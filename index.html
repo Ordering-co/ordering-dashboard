@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Admin dashboard by ordering.inc" />
+    <!-- PWA disabled -->
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
+    <!-- <meta name="mobile-web-app-capable" content="yes" /> -->
+
+    <title>Ordering.co Dashboard</title>
+
+    <style>
+      /* First paint until the app mounts: no white flash */
+      .od-boot { position: fixed; inset: 0; z-index: 2147483000; display: flex; align-items: center; justify-content: center; background: #FFFFFF; }
+      .od-boot__inner { display: flex; flex-direction: column; align-items: center; gap: 20px; opacity: 0; animation: od-boot-in 240ms ease-out 140ms forwards; }
+      .od-boot__inner--static { animation: none; opacity: 1; }
+      .od-boot__logo { width: 40px; height: 40px; display: none; }
+      .od-boot--brand .od-boot__logo { display: block; }
+      .od-boot__bar { position: relative; width: 120px; height: 3px; overflow: hidden; border-radius: 999px; background: #DEE0E3; }
+      .od-boot__bar::after { content: ''; position: absolute; inset: 0; width: 40%; border-radius: inherit; background: #266DF0; animation: od-boot-bar 1.1s cubic-bezier(0.32, 0.72, 0, 1) infinite; }
+      .od-boot__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      @media (prefers-color-scheme: dark) {
+        .od-boot--auto { background: #0B0C0D; }
+        .od-boot--auto .od-boot__bar { background: #34363A; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .od-boot__inner { animation: none; opacity: 1; }
+        .od-boot__bar::after { animation: none; width: 100%; opacity: 0.5; }
+      }
+      @keyframes od-boot-in { to { opacity: 1; } }
+      @keyframes od-boot-bar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+    </style>
+
+    <link rel="preconnect" href="https://apiv4.orderingplus" />
+    <link rel="preconnect" href="https://maps.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- PWA disabled -->
+    <!-- <link rel="manifest" href="/manifest.json" /> -->
+
+    <link rel="android-touch-icon" href="/favicon.png" />
+    <link rel="windows-touch-icon" href="/favicon.png" />
+
+    <!-- <link rel="apple-touch-icon" href="/favicon.png"> -->
+    <link rel="apple-touch-icon" href="/touch-icon-iphone.png" />
+    <link rel="apple-touch-icon" href="/touch-icon-ipad.png" sizes="152x152" />
+    <link
+      rel="apple-touch-icon"
+      href="/touch-icon-iphone-retina.png"
+      sizes="180x180"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/touch-icon-ipad-retina.png"
+      sizes="167x167"
+    />
+
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_2048.png"
+      sizes="2048x2732"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_1668.png"
+      sizes="1668x2224"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_1536.png"
+      sizes="1536x2048"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_1125.png"
+      sizes="1125x2436"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_1242.png"
+      sizes="1242x2208"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_750.png"
+      sizes="750x1334"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_640.png"
+      sizes="640x1136"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splashscreens/apple_splash_1284.png"
+      sizes="1284x2778"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1170.png"
+    />
+    <!-- iPhone_14__iPhone_13_Pro__iPhone_13__iPhone_12_Pro__iPhone_12 -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_750_new.png"
+    />
+    <!-- iPhone_8__iPhone_7__iPhone_6s__iPhone_6 -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1125_new.png"
+    />
+    <!-- iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_828_new.png"
+    />
+    <!-- iPhone_11__iPhone_XR_iPhone_11_Pro_Max__iPhone_XS_Max -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1290_new.png"
+    />
+    <!-- iPhone_14_Pro_Max -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1179_new.png"
+    />
+    <!-- iPhone_14_Pro -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1284_new.png"
+    />
+    <!-- iPhone_14_Plus__iPhone_13_Pro_Max__iPhone_12_Pro_Max -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_2048_new.png"
+    />
+    <!-- 12.9__iPad_Pro -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1668_new_2.png"
+    />
+    <!-- 11__iPad_Pro__10.5__iPad_Pro -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1640_new.png"
+    />
+    <!-- 10.9__iPad_Air -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1668_new.png"
+    />
+    <!-- 10.5__iPad_Air -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1620_new.png"
+    />
+    <!-- 10.2__iPad -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1536_new.png"
+    />
+    <!-- 9.7__iPad_Pro__7.9__iPad_mini__9.7__iPad_Air__9.7__iPad -->
+    <link
+      rel="apple-touch-startup-image"
+      media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+      href="/splashscreens/apple_splash_1488_new.png"
+    />
+    <!-- 8.3__iPad_Mini -->
+
+    <style>
+      .pac-container {
+        z-index: 10000 !important;
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var url = new URL(window.location.href);
+          var token = url.searchParams.get("token");
+          if (!token) return;
+          window.__ORDERING_AUTOLOGIN__ = {
+            token: token,
+            project: url.searchParams.get("project"),
+          };
+          url.searchParams.delete("token");
+          history.replaceState(
+            history.state,
+            "",
+            url.pathname + url.search + url.hash
+          );
+        } catch (e) {}
+      })();
+    </script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+    <script>
+      window.intercomSettings = {
+        ...window.intercomSettings,
+        alignment: "left",
+        horizontal_padding: 20,
+      };
+    </script>
+    <!-- End Google Tag Manager -->
+    <script>
+      !(function (w, d, i, s) {
+        function l() {
+          if (!d.getElementById(i)) {
+            var f = d.getElementsByTagName(s)[0],
+              e = d.createElement(s);
+            (e.type = "text/javascript"),
+              (e.async = !0),
+              (e.src = "https://canny.io/sdk.js"),
+              f.parentNode.insertBefore(e, f);
+          }
+        }
+        if ("function" != typeof w.Canny) {
+          var c = function () {
+            c.q.push(arguments);
+          };
+          (c.q = []),
+            (w.Canny = c),
+            "complete" === d.readyState
+              ? l()
+              : w.attachEvent
+              ? w.attachEvent("onload", l)
+              : w.addEventListener("load", l, false);
+        }
+      })(window, document, "canny-jssdk", "script");
+    </script>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="od-boot" id="od-boot" role="status" aria-live="polite">
+        <div class="od-boot__inner">
+          <svg class="od-boot__logo" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+            <path fill="#32B45F" d="M243 46.402767A210 210 0 0 0 46.402767 243L94.522447 243A162 162 0 0 1 243 94.522447Z"/>
+            <path fill="#266DF0" d="M269 46.402767A210 210 0 0 1 465.597233 243L417.477553 243A162 162 0 0 0 269 94.522447Z"/>
+            <path fill="#FF9418" d="M243 465.597233A210 210 0 0 1 46.402767 269L94.522447 269A162 162 0 0 0 243 417.477553Z"/>
+            <path fill="#E91D63" d="M465.597233 269A210 210 0 0 1 269 465.597233L269 417.477553A162 162 0 0 0 417.477553 269Z"/>
+          </svg>
+          <div class="od-boot__bar"></div>
+          <span class="od-boot__sr">Loading</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Ordering.co mark on Ordering.co hosts only (white-label hosts get the bar);
+      // follow the OS color scheme when nobody is signed in, like the login does
+      (function () {
+        var boot = document.getElementById('od-boot')
+        if (!boot) return
+        var host = location.hostname.toLowerCase()
+        var official = /^(dashboard|dashboardcf)\.(ordering\.co|orderingplus\.com|tryordering\.com)$/.test(host) || host === 'localhost' || host === '127.0.0.1'
+        if (official) boot.className += ' od-boot--brand'
+        var token = null
+        try { token = window.localStorage.getItem('token') } catch (e) {}
+        if (!token) boot.className += ' od-boot--auto'
+      })()
+    </script>
+
+    <script type="module" src="/src/index.js"></script>
+  </body>
+</html>

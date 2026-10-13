@@ -1,0 +1,18 @@
+import React from 'react'
+import { HelmetTags } from '../../components/HelmetTags'
+import { EnterprisePromotionListing } from '~ui'
+
+export const EnterprisePromotionList = (props) => {
+  const enterprisePromotionListProps = {
+    ...props,
+    isUseQuery: true,
+    isSearchByPromotionName: true,
+    isSearchByPromotionDescription: true
+  }
+  return (
+    <>
+      <HelmetTags page='enterprise_promotions' />
+      <EnterprisePromotionListing {...enterprisePromotionListProps} />
+    </>
+  )
+}

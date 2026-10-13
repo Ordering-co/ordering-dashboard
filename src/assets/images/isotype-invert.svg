@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Ordering reversed symbol</title>
+  <desc id="desc">Monochrome Ordering symbol for dark backgrounds.</desc>
+  <path id="top-left" fill="#FFFFFF" d="M243 46.402767A210 210 0 0 0 46.402767 243L94.522447 243A162 162 0 0 1 243 94.522447Z"/>
+  <path id="top-right" fill="#FFFFFF" d="M269 46.402767A210 210 0 0 1 465.597233 243L417.477553 243A162 162 0 0 0 269 94.522447Z"/>
+  <path id="bottom-left" fill="#FFFFFF" d="M243 465.597233A210 210 0 0 1 46.402767 269L94.522447 269A162 162 0 0 0 243 417.477553Z"/>
+  <path id="bottom-right" fill="#FFFFFF" d="M465.597233 269A210 210 0 0 1 269 465.597233L269 417.477553A162 162 0 0 0 417.477553 269Z"/>
+</svg>

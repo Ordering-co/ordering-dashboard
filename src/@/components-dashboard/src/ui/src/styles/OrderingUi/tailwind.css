@@ -1,0 +1,21 @@
+@import 'tailwindcss/theme.css' layer(theme) prefix(mia);
+@import 'tailwindcss/utilities.css' layer(utilities) prefix(mia) source(none);
+@source './button.jsx';
+@source '../../components/Assistant/AssistantDestinations.js';
+
+@theme inline {
+  --color-primary: var(--od-action);
+  --color-primary-foreground: var(--od-action-foreground);
+  --color-action-foreground: var(--od-action-content);
+  --color-background: var(--od-surface);
+  --color-foreground: var(--od-text);
+  --color-secondary: var(--od-surface-subtle);
+  --color-secondary-foreground: var(--od-text);
+  --color-muted: var(--od-surface-subtle);
+  --color-border: var(--od-border);
+  --color-ring: var(--od-focus);
+  --color-input: var(--od-border);
+  --color-destructive: var(--od-danger-functional);
+  --radius-md: var(--od-radius-component);
+  --radius-sm: var(--od-radius-control);
+}

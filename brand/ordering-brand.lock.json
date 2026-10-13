@@ -1,0 +1,17 @@
+{
+  "release": "1.3.1",
+  "source": "https://brand.ordering.co",
+  "tokens": {
+    "url": "https://brand.ordering.co/machine/ordering.tokens.json",
+    "version": "1.0.0",
+    "sha256": "4a31e2f09c7549893360675f87ba471df298b7e16e3d03c426fa55ad915016ec"
+  },
+  "assets": {
+    "inter": {
+      "url": "https://brand.ordering.co/assets/fonts/inter/InterVariable.woff2",
+      "path": "src/assets/fonts/ordering/InterVariable.woff2",
+      "bytes": 352240,
+      "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3"
+    }
+  }
+}

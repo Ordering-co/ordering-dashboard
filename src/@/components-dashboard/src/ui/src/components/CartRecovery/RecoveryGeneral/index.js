@@ -1,0 +1,241 @@
+import React, { useState, useEffect } from 'react'
+import { useLanguage } from '../../../../../index'
+import { Input, TextArea, Button } from '../../../styles'
+import NumericInput from 'react-numeric-input'
+
+import {
+  // X as CloseIcon,
+  Circle as UnCheckIcon,
+  RecordCircleFill as CheckIcon
+} from 'react-bootstrap-icons'
+
+import {
+  Container,
+  InputWrapper,
+  // AddCouponSwitchWrapper,
+  // CuponCodeWrapper,
+  LastTimeWrapper,
+  TypeWrapper,
+  ParentCheckBoxWrapper,
+  TimeContent,
+  ButtonWrapper,
+  TimeBlock,
+  DaysContent
+  // DateContent,
+  // ChildCheckBoxWrapper,
+  // DateRangeContent
+} from './styles'
+// import { AnalyticsCalendar } from '../../BusinessIntelligence/AnalyticsCalendar'
+
+export const RecoveryGeneral = (props) => {
+  const {
+    isAddMode,
+    formState,
+    recoveryActionState,
+    handleAddRecoveryAction,
+    handleUpdateClick,
+    handleChangeInput,
+    handleChangeItem
+  } = props
+
+  const [, t] = useLanguage()
+
+  const [hours, setHours] = useState([])
+  const [minutes, setMinutes] = useState([])
+  const [seconds, setSeconds] = useState([])
+  const [curPreorderTime, setCurPreorderTime] = useState({ hour: '0', minute: '0', second: '0' })
+  const [curDayTime, setCurDayTime] = useState(0)
+  const [isTime, setIsTime] = useState(true)
+
+  const setTimeList = () => {
+    const _hours = []
+    const _minutes = []
+    const _seconds = []
+    for (let i = 0; i < 24; i++) {
+      const text = (i < 10 ? '0' : ' ') + i
+      _hours.push({
+        text,
+        hour: i
+      })
+    }
+    for (let i = 0; i < 60; i++) {
+      const text = (i < 10 ? '0' : '') + i
+      _minutes.push({
+        text,
+        minute: i
+      })
+      _seconds.push({
+        text,
+        second: i
+      })
+    }
+    setHours(_hours)
+    setMinutes(_minutes)
+    setSeconds(_seconds)
+  }
+
+  const handleChangePreorderTime = (evt) => {
+    const type = evt.target.name
+    const value = evt.target.value
+    setCurPreorderTime({
+      ...curPreorderTime,
+      [type]: value
+    })
+    let preorderTime = 0
+    if (type === 'hour') preorderTime = parseInt(value) * 3600 + parseInt(curPreorderTime?.minute) * 60 + parseInt(curPreorderTime?.second)
+    else if (type === 'minute') preorderTime = parseInt(curPreorderTime?.hour) * 3600 + parseInt(value) * 60 + parseInt(curPreorderTime?.second)
+    else preorderTime = parseInt(curPreorderTime?.hour) * 3600 + parseInt(curPreorderTime?.minute) * 60 + parseInt(value)
+    handleChangeItem({ times: [preorderTime], launch_type: 'times' })
+  }
+
+  const handleChangeDay = (value) => {
+    setCurDayTime(value)
+    handleChangeItem({ times: [value * 24 * 3600], launch_type: 'times' })
+  }
+
+  const handleSubmitBtnClick = () => {
+    if (Object.keys(formState.changes).length > 0) {
+      if (isAddMode) {
+        handleAddRecoveryAction()
+      } else {
+        handleUpdateClick()
+      }
+    }
+  }
+
+  const handleSwitchTime = () => {
+    setIsTime(prev => !prev)
+  }
+
+  useEffect(() => {
+    setTimeList()
+    setCurPreorderTime({
+      hour: recoveryActionState?.action?.times ? (parseInt(recoveryActionState?.action?.times[0] / 3600)) : '0',
+      minute: recoveryActionState?.action?.times ? (parseInt(recoveryActionState?.action?.times[0] % 3600 / 60)) : '0',
+      second: recoveryActionState?.action?.times ? (recoveryActionState?.action?.times[0] % 3600 % 60) : '0'
+    })
+    if (!recoveryActionState?.action?.times) return
+
+    if (recoveryActionState?.action?.times[0] / 3600 < 24) {
+      setIsTime(true)
+    } else {
+      setIsTime(false)
+      setCurDayTime(parseInt(recoveryActionState?.action.times[0] / 3600 / 24))
+    }
+  }, [recoveryActionState?.action])
+
+  return (
+    <>
+      <Container>
+        <InputWrapper>
+          <label>{t('NAME', 'Name')}</label>
+          <Input
+            name='name'
+            type='text'
+            placeholder={t('NAME', 'name')}
+            value={
+              formState?.changes?.name ?? recoveryActionState?.action?.name ?? ''
+            }
+            onChange={handleChangeInput}
+            disabled={formState.loading}
+            autoComplete='off'
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <label>{t('DESCRIPTION', 'Description')}</label>
+          <TextArea
+            placeholder={t('WRITE_LITTLE_DESCRIPTION', 'Write a little description')}
+            name='description'
+            rows={3}
+            value={
+              formState?.changes?.description ?? recoveryActionState?.action?.description ?? ''
+            }
+            onChange={handleChangeInput}
+            disabled={formState.loading}
+            autoComplete='off'
+          />
+        </InputWrapper>
+        <LastTimeWrapper>
+          <h3>{t('LAST_TIME_CART_WAS_OPENED', 'Last time the cart was opened')}</h3>
+          <TypeWrapper>
+            <ParentCheckBoxWrapper>
+              <div onClick={() => handleSwitchTime()}>
+                {isTime ? <CheckIcon className='checked-icon' /> : <UnCheckIcon />}
+                <span>{t('TIME', 'Time')}</span>
+              </div>
+            </ParentCheckBoxWrapper>
+            {isTime && (
+              <TimeContent>
+                <TimeBlock>
+                  <select
+                    value={curPreorderTime?.hour}
+                    name='hour'
+                    onChange={handleChangePreorderTime}
+                  >
+                    {
+                      hours?.map((hour, i) => (
+                        <option value={hour.hour} key={i}>{hour.text}</option>
+                      ))
+                    }
+                  </select>
+                  <span>:</span>
+                  <select
+                    value={curPreorderTime?.minute}
+                    name='minute'
+                    onChange={handleChangePreorderTime}
+                  >
+                    {minutes?.map((minute, i) => (
+                      <option value={minute.minute} key={i}>{minute.text}</option>
+                    ))}
+                  </select>
+                  <span>:</span>
+                  <select
+                    value={curPreorderTime?.second}
+                    name='second'
+                    onChange={handleChangePreorderTime}
+                  >
+                    {seconds?.map((second, i) => (
+                      <option value={second.second} key={i}>{second.text}</option>
+                    ))}
+                  </select>
+                </TimeBlock>
+              </TimeContent>
+            )}
+          </TypeWrapper>
+          <TypeWrapper>
+            <ParentCheckBoxWrapper>
+              <div onClick={() => handleSwitchTime()}>
+                {!isTime ? <CheckIcon className='checked-icon' /> : <UnCheckIcon />}
+                <span>{t('DAYS', 'Days')}</span>
+              </div>
+            </ParentCheckBoxWrapper>
+            {!isTime && (
+              <DaysContent>
+                <NumericInput
+                  placeholder='00'
+                  onKeyPress={(e) => {
+                    if (!/^[0-9]$/.test(e.key)) {
+                      e.preventDefault()
+                    }
+                  }}
+                  value={curDayTime || ''}
+                  onChange={(value) => handleChangeDay(value)}
+                  min={0}
+                />
+              </DaysContent>
+            )}
+          </TypeWrapper>
+        </LastTimeWrapper>
+      </Container>
+      <ButtonWrapper>
+        <Button
+          color='primary'
+          onClick={() => handleSubmitBtnClick()}
+          disabled={Object.keys(formState.changes).length === 0 || formState.loading}
+        >
+          {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
+        </Button>
+      </ButtonWrapper>
+    </>
+  )
+}

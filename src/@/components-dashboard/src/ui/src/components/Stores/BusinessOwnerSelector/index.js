@@ -1,0 +1,80 @@
+import React, { useState, useEffect } from 'react'
+import { useLanguage, UsersList as UsersListController } from '../../../../../index'
+import { Select } from '../../../styles/Select/FirstSelect'
+
+import { BusinessOwnerSelectorWrapper, Option } from './styles'
+
+const BusinessOwnerSelectorUI = (props) => {
+  const {
+    usersList,
+    selectedOwnerIds,
+    handleSelectBusinessOwner,
+    selectedOwner,
+    type
+  } = props
+
+  const [, t] = useLanguage()
+  const [usersListOptions, setUsersListOptions] = useState([])
+  const [searchValue, setSearchValue] = useState(null)
+
+  const placeholder = <Option>{t(`SELECT_BUSINESS_${type.toUpperCase().slice(0, -1)}`, `Select business ${type.slice(0, -1)}`)}</Option>
+
+  const onSelectBusinessOwner = (id) => {
+    const selectedOwner = usersList?.users.find(user => user.id === id)
+    handleSelectBusinessOwner(selectedOwner)
+  }
+
+  useEffect(() => {
+    if (usersList?.loading) return
+
+    let _userLists
+    if (searchValue) {
+      _userLists = usersList?.users.filter(user => (`${user?.id ?? ''}${user?.name ?? ''}${user?.lastname ?? ''}`).toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+    } else {
+      _userLists = usersList?.users
+    }
+
+    const _usersListOptions = _userLists?.map(user => {
+      return {
+        value: user?.id,
+        content: (
+          <Option>
+            {user.id}. {user?.name} {user?.lastname}
+          </Option>
+        ),
+        showDisable: selectedOwnerIds.includes(user.id)
+      }
+    })
+    setUsersListOptions(_usersListOptions)
+  }, [usersList, selectedOwnerIds, searchValue])
+
+  const handleChangeSearch = (searchVal) => {
+    setSearchValue(searchVal)
+  }
+
+  return (
+    <BusinessOwnerSelectorWrapper>
+      <Select
+        options={usersListOptions}
+        defaultValue={selectedOwner?.id}
+        placeholder={placeholder}
+        onChange={onSelectBusinessOwner}
+        isShowSearchBar
+        searchBarIsCustomLayout
+        searchBarIsNotLazyLoad
+        searchValue={searchValue}
+        handleChangeSearch={handleChangeSearch}
+      />
+    </BusinessOwnerSelectorWrapper>
+  )
+}
+
+export const BusinessOwnerSelector = (props) => {
+  const businessOwnersProps = {
+    ...props,
+    UIComponent: BusinessOwnerSelectorUI,
+    isBusinessOwners: true,
+    defaultUserTypesSelected: props.defaultUserTypesSelected || [2]
+  }
+  return <UsersListController {...businessOwnersProps} />
+}

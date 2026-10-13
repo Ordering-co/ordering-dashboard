@@ -1,0 +1,500 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import {
+  useLanguage,
+  useSession,
+  useEvent,
+  DragAndDrop,
+  ExamineClick,
+  UserFormDetails as UserFormDetailsController
+} from '../../../../../index'
+import { Button, Input, DefaultSelect } from '../../../styles'
+import { Alert, InputPhoneNumber, Modal, ImageCrop } from '../../Shared'
+import { sortInputFields, bytesConverter, setStorageItem } from '../../../utils'
+import parsePhoneNumber from 'libphonenumber-js'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import BiImage from '@meronex/icons/bi/BiImage'
+import { useWindowSize } from '../../../hooks/useWindowSize'
+import MdCheckBoxOutlineBlank from '@meronex/icons/md/MdCheckBoxOutlineBlank'
+import MdCheckBox from '@meronex/icons/md/MdCheckBox'
+import { timezones } from '../../../config/constants'
+
+import {
+  FormContainer,
+  UserImage,
+  Image,
+  UploadImageIconContainer,
+  UploadImageIcon,
+  SkeletonWrapper,
+  FormInput,
+  ActionsForm,
+  SkeletonForm,
+  MainInformationContainer,
+  DriverGroupListContainer,
+  DriverGroupItem,
+  CheckboxWrapper,
+  InputWrapper
+} from './styles'
+
+const UserAddFormUI = (props) => {
+  const {
+    formState,
+    showField,
+    cleanFormState,
+    isRequiredField,
+    validationFields,
+    handleChangeInput,
+    handleButtonAddClick,
+    isCheckout,
+    handlechangeImage,
+    isDriversPage,
+    isDriversManagersPage,
+    handleChangeSwtich,
+    isTourOpen,
+    driversGroupsState,
+    selectedDriverGroupIds,
+    handleDriverGroupClick,
+    setCellphoneStartZero
+  } = props
+  const formMethods = useForm()
+  const [, t] = useLanguage()
+  const [events] = useEvent()
+  const { width } = useWindowSize()
+  const [session] = useSession()
+
+  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(null)
+  const [userPhoneNumber, setUserPhoneNumber] = useState(null)
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [isSuccessSubmitted, setIsSuccessSubmitted] = useState(false)
+  const [timezonesOptions, setTimezonesOptions] = useState([])
+  const [timezoneSearchValue, setTimezoneSearchValue] = useState('')
+  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
+
+  const emailInput = useRef(null)
+  const inputRef = useRef(null)
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+    cleanFormState && cleanFormState({ result: { error: false } })
+  }
+
+  useEffect(() => {
+    const _timezonesOptions = timezones
+      .filter(timezone => timezone.toLocaleLowerCase().includes(timezoneSearchValue.toLocaleLowerCase()))
+      .map(timezone => {
+        return {
+          value: timezone,
+          content: timezone
+        }
+      })
+    setTimezonesOptions(_timezonesOptions)
+  }, [timezoneSearchValue])
+
+  const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
+
+  const onSubmit = () => {
+    const isPhoneNumberValid = userPhoneNumber ? isValidPhoneNumber : true
+    if (!isPhoneNumberValid && userPhoneNumber) {
+      setAlertState({
+        open: true,
+        content: [t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid')]
+      })
+      return
+    }
+    if (Object.keys(formState.changes).length > 0 && isPhoneNumberValid) {
+      handleButtonAddClick()
+
+      if (isTourOpen) {
+        setIsSuccessSubmitted(true)
+      }
+    }
+  }
+
+  const handleClickImage = () => {
+    inputRef.current.click()
+  }
+
+  const handleFiles = (files) => {
+    if (files.length === 1) {
+      const type = files[0].type.split('/')[0]
+      if (type !== 'image') {
+        setAlertState({
+          open: true,
+          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
+        })
+        return
+      }
+
+      if (bytesConverter(files[0]?.size) > 2048) {
+        setAlertState({
+          open: true,
+          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
+        })
+        return
+      }
+
+      const reader = new window.FileReader()
+      reader.readAsDataURL(files[0])
+      reader.onload = () => {
+        setCropState({ name: 'photo', data: reader.result, open: true })
+      }
+
+      handlechangeImage(files[0])
+    }
+  }
+
+  const handleChangePhoto = (croppedImg) => {
+    handleChangeSwtich(cropState?.name, croppedImg)
+    setCropState({ name: null, data: null, open: false })
+  }
+
+  const handleChangePhoneNumber = (number, isValid, rawNumber) => {
+    setUserPhoneNumber(number)
+
+    let phoneNumberParser = null
+    let phoneNumber = {
+      country_phone_code: {
+        name: 'country_phone_code',
+        value: ''
+      },
+      cellphone: {
+        name: 'cellphone',
+        value: ''
+      }
+    }
+    if (isValid) {
+      phoneNumberParser = parsePhoneNumber(number)
+    }
+    if (phoneNumberParser) {
+      phoneNumber = {
+        country_phone_code: {
+          name: 'country_phone_code',
+          value: phoneNumberParser.countryCallingCode
+        },
+        cellphone: {
+          name: 'cellphone',
+          value: phoneNumberParser.nationalNumber
+        }
+      }
+    }
+    setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
+    handleChangeInput(phoneNumber, true)
+  }
+
+  const handleChangeInputEmail = (e) => {
+    handleChangeInput({ target: { name: 'email', value: e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '') } })
+    formMethods.setValue('email', e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
+    emailInput.current.value = e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '')
+  }
+
+  useEffect(() => {
+    if (Object.keys(formMethods.errors).length > 0) {
+      const content = Object.values(formMethods.errors).map(error => error.message)
+      if (!isValidPhoneNumber && userPhoneNumber) {
+        content.push(t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid.'))
+      }
+      setAlertState({
+        open: true,
+        content
+      })
+    }
+  }, [formMethods.errors])
+
+  useEffect(() => {
+    if ((!formState?.loading && formState?.result?.error)) {
+      setIsSuccessSubmitted(false)
+      setAlertState({
+        open: true,
+        content: formState.result?.result || [t('ERROR', 'Error')]
+      })
+    }
+  }, [formState?.loading])
+
+  useEffect(() => {
+    if (isDriversPage) {
+      cleanFormState && cleanFormState({ changes: { level: 4 } })
+    } else if (isDriversManagersPage) {
+      cleanFormState && cleanFormState({ changes: { level: 5 } })
+    } else {
+      cleanFormState && cleanFormState({ changes: { level: 3 } })
+    }
+  }, [isDriversPage, isDriversManagersPage])
+
+  useEffect(() => {
+    if (!validationFields.loading && emailInput.current) {
+      formMethods.setValue('email', formState?.result?.result
+        ? formState?.result?.result?.email
+        : formState?.changes?.email ?? '')
+    }
+  }, [validationFields, emailInput.current])
+
+  useEffect(() => {
+    formMethods.register('email', {
+      pattern: {
+        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+      }
+    })
+  }, [formMethods])
+
+  useEffect(() => {
+    if (!isTourOpen || !isSuccessSubmitted || formState?.loading || formState?.result?.error) return
+    if (isDriversPage) {
+      setStorageItem('isFromDeliveryDrivers', true)
+      events.emit('go_to_page', { page: 'drivers_managers' })
+    }
+    if (isDriversManagersPage) {
+      setStorageItem('isFromDeliveryDriversGroup', true)
+      events.emit('go_to_page', { page: 'drivers_groups' })
+    }
+  }, [isTourOpen, isSuccessSubmitted, formState?.loading])
+
+  return (
+    <>
+      <FormContainer>
+        <FormInput
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          isCheckout={isCheckout}
+          data-tour={width > 768 ? 'tour_fill' : ''}
+        >
+          <h1>
+            {
+              isDriversPage
+                ? t('NEW_DRIVER', 'New driver')
+                : isDriversManagersPage
+                  ? t('NEW_DRIVER_MANAGER', 'New driver manager')
+                  : t('USERS_REGISTER', 'New user')
+            }
+          </h1>
+          <UserImage className='user-image'>
+            <Image onClick={() => handleClickImage()} isImage={formState?.changes?.photo && !formState.result.error}>
+              <ExamineClick onFiles={handleFiles} childRef={(e) => { inputRef.current = e }} accept='image/png, image/jpeg, image/jpg' disabled={formState.loading}>
+                <DragAndDrop onDrop={dataTransfer => handleFiles(dataTransfer.files)} accept='image/png, image/jpeg, image/jpg' disabled={formState.loading}>
+                  {
+                    formState.loading
+                      ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                      : formState?.changes?.photo && <img src={formState?.changes?.photo} alt='user image' loading='lazy' />
+                  }
+                  <UploadImageIconContainer>
+                    <UploadImageIcon>
+                      <BiImage />
+                    </UploadImageIcon>
+                  </UploadImageIconContainer>
+                </DragAndDrop>
+              </ExamineClick>
+            </Image>
+          </UserImage>
+          <MainInformationContainer
+            data-tour={width <= 768 ? 'tour_fill' : ''}
+          >
+            {!validationFields?.loading
+              ? (
+              <>
+                {sortInputFields({ values: validationFields?.fields?.checkout }).map(field =>
+                  showField && showField(field.code) && (
+                    <React.Fragment key={field.id}>
+                      {field.code === 'email'
+                        ? (
+                        <Input
+                          key={field.id}
+                          type={field.type}
+                          name={field.code}
+                          className='form'
+                          placeholder={t(field.code.toUpperCase(), field?.name)}
+                          defaultValue={
+                          formState?.result?.result
+                            ? formState?.result?.result[field.code]
+                            : formState?.changes[field.code] ?? ''
+                          }
+                          onChange={handleChangeInputEmail}
+                          ref={(e) => {
+                            emailInput.current = e
+                          }}
+                          autoComplete='off'
+                        />
+                          )
+                        : (
+                        <Input
+                          key={field.id}
+                          type={field.type}
+                          name={field.code}
+                          className='form'
+                          placeholder={t(field.code.toUpperCase(), field?.name)}
+                          defaultValue={
+                          formState?.result?.result
+                            ? formState?.result?.result[field.code]
+                            : formState?.changes[field.code] ?? ''
+                          }
+                          onChange={handleChangeInput}
+                          ref={formMethods.register({
+                            required: isRequiredField(field.code)
+                              ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
+                              : null
+                          })}
+                          autoComplete='off'
+                        />
+                          )}
+
+                    </React.Fragment>
+                  )
+                )}
+                {isDriversPage && (
+                  <>
+                    <Input
+                      name='external_id'
+                      className='form'
+                      placeholder={t('EXTERNAL_ID', 'External Id')}
+                      defaultValue={
+                        formState?.result?.result
+                          ? formState?.result?.result?.external_id
+                          : formState?.changes?.external_id ?? ''
+                      }
+                      onChange={handleChangeInput}
+                      autoComplete='off'
+                      onKeyPress={(e) => {
+                        if (!/^[0-9]$/.test(e.key)) {
+                          e.preventDefault()
+                        }
+                      }}
+                    />
+                    <InputWrapper>
+                      <DefaultSelect
+                        placeholder={t('SELECT_TIMEZONE', 'Select a timezone')}
+                        defaultValue={formState?.changes?.timezone}
+                        options={timezonesOptions}
+                        onChange={val => handleChangeSwtich('timezone', val)}
+                        optionInnerMaxHeight='300px'
+                        isShowSearchBar
+                        searchBarIsCustomLayout
+                        searchBarIsNotLazyLoad
+                        searchValue={timezoneSearchValue}
+                        handleChangeSearch={setTimezoneSearchValue}
+                      />
+                    </InputWrapper>
+                  </>
+                )}
+                {!!showInputPhoneNumber && (
+                  <InputPhoneNumber
+                    value={userPhoneNumber}
+                    setValue={handleChangePhoneNumber}
+                    handleIsValid={setIsValidPhoneNumber}
+                  />
+                )}
+                {!isCheckout && (
+                  <Input
+                    type='password'
+                    name='password'
+                    className='form'
+                    placeholder={t('FRONT_VISUALS_PASSWORD', 'Password')}
+                    onChange={handleChangeInput}
+                    ref={formMethods.register({
+                      required: isRequiredField('password')
+                        ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password'))
+                        : null,
+                      minLength: {
+                        value: 8,
+                        message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                      }
+                    })}
+                  />
+                )}
+                {isDriversPage && session?.user?.level === 5 && (
+                  <DriverGroupListContainer>
+                    {driversGroupsState.loading
+                      ? (
+                          [...Array(10).keys()].map(i => (
+                        <DriverGroupItem key={i}>
+                          <Skeleton width={20} height={20} />
+                          <Skeleton width={100} />
+                        </DriverGroupItem>
+                          ))
+                        )
+                      : (
+                          driversGroupsState.groups.map(group => (
+                        <DriverGroupItem
+                          key={group.id}
+                          onClick={() => handleDriverGroupClick(group.id)}
+                        >
+                          <CheckboxWrapper
+                            active={selectedDriverGroupIds.includes(group.id)}
+                          >
+                            {selectedDriverGroupIds.includes(group.id)
+                              ? (
+                              <MdCheckBox />
+                                )
+                              : (
+                              <MdCheckBoxOutlineBlank />
+                                )}
+                          </CheckboxWrapper>
+                          <span>{group?.name}</span>
+                        </DriverGroupItem>
+                          ))
+                        )}
+                  </DriverGroupListContainer>
+                )}
+                <ActionsForm>
+                  <Button
+                    color='primary'
+                    borderRadius='8px'
+                    type='submit'
+                    disabled={Object.keys(formState?.changes).length === 0 || formState.loading}
+                  >
+                    {formState.loading ? t('LOADING', 'Loading') : t('ADD', 'Add')}
+                  </Button>
+                </ActionsForm>
+              </>
+                )
+              : (
+              <SkeletonForm>
+                {[...Array(6)].map((item, i) => (
+                  <Skeleton key={i} />
+                ))}
+              </SkeletonForm>
+                )}
+          </MainInformationContainer>
+        </FormInput>
+        <Alert
+          title={t('PROFILE', 'Profile')}
+          content={alertState.content}
+          acceptText={t('ACCEPT', 'Accept')}
+          open={alertState.open}
+          onClose={() => closeAlert()}
+          onAccept={() => closeAlert()}
+          closeOnBackdrop={false}
+        />
+      </FormContainer>
+      {cropState?.open && (
+        <Modal
+          width='700px'
+          height='80vh'
+          padding='30px'
+          title={t('IMAGE_CROP', 'Image crop')}
+          open={cropState?.open}
+          onRemove={() => setCropState({ ...cropState, open: false })}
+        >
+          <ImageCrop
+            photo={cropState?.data}
+            handleChangePhoto={handleChangePhoto}
+          />
+        </Modal>
+      )}
+    </>
+
+  )
+}
+
+export const UserAddForm = (props) => {
+  const UserAddProps = {
+    ...props,
+    useSessionUser: false,
+    useValidationFields: true,
+    UIComponent: UserAddFormUI
+  }
+  return (
+    <UserFormDetailsController {...UserAddProps} />
+  )
+}

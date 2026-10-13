@@ -1,0 +1,617 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { bytesConverter } from '../../../utils'
+import BsCardImage from '@meronex/icons/bs/BsCardImage'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { Alert } from '../../Shared'
+import { Input, TextArea, Button } from '../../../styles'
+import { InfoCircle } from 'react-bootstrap-icons'
+
+import {
+  useLanguage,
+  DragAndDrop,
+  ExamineClick,
+  useApi
+} from '../../../../../index'
+
+import {
+  DetailContainer,
+  ContactUsContainer,
+  FormContainer,
+  BusinessImg,
+  SkeletonWrapper,
+  UploadImageIconContainer,
+  UploadImageIcon,
+  LogoImage,
+  FormControl,
+  LabelHeader,
+  Label,
+  FormGroup,
+  SaveBtnWrapper,
+  SocialShareImage,
+  InfoWrapper,
+  InfoContent,
+  InfoTitle,
+  Info
+} from './styles'
+
+export const OrderingProductGeneralDetails = (props) => {
+  const {
+    siteState,
+    formState,
+    isAddMode,
+    handleChangeInput,
+    handlechangeImage,
+    handleUpdateSite,
+    handleAddSite,
+    sitesList,
+    enableAutoFillFromWebsite
+  } = props
+
+  const [, t] = useLanguage()
+  const [, { configurations }] = useApi()
+  const { handleSubmit, register, errors, watch, setValue } = useForm()
+  const businessUrlTemplate = watch('business_url_template', '')
+
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [syncState, setSyncState] = useState({ loading: false })
+
+  const headerImageInputRef = useRef(null)
+  const logoImageInputRef = useRef(null)
+  const socialShareInputRef = useRef(null)
+
+  const availableBusinessUrls = [
+    { key: 0, value: '/:business_slug' },
+    { key: 1, value: '/store/:business_slug' },
+    { key: 2, value: '/store?<any>=:business_slug' }
+  ]
+  const availableProductUrls = [
+    { key: 0, value: '/store/:business_slug/:category_slug/:product_slug' },
+    { key: 1, value: '/store/:category_slug/:product_slug?<any>=:business_slug' },
+    { key: 2, value: '/store/:business_slug?<any>=:category_id&<any>=:product_id' },
+    { key: 3, value: '/:business_slug/:category_slug/:product_slug' },
+    { key: 4, value: '/:business_slug?<any>=:category_id&<any>=:product_id' }
+  ]
+
+  const handleClickImage = (type) => {
+    if (type === 'header') {
+      headerImageInputRef.current.click()
+    }
+    if (type === 'logo') {
+      logoImageInputRef.current.click()
+    }
+    if (type === 'social_share') {
+      socialShareInputRef.current.click()
+    }
+  }
+
+  const handleFiles = (files, name) => {
+    if (files.length === 1) {
+      const type = files[0].type.split('/')[0]
+      if (type !== 'image') {
+        setAlertState({
+          open: true,
+          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
+        })
+        return
+      }
+
+      if (bytesConverter(files[0]?.size) > 2048) {
+        setAlertState({
+          open: true,
+          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
+        })
+        return
+      }
+      handlechangeImage(files[0], name)
+    }
+  }
+
+  const onSubmit = () => {
+    if (isAddMode) {
+      handleAddSite && handleAddSite()
+    } else {
+      handleUpdateSite && handleUpdateSite()
+    }
+  }
+
+  const fieldsToSync = [
+    'url',
+    'business_url_template',
+    'cart_url_template',
+    'category_url_template',
+    'checkout_url_template',
+    'image',
+    'logo',
+    'header',
+    'social_share',
+    'profile_url_template',
+    'product_url_template',
+    'reset_password_url_template',
+    'track_order_url_template'
+  ]
+
+  const getSourceSite = () => {
+    const currentId = siteState?.site?.id
+    let websiteSite = null
+    if (Array.isArray(sitesList) && sitesList.length > 0) {
+      websiteSite = sitesList.find(s => s?.code === 'website')
+    }
+    if (!websiteSite || websiteSite?.id === currentId) {
+      const storedSite = window.localStorage.getItem('website_site_details')
+      if (storedSite) {
+        try {
+          const parsedSite = JSON.parse(storedSite)
+          if (parsedSite?.id !== currentId) {
+            websiteSite = parsedSite
+          }
+        } catch (error) {
+          setAlertState({
+            open: true,
+            content: [t('ERROR_PARSING_WEBSITE_DETAILS', 'Error parsing website site details')]
+          })
+        }
+      }
+    }
+    return websiteSite
+  }
+
+  const handleSyncFromWebsite = async () => {
+    if (isAddMode) return
+    if (formState?.loading || syncState.loading) return
+
+    const sourceSite = getSourceSite()
+    if (!sourceSite) {
+      setAlertState({
+        open: true,
+        content: [t('NO_SOURCE_SITE_FOUND', 'No source site found to sync from.')]
+      })
+      return
+    }
+
+    const changesToApply = fieldsToSync.reduce((acc, fieldName) => {
+      const currentValue = formState?.changes?.[fieldName] ?? siteState?.site?.[fieldName]
+      if (currentValue) return acc
+
+      const sourceValue = sourceSite?.[fieldName]
+      if (sourceValue === null || sourceValue === undefined || sourceValue === '') return acc
+
+      acc[fieldName] = sourceValue
+      return acc
+    }, {})
+
+    if (Object.keys(changesToApply).length === 0) {
+      setAlertState({
+        open: true,
+        content: [t('NOTHING_TO_SYNC', 'Nothing to sync. All fields already have values.')]
+      })
+      return
+    }
+
+    try {
+      setSyncState({ loading: true })
+
+      // Keep UI in sync immediately (inputs + controller formState)
+      const formFieldsToSetValue = ['url', 'business_url_template', 'category_url_template', 'product_url_template']
+      for (const [name, value] of Object.entries(changesToApply)) {
+        if (formFieldsToSetValue.includes(name)) {
+          try { setValue(name, value) } catch (e) { }
+        }
+        handleChangeInput?.({ target: { name, value } })
+      }
+    } finally {
+      setSyncState({ loading: false })
+    }
+  }
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+  }
+
+  const handleValidateProductUrl = (value) => {
+    if (businessUrlTemplate.includes('?')) {
+      const urls = businessUrlTemplate.split('?')
+      if (value.indexOf(urls[0]) === 0 && value.includes(urls[1])) {
+        return true
+      } else {
+        return t('VALIDATE_PRODUCT_TEMPLATE_URL', 'The product url template do not match with business url template')
+      }
+    } else {
+      if (value.indexOf(businessUrlTemplate) === 0) {
+        return true
+      } else {
+        return t('VALIDATE_PRODUCT_TEMPLATE_URL', 'The product url template do not match with business url template')
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!formState.error) return
+    setAlertState({
+      open: true,
+      content: formState.error
+    })
+  }, [formState.error])
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      setAlertState({
+        open: true,
+        content: Object.values(errors).map((error) => error.message)
+      })
+    }
+  }, [errors])
+
+  useEffect(() => {
+    if (isAddMode) return
+    const fields = ['name', 'code', 'url', 'business_url_template', 'category_url_template', 'product_url_template']
+    fields.forEach(field => {
+      setValue(field, siteState.site?.[field] || '')
+    })
+  }, [siteState.site])
+
+  return (
+    <DetailContainer>
+      {!isAddMode && (
+        <ContactUsContainer>
+          <p>
+            {t('NEED_HELP_WITH_SET_UP', 'Do you need help with the setup?')}
+          </p>
+          <Button
+            outline
+            borderRadius='8px'
+            color='primary'
+            onClick={() => window.open(`https://www.${configurations?.subdomain}.com/ordering-sales`, '_blank')}
+          >
+            {t('CONTACT_US', 'Contact us')}
+          </Button>
+        </ContactUsContainer>
+      )}
+      <FormContainer onSubmit={handleSubmit(onSubmit)}>
+        <BusinessImg
+          onClick={() => handleClickImage('header')}
+        >
+          <ExamineClick
+            onFiles={files => handleFiles(files, 'header')}
+            childRef={(e) => { headerImageInputRef.current = e }}
+            accept='image/png, image/jpeg, image/jpg'
+            disabled={formState.loading}
+          >
+            <DragAndDrop
+              onDrop={dataTransfer => handleFiles(dataTransfer.files, 'header')}
+              accept='image/png, image/jpeg, image/jpg'
+              disabled={formState.loading}
+            >
+              {formState.loading
+                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                : ((!formState.changes?.header || formState.error)
+                    ? siteState.site?.header &&
+                  (<img src={siteState.site?.header} alt='header image' loading='lazy' />)
+                    : formState?.changes?.header &&
+                  <img src={formState?.changes?.header} alt='header image' loading='lazy' />
+                  )}
+              <UploadImageIconContainer>
+                <UploadImageIcon>
+                  <BsCardImage />
+                  <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                </UploadImageIcon>
+              </UploadImageIconContainer>
+            </DragAndDrop>
+          </ExamineClick>
+        </BusinessImg>
+        <LogoImage
+          onClick={() => handleClickImage('logo')}
+        >
+          <ExamineClick
+            onFiles={files => handleFiles(files, 'logo')}
+            childRef={(e) => { logoImageInputRef.current = e }}
+            accept='image/png, image/jpeg, image/jpg'
+            disabled={formState.loading}
+          >
+            <DragAndDrop
+              onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo')}
+              accept='image/png, image/jpeg, image/jpg'
+              disabled={formState.loading}
+            >
+              {formState.loading
+                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                : ((!formState.changes?.logo || formState.error)
+                    ? siteState.site?.logo &&
+                  (<img src={siteState.site?.logo} alt='logo image' loading='lazy' />)
+                    : formState?.changes?.logo &&
+                  <img src={formState?.changes?.logo} alt='logo image' loading='lazy' />
+                  )}
+              <UploadImageIconContainer small>
+                <UploadImageIcon small>
+                  <BsCardImage />
+                  <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                </UploadImageIcon>
+              </UploadImageIconContainer>
+            </DragAndDrop>
+          </ExamineClick>
+        </LogoImage>
+        <FormGroup className='row'>
+          <FormControl className='col-md-12'>
+            <Label>{t('NAME', 'Name')}</Label>
+            <Input
+              type='text'
+              name='name'
+              placeholder={t('NAME', 'Name')}
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                required: t('VALIDATION_ERROR_REQUIRED', 'The name field is required.').replace('_attribute_', t('NAME', 'Name'))
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('CODE', 'Code')}</Label>
+            <Input
+              type='text'
+              name='code'
+              placeholder={t('CODE', 'Code')}
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                required: t('VALIDATION_ERROR_REQUIRED', 'The name code is required.').replace('_attribute_', t('CODE', 'Code'))
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('URL', 'URL')}</Label>
+            <Input
+              type='text'
+              name='url'
+              placeholder={t('URL', 'Url')}
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                pattern: {
+                  value: /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g,
+                  message: t(
+                    'VALIDATION_ERROR_ACTIVE_URL',
+                    'The _attribute_ is not a valid URL.'
+                  ).replace('_attribute_', t('URL', 'Url'))
+                }
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('SOCIAL_SHARE', 'Social share')}</Label>
+            <SocialShareImage
+              onClick={() => handleClickImage('social_share')}
+            >
+              <ExamineClick
+                onFiles={files => handleFiles(files, 'social_share')}
+                childRef={(e) => { socialShareInputRef.current = e }}
+                accept='image/png, image/jpeg, image/jpg'
+                disabled={formState.loading}
+              >
+                <DragAndDrop
+                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'social_share')}
+                  accept='image/png, image/jpeg, image/jpg'
+                  disabled={formState.loading}
+                >
+                  {formState.loading
+                    ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                    : ((!formState.changes?.social_share || formState.error)
+                        ? siteState.site?.social_share &&
+                      (<img src={siteState.site?.social_share} alt='social share image' loading='lazy' />)
+                        : formState?.changes?.social_share &&
+                      <img src={formState?.changes?.social_share} alt='social share image' loading='lazy' />
+                      )}
+                  <UploadImageIconContainer small>
+                    <UploadImageIcon small>
+                      <BsCardImage />
+                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                    </UploadImageIcon>
+                  </UploadImageIconContainer>
+                </DragAndDrop>
+              </ExamineClick>
+            </SocialShareImage>
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('RESET_PASSWORD_URL_TEMPLATE', 'Reset password url template')}</Label>
+            <Input
+              type='text'
+              name='reset_password_url_template'
+              placeholder={t('URL', 'Url')}
+              value={
+                formState?.changes?.reset_password_url_template ?? siteState.site?.reset_password_url_template ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('TRACK_ORDER_URL_TEMPLATE', 'Track order url template')}</Label>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='track_order_url_template'
+              value={
+                formState?.changes?.track_order_url_template ?? siteState.site?.track_order_url_template ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('DESCRIPTION', 'Description')}</Label>
+            <TextArea
+              name='description'
+              rows={5}
+              placeholder={t('SHORT_PROMOTION_ABOUT', 'Write a little description')}
+              value={
+                formState?.changes?.description ?? siteState.site?.description ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('CHECKOUT_URL_TEMPLATE', 'Checkout url template')}</Label>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='checkout_url_template'
+              value={
+                formState?.changes?.checkout_url_template ?? siteState.site?.checkout_url_template ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('CART_URL_TEMPLATE', 'Cart url template')}</Label>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='cart_url_template'
+              value={
+                formState?.changes?.cart_url_template ?? siteState.site?.cart_url_template ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <LabelHeader>
+              <Label>{t('BUSINESS_URL_TEMPLATE', 'Business url template')}</Label>
+              <InfoWrapper>
+                <InfoCircle />
+                <InfoContent>
+                  <InfoTitle>{t('AVAILABLE_FORMATS', 'Available Formats')}</InfoTitle>
+                  {availableBusinessUrls.map(url => (
+                    <Info key={url.key}>{url.value}</Info>
+                  ))}
+                </InfoContent>
+              </InfoWrapper>
+            </LabelHeader>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='business_url_template'
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                pattern: {
+                  value: /(^\/)(store)?((\/?:business_slug$)|(\/?\?[a-zA-Z]+=:business_slug$))$/g,
+                  message: t(
+                    'VALIDATION_ERROR_ACTIVE_URL',
+                    'The _attribute_ is not a valid URL.'
+                  ).replace('_attribute_', t('BUSINESS_URL_TEMPLATE', 'Business url template'))
+                }
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <LabelHeader>
+              <Label>{t('CATEGORY_URL_TEMPLATE', 'Category url template')}</Label>
+              <InfoWrapper>
+                <InfoCircle />
+                <InfoContent>
+                  <InfoTitle>{t('AVAILABLE_FORMATS', 'Available Formats')}</InfoTitle>
+                  <Info>store/:business_slug/:category_slug</Info>
+                  <Info>store/:category_slug?{'<any>'}=:business_slug</Info>
+                  <Info>:business_slug/:category_slug</Info>
+                  <Info>:category_slug?{'<any>'}=:business_slug</Info>
+                </InfoContent>
+              </InfoWrapper>
+            </LabelHeader>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='category_url_template'
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                pattern: {
+                  value: /(store\/)?((:business_slug\/:category_slug$)|(:category_slug\?[a-zA-Z]+=:business_slug$))$/g,
+                  message: t(
+                    'VALIDATION_ERROR_ACTIVE_URL',
+                    'The _attribute_ is not a valid URL.'
+                  ).replace('_attribute_', t('CATEGORY_URL_TEMPLATE', 'Category url template'))
+                }
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <LabelHeader>
+              <Label>{t('PRODUCT_URL_TEMPLATE', 'Product url template')}</Label>
+              <InfoWrapper>
+                <InfoCircle />
+                <InfoContent>
+                  <InfoTitle>{t('AVAILABLE_FORMATS', 'Available Formats')}</InfoTitle>
+                  {availableProductUrls.map(url => (
+                    <Info key={url.key}>{url.value}</Info>
+                  ))}
+                </InfoContent>
+              </InfoWrapper>
+            </LabelHeader>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='product_url_template'
+              autoComplete='off'
+              onChange={(e) => handleChangeInput(e)}
+              ref={register({
+                pattern: {
+                  value: /(^\/)(store\/)?((:business_slug\/:category_slug\/:product_slug$)|(:category_slug\/:product_slug\?[a-zA-Z]+=:business_slug$)|(:business_slug\?[a-zA-Z]+=:category_id&[a-zA-Z]+=:product_id$))$/g,
+                  message: t(
+                    'VALIDATION_ERROR_ACTIVE_URL',
+                    'The _attribute_ is not a valid URL.'
+                  ).replace('_attribute_', t('PRODUCT_URL_TEMPLATE', 'Product url template'))
+                },
+                validate: handleValidateProductUrl
+              })}
+            />
+          </FormControl>
+          <FormControl className='col-md-12'>
+            <Label>{t('PROFILE_URL_TEMPLATE', 'Profile url template')}</Label>
+            <Input
+              type='text'
+              placeholder={t('URL', 'Url')}
+              name='profile_url_template'
+              value={
+                formState?.changes?.profile_url_template ?? siteState.site?.profile_url_template ?? ''
+              }
+              onChange={(e) => handleChangeInput(e)}
+            />
+          </FormControl>
+        </FormGroup>
+        <SaveBtnWrapper>
+          <Button
+            borderRadius='7.6px'
+            color='primary'
+            type='submit'
+            disabled={formState.loading || Object.keys(formState.changes).length === 0}
+          >
+            {t('SAVE', 'Save')}
+          </Button>
+          {!!enableAutoFillFromWebsite && !isAddMode && siteState?.site?.code !== 'website' && (
+            <Button
+              outline
+              borderRadius='7.6px'
+              color='primary'
+              type='button'
+              disabled={formState.loading || syncState.loading}
+              onClick={handleSyncFromWebsite}
+            >
+              {syncState.loading ? t('LOADING', 'Loading') : t('FILL_FROM_WEBSITE', 'Fill from Website')}
+            </Button>
+          )}
+        </SaveBtnWrapper>
+      </FormContainer>
+
+      <Alert
+        title={t('ORDERING_PRODUCTS', 'Ordering products')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </DetailContainer>
+  )
+}

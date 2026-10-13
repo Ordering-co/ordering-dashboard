@@ -1,0 +1,6 @@
+/assets/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: range, if-none-match, if-modified-since, content-type
+  Access-Control-Max-Age: 86400
+  Cache-Control: public, max-age=31536000, immutable

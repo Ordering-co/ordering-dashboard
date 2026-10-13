@@ -1,0 +1,217 @@
+import React, { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useLanguage, useUtils, DashboardBusinessList as BusinessListController } from '../../../../../index'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { useTheme } from 'styled-components'
+import { StarFill } from 'react-bootstrap-icons'
+import { Confirm, Pagination, SideBar } from '../../Shared'
+import { BusinessReviewDetails } from '../BusinessReviewDetails'
+import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
+
+import {
+  ReviewsTable,
+  ReviewTbody,
+  ReviewObject,
+  InfoBlock,
+  ReviewMarkerWrapper,
+  PagesBottomContainer,
+  WrapperImage,
+  Image
+} from './styles'
+
+const BusinessReviewsListingUI = (props) => {
+  const {
+    businessList,
+    pagination,
+    parentSearchValue,
+    getPageBusinesses,
+    handleUpdateReview,
+    onSearch,
+    handleOpenProducts,
+    isUseQuery
+  } = props
+
+  const query = new URLSearchParams(useLocation().search)
+  const [, t] = useLanguage()
+  const theme = useTheme()
+  const [{ optimizeImage }] = useUtils()
+  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  const [openReview, setOpenReview] = useState(false)
+  const [curBusiness, setCurBusiness] = useState(null)
+  const [curBusinessId, setCurBusinessId] = useState(null)
+
+  const handleChangePage = (page) => {
+    getPageBusinesses(pagination.pageSize, page)
+  }
+
+  const handleChangePageSize = (pageSize) => {
+    const expectedPage = Math.ceil(pagination.from / pageSize)
+    getPageBusinesses(pageSize, expectedPage)
+  }
+
+  const handleOpenReview = (business, isInitialRender) => {
+    setCurBusiness(business)
+    setCurBusinessId(business.id)
+    setOpenReview(true)
+    if (!isInitialRender) {
+      addQueryToUrl({ id: business.id })
+    }
+  }
+  useEffect(() => {
+    if (parentSearchValue === null) return
+    onSearch(parentSearchValue)
+  }, [parentSearchValue])
+
+  const handleCloseReviewDetails = () => {
+    setCurBusiness(null)
+    setOpenReview(false)
+    removeQueryToUrl(['id'])
+  }
+
+  useEffect(() => {
+    const tab = query.get('tab')
+    const id = query.get('id')
+    if (tab === 'business' && id) {
+      setCurBusinessId(Number(id))
+      setOpenReview(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!curBusinessId || curBusiness?.id === curBusinessId) return
+    const business = businessList.businesses?.find(item => item.id === curBusinessId)
+    if (business) {
+      setCurBusiness(business)
+    }
+  }, [curBusinessId, businessList.businesses, curBusiness?.id])
+  useEffect(() => {
+    if (!isUseQuery || !pagination?.currentPage || !pagination?.pageSize || !pagination?.total) return
+    addQueryToUrl({
+      page: pagination.currentPage,
+      pageSize: pagination.pageSize
+    })
+  }, [pagination?.currentPage, pagination?.pageSize, pagination?.total])
+
+  return (
+    <>
+      <ReviewsTable>
+        <thead>
+          <tr>
+            <th><ReviewObject isHeader>{t('BUSINESS', 'Business')}</ReviewObject></th>
+            <th><ReviewMarkerWrapper isHeader>{t('REVIEWS', 'Reviews')}</ReviewMarkerWrapper></th>
+          </tr>
+        </thead>
+        {businessList.loading
+          ? (
+              [...Array(pagination.pageSize).keys()].map(i => (
+            <ReviewTbody key={i}>
+              <tr>
+                <td>
+                  <ReviewObject>
+                    <WrapperImage isSkeleton>
+                      <Skeleton width={45} height={45} />
+                    </WrapperImage>
+                    <InfoBlock>
+                      <p><Skeleton width={80} /></p>
+                      <p><Skeleton width={100} /></p>
+                    </InfoBlock>
+                  </ReviewObject>
+                </td>
+                <td><ReviewMarkerWrapper><Skeleton width={20} /></ReviewMarkerWrapper></td>
+              </tr>
+            </ReviewTbody>
+              ))
+            )
+          : (
+              businessList.businesses.map(business => (
+            <ReviewTbody
+              key={business.id}
+              active={business.id === curBusiness?.id}
+              onClick={() => handleOpenReview(business)}
+            >
+              <tr>
+                <td>
+                  <ReviewObject>
+                    <WrapperImage>
+                      <Image bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_50,c_limit')} />
+                    </WrapperImage>
+                    <InfoBlock>
+                      <p className='bold'>{business?.name}</p>
+                      <p>{business?.address}</p>
+                    </InfoBlock>
+                  </ReviewObject>
+                </td>
+                <td>
+                  <div>
+                    <ReviewMarkerWrapper>
+                      {business?.reviews?.total && (
+                        <>
+                          <StarFill />
+                          <p>{business?.reviews?.total}</p>
+                        </>
+                      )}
+                    </ReviewMarkerWrapper>
+                  </div>
+                </td>
+              </tr>
+            </ReviewTbody>
+              ))
+            )}
+      </ReviewsTable>
+      {pagination && (
+        <PagesBottomContainer>
+          {pagination?.total > 0 && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={Math.ceil(pagination?.total / pagination.pageSize)}
+              handleChangePage={handleChangePage}
+              handleChangePageSize={handleChangePageSize}
+              defaultPageSize={pagination?.pageSize}
+            />
+          )}
+        </PagesBottomContainer>
+      )}
+      {openReview && (
+        <SideBar
+          defaultSideBarWidth={550}
+          open={openReview}
+          onClose={() => handleCloseReviewDetails()}
+          showExpandIcon
+        >
+          <BusinessReviewDetails
+            key={curBusinessId}
+            business={curBusiness}
+            businessId={curBusinessId}
+            handleUpdateReview={handleUpdateReview}
+            handleOpenProducts={handleOpenProducts}
+          />
+        </SideBar>
+      )}
+      <Confirm
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={confirm.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={confirm.open}
+        onClose={() => setConfirm({ ...confirm, open: false })}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+        onAccept={confirm.handleOnAccept}
+        closeOnBackdrop={false}
+      />
+    </>
+  )
+}
+
+export const BusinessReviewList = (props) => {
+  const reviewsProps = {
+    ...props,
+    noActiveStatusCondition: true,
+    asDashboard: true,
+    isSearchByBusinessName: true,
+    isSearchByBusinessEmail: true,
+    isSearchByBusinessPhone: true,
+    propsToFetch: ['name', 'logo', 'address', 'reviews', 'slug'],
+    UIComponent: BusinessReviewsListingUI
+  }
+  return <BusinessListController {...reviewsProps} />
+}

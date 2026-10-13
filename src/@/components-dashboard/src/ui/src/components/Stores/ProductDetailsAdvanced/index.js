@@ -1,0 +1,615 @@
+import React, { useState, useEffect } from 'react'
+import {
+  useLanguage,
+  useSession,
+  useUtils,
+  ProductDetailsAdvanced as ProductDetailsAdvancedController
+} from '../../../../../index'
+import { EditTaxManager } from '../EditTaxManager'
+import { Button, Input, Switch } from '../../../styles'
+import { useForm } from 'react-hook-form'
+import {
+  PropertiesContainer,
+  PropertyOption,
+  TypeSelectWrapper,
+  Option,
+  LabelCustom,
+  OptionCenter,
+  InputContainer,
+  FieldRow,
+  WeightWrapper,
+  PropertyOptionWrapper
+} from './styles'
+import { Select } from '../../../styles/Select/FirstSelect'
+import { MultiSelect } from '../../../styles/MultiSelect'
+import { Alert, Modal } from '../../Shared'
+
+const getProductTaxIds = (productState, formState) => {
+  let ids = []
+  if (Array.isArray(formState?.changes?.taxes)) {
+    ids = formState.changes.taxes
+  } else if (Array.isArray(productState?.taxes) && productState.taxes.length > 0) {
+    ids = productState.taxes.map(tax => (typeof tax === 'object' ? tax.id : tax))
+  } else if (productState?.tax_id) {
+    ids = [productState.tax_id]
+  }
+  return ids.map(Number).filter(id => !Number.isNaN(id))
+}
+
+const TAX_MULTI_SELECT_PROPS = {
+  optionBottomBorder: true,
+  optionInnerMaxHeight: '240px',
+  optionInnerMargin: '4px',
+  dropdownMinWidth: '100%',
+  optionsPosition: 'left',
+  isFullWidthOptions: true
+}
+
+const ProductDetailsAdvancedUI = (props) => {
+  const {
+    formState,
+    productState,
+    handleClickProperty,
+    handleClickProperties,
+    business,
+    taxes,
+    taxToEdit,
+    setTaxToEdit,
+    handleSaveTax,
+    handleChangeTax,
+    handleDeleteTax,
+    setAlertState,
+    alertState,
+    fees,
+    handleUpdateClick,
+    formTaxChanges,
+    setFormTaxChanges
+  } = props
+
+  const formMethods = useForm()
+  const [, t] = useLanguage()
+  const [{ user }] = useSession()
+  const [{ parsePrice }] = useUtils()
+  const [isSku, setIsSku] = useState(false)
+  const [isShowPriceByWeight, setIsShowPriceByWeight] = useState(false)
+  const [, setTaxesOption] = useState([])
+  const [feesOptions, setFeesOptions] = useState([])
+  const [feesSelected, setFeeSelected] = useState(null)
+  const [, setTaxSelected] = useState(null)
+  const [taxToDelete, setTaxToDelete] = useState({ action: null, id: null })
+
+  const estimatedPersons = [
+    { value: 'no_apply', content: <Option>{t('NO_APPLY', 'No apply')}</Option>, showOnSelected: <Option>{t('NO_APPLY', 'No apply')}</Option> },
+    ...[...Array(10)].map((item, i) => ({
+      value: i + 1,
+      content: <Option>{i + 1}</Option>
+    }))
+  ]
+
+  const weightUnitOptions = [
+    {
+      value: 'grams',
+      content: t('WEIGHT_UNIT_GRAM', 'grams'),
+      ratio: 1
+    },
+    {
+      value: 'kg',
+      content: t('WEIGHT_UNIT_KILOGRAM', 'kilograms'),
+      ratio: 0.001
+    },
+    {
+      value: 'ounces',
+      content: t('WEIGHT_UNIT_OUNCE', 'ounces'),
+      ratio: 0.035274
+    },
+    {
+      value: 'pounds',
+      content: t('WEIGHT_UNIT_POUND', 'pounds'),
+      ratio: 0.00220462
+    }
+  ]
+
+  const getTaxOrFeeString = (string) => {
+    return string === 'taxes' ? 'tax' : 'fee'
+  }
+
+  const handleAddTax = (action) => {
+    setTaxToEdit({ action, payload: true })
+    if (action === 'taxes') handleChangeTax('type', 1)
+  }
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+    setTaxToDelete({ action: null, payload: null })
+  }
+
+  const handleCloseModal = () => {
+    setTaxToEdit({ action: null, payload: null })
+    setFormTaxChanges({})
+  }
+
+  const getTaxes = async () => {
+    const inheritOption = {
+      name: t('INHERIT_FROM_BUSINESS', 'Inherit from business'),
+      value: 'inherit',
+      content: <Option>{t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ({business.tax}% {business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})</Option>,
+      showOnSelected: <Option>{t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ({business.tax}% {business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})</Option>
+    }
+    const addTaxOption = {
+      name: t('ADD_NEW_TAX', 'Add new tax'),
+      value: null,
+      content: <OptionCenter onClick={() => handleAddTax('taxes')}>{t('ADD_NEW_TAX', 'Add new tax')}</OptionCenter>
+    }
+    const taxesOptions = [
+      inheritOption,
+      ...Object.values(taxes).map(tax => ({
+        value: tax.id,
+        name: tax.name,
+        content: (
+          <Option>{tax.name} ({tax.rate}% {tax.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})</Option>
+        ),
+        showOnSelected: (
+          <Option>{tax.name} ({tax.rate}% {tax.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})</Option>
+        ),
+        editFunctionality: user?.level === 0,
+        deleteFunctionality: user?.level === 0,
+        rate: tax.rate,
+        type: tax.type,
+        description: tax.description,
+        order_type_rates: tax.order_type_rates
+      })),
+      addTaxOption
+    ]
+    setTaxesOption(taxesOptions)
+    setTaxSelected(taxesOptions.find(tax => tax.value === productState?.tax_id) || inheritOption)
+  }
+
+  const getFees = () => {
+    const inheritOption = {
+      name: t('INHERIT_FROM_BUSINESS', 'Inherit from business'),
+      value: 'inherit',
+      content: <Option>{t('INHERIT_FROM_BUSINESS', 'Inherit from business')} (0$ + {business.service_fee}%)</Option>,
+      showOnSelected: <Option>{t('INHERIT_FROM_BUSINESS', 'Inherit from business')} (0$ + {business.service_fee}%)</Option>
+    }
+    const addFeeOption = {
+      name: t('ADD_NEW_FEE', 'Add new fee'),
+      value: null,
+      content: <OptionCenter onClick={() => handleAddTax('fees')}>{t('ADD_NEW_FEE', 'Add new fee')}</OptionCenter>
+    }
+
+    const feesOptions = [
+      inheritOption,
+      ...Object.values(fees).map(fee => ({
+        value: fee.id,
+        name: fee.name,
+        content: (
+          <Option>{fee.name} ({parsePrice(fee.fixed)} + {fee.percentage}%)</Option>
+        ),
+        showOnSelected: (
+          <Option>{fee.name} ({parsePrice(fee.fixed)} + {fee.percentage}%)</Option>
+        ),
+        editFunctionality: user?.level === 0,
+        deleteFunctionality: user?.level === 0,
+        fixed: fee.fixed,
+        percentage: fee.percentage,
+        description: fee.description
+      })),
+      addFeeOption
+    ]
+    setFeesOptions(feesOptions)
+    setFeeSelected(feesOptions.find(fee => fee.value === productState?.fee_id) || inheritOption)
+  }
+
+  const deleteTax = (data) => {
+    handleDeleteTax(data.id, data.action)
+    closeAlert()
+  }
+
+  const handleEnableSKU = (enabled) => {
+    setIsSku(enabled)
+    if (!enabled) {
+      handleClickProperty('sku', -1)
+    }
+  }
+
+  const handleEnablePriceWeight = (enabled) => {
+    setIsShowPriceByWeight(enabled)
+    if (!enabled) {
+      handleClickProperty('weight', null)
+    }
+  }
+
+  useEffect(() => {
+    if (taxes) getTaxes()
+  }, [JSON.stringify(taxes), productState?.tax_id, JSON.stringify(productState?.taxes)])
+
+  useEffect(() => {
+    if (fees) getFees()
+  }, [JSON.stringify(fees), productState?.fee_id])
+
+  useEffect(() => {
+    if (taxToDelete.action) {
+      setAlertState({
+        open: true,
+        content: t(
+          `ARE_YOUR_SURE_DELETE_${getTaxOrFeeString(taxToDelete.action).toUpperCase()}`,
+          `Are you sure do you want delete this ${getTaxOrFeeString(taxToDelete.action)}?`
+        )
+      })
+    }
+  }, [taxToDelete])
+
+  const onSubmit = () => {
+    const valid = checkValidate()
+    if (Object.keys(formState.changes).length > 0 && valid) {
+      handleUpdateClick()
+    }
+  }
+
+  const checkValidate = () => {
+    let valid = true
+
+    if (formState?.changes?.maximum_per_order === '0') {
+      valid = false
+      setAlertState({
+        open: true,
+        content: t('REMOVE_MAXIMUM_QUANTITY_RESTRICTION', 'To remove the maximum quantity restriction, leave the Maximum quantity to order space empty')
+      })
+    }
+    if (formState?.changes?.minimum_per_order && formState?.changes?.maximum_per_order && !(formState?.changes?.maximum_per_order === null || formState?.changes?.maximum_per_order === '0')) {
+      if ((Number(formState?.changes?.minimum_per_order) > Number(formState?.changes?.maximum_per_order))) {
+        valid = false
+        setAlertState({
+          open: true,
+          content: t('MINIMUM_QUANTITY_MUST_SMALL_MAXIMUM_QUANTITY', 'The minimum quantity must be small than the maximum quantity')
+        })
+      }
+    }
+    return valid
+  }
+
+  useEffect(() => {
+    if (Object.keys(formMethods.errors).length > 0) {
+      const content = Object.values(formMethods.errors).map(error => {
+        return error.message
+      })
+      setAlertState({
+        open: true,
+        content
+      })
+    }
+  }, [formMethods.errors])
+
+  useEffect(() => {
+    if (formState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: formState?.result?.result
+      })
+    }
+  }, [formState?.result])
+
+  useEffect(() => {
+    if (parseInt(productState?.sku) === -1 || !productState?.sku) {
+      setIsSku(false)
+    } else {
+      setIsSku(true)
+    }
+  }, [productState])
+
+  useEffect(() => {
+    if (productState?.weight) {
+      setIsShowPriceByWeight(true)
+    } else {
+      setIsShowPriceByWeight(false)
+    }
+  }, [productState?.weight])
+
+  useEffect(() => {
+    if (formState?.changes?.weight && !productState?.weight_unit && !(formState?.changes?.weight_unit)) {
+      handleClickProperty('weight_unit', 'grams')
+    }
+  }, [formState?.changes?.weight])
+
+  useEffect(() => {
+    if (formState?.changes?.minimum_per_order && !(formState?.changes?.maximum_per_order || formState?.changes?.maximum_per_order === null)) {
+      handleClickProperty('maximum_per_order', productState?.maximum_per_order)
+    }
+    if ((formState?.changes?.maximum_per_order || formState?.changes?.maximum_per_order === null) && !(formState?.changes?.minimum_per_order)) {
+      handleClickProperty('minimum_per_order', productState?.minimum_per_order)
+    }
+  }, [formState?.changes])
+
+  return (
+    <PropertiesContainer onSubmit={formMethods.handleSubmit(onSubmit)}>
+      {isSku && (
+        <>
+          <LabelCustom htmlFor='sku'>SKU</LabelCustom>
+          <Input
+            name='sku'
+            id='sku'
+            placeholder={t('SKU', 'Stock Keeping Unit (SKU)')}
+            defaultValue={parseInt(productState?.sku) !== -1 ? productState?.sku : ''}
+            onChange={(e) => handleClickProperty('sku', e.target.value ?? null)}
+          />
+        </>
+      )}
+      <LabelCustom htmlFor='estimated'>{t('ESTIMATED_PERSON', 'Estimated person')}</LabelCustom>
+      <TypeSelectWrapper>
+        <Select
+          notAsync
+          defaultValue={productState?.estimated_person ?? 'no_apply'}
+          options={estimatedPersons}
+          onChange={(val) => handleClickProperty('estimated_person', val === 'no_apply' ? null : val)}
+        />
+      </TypeSelectWrapper>
+      <LabelCustom htmlFor='tax'>{t('TAXES', 'Taxes')}</LabelCustom>
+      <TypeSelectWrapper>
+        <MultiSelect
+          placeholder={t('SELECT_TAXES', 'Select taxes')}
+          options={Object.values(taxes).map(tax => ({
+            value: tax.id,
+            content: `${tax.name} (${tax.rate}% ${tax.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
+          }))}
+          defaultValue={getProductTaxIds(productState, formState)}
+          onChange={(val) => {
+            const current = getProductTaxIds(productState, formState).map(Number)
+            const exists = current.some(id => id === Number(val))
+            const ids = exists
+              ? current.filter(id => id !== Number(val))
+              : [...current, Number(val)]
+            handleClickProperties({ taxes: ids })
+          }}
+          {...TAX_MULTI_SELECT_PROPS}
+        />
+        <OptionCenter onClick={() => handleAddTax('taxes')}>
+          {t('ADD_NEW_TAX', 'Add new tax')}
+        </OptionCenter>
+      </TypeSelectWrapper>
+      <LabelCustom htmlFor='fees'>{t('FEES', 'Fees')}</LabelCustom>
+      <TypeSelectWrapper>
+        {feesSelected && (
+          <Select
+            placeholder={feesSelected.showOnSelected}
+            defaultValue={feesSelected?.value ?? 'inherit'}
+            options={feesOptions}
+            onChange={(val) => handleClickProperty('fee_id', val === 'inherit' ? null : val)}
+            onEdit={(val) => setTaxToEdit({ action: 'fees', payload: val })}
+            onDelete={(val) => setTaxToDelete({ action: 'fees', id: val })}
+          />
+        )}
+      </TypeSelectWrapper>
+      <FieldRow fullWidth>
+        <InputContainer>
+          <LabelCustom htmlFor='external_id'>{t('EXTERNAL_ID', 'External Id')}</LabelCustom>
+          <Input
+            name='external_id'
+            placeholder={t('EXTERNAL_ID', 'External Id')}
+            defaultValue={productState?.external_id}
+            onChange={(e) => handleClickProperty('external_id', e.target.value ?? null)}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+      </FieldRow>
+      <FieldRow>
+        <InputContainer>
+          <LabelCustom htmlFor='cost_price'>{t('PRODUCT_COST', 'Product cost')}</LabelCustom>
+          <Input
+            name='cost_price'
+            id='cost_price'
+            placeholder='0.00'
+            defaultValue={productState?.cost_price ?? ''}
+            onChange={(e) => handleClickProperty('cost_price', e.target.value ?? null)}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+        <InputContainer>
+          <LabelCustom htmlFor='cost_offer_price'>{t('PRODUCT_REGULAR_COST', 'Product cost - regular price')}</LabelCustom>
+          <Input
+            name='cost_offer_price'
+            id='cost_offer_price'
+            placeholder='0.00'
+            defaultValue={productState?.cost_offer_price ?? ''}
+            onChange={(e) => handleClickProperty('cost_offer_price', e.target.value ?? null)}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+      </FieldRow>
+      <FieldRow>
+        <InputContainer>
+          <LabelCustom htmlFor='minimum_per_order'>{t('MINIMUM_QUANTITY_ORDER', 'Minimum quantity to order')}</LabelCustom>
+          <Input
+            name='minimum_per_order'
+            id='minimum_per_order'
+            placeholder='0'
+            defaultValue={productState?.minimum_per_order ?? ''}
+            ref={formMethods.register({
+              required: t('MINIMUM_QUANTITY_REQUIRED', 'The minimum quantity is required')
+            })}
+            onChange={(e) => handleClickProperty('minimum_per_order', e.target.value ?? null)}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+        <InputContainer>
+          <LabelCustom htmlFor='maximum_per_order'>{t('MAXIMUM_QUANTITY_ORDER', 'Maximum quantity to order')}</LabelCustom>
+          <Input
+            name='maximum_per_order'
+            id='maximum_per_order'
+            placeholder={t('NO_LIMITS_IN_MAX_QUANTITY_TO_ORDER', 'No limits in max quantity to order')}
+            defaultValue={productState?.maximum_per_order ?? ''}
+            onChange={(e) => { handleClickProperty('maximum_per_order', e.target.value === '' ? null : e.target.value) }}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+      </FieldRow>
+      <FieldRow>
+        <InputContainer className={`${isShowPriceByWeight ? 'growUnset showWeight' : 'growUnset'}`}>
+          <LabelCustom htmlFor='calories'>{t('CALORIES', 'Calories')}</LabelCustom>
+          <Input
+            name='calories'
+            id='calories'
+            placeholder='0.00'
+            defaultValue={productState?.calories ?? ''}
+            onChange={(e) => handleClickProperty('calories', e.target.value ?? null)}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputContainer>
+        {isShowPriceByWeight && (
+          <InputContainer>
+            <LabelCustom htmlFor='weight'>{t('PRODUCT_WEIGHT', 'Product weight')}</LabelCustom>
+            <WeightWrapper>
+              <Input
+                name='weight'
+                id='weight'
+                placeholder='0.00'
+                defaultValue={productState?.weight ?? ''}
+                onChange={(e) => handleClickProperty('weight', e.target.value ?? null)}
+                disabled={formState.loading}
+                autoComplete='off'
+                onKeyPress={(e) => {
+                  if (!/^[0-9.]$/.test(e.key)) {
+                    e.preventDefault()
+                  }
+                }}
+              />
+              <Select
+                notAsync
+                defaultValue={productState?.weight_unit ?? 'grams'}
+                options={weightUnitOptions}
+                onChange={(val) => handleClickProperty('weight_unit', val ?? 'grams')}
+              />
+            </WeightWrapper>
+          </InputContainer>
+        )}
+      </FieldRow>
+      <PropertyOptionWrapper>
+        <PropertyOption>
+          <label>{t('FEATURED', 'Featured')}</label>
+          <Switch
+            defaultChecked={productState?.featured || false}
+            onChange={enabled => handleClickProperty('featured', enabled)}
+          />
+        </PropertyOption>
+        <PropertyOption>
+          <label>{t('UPSELLING', 'Upselling')}</label>
+          <Switch
+            defaultChecked={productState?.upselling || false}
+            onChange={enabled => handleClickProperty('upselling', enabled)}
+          />
+        </PropertyOption>
+        <PropertyOption>
+          <label>{t('SKU', 'Stock Keeping Unit (SKU)')}</label>
+          <Switch
+            defaultChecked={isSku}
+            onChange={enabled => handleEnableSKU(enabled)}
+          />
+        </PropertyOption>
+        <PropertyOption>
+          <label>{t('HIDE_SPECIAL_INSTRUCTIONS', 'Hide special instructions')}</label>
+          <Switch
+            defaultChecked={productState?.hide_special_instructions}
+            onChange={enabled => handleClickProperty('hide_special_instructions', enabled)}
+          />
+        </PropertyOption>
+        <PropertyOption>
+          <label>{t('SHOW_PRICE_BY_WEIGHT', 'Show price by weight')}</label>
+          <Switch
+            defaultChecked={isShowPriceByWeight}
+            onChange={enabled => handleEnablePriceWeight(enabled)}
+          />
+        </PropertyOption>
+        <PropertyOption>
+          <label>{t('IS_ALCOHOL', 'Is Alcohol')}</label>
+          <Switch
+            defaultChecked={productState?.is_alcohol}
+            onChange={enabled => handleClickProperty('is_alcohol', enabled)}
+          />
+        </PropertyOption>
+      </PropertyOptionWrapper>
+      <Button
+        type='submit'
+        color='primary'
+        borderRadius='7.6px'
+        disabled={formState.loading || Object.keys(formState?.changes).length === 0}
+      >
+        {formState?.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
+      </Button>
+      {!!taxToEdit?.action && (
+        <Modal
+          open={!!taxToEdit?.action}
+          width='80%'
+          padding='30px'
+          title={typeof taxToEdit?.payload === 'boolean'
+            ? t(`ADD_${getTaxOrFeeString(taxToEdit?.action).toUpperCase()}`, `Add ${getTaxOrFeeString(taxToEdit?.action)}`)
+            : t(`EDIT_${getTaxOrFeeString(taxToEdit?.action).toUpperCase()}`, `Edit ${getTaxOrFeeString(taxToEdit?.action)}`)}
+          onClose={handleCloseModal}
+        >
+          <EditTaxManager
+            type={taxToEdit?.action}
+            data={taxToEdit?.payload}
+            onChange={handleChangeTax}
+            formChanges={formTaxChanges}
+            onClose={handleCloseModal}
+            handleSave={handleSaveTax}
+          />
+        </Modal>
+      )}
+      <Alert
+        title={taxToDelete.action ? t(`DELETE_${getTaxOrFeeString(taxToDelete?.action).toUpperCase()}`, `Delete ${getTaxOrFeeString(taxToDelete?.action)}`) : t('ERROR')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => taxToDelete.action ? deleteTax(taxToDelete) : closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </PropertiesContainer>
+  )
+}
+
+export const ProductDetailsAdvanced = (props) => {
+  const productAdvancedProps = {
+    ...props,
+    UIComponent: ProductDetailsAdvancedUI
+  }
+  return <ProductDetailsAdvancedController {...productAdvancedProps} />
+}

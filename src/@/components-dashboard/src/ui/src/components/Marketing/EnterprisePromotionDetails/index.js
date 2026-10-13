@@ -1,0 +1,290 @@
+import React, { useState, useEffect } from 'react'
+import {
+  useLanguage,
+  EnterprisePromotionDetails as EnterprisePromotionDetailsController
+} from '../../../../../index'
+import { Dropdown, DropdownButton } from 'react-bootstrap'
+import { ArrowsAngleContract, ArrowsAngleExpand, ThreeDots } from 'react-bootstrap-icons'
+import { useTheme } from 'styled-components'
+import { Switch, IconButton } from '../../../styles'
+import { DragScroll, Alert, Confirm, SelectBusinesses, SelectSites, SelectUsers, SelectLoyaltyLevels } from '../../Shared'
+import { EnterprisePromotionGeneralDetails } from '../EnterprisePromotionGeneralDetails'
+import { EnterprisePromotionRules } from '../EnterprisePromotionRules'
+
+import {
+  DetailsContainer,
+  Header,
+  TabsContainer,
+  Tab,
+  WrapperActionSelector,
+  RightHeader
+} from './styles'
+
+const EnterprisePromotionDetailsUI = (props) => {
+  const {
+    isAddMode,
+    promotionState,
+    formState,
+    actionState,
+    handleChangeItem,
+    setMoveDistance,
+    sitesState,
+    handleSelectSite,
+    handleUpdateClick,
+    handleAddPromotion,
+    handleSelectAllSites,
+    selectedSitesIds,
+    selectedBusinessIds,
+    businessesList,
+    businessesPaginationProps,
+    searchBusinesses,
+    handleChangeBusinessPage,
+    handleChangeBusinessPageSize,
+    handleSelectBusiness,
+    handleSelectAllBusiness,
+    handleDeletePromotion,
+    selectedUserIds,
+    handleSelectUser,
+    selectedLoyaltyLevelIds,
+    handleSelectLoyaltyLevel,
+    handleSelectAllLoyaltyLevels,
+    handleSelectAllUsers
+  } = props
+
+  const theme = useTheme()
+  const [, t] = useLanguage()
+  const [alertState, setAlertState] = useState({ open: false, content: [], handleOnAccept: null })
+  const [selectedOption, setSelectedOption] = useState('general')
+  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  const [isExpand, setIsExpand] = useState(false)
+
+  const tabOptions = [
+    { key: 'general', content: t('GENERAL', 'General'), enabled: true },
+    { key: 'sites', content: t('SITES', 'Sites'), enabled: true },
+    { key: 'businesses', content: t('CONTROL_PANEL_BUSINESS', 'Business'), enabled: true },
+    { key: 'users', content: t('USERS', 'Users'), enabled: true },
+    { key: 'loyalty_levels', content: t('LOYALTY_LEVELS', 'Loyalty Levels'), enabled: true },
+    { key: 'rules', content: t('RULES', 'Rules'), enabled: true }
+  ]
+
+  const handleClickTab = (option) => {
+    if (selectedOption === 'rules') {
+      const isValid = handleCheckDiscountPercentageValidation()
+      if (!isValid) return
+    }
+    setMoveDistance(0)
+    setSelectedOption(option)
+    if (formState.changes?.businesses?.length > 0 && Object.keys(formState.changes).length !== 0 && !actionState.loading) {
+      if (!isAddMode) {
+        handleUpdateClick()
+      }
+    }
+  }
+
+  const onClickDeletePromotion = () => {
+    setConfirm({
+      open: true,
+      content: t('QUESTION_DELETE_ITEM', 'Are you sure to delete this _item_?').replace('_item_', t('PROMOTION', 'Promotion')),
+      handleOnAccept: () => {
+        setConfirm({ ...confirm, open: false })
+        handleDeletePromotion()
+      }
+    })
+  }
+
+  const handleCheckDiscountPercentageValidation = () => {
+    const rateType = formState.changes?.rate_type ?? promotionState.promotion?.rate_type
+    const rate = formState.changes?.rate ?? promotionState?.promotion?.rate ?? ''
+    if (rateType === 1 && parseFloat(rate) > 100) {
+      setAlertState({
+        open: true,
+        content: [
+          t('VALIDATION_ERROR_MAX_NUMERIC', 'The _attribute_ may not be greater than _max_.')
+            .replace('_attribute_', t('DISCOUNT_PERCENTAGE', 'Discount percentage'))
+            .replace('_max_', 100)
+        ],
+        handleOnAccept: () => {
+          if (document.getElementById('discount_value')) {
+            document.getElementById('discount_value').focus()
+          }
+          setAlertState({ open: false, content: [] })
+        }
+      })
+      return false
+    }
+    return true
+  }
+
+  const expandSidebar = () => {
+    const element = document.getElementById('sideSlider')
+    if (!element) return
+    if (isExpand) element.style.width = '600px'
+    else element.style.width = 'var(--app-width, 100vw)'
+    setIsExpand(prev => !prev)
+  }
+
+  useEffect(() => {
+    if (!actionState?.error || actionState.loading) return
+    setAlertState({
+      open: true,
+      content: actionState?.error
+    })
+  }, [actionState])
+
+  return (
+    <>
+      <DetailsContainer>
+        <Header>
+          <div>
+            {(formState.changes?.name || promotionState?.promotion?.name) && (
+              <h1>{formState.changes?.name ?? promotionState?.promotion?.name}</h1>
+            )}
+            <Switch
+              defaultChecked={
+                typeof formState.changes?.enabled !== 'undefined'
+                  ? formState.changes?.enabled
+                  : promotionState.promotion?.enabled ?? false
+              }
+              onChange={val => handleChangeItem({ enabled: val })}
+            />
+          </div>
+          <RightHeader>
+            <IconButton
+              color='black'
+              onClick={expandSidebar}
+            >
+              {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
+            </IconButton>
+            {!isAddMode && (
+              <WrapperActionSelector>
+                <DropdownButton
+                  menuAlign={theme?.rtl ? 'left' : 'right'}
+                  title={<ThreeDots />}
+                  id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
+                >
+                  <Dropdown.Item
+                    onClick={() => onClickDeletePromotion()}
+                  >
+                    {t('DELETE', 'Delete')}
+                  </Dropdown.Item>
+                </DropdownButton>
+              </WrapperActionSelector>
+            )}
+          </RightHeader>
+        </Header>
+        <TabsContainer>
+          <DragScroll>
+            {tabOptions.map(option => (
+              option.enabled && (
+                <Tab
+                  key={option.key}
+                  active={selectedOption === option.key}
+                  onClick={() => handleClickTab(option.key)}
+                >
+                  {option.content}
+                </Tab>
+              )
+            ))}
+          </DragScroll>
+        </TabsContainer>
+
+        {selectedOption === 'general' && (
+          <EnterprisePromotionGeneralDetails
+            {...props}
+            handleUpdateClick={handleUpdateClick}
+            handleAddPromotion={handleAddPromotion}
+          />
+        )}
+        {selectedOption === 'sites' && (
+          <SelectSites
+            isAddMode={isAddMode}
+            allSites={sitesState.sites}
+            selectedSitesIds={selectedSitesIds}
+            handleSelectSite={handleSelectSite}
+            handleSelectAllSites={() => handleSelectAllSites(true)}
+            handleSelectNoneSites={() => handleSelectAllSites(false)}
+            isDisabled={Object.keys(formState.changes).length === 0 || actionState.loading}
+            handleUpdateClick={handleUpdateClick}
+            handleAddClick={handleAddPromotion}
+          />
+        )}
+        {selectedOption === 'businesses' && (
+          <SelectBusinesses
+            isAddMode={isAddMode}
+            isSkeleton={businessesList.loading}
+            allBusinesses={businessesList.businesses}
+            selectedBusinessIds={selectedBusinessIds}
+            handleSelectBusiness={handleSelectBusiness}
+            handleSelectAllBusinesses={() => handleSelectAllBusiness(true)}
+            handleSelectNoneBusinesses={() => handleSelectAllBusiness(false)}
+            isDisabled={Object.keys(formState.changes).length === 0 || actionState.loading}
+            handleUpdateClick={handleUpdateClick}
+            handleAddClick={handleAddPromotion}
+            searchBusinesses={searchBusinesses}
+            handleChangeBusinessPage={handleChangeBusinessPage}
+            handleChangeBusinessPageSize={handleChangeBusinessPageSize}
+            businessesPaginationProps={businessesPaginationProps}
+          />
+        )}
+        {selectedOption === 'users' && (
+          <SelectUsers
+            isAddMode={isAddMode}
+            isDisabled={Object.keys(formState.changes).length === 0 || actionState.loading}
+            selectedUserIds={selectedUserIds}
+            handleSelectUser={handleSelectUser}
+            handleUpdateClick={handleUpdateClick}
+            handleAddPromotion={handleAddPromotion}
+            handleSelectAllUsers={handleSelectAllUsers}
+          />
+        )}
+        {selectedOption === 'loyalty_levels' && (
+          <SelectLoyaltyLevels
+            isAddMode={isAddMode}
+            isDisabled={Object.keys(formState.changes).length === 0 || actionState.loading}
+            selectedLoyaltyLevelIds={selectedLoyaltyLevelIds}
+            handleSelectLoyaltyLevel={handleSelectLoyaltyLevel}
+            handleSelectAllLoyaltyLevels={handleSelectAllLoyaltyLevels}
+            handleUpdateClick={handleUpdateClick}
+            handleAddPromotion={handleAddPromotion}
+          />
+        )}
+        {selectedOption === 'rules' && (
+          <EnterprisePromotionRules
+            {...props}
+            isExpand={isExpand}
+            handleUpdateClick={handleUpdateClick}
+            handleAddPromotion={handleAddPromotion}
+          />
+        )}
+      </DetailsContainer>
+      <Alert
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => setAlertState({ open: false, content: [] })}
+        onAccept={() => alertState?.handleOnAccept ? alertState.handleOnAccept() : setAlertState({ open: false, content: [] })}
+        closeOnBackdrop={false}
+      />
+      <Confirm
+        width='700px'
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={confirm.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={confirm.open}
+        onClose={() => setConfirm({ ...confirm, open: false })}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+        onAccept={confirm.handleOnAccept}
+        closeOnBackdrop={false}
+      />
+    </>
+  )
+}
+
+export const EnterprisePromotionDetails = (props) => {
+  const promotionProps = {
+    ...props,
+    UIComponent: EnterprisePromotionDetailsUI
+  }
+  return <EnterprisePromotionDetailsController {...promotionProps} />
+}

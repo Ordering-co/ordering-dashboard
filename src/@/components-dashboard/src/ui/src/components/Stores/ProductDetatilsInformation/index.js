@@ -1,0 +1,523 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { useLanguage, DragAndDrop, ExamineClick, useUtils } from '../../../../../index'
+import { Alert, Modal, ImageCrop, ColorPicker } from '../../Shared'
+import { bytesConverter, shape, ribbonValues } from '../../../utils'
+import BiImage from '@meronex/icons/bi/BiImage'
+import { Button, Input, TextArea, Switch } from '../../../styles'
+import { MultiSelect } from '../../../styles/MultiSelect'
+import { SCHOOL_ALLERGENS, SCHOOL_DIETARY_TAGS, SCHOOL_VERTICAL } from '../../../../../constants/school'
+import { StandardField } from '../../../styles/StandardField'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { RecordCircleFill, Circle } from 'react-bootstrap-icons'
+
+import {
+  FormInput,
+  ProductImage,
+  SkeletonWrapper,
+  UploadImageIconContainer,
+  UploadImageIcon,
+  InputWrapper,
+  ActionsForm,
+  InventoryWrapper,
+  // Wrapper,
+  RegularWrapper,
+  FieldRow,
+  ColorShapeWrapper,
+  ColorWrapper,
+  ShapeWrapper,
+  ShapeContentWrapper,
+  ShapeBoxWrapper
+} from './styles'
+
+export const ProductDetatilsInformation = (props) => {
+  const {
+    product,
+    formState,
+    handlechangeImage,
+    handleChangeInput,
+    handleChangeFormState,
+    handleButtonUpdateClick,
+    onCancel,
+    handleChangeRibbon,
+    business
+  } = props
+
+  const [{ parsePrice, optimizeImage }] = useUtils()
+  const formMethods = useForm()
+
+  const isSchool = business?.vertical === SCHOOL_VERTICAL
+  const toArray = (value) => {
+    if (Array.isArray(value)) return value
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value)
+        return Array.isArray(parsed) ? parsed : []
+      } catch (err) {
+        return []
+      }
+    }
+    return []
+  }
+  const currentAllergens = toArray(formState?.changes?.allergens ?? product?.allergens)
+  const currentDietaryTags = toArray(formState?.changes?.dietary_tags ?? product?.dietary_tags)
+  const [, t] = useLanguage()
+  const allergenOptions = SCHOOL_ALLERGENS.map((a) => ({ value: a.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_ALLERGEN_${a.value.toUpperCase()}`, a.name)}</span> }))
+  const dietaryOptions = SCHOOL_DIETARY_TAGS.map((d) => ({ value: d.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_DIETARY_${d.value.toUpperCase()}`, d.name)}</span> }))
+  const productImageInputRef = useRef(null)
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [minimumRegualrPrice, setMinimumRegualrPrice] = useState(null)
+  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
+  const [autoGenerateCode, setAutoGenerate] = useState({
+    isAutoGenerate: false,
+    autoCodeText: product?.slug
+  })
+
+  const handleClickImage = () => {
+    productImageInputRef.current.click()
+  }
+
+  const handleFiles = (files) => {
+    if (files.length === 1) {
+      const type = files[0].type.split('/')[0]
+      if (type !== 'image') {
+        setAlertState({
+          open: true,
+          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
+        })
+        return
+      }
+
+      if (bytesConverter(files[0]?.size) > 2048) {
+        setAlertState({
+          open: true,
+          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
+        })
+        return
+      }
+
+      const reader = new window.FileReader()
+      reader.readAsDataURL(files[0])
+      reader.onload = () => {
+        setCropState({ name: 'images', data: reader.result, open: true })
+      }
+
+      handlechangeImage(files[0])
+    }
+  }
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+  }
+
+  const stringToSlug = str => {
+    str = str.replace(/^\s+|\s+$/g, '') // trim
+    str = str?.toLowerCase()
+
+    // remove accents, swap ñ for n, etc
+    const from = 'åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;'
+    const to = 'aaaaaaeeeeiiiioooouuuunc------'
+
+    for (let i = 0, l = from.length; i < l; i++) {
+      str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i))
+    }
+
+    str = str
+      .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+      .replace(/\s+/g, '_') // collapse whitespace and replace by _
+      .replace(/-+/g, '_') // collapse dashes
+      .replace(/^-+/, '') // trim - from start of text
+      .replace(/-+$/, '') // trim - from end of text
+
+    return str
+  }
+
+  const onSubmit = () => {
+    if (Object.keys(formState.changes).length > 0) {
+      handleButtonUpdateClick()
+    }
+  }
+
+  const handleChangeRegularPrice = (e) => {
+    if (e.target.value === '') {
+      handleChangeInput({ target: { name: 'offer_price', value: null } })
+    } else {
+      handleChangeInput(e)
+    }
+  }
+
+  const handleChangePhoto = (croppedImg) => {
+    handleChangeFormState({ [cropState?.name]: croppedImg })
+    setCropState({ name: null, data: null, open: false })
+  }
+
+  const handleChangeEnable = (value) => {
+    if (!product?.ribbon && !value) {
+      const ribbonChanges = { ...ribbonValues }
+      handleChangeFormState({ ribbon: ribbonChanges })
+      return
+    }
+    handleChangeRibbon({ enabled: value })
+  }
+
+  useEffect(() => {
+    if (Object.keys(formMethods.errors).length > 0) {
+      const content = Object.values(formMethods.errors).map(error => {
+        if (error.type === 'min') return t('REGULAR_PRICE_MUST_BIGGER_PRICE', 'This regular price must be bigger than price')
+        else return error.message
+      })
+      setAlertState({
+        open: true,
+        content
+      })
+    }
+  }, [formMethods.errors])
+
+  useEffect(() => {
+    if (formState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: formState?.result?.result
+      })
+    }
+  }, [formState?.result])
+
+  useEffect(() => {
+    if (autoGenerateCode.isAutoGenerate) {
+      const generateCode = {
+        target: {
+          name: 'slug',
+          value: formState.changes.name ? stringToSlug(formState.changes.name) : stringToSlug(product.name)
+        }
+      }
+      setAutoGenerate({
+        ...autoGenerateCode,
+        autoCodeText: generateCode.target.value
+      })
+      handleChangeInput(generateCode)
+      setAutoGenerate({
+        ...autoGenerateCode,
+        isAutoGenerate: false
+      })
+    }
+  }, [autoGenerateCode])
+
+  useEffect(() => {
+    if (typeof formState?.changes?.price !== 'undefined') {
+      setMinimumRegualrPrice(parseFloat(formState?.changes?.price) + 0.01)
+      return
+    }
+    if (product?.price) {
+      setMinimumRegualrPrice(parseFloat(product?.price) + 0.01)
+    }
+  }, [product?.price, formState?.changes?.price])
+
+  useEffect(() => {
+    if (typeof formState?.changes?.name === 'undefined') return
+    const generateCode = {
+      target: {
+        name: 'slug',
+        value: stringToSlug(formState.changes.name)
+      }
+    }
+    handleChangeInput(generateCode)
+  }, [formState?.changes?.name])
+
+  return (
+    <>
+      <FormInput onSubmit={formMethods.handleSubmit(onSubmit)}>
+        <ProductImage
+          onClick={() => handleClickImage()}
+        >
+          <ExamineClick
+            onFiles={files => handleFiles(files)}
+            childRef={(e) => { productImageInputRef.current = e }}
+            accept='image/png, image/jpeg, image/jpg'
+            disabled={formState.loading}
+          >
+            <DragAndDrop
+              onDrop={dataTransfer => handleFiles(dataTransfer.files)}
+              accept='image/png, image/jpeg, image/jpg'
+              disabled={formState.loading}
+            >
+              {formState.loading
+                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                : (
+                    (!formState.changes?.images || formState.result?.result === 'Network Error' || formState.result.error)
+                      ? product?.images && (<img src={optimizeImage(product?.images, 'h_200,c_limit')} alt='product image' loading='lazy' />)
+                      : formState?.changes?.images && (<img src={formState?.changes?.images} alt='product image' loading='lazy' />)
+                  )}
+              <UploadImageIconContainer>
+                <UploadImageIcon>
+                  <BiImage />
+                  <span>{t('DRAG_DROP_IMAGE_HERE', 'Put your image here')}</span>
+                </UploadImageIcon>
+              </UploadImageIconContainer>
+            </DragAndDrop>
+          </ExamineClick>
+        </ProductImage>
+        <InputWrapper>
+          <label>{t('Name_V2', 'Name')}</label>
+          <Input
+            name='name'
+            placeholder={t('Name', 'name')}
+            defaultValue={product?.name}
+            onChange={handleChangeInput}
+            ref={formMethods.register({
+              required: t('NAME_REQUIRED', 'The name is required')
+            })}
+            disabled={formState.loading}
+            autoComplete='off'
+          />
+        </InputWrapper>
+        <FieldRow>
+          <InputWrapper>
+            <label className='space-between'>
+              <span>{t('PRICE', 'Price')}</span>
+            </label>
+            <Input
+              name='price'
+              placeholder={parsePrice(0)}
+              defaultValue={product?.price}
+              onChange={(e) => handleChangeFormState({ price: Number(e.target.value) })}
+              disabled={formState.loading}
+              autoComplete='off'
+              onKeyPress={(e) => {
+                if (!/^[0-9.]$/.test(e.key)) {
+                  e.preventDefault()
+                }
+              }}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <RegularWrapper>
+              <span>{t('REGULAR_PRICE', 'Regular Price')}</span>
+              <Switch
+                defaultChecked={(product?.in_offer && product?.offer_price) || false}
+                onChange={val => handleChangeFormState({ in_offer: val })}
+              />
+            </RegularWrapper>
+            <Input
+              name='offer_price'
+              placeholder={parsePrice(0)}
+              defaultValue={product?.offer_price}
+              ref={formMethods.register({
+                min: ((typeof formState?.changes?.in_offer === 'undefined' && product?.in_offer) || formState?.changes?.in_offer) && minimumRegualrPrice,
+                required:
+                  ((typeof formState?.changes?.in_offer === 'undefined' && product?.in_offer) || formState?.changes?.in_offer)
+                    ? t(
+                      'VALIDATION_ERROR_REQUIRED',
+                      'The Regular Price field is required'
+                    ).replace('_attribute_', t('REGULAR_PRICE', 'Regular Price'))
+                    : false
+              })}
+              onChange={handleChangeRegularPrice}
+              disabled={formState.loading || !(formState?.changes?.in_offer ?? product?.in_offer)}
+              autoComplete='off'
+              onKeyPress={(e) => {
+                if (!/^[0-9.]$/.test(e.key)) {
+                  e.preventDefault()
+                }
+              }}
+            />
+          </InputWrapper>
+        </FieldRow>
+        <InputWrapper>
+          <label>{t('DESCRIPTION', 'Description')}</label>
+          <TextArea
+            rows={4}
+            name='description'
+            placeholder={t('TYPE_BUSINESS_SHORT_DESCRIPTION', 'Write a little description')}
+            defaultValue={product?.description}
+            onChange={handleChangeInput}
+            disabled={formState.loading}
+            autoComplete='off'
+          />
+        </InputWrapper>
+
+        {isSchool && (
+          <StandardField>
+            <InputWrapper>
+              <label>{t('SCHOOL_ALLERGENS', 'Allergens')}</label>
+              <MultiSelect
+                placeholder={t('SCHOOL_SELECT_ALLERGENS', 'Select allergens')}
+                options={allergenOptions}
+                optionsPosition='left'
+                dropdownMinWidth='100%'
+                isFullWidthOptions
+                optionInnerMaxHeight='260px'
+                optionBottomBorder
+                defaultValue={Array.isArray(currentAllergens) ? currentAllergens : []}
+                onChange={(val) => {
+                  const next = currentAllergens.includes(val) ? currentAllergens.filter((v) => v !== val) : [...currentAllergens, val]
+                  handleChangeFormState({ allergens: next })
+                }}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <label>{t('SCHOOL_DIETARY_TAGS', 'Dietary tags')}</label>
+              <MultiSelect
+                placeholder={t('SCHOOL_SELECT_DIETARY_TAGS', 'Select dietary tags')}
+                options={dietaryOptions}
+                optionsPosition='left'
+                dropdownMinWidth='100%'
+                isFullWidthOptions
+                optionInnerMaxHeight='260px'
+                optionBottomBorder
+                defaultValue={Array.isArray(currentDietaryTags) ? currentDietaryTags : []}
+                onChange={(val) => {
+                  const next = currentDietaryTags.includes(val) ? currentDietaryTags.filter((v) => v !== val) : [...currentDietaryTags, val]
+                  handleChangeFormState({ dietary_tags: next })
+                }}
+              />
+            </InputWrapper>
+          </StandardField>
+        )}
+
+        <InventoryWrapper>
+          <span>{t('INVENTORY', 'Inventory')}</span>
+          <Switch
+            defaultChecked={product?.inventoried || false}
+            onChange={val => handleChangeFormState({ inventoried: val })}
+          />
+        </InventoryWrapper>
+        {
+          (typeof (formState?.changes?.inventoried) !== 'undefined' ? formState?.changes?.inventoried : product?.inventoried) && (
+            <InputWrapper>
+              <label>{t('QUANTITY', 'Quantity')}</label>
+              <Input
+                name='quantity'
+                placeholder={t('QUANTITY', 'Quantity')}
+                defaultValue={product?.quantity}
+                onChange={e => handleChangeFormState({ quantity: parseInt(e.target.value) })}
+                disabled={formState.loading}
+                autoComplete='off'
+                onKeyPress={(e) => {
+                  if (!/^[0-9]$/.test(e.key)) {
+                    e.preventDefault()
+                  }
+                }}
+              />
+            </InputWrapper>
+          )
+        }
+
+        <InventoryWrapper>
+          <span>{t('RIBBON', 'Ribbon')}</span>
+          <Switch
+            defaultChecked={product?.ribbon?.enabled || false}
+            onChange={val => handleChangeEnable(val)}
+          />
+        </InventoryWrapper>
+        {
+          (typeof (formState?.changes?.ribbon?.enabled) !== 'undefined' ? formState?.changes?.ribbon?.enabled : product?.ribbon?.enabled) && (
+            <>
+              <InputWrapper>
+                <label>{t('TEXT', 'Text')}</label>
+                <Input
+                  name='text'
+                  placeholder={t('TEXT', 'Text')}
+                  defaultValue={formState?.changes?.ribbon?.text ?? product?.ribbon?.text}
+                  onChange={(e) => handleChangeRibbon({ text: e.target.value })}
+                  disabled={formState.loading}
+                  autoComplete='off'
+                  ref={formMethods.register({
+                    required:
+                      (product?.ribbon && (typeof (formState?.changes?.ribbon?.enabled) !== 'undefined' ? formState?.changes?.ribbon?.enabled : product?.ribbon?.enabled))
+                        ? t(
+                          'VALIDATION_ERROR_REQUIRED',
+                          'The Ribbon text field is required'
+                        ).replace('_attribute_', t('Ribbon_Text', 'Ribbon text'))
+                        : false
+                  })}
+                />
+              </InputWrapper>
+              <ColorShapeWrapper>
+                <ColorWrapper>
+                  <label>{t('COLOR', 'Color')}</label>
+                  <ColorPicker
+                    defaultColor={formState?.changes?.ribbon?.color ?? product?.ribbon?.color}
+                    onChangeColor={(color) => handleChangeRibbon({ color })}
+                  />
+                </ColorWrapper>
+                <ShapeWrapper>
+                  <label>{t('SHAPE', 'Shape')}</label>
+                  <ShapeContentWrapper>
+                    {shape && Object.keys(shape).map((key, i) => (
+                      <ShapeBoxWrapper
+                        key={i}
+                        shapeRect={shape[key] === shape?.rectangleRound}
+                        round={shape[key] === shape?.capsuleShape}
+                        active={formState?.changes?.ribbon?.shape
+                          ? (formState?.changes?.ribbon?.shape === shape[key])
+                          : (product?.ribbon?.shape === shape[key])}
+                        onClick={() => handleChangeRibbon({ shape: shape[key] })}
+                      >
+                        <div />
+                        {(product?.ribbon && formState?.changes?.ribbon?.shape
+                          ? (formState?.changes?.ribbon?.shape === shape[key])
+                          : (product?.ribbon?.shape === shape[key]))
+                          ? <RecordCircleFill />
+                          : <Circle />}
+                      </ShapeBoxWrapper>
+                    ))}
+                  </ShapeContentWrapper>
+                </ShapeWrapper>
+              </ColorShapeWrapper>
+            </>
+          )
+        }
+        <ActionsForm>
+          {onCancel && (
+            <Button
+              outline
+              borderRadius='7.6px'
+              type='button'
+              onClick={() => onCancel(false)}
+              disabled={formState.loading}
+            >
+              {t('CANCEL', 'Cancel')}
+            </Button>
+          )}
+          <Button
+            type='submit'
+            color='primary'
+            borderRadius='7.6px'
+            disabled={formState.loading || Object.keys(formState?.changes).length === 0}
+          >
+            {formState?.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
+          </Button>
+        </ActionsForm>
+      </FormInput>
+      <Alert
+        width='700px'
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+      {cropState?.open && (
+        <Modal
+          width='700px'
+          height='80vh'
+          padding='30px'
+          title={t('IMAGE_CROP', 'Image crop')}
+          open={cropState?.open}
+          onRemove={() => setCropState({ ...cropState, open: false })}
+        >
+          <ImageCrop
+            photo={cropState?.data}
+            handleChangePhoto={handleChangePhoto}
+          />
+        </Modal>
+      )}
+    </>
+  )
+}

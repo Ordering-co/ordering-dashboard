@@ -1,0 +1,8 @@
+{
+  "product": "dashboard",
+  "prefix": "DASHBOARD_",
+  "sourceLanguage": "en",
+  "supportedLocales": ["es", "fr", "it", "de", "pt", "da", "nl", "ar", "el", "bg", "tr"],
+  "catalogPath": "i18n/translations.json",
+  "legacyCatalogPath": "dashboard-translations.json"
+}

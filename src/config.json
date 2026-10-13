@@ -1,0 +1,40 @@
+{
+  "app_name": "Ordering.co Dashboard",
+  "app_internal_name": "dashboard",
+  "notification_app": "dashboardweb",
+  "project": "your-project-slug",
+  "billing_url": "https://accounts.ordering.co",
+  "stripe_public_key": "",
+  "posthog_api_key": "",
+  "posthog_analytics_enabled": false,
+  "api": {
+    "url": "https://api.orderingplus.com",
+    "language": "en",
+    "version": "v400"
+  },
+  "configurations": {
+    "subdomain": "your-project-slug"
+  },
+  "socket": {
+    "url": "https://sockets-v3.orderingplus.com"
+  },
+  "sentry_key": "",
+  "google_tag_manager": "",
+  "ai_api": {
+    "url": "https://api.ai.finitless.com"
+  },
+  "pro_plan_id": [
+    401
+  ],
+  "use_project_domain": false,
+  "use_project_subdomain": false,
+  "use_batch_sockets": false,
+  "use_franchise_images": false,
+  "is_white_label": false,
+  "trial_extension": {
+    "enabled": true,
+    "booking_url": "https://calendly.com/orderingteam/ordering-demo",
+    "days": 14
+  },
+  "intercom_app_id": ""
+}

@@ -1,0 +1,611 @@
+{
+  "app": {
+    "title": "Ordering.co Dashboard",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "home": {
+    "title": "Home",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "orders": {
+    "title": "Orders list",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "all_in_one": {
+    "title": "All in one",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "deliveries": {
+    "title": "Deliveries dashboard",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "drivers_dashboard": {
+    "title": "Drivers dashboard",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "driver_store_status": {
+    "title": "Driver Store Status",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "login": {
+    "title": "Login",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "",
+    "canonicalUrl": ""
+  },
+  "forgotpassword": {
+    "title": "Forgot Password",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "businesses": {
+    "title": "Stores",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "business_add": {
+    "title": "Business add",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "connect_overview": {
+    "title": "Overview",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "delivery_services": {
+    "title": "Delivery Services",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "importers": {
+    "title": "Importers",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "pos_menu": {
+    "title": "POS & Menu Sync",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "sales_channels": {
+    "title": "Sales Channels",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "brand": {
+    "title": "Businesse brand",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "devices": {
+    "title": "Business devices",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "basic_settings": {
+    "title": "Basic settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "standard_settings": {
+    "title": "Basic settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "all_settings": {
+    "title": "All settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure orders, payments, notifications and the rest of the project from one place.",
+    "keywords": "settings, configuration",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "pro_settings": {
+    "title": "Pro settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "operation_settings": {
+    "title": "Operation settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "plugin_settings": {
+    "title": "Plugin settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "logs": {
+    "title": "Settings logs",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "enterprise_settings": {
+    "title": "Enterprise integrations",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "purchase_addons": {
+    "title": "Add-ons",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "store": {
+    "title": "Store",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "business_analytics": {
+    "title": "Business reports",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "drivers_analytics": {
+    "title": "Delivery reports",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "invoice": {
+    "title": "Invoice manager",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "reviews": {
+    "title": "Review manager",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "reports": {
+    "title": "Advanced reports",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "ecommerce_reports": {
+    "title": "Ecommerce reports",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "business_payment_reports": {
+    "title": "Business payment reports",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "messages": {
+    "title": "Messages",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "pages": {
+    "title": "Pages",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "integrations": {
+    "title": "Integrations",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "language": {
+    "title": "Language",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "places": {
+    "title": "Places",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "customers": {
+    "title": "Customers",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "business_owners": {
+    "title": "Business owners",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "callcenter_agents": {
+    "title": "Callcenter agents",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "admins": {
+    "title": "Admins",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "professionals": {
+    "title": "Professionals",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "delivery_drivers": {
+    "title": "Drivers",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "drivers_managers": {
+    "title": "Driver managers",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "drivers_companies": {
+    "title": "Driver companies",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "drivers_groups": {
+    "title": "Driver groups",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "drivers_time_display": {
+    "title": "Driver time display",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "products": {
+    "title": "Ordering products",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "builder": {
+    "title": "Builder",
+    "description": "Create your apps, edit them and follow their builds.",
+    "keywords": "builder, apps",
+    "robots": "noindex, nofollow",
+    "canonicalUrl": ""
+  },
+  "ordering_products": {
+    "title": "Ordering products",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "open_carts": {
+    "title": "Open carts",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "recovery_actions": {
+    "title": "Cart recovery rules",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "ordering_website": {
+    "title": "Ordering Website",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "ordering_website_2": {
+    "title": "Ordering Website 2",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "franchises_website": {
+    "title": "Website Franchises",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "customer_app": {
+    "title": "Customer App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "custom_project": {
+    "title": "Custom Project",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "store_app": {
+    "title": "Store App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "driver_app": {
+    "title": "Driver App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "pos_app": {
+    "title": "POS App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "call_center_app": {
+    "title": "Call Center App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "kiosk_app": {
+    "title": "Kiosk App",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "ordering_widgets": {
+    "title": "Ordering Widgets",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "support": {
+    "title": "Support",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "enterprise_promotions": {
+    "title": "Advanced offers",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "campaign": {
+    "title": "Campaign",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "rewards_programs": {
+    "title": "Rewards programs",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "wallets_refunds": {
+    "title": "Cash wallet and refunds",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "gift_cards_settings": {
+    "title": "Gift cards settings",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "gift_cards": {
+    "title": "Gift cards",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "catering": {
+    "title": "Catering",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "multi_business_checkout": {
+    "title": "Multi-business checkout",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "stripe_connect": {
+    "title": "Stripe connect",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "free_products": {
+    "title": "Free Products",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "purchased_products": {
+    "title": "Purchased products",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "appointments": {
+    "title": "Appointments",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "ad_banners": {
+    "title": "Ad banners",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "markups": {
+    "title": "Markups",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "reset_password": {
+    "title": "Reset password",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "reservations": {
+    "title": "Reservations",
+    "description": "a dummy description about this page",
+    "keywords": "test, dummy, data",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
+  "assistant": {
+    "title": "Mia",
+    "description": "Mia, the Dashboard assistant",
+    "keywords": "assistant",
+    "robots": "noindex, nofollow",
+    "canonicalUrl": ""
+  }
+}

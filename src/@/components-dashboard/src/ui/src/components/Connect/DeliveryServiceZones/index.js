@@ -1,0 +1,87 @@
+import React, { useState, useEffect } from 'react'
+import {
+  useLanguage,
+  DeliveryServiceZones as DeliveryServiceZonesController
+} from '../../../../../index'
+import { DeliveryServiceZonesList } from '../DeliveryServiceZonesList'
+import { Button } from '../../../styles'
+import { Alert } from '../../Shared'
+
+import {
+  Container
+} from './styles'
+
+const DeliveryServiceZonesUI = (props) => {
+  const {
+    drivergroup,
+    setIsExtendExtraOpen,
+    formState,
+    onDeliveryStateSave,
+    actionState,
+    zoneListState,
+    handleChangeZoneState,
+    handleChangeAllZoneState,
+    handleParentSidebarMove,
+    zoneList,
+    setZoneList,
+    setIsOpenDetails,
+    isOpenDetails,
+    actionDisabled
+  } = props
+
+  const [, t] = useLanguage()
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+
+  useEffect(() => {
+    if (!actionState?.error) return
+    setAlertState({
+      open: true,
+      content: actionState?.error
+    })
+  }, [actionState?.error])
+
+  return (
+    <Container
+      disabled={actionDisabled}
+    >
+      <DeliveryServiceZonesList
+        setZoneList={setZoneList}
+        handleParentSidebarMove={handleParentSidebarMove}
+        drivergroup={drivergroup}
+        zoneList={zoneList}
+        setIsExtendExtraOpen={setIsExtendExtraOpen}
+        onClose={() => setIsExtendExtraOpen(false)}
+        zoneListState={zoneListState}
+        handleChangeZoneState={handleChangeZoneState}
+        handleChangeAllZoneState={handleChangeAllZoneState}
+        setIsOpenDetails={setIsOpenDetails}
+        isOpenDetails={isOpenDetails}
+      />
+      <Button
+        borderRadius='8px'
+        color='primary'
+        disabled={actionState?.loading || (Object?.keys(formState?.changes)?.length === 0 && !zoneListState?.isDirty)}
+        onClick={() => onDeliveryStateSave()}
+      >
+        {t('SAVE', 'Save')}
+      </Button>
+      <Alert
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={alertState?.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState?.open}
+        onClose={() => setAlertState({ open: false, content: [] })}
+        onAccept={() => setAlertState({ open: false, content: [] })}
+        closeOnBackdrop={false}
+      />
+    </Container>
+  )
+}
+
+export const DeliveryServiceZones = (props) => {
+  const driverGroupDeliveryProps = {
+    ...props,
+    UIComponent: DeliveryServiceZonesUI
+  }
+  return <DeliveryServiceZonesController {...driverGroupDeliveryProps} />
+}

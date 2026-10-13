@@ -1,0 +1,669 @@
+import React, { useState, useEffect, useMemo } from 'react'
+import { useApi, useLanguage, useSession } from '../../../../../index'
+import { Select } from '../../../styles/Select'
+import { Select as FirstSelect } from '../../../styles/Select/FirstSelect'
+import { MultiSelect } from '../../../styles/MultiSelect'
+import { Alert } from '../../Shared'
+import { OrderStatusRegressionModal } from '../OrderStatusRegressionModal'
+import { getHiddenOrderStatuses, isFinalOrderStatusLocked } from '../../../utils'
+import { Option, PlaceholderTitle, OrderStatusTypeSelectWrapper } from './styles'
+
+export const OrderStatusTypeSelector = (props) => {
+  const {
+    isFirstSelect,
+    defaultValue,
+    deliveryType,
+    mutiOrdersChange,
+    orderId,
+    type,
+    orderControl,
+    noPadding,
+    noSelected,
+    isFilterView,
+    filterValues,
+    handleUpdateOrderStatus,
+    handleChangeMultiOrdersStatus,
+    handleChangeOrderStatus,
+    viewOnly,
+    hideErrorAlert
+  } = props
+
+  const [, t] = useLanguage()
+  const [ordering] = useApi()
+  const [{ user }] = useSession()
+  const [defaultOptionValue, setDefaultOptionValue] = useState('default')
+  const [filteredOrderStatuses, setFilteredOrderStatuses] = useState([])
+  const [searchValue, setSearchValue] = useState(null)
+  const [selectResetKey, setSelectResetKey] = useState(0)
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [regressionRequest, setRegressionRequest] = useState(null)
+  const [regressionLoading, setRegressionLoading] = useState(false)
+
+  const placeholder = <PlaceholderTitle><p>{t('SELECT_STATUS', 'Select Status')}</p></PlaceholderTitle>
+
+  const hiddenOrderStatuses = getHiddenOrderStatuses(ordering?.project)
+  const isStatusLocked = !mutiOrdersChange && !isFilterView && isFinalOrderStatusLocked(ordering?.project, user?.level, defaultValue)
+
+  const orderStatuses = [
+    {
+      value: 'default',
+      name: t('CHANGE_STATUS', 'Change Status'),
+      content: <Option noPadding={noPadding}><p>{t('CHANGE_STATUS', 'Change Status')}</p></Option>,
+      disabled: true,
+      showDisable: true
+    },
+    {
+      value: 'pending',
+      name: t('PENDING', 'Pending'),
+      content: (
+        <Option noPadding={noPadding} isSubTitle>
+          <p>{t('PENDING', 'Pending')}</p>
+        </Option>
+      ),
+      disabled: true
+    },
+    {
+      value: 0,
+      name: t('PENDING', 'Pending'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('PENDING', 'Pending')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 13,
+      name: t('PREORDER', 'Preorder'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('PREORDER', 'Preorder')}</p>
+        </Option>
+      ),
+      color: 'primary',
+      disabled: true
+    },
+    {
+      value: 'inProgress',
+      name: t('IN_PROGRESS', 'In Progress'),
+      content: (
+        <Option noPadding={noPadding} isSubTitle>
+          <p>{t('IN_PROGRESS', 'In Progress')}</p>
+        </Option>
+      ),
+      disabled: true
+    },
+    {
+      value: 7,
+      name: t('ACCEPTED_BY_BUSINESS', 'Accepted by Business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ACCEPTED_BY_BUSINESS', 'Accepted by Business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 4,
+      name: t('PREPARATION_COMPLETED', 'Preparation Completed'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('PREPARATION_COMPLETED', 'Preparation Completed')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 8,
+      name: t('ACCEPTED_BY_DRIVER', 'Accepted by Driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ACCEPTED_BY_DRIVER', 'Accepted by Driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 3,
+      name: t('ORDER_STATUS_IN_BUSINESS', 'Driver arrived to business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_STATUS_IN_BUSINESS', 'Driver arrived to business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 9,
+      name: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 14,
+      name: t('ORDER_NOT_READY', 'Order not ready'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_NOT_READY', 'Order not ready')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 18,
+      name: t('ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS', 'Driver almost arrived to business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS', 'Driver almost arrived to business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 19,
+      name: t('ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER', 'Driver almost arrived to customer'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER', 'Driver almost arrived to customer')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 20,
+      name: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 21,
+      name: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 22,
+      name: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 23,
+      name: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_DRIVER_ON_WAY', 'Driver on way')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 24,
+      name: t('ORDER_STATUS_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_STATUS_DRIVER_WAITING_FOR_ORDER', 'Driver waiting for order')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 25,
+      name: t('ORDER_STATUS_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_STATUS_ACCEPTED_BY_DRIVER_COMPANY', 'Accepted by driver company')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 26,
+      name: t('ORDER_DRIVER_ARRIVED_CUSTOMER', 'Driver arrived to customer'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_DRIVER_ARRIVED_CUSTOMER', 'Driver arrived to customer')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: null,
+      name: t('COMPLETED', 'Completed'),
+      content: (
+        <Option noPadding={noPadding} isSubTitle>
+          <p>{t('COMPLETED', 'Completed')}</p>
+        </Option>
+      ),
+      disabled: true
+    },
+    {
+      value: 1,
+      name: t('COMPLETED_BY_ADMIN', 'Completed by Admin'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('COMPLETED_BY_ADMIN', 'Completed by Admin')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 11,
+      name: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery Completed by Driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery Completed by Driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 15,
+      name: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: null,
+      name: t('CANCELLED', 'Cancelled'),
+      content: (
+        <Option noPadding={noPadding} isSubTitle>
+          <p>{t('CANCELLED', 'Cancelled')}</p>
+        </Option>
+      ),
+      disabled: true
+    },
+    {
+      value: 2,
+      name: t('REJECTED_BY_ADMIN', 'Rejected by Admin'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('REJECTED_BY_ADMIN', 'Rejected by Admin')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 5,
+      name: t('REJECTED_BY_BUSINESS', 'Rejected by Business'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('REJECTED_BY_BUSINESS', 'Rejected by Business')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 6,
+      name: t('REJECTED_BY_DRIVER', 'Rejected by Driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('REJECTED_BY_DRIVER', 'Rejected by Driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 10,
+      name: t('PICK_UP_FAILED_BY_DRIVER', 'Pickup Failed by Driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('PICK_UP_FAILED_BY_DRIVER', 'Pickup Failed by Driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 12,
+      name: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by Driver'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by Driver')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 16,
+      name: t('ORDER_STATUS_CANCELLED_BY_CUSTOMER', 'Cancelled by customer'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_STATUS_CANCELLED_BY_CUSTOMER', 'Cancelled by customer')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    },
+    {
+      value: 17,
+      name: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Not picked by customer'),
+      content: (
+        <Option noPadding={noPadding}>
+          <p>{t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Not picked by customer')}</p>
+        </Option>
+      ),
+      color: 'primary'
+    }
+  ]
+
+  const revertStatusSelection = (previousStatus) => {
+    setDefaultOptionValue(previousStatus)
+    setSelectResetKey((key) => key + 1)
+  }
+
+  const changeOrderStatus = async (orderStatus) => {
+    if (orderStatus === 'default' || orderStatus === defaultValue || isStatusLocked) return
+    const previousStatus = defaultValue ?? defaultOptionValue
+    if (!mutiOrdersChange) {
+      const response = await handleUpdateOrderStatus({ id: orderId, newStatus: orderStatus })
+      if (response?.regressionRequired) {
+        setRegressionRequest({ newStatus: orderStatus, previousStatus })
+        return
+      }
+      if (response?.error) {
+        revertStatusSelection(previousStatus)
+        if (!hideErrorAlert) {
+          setAlertState({ open: true, content: response.result })
+        }
+      }
+      return
+    }
+    handleChangeMultiOrdersStatus(orderStatus)
+  }
+
+  const handleSubmitRegressionReason = async (reasons) => {
+    setRegressionLoading(true)
+    const response = await handleUpdateOrderStatus({ id: orderId, newStatus: regressionRequest.newStatus, reasons })
+    setRegressionLoading(false)
+    if (response?.error) {
+      revertStatusSelection(regressionRequest.previousStatus)
+      if (!hideErrorAlert) {
+        setAlertState({ open: true, content: response.result })
+      }
+    }
+    setRegressionRequest(null)
+  }
+
+  const handleCancelRegressionReason = () => {
+    revertStatusSelection(regressionRequest.previousStatus)
+    setRegressionRequest(null)
+  }
+
+  useEffect(() => {
+    if (!isFilterView) {
+      if (orderControl) {
+        setFilteredOrderStatuses(orderStatuses)
+      } else {
+        let _filteredOrderStatuses = []
+        let extractOrderStatus = []
+        switch (deliveryType) {
+          case 1:
+            _filteredOrderStatuses = orderStatuses
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 2:
+            extractOrderStatus = orderStatuses.slice(0, 7)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(13, 15)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 3:
+            extractOrderStatus = orderStatuses.slice(0, 3)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(4, 7)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 4:
+            extractOrderStatus = orderStatuses.slice(0, 7)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(13, 15)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 5:
+            extractOrderStatus = orderStatuses.slice(0, 7)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(13, 15)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 7:
+            _filteredOrderStatuses = orderStatuses
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 8:
+            extractOrderStatus = orderStatuses.slice(0, 7)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(13, 15)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          case 9:
+            extractOrderStatus = orderStatuses.slice(0, 3)
+            _filteredOrderStatuses = [...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(4, 7)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(10, 11)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(20, 22)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(23, 26)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            extractOrderStatus = orderStatuses.slice(30, 31)
+            _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+            if (searchValue) {
+              _filteredOrderStatuses = [..._filteredOrderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+          default:
+            if (searchValue) {
+              _filteredOrderStatuses = [...orderStatuses?.filter(orderStatus => orderStatus?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))]
+            }
+            setFilteredOrderStatuses(_filteredOrderStatuses)
+            break
+        }
+      }
+    } else {
+      let _filteredOrderStatuses = []
+      let extractOrderStatus = []
+      extractOrderStatus = orderStatuses.slice(2, 4)
+      _filteredOrderStatuses = [...extractOrderStatus]
+
+      extractOrderStatus = orderStatuses.slice(5, 17)
+      _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+
+      extractOrderStatus = orderStatuses.slice(18, 21)
+      _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+
+      extractOrderStatus = orderStatuses.slice(22, 29)
+      _filteredOrderStatuses = [..._filteredOrderStatuses, ...extractOrderStatus]
+
+      setFilteredOrderStatuses(_filteredOrderStatuses)
+    }
+  }, [deliveryType, searchValue])
+
+  useEffect(() => {
+    setDefaultOptionValue(defaultValue)
+  }, [defaultValue])
+
+  const filterChangeOrderStatus = (status) => {
+    handleChangeOrderStatus(status)
+  }
+
+  const [defaultFilterValues, setDefaultFilterValues] = useState([])
+
+  useEffect(() => {
+    if (isFilterView) {
+      const _defaultFilterValues = [...filterValues.statuses]
+      setDefaultFilterValues(_defaultFilterValues)
+    }
+  }, [filterValues])
+
+  const handleChangeSearch = (searchValue) => {
+    setSearchValue(searchValue)
+  }
+
+  const visibleOrderStatuses = useMemo(() => {
+    if (!hiddenOrderStatuses.length) return filteredOrderStatuses
+    return filteredOrderStatuses.filter(orderStatus => !hiddenOrderStatuses.includes(orderStatus?.value) || orderStatus?.value === defaultValue)
+  }, [filteredOrderStatuses, hiddenOrderStatuses, defaultValue])
+
+  if (isFilterView) {
+    return (
+      <MultiSelect
+        className='order-status-multi-select'
+        optionInnerMaxHeight='50vh'
+        placeholder={placeholder}
+        defaultValue={defaultFilterValues}
+        options={filteredOrderStatuses}
+        onChange={(orderStatus) => filterChangeOrderStatus(orderStatus)}
+      />
+    )
+  } else {
+    return (
+      <OrderStatusTypeSelectWrapper>
+        {isFirstSelect
+          ? (
+            <FirstSelect
+              key={selectResetKey}
+              searchBarIsCustomLayout
+              searchBarIsNotLazyLoad
+              searchBarPlaceholder={t('SEARCH', 'Search')}
+              type={type}
+              placeholder={<Option noPadding={noPadding} isSubTitle><p>{t('CHANGE_STATUS', 'Change Status')}</p></Option>}
+              optionInnerMaxHeight='50vh'
+              noSelected={noSelected}
+              defaultValue={defaultOptionValue}
+              options={visibleOrderStatuses}
+              onChange={(orderStatus) => changeOrderStatus(orderStatus)}
+              className='orderStatus'
+              isShowSearchBar
+              searchValue={searchValue}
+              handleChangeSearch={handleChangeSearch}
+              isDisabled={viewOnly || isStatusLocked}
+            />
+            )
+          : (
+            <Select
+              key={selectResetKey}
+              searchBarIsCustomLayout
+              searchBarIsNotLazyLoad
+              searchBarPlaceholder={t('SEARCH', 'Search')}
+              type={type}
+              placeholder={<Option noPadding={noPadding} isSubTitle><p>{t('CHANGE_STATUS', 'Change Status')}</p></Option>}
+              optionInnerMaxHeight='50vh'
+              noSelected={noSelected}
+              defaultValue={defaultOptionValue}
+              options={visibleOrderStatuses}
+              searchValue={searchValue}
+              onChange={(orderStatus) => changeOrderStatus(orderStatus)}
+              className='orderStatus'
+            />
+            )}
+        {!hideErrorAlert && (
+          <Alert
+            title={t('WEB_APPNAME', 'Ordering')}
+            content={alertState.content}
+            acceptText={t('ACCEPT', 'Accept')}
+            open={alertState.open}
+            onClose={() => setAlertState({ open: false, content: [] })}
+            onAccept={() => setAlertState({ open: false, content: [] })}
+            closeOnBackdrop={false}
+          />
+        )}
+        <OrderStatusRegressionModal
+          open={!!regressionRequest}
+          orderId={orderId}
+          currentStatus={regressionRequest?.previousStatus}
+          newStatus={regressionRequest?.newStatus}
+          loading={regressionLoading}
+          onSubmit={handleSubmitRegressionReason}
+          onClose={handleCancelRegressionReason}
+        />
+      </OrderStatusTypeSelectWrapper>
+    )
+  }
+}

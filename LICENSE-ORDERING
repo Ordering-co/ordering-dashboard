@@ -1,0 +1,79 @@
+Ordering.co Source License
+Version 1.2
+
+This license is based on the MIT License, modified with the additional
+conditions of Ordering.co.
+
+Copyright (c) 2026 Ordering, Inc. ("Ordering.co")
+
+In short: build on our code and make money with it. Whoever runs it
+needs an active Ordering.co project.
+
+1. What you can do
+This license covers the Ordering.co frontend source code: the web
+storefront, customer apps, Merchant App, Driver App, and admin Dashboard (the
+"Software"). It does not cover the Ordering.co backend or API.
+
+You may:
+- Use, copy, and modify the Software.
+- Build templates, themes, new features, integrations, and complete
+  solutions on top of it.
+- Sell what you build to anyone, at your own price and under your own
+  brand, and keep what you earn.
+- Deliver the Software, with or without your changes, to your
+  customers, employees, and contractors.
+
+2. Conditions
+a. Active project. Every deployment of the Software, or of anything
+   built on it, must be linked to a project with an active subscription
+   or plan at Ordering.co. Your customers need an active project to run
+   what you sell them.
+b. Ordering.co API. The Software must use the Ordering.co API as its
+   ordering backend.
+c. No substitute API. You may not use the Software, in whole or in part,
+   with any API or backend that replaces the Ordering.co API. You may
+   connect complementary third-party services (payments, maps,
+   analytics, and similar) that do not replace it.
+d. No reverse engineering. You may not reverse engineer, decompile, or
+   otherwise try to derive the source code, structure, or internal logic
+   of the Ordering.co API, backend, or any Ordering.co service not
+   delivered to you in source form, and you may not use the Software to
+   build a replacement for them. Building and selling frontends,
+   templates, and features is not a replacement.
+e. Same license. Anyone who receives the Software from you receives it
+   under this license and must follow it.
+f. Notice. Keep this license and the copyright notice in all copies of
+   the Software.
+
+3. What you build is yours
+Templates, features, modifications, and anything else you create on top
+of the Software belong to you. You may sell or license them however you
+like. Ordering.co does not claim ownership of your work, and this
+license takes no share of what you earn from it.
+
+The original Software remains the property of Ordering.co. You sell
+under your own brand; this license gives you no rights to the
+Ordering.co name or logo.
+
+4. Termination
+This license ends automatically for any deployment whose project is no
+longer active, and for you entirely if you break any condition. You then
+have 30 days to stop using the Software and delete your copies. If your
+license ends, your customers' deployments that are linked to active
+projects are not affected.
+
+5. Other terms
+If you have a signed agreement with Ordering.co, that agreement prevails
+over this license. Third-party components included in the Software
+remain under their own licenses.
+
+6. No warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL ORDERING.CO BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+7. Governing law
+This license is governed by the laws of the State of Delaware,
+USA.

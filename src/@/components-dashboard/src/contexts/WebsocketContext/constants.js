@@ -1,0 +1,7 @@
+export const SOCKET_STATUS = {
+  CONNECTING: 0,
+  CONNECTED: 1,
+  DISCONNECTED: 2
+}
+
+export const MAX_CONNECTION_FAILURES = 3

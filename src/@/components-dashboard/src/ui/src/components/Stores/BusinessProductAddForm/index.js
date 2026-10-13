@@ -1,0 +1,420 @@
+import React, { useState, useEffect, useRef } from 'react'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { Alert, ImageCrop, Modal } from '../../Shared'
+import { bytesConverter } from '../../../utils'
+import BiImage from '@meronex/icons/bi/BiImage'
+import { Button, Input, TextArea } from '../../../styles'
+import { Select } from '../../../styles/Select/FirstSelect'
+import { MultiSelect } from '../../../styles/MultiSelect'
+import { SCHOOL_ALLERGENS, SCHOOL_DIETARY_TAGS, SCHOOL_VERTICAL } from '../../../../../constants/school'
+import { useDraftImageRead } from '../../../hooks/useDraftImageRead'
+import { StandardField } from '../../../styles/StandardField'
+
+import {
+  useLanguage,
+  useConfig,
+  DragAndDrop,
+  ExamineClick,
+  BusinessProductCreator as BusinessProductCreatorController
+} from '../../../../../index'
+
+import {
+  FormInput,
+  ProductImage,
+  SkeletonWrapper,
+  UploadImageIconContainer,
+  UploadImageIcon,
+  InputWrapper,
+  ActionsForm,
+  SkipButton,
+  SelectWrapper,
+  Option,
+  FieldRow,
+  TimeContent,
+  TimeBlock
+} from './styles'
+
+export const BusinessProductAddFormUI = (props) => {
+  const {
+    formState,
+    handleChangeInput,
+    handleUpdateClick,
+    handlechangeImage,
+    isTutorialMode,
+    handleTutorialSkip,
+    handleChangeItem,
+    business,
+    onboardingMode = false
+  } = props
+
+  const [, t] = useLanguage()
+  const [{ configs }] = useConfig()
+
+  const isSchool = business?.vertical === SCHOOL_VERTICAL
+  const allergenOptions = SCHOOL_ALLERGENS.map((a) => ({ value: a.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_ALLERGEN_${a.value.toUpperCase()}`, a.name)}</span> }))
+  const dietaryOptions = SCHOOL_DIETARY_TAGS.map((d) => ({ value: d.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_DIETARY_${d.value.toUpperCase()}`, d.name)}</span> }))
+
+  const productImageInputRef = useRef(null)
+  const isEnabledAppointmentsFeature = !onboardingMode && configs?.appointments?.value
+  const imageRead = useDraftImageRead(onboardingMode)
+
+  const [hours, setHours] = useState([])
+  const [minutes, setMinutes] = useState([])
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
+  const [curPreorderTime, setCurPreorderTime] = useState({})
+  const [isCustom, setIsCustom] = useState(false)
+
+  const typeList = [
+    { value: 'item', content: <Option>{t('ITEM', 'Item')}</Option> },
+    { value: 'service', content: <Option>{t('SERVICE', 'Service')}</Option> }
+  ]
+
+  const durationList = [
+    { value: 15, content: <Option>15 <span>{t('MINUTES', 'minutes')}</span></Option> },
+    { value: 30, content: <Option>30 <span>{t('MINUTES', 'minutes')}</span></Option> },
+    { value: 45, content: <Option>45 <span>{t('MINUTES', 'minutes')}</span></Option> },
+    { value: 60, content: <Option>1 <span>{('HOUR', 'hour')}</span></Option> },
+    { value: 'custom', content: <Option><span>{('CUSTOME', 'custom')}</span></Option> }
+  ]
+
+  const setTimeList = () => {
+    const _hours = []
+    const _minutes = []
+    for (let i = 0; i < 24; i++) {
+      const text = (i < 10 ? '0' : ' ') + i
+      _hours.push({
+        text,
+        hour: i
+      })
+    }
+    for (let i = 0; i < 60; i++) {
+      const text = (i < 10 ? '0' : '') + i
+      _minutes.push({
+        text,
+        minute: i
+      })
+    }
+    setHours(_hours)
+    setMinutes(_minutes)
+  }
+
+  const handleClickImage = () => {
+    productImageInputRef.current.click()
+  }
+
+  const handleFiles = (files) => {
+    if (files.length === 1) {
+      const type = files[0].type.split('/')[0]
+      if (type !== 'image') {
+        setAlertState({
+          open: true,
+          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
+        })
+        return
+      }
+
+      if (bytesConverter(files[0]?.size) > 2048) {
+        setAlertState({
+          open: true,
+          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
+        })
+        return
+      }
+
+      if (onboardingMode) {
+        imageRead.read(files[0], data => setCropState({ name: 'images', data, open: true }), () => setAlertState({ open: true, content: [t('ERROR', 'Error')] }))
+        return
+      }
+
+      const reader = new window.FileReader()
+      reader.readAsDataURL(files[0])
+      reader.onload = () => {
+        setCropState({ name: 'images', data: reader.result, open: true })
+      }
+      handlechangeImage(files[0])
+    }
+  }
+
+  const handleChangePhoto = (croppedImg) => {
+    handleChangeItem({ [cropState?.name]: croppedImg })
+    setCropState({ name: null, data: null, open: false })
+  }
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+  }
+
+  const handleChangePreorderTime = (evt) => {
+    const type = evt.target.name
+    const value = evt.target.value
+    setCurPreorderTime({
+      ...curPreorderTime,
+      [type]: value
+    })
+    let preorderTime = 0
+    if (type === 'hour') preorderTime = parseInt(value) * 60 + parseInt(curPreorderTime?.minute)
+    else preorderTime = parseInt(curPreorderTime?.hour) * 60 + parseInt(value)
+    handleChangeItem({ duration: preorderTime })
+  }
+
+  const handleChangeSelect = (value) => {
+    setCurPreorderTime({ hour: '0', minute: '0' })
+    if (value === 'custom') {
+      setIsCustom(true)
+      handleChangeItem({ duration: null })
+      return
+    }
+    setIsCustom(false)
+    handleChangeItem({ duration: value })
+  }
+
+  useEffect(() => {
+    if (formState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: formState?.result?.result
+      })
+    }
+  }, [formState?.result])
+
+  useEffect(() => {
+    setTimeList()
+  }, [])
+
+  return (
+    <>
+      <FormInput>
+        {!onboardingMode && <h1>{t('NEW_PRODUCT', 'New product')}</h1>}
+        <ProductImage
+          onClick={() => handleClickImage()}
+        >
+          <ExamineClick
+            onFiles={files => handleFiles(files)}
+            childRef={(e) => { productImageInputRef.current = e }}
+            accept='image/png, image/jpeg, image/jpg'
+            disabled={formState.loading}
+          >
+            <DragAndDrop
+              onDrop={dataTransfer => handleFiles(dataTransfer.files)}
+              accept='image/png, image/jpeg, image/jpg'
+              disabled={formState.loading}
+            >
+              {formState?.loading
+                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
+                : ((!formState?.changes?.images)
+                    ? <div />
+                    : formState?.changes?.images &&
+                  (
+                    <img src={formState?.changes?.images} alt='business type image' loading='lazy' />
+                  )
+                  )}
+              <UploadImageIconContainer>
+                <UploadImageIcon>
+                  <BiImage />
+                  <span>{t('DRAG_DROP_IMAGE_HERE', 'Put your image here')}</span>
+                </UploadImageIcon>
+              </UploadImageIconContainer>
+            </DragAndDrop>
+          </ExamineClick>
+        </ProductImage>
+        {isEnabledAppointmentsFeature && typeList?.length > 1 && (
+          <SelectWrapper notAllow>
+            <label>{t('TYPE', 'Type')}</label>
+            <Select
+              options={typeList}
+              className='select'
+              defaultValue={formState?.changes?.type ?? 'item'}
+              placeholder={t('SELECT_OPTION', 'Select an option')}
+              onChange={(value) => handleChangeItem({ type: value })}
+            />
+          </SelectWrapper>
+        )}
+        {(formState?.changes?.type === 'service') && (
+          <FieldRow>
+            <SelectWrapper>
+              <label>{t('DURATION', 'Duration')}</label>
+              <Select
+                options={durationList}
+                className='select'
+                defaultValue={isCustom ? 'custom' : (formState?.changes?.duration ?? '')}
+                placeholder={t('SELECT_OPTION', 'Select an option')}
+                onChange={(value) => handleChangeSelect(value)}
+              />
+            </SelectWrapper>
+            {isCustom && (
+              <InputWrapper>
+                <label>{t('CUSTOM_DURATION', 'Custom duration')}</label>
+                <TimeContent>
+                  <TimeBlock>
+                    <select
+                      value={curPreorderTime?.hour}
+                      name='hour'
+                      onChange={handleChangePreorderTime}
+                    >
+                      {
+                        hours?.map((hour, i) => (
+                          <option value={hour.hour} key={i}>{hour.text}</option>
+                        ))
+                      }
+                    </select>
+                    <span>:</span>
+                    <select
+                      value={curPreorderTime?.minute}
+                      name='minute'
+                      onChange={handleChangePreorderTime}
+                    >
+                      {minutes?.map((minute, i) => (
+                        <option value={minute.minute} key={i}>{minute.text}</option>
+                      ))}
+                    </select>
+                  </TimeBlock>
+                </TimeContent>
+              </InputWrapper>
+            )}
+          </FieldRow>
+        )}
+        <InputWrapper>
+          <label>{t('PRODUCT_NAME', 'Product name')}</label>
+          <Input
+            type='text'
+            name='name'
+            defaultValue={formState?.changes?.name || ''}
+            onChange={handleChangeInput}
+            placeholder={t('WRITE_A_NAME', 'Write a name')}
+            autoComplete='off'
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <label>{t('PRICE', 'Price')}</label>
+          <Input
+            type='number'
+            name='price'
+            defaultValue={onboardingMode ? (formState?.changes?.price ?? '') : (formState?.changes?.price || '')}
+            onChange={handleChangeInput}
+            placeholder={t('WRITE_PRICE', 'Write price')}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9.]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <label>{t('DESCRIPTION', 'Description')}</label>
+          <TextArea
+            rows={4}
+            name='description'
+            defaultValue={formState?.changes?.description || ''}
+            onChange={handleChangeInput}
+            placeholder={t('WRITE_DESCRIPTION', 'Write description')}
+            autoComplete='off'
+          />
+        </InputWrapper>
+        {isSchool && (
+          <StandardField>
+            <InputWrapper>
+              <label>{t('SCHOOL_ALLERGENS', 'Allergens')}</label>
+              <MultiSelect
+                placeholder={t('SCHOOL_SELECT_ALLERGENS', 'Select allergens')}
+                options={allergenOptions}
+                optionsPosition='left'
+                dropdownMinWidth='100%'
+                isFullWidthOptions
+                optionInnerMaxHeight='260px'
+                optionBottomBorder
+                defaultValue={Array.isArray(formState?.changes?.allergens) ? formState.changes.allergens : []}
+                onChange={(val) => {
+                  const current = Array.isArray(formState?.changes?.allergens) ? formState.changes.allergens : []
+                  const next = current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
+                  handleChangeItem({ allergens: next })
+                }}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <label>{t('SCHOOL_DIETARY_TAGS', 'Dietary tags')}</label>
+              <MultiSelect
+                placeholder={t('SCHOOL_SELECT_DIETARY_TAGS', 'Select dietary tags')}
+                options={dietaryOptions}
+                optionsPosition='left'
+                dropdownMinWidth='100%'
+                isFullWidthOptions
+                optionInnerMaxHeight='260px'
+                optionBottomBorder
+                defaultValue={Array.isArray(formState?.changes?.dietary_tags) ? formState.changes.dietary_tags : []}
+                onChange={(val) => {
+                  const current = Array.isArray(formState?.changes?.dietary_tags) ? formState.changes.dietary_tags : []
+                  const next = current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
+                  handleChangeItem({ dietary_tags: next })
+                }}
+              />
+            </InputWrapper>
+          </StandardField>
+        )}
+        <ActionsForm>
+          {isTutorialMode && (
+            <SkipButton
+              onClick={() => handleTutorialSkip()}
+            >
+              {t('TUTORIAL_SKIP', 'Skip')}
+            </SkipButton>
+          )}
+          {((formState && Object.keys(formState?.changes).length > 0)) && (
+            <Button
+              type='submit'
+              color='primary'
+              borderRadius='7.6px'
+              disabled={formState.loading || Object.keys(formState?.changes).length === 1 || (onboardingMode && (imageRead.reading || cropState.open))}
+              onClick={() => Object.keys(formState?.changes).length > 1 && handleUpdateClick()}
+            >
+              {
+                formState?.loading
+                  ? t('LOADING', 'Loading')
+                  : isTutorialMode ? t('SAVE_AND_CONTINUE', 'Save and continue') : t('SAVE', 'Save')
+              }
+            </Button>
+          )}
+        </ActionsForm>
+      </FormInput>
+      <Alert
+        title={t('WEB_APPNAME', 'Ordering')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+      {cropState?.open && (
+        <Modal
+          width='700px'
+          height='80vh'
+          padding='30px'
+          title={t('IMAGE_CROP', 'Image crop')}
+          open={cropState?.open}
+          onRemove={() => setCropState({ ...cropState, open: false })}
+        >
+          <ImageCrop
+            photo={cropState?.data}
+            handleChangePhoto={handleChangePhoto}
+          />
+        </Modal>
+      )}
+    </>
+  )
+}
+
+export const BusinessProductAddForm = (props) => {
+  const businessProductAddProps = {
+    ...props,
+    UIComponent: BusinessProductAddFormUI
+  }
+  return (
+    <BusinessProductCreatorController {...businessProductAddProps} />
+  )
+}

@@ -1,0 +1,96 @@
+# Cloudflare Pages (Git): use pnpm, not Yarn (no yarn.lock in repo).
+# Install:
+#   corepack enable && corepack prepare pnpm@9.15.0 --activate && pnpm install --frozen-lockfile
+# Build: pnpm run build
+# Optional: NODE_VERSION=24 (matches .nvmrc), HUSKY=0
+name = "your-dashboard-worker"
+compatibility_date = "2026-04-20"
+compatibility_flags = ["nodejs_compat"]
+main = "./worker/index.js"
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+binding = "ASSETS"
+
+run_worker_first = [
+  "/*",
+  "!/*.png",
+  "!/*.svg",
+  "!/*.webp",
+  "!/*.jpg",
+  "!/*.jpeg",
+  "!/*.gif",
+  "!/*.ico",
+  "!/*.css",
+  "!/*.js",
+  "!/*.map",
+  "!/*.woff",
+  "!/*.woff2",
+  "!/*.ttf",
+  "!/*.eot",
+  "!/*.json",
+  "!/*.txt",
+  "!/*.xml",
+  "!/*.avif",
+  "!/*.mp4",
+  "!/*.webm"
+]
+
+[vars]
+ASSET_BASE_URL = "/"
+PROJECT = "your-project-slug"
+SEO_TTL = "300"
+FIRST_LOAD_TTL = "300"
+DISABLE_CACHE = "false"
+MAX_RESPONSE_BYTES = "2097152"
+SEO_TIMEOUT_MS = "3000"
+FIRST_LOAD_TIMEOUT_MS = "4000"
+USE_PROJECT_SUBDOMAIN = "false"
+USE_PROJECT_DOMAIN = "true"
+DISABLE_POWERED_BY = "false"
+
+[previews.vars]
+ASSET_BASE_URL = "/"
+PROJECT = "your-project-slug"
+SEO_TTL = "300"
+FIRST_LOAD_TTL = "300"
+DISABLE_CACHE = "false"
+MAX_RESPONSE_BYTES = "2097152"
+SEO_TIMEOUT_MS = "3000"
+FIRST_LOAD_TIMEOUT_MS = "4000"
+USE_PROJECT_SUBDOMAIN = "false"
+USE_PROJECT_DOMAIN = "true"
+DISABLE_POWERED_BY = "false"
+
+[env.staging]
+name = "your-dashboard-worker"
+
+[env.staging.vars]
+ASSET_BASE_URL = "/"
+PROJECT = "your-project-slug"
+SEO_TTL = "300"
+FIRST_LOAD_TTL = "300"
+DISABLE_CACHE = "false"
+MAX_RESPONSE_BYTES = "2097152"
+SEO_TIMEOUT_MS = "3000"
+FIRST_LOAD_TIMEOUT_MS = "4000"
+USE_PROJECT_SUBDOMAIN = "false"
+USE_PROJECT_DOMAIN = "true"
+DISABLE_POWERED_BY = "false"
+
+[env.production]
+name = "your-dashboard-worker"
+
+[env.production.vars]
+ASSET_BASE_URL = "/"
+PROJECT = "your-project-slug"
+SEO_TTL = "300"
+FIRST_LOAD_TTL = "300"
+DISABLE_CACHE = "false"
+MAX_RESPONSE_BYTES = "2097152"
+SEO_TIMEOUT_MS = "3000"
+FIRST_LOAD_TIMEOUT_MS = "4000"
+USE_PROJECT_SUBDOMAIN = "false"
+USE_PROJECT_DOMAIN = "true"
+DISABLE_POWERED_BY = "false"

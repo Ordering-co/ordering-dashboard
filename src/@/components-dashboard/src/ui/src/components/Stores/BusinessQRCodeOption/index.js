@@ -1,0 +1,197 @@
+import React, { useEffect, useState, useRef } from 'react'
+import { useLanguage, useApi, useConfig, useSite } from '../../../../../index'
+import { useWindowSize } from '../../../hooks/useWindowSize'
+import { Button, Input } from '../../../styles'
+import { X as Close } from 'react-bootstrap-icons'
+import QRCode from 'react-qr-code'
+import ReactToPrint from 'react-to-print'
+import { Alert } from '../../Shared'
+import {
+  Container,
+  ButtonGroup,
+  Header,
+  CloseButton,
+  FormControl,
+  QRCodeLayout,
+  TableNumberHintText
+} from './styles'
+import { checkSiteUrl } from '../../../utils'
+import { getPreferredSiteUrl } from '../../../utils/getPreferredSiteUrl'
+import { useProjectState } from '../../../contexts/ProjectContext'
+
+export const BusinessQRCodeOption = (props) => {
+  const {
+    open,
+    item,
+    business,
+    onClose
+  } = props
+
+  const [, t] = useLanguage()
+  const [ordering, { configurations }] = useApi()
+  const [{ configs }] = useConfig()
+  const [{ sites }] = useSite()
+  const [projectStatus] = useProjectState()
+
+  const { width } = useWindowSize()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [code, setCode] = useState(null)
+
+  const numberRef = useRef(null)
+  const printerRef = useRef()
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+  }
+
+  const generateQRCode = () => {
+    if (!projectStatus?.websiteProduct) return
+
+    const errors = []
+    if ((item?.key !== 'pick_up' && item?.key !== 'delivery') && !numberRef?.current?.value) {
+      errors.push(
+        item?.key === 'eat_in'
+          ? t('VALIDATION_ERROR_REQUIRED', 'Table number is required').replace('_attribute_', t('TABLE_NUMBER', 'Table number'))
+          : t('VALIDATION_ERROR_REQUIRED', 'Spot number is required').replace('_attribute_', t('SPOT_NUMBER', 'Spot number'))
+      )
+    }
+    if (errors.length > 0) {
+      setAlertState({
+        open: true,
+        content: errors
+      })
+      return
+    }
+    const siteUrl = getPreferredSiteUrl({
+      sites,
+      configurations,
+      configs,
+      ordering,
+      websiteProduct: projectStatus.websiteProduct
+    })
+    if (!siteUrl) return
+
+    const normalizedUrl = checkSiteUrl(siteUrl)
+    const storeUrl = `${normalizedUrl}store/${business?.slug}`
+
+    const tsNumber = (item?.key !== 'pick_up' && item?.key !== 'delivery')
+      ? (item?.key === 'eat_in'
+          ? `&table_number=${numberRef?.current?.value}`
+          : `&spot_number=${numberRef?.current?.value}`)
+      : ''
+    const compltedUrl = `${storeUrl}?order_type=${item.value}${tsNumber}`
+    setCode(compltedUrl)
+  }
+
+  const actionSidebar = (value) => {
+    if (!value) {
+      onClose && onClose()
+    }
+    setIsMenuOpen(value)
+    document.getElementById('qrOption').style.width = value
+      ? width > 1000 ? '500px' : '100%'
+      : '0'
+  }
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      if (width < 1000) {
+        document.getElementById('qrOption').style.width = '100%'
+      } else {
+        document.getElementById('qrOption').style.width = '500px'
+      }
+    }
+  }, [width])
+
+  useEffect(() => {
+    if (!open) return
+    actionSidebar(true)
+  }, [open])
+
+  useEffect(() => {
+    setCode(null)
+    if (numberRef?.current) {
+      numberRef.current.value = ''
+    }
+  }, [item])
+
+  return (
+    <Container id='qrOption'>
+      <Header>
+        {item?.title && (<h1>{item?.title}</h1>)}
+        <CloseButton>
+          <Close onClick={() => onClose && onClose()} />
+        </CloseButton>
+      </Header>
+
+      {code && (
+        <QRCodeLayout ref={printerRef}>
+          <QRCode
+            size={256}
+            style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+            value={code}
+            viewBox='0 0 256 256'
+          />
+        </QRCodeLayout>
+      )}
+
+      {(item?.key === 'pick_up' || item?.key === 'delivery')
+        ? (
+        <h4>{t('GENERATE_QR_CODE', 'Generate QR Code')}</h4>
+          )
+        : (
+        <>
+          {item?.key === 'eat_in' && code && (
+            <TableNumberHintText>
+              {t('TO_GENERATE_NEW_QR_CODE_UPDATE_TABLE_NUMBER', 'To generate new QR codes, update the table number and regenerate the code.')}
+            </TableNumberHintText>
+          )}
+          <FormControl>
+            <label>{item?.key === 'eat_in' ? t('TABLE_NUMBER', 'Table number') : t('SPOT_NUMBER', 'Spot number')}</label>
+            <Input
+              placeholder='0'
+              ref={numberRef}
+              onKeyPress={(e) => {
+                if (!/^[0-9.]$/.test(e.key)) {
+                  e.preventDefault()
+                }
+              }}
+            />
+          </FormControl>
+        </>
+          )}
+
+      <ButtonGroup>
+        <Button color='primary' outline disabled={!projectStatus?.websiteProduct} onClick={generateQRCode}>
+          {t('GENERATE_CODE', 'Generate Code')}
+        </Button>
+        <ReactToPrint
+          trigger={() => (
+            <Button
+              color='primary'
+              disabled={!code}
+            >
+              {t('PRINT', 'Print')}
+            </Button>
+          )}
+          content={() => printerRef.current}
+          removeAfterPrint
+        />
+      </ButtonGroup>
+
+      <Alert
+        title={t('ORDERING', 'Ordering')}
+        content={alertState.content}
+        acceptText={t('ACCEPT', 'Accept')}
+        open={alertState.open}
+        onClose={() => closeAlert()}
+        onAccept={() => closeAlert()}
+        closeOnBackdrop={false}
+      />
+    </Container>
+  )
+}

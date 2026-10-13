@@ -1,0 +1,31 @@
+import React from 'react'
+import { HelmetTags } from '../../components/HelmetTags'
+import { useLanguage } from '~components'
+import { DeliveryUsersListing, addQueryToUrl, removeQueryToUrl, learnOptionsValues } from '~ui'
+
+export const DeliveryDriversList = (props) => {
+  const [, t] = useLanguage()
+  const learnOptions = learnOptionsValues(['drivers', 'driver_details'], t)
+
+  const usersProps = {
+    ...props,
+    learnOptions,
+    isUseQuery: true,
+    headerTitle: t('DRIVERS', 'Drivers'),
+    defaultUserTypesSelected: [4],
+    disabledActiveStateCondition: true,
+    isDriversPage: true,
+    onUserRedirect: (userId) => {
+      if (!userId) {
+        return removeQueryToUrl(['id', 'tab'])
+      }
+      return addQueryToUrl({ id: userId })
+    }
+  }
+  return (
+    <>
+      <HelmetTags page='delivery_drivers' />
+      <DeliveryUsersListing {...usersProps} />
+    </>
+  )
+}

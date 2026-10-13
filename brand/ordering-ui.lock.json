@@ -1,0 +1,6 @@
+{
+  "source": "https://brand.ordering.co/r/ordering-button.json",
+  "sha256": "39c89751fa128ee7af84dd8928f02810d54014303ad96d81ca6345b74f20d96b",
+  "adapter": "scripts/ordering-ui.mjs",
+  "boundary": "Mia navigation buttons only; JSX adaptation, prefixed Tailwind utilities without Preflight"
+}

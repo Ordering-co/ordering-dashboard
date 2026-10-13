@@ -1,0 +1,58 @@
+{
+  "fonts": {
+    "primary": {
+      "name": "Poppins",
+      "weights": [300, 400, 500, 600]
+    },
+    "special": {
+      "name": "Lobster",
+      "weights": [400]
+    }
+  },
+  "colors": {
+    "primary": "#2C7BE5",
+    "disabled": "#B1BCCC",
+    "primaryContrast": "#FFF",
+    "secundary": "#F8F9FA",
+    "secundaryContrast": "#748194",
+    "secundaryLight": "#B1BCCC",
+    "secundaryDark": "#414954",
+    "secundaryDarkContrast": "#E9ECEF",
+    "disabledContrast": "#000",
+    "backgroundPage": "#FFF",
+    "colorPage": "#333",
+    "headingColor": "#344050",
+    "lightGray": "#909BA9",
+    "borderColor": "#E9ECEF",
+    "lightPrimary": "#E9F2FE",
+    "danger": "#E63757",
+    "gray": "#DEE2E6",
+    "green": "#00D27A",
+    "lightGreen": "#E3FEF3",
+    "black": "#000",
+    "white": "#FFF",
+    "orange": "#FF9922",
+    "offline": "#9D9B9B",
+    "textGray": "#C3C3C3",
+    "textBlack": "#000",
+    "textBlackContrast": "#151824",
+    "btnPrimary": "#F2F2F2",
+    "btnPrimaryContrast": "#1C202E",
+    "btnSecondary": "#072DB2",
+    "btnSecondaryContrast": "#FFFFFF",
+    "btnDarkBlue": "#182964",
+    "btnDarkBlueContrast": "#fff",
+    "deadlineOk": "#0E9B55",
+    "deadlineDelayed": "#DA4A54",
+    "deadlineRisk": "#FFBF12",
+    "info": "#27BCFD",
+    "warning": "#FFC700",
+    "success": "#00D27A",
+    "backgroundInfo": "#F5F9FF",
+    "danger100": "#FEEDF0",
+    "warning100": "#FFF9E2"
+  },
+  "defaultLanguages": {
+    "LOADING_DELICIOUS_FOOD": "Loading Ordering Dashboard..."
+  }
+}

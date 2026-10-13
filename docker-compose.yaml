@@ -1,0 +1,13 @@
+services:
+  dashboard-dev:
+    container_name: dashboard_c
+    image: dashboard_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/dashboard
+      - /dashboard/node_modules
+    command: pnpm exec vite --host 0.0.0.0 --port 3001

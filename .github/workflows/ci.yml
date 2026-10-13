@@ -1,0 +1,29 @@
+name: CI Quality Gate
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: '0'
+      - run: node i18n/check-generated.cjs
+      - run: node i18n/verify.cjs
+      - run: pnpm lint:check
+      - run: pnpm build
+      - run: pnpm exec vitest --coverage --run --pool=forks --maxWorkers=2
+      - run: node scripts/coverage-summary.js --no-run --strict

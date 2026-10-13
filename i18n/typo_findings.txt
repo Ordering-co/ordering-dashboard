@@ -1,0 +1,26 @@
+LOGOUT_ALL_DEVICES_SUCCESS	All devices logged out successfully
+UPDATED_SUCCESSFULLY	Updated successfully
+CUSTOM_DOMAIN_REMOVED_SUCCESSFULLY	Custom domain removed successfully
+CUSTOMER_REVIEW_SUCCESS_CONTENT	Thank you, Customer review successfully submitted!
+YOUR_AUDIO_FILE_UPLOADED	Your audio file has been uploaded successfully
+PRODUCT_ADDED_NOTIFICATION	Product _PRODUCT_ added succesfully
+PRODUCT_UPDATED_NOTIFICATION	Product _PRODUCT_ updated succesfully
+CARD_CREATED_SUCCESSFULLY	Card Created Successfully
+CARD_SELECTED_SUCCESSFULLY	Card Selected Successfully
+PLAN_UPDATED_SUCCESSFULLY	Plan updated Successfully
+PAYMETHOD_SALES	Paymethod sales
+PAYMETHOD_SALES_DESC	Paymethod sales description
+INTEGRATION_UPDATED	Integration updated successfully
+IMPORTER_STATUS_SUCCESS	Menu imported successfully
+LINK_SEND_SUCCESSFULLY	Link Sent Successfully
+SUBTITLE_FORGOT_PASSWORD	Enter your email addres and we'll send you a link to reset your password.
+PASSWORD_RESET_SUCCESS	Password changed successfully
+CREDENTIALS_SAVED	Credentials saved successfully
+DRIVER_TIPS_REQUIRED	Driver tips is required, please select a driver tip before select this paymethod
+FULL_ADDRESS	Full Addres
+SELECT_PAYMETHOD	Select paymethod
+PAYMETHODS_LOADING	Paymethods loading
+ADDON_PURCHASED_SUCCESSFULLY	Addon Purchased Successfully
+PAYMETHOD_ID	Paymethod
+ERROR_ID_EQUAL_SPLIT_RECIEVE	Id cannot be equal to another split recieve id
+PAYMETHOD	Paymethod
