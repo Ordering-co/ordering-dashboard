@@ -431,7 +431,7 @@ const DashboardApp = () => {
                           ? ((user?.level !== 5 && user?.level !== 8) && !(readOnlyAdmin || readOnlyDeliveryManager || readOnlyBusinessOwner))
                               ? <Redirect to='/home' />
                               : user?.level === 8 ? <Redirect to='/profile' /> : <Redirect to='/orders' />
-                          : (queryProject && queryToken)
+                          : (queryProject && queryToken && (!settings.local_project_pin || queryProject === settings.local_project_pin))
                               ? <QueryLogin project={queryProject} token={queryToken} />
                               : <Redirect to='/login' />
                       }

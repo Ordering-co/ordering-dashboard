@@ -30,3 +30,25 @@ describe('WebStrategy', () => {
     expect(getLocalStorageItem('user', true)).toBeNull()
   })
 })
+
+describe('local project storage isolation', () => {
+  it('never consumes or deletes another tenant global identity and restores only its scoped session', async () => {
+    localStorage.clear()
+    localStorage.setItem('token', 'other-token')
+    localStorage.setItem('user', JSON.stringify({ id: 99, level: 0 }))
+    localStorage.setItem('project', 'tenant-b')
+    localStorage.setItem('drivers_cache_99', 'other-cache')
+    const settings = { local_project_pin: 'tenant-a', api: { url: 'https://api.test', version: 'v400' } }
+    const a = new WebStrategy(settings)
+    const b = new WebStrategy({ ...settings, local_project_pin: 'tenant-b' })
+    expect(await a.getItem('token')).toBeNull()
+    await a.setItem('token', 'a-token')
+    await a.setItem('user', { id: 1 }, true)
+    expect(await new WebStrategy(settings).getItem('token')).toBe('a-token')
+    expect(await a.getItem('user', true)).toEqual({ id: 1 })
+    expect(await b.getItem('token')).toBeNull()
+    await a.removeItem('token')
+    expect(localStorage.getItem('token')).toBe('other-token')
+    expect(localStorage.getItem('drivers_cache_99')).toBe('other-cache')
+  })
+})

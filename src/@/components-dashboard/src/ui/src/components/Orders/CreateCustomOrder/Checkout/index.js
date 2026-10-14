@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   Checkout as CheckoutController,
   useOrder,
@@ -11,6 +11,8 @@ import {
   useConfig,
   useCustomer
 } from '../../../../../../index'
+import { ConfigFileContext } from '../../../../contexts/ConfigFileContext'
+import { getDashboardStorageKey } from '~/utils/local-tenant'
 import { parseJsonArray } from '../../../../../../utils/safeJsonParse'
 import parsePhoneNumber from 'libphonenumber-js'
 import VscWarning from '@meronex/icons/vsc/VscWarning'
@@ -343,6 +345,7 @@ export const Checkout = (props) => {
     businessSlug
   } = props
 
+  const [configFile] = useContext(ConfigFileContext) || []
   const [orderState, { confirmCart }] = useOrder()
   const [{ token }] = useSession()
   const [ordering] = useApi()
@@ -385,7 +388,7 @@ export const Checkout = (props) => {
     try {
       let result = {}
       const cart = carts.find(cart => cart.uuid === cartId)
-      const userCustomer = JSON.parse(window.localStorage.getItem('user-customer'))
+      const userCustomer = JSON.parse(window.localStorage.getItem(getDashboardStorageKey(configFile, 'user-customer')))
       if (cart && !userCustomer) {
         result = JSON.parse(JSON.stringify(cart))
       } else {

@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 vi.mock('../../ApiContext', () => ({
   useApi: () => [{ root: 'https://api.test/v400/en/demo', project: 'demo' }]
@@ -183,4 +183,76 @@ describe('SessionProvider stored session check', () => {
     expect(fetchMock).not.toHaveBeenCalled()
     expect(screen.getByTestId('session')).toHaveTextContent('null')
   })
+})
+
+describe('SessionProvider local tenant identity', () => {
+  beforeEach(() => localStorage.clear())
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('does not send a global tenant token to the configured local API or erase its cache', async () => {
+    storeSession({ id: 99, level: 5 })
+    localStorage.setItem('drivers_cache_99', 'untouched')
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    const settings = { project: 'demo', local_project_pin: 'demo', api: { url: 'https://api.test', version: 'v400' } }
+    render(
+      <SessionProvider strategy={new WebStrategy(settings)} settings={settings}>
+        <SessionState />
+      </SessionProvider>
+    )
+    await waitForSession()
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(screen.getByTestId('session')).toHaveTextContent('null')
+    expect(localStorage.getItem('token')).toBe('stored-token')
+    expect(localStorage.getItem('drivers_cache_99')).toBe('untouched')
+  })
+
+  it('validates a scoped session for the matching tenant', async () => {
+    const settings = { project: 'demo', local_project_pin: 'demo', api: { url: 'https://api.test', version: 'v400' } }
+    const strategy = new WebStrategy(settings)
+    await strategy.setItem('project', 'demo')
+    await strategy.setItem('token', 'matching-token')
+    await strategy.setItem('user', { id: 1, level: 0 }, true)
+    const fetchMock = respond(200, { error: false, result: { id: 1, level: 0, enabled: true } })
+    vi.stubGlobal('fetch', fetchMock)
+    render(
+      <SessionProvider strategy={strategy} settings={settings}>
+        <SessionState />
+      </SessionProvider>
+    )
+    await waitForSession()
+    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe('Bearer matching-token')
+    expect(screen.getByTestId('session')).toHaveTextContent('matching-token')
+  })
+})
+
+it('local driver logout removes only its scoped cache and identity', async () => {
+  localStorage.clear()
+  const settings = { project: 'demo', local_project_pin: 'demo', api: { url: 'https://api.test', version: 'v400' } }
+  const strategy = new WebStrategy(settings)
+  await strategy.setItem('project', 'demo')
+  await strategy.setItem('token', 'driver-token')
+  await strategy.setItem('user', { id: 5, level: 5 }, true)
+  await strategy.setItem('drivers_cache_5', 'local-cache')
+  localStorage.setItem('drivers_cache_5', 'other-tenant-cache')
+  localStorage.setItem('token', 'other-tenant-token')
+  vi.stubGlobal('fetch', respond(200, { error: false, result: { id: 5, level: 5, enabled: true } }))
+  const SessionActions = () => {
+    const [, { logout }] = useSession()
+    return <button onClick={logout}>Log out local driver</button>
+  }
+  render(
+    <SessionProvider strategy={strategy} settings={settings}>
+      <SessionState />
+      <SessionActions />
+    </SessionProvider>
+  )
+  await waitForSession()
+  fireEvent.click(screen.getByRole('button', { name: 'Log out local driver' }))
+  await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('false'))
+  expect(await strategy.getItem('drivers_cache_5')).toBeNull()
+  expect(await strategy.getItem('token')).toBeNull()
+  expect(localStorage.getItem('drivers_cache_5')).toBe('other-tenant-cache')
+  expect(localStorage.getItem('token')).toBe('other-tenant-token')
+  vi.unstubAllGlobals()
 })

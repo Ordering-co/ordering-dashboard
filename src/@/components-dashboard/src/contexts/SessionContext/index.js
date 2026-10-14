@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useApi } from '../ApiContext'
+import { getDashboardStorageKey } from '../../../../../utils/local-tenant'
 import { getSessionStorageSyncAction } from './sessionStorageSync'
 import { getSessionCheckAction, getSessionCheckUrl } from './sessionCheck'
 import { getDocsConnectMode } from '../../components/DocsConnection/mode'
@@ -9,9 +10,12 @@ import { getDocsConnectMode } from '../../components/DocsConnection/mode'
  */
 export const SessionContext = createContext()
 
-export const getSessionStorageValues = async (strategy) => {
-  const token = await strategy.getItem('token')
+export const getSessionStorageValues = async (strategy, expectedProject) => {
   const project = await strategy.getItem('project')
+  if (expectedProject && project !== expectedProject) {
+    return { auth: null, token: null, project: expectedProject, user: null }
+  }
+  const token = await strategy.getItem('token')
   const user = await strategy.getItem('user', true)
 
   if (token && (!user || typeof user !== 'object' || Array.isArray(user))) {
@@ -55,7 +59,7 @@ export const SessionProvider = ({ children, strategy, settings }) => {
   }
 
   const setValuesFromLocalStorage = async () => {
-    const { auth, token, project, user } = await getSessionStorageValues(strategy)
+    const { auth, token, project, user } = await getSessionStorageValues(strategy, settings?.local_project_pin)
 
     if (token) {
       const action = await checkStoredSession(token)
@@ -79,6 +83,7 @@ export const SessionProvider = ({ children, strategy, settings }) => {
   }
 
   const login = async (values) => {
+    if (settings?.local_project_pin && values.project !== settings.local_project_pin) return
     await strategy.setItem('token', values.token)
     await strategy.setItem('user', values.user, true)
     await strategy.setItem('project', values.project)
@@ -100,7 +105,7 @@ export const SessionProvider = ({ children, strategy, settings }) => {
       }
 
       if (userToClean?.level === 5 && userToClean?.id) {
-        const storageKey = `drivers_cache_${userToClean.id}`
+        const storageKey = getDashboardStorageKey(settings, `drivers_cache_${userToClean.id}`)
         localStorage.removeItem(storageKey)
       }
     } catch (error) {
@@ -133,7 +138,7 @@ export const SessionProvider = ({ children, strategy, settings }) => {
   }
 
   const checkLocalStorage = async () => {
-    const { token, project, user } = await getSessionStorageValues(strategy)
+    const { token, project, user } = await getSessionStorageValues(strategy, settings?.local_project_pin)
     const action = getSessionStorageSyncAction({
       storageToken: token,
       sessionToken: state.token,

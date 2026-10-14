@@ -2,6 +2,7 @@ import React, { cloneElement, useEffect, useState } from 'react'
 
 import { AppBootLoader } from '~ui'
 import settings from '../../config'
+import { WebStrategy } from '../../@/components-dashboard/src/webStrategy'
 import { AUTOLOGIN_STASH_KEY, readAutologinParams } from '../../utils/stripAutologinQuery'
 import { getAutologinApplyResult } from './autologinSession'
 
@@ -18,7 +19,9 @@ const clearAutologinParams = () => {
 export const AutologinParams = (props) => {
   const [queryParams] = useState(() => readAutologinParams(window))
   const { project: queryProject, token: queryToken } = queryParams
-  const needsAutologin = Boolean(queryProject && queryToken)
+  const pinnedProject = props.configFile?.local_project_pin
+  const matchesProject = !pinnedProject || queryProject === pinnedProject
+  const needsAutologin = Boolean(queryProject && queryToken && matchesProject)
   const [userState, setUserState] = useState({
     loading: needsAutologin,
     result: null,
@@ -28,7 +31,7 @@ export const AutologinParams = (props) => {
   const fallbackProject = props.configFile?.project
 
   const setUser = async () => {
-    if (!queryProject || !queryToken) {
+    if (!queryProject || !queryToken || !matchesProject) {
       clearAutologinParams()
       setUserState({ ...userState, loading: false })
       return
@@ -52,9 +55,10 @@ export const AutologinParams = (props) => {
         fallbackProject
       })
       if (persistSession) {
-        window.localStorage.setItem('token', queryToken)
-        window.localStorage.setItem('user', JSON.stringify(result))
-        window.localStorage.setItem('project', queryProject)
+        const strategy = new WebStrategy(props.configFile)
+        await strategy.setItem('token', queryToken)
+        await strategy.setItem('user', result, true)
+        await strategy.setItem('project', queryProject)
         setAppliedProject(providerProject)
       }
       setUserState({

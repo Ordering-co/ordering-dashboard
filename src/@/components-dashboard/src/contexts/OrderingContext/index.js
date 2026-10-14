@@ -26,7 +26,7 @@ export const OrderingContext = createContext()
  * @param {props} props
  */
 export const OrderingProvider = ({ Alert, settings, children }) => {
-  const webStrategy = new WebStrategy()
+  const webStrategy = new WebStrategy(settings)
   return (
     <OrderingContext.Provider value={{}}>
       <EventProvider>

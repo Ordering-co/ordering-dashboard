@@ -604,7 +604,7 @@ theme.videos = {
 
 const RouteApp = () => {
   const language = getStoredLanguageCode()
-  const auth = readStoredDashboardAuth()
+  const auth = readStoredDashboardAuth(window, settings)
   const isOrderingSubdomain = getOrderingSubdomains()
   const storedProject = window.localStorage.getItem('project')
   const project = resolveInitialDashboardProject({
@@ -615,13 +615,20 @@ const RouteApp = () => {
     isOrderingSubdomain
   })
 
-  const [configFile, setConfigFile] = useState({
+  const [configFile, updateConfigFile] = useState({
     ...settings,
     api: {
       ...settings.api,
       language
     },
     project
+  })
+
+  const setConfigFile = (value) => updateConfigFile(current => {
+    const next = typeof value === 'function' ? value(current) : value
+    return settings.local_project_pin
+      ? { ...next, project: settings.local_project_pin, local_project_pin: settings.local_project_pin }
+      : next
   })
 
   useEffect(() => {
@@ -631,7 +638,8 @@ const RouteApp = () => {
       useProjectDomain: settings?.use_project_domain,
       useProjectSubdomain: settings?.use_project_subdomain,
       storedProject,
-      firstLoadConfigs: readFirstLoadConfigs()
+      firstLoadConfigs: readFirstLoadConfigs(),
+      localProjectPin: settings.local_project_pin
     })
     if (!shouldResolveProject) return
 

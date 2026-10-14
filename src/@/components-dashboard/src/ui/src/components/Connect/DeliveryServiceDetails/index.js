@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { ArrowsAngleContract, ArrowsAngleExpand } from 'react-bootstrap-icons'
 import {
   useLanguage,
+  useApi,
   DeliveryServiceDetails as DeliveryServiceDetailsController
 } from '../../../../../index'
 import { IconButton, Switch, Button } from '../../../styles'
@@ -303,10 +304,11 @@ const DeliveryServiceDetailsUI = (props) => {
 }
 
 export const DeliveryServiceDetails = (props) => {
+  const [ordering] = useApi()
   const deliveryServiceDetailsProps = {
     ...props,
     UIComponent: DeliveryServiceDetailsUI,
-    projectCode: window.localStorage.getItem('project')
+    projectCode: ordering.project
   }
   return <DeliveryServiceDetailsController {...deliveryServiceDetailsProps} />
 }

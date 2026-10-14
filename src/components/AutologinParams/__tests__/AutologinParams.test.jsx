@@ -14,6 +14,7 @@ vi.mock('~ui', () => ({
 }))
 
 import { AutologinParams } from '../index'
+import { WebStrategy } from '../../../@/components-dashboard/src/webStrategy'
 
 const Dashboard = ({ settings }) => (
   <div data-testid='dashboard' data-project={settings.project} />
@@ -180,5 +181,44 @@ describe('AutologinParams', () => {
     expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'tenant-project')
     expect(window.localStorage.getItem('token')).toBe('level-8-token')
     expect(window.localStorage.getItem('project')).toBe('tenant-project')
+  })
+})
+
+describe('local project pin autologin', () => {
+  afterEach(() => {
+    window.localStorage.clear()
+    window.history.replaceState(null, '', '/')
+    vi.unstubAllGlobals()
+  })
+
+  it('drops a different tenant query without validating or storing its token', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    window.localStorage.setItem('token', 'untouched-other-token')
+    window.history.replaceState(null, '', '/orders?project=tenant-b&token=wrong-tenant-token')
+    render(
+      <AutologinParams configFile={{ project: 'tenant-a', local_project_pin: 'tenant-a' }}>
+        <Dashboard />
+      </AutologinParams>
+    )
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'tenant-a')
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(window.location.search).toBe('')
+    expect(window.localStorage.getItem('token')).toBe('untouched-other-token')
+  })
+
+  it('persists a matching autologin into scoped storage and preserves global identity', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ json: async () => ({ error: false, result: { id: 1, level: 0 } }) })
+    vi.stubGlobal('fetch', fetchMock)
+    window.localStorage.setItem('token', 'untouched-other-token')
+    window.history.replaceState(null, '', '/orders?project=tenant-a&token=matching-token')
+    render(
+      <AutologinParams configFile={{ project: 'tenant-a', local_project_pin: 'tenant-a' }}>
+        <Dashboard />
+      </AutologinParams>
+    )
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'tenant-a')
+    expect(window.localStorage.getItem('token')).toBe('untouched-other-token')
+    expect(await new WebStrategy({ local_project_pin: 'tenant-a' }).getItem('token')).toBe('matching-token')
   })
 })
