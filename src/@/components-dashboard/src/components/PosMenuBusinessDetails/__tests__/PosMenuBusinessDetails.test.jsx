@@ -68,6 +68,12 @@ describe('PosMenuBusinessDetails controller', () => {
     expect(await controller.handleSync('/setup', undefined)).toBeNull()
   })
 
+  it('keeps an absolute or protocol-relative setup url instead of prepending the plugin root', async () => {
+    renderController()
+    expect(await controller.handleSync('https://calendly.com/pos/meet?business_id=@{business_id}', 'https://plugin.test')).toBe('https://calendly.com/pos/meet?business_id=42')
+    expect(await controller.handleSync('//calendly.com/pos/meet', 'https://plugin.test')).toBe('//calendly.com/pos/meet')
+  })
+
   it('connects the business and runs the callback on success', async () => {
     fetchMock.mockResolvedValue({ json: async () => ({ error: false, result: {} }) })
     const callback = vi.fn()

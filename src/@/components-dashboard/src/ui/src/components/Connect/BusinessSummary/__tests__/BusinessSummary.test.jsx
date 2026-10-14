@@ -59,8 +59,8 @@ describe('POS setup calls', () => {
     state.level = 2
   })
 
-  it.each([0, 2])('shows both booking links with existing logos for user level %s', (level) => {
-    state.level = level
+  it('shows both booking links with existing logos for admins', () => {
+    state.level = 0
     const props = renderSummary()
     expect(screen.getByRole('img', { name: 'Checkmate' })).toHaveAttribute('src', checkmateLogo)
     expect(screen.getByRole('img', { name: 'Deliverect' })).toHaveAttribute('src', deliverectLogo)
@@ -81,6 +81,25 @@ describe('POS setup calls', () => {
     expect(props.handleSync).not.toHaveBeenCalled()
   })
 
+  it.each([2, undefined, 1])('shows only disabled Contact admin buttons for non-admin level %s', (level) => {
+    state.level = level
+    const props = renderSummary()
+    expect(screen.getByRole('img', { name: 'Checkmate' })).toHaveAttribute('src', checkmateLogo)
+    expect(screen.getByRole('img', { name: 'Deliverect' })).toHaveAttribute('src', deliverectLogo)
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
+    const buttons = screen.getAllByRole('button', { name: 'Contact admin' })
+    expect(buttons).toHaveLength(2)
+    buttons.forEach(button => {
+      expect(button).toBeDisabled()
+      expect(button).not.toHaveAttribute('href')
+      fireEvent.click(button)
+    })
+    expect(props.handleInstallPosIntegration).not.toHaveBeenCalled()
+    expect(props.handleConnectBusiness).not.toHaveBeenCalled()
+    expect(props.handleSelectIntegration).not.toHaveBeenCalled()
+    expect(props.handleSync).not.toHaveBeenCalled()
+  })
+
   it('replaces API-provided Checkmate and Deliverect setup entries without duplicates', () => {
     renderSummary({
       integrationsList: {
@@ -91,7 +110,8 @@ describe('POS setup calls', () => {
       },
       businessState: { business: { third_party_integrations: [{ third_party_integration_id: 1 }, { third_party_integration_id: 2 }] } }
     })
-    expect(screen.getAllByRole('link', { name: /Connect (Checkmate|Deliverect)/ })).toHaveLength(2)
+    expect(screen.queryByRole('link')).not.toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'Contact admin' })).toHaveLength(2)
     expect(screen.queryByText('ItsaCheckmate')).not.toBeInTheDocument()
     expect(screen.queryByText('Deliverect POS')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Setup' })).not.toBeInTheDocument()
@@ -107,6 +127,35 @@ describe('POS setup calls', () => {
 })
 
 describe('POS integration actions', () => {
+  it.each([
+    { plugin_id: 9, plugin: { root: 'https://calendly.com', setup_url: '/pos/meet' } },
+    { plugin_id: 9, plugin: { root: 'https://plugin.test', links: { setup: 'https://calendly.com/pos/meet' } } },
+    { plugin_id: null, plugin_root: 'https://calendly.com/pos/meet' }
+  ])('restricts other POS with Calendly setup metadata: %j', (metadata) => {
+    state.level = 2
+    const props = renderSummary({
+      integrationsList: { thirdPartyIntegrations: [{ id: 9, name: 'Other POS', ...metadata }] },
+      businessState: { business: { third_party_integrations: metadata.plugin_id ? [{ third_party_integration_id: 9 }] : [] } }
+    })
+    const row = within(screen.getByText('Other POS').closest('.connect-pos-wrapper'))
+    const button = row.getByRole('button', { name: 'Contact admin' })
+    expect(button).toBeDisabled()
+    fireEvent.click(button)
+    expect(props.handleSync).not.toHaveBeenCalled()
+    expect(props.handleInstallPosIntegration).not.toHaveBeenCalled()
+    expect(props.handleConnectBusiness).not.toHaveBeenCalled()
+  })
+
+  it('preserves the admin setup action for other Calendly POS', async () => {
+    state.level = 0
+    const props = renderSummary({
+      integrationsList: { thirdPartyIntegrations: [{ id: 9, name: 'Other POS', plugin_id: 9, plugin: { root: 'https://calendly.com', setup_url: '/pos/meet' } }] },
+      businessState: { business: { third_party_integrations: [{ third_party_integration_id: 9 }] } }
+    })
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Setup' })))
+    expect(props.handleSync).toHaveBeenCalledWith('/pos/meet', 'https://calendly.com')
+  })
+
   const integrationsList = {
     thirdPartyIntegrations: [
       { id: 3, name: 'Install POS', plugin_root: 'install-root' },
@@ -232,8 +281,8 @@ describe('POS integration actions', () => {
     expect(within(screen.getByText('Clover').closest('.connect-pos-wrapper')).getByRole('button', { name: 'Install' })).toBeDisabled()
   })
 
-  it('opens the setup link of plugins that only expose links.setup', async () => {
-    state.level = 0
+  it.each([0, 2])('preserves non-Calendly links.setup for level %s', async (level) => {
+    state.level = level
     const props = renderSummary({
       integrationsList: { thirdPartyIntegrations: [{ id: 298, name: 'Wansoft', plugin_id: 1717, plugin: { root: 'https://wansoft.test', setup_url: null, links: { setup: '/views/setup?b=1' } } }] },
       businessState: { business: { third_party_integrations: [{ third_party_integration_id: 298 }] } }

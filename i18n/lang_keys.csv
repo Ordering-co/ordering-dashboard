@@ -1305,6 +1305,7 @@ key,value,source,note
 "CONNECTION_STATUS","Connection status","submodule",""
 "CONNTECT_PROFESSIONAL_ACCOUNT_INFO","Connect your Professional account with your Google account to synchronize the appointments with the Google calendar Application. Use the Google account button to start with the login process, do not forget to notify the admin to Complete the synchronization.","submodule",""
 "CONSTANTS_SETTINGS","Constants","submodule",""
+"CONTACT_ADMIN","Contact admin","submodule",""
 "CONTACT_ADMINISTRATOR","Contact administrator","submodule",""
 "CONTACT_SALES_SUB_TITLE","Ask about pricing, custom work, budget and more money talk","submodule",""
 "CONTACT_SALES_TEAM","Contact our Sales Team","submodule",""

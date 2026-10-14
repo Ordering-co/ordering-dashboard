@@ -11,6 +11,7 @@ import 'react-date-range/dist/theme/default.css'
 import { useLanguage, useSession, useToast, ToastType, useApi } from '~components'
 import { Button, ButtonLink, IconButton, Switch } from '../../../styles'
 import {
+  isCalendlyUrl,
   isSetupCallIntegration,
   parseTemplate,
   POS_SETUP_CALL_PROVIDERS,
@@ -69,6 +70,11 @@ export const BusinessSummary = (props) => {
   const { width } = useWindowSize()
   const [sessionState] = useSession()
   const isBusinessOwner = sessionState?.user?.level === 2
+  const isAdmin = sessionState?.user?.level === 0
+  const isCalendlyRestricted = (integration) => !fromSalesChannels && !isAdmin && (
+    isCalendlyUrl(getPluginSetupPath(integration?.plugin), integration?.plugin?.root) ||
+    (!integration?.plugin_id && isCalendlyUrl(integration?.plugin_root))
+  )
   const [, { showToast }] = useToast()
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
   const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
@@ -219,6 +225,7 @@ export const BusinessSummary = (props) => {
   }
 
   const handleButtonClick = (integration, e) => {
+    if (isCalendlyRestricted(integration)) return
     if (integration?.plugin_root && !integration?.plugin_id) {
       e?.stopPropagation()
       const connectedPos = integration?.type === 'pos'
@@ -381,16 +388,24 @@ export const BusinessSummary = (props) => {
                     />
                     <p>{integration.name}</p>
                   </div>
-                  <ButtonLink
-                    color='primary'
-                    borderRadius='8px'
-                    href={POS_SETUP_CALL_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    aria-label={`${t('CONNECT', 'Connect')} ${integration.name}`}
-                  >
-                    {t('CONNECT', 'Connect')}
-                  </ButtonLink>
+                  {isAdmin
+                    ? (
+                    <ButtonLink
+                      color='primary'
+                      borderRadius='8px'
+                      href={POS_SETUP_CALL_URL}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      aria-label={`${t('CONNECT', 'Connect')} ${integration.name}`}
+                    >
+                      {t('CONNECT', 'Connect')}
+                    </ButtonLink>
+                      )
+                    : (
+                    <Button color='secundary' borderRadius='8px' disabled>
+                      {t('CONTACT_ADMIN', 'Contact admin')}
+                    </Button>
+                      )}
                 </div>
               </BusinessDetailsContent>
             ))}
@@ -405,14 +420,16 @@ export const BusinessSummary = (props) => {
                     <p>{t(integration.name.toUpperCase() || 'INTEGRATION', integration.name || 'Integration')}</p>
                   </div>
                   {!getHideSetupButton(integration) && (
-                    isBusinessOwner && !integration?.plugin_id
+                    isCalendlyRestricted(integration) || (isBusinessOwner && !integration?.plugin_id)
                       ? (
                         <Button
                           color='secundary'
                           borderRadius='8px'
                           disabled
                         >
-                          {t('CONTACT_ADMINISTRATOR', 'Contact administrator')}
+                          {isCalendlyRestricted(integration)
+                            ? t('CONTACT_ADMIN', 'Contact admin')
+                            : t('CONTACT_ADMINISTRATOR', 'Contact administrator')}
                         </Button>
                         )
                       : (

@@ -19151,6 +19151,20 @@
     "bg": "Константи",
     "tr": "Sabitler"
   },
+  "CONTACT_ADMIN": {
+    "en": "Contact admin",
+    "es": "Contacta al administrador",
+    "fr": "Contactez l'administrateur",
+    "it": "Contatta l'amministratore",
+    "de": "Administrator kontaktieren",
+    "pt": "Contate o administrador",
+    "da": "Kontakt administratoren",
+    "nl": "Neem contact op met de beheerder",
+    "ar": "اتصل بالمسؤول",
+    "el": "Επικοινωνήστε με τον διαχειριστή",
+    "bg": "Свържете се с администратора",
+    "tr": "Yöneticiyle iletişime geçin"
+  },
   "CONTACT_ADMINISTRATOR": {
     "en": "Contact administrator",
     "es": "Contacta al administrador",

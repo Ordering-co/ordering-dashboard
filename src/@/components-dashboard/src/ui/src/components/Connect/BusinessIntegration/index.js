@@ -6,7 +6,7 @@ import { useLanguage } from '../../../../../index'
 import { Button, Input, Switch } from '../../../styles'
 import { Alert, Modal, IntegrationLogs } from '../../Shared'
 import { useApi, useSession } from '../../../../../index'
-import { parseTemplate, capitalize } from '../../../utils'
+import { parseTemplate, capitalize, isCalendlyUrl } from '../../../utils'
 
 import {
   BusinessOrderingChannelsContainer,
@@ -43,7 +43,8 @@ export const BusinessIntegration = (props) => {
   const [languageState, t] = useLanguage()
   const theme = useTheme()
   const [ordering] = useApi()
-  const [{ token }] = useSession()
+  const [{ token, user }] = useSession()
+  const isCalendlyRestricted = (plugin, link) => !fromSalesChannels && user?.level !== 0 && isCalendlyUrl(link, plugin?.root)
   const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
   const [externalId, setExternalId] = useState('')
   const [enabled, setEnabled] = useState(false)
@@ -102,12 +103,12 @@ export const BusinessIntegration = (props) => {
 
   const handleOpenPluginDetails = (e, plugin, linkKey = 'general_settings') => {
     const link = plugin?.links?.[linkKey]
-    if (!link) return
+    if (!link || isCalendlyRestricted(plugin, link)) return
     e.stopPropagation()
     setPluginSelected({
       open: true,
       title: plugin.name,
-      url: plugin.root + link
+      url: /^(?:https?:)?\/\//i.test(link) ? link : plugin.root + link
     })
   }
 
@@ -200,10 +201,12 @@ export const BusinessIntegration = (props) => {
               color='lightPrimary'
               borderRadius='8px'
               key={key}
-              disabled={formState?.loading}
-              onClick={(e) => handleOpenPluginDetails(e, selectedIntegration?.plugin, key)}
+              disabled={formState?.loading || isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key])}
+              onClick={isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key]) ? undefined : (e) => handleOpenPluginDetails(e, selectedIntegration?.plugin, key)}
             >
-              {t(key?.replace(/ /g, '_'), capitalize(key?.replace(/_/g, ' ')))}
+              {isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key])
+                ? t('CONTACT_ADMIN', 'Contact admin')
+                : t(key?.replace(/ /g, '_'), capitalize(key?.replace(/_/g, ' ')))}
             </Button>
           ))}
           <Button

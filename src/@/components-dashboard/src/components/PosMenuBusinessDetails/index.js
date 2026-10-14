@@ -317,8 +317,11 @@ export const PosMenuBusinessDetails = (props) => {
   }
 
   const handleSync = async (urlParam, root) => {
-    if (!root || !urlParam) return null
-    return `${root}${urlParam.replace('@{project_code}', ordering.project).replace('@{access_token}', session.token).replace('@{business_id}', businessState?.business?.id)}`
+    if (!urlParam) return null
+    const absolute = /^(?:https?:)?\/\//i.test(urlParam)
+    if (!absolute && !root) return null
+    const resolved = absolute ? urlParam : `${root}${urlParam}`
+    return resolved.replace('@{project_code}', ordering.project).replace('@{access_token}', session.token).replace('@{business_id}', businessState?.business?.id)
   }
 
   const requestIntegrationChange = async (integrationId, method, data, successMessage) => {
