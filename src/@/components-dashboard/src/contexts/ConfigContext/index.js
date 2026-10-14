@@ -89,11 +89,13 @@ export const ConfigProvider = ({ children, settings }) => {
         ? await ordering.setAccessToken(token).configs().asDictionary().get()
         : await ordering.configs().asDictionary().get()
       let data = null
-      try {
-        const response = await fetch('https://ipapi.co/json/')
-        data = await response.json()
-      } catch (error) {
-        data = null
+      if (!result?.default_country_code?.value) {
+        try {
+          const response = await fetch('https://ipapi.co/json/')
+          data = await response.json()
+        } catch (error) {
+          data = null
+        }
       }
       const configsResult = {
         ...customConfigs,

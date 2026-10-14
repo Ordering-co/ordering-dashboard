@@ -97,7 +97,7 @@ const ReportsHeatMapUI = (props) => {
   return (
     <>
       <HeatMapContainer>
-        <Title>{t('HEAT_MAP_WITH', 'Heat map with')}</Title>
+        <Title>{t('REPORT_ORDERS_HEAT_MAP', 'Orders heat map')}</Title>
         <ButtonActionList>
           <BrandBusinessWrapper>
             <Button
@@ -142,7 +142,7 @@ const ReportsHeatMapUI = (props) => {
         </ButtonActionList>
         <DistancePerBrandWrapper>
           <DistanceTitleBlock active={reportData?.content?.locations?.length > 0}>
-            <h2>{t('HEAT_MAP_WITH', 'Heat map with')}</h2>
+            <h2>{t('REPORT_ORDERS_HEAT_MAP', 'Orders heat map')}</h2>
           </DistanceTitleBlock>
           {reportData?.loading
             ? (

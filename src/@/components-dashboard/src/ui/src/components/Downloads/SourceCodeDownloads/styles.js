@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, IconButton } from '../../../styles/Buttons'
+import { Button, ButtonLink, IconButton } from '../../../styles/Buttons'
 
 export const Page = styled.section`
   flex: 1;
@@ -12,6 +12,7 @@ export const Page = styled.section`
   background: var(--od-bg, ${props => props.theme.colors.backgroundPage});
   font-family: var(--od-font-sans, inherit);
   direction: ${props => props.theme.rtl ? 'rtl' : 'ltr'};
+  text-align: ${props => props.theme.rtl ? 'right' : 'left'};
   font-size: 14px;
   line-height: 1.6;
   @media (max-width: 600px) { padding: 20px 16px; }
@@ -21,7 +22,8 @@ export const Content = styled.div`
   min-width: 0;
   h1 { margin: 0; font-size: 20px; line-height: 32px; font-weight: 600; }
   h2 { margin: 0; font-size: 20px; line-height: 30px; font-weight: 600; }
-  h3 { margin: 0 0 12px; font-size: 16px; line-height: 24px; font-weight: 600; }
+  h3 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; }
+  > p { max-width: 75ch; }
   p { margin: 8px 0 16px; }
   code, pre { font-family: var(--od-font-mono, ui-monospace), monospace; font-variant-ligatures: none; }
   code { color: inherit; overflow-wrap: anywhere; direction: ltr; unicode-bidi: isolate; }
@@ -29,9 +31,6 @@ export const Content = styled.div`
   pre code { overflow-wrap: normal; }
   a { color: var(--od-action-content, ${props => props.theme.colors.primary}); text-decoration: underline; }
   a:focus-visible, summary:focus-visible { outline: 2px solid var(--od-action, ${props => props.theme.colors.primary}); outline-offset: 2px; }
-  table { border-collapse: collapse; }
-  th, td { border: 1px solid ${props => props.theme.colors.borderColor}; padding: 8px; text-align: start; }
-  .assistant-table { overflow: auto; }
 `
 export const Header = styled.div`
   display: flex;
@@ -45,20 +44,13 @@ export const MenuButton = styled(IconButton)`
   &:focus-visible { outline: 2px solid var(--od-action, ${props => props.theme.colors.primary}); outline-offset: 2px; }
 `
 export const Product = styled.article`
-  margin-top: 24px;
   padding: 24px;
+  min-width: 0;
   border: 1px solid var(--od-border, ${props => props.theme.colors.borderColor});
   border-radius: 8px;
+  details { margin-top: 16px; border-top: 1px solid var(--od-border, ${props => props.theme.colors.borderColor}); padding-top: 12px; }
+  summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-weight: 600; }
   @media (max-width: 600px) { padding: 16px; }
-`
-export const Metadata = styled.dl`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px 40px;
-  margin: 20px 0;
-  > div { min-width: 0; }
-  dt { font-size: 12px; color: var(--od-text-muted, ${props => props.theme.colors.headingColor}); }
-  dd { margin: 4px 0 0; overflow-wrap: anywhere; }
 `
 export const Action = styled(Button)`
   min-height: 44px;
@@ -91,28 +83,39 @@ export const State = styled.div`
   padding: 20px 0;
   p { max-width: 65ch; }
 `
-export const DownloadStatus = styled.div`
-  margin-bottom: 20px;
-  p { margin-bottom: 8px; }
+
+export const RepositoryLink = styled(ButtonLink)`
+  min-height: 44px;
+  line-height: 22px;
+  padding: 10px 16px;
+  max-width: 100%;
+  white-space: normal;
+  && {
+    background: var(--od-action, ${props => props.theme.colors.btnSecondary || props.theme.colors.primary});
+    color: var(--od-action-foreground, ${props => props.theme.colors.primaryContrast || '#FFF'});
+    border-color: var(--od-action, ${props => props.theme.colors.btnSecondary || props.theme.colors.primary});
+    text-decoration: none;
+  }
+  &:focus-visible { outline: 2px solid var(--od-action, ${props => props.theme.colors.primary}); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { transition: none; }
 `
-export const Instructions = styled.section`
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--od-border, ${props => props.theme.colors.borderColor});
-  overflow-wrap: anywhere;
+export const RepositorySection = styled.section`
+  margin-top: 32px;
 `
-export const Details = styled.details`
-  margin-top: 20px;
-  border-top: 1px solid var(--od-border, ${props => props.theme.colors.borderColor});
-  padding-top: 12px;
-  summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-weight: 600; }
-  pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-  dl { margin-bottom: 0; }
-  dt { margin-top: 12px; font-weight: 600; }
-  dd { margin-inline-start: 0; }
-  li { margin-top: 8px; }
+export const RepositoryGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+  @media (max-width: 850px) { grid-template-columns: minmax(0, 1fr); }
 `
-export const LicenseText = styled.div`
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+export const Platform = styled.span`
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+`
+export const CopyBlock = styled.div`
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 12px 0; }
+  pre code { overflow-wrap: anywhere; }
+  ${Actions} { margin-bottom: 0; }
 `

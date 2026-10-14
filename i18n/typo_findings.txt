@@ -9,7 +9,6 @@ CARD_CREATED_SUCCESSFULLY	Card Created Successfully
 CARD_SELECTED_SUCCESSFULLY	Card Selected Successfully
 PLAN_UPDATED_SUCCESSFULLY	Plan updated Successfully
 PAYMETHOD_SALES	Paymethod sales
-PAYMETHOD_SALES_DESC	Paymethod sales description
 INTEGRATION_UPDATED	Integration updated successfully
 IMPORTER_STATUS_SUCCESS	Menu imported successfully
 LINK_SEND_SUCCESSFULLY	Link Sent Successfully

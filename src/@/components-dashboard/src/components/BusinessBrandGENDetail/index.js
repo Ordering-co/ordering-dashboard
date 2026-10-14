@@ -112,6 +112,7 @@ export const BusinessBrandGENDetail = (props) => {
       })
       handleUpdateBrandList(_brands)
     }
+    onSelectedBrand && onSelectedBrand({ ...brand, ...content.result })
   }
 
   /**

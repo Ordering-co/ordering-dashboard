@@ -116,12 +116,15 @@ const MarkupsUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
 
   const handleOpenAlert = (content) => {
+    const knownErrors = {
+      API_ERROR_MARKUP_ALREADY_EXISTS: t('API_ERROR_MARKUP_ALREADY_EXISTS', 'A markup for this business, site and delivery type already exists. Edit that markup or pick a different combination.')
+    }
     const normalized = Array.isArray(content)
       ? content
       : content
         ? [String(content)]
         : []
-    setAlertState({ open: true, content: normalized })
+    setAlertState({ open: true, content: normalized.map(item => knownErrors[item] || item) })
   }
 
   const handleBusinessSearchChange = (val) => {

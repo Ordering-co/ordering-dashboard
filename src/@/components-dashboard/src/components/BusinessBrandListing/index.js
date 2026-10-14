@@ -46,6 +46,22 @@ export const BusinessBrandListing = (props) => {
     updateBrand(id, changes)
   }
 
+  const getBrand = async (id) => {
+    try {
+      const response = await fetch(`${ordering.root}/franchises/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const content = await response.json()
+      return content?.error ? null : content?.result || null
+    } catch {
+      return null
+    }
+  }
+
   /**
    * Method to delete a brand from API
    */
@@ -239,6 +255,7 @@ export const BusinessBrandListing = (props) => {
           paginationProps={paginationProps}
           setPaginationProps={setPaginationProps}
           getBrands={getBrands}
+          getBrand={getBrand}
         />
       )}
     </>

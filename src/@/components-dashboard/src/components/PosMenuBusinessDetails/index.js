@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -26,6 +26,8 @@ export const PosMenuBusinessDetails = (props) => {
   const [selectedIntegration, setSelectedIntegration] = useState(null)
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [integrationActionLoading, setIntegrationActionLoading] = useState(false)
+  const integrationRequestRef = useRef(false)
 
   /**
    * Clean formState
@@ -39,16 +41,26 @@ export const PosMenuBusinessDetails = (props) => {
     try {
       setBusinessState({
         ...businessState,
-        loading: false
+        loading: !businessState.business,
+        error: null
       })
       const fetchEndpoint = asDashboard
         ? ordering.setAccessToken(session.token).businesses(businessId).asDashboard().select(propsToFetch)
         : ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
-      const { content: { result } } = await fetchEndpoint.get()
+      const { content: { error, result } } = await fetchEndpoint.get()
+      if (error) {
+        setBusinessState({
+          ...businessState,
+          loading: false,
+          error: Array.isArray(result) ? result : [result || t('ERROR', 'Error')]
+        })
+        return
+      }
       const business = Array.isArray(result) ? null : result
       setBusinessState({
         ...businessState,
         loading: false,
+        error: null,
         business
       })
     } catch (err) {
@@ -305,59 +317,54 @@ export const PosMenuBusinessDetails = (props) => {
   }
 
   const handleSync = async (urlParam, root) => {
-    const params = {
-      business_id: businessState?.business?.id,
-      user_id: session.user?.id,
-      project: ordering.project,
-      token: session.token
+    if (!root || !urlParam) return null
+    return `${root}${urlParam.replace('@{project_code}', ordering.project).replace('@{access_token}', session.token).replace('@{business_id}', businessState?.business?.id)}`
+  }
+
+  const requestIntegrationChange = async (integrationId, method, data, successMessage) => {
+    if (integrationRequestRef.current) return false
+    integrationRequestRef.current = true
+    setIntegrationActionLoading(true)
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    try {
+      const response = await fetch(`${ordering.root}/business/${businessId}/third_party_integrations/${integrationId}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        },
+        ...(data && { body: JSON.stringify(data) })
+      })
+      const content = await response.json().catch(() => null)
+      if (!content) {
+        showToast(ToastType.Error, t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.'))
+        return false
+      }
+      if (content.error) {
+        showToast(ToastType.Error, Array.isArray(content.result) ? content.result.join(', ') : content.result)
+        return false
+      }
+      showToast(ToastType.Success, successMessage)
+      return true
+    } catch (err) {
+      showToast(ToastType.Error, t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.'))
+      return false
+    } finally {
+      integrationRequestRef.current = false
+      setIntegrationActionLoading(false)
     }
-    const transformedParams = Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
-    let url = `https://integrations.ordering.co/clover-store/sync.php?${transformedParams}`
-    if (root && urlParam) {
-      url = `${root}${urlParam.replace('@{project_code}', ordering.project).replace('@{access_token}', session.token).replace('@{business_id}', businessState?.business?.id)}`
-    }
-    return url
   }
 
   const handleConnectBusiness = async (integrationId, data, callback, successMessage) => {
-    showToast(ToastType.Info, t('LOADING', 'Loading'))
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.token}`
-      }
-    }
-    if (data) {
-      requestOptions.body = JSON.stringify(data)
-    }
-    const response = await fetch(`${ordering.root}/business/${businessId}/third_party_integrations/${integrationId}`, requestOptions)
-    const content = await response.json()
-    if (!content.error) {
-      showToast(ToastType.Success, successMessage || t('BUSINESS_CONNECTED', 'Business connected'))
-      callback && callback()
-    } else {
-      showToast(ToastType.Error, content.result)
-    }
+    const success = await requestIntegrationChange(integrationId, 'POST', data, successMessage || t('BUSINESS_CONNECTED', 'Business connected'))
+    if (success && callback) callback()
+    return success
   }
 
   const handleDisconnectBusiness = async (integrationId, callback) => {
-    showToast(ToastType.Info, t('LOADING', 'Loading'))
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.token}`
-      }
-    }
-    const response = await fetch(`${ordering.root}/business/${businessId}/third_party_integrations/${integrationId}`, requestOptions)
-    const content = await response.json()
-    if (!content.error) {
-      showToast(ToastType.Success, t('BUSINESS_DISCONNECTED', 'Business disconnected'))
-      callback && callback()
-    } else {
-      showToast(ToastType.Error, content.result)
-    }
+    const success = await requestIntegrationChange(integrationId, 'DELETE', null, t('BUSINESS_DISCONNECTED', 'Business disconnected'))
+    if (success && callback) callback()
+    return success
   }
 
   const handlePushAction = async (integrationId, action = 'push_menu', message) => {
@@ -371,7 +378,7 @@ export const PosMenuBusinessDetails = (props) => {
       })
       const content = await response.json()
       if (!content.error) {
-        showToast(ToastType.Success, message || t('MENU_PUSHED', 'Menu pushed'))
+        showToast(ToastType.Success, message || t('MENU_PUSH_STARTED', 'Menu push started. It can take a few minutes.'))
       } else {
         showToast(ToastType.Error, content.result)
       }
@@ -420,6 +427,7 @@ export const PosMenuBusinessDetails = (props) => {
             handleSyncEvent={handleSyncEvent}
             handleSync={handleSync}
             handleConnectBusiness={handleConnectBusiness}
+            integrationActionLoading={integrationActionLoading}
             handleDisconnectBusiness={handleDisconnectBusiness}
             handleSelectIntegration={handleSelectIntegration}
             handlePushAction={handlePushAction}

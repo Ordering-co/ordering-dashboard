@@ -54,6 +54,7 @@ const BusinessBrandListingUI = (props) => {
     setOpenDetail,
     paginationProps,
     getBrands,
+    getBrand,
     handleUpdateBrandList
   } = props
 
@@ -91,10 +92,14 @@ const BusinessBrandListingUI = (props) => {
     removeQueryToUrl(['id', 'tab'])
   }
 
-  const handleOpenSideBar = (id) => {
+  const handleOpenSideBar = async (id) => {
     setSelectedType('general')
     if (id) {
-      const brand = brandListState?.brands.find(item => item.id === id)
+      const brand = brandListState?.brands.find(item => item.id === id) || await getBrand?.(id)
+      if (!brand) {
+        removeQueryToUrl(['id', 'tab'])
+        return
+      }
       setSelectedBrand(brand)
     } else {
       setSelectedBrand(null)
@@ -133,7 +138,7 @@ const BusinessBrandListingUI = (props) => {
   useEffect(() => {
     if (brandList?.length > 0 && selectedBrand) {
       const brand = brandListState?.brands?.find(item => item.id === selectedBrand?.id)
-      setSelectedBrand(brand)
+      if (brand) setSelectedBrand(brand)
     }
   }, [brandList])
 

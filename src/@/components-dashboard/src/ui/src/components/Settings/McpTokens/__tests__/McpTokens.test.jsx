@@ -166,7 +166,8 @@ describe('McpTokens', () => {
     expect(guide).toHaveTextContent(`"url": "${STATUS.url}"`)
     expect(guide).toHaveTextContent('"Authorization": "Bearer ${ORDERING_MCP_KEY}"') // eslint-disable-line no-template-curly-in-string
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Codex' }))
+    fireEvent.click(screen.getByText('Manual configuration'))
+    fireEvent.click(screen.getByRole('button', { name: 'Codex' }))
     expect(screen.getByTestId('mcp-guide-codex')).toHaveTextContent('bearer_token_env_var = "ORDERING_MCP_KEY"')
     expect(screen.getByText('Who am I in Ordering?')).toBeInTheDocument()
     expect(screen.getByText('List the last 5 orders')).toBeInTheDocument()
@@ -218,10 +219,11 @@ describe('McpTokens', () => {
     expect(screen.queryByText('ord_mcp_ab12SECRETSECRET')).not.toBeInTheDocument()
     expect(document.body.innerHTML).not.toContain('SECRETSECRET')
 
-    fireEvent.click(screen.getByRole('button', { name: 'Copy to LLM' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy prompt to connect' }))
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(2))
     const setupPrompt = navigator.clipboard.writeText.mock.calls[1][0]
-    expect(setupPrompt).toContain(STATUS.url)
+    expect(setupPrompt).not.toContain(STATUS.url)
+    expect(setupPrompt).toContain('then read its SETUP.md and follow it step by step.')
     expect(setupPrompt).not.toContain('SECRETSECRET')
     expect(setupPrompt).not.toContain('Bearer jwt')
 

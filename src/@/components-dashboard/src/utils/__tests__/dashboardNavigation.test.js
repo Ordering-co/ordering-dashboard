@@ -101,12 +101,12 @@ describe('getDashboardNavSections', () => {
 })
 
 describe('getDashboardFooterLinks', () => {
-  it('offers source code to admins and business owners only', () => {
+  it('offers source code to admins only', () => {
     const admin = getDashboardFooterLinks({ user: { level: 0, user_system_id: 1 } })
     const owner = getDashboardFooterLinks({ user: { level: 2 } })
     const driver = getDashboardFooterLinks({ user: { level: 5 } })
     expect(admin.filter(link => link.enabled).map(link => link.url)).toEqual(['/settings', '/free-downloads', '/open-source-code', '/purchase/addons', '/profile'])
-    expect(owner.filter(link => link.enabled).map(link => link.url)).toEqual(['/open-source-code', '/profile'])
+    expect(owner.filter(link => link.enabled).map(link => link.url)).toEqual(['/profile'])
     expect(driver.filter(link => link.enabled).map(link => link.url)).toEqual(['/profile'])
   })
 })

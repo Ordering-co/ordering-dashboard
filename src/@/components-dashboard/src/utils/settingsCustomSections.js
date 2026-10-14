@@ -701,6 +701,7 @@ export const SETTINGS_FIELD_DEPENDENCIES = {
   ...dependAll(['forgot_password_rate_attempts', 'forgot_password_rate_minutes'], dependsOn('forgot_password_rate_enabled')),
   // Apps & developers
   intercom_api_key: dependsOn('intercom_enabled'),
+  whatsapp_support_phone: dependsOn('whatsapp_support_enabled'),
   ...dependAll(['spoonity_vendor', 'spoonity_title'], dependsOn('spoonity_enabled')),
   // Orders & checkout
   ...dependAll(['max_days_preorder', 'preorder_maximum_days'], dependsOn('preorder_status_enabled')),

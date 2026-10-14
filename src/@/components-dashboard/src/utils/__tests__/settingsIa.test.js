@@ -54,7 +54,7 @@ const CATALOG = {
   pro_advanced_login: ['facebook', 'google', 'apple_login', 'twilio', 'pro_advanced_login_other'],
   pro_white_labeling: ['ordering_support'],
   pro_payments: ['global_apple_pay', 'global_google_pay'],
-  pro_integrations: ['google_analytics', 'facebook_pixel', 'intercom'],
+  pro_integrations: ['google_analytics', 'facebook_pixel', 'intercom', 'whatsapp_support'],
   key_enterprise: ['enterprise_platform_settings', 'enterprise_orders_management', 'enterprise_delivery', 'enterprise_orders_slas', 'enterprise_security', 'enterprise_integrations', 'enterprise_kiosk'],
   enterprise_delivery: [
     'enterprise_delivery_driver_permissions_and_controls',
@@ -135,6 +135,7 @@ describe('getSettingsGroupKey', () => {
     expect(getSettingsGroupKey({ categoryKey: 'enterprise_orders_slas' })).toBe('orders')
     expect(getSettingsGroupKey({ categoryKey: 'notification' })).toBe('notifications')
     expect(getSettingsGroupKey({ categoryKey: 'ordering_support' })).toBe('dashboard')
+    expect(getSettingsGroupKey({ categoryKey: 'whatsapp_support' })).toBe('developers')
   })
 })
 

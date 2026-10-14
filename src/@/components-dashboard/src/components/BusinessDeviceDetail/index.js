@@ -175,6 +175,7 @@ export const BusinessDeviceDetail = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = {
         business_id: selectedDevice?.business_id,
+        user_id: selectedDevice?.user_id,
         ...formState?.changes
       }
       const requestOptions = {

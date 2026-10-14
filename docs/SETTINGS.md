@@ -45,6 +45,8 @@ Read-only screens are allowed when they belong to a group. **API usage limits** 
 
 **MCP (Claude Code & Codex)** (`?group=developers&category=developers&id=mcpTokens`) is a side panel of API & integrations. It calls `GET /mcp/status` first: `enabled: false` shows a Coming soon state; `enabled: true` shows the server URL (`status.url`, never built in the frontend), the user's own MCP keys (`/users/{session user}/mcp_tokens`: list, create, revoke) and the setup guide for Claude Code and Codex. Creating a key requires the data notice checkbox and sends `data_notice_version` from the status. The secret (`token`) is shown once in the create modal and dropped when it closes: never store or log it. The tile and panel are for levels 0 and 2; the Settings route itself is still level 0 only.
 
+**Stripe Connect** (`?group=payments&category=addon_stripe_connect`) has two tabs. **Settings** retains the section configs: test mode, the Connect client ID and the payouts switch. **Configuration** reads and saves global payout rules through `GET` / `PUT /payout_rules/{platform|driver}`. Save a complete rule; it applies to future orders. The worked example illustrates the rule, while the API computes actual orders. Stripe keys remain in Card payments (Stripe).
+
 ## What is not edited in Settings
 
 These stay outside the hub on purpose. Do not move them in without a product decision.
@@ -57,6 +59,8 @@ These stay outside the hub on purpose. Do not move them in without a product dec
 | Gift card inventory | Orders > Gift cards (`/gift-cards`) | Inventory, not project config. Configs are Settings > Payments. |
 | Apps catalog | Footer Apps & Addons (`/purchase/addons`) | Purchase catalog. Enabled app configs live in the matching Settings group. |
 | Logs Audit | `/settings/logs` | Out of scope. |
+| Store Stripe account, platform fee and payouts | Stores > store > Payment methods > Stripe Connect v2 | Per-store records; account connection follows store-owner permissions. |
+| Driver Stripe account and payment rule | Delivery > Drivers > driver > Stripe Connect | Per-driver records; available to administrators when the payouts flag is enabled. |
 
 ## File map
 

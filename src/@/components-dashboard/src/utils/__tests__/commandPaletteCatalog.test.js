@@ -24,10 +24,11 @@ describe('buildNavigationEntries', () => {
 
   it('drops destinations that the route guard would reject', () => {
     const entries = buildNavigationEntries({ user: { level: 2 }, configs: {} })
-    expect(ids(entries)).toEqual(expect.arrayContaining(['nav:orders', 'nav:businesses', 'nav:store', 'nav:open_source_code']))
+    expect(ids(entries)).toEqual(expect.arrayContaining(['nav:orders', 'nav:businesses', 'nav:store']))
     expect(ids(entries)).not.toContain('nav:devices')
     expect(ids(entries)).not.toContain('nav:customers')
     expect(ids(entries)).not.toContain('nav:settings')
+    expect(ids(entries)).not.toContain('nav:open_source_code')
   })
 
   it('gives drivers managers only their pages', () => {
@@ -99,6 +100,33 @@ describe('buildSettingsHubEntries', () => {
     const entries = buildSettingsHubEntries({ hub: buildSettingsHub({ categoryLists, configs: {} }) })
     expect(ids(entries)).not.toContain('settings-field:general_hour_format')
     expect(ids(entries)).toContain('settings-section:addon_gift_cards')
+  })
+
+  it('indexes WhatsApp support under developers', () => {
+    const hub = buildSettingsHub({
+      categoryLists: {
+        key_pro: [{
+          id: 9,
+          key: 'pro_integrations',
+          name: 'Integrations',
+          configs: [],
+          children: [{
+            id: 10,
+            key: 'whatsapp_support',
+            name: 'WhatsApp support',
+            configs: [
+              { key: 'whatsapp_support_enabled', name: 'WhatsApp support button', rank: 1 },
+              { key: 'whatsapp_support_phone', name: 'WhatsApp phone number', rank: 2 }
+            ]
+          }]
+        }]
+      },
+      configs: {}
+    })
+    const entries = buildSettingsHubEntries({ hub })
+    const section = entries.find(entry => entry.id === 'settings-section:whatsapp_support')
+    expect(section.path).toBe('/settings?group=developers&category=whatsapp_support')
+    expect(rankCommandEntries(entries, 'whatsapp')[0].id).toBe('settings-section:whatsapp_support')
   })
 
   it('handles an empty hub', () => {

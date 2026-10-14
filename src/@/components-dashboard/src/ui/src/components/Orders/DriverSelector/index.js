@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useLanguage, useConfig, DriversList as DriversController } from '../../../../../index'
+import { Link } from 'react-router-dom'
+import { useLanguage, useConfig, useSession, DriversList as DriversController } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { Select } from '../../../styles/Select'
 import { Select as FirstSelect } from '../../../styles/Select/FirstSelect'
+import { canOpenDashboardRoute, getDashboardRoleFlags } from '../../../../../utils/dashboardNavigation'
 
 import {
   Option,
@@ -12,8 +14,11 @@ import {
   DriverImage,
   DriverName,
   OptionInnerContainer,
-  SelectWrapper
+  SelectWrapper,
+  NoDriversBanner
 } from './styles'
+
+const DRIVERS_GROUPS_PATH = '/delivery/drivers-groups'
 
 const DriverSelectorUI = (props) => {
   const {
@@ -40,6 +45,10 @@ const DriverSelectorUI = (props) => {
   const [driversOptionList, setDriversOptionList] = useState([])
   const [searchValue, setSearchValue] = useState(null)
   const [{ configs }] = useConfig()
+  const [{ user }] = useSession()
+
+  const hasNoDrivers = !driversList.loading && !driversList.error && !driversList.drivers?.length
+  const canOpenDriversGroups = canOpenDashboardRoute(DRIVERS_GROUPS_PATH, user?.level) && !getDashboardRoleFlags(user).isReadOnly
 
   const driversLoading = [{ value: 'default', content: <Option small={small}><span>{t('LOADING', 'loading')}...</span></Option> }]
   const showDriverAssignmentComment = configs?.manual_driver_assignment_comment_enabled?.value === '1'
@@ -165,56 +174,68 @@ const DriverSelectorUI = (props) => {
   }
 
   return (
-    <SelectWrapper>
-      {!driversList.loading
-        ? (
-        <>
-          {isFirstSelect
-            ? (
-            <FirstSelect
-              defaultValue={defaultOption || 'default'}
-              options={driversOptionList}
-              optionInnerMaxHeight='200px'
-              onChange={(driverId) => changeDriver(driverId)}
-              isShowSearchBar
-              searchBarPlaceholder={t('SEARCH', 'Search')}
-              searchBarIsCustomLayout
-              searchBarIsNotLazyLoad
-              searchValue={searchValue}
-              handleChangeSearch={handleSearch}
-              className='driver-select'
-            />
-              )
-            : (
+    <>
+      <SelectWrapper>
+        {!driversList.loading
+          ? (
+          <>
+            {isFirstSelect
+              ? (
+              <FirstSelect
+                defaultValue={defaultOption || 'default'}
+                options={driversOptionList}
+                optionInnerMaxHeight='200px'
+                onChange={(driverId) => changeDriver(driverId)}
+                isShowSearchBar
+                searchBarPlaceholder={t('SEARCH', 'Search')}
+                searchBarIsCustomLayout
+                searchBarIsNotLazyLoad
+                searchValue={searchValue}
+                handleChangeSearch={handleSearch}
+                className='driver-select'
+              />
+                )
+              : (
+              <Select
+                defaultValue={defaultOption || 'default'}
+                options={driversOptionList}
+                optionInnerMaxHeight='200px'
+                onChange={(driverId) => changeDriver(driverId)}
+                isShowSearchBar
+                searchBarIsNotLazyLoad
+                searchBarPlaceholder={t('SEARCH', 'Search')}
+                searchBarIsCustomLayout
+                searchValue={searchValue}
+                handleChangeSearch={handleSearch}
+                className='driver-select'
+              />
+                )}
+          </>
+            )
+          : (
+          <>
             <Select
-              defaultValue={defaultOption || 'default'}
-              options={driversOptionList}
+              placeholder={t('SELECT_DRIVER', 'Select driver')}
+              defaultValue='default'
+              options={driversLoading}
+              optionInnerMargin='10px'
               optionInnerMaxHeight='200px'
-              onChange={(driverId) => changeDriver(driverId)}
-              isShowSearchBar
-              searchBarIsNotLazyLoad
-              searchBarPlaceholder={t('SEARCH', 'Search')}
-              searchBarIsCustomLayout
-              searchValue={searchValue}
-              handleChangeSearch={handleSearch}
               className='driver-select'
             />
-              )}
-        </>
-          )
-        : (
-        <>
-          <Select
-            placeholder={t('SELECT_DRIVER', 'Select driver')}
-            defaultValue='default'
-            options={driversLoading}
-            optionInnerMargin='10px'
-            optionInnerMaxHeight='200px'
-            className='driver-select'
-          />
-        </>
+          </>
+            )}
+      </SelectWrapper>
+      {hasNoDrivers && (
+        <NoDriversBanner as='section' role='status'>
+          <span>{t('DRIVER_SELECTOR_NO_DRIVERS', 'No drivers can take this order. Check that the store is in an enabled driver group that accepts this payment method.')}</span>
+          {canOpenDriversGroups && (
+            <Link to={DRIVERS_GROUPS_PATH}>
+              {t('DRIVER_SELECTOR_NO_DRIVERS_LINK', 'Open Delivery Groups')}
+            </Link>
           )}
-    </SelectWrapper>
+        </NoDriversBanner>
+      )}
+    </>
   )
 }
 

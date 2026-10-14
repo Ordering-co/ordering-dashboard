@@ -697,7 +697,7 @@ const SidebarMenuUI = (props) => {
                       <span>{t('FREE_DOWNLOADS', 'Free downloads')}</span>
                     </Button>
                   )}
-                  {[0, 2].includes(sessionState?.user?.level) && (
+                  {sessionState?.user?.level === 0 && (
                     <Button
                       as={Link}
                       to='/open-source-code'

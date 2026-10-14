@@ -10,7 +10,7 @@ import { useTheme } from 'styled-components'
 import { ThreeDots, XLg } from 'react-bootstrap-icons'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { Confirm } from '../../Shared'
-import { addQueryToUrl } from '../../../utils'
+import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
 
 import {
   Container,
@@ -19,7 +19,8 @@ import {
   TabOption,
   TabOptionName,
   ActionSelectorWrapper,
-  EmptyMessage
+  EmptyMessage,
+  ScrollableTabsContainer
 } from './styles'
 
 export const PaymentOption = (props) => {
@@ -36,7 +37,9 @@ export const PaymentOption = (props) => {
     handleSaveClick,
     businessPaymethod,
     handleDeletePaymethod,
-    selectedPaymethodGateway
+    selectedPaymethodGateway,
+    extraTabs,
+    title
   } = props
 
   const query = new URLSearchParams(useLocation().search)
@@ -52,6 +55,10 @@ export const PaymentOption = (props) => {
   const [all, setAll] = useState(!filteredOptions?.length)
 
   const allowDevicesPaymethods = ['cash', 'card_delivery']
+  // Tabs a gateway adds before the common ones, as `{ key, title, content }`; the first one is where it opens
+  const defaultTab = extraTabs?.[0]?.key ?? 0
+  const currentExtraTab = extraTabs?.find(tab => tab.key === paymentTabs)
+  const PaymentTabs = extraTabs?.length ? ScrollableTabsContainer : TabsContainer
 
   const setPaymethodInfo = (values) => {
     const data = {}
@@ -111,7 +118,7 @@ export const PaymentOption = (props) => {
   }, [open])
 
   useEffect(() => {
-    setPaymentTabs(0)
+    setPaymentTabs(defaultTab)
   }, [sitesState])
 
   useEffect(() => {
@@ -131,18 +138,23 @@ export const PaymentOption = (props) => {
 
   const handleTabClick = (tab, isInitialRender) => {
     setPaymentTabs(tab)
-    if (!isInitialRender) {
+    if (isInitialRender) return
+    if (extraTabs?.some(extraTab => extraTab.key === tab)) {
+      // Not kept in the URL: every payment method reads that param as the number of one of its own tabs
+      removeQueryToUrl(['paymethod_tab'])
+    } else {
       addQueryToUrl({ paymethod_tab: tab })
     }
   }
 
   useEffect(() => {
     const payemthodTab = query.get('paymethod_tab')
-    if (payemthodTab) {
+    // A gateway with tabs of its own opens on the first of them, whatever tab another payment method left in the URL
+    if (payemthodTab && !extraTabs?.length) {
       const _payemthodTab = Number(payemthodTab)
       handleTabClick(_payemthodTab, true)
     } else {
-      handleTabClick(0)
+      handleTabClick(defaultTab)
     }
   }, [])
 
@@ -150,7 +162,7 @@ export const PaymentOption = (props) => {
     <>
       <Container id='payment_method_option'>
         <Header>
-          <h1>{t(businessPaymethod?.paymethod?.gateway?.toUpperCase() ?? 'PAYMETHOD', businessPaymethod?.paymethod?.name ?? 'Paymethod')}</h1>
+          <h1>{title ?? t(businessPaymethod?.paymethod?.gateway?.toUpperCase() ?? 'PAYMETHOD', businessPaymethod?.paymethod?.name ?? 'Paymethod')}</h1>
           <ActionSelectorWrapper>
             <DropdownButton
               menuAlign={theme?.rtl ? 'left' : 'right'}
@@ -174,7 +186,16 @@ export const PaymentOption = (props) => {
           </CloseButton>
         </Header>
 
-        <TabsContainer>
+        <PaymentTabs>
+          {extraTabs?.map(tab => (
+            <Tab
+              key={tab.key}
+              active={paymentTabs === tab.key}
+              onClick={() => handleTabClick(tab.key)}
+            >
+              {tab.title}
+            </Tab>
+          ))}
           {sitesState?.sites?.length > 0 && (
             <Tab
               active={paymentTabs === 0}
@@ -197,7 +218,8 @@ export const PaymentOption = (props) => {
               {t('DEVICES', 'Devices')}
             </Tab>
           )}
-        </TabsContainer>
+        </PaymentTabs>
+        {currentExtraTab?.content}
         {paymentTabs === 0 && sitesState?.sites?.length > 0 && (
           <>
             <TabOption
@@ -274,14 +296,16 @@ export const PaymentOption = (props) => {
           </>
         )}
 
-        <Button
-          borderRadius='5px'
-          color='primary'
-          disabled={actionState.loading || Object.keys(changesState).length === 0}
-          onClick={() => handleSaveClick(businessPaymethod.id)}
-        >
-          {actionState.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
-        </Button>
+        {!currentExtraTab && (
+          <Button
+            borderRadius='5px'
+            color='primary'
+            disabled={actionState.loading || Object.keys(changesState).length === 0}
+            onClick={() => handleSaveClick(businessPaymethod.id)}
+          >
+            {actionState.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
+          </Button>
+        )}
       </Container>
       <Confirm
         width='700px'

@@ -49,9 +49,6 @@ export const BusinessSummary = (props) => {
     setIsExpand,
     formState,
     setFormState,
-    handleSyncClover,
-    cloverState,
-    handleInstallClover,
     streamConnectionState
   } = props
 
@@ -265,17 +262,6 @@ export const BusinessSummary = (props) => {
     })
   }
 
-  const onClickInstallClover = () => {
-    setConfirm({
-      open: true,
-      content: t('INSTALL_CLOVER_CONFIRM', 'This installs Clover for the whole project. You can connect this store right after.'),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleInstallClover()
-      }
-    })
-  }
-
   const expandSideBar = () => {
     const element = document.getElementById('business_details_bar')
     if (!element) return
@@ -413,27 +399,6 @@ export const BusinessSummary = (props) => {
 
         <BusinessDetailsContent>
           <ButtonWrapper flexEnd>
-            {sessionState?.user?.level === 0 && (cloverState?.installed || cloverState?.error || cloverState?.loading
-              ? (
-                <Button
-                  color='lightPrimary'
-                  borderRadius='8px'
-                  onClick={() => handleSyncClover()}
-                  disabled={businessState?.loading || formState?.loading || cloverState?.loading}
-                >
-                  {t('CONNECT_CLOVER', 'Connect clover')}
-                </Button>
-                )
-              : (
-                <Button
-                  color='lightPrimary'
-                  borderRadius='8px'
-                  onClick={onClickInstallClover}
-                  disabled={businessState?.loading || formState?.loading || cloverState?.installing}
-                >
-                  {cloverState?.installing ? t('INSTALLING', 'Installing...') : t('INSTALL_CLOVER', 'Install Clover')}
-                </Button>
-                ))}
             <Button
               color='lightGreen'
               borderRadius='8px'

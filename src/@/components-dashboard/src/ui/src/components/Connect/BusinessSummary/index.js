@@ -56,6 +56,7 @@ export const BusinessSummary = (props) => {
     integrationsList,
     getIntegrations,
     updateBusiness,
+    integrationActionLoading,
     installingPluginRoot,
     handleInstallPosIntegration
   } = props
@@ -270,6 +271,10 @@ export const BusinessSummary = (props) => {
     if (!plugin) return
     e.stopPropagation()
     const url = await handleSync(getPluginSetupPath(plugin), plugin?.root)
+    if (!url) {
+      showToast(ToastType.Error, t('INTEGRATION_SETUP_NOT_AVAILABLE', 'This integration has no setup page. Contact support to finish the connection.'))
+      return
+    }
     setPluginSelected({
       open: true,
       title: plugin.name,
@@ -415,7 +420,7 @@ export const BusinessSummary = (props) => {
                           color={integration?.plugin_id ? 'green' : 'primary'}
                           borderRadius='8px'
                           onClick={(e) => handleButtonClick(integration, e)}
-                          disabled={businessState?.loading || formState?.loading || !!installingPluginRoot}
+                          disabled={businessState?.loading || formState?.loading || integrationActionLoading || !!installingPluginRoot}
                         >
                           {installingPluginRoot && installingPluginRoot === integration?.plugin_root ? t('INSTALLING', 'Installing...') : getButtonText(integration)}
                         </Button>

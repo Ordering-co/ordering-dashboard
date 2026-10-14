@@ -1,4 +1,6 @@
-# Source Code Downloads — backend contract
+# Source Code Downloads — legacy backend contract
+
+The Dashboard page now links to public GitHub repositories and no longer consumes these endpoints. See [public source code](public-source-code.md). This document preserves the optional legacy backend contract for other consumers.
 
 This document defines the optional Dashboard Worker and local Vite adapter contract. The versioned [JSON Schema](./source-code-contract.schema.json) defines the shared interface for the artifact producer and Dashboard client. See [setup.md](../setup.md) for application configuration.
 
@@ -11,7 +13,7 @@ GET {apiBase}/{apiVersion}/{language}/{serverResolvedProject}/users/me?params=id
 Authorization: Bearer <token>
 ```
 
-The result must be a successful JSON response with `error: false`, a nonempty user `id`, integer `level`, and boolean `enabled`. Only enabled levels `0` (Administrator) and `2` (Business Owner) proceed. API `401` maps to `401`; other API failures, timeouts, malformed or incomplete responses map to `503`; disabled or other levels map to `403`. An anonymous request receives `401` before any tenant or identity lookup. No JWT decoding or browser-supplied role is trusted. A project selection never bypasses the API identity check.
+The result must be a successful JSON response with `error: false`, a nonempty user `id`, integer `level`, and boolean `enabled`. Only enabled level `0` (Administrator) proceeds; Business Owners (level `2`) receive `403`. API `401` maps to `401`; other API failures, timeouts, malformed or incomplete responses map to `503`; disabled or other levels map to `403`. An anonymous request receives `401` before any tenant or identity lookup. No JWT decoding or browser-supplied role is trusted. A project selection never bypasses the API identity check.
 
 Custom domains cannot set `X-Ordering-Project`. When `USE_PROJECT_DOMAIN` is enabled, the Worker resolves their request host through the Ordering API `/current` endpoint with a 16 KiB streaming byte limit; it cancels the body as soon as the limit is exceeded and does not rely on `Content-Length`. It fails closed if resolution fails. Auth and catalogue lookup then use that same server-resolved project. This keeps custom-domain sessions isolated from the base project. Existing SEO/page fallback behavior remains unchanged.
 

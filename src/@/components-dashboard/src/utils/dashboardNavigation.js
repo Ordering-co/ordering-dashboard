@@ -68,7 +68,7 @@ export const DASHBOARD_ROUTE_LEVELS = {
   '/settings': [0],
   '/settings/logs': [0],
   '/free-downloads': [0],
-  '/open-source-code': [0, 2],
+  '/open-source-code': [0],
   '/purchase/addons': [0],
   '/support': [0],
   '/ordering-products': [0],
@@ -359,7 +359,7 @@ export const getDashboardFooterLinks = ({ t = (_key, fallback) => fallback, user
       title: t('SOURCE_CODE_TITLE', 'Open Source Code'),
       pageName: 'open_source_code',
       url: '/open-source-code',
-      enabled: [0, 2].includes(level)
+      enabled: level === 0
     },
     {
       id: 'purchase_addons',

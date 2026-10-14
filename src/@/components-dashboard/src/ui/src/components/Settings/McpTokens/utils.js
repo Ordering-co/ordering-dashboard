@@ -99,4 +99,4 @@ export const buildCodexToml = (url) =>
 export const buildCodexCommand = (url) =>
   `codex mcp add ${MCP_SERVER_NAME} \\\n  --url ${url} \\\n  --bearer-token-env-var ${MCP_ENV_VAR}`
 
-export const buildEnvExport = () => `export ${MCP_ENV_VAR}="ord_mcp_…"`
+export const buildEnvExport = () => `printf 'MCP key (hidden): '\nread -r -s ${MCP_ENV_VAR}\nprintf '\\n'\nexport ${MCP_ENV_VAR}`

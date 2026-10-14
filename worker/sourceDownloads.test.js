@@ -82,7 +82,7 @@ afterEach(() => {
 })
 
 describe('source downloads Worker endpoints', () => {
-  it.each([0, 2])('returns only the contract whitelist for an enabled owner/admin level %i', async level => {
+  it.each([0])('returns only the contract whitelist for an enabled administrator level %i', async level => {
     const { bucket, archiveBytes } = makeBucket()
     const fetchImpl = identityFetch({ id: 12, level, enabled: true })
     const response = await handleSourceDownloadsRequest(request('/api/source-catalog'), { SOURCE_DOWNLOADS: bucket }, config, fetchImpl)
@@ -192,6 +192,7 @@ describe('source downloads Worker endpoints', () => {
 
   it.each([
     [{ id: 8, level: 1, enabled: true }, 'forbidden'],
+    [{ id: 8, level: 2, enabled: true }, 'forbidden'],
     [{ id: 8, level: 3, enabled: true }, 'forbidden'],
     [{ id: 8, level: 4, enabled: true }, 'forbidden'],
     [{ id: 8, level: 5, enabled: true }, 'forbidden'],
@@ -264,7 +265,7 @@ describe('source downloads Worker endpoints', () => {
 
   it('streams the private ZIP with its verified size and attachment headers', async () => {
     const { bucket, archiveBytes } = makeBucket()
-    const fetchImpl = identityFetch({ id: 2, level: 2, enabled: true })
+    const fetchImpl = identityFetch({ id: 2, level: 0, enabled: true })
     const response = await handleSourceDownloadsRequest(
       request('/api/source-downloads/website-marketplace/v2026.10.02.132200'),
       { SOURCE_DOWNLOADS: bucket }, config, fetchImpl

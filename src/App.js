@@ -735,7 +735,7 @@ const DashboardApp = () => {
                     <ProtectedRoute path='/settings/enterprise' allowedLevels={[0]}>
                       <SettingsLegacyRedirect from='/settings/enterprise' />
                     </ProtectedRoute>
-                    <ProtectedRoute path='/open-source-code' allowedLevels={[0, 2]}>
+                    <ProtectedRoute path='/open-source-code' allowedLevels={[0]}>
                       <OpenSourceCode />
                     </ProtectedRoute>
                     <ProtectedRoute path='/free-downloads' allowedLevels={[0]}>

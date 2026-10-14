@@ -19,6 +19,7 @@ export const EnterprisePromotionList = (props) => {
   const {
     UIComponent,
     paginationSettings,
+    orderBy,
     propsToFetch,
     isSearchByPromotionName,
     isSearchByPromotionDescription
@@ -134,7 +135,8 @@ export const EnterprisePromotionList = (props) => {
         ? `${ordering.root}/offers?page=${page}&page_size=${pageSize}&params=${propsToFetch.toString()}&&where=${JSON.stringify(where)}`
         : `${ordering.root}/offers?page=${page}&page_size=${pageSize}&params=${propsToFetch.toString()}`
 
-      const response = await fetch(fetchEndpoint, requestOptions)
+      const orderingParam = orderBy ? `&orderBy=${encodeURIComponent(orderBy)}` : ''
+      const response = await fetch(`${fetchEndpoint}${orderingParam}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setPromotionListState({ promotions: content.result, loading: false, error: null })

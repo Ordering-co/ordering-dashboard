@@ -24,12 +24,13 @@ export const BannerImageDetails = (props) => {
   const [{ token, user }] = useSession()
   const [, { showToast }] = useToast()
 
-  const [searchValue, setSearchValue] = useState(null)
+  const [searchValue, setSearchValue] = useState('')
   const [imageState, setImageState] = useState({ image: props.image, loading: false, error: null })
   const [changesState, setChangesState] = useState({ changes: {}, loading: false, error: null })
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
   const [selectedLinkType, setSelectedLinkType] = useState(props.image?.action?.type || null)
   const [selectedBusinessId, setSelectedBusinessId] = useState(null)
+  const [selectedBusiness, setSelectedBusiness] = useState(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState(null)
   const [selectedProductId, setSelectedProductId] = useState(null)
 
@@ -128,6 +129,15 @@ export const BannerImageDetails = (props) => {
 
   const handleChangeBusinessPage = (page) => {
     getBusinessList(page, businessList?.pagination?.page_size || BUSINESSES_PAGE_SIZE)
+  }
+
+  const getSelectedBusiness = async (businessId) => {
+    try {
+      const { content: { error, result } } = await ordering.businesses(businessId).asDashboard().select(propsToFetch).get()
+      if (!error && result) setSelectedBusiness(result)
+    } catch (error) {
+      setSelectedBusiness(null)
+    }
   }
 
   /**
@@ -272,6 +282,20 @@ export const BannerImageDetails = (props) => {
     }
   }, [props.image, selectedLinkType])
 
+  useEffect(() => {
+    if (!selectedBusinessId) {
+      setSelectedBusiness(null)
+      return
+    }
+    if (businessList.loading || selectedBusiness?.id === selectedBusinessId) return
+    const business = businessList.businesses.find(business => business.id === selectedBusinessId)
+    if (business) {
+      setSelectedBusiness(business)
+      return
+    }
+    getSelectedBusiness(selectedBusinessId)
+  }, [selectedBusinessId, businessList])
+
   return (
     <>
       {UIComponent && (
@@ -288,6 +312,7 @@ export const BannerImageDetails = (props) => {
           setSelectedLinkType={setSelectedLinkType}
           selectedBusinessId={selectedBusinessId}
           setSelectedBusinessId={setSelectedBusinessId}
+          selectedBusiness={selectedBusiness}
           selectedCategoryId={selectedCategoryId}
           setSelectedCategoryId={setSelectedCategoryId}
           selectedProductId={selectedProductId}

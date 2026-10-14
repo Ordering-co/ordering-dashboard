@@ -30,33 +30,26 @@ describe('MCP setup prompt copy', () => {
     vi.restoreAllMocks()
   })
 
-  it('copies the default Claude prompt, then the selected Codex prompt with the current project URL', async () => {
+  it('copies one canonical prompt without tenant or credentials, regardless of manual client', async () => {
     const { rerender } = render(guide())
-    const copy = screen.getByRole('button', { name: 'Copy to LLM' })
-    expect(copy).toHaveTextContent('Copy to LLM')
+    const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     fireEvent.click(copy)
     await waitFor(() => expect(copy).toHaveTextContent('Copied'))
-    expect(navigator.clipboard.writeText.mock.calls[0][0]).toContain('connecting Ordering MCP to Claude Code')
-    expect(navigator.clipboard.writeText.mock.calls[0][0]).toContain(status.url)
-    expect(navigator.clipboard.writeText.mock.calls[0][0]).toContain('"Authorization": "Bearer ${ORDERING_MCP_KEY}"') // eslint-disable-line no-template-curly-in-string
-
-    fireEvent.click(screen.getByRole('tab', { name: 'Codex' }))
-    expect(copy).toHaveTextContent('Copy to LLM')
+    const prompt = navigator.clipboard.writeText.mock.calls[0][0]
+    expect(prompt).toBe('Connect me to Ordering.co: clone https://github.com/Ordering-co/ordering-dev-quickstart to ~/ordering-dev-quickstart (or pull it if I already have it), then read its SETUP.md and follow it step by step.')
     rerender(guide({ url: 'https://api.ordering.co/mcp/project-b', token: 'ord_mcp_DO_NOT_COPY' }))
     fireEvent.click(copy)
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(2))
-    const prompt = navigator.clipboard.writeText.mock.calls[1][0]
-    expect(prompt).toContain('connecting Ordering MCP to Codex')
-    expect(prompt).toContain('https://api.ordering.co/mcp/project-b')
-    expect(prompt).toContain('bearer_token_env_var = "ORDERING_MCP_KEY"')
-    expect(prompt).not.toContain('project-a')
+    expect(navigator.clipboard.writeText.mock.calls[1][0]).toBe(prompt)
+    expect(prompt).not.toContain('project-b')
     expect(prompt).not.toContain('DO_NOT_COPY')
+    expect(screen.getByRole('link', { name: 'Complete guide' })).toHaveAttribute('href', 'https://docs.ordering.co/docs/developers/mcp/')
   })
 
   it('reports clipboard failure and supports retry without falsely saying copied', async () => {
     navigator.clipboard.writeText.mockRejectedValueOnce(new Error('Denied'))
     render(guide())
-    const copy = screen.getByRole('button', { name: 'Copy to LLM' })
+    const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     fireEvent.click(copy)
     await waitFor(() => expect(copy).toHaveTextContent('Copy failed. Try again.'))
     expect(copy).not.toHaveTextContent('Copied')
@@ -68,49 +61,48 @@ describe('MCP setup prompt copy', () => {
   it('handles an unavailable clipboard without unhandled errors', async () => {
     Object.assign(navigator, { clipboard: undefined })
     render(guide())
-    fireEvent.click(screen.getByRole('button', { name: 'Copy to LLM' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy prompt to connect' }))
     expect(await screen.findByText('Copy failed. Try again.')).toBeInTheDocument()
   })
 
-  it('ignores an obsolete clipboard completion after changing assistant, including its pending state', async () => {
+  it('ignores obsolete completions when a copy consumer changes text', async () => {
     const oldCopy = deferred()
     const currentCopy = deferred()
     navigator.clipboard.writeText.mockReturnValueOnce(oldCopy.promise).mockReturnValueOnce(currentCopy.promise)
-    render(guide())
-    const copy = screen.getByRole('button', { name: 'Copy to LLM' })
+    const consumer = text => <ThemeProvider theme={theme}><McpCopyButton text={text} buttonText='Copy prompt to connect' /></ThemeProvider>
+    const { rerender } = render(consumer('first'))
+    const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     fireEvent.click(copy)
     expect(copy).toBeDisabled()
-    fireEvent.click(screen.getByRole('tab', { name: 'Codex' }))
+    rerender(consumer('second'))
     expect(copy).toBeEnabled()
     fireEvent.click(copy)
     await act(async () => oldCopy.resolve())
     expect(copy).toBeDisabled()
     expect(copy).not.toHaveTextContent('Copied')
     await act(async () => currentCopy.resolve())
-    expect(copy).toBeEnabled()
     expect(copy).toHaveTextContent('Copied')
   })
 
-  it('ignores an obsolete failure after the project URL changes', async () => {
+  it('ignores obsolete failures when a copy consumer changes text', async () => {
     const oldCopy = deferred()
     navigator.clipboard.writeText.mockReturnValueOnce(oldCopy.promise)
-    const { rerender } = render(guide())
-    const copy = screen.getByRole('button', { name: 'Copy to LLM' })
-    fireEvent.click(copy)
-    rerender(guide({ url: 'https://api.ordering.co/mcp/project-b' }))
+    const consumer = text => <ThemeProvider theme={theme}><McpCopyButton text={text} buttonText='Copy prompt to connect' /></ThemeProvider>
+    const { rerender } = render(consumer('first'))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy prompt to connect' }))
+    rerender(consumer('second'))
     await act(async () => oldCopy.reject(new Error('Denied')))
-    expect(copy).toHaveTextContent('Copy to LLM')
-    expect(copy).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Copy prompt to connect' })).toHaveTextContent('Copy prompt to connect')
   })
 
   it('resets successful feedback after two seconds and cancels timers on unmount', async () => {
     vi.useFakeTimers()
     const { unmount } = render(guide())
-    const copy = screen.getByRole('button', { name: 'Copy to LLM' })
+    const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     await act(async () => fireEvent.click(copy))
     expect(copy).toHaveTextContent('Copied')
     act(() => vi.advanceTimersByTime(2000))
-    expect(copy).toHaveTextContent('Copy to LLM')
+    expect(copy).toHaveTextContent('Copy prompt to connect')
     await act(async () => fireEvent.click(copy))
     expect(vi.getTimerCount()).toBe(1)
     unmount()
@@ -122,7 +114,7 @@ describe('MCP setup prompt copy', () => {
     const pending = deferred()
     navigator.clipboard.writeText.mockReturnValueOnce(pending.promise)
     const { unmount } = render(guide())
-    fireEvent.click(screen.getByRole('button', { name: 'Copy to LLM' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy prompt to connect' }))
     unmount()
     await act(async () => pending.resolve())
     expect(vi.getTimerCount()).toBe(0)

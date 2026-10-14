@@ -71,6 +71,7 @@ export const DeliveryServices = (props) => {
    * @param {Object} changes
    */
   const handleUpdateDeliveryService = async (deliveryServiceId, changes) => {
+    if (!deliveryServiceId) return
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true, error: null })

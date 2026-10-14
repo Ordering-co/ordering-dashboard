@@ -150,6 +150,7 @@ export const SETTINGS_CATEGORY_GROUPS = {
   google_analytics: 'developers',
   facebook_pixel: 'developers',
   intercom: 'developers',
+  whatsapp_support: 'developers',
   // key_enterprise
   enterprise_platform_settings: 'platform',
   enterprise_orders_management: 'orders',

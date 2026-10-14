@@ -214,7 +214,7 @@ export const DeliveryServicesList = (props) => {
                             <Switch
                               disabled={actionDisabled || !company?.plugin_id}
                               defaultChecked={company?.enabled}
-                              onChange={enabled => handleUpdateDeliveryService?.(deliveryServiceId, { enabled })}
+                              onChange={enabled => handleUpdateDeliveryService?.(company.id, { enabled })}
                             />
                           </EnableWrapper>
                         </ActionsContainer>

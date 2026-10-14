@@ -7,6 +7,7 @@ import { EmailSetting } from '../EmailSetting'
 import { NotificationSetting } from '../NotificationSetting'
 import { SettingsList } from '../SettingsList'
 import { SettingsLoyaltyStores } from '../SettingsLoyaltyStores'
+import { SettingsStripeConnect } from '../SettingsStripeConnect'
 import { LanguageSetting } from '../LanguageSetting'
 import { PlaceListing } from '../PlaceListing'
 import { IntegrationListing } from '../IntegrationListing'
@@ -96,6 +97,9 @@ export const SettingsHubDetail = ({ section, onBack, focus }) => {
           : null
       if (loyaltyType) {
         return <SettingsLoyaltyStores type={loyaltyType} category={category} />
+      }
+      if (category.key === 'addon_stripe_connect') {
+        return <SettingsStripeConnect category={category} focus={focus} />
       }
       return (
         <SettingsList category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle focus={focus} />

@@ -97,7 +97,7 @@ export const BusinessDetails = (props) => {
           )}
         </FormControl>
         <GoogleMapContainer>
-          {!addressOnly && <><label>{t('GOOGLE_PLACE_ID', 'Google place ID')}</label><p>{placeId ?? googleMapsApiKey}</p></>}
+          {!addressOnly && placeId && <><label>{t('GOOGLE_PLACE_ID', 'Google place ID')}</label><p>{placeId}</p></>}
           {configs?.google_maps_api_key?.value && (
             <WrapperMap>
               <GoogleMapsMap

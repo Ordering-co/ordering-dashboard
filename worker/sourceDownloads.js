@@ -3,7 +3,7 @@ const STORAGE_PREFIX = 'source-distributions'
 const MAX_CATALOG_BYTES = 1024 * 1024
 const MAX_IDENTITY_BYTES = 16 * 1024
 const IDENTITY_TIMEOUT_MS = 5000
-const ALLOWED_LEVELS = new Set([0, 2])
+const ALLOWED_LEVELS = new Set([0])
 const ALLOWED_PRODUCT_ID = 'website-marketplace'
 const VERSION_PATTERN = /^v\d{4}\.\d{2}\.\d{2}\.\d{6}$/
 const SHA_PATTERN = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i
@@ -345,7 +345,7 @@ export const handleSourceDownloadsRequest = async (request, env, config, fetchIm
 
 export const sourceDownloadsConstants = Object.freeze({
   catalogKey: CATALOG_KEY,
-  allowedLevels: [0, 2],
+  allowedLevels: [0],
   allowedProductId: ALLOWED_PRODUCT_ID,
   storagePrefix: STORAGE_PREFIX
 })

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { WarningBanner } from '../GoogleMapsApiKeySettingButton/style'
 
 export const SelectWrapper = styled.div`
   .header {
@@ -152,3 +153,8 @@ export const DriverImage = (props) => {
     </DriverImageStyled>
   )
 }
+
+export const NoDriversBanner = styled(WarningBanner)`
+  max-width: none;
+  margin-top: 10px;
+`

@@ -15,3 +15,7 @@ Read [setup.md](setup.md) for configuration, development commands and optional s
 ## License
 
 [Ordering.co Source License v1.2](LICENSE-ORDERING) applies to this source. Existing third-party notices remain applicable. Read the license terms before using or redistributing it.
+
+## Open Source Code
+
+The Dashboard page links to seven public product repositories and two developer tools. See [public source code](docs/public-source-code.md) for repository links, setup guidance and access requirements.

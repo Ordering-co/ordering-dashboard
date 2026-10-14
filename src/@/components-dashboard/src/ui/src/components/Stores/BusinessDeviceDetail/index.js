@@ -170,7 +170,7 @@ const BusinessDeviceDetailUI = (props) => {
       <FormControl>
         <label>{t('NAME', 'Name')}</label>
         <Input
-          value={formState?.changes?.name ?? selectedDevice?.name}
+          value={formState?.changes?.name ?? selectedDevice?.name ?? ''}
           onChange={(e) => handleChangeFormState({ name: e.target.value })}
         />
       </FormControl>
@@ -228,7 +228,7 @@ const BusinessDeviceDetailUI = (props) => {
         <FormControl>
           <label>{t('DEVICE_CODE', 'Device Code')}</label>
           <Input
-            value={formState?.changes?.code ?? selectedDevice?.code}
+            value={formState?.changes?.code ?? selectedDevice?.code ?? ''}
             onChange={(e) => handleChangeFormState({ code: e.target.value })}
             disabled
           />

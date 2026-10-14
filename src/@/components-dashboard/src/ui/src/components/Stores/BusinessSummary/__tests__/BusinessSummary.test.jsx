@@ -5,6 +5,7 @@ import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import themeJson from '~/theme.json'
 
 const websiteState = vi.hoisted(() => ({ url: null }))
+const sessionState = vi.hoisted(() => ({ user: { level: 2 } }))
 
 vi.mock('~components', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback],
@@ -12,7 +13,7 @@ vi.mock('~components', () => ({
   useEvent: () => [{ emit: vi.fn() }],
   useApi: () => [{ project: '22sept' }],
   useConfig: () => [{ configs: {} }],
-  useSession: () => [{ user: { level: 2 } }]
+  useSession: () => [sessionState]
 }))
 
 vi.mock('~ui', async () => {
@@ -71,7 +72,6 @@ const renderSummary = (overrides = {}) => renderWithProviders(
     handleUpdateBusinessClick={vi.fn()}
     handleDeleteBusiness={vi.fn()}
     handleDuplicateBusiness={vi.fn()}
-    handleSyncClover={vi.fn()}
     setFormState={vi.fn()}
     setIsExpand={vi.fn()}
     {...overrides}
@@ -81,6 +81,7 @@ const renderSummary = (overrides = {}) => renderWithProviders(
 
 beforeEach(() => {
   websiteState.url = 'https://v26-22sept.orderingplus.com/store/chick_fil_a'
+  sessionState.user = { level: 2 }
 })
 
 afterEach(() => {
@@ -114,5 +115,15 @@ describe('BusinessSummary store preview', () => {
     expect(previewButton).toBeDisabled()
     fireEvent.click(previewButton)
     expect(openWindow).not.toHaveBeenCalled()
+  })
+})
+
+describe('BusinessSummary header actions', () => {
+  it('does not offer Clover install or connect to admins', () => {
+    sessionState.user = { level: 0 }
+    renderSummary({ isAdmin: true })
+
+    expect(screen.getByRole('button', { name: 'Snooze' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /clover/i })).not.toBeInTheDocument()
   })
 })

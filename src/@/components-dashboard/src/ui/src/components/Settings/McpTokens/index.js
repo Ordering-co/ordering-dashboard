@@ -218,10 +218,11 @@ const McpTokensUI = (props) => {
     <>
       <Container>
         {renderHeader()}
+        <McpSetupGuide status={status} />
 
         <Section>
           <h2>{t('MCP_SERVER_URL', 'Server URL')}</h2>
-          <p>{t('MCP_SERVER_URL_HELP', 'The address of the MCP server for this project. The setup guide below already uses it.')}</p>
+          <p>{t('MCP_SERVER_URL_HELP', 'The MCP endpoint for this project, for manual setup. Automatic connection confirms the project during sign-in.')}</p>
           <CopyRow>
             <code data-testid='mcp-server-url'>{status.url}</code>
             <McpCopyButton text={status.url} label={t('MCP_COPY_URL', 'Copy the server URL')} />
@@ -251,7 +252,7 @@ const McpTokensUI = (props) => {
           {!tokensState.loading && !tokensState.error && tokens.length === 0 && (
             <EmptyState>
               <h3>{t('MCP_NO_KEYS', 'You have no MCP keys yet')}</h3>
-              <p>{t('MCP_NO_KEYS_HELP', 'Create a key, then follow the guide below to connect Claude Code or Codex.')}</p>
+              <p>{t('MCP_NO_KEYS_HELP', 'Copy the prompt above to sign in and create your MCP credential. You can also create a key manually as an alternative.')}</p>
               <Button color='primary' borderRadius='7.6px' onClick={() => openCreate()}>
                 {t('MCP_CREATE_KEY', 'Create key')}
               </Button>
@@ -300,7 +301,6 @@ const McpTokensUI = (props) => {
           )}
         </Section>
 
-        <McpSetupGuide status={status} />
       </Container>
 
       {createForm && (
