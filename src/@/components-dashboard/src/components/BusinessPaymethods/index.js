@@ -236,9 +236,13 @@ export const BusinessPaymethods = (props) => {
         setActionState({ loading: false, result: { error: false } })
         showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
         callback && callback({ ...content.result, paymethod })
+      } else {
+        setActionState({ loading: false, result: { error: true, result: content.result } })
+        showToast(ToastType.Error, getInstallErrorMessage(content.result))
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
+      showToast(ToastType.Error, t('PAYMETHOD_SAVE_FAILED', 'The payment method could not be saved. Please try again.'))
     }
   }
 
@@ -276,9 +280,13 @@ export const BusinessPaymethods = (props) => {
           })
         }))
         showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
+      } else {
+        setActionState({ loading: false, result: { error: true, result: content.result } })
+        showToast(ToastType.Error, getInstallErrorMessage(content.result))
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
+      showToast(ToastType.Error, t('PAYMETHOD_SAVE_FAILED', 'The payment method could not be saved. Please try again.'))
     }
   }
 

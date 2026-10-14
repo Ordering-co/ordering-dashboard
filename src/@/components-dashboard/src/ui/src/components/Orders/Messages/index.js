@@ -11,6 +11,7 @@ import MdClose from '@meronex/icons/md/MdClose'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { addQueryToUrl } from '../../../utils'
 import { buildOrderPlacedForViaHtml, getOrderPlacedViaCopy } from './orderPlacedHistory'
+import { getQuickMessages } from './quickMessages'
 
 import {
   MessagesContainer,
@@ -110,20 +111,6 @@ export const MessagesUI = (props) => {
   const [{ configs }] = useConfig()
   const showExternalId = configs?.change_order_id?.value === '1'
 
-  const adminMessageList = [
-    { key: 'message_1', text: t('ADMIN_MESSAGE_1', 'admin_message_1') },
-    { key: 'message_2', text: t('ADMIN_MESSAGE_2', 'admin_message_2') },
-    { key: 'message_3', text: t('ADMIN_MESSAGE_3', 'admin_message_3') },
-    { key: 'message_4', text: t('ADMIN_MESSAGE_4', 'admin_message_4') }
-  ]
-
-  const storeMessageList = [
-    { key: 'message_1', text: t('STORE_MESSAGE_1', 'store_message_1') },
-    { key: 'message_2', text: t('STORE_MESSAGE_2', 'store_message_2') },
-    { key: 'message_3', text: t('STORE_MESSAGE_3', 'store_message_3') },
-    { key: 'message_4', text: t('STORE_MESSAGE_4', 'store_message_4') }
-  ]
-
   const handleClickQuickMessage = (msg) => {
     const quickMsg = message ? `${message} ${msg}` : msg
     setValue('message', quickMsg)
@@ -138,9 +125,7 @@ export const MessagesUI = (props) => {
   }
 
   useEffect(() => {
-    if (user.level === 0) setMessageList(adminMessageList)
-    else if (user.level === 2) setMessageList(storeMessageList)
-    else setMessageList([])
+    setMessageList(getQuickMessages(user?.level, t))
   }, [user])
 
   useEffect(() => {

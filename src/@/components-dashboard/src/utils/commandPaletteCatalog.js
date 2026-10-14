@@ -139,10 +139,11 @@ export const SETTINGS_SECTION_ALIASES = {
   pages: ['paginas', 'paginas web', 'cms', 'pages'],
   custom_order: ['ordenes personalizadas', 'custom orders'],
   // Integration categories: search by provider name
-  pro_integrations: ['analiticas', 'tracking', 'pixel', 'google analytics', 'facebook pixel', 'intercom'],
+  pro_integrations: ['analiticas', 'tracking', 'pixel', 'google analytics', 'facebook pixel', 'intercom', 'whatsapp'],
   google_analytics: ['google analytics', 'ga4', 'analiticas'],
   facebook_pixel: ['facebook pixel', 'meta pixel', 'pixel'],
   intercom: ['intercom', 'chat de soporte'],
+  whatsapp_support: ['whatsapp', 'soporte por whatsapp'],
   enterprise_integrations: ['integraciones', 'segment', 'spoonity'],
   segment: ['segment'],
   spoonity: ['spoonity', 'lealtad'],

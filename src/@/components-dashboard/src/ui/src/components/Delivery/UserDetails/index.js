@@ -15,6 +15,9 @@ import { DriversLogs } from '../DriversLogs'
 import { DriversGroupLogsUI } from '../DriversGroupLogs'
 import { DriverGroupSetting } from '../DriverGroupSetting'
 import { DriversAdvancedLogs } from '../DriversAdvancedLogs'
+import { StripeConnectAccount } from '../../Shared/StripeConnectAccount'
+import { PayoutRuleForm } from '../../Shared/PayoutRuleForm'
+import { isSettingsToggleOn } from '../../../../../utils/settingsCustomSections'
 import { ArrowsAngleContract, ArrowsAngleExpand, ThreeDots } from 'react-bootstrap-icons'
 import { Switch, Button, IconButton } from '../../../styles'
 import { ActionsForm } from '../UserFormDetails/styles'
@@ -27,7 +30,8 @@ import {
   PersonalizationWrapper,
   DetailsHeader,
   ActionSelectorWrapper,
-  RightHeader
+  RightHeader,
+  StripeConnectSection
 } from './styles'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 
@@ -58,6 +62,8 @@ export const UserDetailsUI = (props) => {
   const [{ configs }] = useConfig()
   const viewOnly = getUserType('readOnlyAdmin') || getUserType('readOnlyDeliveryManager')
   const disableSchedule = (configs?.allow_driver_manager_update_driver_schedule?.value === '0' && user?.level === 5) || viewOnly
+  // The Stripe account a driver is paid on and their own payout rule: administrators, with payouts on
+  const isStripeConnectEnabled = !!isDriversPage && user?.level === 0 && isSettingsToggleOn(configs?.stripe_connect_payouts_enabled?.value)
 
   const expandSidebar = () => {
     const element = document.getElementById('user_lateral_bar')
@@ -149,6 +155,7 @@ export const UserDetailsUI = (props) => {
 
       <UserDetailsMenu
         isDriverMenu={isDriversPage}
+        isStripeConnectEnabled={isStripeConnectEnabled}
         currentMenuSelected={currentMenuSelected}
         handleChangeMenu={handleTabClick}
       />
@@ -224,6 +231,12 @@ export const UserDetailsUI = (props) => {
               customerId={userState.user?.id}
               handleCustomOrderDetail={setExtraOpen}
             />
+          )}
+          {currentMenuSelected === 'stripe_connect' && isStripeConnectEnabled && (
+            <StripeConnectSection>
+              <StripeConnectAccount ownerType='driver' ownerId={userState.user.id} />
+              <PayoutRuleForm scope='driver' ownerId={userState.user.id} />
+            </StripeConnectSection>
           )}
           {currentMenuSelected === 'push_tokens' && (
             <PushTokens

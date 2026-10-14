@@ -71,3 +71,23 @@ The browser showed `Sign in to your dashboard` with `Project: orderingv1` on the
 The coordinating session observed `My clean Dashboard edit` after a temporary change to the login h1. [Visible-edit screenshot](onboarding-evidence/dashboard-clean-hmr.png). The server log recorded `(client) page reload` for the LoginForm module: this is an automatic Vite development reload, not evidence of state-preserving React Fast Refresh.
 
 The original LoginForm source was saved outside the clone before the edit and restored byte-for-byte afterward. Its restored SHA-256 matches the original: `034ca6de721562fd5062e4d1b7f7944df096cbb32bd8e212a8b7816387afd100`. A subsequent GET of the restored served module returned HTTP 200, contained the original heading, and no longer contained the temporary heading. The screenshots were copied from the actual browser captures without modification.
+
+
+## Prepared upstream merge validation — 2026-10-14
+
+The prepared merge tree was validated before the coordinating session created its merge commit. Observed references were session HEAD `2a03e366be469601e399fc0c73d5b85ab1107e43` and incoming merge parent `a44d0e25cdf9943f59a583cafb730306e939b68e`. The index had no unresolved entries. README retained the initial checkout-preserving prompt and license text alongside the incoming Open Source Code section and `docs/public-source-code.md` link. The tenant-aware query-login guard remained present in `src/App.js`.
+
+The incoming lockfile was installed without modification under Node 24.21.0 / pnpm 9.15.0. Its SHA-256 before and after validation was `04ed2fb122c4d8c26124161e447a6e15bd1637de06ac17ffae9867b4fdef3477`. This installation used incoming Vite 7.3.7 and Wrangler 4.149.0; earlier browser evidence above belongs to its explicitly identified pre-merge clone.
+
+| Prepared-tree check | Actual result |
+| --- | --- |
+| `pnpm install --frozen-lockfile` | Exit 0; incoming lockfile preserved. |
+| Common helper and Dashboard manifest tests | 32 passed, 0 failed. |
+| `pnpm lint:check` | Exit 0. |
+| `pnpm build` | Exit 0; Vite 7.3.7, 19.28 s. Bundle-size warning remains; no deployment. |
+| `node i18n/check-generated.cjs` | Exit 0; generated catalog matches the combined source. |
+| `node i18n/verify.cjs` | Exit 0; 4627 code keys, 442 preserved orphan entries. |
+| Full Vitest coverage run | 361 files and 2494 tests passed; 0 failed; exit 0. |
+| Strict coverage summary | Exit 0; average 93.05% against the 70% gate. Statements 96.37%, branches 87.29%, functions 92.15%, lines 96.37%. |
+
+No source fixes, staging, commit, merge, or QA configuration changes were made by this validation pass. `src/config.json` retained the public placeholder and the incoming lockfile had no unstaged modification. The full suite produced no failures requiring an upstream-baseline exception. These automated checks verify the prepared source tree; they do not retroactively claim browser coverage, authenticated operations, or deployment of the incoming main changes.

@@ -267,6 +267,7 @@ export const EnterprisePromotionListing = (props) => {
   const enterprisePromotionsProps = {
     ...props,
     selectedView,
+    orderBy: selectedView === JOURNEY_VIEWS.JOURNEYS ? '-id' : undefined,
     UIComponent: PromotionWorkspaceUI,
     paginationSettings: {
       initialPage: props.isUseQuery && selectedView === JOURNEY_VIEWS.ADVANCED && !isNaN(defaultPage) ? Number(defaultPage) : 1,
@@ -277,5 +278,5 @@ export const EnterprisePromotionListing = (props) => {
     isSearchByPromotionDescription: true
   }
 
-  return <EnterprisePromontioListController {...enterprisePromotionsProps} />
+  return <EnterprisePromontioListController key={selectedView} {...enterprisePromotionsProps} />
 }

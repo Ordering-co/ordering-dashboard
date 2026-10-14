@@ -20,6 +20,7 @@ import { AnalyticsSpendList } from '../AnalyticsSpendList'
 import { AnalyticsStatusSubFilter } from '../AnalyticsStatusSubFilter'
 import { ReportsDriverGroupFilter } from '../ReportsDriverGroupFilter'
 import { AnalyticsDriverOrders } from '../AnalyticsDriverOrders'
+import { AnalyticsDriverOrderRoute } from '../AnalyticsDriverOrderRoute'
 import { ReportsBrandFilter } from '../ReportsBrandFilter'
 import { CountryFilter } from '../CountryFilter'
 import { learnOptionsValues } from '../../../utils'
@@ -133,6 +134,9 @@ const DriverAnalyticsUI = (props) => {
       </MapWrraper>
 
       <AnalyticsContentWrapper className='row'>
+        <div className='col-md-12'>
+          <AnalyticsDriverOrderRoute />
+        </div>
         <div className='col-md-12 col-lg-6'>
           <AnalyticsDriverOrders
             isOrders

@@ -2,7 +2,7 @@ import React, { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from 'styled-components'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { PromotionJourneysListingUI } from './index'
+import { PromotionJourneysListing, PromotionJourneysListingUI } from './index'
 
 const hookState = vi.hoisted(() => ({
   configs: {},
@@ -12,8 +12,13 @@ const hookState = vi.hoisted(() => ({
   user: { level: 0 }
 }))
 
-vi.mock('../../../../../index', () => ({
-  EnterprisePromotionList: () => null,
+vi.mock('../../../../../contexts/ApiContext', () => ({ useApi: () => [hookState.ordering] }))
+vi.mock('../../../../../contexts/SessionContext', () => ({ useSession: () => [{ token: hookState.token, user: hookState.user }] }))
+vi.mock('../../../../../contexts/LanguageContext', () => ({ useLanguage: () => [{}, (key, fallback) => fallback || key] }))
+vi.mock('../../../../../contexts/ToastContext', () => ({ useToast: () => [{}, { showToast: hookState.showToast }], ToastType: { Success: 'success' } }))
+
+vi.mock('../../../../../index', async () => ({
+  EnterprisePromotionList: (await vi.importActual('../../../../../components/EnterprisePromotionList')).EnterprisePromotionList,
   ToastType: { Success: 'success' },
   useApi: () => [hookState.ordering],
   useConfig: () => [{ configs: hookState.configs }],
@@ -818,6 +823,52 @@ describe('PromotionJourneysListingUI', () => {
     expect(container.querySelector('[role="region"]')).toBeNull()
     expect(container.textContent).toContain('First purchase')
     act(() => root.unmount())
+  })
+
+  test('creating from page two puts the new card first through the real controller', async () => {
+    hookState.configs = { format_number_currency: { value: '$' } }
+    const offers = Array.from({ length: 23 }, (_, index) => ({ id: index + 1, name: `Existing offer ${index + 1}`, description: 'Existing', enabled: false }))
+    global.fetch = vi.fn(async (endpoint, options) => {
+      const url = new URL(endpoint)
+      if (url.pathname === '/offers' && options.method === 'POST') {
+        const promotion = { ...JSON.parse(options.body), id: 24 }
+        offers.push(promotion)
+        return { ok: true, json: async () => ({ error: false, result: promotion }) }
+      }
+      if (url.pathname === '/offers') {
+        const page = Number(url.searchParams.get('page'))
+        const pageSize = Number(url.searchParams.get('page_size'))
+        const sorted = url.searchParams.get('orderBy') === '-id' ? [...offers].reverse() : offers
+        return { json: async () => ({ error: false, result: sorted.slice((page - 1) * pageSize, page * pageSize), pagination: { current_page: page, page_size: pageSize, total: offers.length, total_pages: Math.ceil(offers.length / pageSize) } }) }
+      }
+      const result = url.pathname === '/sites'
+        ? [{ id: 3, name: 'Website' }]
+        : url.pathname === '/backoffice/businesses' ? [{ id: 10, name: 'Store One', slug: 'store-one' }] : []
+      return { ok: true, json: async () => ({ error: false, result }) }
+    })
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const root = createRoot(container)
+    try {
+      await act(async () => root.render(<ThemeProvider theme={theme}><PromotionJourneysListing /></ThemeProvider>))
+      expect(container.querySelector('[data-promotion-id]').getAttribute('data-promotion-id')).toBe('23')
+      await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Next').click())
+      expect(container.textContent).toContain('2 / 3')
+      act(() => container.querySelector('[data-template-key="first_order"]').click())
+      await completeFirstPurchase(container)
+      setInputValue(container.querySelector('input'), 'Brand new offer')
+      await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft').click())
+      const cards = container.querySelectorAll('[data-promotion-id]')
+      expect(cards).toHaveLength(10)
+      expect(cards[0].getAttribute('data-promotion-id')).toBe('24')
+      expect(cards[0].querySelector('h3').textContent).toBe('Brand new offer')
+      expect(container.textContent).toContain('1 / 3')
+      const requests = global.fetch.mock.calls.filter(([endpoint, options]) => new URL(endpoint).pathname === '/offers' && options.method === 'GET')
+      expect(requests.map(([endpoint]) => new URL(endpoint).searchParams.get('page'))).toEqual(['1', '2', '1'])
+      expect(requests.map(([endpoint]) => new URL(endpoint).searchParams.get('orderBy'))).toEqual(['-id', '-id', '-id'])
+    } finally {
+      act(() => root.unmount())
+    }
   })
 
   test('renders a nonblank error state when promotions cannot be loaded', () => {

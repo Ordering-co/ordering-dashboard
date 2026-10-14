@@ -11,6 +11,19 @@ export const CONNECT_BUSINESS_OWNER_PAGES = ['pos_menu']
 export const getConnectAllowedLevels = (pageName) =>
   CONNECT_BUSINESS_OWNER_PAGES.includes(pageName) ? [0, 2] : [0]
 
+export const isCalendlyUrl = (url, root = '') => {
+  if (!url) return false
+  try {
+    const protocolRelative = typeof url === 'string' && url.startsWith('//')
+    const candidate = protocolRelative ? `https:${url}` : url
+    const { hostname } = new URL(candidate, /^https?:\/\//i.test(candidate) ? undefined : root || undefined)
+    const host = hostname.toLowerCase().replace(/\.$/, '')
+    return host === 'calendly.com' || host.endsWith('.calendly.com')
+  } catch {
+    return false
+  }
+}
+
 const normalizeIdentifier = (value) =>
   String(value ?? '')
     .toLowerCase()

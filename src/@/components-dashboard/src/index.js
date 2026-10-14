@@ -135,6 +135,7 @@ import { SettingsLogs } from './components/SettingsLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
+import { DriverOrderRoute } from './components/DriverOrderRoute'
 import { DriverStoreStatus } from './components/DriverStoreStatus'
 import { EcommerceAnalitycs } from './components/EcommerceAnalitycs'
 import { EnterprisePromotionList } from './components/EnterprisePromotionList'
@@ -191,6 +192,8 @@ import { PaymentOptions } from './components/PaymentOptions'
 import { PaymentOptionSquare } from './components/PaymentOptionSquare'
 import { PaymentOptionWallet } from './components/PaymentOptionWallet'
 import { PagesList } from './components/PagesList'
+import { PayoutRules } from './components/PayoutRules'
+import { PayoutsList } from './components/PayoutsList'
 import { PageForm } from './components/PageForm'
 import { PlaceList } from './components/PlaceList'
 import { PlatformProductDetail } from './components/PlatformProductDetail'
@@ -280,6 +283,7 @@ import { PosMenuBusinessList } from './components/PosMenuBusinessList'
 import { PosMenuBusinessDetails } from './components/PosMenuBusinessDetails'
 import { ReportsDriverFilter } from './components/ReportsDriverFilter'
 import { ReviewCustomer } from './components/ReviewCustomer'
+import { StripeConnectAccount } from './components/StripeConnectAccount'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleBusinessCategory } from './components/SingleBusinessCategory'
@@ -441,6 +445,7 @@ export {
   DriverTips,
   DriversList,
   DriverAnalytics,
+  DriverOrderRoute,
   DriverStoreStatus,
   DriversCompaniesList,
   DriversGroupAutoassign,
@@ -511,6 +516,8 @@ export {
   PaymentOptionSquare,
   PaymentOptionWallet,
   PagesList,
+  PayoutRules,
+  PayoutsList,
   PageForm,
   PlaceList,
   PlatformProductDetail,
@@ -585,6 +592,7 @@ export {
   PosMenuBusinessDetails,
   PhoneAutocomplete,
   BusinessesMap,
+  StripeConnectAccount,
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,

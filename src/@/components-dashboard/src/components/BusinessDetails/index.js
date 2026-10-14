@@ -6,12 +6,9 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useEvent } from '../../contexts/EventContext'
 import { useAssistantRecordChanges } from '../../contexts/AssistantContext'
-import { getPluginSetupPath, getPosCatalogItem, waitForInstalledIntegration } from '../../utils/posPluginCatalog'
 
 const STREAM_ORDERS_STATUS_URL = 'https://stream-orders.plugins.orderingplus.com'
 const VISIBLE_STREAM_STATUSES = ['connected', 'paused', 'disconnected']
-const CLOVER_INTEGRATION_KEY = 'clover_integration'
-const CLOVER_PLUGIN_ROOT = getPosCatalogItem(CLOVER_INTEGRATION_KEY)?.installUrl
 
 const isStreamOrdersPlugin = (plugin) => {
   const identifiers = [plugin?.key, plugin?.url, plugin?.name]
@@ -40,7 +37,6 @@ export const BusinessDetails = (props) => {
     notGetSites,
     notGetTaxes,
     notGetStreamConnection,
-    notGetCloverIntegration,
     googleFeedSecondaryIncludedIds,
     googleFeedInclusionListLoading,
     googleFeedSavingBusinessId,
@@ -55,7 +51,6 @@ export const BusinessDetails = (props) => {
   const [, t] = useLanguage()
   const [events] = useEvent()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
-  const [cloverState, setCloverState] = useState({ loading: !notGetCloverIntegration && session?.user?.level === 0, installing: false, installed: false, error: false, plugin: null, pluginRoot: CLOVER_PLUGIN_ROOT })
 
   // The assistant changed this store: show the values it read back
   useAssistantRecordChanges(({ entity, id, after }) => {
@@ -498,91 +493,6 @@ export const BusinessDetails = (props) => {
     }
   }
 
-  const fetchIntegrations = async () => {
-    const response = await fetch(`${ordering.root}/third_party_integrations`, {
-      headers: { Authorization: `Bearer ${session.token}` }
-    })
-    const content = await response.json()
-    if (content?.error || !Array.isArray(content?.result)) throw new Error('THIRD_PARTY_INTEGRATIONS_UNAVAILABLE')
-    return content.result
-  }
-
-  const applyCloverIntegration = (integrations) => {
-    const integration = integrations.find(item => item?.key === CLOVER_INTEGRATION_KEY)
-    const plugin = integration?.plugin_id && integration?.plugin?.root && getPluginSetupPath(integration?.plugin)
-      ? integration.plugin
-      : null
-    setCloverState(prev => ({
-      ...prev,
-      loading: false,
-      error: false,
-      installed: !!plugin,
-      plugin,
-      pluginRoot: integration?.plugin_root || CLOVER_PLUGIN_ROOT
-    }))
-    return !!plugin
-  }
-
-  const getCloverIntegration = async () => {
-    setCloverState(prev => ({ ...prev, loading: true, error: false }))
-    try {
-      applyCloverIntegration(await fetchIntegrations())
-    } catch (err) {
-      setCloverState(prev => ({ ...prev, loading: false, error: true }))
-    }
-  }
-
-  const handleInstallClover = async () => {
-    if (cloverState.installing) return false
-    setCloverState(prev => ({ ...prev, installing: true }))
-    showToast(ToastType.Info, t('LOADING', 'Loading'))
-    try {
-      const response = await fetch(`${ordering.root}/plugins`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        },
-        body: JSON.stringify({ url: cloverState.pluginRoot })
-      })
-      const content = await response.json()
-      if (content?.error) {
-        showToast(ToastType.Error, Array.isArray(content.result) ? content.result.join(', ') : (content.result || t('ERROR', 'Error')))
-        return false
-      }
-      let integrations = []
-      await waitForInstalledIntegration(async () => {
-        integrations = await fetchIntegrations()
-        return integrations
-      }, { key: CLOVER_INTEGRATION_KEY })
-      if (!applyCloverIntegration(integrations)) {
-        showToast(ToastType.Info, t('INTEGRATION_INSTALL_PENDING', 'The plugin is installed and still finishing its setup. Try again in a few seconds.'))
-        return false
-      }
-      showToast(ToastType.Success, t('CLOVER_INSTALLED', 'Clover installed. You can connect this store now.'))
-      return true
-    } catch (err) {
-      showToast(ToastType.Error, t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.'))
-      return false
-    } finally {
-      setCloverState(prev => ({ ...prev, installing: false }))
-    }
-  }
-
-  const handleSyncClover = () => {
-    const plugin = cloverState.plugin
-    if (!plugin) {
-      showToast(ToastType.Error, t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.'))
-      getCloverIntegration()
-      return
-    }
-    const setupPath = getPluginSetupPath(plugin)
-      .replace('@{project_code}', encodeURIComponent(ordering.project))
-      .replace('@{access_token}', encodeURIComponent(session.token))
-      .replace('@{business_id}', encodeURIComponent(businessState?.business?.id))
-    window.open(`${plugin.root}${setupPath}`, '_blank')
-  }
-
   const handleChangeTax = (name, value, orderType) => {
     if (value === null) {
       const _formTaxChanges = { ...formTaxChanges }
@@ -839,9 +749,6 @@ export const BusinessDetails = (props) => {
     if (!notGetTaxes) {
       getTaxes()
     }
-    if (!notGetCloverIntegration && session?.user?.level === 0) {
-      getCloverIntegration()
-    }
   }, [])
 
   useEffect(() => {
@@ -953,9 +860,6 @@ export const BusinessDetails = (props) => {
             handleUpdateBusinessConfigs={handleUpdateBusinessConfigs}
             handleUpdateSpoonityKey={handleUpdateSpoonityKey}
             handleSyncEvent={handleSyncEvent}
-            handleSyncClover={handleSyncClover}
-            cloverState={cloverState}
-            handleInstallClover={handleInstallClover}
             spoonityKeyState={spoonityKeyState}
             siteState={siteState}
             taxes={taxes}

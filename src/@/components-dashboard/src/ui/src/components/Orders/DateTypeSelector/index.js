@@ -23,7 +23,7 @@ export const DateTypeSelector = (props) => {
     { value: 'default', content: <PlaceholderTitle>{t('SELECT_DATE', 'Select date')}</PlaceholderTitle> },
     { value: 'today', content: <Option>{t('TODAY', 'Today')}</Option> },
     { value: 'yesterday', content: <Option>{t('YESTERDAY', 'Yesterday')}</Option> },
-    { value: 'last7', content: <Option>{t('LAST_7_DAYS', 'Last 7 dyas')}</Option> },
+    { value: 'last7', content: <Option>{t('LAST_7_DAYS', 'Last 7 days')}</Option> },
     { value: 'last30', content: <Option>{t('LAST_30_DAYS', 'Last 30 days')}</Option> },
     {
       value: 'term',

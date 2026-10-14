@@ -25,3 +25,7 @@ For manual commands, requirements, and optional services, read [setup.md](setup.
 ## Code and license
 
 The UI, business controllers, and SDK live in this repository. [Ordering.co Source License v1.2](LICENSE-ORDERING) applies to this source. Existing third-party notices remain applicable. Read the terms before using or redistributing it.
+
+## Open Source Code
+
+The Dashboard page links to seven public product repositories and two developer tools. See [public source code](docs/public-source-code.md) for repository links, setup guidance and access requirements.

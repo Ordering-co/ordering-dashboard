@@ -64,20 +64,22 @@ export const GiftCardsList = (props) => {
           )
         }
         if (isSearchByAuthorName) {
-          searchConditions.push(
-            {
-              attribute: 'author',
-              conditions: [
-                {
-                  attribute: 'name',
-                  value: {
-                    condition: 'ilike',
-                    value: encodeURI(`%${searchValue}%`)
+          ['name', 'lastname'].forEach(attribute => {
+            searchConditions.push(
+              {
+                attribute: 'author',
+                conditions: [
+                  {
+                    attribute,
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI(`%${searchValue}%`)
+                    }
                   }
-                }
-              ]
-            }
-          )
+                ]
+              }
+            )
+          })
         }
         if (isSearchByAuthorEmail) {
           searchConditions.push(

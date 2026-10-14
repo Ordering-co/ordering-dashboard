@@ -31,3 +31,8 @@ it('uses the same native address/map section without duplicate details or API ke
   expect(native.input.apiKey).toBe('native-test-key'); expect(native.input.countryCode).toBe('mx'); expect(native.map.apiKey).toBe(native.input.apiKey)
   expect(native.map.isFitCenter).toBe(false); expect(native.map.location).toEqual({ lat: 0, lng: 2 }); expect(native.map.onlyMarkerChangeCenter).toBe(true); expect(native.map.mapControls.isMarkerDraggable).toBe(false)
 })
+it('never shows the Google Maps API key while the new business has no place yet', () => {
+  renderDetails({ placeId: undefined })
+  expect(screen.queryByText('native-test-key')).toBeNull()
+  expect(screen.queryByText('Google place ID')).toBeNull()
+})

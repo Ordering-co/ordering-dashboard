@@ -1,5 +1,5 @@
 key,value,app_uses,submodule_uses
-"LOADING","Loading",0,373
+"LOADING","Loading",0,372
 "LOADING","loading",0,4
 "LOADING","Loading...",0,3
 "VALIDATION_ERROR_REQUIRED","The link type is required",0,1
@@ -78,7 +78,7 @@ key,value,app_uses,submodule_uses
 "EXTERNAL_ID","External ID",0,5
 "EXTERNAL_ID","External Id",0,10
 "EXTERNAL_ID","External ID :",0,1
-"DRIVER","Driver",0,35
+"DRIVER","Driver",0,37
 "DRIVER","DRIVER",0,1
 "ADVANCED_LOGISTICS","Advanced logistics",0,3
 "ADVANCED_LOGISTICS","Advance Logistics",0,2
@@ -111,7 +111,7 @@ key,value,app_uses,submodule_uses
 "SELECT_A_CARD","Select a card",0,1
 "PAYMENT_METHODS","Payment Methods",0,2
 "PAYMENT_METHODS","Payment methods",0,10
-"SAVE","Save",0,119
+"SAVE","Save",0,120
 "SAVE","SAVE",0,1
 "DESCRIPTION","Description",0,27
 "DESCRIPTION","Decription",0,4
@@ -127,7 +127,7 @@ key,value,app_uses,submodule_uses
 "SELECT_DATE","Select a Date",0,2
 "SELECT_DATE","Select date",0,2
 "CUSTOMER_SATISFACTION","Customer Safisfaction",0,1
-"CUSTOMER_SATISFACTION","Customer safisfaction",0,3
+"CUSTOMER_SATISFACTION","Customer satisfaction",0,3
 "ORDERS","Orders",0,44
 "ORDERS","orders",0,3
 "TOTALS","totals",0,5
@@ -142,8 +142,8 @@ key,value,app_uses,submodule_uses
 "REGISTER_USERS","Register users",0,3
 "COMPLETED","Completed",0,6
 "COMPLETED","completed",0,3
-"LAST_7_DAYS","Last 7 days",0,1
-"LAST_7_DAYS","Last 7 dyas",0,2
+"LAST_7_DAYS","Last 7 days",0,2
+"LAST_7_DAYS","Last 7 dyas",0,1
 "TOP_ORDERS","Top Orders",0,1
 "TOP_ORDERS","Top orders",0,1
 "COUNTRY","Country",0,21
@@ -295,8 +295,6 @@ key,value,app_uses,submodule_uses
 "GIFT_CARD","Gift Card",0,1
 "FIXED","fixed",0,1
 "FIXED","Fixed",0,6
-"VALUE","Value",0,8
-"VALUE","Vlue",0,77
 "SELECT_OPTION","Select option",0,4
 "SELECT_OPTION","Select an option",0,8
 "SELECT_OPTION","Select a option",0,7

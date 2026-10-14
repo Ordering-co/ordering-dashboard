@@ -138,7 +138,7 @@ const ReportsCustomerUI = (props) => {
 
   return (
     <ReportsTopDriversContainer>
-      <Title>{t('CUSTOMER_SATISFACTION', 'Customer safisfaction')}</Title>
+      <Title>{t('CUSTOMER_SATISFACTION', 'Customer satisfaction')}</Title>
       <ButtonActionList>
         <BrandBusinessWrapper>
           <Button
@@ -161,7 +161,7 @@ const ReportsCustomerUI = (props) => {
       </ButtonActionList>
       <ChartBlockWrapper>
         <ChartTitleBlock active={reportData?.content?.dataset?.dataset?.data?.length > 0}>
-          <h2>{t('CUSTOMER_SATISFACTION', 'Customer safisfaction')}</h2>
+          <h2>{t('CUSTOMER_SATISFACTION', 'Customer satisfaction')}</h2>
           <Download onClick={() => downloadCSV()} />
         </ChartTitleBlock>
         <ChartWrapper>

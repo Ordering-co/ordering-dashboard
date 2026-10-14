@@ -35,6 +35,7 @@ import {
 import {
   CONNECT_BUSINESS_OWNER_PAGES,
   getConnectAllowedLevels,
+  isCalendlyUrl,
   isSetupCallIntegration,
   POS_SETUP_CALL_URL
 } from '../connectAccess'
@@ -320,6 +321,22 @@ describe('getDefaultTemporalSiteUrl', () => {
 })
 
 describe('connectAccess helpers', () => {
+  it.each([
+    ['https://calendly.com/meet', undefined, true],
+    ['https://WWW.CALENDLY.COM/meet', undefined, true],
+    ['/meet', 'https://calendly.com', true],
+    ['https://calendly.com/meet', 'legacy-root', true],
+    ['//calendly.com/meet', 'https://plugin.test', true],
+    ['//calendly.com/meet', undefined, true],
+    ['/setup', 'https://square.test', false],
+    ['https://calendly.com.example.org/setup', undefined, false],
+    ['https://plugin.test/setup?next=calendly.com', undefined, false],
+    ['not a url', undefined, false],
+    [null, 'https://calendly.com', false]
+  ])('identifies Calendly by hostname for %s with root %s', (url, root, expected) => {
+    expect(isCalendlyUrl(url, root)).toBe(expected)
+  })
+
   it('detects POS setup-call providers by name, plugin root, or key', () => {
     expect(isSetupCallIntegration({ name: 'ItsaCheckmate' })).toBe(true)
     expect(isSetupCallIntegration({ name: 'Deliverect POS' })).toBe(true)

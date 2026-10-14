@@ -6,7 +6,7 @@ import { useLanguage } from '../../../../../index'
 import { Button, Input, Switch } from '../../../styles'
 import { Alert, Modal, IntegrationLogs } from '../../Shared'
 import { useApi, useSession } from '../../../../../index'
-import { parseTemplate, capitalize } from '../../../utils'
+import { parseTemplate, capitalize, isCalendlyUrl } from '../../../utils'
 
 import {
   BusinessOrderingChannelsContainer,
@@ -36,13 +36,15 @@ export const BusinessIntegration = (props) => {
     handlePushAction: propHandlePushAction,
     fromSalesChannels,
     formState,
-    setFormState
+    setFormState,
+    integrationActionLoading
   } = props
 
   const [languageState, t] = useLanguage()
   const theme = useTheme()
   const [ordering] = useApi()
-  const [{ token }] = useSession()
+  const [{ token, user }] = useSession()
+  const isCalendlyRestricted = (plugin, link) => !fromSalesChannels && user?.level !== 0 && isCalendlyUrl(link, plugin?.root)
   const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
   const [externalId, setExternalId] = useState('')
   const [enabled, setEnabled] = useState(false)
@@ -56,6 +58,7 @@ export const BusinessIntegration = (props) => {
   const variables = {
     project_code: ordering.project,
     access_token: token,
+    business_id: business?.id,
     language_code: languageState?.language?.code
   }
 
@@ -74,7 +77,7 @@ export const BusinessIntegration = (props) => {
   const handleSaveIntegration = (paramEnabled) => {
     if (!selectedIntegration) return
 
-    handleConnectBusiness(selectedIntegration.id, {
+    return handleConnectBusiness(selectedIntegration.id, {
       external_id: externalId,
       enabled: paramEnabled ?? enabled
     }, () => {
@@ -98,13 +101,14 @@ export const BusinessIntegration = (props) => {
     })
   }
 
-  const handleOpenPluginDetails = (e, plugin) => {
-    if (!plugin?.links?.general_settings) return
+  const handleOpenPluginDetails = (e, plugin, linkKey = 'general_settings') => {
+    const link = plugin?.links?.[linkKey]
+    if (!link || isCalendlyRestricted(plugin, link)) return
     e.stopPropagation()
     setPluginSelected({
       open: true,
       title: plugin.name,
-      url: plugin.root + plugin.links.general_settings
+      url: /^(?:https?:)?\/\//i.test(link) ? link : plugin.root + link
     })
   }
 
@@ -124,10 +128,10 @@ export const BusinessIntegration = (props) => {
   const handleSaveAction = () => {
     if (!selectedAction) return
     const message = selectedAction === 'sync_business'
-      ? t('BUSINESS_SYNCED', 'Business synced')
+      ? t('BUSINESS_SYNC_STARTED', 'Business sync started. It can take a few minutes.')
       : fromSalesChannels
-        ? t('MENU_PUSHED', 'Menu pushed')
-        : t('MENU_SYNCED', 'Menu synced')
+        ? t('MENU_PUSH_STARTED', 'Menu push started. It can take a few minutes.')
+        : t('MENU_SYNC_STARTED', 'Menu sync started. It can take a few minutes.')
     handlePushAction(selectedIntegration?.id, selectedAction, message)
   }
 
@@ -155,10 +159,11 @@ export const BusinessIntegration = (props) => {
             <Switch
               defaultChecked={enabled}
               checked={enabled}
-              disabled={formState?.loading}
-              onChange={(value) => {
+              disabled={formState?.loading || integrationActionLoading}
+              onChange={async (value) => {
                 setEnabled(value)
-                handleSaveIntegration(value)
+                const saved = await handleSaveIntegration(value)
+                if (!saved) setEnabled(!value)
               }}
             />
           </div>
@@ -167,11 +172,11 @@ export const BusinessIntegration = (props) => {
               menuAlign={theme?.rtl ? 'left' : 'right'}
               title={<ThreeDots />}
               id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
-              disabled={formState?.loading}
+              disabled={formState?.loading || integrationActionLoading}
             >
               <Dropdown.Item
                 onClick={() => handleDisconnectIntegration()}
-                disabled={formState?.loading}
+                disabled={formState?.loading || integrationActionLoading}
               >
                 {t('DISCONNECT', 'Disconnect')}
               </Dropdown.Item>
@@ -185,7 +190,7 @@ export const BusinessIntegration = (props) => {
               color='lightPrimary'
               borderRadius='8px'
               disabled={formState?.loading}
-              onClick={() => handlePushAction(selectedIntegration?.id, fromSalesChannels ? 'push_menu' : 'sync_menu', fromSalesChannels ? t('MENU_PUSHED', 'Menu pushed') : t('MENU_SYNCED', 'Menu synced'))}
+              onClick={() => handlePushAction(selectedIntegration?.id, fromSalesChannels ? 'push_menu' : 'sync_menu', fromSalesChannels ? t('MENU_PUSH_STARTED', 'Menu push started. It can take a few minutes.') : t('MENU_SYNC_STARTED', 'Menu sync started. It can take a few minutes.'))}
             >
               {fromSalesChannels ? t('PUSH_MENU', 'Push menu') : t('SYNC_MENU', 'Sync menu')}
             </Button>
@@ -196,10 +201,12 @@ export const BusinessIntegration = (props) => {
               color='lightPrimary'
               borderRadius='8px'
               key={key}
-              disabled={formState?.loading}
-              onClick={(e) => handleOpenPluginDetails(e, selectedIntegration?.plugin)}
+              disabled={formState?.loading || isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key])}
+              onClick={isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key]) ? undefined : (e) => handleOpenPluginDetails(e, selectedIntegration?.plugin, key)}
             >
-              {t(key?.replace(/ /g, '_'), capitalize(key?.replace(/_/g, ' ')))}
+              {isCalendlyRestricted(selectedIntegration?.plugin, selectedIntegration?.plugin?.links[key])
+                ? t('CONTACT_ADMIN', 'Contact admin')
+                : t(key?.replace(/ /g, '_'), capitalize(key?.replace(/_/g, ' ')))}
             </Button>
           ))}
           <Button

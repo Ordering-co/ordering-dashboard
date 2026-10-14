@@ -218,12 +218,12 @@ const UserMetaFieldsUI = (props) => {
                     id='meta_value'
                     // value={metaValue}
                     onChange={(e) => setMetaValue(e.target.value)}
-                    placeholder={t('VALUE', 'Vlue')}
+                    placeholder={t('VALUE', 'Value')}
                     ref={register({
                       required: t(
                         'VALIDATION_ERROR_REQUIRED',
                         'Value is required'
-                      ).replace('_attribute_', t('VALUE', 'Vlue'))
+                      ).replace('_attribute_', t('VALUE', 'Value'))
                     })}
                   />
                 )}
@@ -233,18 +233,18 @@ const UserMetaFieldsUI = (props) => {
                     name='value'
                     // value={metaValue}
                     onChange={(e) => setMetaValue(e.target.value)}
-                    placeholder={t('VALUE', 'Vlue')}
+                    placeholder={t('VALUE', 'Value')}
                     ref={register({
                       required: t(
                         'VALIDATION_ERROR_REQUIRED',
                         'Value is required'
-                      ).replace('_attribute_', t('VALUE', 'Vlue')),
+                      ).replace('_attribute_', t('VALUE', 'Value')),
                       pattern: {
                         value: /^\d+$/,
                         message: t(
                           'VALIDATION_ERROR_INTEGER',
                           'Invalid integer'
-                        ).replace('_attribute_', t('VALUE', 'Vlue'))
+                        ).replace('_attribute_', t('VALUE', 'Value'))
                       }
                     })}
                   />
@@ -255,18 +255,18 @@ const UserMetaFieldsUI = (props) => {
                     name='value'
                     // value={metaValue}
                     onChange={(e) => setMetaValue(e.target.value)}
-                    placeholder={t('VALUE', 'Vlue')}
+                    placeholder={t('VALUE', 'Value')}
                     ref={register({
                       required: t(
                         'VALIDATION_ERROR_REQUIRED',
                         'Value is required'
-                      ).replace('_attribute_', t('VALUE', 'Vlue')),
+                      ).replace('_attribute_', t('VALUE', 'Value')),
                       pattern: {
                         value: /^[+-]?\d*\.?\d+(?:[Ee][+-]?\d+)?$/,
                         message: t(
                           'VALIDATION_ERROR_DECIMAL',
                           'Invalid decimal'
-                        ).replace('_attribute_', t('VALUE', 'Vlue'))
+                        ).replace('_attribute_', t('VALUE', 'Value'))
                       }
                     })}
                   />

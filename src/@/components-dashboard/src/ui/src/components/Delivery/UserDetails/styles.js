@@ -152,3 +152,10 @@ export const RightHeader = styled.div`
   display: flex;
   align-items: center;
 `
+
+export const StripeConnectSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`

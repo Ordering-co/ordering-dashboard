@@ -1390,6 +1390,7 @@ export {
   POS_SETUP_CALL_PROVIDERS,
   POS_SETUP_CALL_URL,
   getConnectAllowedLevels,
+  isCalendlyUrl,
   isSetupCallIntegration
 } from './connectAccess'
 

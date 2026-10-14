@@ -65,9 +65,6 @@ export const BusinessDetailsUI = (props) => {
     spoonityKeyState,
     siteState,
     setShowBillingPayment,
-    handleSyncClover,
-    cloverState,
-    handleInstallClover,
     createCustomTax,
     getCustomTaxes,
     setCustomTaxes,
@@ -240,9 +237,6 @@ export const BusinessDetailsUI = (props) => {
           setIsExpand={setIsExpand}
           formState={formState}
           setFormState={setFormState}
-          handleSyncClover={handleSyncClover}
-          cloverState={cloverState}
-          handleInstallClover={handleInstallClover}
           streamConnectionState={streamConnectionState}
         />
       )}

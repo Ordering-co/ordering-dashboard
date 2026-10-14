@@ -4,6 +4,7 @@ import { WrapperGoogleMaps } from '../WrapperGoogleMaps'
 import { GoogleMapsHeatmapLayer } from '../GoogleMapsHeatmapLayer'
 import { useEvent } from '../../contexts/EventContext'
 import { useUtils } from '../../contexts/UtilsContext'
+import { fetchBusinessDetails } from '../GoogleAutocompleteInput/placesApi'
 
 export const GoogleMaps = (props) => {
   const {
@@ -413,14 +414,13 @@ export const GoogleMaps = (props) => {
 
   useEffect(() => {
     if (googleMap && placeId) {
-      const request = { placeId }
-      const service = new window.google.maps.places.PlacesService(googleMap)
-      const callback = (place, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-          setDetails && setDetails(place)
-        }
-      }
-      service.getDetails(request, callback)
+      let active = true
+      fetchBusinessDetails(googleMap, placeId)
+        .then(place => {
+          if (active) setDetails && setDetails(place)
+        })
+        .catch(error => console.error('Google Places details request failed', error))
+      return () => { active = false }
     }
   }, [googleMap, placeId])
 

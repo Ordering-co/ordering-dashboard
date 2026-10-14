@@ -1,203 +1,110 @@
 import React from 'react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { StyleSheetManager } from 'styled-components'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import theme from '~/theme.json'
-import { sourceProduct } from '../../../../../../components/SourceCodeDownloads/__tests__/fixtures'
+import { PUBLIC_SOURCE_PRODUCTS, PUBLIC_SOURCE_TOOLS, QUICKSTART_SETUP_PROMPT } from '../../../../../../components/SourceCodeDownloads/public-source-repositories'
 import labels from '../../../../../../components/SourceCodeDownloads/sourceCodeTranslations.generated.json'
-import { producerGuides, producerCommands, mixedFenceGuide, heredocCommands } from './producerGuideFixture'
-
 const state = vi.hoisted(() => ({ collapsed: false, collapse: vi.fn(), language: { code: 'en' }, apiLabels: {} }))
-vi.mock('../../../../../../index', () => ({
-  SourceCodeDownloads: ({ UIComponent, ...props }) => <UIComponent {...props} />,
-  useLanguage: () => [{ language: state.language }, (key, fallback) => state.apiLabels[`DASHBOARD_${key}`] ?? state.apiLabels[key] ?? fallback]
-}))
+vi.mock('../../../../../../contexts/LanguageContext', () => ({ useLanguage: () => [{ language: state.language }, (key, fallback) => state.apiLabels[`DASHBOARD_${key}`] ?? fallback] }))
 vi.mock('../../../../contexts/InfoShareContext', () => ({ useInfoShare: () => [{ isCollapse: state.collapsed }, { handleMenuCollapse: state.collapse }] }))
-import { SourceCodeDownloadsUI, SourceCodeDownloads } from '../index'
-
-const product = {
-  ...sourceProduct,
-  description: sourceProduct.descriptionByLocale.es,
-  descriptionLocale: 'es',
-  instructions: sourceProduct.instructionsByLocale.es,
-  instructionsLocale: 'es',
-  instructionsFallback: false,
-  publishedLabel: 'Jul 1, 2026, 12:00:00',
-  sizeLabel: '4'
-}
-const props = overrides => ({
-  catalogStatus: 'ready',
-  catalogError: null,
-  product,
-  downloadState: { status: 'idle', error: null },
-  downloadSource: vi.fn(),
-  reloadCatalog: vi.fn(),
-  signInAgain: vi.fn(),
-  ...overrides
-})
-const renderUI = overrides => {
-  const values = props(overrides)
-  return { values, ...renderWithProviders(<SourceCodeDownloadsUI {...values} />, { theme }) }
-}
+import { SourceCodeDownloadsUI } from '../index'
+const renderUI = (overrides = {}, customTheme = theme) => renderWithProviders(<SourceCodeDownloadsUI catalogStatus='ready' products={PUBLIC_SOURCE_PRODUCTS} tools={PUBLIC_SOURCE_TOOLS} {...overrides} />, { theme: customTheme })
 beforeEach(() => { state.collapsed = false; state.collapse.mockClear(); state.language = { code: 'en' }; state.apiLabels = {} })
-
-describe('source downloads presentation', () => {
-  it('preserves the literal backtick line and all commands of D’s tilde heredoc as one code block', () => {
-    const { container } = renderUI({ product: { ...product, instructions: mixedFenceGuide } })
-    const code = container.querySelectorAll('pre code')
-    expect(code).toHaveLength(1)
-    expect(code[0].textContent).toBe(heredocCommands)
+afterEach(() => vi.restoreAllMocks())
+describe('public repository presentation', () => {
+  it('separates seven products from two tools and contains no package/download metadata', () => {
+    renderUI()
+    expect(within(screen.getByRole('region', { name: 'Products' })).getAllByRole('article')).toHaveLength(7)
+    expect(within(screen.getByRole('region', { name: 'Developer tools' })).getAllByRole('article')).toHaveLength(2)
+    expect(screen.queryByText(/Download source code|checksum|ZIP|Published \(CST/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Creating a fork requires your own GitHub account/)).toBeInTheDocument()
+    expect(screen.getByText(/appropriate permissions/)).toBeInTheDocument()
   })
-  it.each(['es', 'ar'])('renders the producer-format %s tilde guide as code with no raw fences', locale => {
-    state.language = { code: locale }
-    const original = producerGuides[locale]
-    const value = { ...product, instructions: original, instructionsLocale: locale }
-    const { container } = renderWithProviders(<SourceCodeDownloadsUI {...props({ product: value })} />, { theme: { ...theme, rtl: locale === 'ar' } })
-    const code = container.querySelector('pre code')
-    expect(code).toBeInTheDocument()
-    expect(code.textContent).toBe(producerCommands)
-    expect(container.textContent).not.toContain('~~~sh')
-    expect(container.textContent).not.toContain('```sh')
-    expect(value.instructions).toBe(original)
-  })
-
-  it('overrides Bootstrap pink code only within Source metadata and Details', async () => {
-    const bootstrap = document.createElement('style')
-    bootstrap.textContent = 'code { color: #e83e8c; }'
-    const outside = document.createElement('code')
-    outside.textContent = 'Outside Source'
-    const styleTarget = document.createElement('div')
-    // Bootstrap loads before the component stylesheet in the application.
-    document.head.insertBefore(bootstrap, document.head.firstChild)
-    document.head.appendChild(styleTarget)
-    document.body.appendChild(outside)
-    try {
-      // Use a fresh component sheet after Bootstrap, avoiding JSDOM's cached
-      // stylesheet ordering from earlier renders in this test suite.
-      renderWithProviders(<StyleSheetManager target={styleTarget}><SourceCodeDownloadsUI {...props()} /></StyleSheetManager>, { theme })
-      expect(getComputedStyle(screen.getByText(product.version)).color).not.toBe('rgb(232, 62, 140)')
-      await userEvent.click(screen.getByText('Source and checksum'))
-      expect(getComputedStyle(screen.getByText(product.sourceSha)).color).not.toBe('rgb(232, 62, 140)')
-      expect(getComputedStyle(outside).color).toBe('rgb(232, 62, 140)')
-    } finally {
-      bootstrap.remove()
-      outside.remove()
-      styleTarget.remove()
+  it.each([...PUBLIC_SOURCE_PRODUCTS, ...PUBLIC_SOURCE_TOOLS])('offers verified public links and the exact clone for $name', repository => {
+    renderUI()
+    const article = screen.getByRole('article', { name: repository.name })
+    expect(within(article).getByRole('link', { name: 'View repository' })).toHaveAttribute('href', repository.url)
+    expect(within(article).getByRole('link', { name: 'README' })).toHaveAttribute('href', repository.readmeUrl)
+    expect(within(article).getByRole('link', { name: 'Create a fork' })).toHaveAttribute('href', repository.forkUrl)
+    expect(within(article).getByText(repository.cloneCommand)).toBeInTheDocument()
+    if (repository.setupUrl) expect(within(article).getByRole('link', { name: 'Setup instructions' })).toHaveAttribute('href', repository.setupUrl)
+    for (const link of within(article).getAllByRole('link')) {
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+      expect(link.getAttribute('href')).toMatch(/^https:\/\/github.com\/Ordering-co\//)
     }
   })
-  it.each(['es', 'ar'])('renders canonical %s source labels without relying on API coverage', locale => {
-    state.language = { code: locale }
-    renderUI({ catalogStatus: 'empty', product: null })
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(labels.SOURCE_CODE_TITLE[locale])
-    expect(screen.getByRole('status')).toHaveTextContent(labels.SOURCE_CODE_EMPTY[locale])
-    expect(screen.getByRole('button', { name: labels.SOURCE_CODE_RETRY[locale] })).toBeInTheDocument()
-  })
-
-  it('keeps a nonempty namespaced API source label authoritative', () => {
-    state.language = { code: 'es-MX' }
-    state.apiLabels = { DASHBOARD_SOURCE_CODE_TITLE: 'Controlled API heading' }
-    renderUI()
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Controlled API heading')
-    expect(screen.getByRole('button', { name: labels.SOURCE_CODE_DOWNLOAD.es })).toBeInTheDocument()
-  })
-  it('shows only producer metadata, localized instructions and the exact original legal text', async () => {
-    renderUI()
-    expect(screen.getByRole('heading', { name: 'Open Source Code', level: 1 })).toBeInTheDocument()
-    const article = screen.getByRole('article')
-    expect(within(article).getByRole('heading', { name: 'Website Marketplace', level: 2 })).toBeInTheDocument()
-    expect(screen.getByText(product.version)).toBeInTheDocument()
-    expect(screen.getByText('Published (CST · UTC−06:00)')).toBeInTheDocument()
-    expect(screen.getByText(product.publishedLabel)).toHaveAttribute('datetime', product.publishedAt)
-    expect(screen.getByText(product.description)).toHaveAttribute('lang', 'es')
-    expect(screen.getByText('Descomprime el ZIP.')).toBeInTheDocument()
-    expect(screen.getByText(product.artifact.filename)).toBeInTheDocument()
-    await userEvent.click(screen.getByText('License · MIT'))
-    expect(screen.getByText(/Copyright \(c\) Controlled test fixture/).textContent).toBe(product.license.text)
-    expect(screen.queryByText(/Purchase|Contact Us/)).not.toBeInTheDocument()
-  })
-
-  it('wires the UI through the controller export', () => {
-    renderWithProviders(<SourceCodeDownloads {...props({ catalogStatus: 'empty', product: null })} />, { theme })
-    expect(screen.getByRole('status')).toHaveTextContent('No Website Marketplace package is available yet.')
-  })
-
-  it('announces loading and an honest empty state without offering a download', () => {
-    const view = renderUI({ catalogStatus: 'loading', product: null })
-    expect(screen.getByRole('status')).toHaveAttribute('aria-busy', 'true')
-    expect(screen.queryByRole('button', { name: 'Download source code' })).not.toBeInTheDocument()
-    view.rerender(<SourceCodeDownloadsUI {...props({ catalogStatus: 'empty', product: null })} />)
-    expect(screen.getByRole('status')).toHaveTextContent('No Website Marketplace package is available yet.')
-    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument()
-  })
-
-  it.each(['sessionExpired', 'forbidden'])('offers a deliberate sign-in action for %s without displaying metadata', async catalogStatus => {
-    const { values } = renderUI({ catalogStatus, product: null })
-    expect(screen.getByRole('alert')).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Website Marketplace' })).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Sign in again' }))
-    expect(values.signInAgain).toHaveBeenCalledTimes(1)
-  })
-
-  it('reports a load failure and supports keyboard retry', async () => {
-    const { values } = renderUI({ catalogStatus: 'error', product: null })
-    expect(screen.getByRole('alert')).toHaveTextContent('Source code could not be loaded.')
+  it('copies all nine exact clone commands, including six pinned submodule checkouts', async () => {
     const user = userEvent.setup()
-    await user.tab()
-    expect(screen.getByRole('button', { name: 'Try again' })).toHaveFocus()
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    renderUI()
+    const repos = [...PUBLIC_SOURCE_PRODUCTS, ...PUBLIC_SOURCE_TOOLS]
+    for (const repository of repos) {
+      const article = screen.getByRole('article', { name: repository.name })
+      await user.click(within(article).getByRole('button', { name: 'Copy clone command' }))
+      expect(writeText).toHaveBeenLastCalledWith(repository.cloneCommand)
+      expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copied')
+    }
+    expect(repos.filter(repo => repo.cloneCommand.includes('--recurse-submodules'))).toHaveLength(6)
+    expect(writeText).toHaveBeenCalledTimes(9)
+  })
+  it('keeps copy failure text selectable and retries successfully with keyboard focus', async () => {
+    const user = userEvent.setup()
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('denied')).mockResolvedValue()
+    renderUI()
+    const article = screen.getByRole('article', { name: 'Dashboard' })
+    const button = within(article).getByRole('button', { name: 'Copy clone command' })
+    button.focus()
     await user.keyboard('{Enter}')
-    expect(values.reloadCatalog).toHaveBeenCalledTimes(1)
+    expect(button).toHaveFocus()
+    expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copy failed. Select and copy the text above.')
+    expect(within(article).getByText(PUBLIC_SOURCE_PRODUCTS[0].cloneCommand)).toBeInTheDocument()
+    await user.keyboard('{Enter}')
+    expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copied')
+    expect(writeText).toHaveBeenCalledTimes(2)
   })
-
-  it('disables only the download while pending and announces the result', () => {
-    const view = renderUI({ downloadState: { status: 'pending' } })
-    expect(screen.getByRole('button', { name: 'Downloading…' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Downloading…' })).toHaveAttribute('aria-busy', 'true')
-    expect(screen.getByRole('status')).toHaveTextContent('Downloading…')
-    view.rerender(<SourceCodeDownloadsUI {...props({ downloadState: { status: 'success' } })} />)
-    expect(screen.getByRole('status')).toHaveTextContent('The ZIP is ready.')
-    expect(screen.getByRole('button', { name: 'Download source code' })).toBeEnabled()
+  it('offers only the published Quickstart MCP prompt, without implying product onboarding', async () => {
+    const user = userEvent.setup()
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    renderUI()
+    const quickstart = screen.getByRole('article', { name: 'Developer Quickstart' })
+    await user.click(within(quickstart).getByText('Connect your agent via MCP'))
+    await user.click(within(quickstart).getByRole('button', { name: 'Copy setup prompt' }))
+    expect(writeText).toHaveBeenLastCalledWith(QUICKSTART_SETUP_PROMPT)
+    expect(screen.getAllByRole('button', { name: 'Copy setup prompt' })).toHaveLength(1)
+    expect(screen.getByText(/it does not replace sign-in or configure the products/)).toBeInTheDocument()
   })
-
-  it('keeps a failed download retryable and allows catalog refresh for a missing version', async () => {
-    const view = renderUI({ downloadState: { status: 'error', error: 'failed' } })
-    expect(screen.getByRole('alert')).toHaveTextContent('The download failed.')
-    await userEvent.click(screen.getByRole('button', { name: 'Download source code' }))
-    expect(view.values.downloadSource).toHaveBeenCalledTimes(1)
-    const changed = props({ downloadState: { status: 'error', error: 'notFound' } })
-    view.rerender(<SourceCodeDownloadsUI {...changed} />)
-    expect(screen.getByRole('alert')).toHaveTextContent('This version is no longer available.')
-    await userEvent.click(screen.getByRole('button', { name: 'Try again' }))
-    expect(changed.reloadCatalog).toHaveBeenCalledTimes(1)
+  it.each(['es', 'ar'])('uses the bundled %s translations with no API labels', locale => {
+    state.language = { code: locale }
+    renderUI({}, { ...theme, rtl: locale === 'ar' })
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(labels.SOURCE_CODE_TITLE[locale])
+    expect(screen.getByRole('region', { name: labels.SOURCE_CODE_TOOLS[locale] })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: labels.SOURCE_CODE_COPY_CLONE[locale] })).toHaveLength(9)
   })
-
-  it('renders Markdown as text/React nodes, rejects script links and labels an English fallback', () => {
-    renderUI({ product: { ...product, instructionsLocale: 'en', instructionsFallback: true, instructions: '<script>untrusted()</script>\n\n[unsafe](javascript:alert(1))\n\n[Docs](https://docs.example.test)' } })
-    expect(screen.getByText('Instructions for this version are shown in English.')).toBeInTheDocument()
-    expect(document.querySelector('script')).toBeNull()
-    expect(screen.queryByRole('link', { name: 'unsafe' })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Docs' })).toHaveAttribute('rel', 'noopener noreferrer')
+  it('preserves nonempty namespaced API labels', () => {
+    state.apiLabels = { DASHBOARD_SOURCE_CODE_TITLE: 'Controlled title' }
+    renderUI()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Controlled title')
   })
-
-  it.each([
-    ['integrityMismatch', 'The downloaded ZIP does not match the package information. Try again.'],
-    ['verificationUnavailable', 'Your browser cannot verify this ZIP. Use a supported browser on HTTPS or localhost.']
-  ])('announces the precise %s failure without claiming a verified download', (error, message) => {
-    renderUI({ downloadState: { status: 'error', error } })
-    expect(screen.getByRole('alert')).toHaveTextContent(message)
-    expect(screen.queryByText('The ZIP is ready. Your browser will save it.')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Download source code' })).toBeEnabled()
+  it.each(['loading', 'sessionExpired', 'forbidden'])('hides repository actions for %s and preserves session feedback', status => {
+    renderUI({ catalogStatus: status })
+    expect(screen.queryByRole('article')).not.toBeInTheDocument()
+    expect(screen.getByRole(status === 'loading' ? 'status' : 'alert')).toBeInTheDocument()
   })
-
-  it('keeps the collapsed menu keyboard-accessible and supports RTL themes', async () => {
+  it('preserves the collapsed menu and deliberate sign-in action for keyboard users', async () => {
     state.collapsed = true
-    renderWithProviders(<SourceCodeDownloadsUI {...props()} />, { theme: { ...theme, rtl: true } })
+    const signInAgain = vi.fn()
+    renderUI({ catalogStatus: 'forbidden', signInAgain, signInError: true })
     const user = userEvent.setup()
     await user.tab()
     expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus()
     await user.keyboard('{Enter}')
     expect(state.collapse).toHaveBeenCalledWith(false)
-    expect(screen.getByRole('button', { name: 'Download source code' })).toBeEnabled()
+    await user.tab()
+    await user.keyboard('{Enter}')
+    expect(signInAgain).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('alert')).toHaveTextContent('Could not sign in. Try again.')
   })
 })

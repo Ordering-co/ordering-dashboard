@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConfig, useLanguage, useSession, OrdersManage as OrdersManageController } from '../../../../../index'
 import { OrderStatusFilterBar } from '../OrderStatusFilterBar'
@@ -64,7 +64,8 @@ const OrdersManagerUI = (props) => {
     disableDriverLocationsSockets,
     detailsOrder,
     setDetailsOrder,
-    disableSocketRoomDriver
+    disableSocketRoomDriver,
+    driverId
   } = props
 
   const [, t] = useLanguage()
@@ -90,6 +91,7 @@ const OrdersManagerUI = (props) => {
   })
 
   const [totalSelectedOrder, setTotalSelectedOrder] = useState(0)
+  const isLateralTabPicked = useRef(false)
   const learnOptions = learnOptionsValues(['order_list_general_view', 'order_details', 'create_custom_order'], t)
 
   const handleBackRedirect = () => {
@@ -185,6 +187,15 @@ const OrdersManagerUI = (props) => {
     if (isTourOpen) return
     setIsTourFlag(false)
   }, [isTourOpen])
+
+  useEffect(() => {
+    if (!isLateralBar || !driverId || isLateralTabPicked.current) return
+    const tabs = ['inProgress', 'pending', 'completed', 'cancelled']
+    if (tabs.some(tab => ordersAmountByStatus[tab] === null)) return
+    isLateralTabPicked.current = true
+    const firstTabWithOrders = tabs.find(tab => ordersAmountByStatus[tab] > 0)
+    if (firstTabWithOrders) handleOrdersStatusGroupFilter(firstTabWithOrders)
+  }, [ordersAmountByStatus])
 
   return (
     <>

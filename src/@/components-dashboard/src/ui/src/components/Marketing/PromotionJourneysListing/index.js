@@ -960,6 +960,7 @@ export const PromotionJourneysListing = props => {
   const journeysProps = {
     ...props,
     UIComponent: PromotionJourneysListingUI,
+    orderBy: '-id',
     paginationSettings: {
       initialPage: 1,
       pageSize: 10,

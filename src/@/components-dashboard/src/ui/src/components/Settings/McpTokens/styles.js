@@ -42,6 +42,10 @@ export const Header = styled.div`
 `
 
 export const Section = styled.section`
+  details summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; }
+  details summary:focus-visible, a:focus-visible { outline: 2px solid ${primary}; outline-offset: 2px; }
+  a { display: inline-flex; align-items: center; min-height: 44px; }
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -422,6 +426,8 @@ export const GuideTabs = styled.div`
 `
 
 export const GuideTab = styled.button`
+  min-height: 44px;
+  &:focus-visible { outline: 2px solid ${primary}; outline-offset: 2px; }
   appearance: none;
   padding: 6px 14px;
   border: none;
@@ -711,4 +717,10 @@ export const SecretView = styled.div`
     word-break: break-all;
     font-size: 13.5px;
   }
+`
+
+export const SetupSection = styled(Section)`
+  && p, && ${GuideTab}, && ${CopyButton} { color: ${heading}; }
+  ${Steps} > li::before { color: ${heading}; }
+  pre:focus-visible { outline: 2px solid ${primary}; outline-offset: 2px; }
 `

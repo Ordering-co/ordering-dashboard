@@ -201,6 +201,7 @@ export const BusinessDetailsUI = (props) => {
               selectedIntegration={selectedIntegration}
               handleConnectBusiness={handleConnectBusiness}
               handleDisconnectBusiness={handleDisconnectBusiness}
+              integrationActionLoading={props.integrationActionLoading}
               handlePushAction={handlePushAction}
             />
           )}

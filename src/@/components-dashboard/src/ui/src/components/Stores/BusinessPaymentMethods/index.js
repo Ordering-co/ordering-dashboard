@@ -16,6 +16,7 @@ import { PaymentOptionStripeLink } from '../PaymentOptionStripeLink'
 import { PaymentOption } from '../PaymentOption'
 import { PaymethodOptionPaypalExpress } from '../PaymethodOptionPaypalExpress'
 import { PaymethodOptionStripeConnect } from '../PaymethodOptionStripeConnect'
+import { PaymentOptionStripeConnectV2 } from '../PaymentOptionStripeConnectV2'
 import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 import { PaymentOptionSquare } from '../PaymentOptionSquare'
 import { PaymentOptionMethods } from '../PaymentOptionMethods'
@@ -104,7 +105,7 @@ const BusinessPaymentMethodsUI = (props) => {
   const braintreePaymethods = ['braintree', 'google_pay_braintree', 'apple_pay_braintree', 'paypal_braintree']
   const methodsPay = ['google_pay', 'apple_pay']
   const globalPayments = ['global_google_pay', 'global_apple_pay', 'stripe', 'computop']
-  const noKeyPayments = ['cash', 'card_delivery', 'izipay', 'physical_terminal', 'stripe_terminal', 'hyp', 'giftme']
+  const noKeyPayments = ['cash', 'card_delivery', 'izipay', 'physical_terminal', 'stripe_terminal', 'hyp', 'giftme', 'stripe_connect_v2']
   const stripeDirectMethods = ['stripe_checkout']
   const paymethodsWithDataTemplate = useMemo(() => paymethodsList?.paymethods?.filter(paymethod => paymethod?.data_template !== null).map(paymethod => paymethod?.gateway), [paymethodsList])
 
@@ -172,6 +173,7 @@ const BusinessPaymentMethodsUI = (props) => {
   const specialPayments = ['paypal',
     'paypal_express',
     'stripe_connect',
+    'stripe_connect_v2',
     'stripe_link',
     'square',
     'credomatic',
@@ -286,13 +288,16 @@ const BusinessPaymentMethodsUI = (props) => {
       return
     }
 
-    handleClickPayment && handleClickPayment(id, (payment) => {
-      setSelectedPaymethodGateway(currentPaymentData?.gateway)
-      setSelectedBusinessPaymethod(payment)
-      setIsEdit(true)
-      setIsExtendExtraOpen(true)
-      addQueryToUrl({ paymethod: id })
-    })
+    const enablesWithoutConfig = isCheckbox && noKeyPayments.includes(currentPaymentData?.gateway)
+    handleClickPayment && handleClickPayment(id, enablesWithoutConfig
+      ? null
+      : (payment) => {
+          setSelectedPaymethodGateway(currentPaymentData?.gateway)
+          setSelectedBusinessPaymethod(payment)
+          setIsEdit(true)
+          setIsExtendExtraOpen(true)
+          addQueryToUrl({ paymethod: id })
+        })
   }
 
   const handleCloseEdit = () => {
@@ -510,6 +515,24 @@ const BusinessPaymentMethodsUI = (props) => {
                     />
                   )
                 }
+                {selectedPaymethodGateway === 'stripe_connect_v2' && (
+                  <PaymentOptionStripeConnectV2
+                    business={business}
+                    title={paymethodSelected ? getPaymethodDisplayName(paymethodSelected) : undefined}
+                    sitesState={sitesState}
+                    open={isEdit}
+                    onClose={() => handleCloseEdit()}
+                    businessPaymethod={selectedBusinessPaymethod}
+                    changesState={changesState}
+                    orderTypes={orderTypes}
+                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
+                    cleanChangesState={cleanChangesState}
+                    actionState={actionState}
+                    handleSaveClick={handleSaveClick}
+                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
+                    selectedPaymethodGateway={selectedPaymethodGateway}
+                  />
+                )}
                 {selectedPaymethodGateway === 'apple_pay' && (
                   <PaymentOptionMethods
                     sitesState={sitesState}
@@ -775,6 +798,24 @@ const BusinessPaymentMethodsUI = (props) => {
                       />
                     )
                   }
+                  {selectedPaymethodGateway === 'stripe_connect_v2' && (
+                    <PaymentOptionStripeConnectV2
+                      business={business}
+                      title={paymethodSelected ? getPaymethodDisplayName(paymethodSelected) : undefined}
+                      sitesState={sitesState}
+                      open={isEdit}
+                      onClose={() => handleCloseEdit()}
+                      businessPaymethod={selectedBusinessPaymethod}
+                      changesState={changesState}
+                      orderTypes={orderTypes}
+                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
+                      cleanChangesState={cleanChangesState}
+                      actionState={actionState}
+                      handleSaveClick={handleSaveClick}
+                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
+                      selectedPaymethodGateway={selectedPaymethodGateway}
+                    />
+                  )}
                   {(methodsPay.includes(selectedPaymethodGateway)) && (
                     <PaymentOptionMethods
                       sitesState={sitesState}

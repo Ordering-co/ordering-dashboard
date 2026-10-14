@@ -311,6 +311,7 @@ describe('dependent fields (progressive disclosure)', () => {
 
   it('exposes the dependency for a dependent key and null otherwise', () => {
     expect(getSettingsFieldDependency('facebook_id')).toEqual({ key: 'facebook_login_enabled' })
+    expect(getSettingsFieldDependency('whatsapp_support_phone')).toEqual({ key: 'whatsapp_support_enabled' })
     expect(getSettingsFieldDependency('email_smtp_host')).toEqual({ key: 'email_smtp_use_default', on: false })
     expect(getSettingsFieldDependency('facebook_login_enabled')).toBeNull()
     expect(getSettingsFieldDependency(undefined)).toBeNull()

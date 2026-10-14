@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
+import { TabsContainer } from '../BusinessMenu/styles'
 
 export const Container = styled.div`
   padding: 20px;
@@ -139,4 +140,9 @@ export const TabOptionName = styled.span`
 
 export const EmptyMessage = styled.div`
   padding: 15px 0;
+`
+
+// For a payment method with tabs of its own, which do not all fit in the panel
+export const ScrollableTabsContainer = styled(TabsContainer)`
+  overflow-x: auto;
 `

@@ -13,6 +13,10 @@ import {
 export const ProductLink = (props) => {
   const {
     businessList,
+    searchValue,
+    onSearch,
+    handleChangeBusinessPage,
+    selectedBusiness,
     selectedBusinessId,
     setSelectedBusinessId,
     selectedProductId,
@@ -26,11 +30,19 @@ export const ProductLink = (props) => {
   const [{ optimizeImage }] = useUtils()
 
   const [businessOptions, setBusinessOptions] = useState([])
-  const [selectedBusinessSlug, setSelectedBusinessSlug] = useState(null)
+
+  const pagination = businessList?.pagination && {
+    currentPage: businessList.pagination.current_page,
+    pageSize: businessList.pagination.page_size,
+    totalPages: businessList.pagination.total_pages
+  }
 
   useEffect(() => {
     if (businessList.loading) return
-    const _businessOptions = businessList.businesses.map(business => {
+    const businesses = [...businessList.businesses]
+    const isSelectedMissing = selectedBusiness && !businesses.some(business => business.id === selectedBusiness.id)
+    if (isSelectedMissing && !searchValue) businesses.unshift(selectedBusiness)
+    const _businessOptions = businesses.map(business => {
       return {
         value: business.id,
         content: (
@@ -42,16 +54,7 @@ export const ProductLink = (props) => {
       }
     })
     setBusinessOptions(_businessOptions)
-  }, [businessList])
-
-  useEffect(() => {
-    if (!selectedBusinessId) {
-      setSelectedBusinessSlug(null)
-      return
-    }
-    const selectedBusiness = businessList.businesses.find(business => business.id === selectedBusinessId)
-    setSelectedBusinessSlug(selectedBusiness?.slug)
-  }, [selectedBusinessId, businessList])
+  }, [businessList, selectedBusiness])
 
   return (
     <ProductLinkContainer>
@@ -64,14 +67,22 @@ export const ProductLink = (props) => {
             options={businessOptions}
             onChange={val => setSelectedBusinessId(val)}
             optionInnerMaxHeight='300px'
+            isShowSearchBar
+            searchBarPlaceholder={t('SEARCH', 'Search')}
+            searchValue={searchValue}
+            handleChangeSearch={onSearch}
+            pagination={pagination}
+            handleChangePage={handleChangeBusinessPage}
+            isLoading={businessList.loading}
+            optionSkeletonHeight={25}
           />
         </SelectWrapper>
       </FormController>
 
-      {selectedBusinessSlug && (
+      {selectedBusiness?.slug && selectedBusiness?.id === selectedBusinessId && (
         <>
           <SelectBusinessProducts
-            slug={selectedBusinessSlug}
+            slug={selectedBusiness.slug}
             selectedProductId={selectedProductId}
             setSelectedProductId={setSelectedProductId}
             selectedCategoryId={selectedCategoryId}

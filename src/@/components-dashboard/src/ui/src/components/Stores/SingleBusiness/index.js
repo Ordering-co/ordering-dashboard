@@ -254,7 +254,6 @@ export const SingleBusiness = (props) => {
     notGetSites: true,
     notGetTaxes: true,
     notGetStreamConnection: true,
-    notGetCloverIntegration: true,
     UIComponent: SingleBusinessUI
   }
   return (

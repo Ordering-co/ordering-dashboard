@@ -20,13 +20,13 @@ import {
   Notice,
   OptionLabel,
   PromptRow,
-  Section,
+  SetupSection,
   Steps
 } from './styles'
 
 const Code = ({ children }) => (
   <CodeBlock>
-    <pre>{children}</pre>
+    <pre tabIndex={0}>{children}</pre>
     <McpCopyButton text={children} />
   </CodeBlock>
 )
@@ -36,16 +36,14 @@ const Code = ({ children }) => (
  * The key is always read from an environment variable, never written in a config.
  */
 export const McpSetupGuide = ({ status }) => {
-  const [, t] = useLanguage()
+  const [languageState, t] = useLanguage()
   const [client, setClient] = useState('claude')
   const url = status.url
 
   const envStep = (
     <li>
       <h3>{t('MCP_GUIDE_ENV_TITLE', 'Save your key in an environment variable')}</h3>
-      <p>
-        {t('MCP_GUIDE_ENV_HELP', 'Add this line to your shell profile (~/.zshrc or ~/.bashrc) with your key, then open a new terminal. Replace it when the key expires.')}
-      </p>
+      <p>{t('MCP_PRIVATE_KEY_INPUT', 'Enter the key yourself at the hidden terminal prompt. Never put it in chat or command arguments. Start the client from that terminal.')}</p>
       <Code>{buildEnvExport()}</Code>
     </li>
   )
@@ -102,42 +100,38 @@ export const McpSetupGuide = ({ status }) => {
 
   return (
     <>
-      <Section>
-        <h2>{t('MCP_GUIDE_TITLE', 'Setup guide')}</h2>
-        <p>{t('MCP_GUIDE_HELP', 'Pick your assistant. The steps already use the URL of this project.')}</p>
-        <p>{t('MCP_COPY_TO_LLM_HELP', 'Paste this prompt into your selected assistant. It will guide the setup and ask you to enter your MCP key privately on your computer.')}</p>
+      <SetupSection data-testid='mcp-automatic-setup'>
+        <h2>{t('MCP_CONNECT_ASSISTANT', 'Connect with my assistant')}</h2>
+        <p>{t('MCP_AUTOMATIC_STEPS', 'Paste the prompt in your terminal agent, sign in in the browser, review permissions, then wait for the installer, reload your client and ask whoami.')}</p>
         <GuideActions>
-          <GuideTabs role='tablist'>
-            <GuideTab
-              type='button'
-              role='tab'
-              aria-selected={client === 'claude'}
-              $active={client === 'claude'}
-              onClick={() => setClient('claude')}
-            >
-              Claude Code
-            </GuideTab>
-            <GuideTab
-              type='button'
-              role='tab'
-              aria-selected={client === 'codex'}
-              $active={client === 'codex'}
-              onClick={() => setClient('codex')}
-            >
-              Codex
-            </GuideTab>
-          </GuideTabs>
-          <McpCopyButton
-            text={buildMcpSetupPrompt({ client, url })}
-            buttonText={t('MCP_COPY_TO_LLM', 'Copy to LLM')}
-          />
+          <McpCopyButton text={buildMcpSetupPrompt()} buttonText={t('MCP_COPY_CONNECT_PROMPT', 'Copy prompt to connect')} />
         </GuideActions>
-        {clients[client]}
-      </Section>
+        <Notice $tone='info'>
+          {t('MCP_INSTALL_BOUNDARY', 'Browser success confirms credential delivery. The terminal verifies detected client registrations; only a tool call in your client proves the connection. A remote installer configures its own machine.')}
+        </Notice>
+        <p>{t('MCP_REST_OPTION', 'MCP read is the default. REST is a separate option checked by default, with broad user permissions and no expiry. Uncheck it if unnecessary; MCP read does not restrict REST.')}</p>
+        <p>
+          <a href={languageState?.language?.code === 'es' ? 'https://docs.ordering.co/es/docs/developers/mcp/' : 'https://docs.ordering.co/docs/developers/mcp/'} target='_blank' rel='noopener noreferrer'>{t('MCP_FULL_GUIDE', 'Complete guide')}</a>
+          {' · '}
+          <a href='https://github.com/Ordering-co/ordering-dev-quickstart' target='_blank' rel='noopener noreferrer'>Quickstart</a>
+          {' · '}
+          <a href='https://github.com/Ordering-co/ordering-mcp-plugin' target='_blank' rel='noopener noreferrer'>Plugin / skill (Claude Code / Codex)</a>
+        </p>
+        <p>{t('MCP_REPO_ACCESS', 'Quickstart installs MCP; the optional plugin adds platform knowledge separately. Repository access is required if GitHub reports that either repo is private.')}</p>
+        <details>
+          <summary>{t('MCP_MANUAL_SETUP', 'Manual configuration')}</summary>
+          <p>{t('MCP_GUIDE_HELP', 'Pick your assistant. The steps already use the URL of this project.')}</p>
+          <GuideTabs>
+            <GuideTab type='button' aria-pressed={client === 'claude'} $active={client === 'claude'} onClick={() => setClient('claude')}>Claude Code</GuideTab>
+            <GuideTab type='button' aria-pressed={client === 'codex'} $active={client === 'codex'} onClick={() => setClient('codex')}>Codex</GuideTab>
+          </GuideTabs>
+          {clients[client]}
+        </details>
+      </SetupSection>
 
-      <Section>
+      <SetupSection>
         <h2>{t('MCP_GUIDE_FIRST_REQUEST', 'Your first request')}</h2>
-        <p>{t('MCP_GUIDE_FIRST_REQUEST_HELP', 'Ask your assistant one of these. If it answers with your user and your latest orders, you are connected.')}</p>
+        <p>{t('MCP_GUIDE_FIRST_REQUEST_HELP', 'Ask your assistant to call whoami and read the latest orders. Confirm actual tool calls and the intended project before reporting connected.')}</p>
         {prompts.map(prompt => (
           <PromptRow key={prompt}>
             <code>{prompt}</code>
@@ -146,10 +140,10 @@ export const McpSetupGuide = ({ status }) => {
         ))}
         {status.tools?.length > 0 && (
           <p>
-            {t('MCP_GUIDE_TOOLS', 'Tools the assistant gets: _tools_.').replace('_tools_', status.tools.join(', '))}
+            {t('MCP_GUIDE_TOOLS', 'Server tool catalog: _tools_. write_operation requires write scope and supported fields.').replace('_tools_', status.tools.join(', '))}
           </p>
         )}
-      </Section>
+      </SetupSection>
     </>
   )
 }

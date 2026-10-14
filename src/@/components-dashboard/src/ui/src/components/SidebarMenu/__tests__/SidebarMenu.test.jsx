@@ -160,8 +160,7 @@ describe('SidebarMenu external resources', () => {
   })
 
   it.each([
-    { level: 0 }, { level: 2 },
-    { level: 0, readOnlyAdmin: true }, { level: 2, readOnlyBusinessOwner: true }
+    { level: 0 }, { level: 0, readOnlyAdmin: true }
   ])('offers source code to eligible session role %j, regardless of editing privileges or system ID', user => {
     state.sessionState = { user }
     renderWithProviders(<SidebarMenu />, { initialEntries: ['/open-source-code'] })
@@ -171,14 +170,14 @@ describe('SidebarMenu external resources', () => {
     expect(link).toHaveClass('btn-primary')
   })
 
-  it.each([undefined, { level: 5 }, { level: 8 }, { level: '2' }])('hides the source link for ineligible session %j', user => {
+  it.each([undefined, { level: 2 }, { level: 2, readOnlyBusinessOwner: true }, { level: 5 }, { level: 8 }, { level: '2' }])('hides the source link for ineligible session %j', user => {
     state.sessionState = { user }
     renderSidebar()
     expect(screen.queryByRole('link', { name: 'Open Source Code' })).not.toBeInTheDocument()
   })
 
   it('navigates the source link internally without sending a session token or download data to the event bus', async () => {
-    state.sessionState = { user: { level: 2 }, token: 'controlled-token' }
+    state.sessionState = { user: { level: 0 }, token: 'controlled-token' }
     renderWithProviders(<><SidebarMenu /><RouterProbe /></>, { initialEntries: ['/orders'] })
     await userEvent.click(screen.getByRole('link', { name: 'Open Source Code' }))
     expect(screen.getByTestId('current-path')).toHaveTextContent('/open-source-code')
@@ -188,7 +187,7 @@ describe('SidebarMenu external resources', () => {
 
   it.each(['es-MX', 'ar-SA'])('localizes only the new source link from the canonical %s subset', code => {
     state.language = { code }
-    state.sessionState = { user: { level: 2 } }
+    state.sessionState = { user: { level: 0 } }
     renderSidebar()
     expect(screen.getByRole('link', { name: labels.SOURCE_CODE_TITLE[code.split('-')[0]] })).toHaveAttribute('href', '/open-source-code')
     expect(screen.getByRole('button', { name: 'Language selector' })).toBeInTheDocument()

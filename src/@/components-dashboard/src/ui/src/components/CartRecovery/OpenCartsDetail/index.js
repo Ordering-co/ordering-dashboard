@@ -161,9 +161,9 @@ const OpenCartsDetailUI = (props) => {
                   />
                   <OrderProducts>
                     <h2>{t('ORDER_DETAILS', 'Order details')}</h2>
-                    {cartState?.cart?.products?.length && cartState?.cart?.products.map((product) => (
+                    {cartState?.cart?.products?.length > 0 && cartState?.cart?.products.map((product, i) => (
                       <ProductItemAccordion
-                        key={product.id}
+                        key={product?.code || `${product?.id}-${i}`}
                         product={product}
                         toppingsRemoved={cartState?.cart?.toppings_removed?.[product?.code]}
                         isCartProduct
