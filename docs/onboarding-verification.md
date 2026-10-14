@@ -91,3 +91,7 @@ The incoming lockfile was installed without modification under Node 24.21.0 / pn
 | Strict coverage summary | Exit 0; average 93.05% against the 70% gate. Statements 96.37%, branches 87.29%, functions 92.15%, lines 96.37%. |
 
 No source fixes, staging, commit, merge, or QA configuration changes were made by this validation pass. `src/config.json` retained the public placeholder and the incoming lockfile had no unstaged modification. The full suite produced no failures requiring an upstream-baseline exception. These automated checks verify the prepared source tree; they do not retroactively claim browser coverage, authenticated operations, or deployment of the incoming main changes.
+
+### Final merged source in the anonymous clone
+
+The anonymous clone was fast-forwarded to `f0d7d688b28b05afc1e5cd815d179f6d8a051087`, preserving its configured project and personalization fixture. Frozen install adopted the exact incoming main lock; public doctor and HTTP 200 passed. The principal observed the selected-project login in the browser. A temporary h1 edit appeared automatically through Vite's browser reload; the initial fallback-only edit was hidden by the now-present translation, so the successful check used temporary literal text. The original translated component was restored byte for byte. This proves an automatic visible development update, not state-preserving React Fast Refresh. Screenshots are `onboarding-evidence/dashboard-merged-clone.png` and `dashboard-merged-hmr.png`. Only documentation/images change after the tested source SHA.
