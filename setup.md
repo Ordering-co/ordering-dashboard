@@ -1,8 +1,23 @@
 # Dashboard setup
 
-Use Node 24 and pnpm 9.15.0 (the packageManager pin). Registry packages and the exact GitLab archive in pnpm-lock.yaml must be accessible over HTTPS.
+Use Node 24 (`.nvmrc`) and pnpm 9.15.0 (`packageManager`). Preserve the lockfile and the current checkout's configuration. For repository conventions, follow [CLAUDE.md](CLAUDE.md) and [AGENTS.md](AGENTS.md). The [README](README.md) provides the short agent-assisted path; this guide covers manual setup, Docker, quality checks, and deployment context. Registry packages and the exact GitLab archive in pnpm-lock.yaml must be accessible over HTTPS.
 
 ## Configuration and startup
+
+If you do not already have a checkout, clone the repository:
+
+```sh
+git clone https://github.com/Ordering-co/ordering-dashboard.git
+cd ordering-dashboard
+```
+
+Enable the pinned pnpm version through Corepack:
+
+```sh
+corepack enable && corepack prepare pnpm@9.15.0 --activate
+```
+
+Install, configure your project, and start the development server (port 3001):
 
 ```sh
 pnpm install --frozen-lockfile
@@ -22,9 +37,25 @@ During development, only a real project with `localProjectConfigured: true` in s
 
 ## Optional services
 
-Review API/socket URLs, business flags, and the integrations you need. Copy `.env.example` to `.env` only if your optional imports/maps/assets require configuration. Supply your own Supabase/import settings. Every VITE variable is browser-visible; never put server or agent secrets in it.
+Review API/socket URLs, business flags, and the integrations you need. Preserve existing configuration; copy `.env.example` to `.env` only if it does not exist and your optional Open Graph/imports/maps/assets require configuration. Supply your own Supabase/import settings. Every VITE variable is browser-visible; never put server or agent secrets in it.
 
 Optional Stripe/PostHog/Sentry/GTM/Intercom destinations are blank by default. Supply your own public client identifiers and opt in explicitly to analytics. Intercom requires `intercom_app_id`. Local development skips push initialization. Authentication and data access require your normal project permissions; no administrative credentials are supplied. Local setup does not provision a backend, publish, or deploy.
+
+## Docker alternative
+
+With Docker installed, the existing image uses Node 22 and pnpm:
+
+```sh
+docker compose up
+```
+
+Open `http://localhost:3001`. The native local setup above uses Node 24.
+
+## Architecture and Settings
+
+This admin Dashboard uses functional components and Vite 7. Controllers, dashboard UI, and the SDK live in-tree at `src/@/components-dashboard`, with path aliases `~components` and `~ui`.
+
+Project configs are unlocked for every customer and edited only on `/settings`. Read [the Settings guide](docs/SETTINGS.md) before changing Settings or any other config editor.
 
 ## Quality checks
 
@@ -39,10 +70,16 @@ node i18n/check-generated.cjs
 node i18n/verify.cjs
 ```
 
-The coverage gate requires an average of at least 70% across statements, branches, functions and lines in the source-defined scope. It does not measure complete product/backend correctness. Local tests and build do not verify authenticated workflows, real orders/payments or a production deployment.
+Use `pnpm run lint` when you want ESLint to apply fixes; `lint:check` above leaves files unchanged. Production builds allocate 8GB Node heap (`NODE_OPTIONS`) due to bundle size.
+
+The [public CI Quality Gate](.github/workflows/ci.yml) checks translations, lint, build, tests and scoped coverage. The coverage gate requires an average of at least 70% across statements, branches, functions and lines in the source-defined scope. It does not measure complete product/backend correctness. Local tests and build do not verify authenticated workflows, real orders/payments or a production deployment.
 
 Keep execution-specific reports, screenshots, logs, and run manifests outside the product tree in the task evidence location. Maintain durable instructions and tests here without embedding results of a particular run.
 
 ## Optional Worker hosting
 
-See [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md). Use your own account, worker names, tenant and bindings. No deployment or live translation sync runs in public CI. Enabling the optional source-downloads endpoints requires your own compatible R2 bucket and configuration; see [the backend contract](docs/SOURCE_CODE_DOWNLOADS.md).
+The app can be hosted with Cloudflare Workers and static assets from `dist/`. See [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md). Use your own account, worker names, tenant and bindings. No deployment or live translation sync runs in public CI. Enabling the optional source-downloads endpoints requires your own compatible R2 bucket and configuration; see [the backend contract](docs/SOURCE_CODE_DOWNLOADS.md). Local setup does not authorize publication or deployment.
+
+## Open Source Code
+
+See [public source code](docs/public-source-code.md) for repository links, setup guidance and access requirements.

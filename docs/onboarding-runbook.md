@@ -2,6 +2,8 @@
 
 ## Connection and scope
 
+Access to source code does not grant API access or provision a backend. Use an Ordering project you own or are authorized to use.
+
 Browser-visible project settings are editable in `src/config.json`: `project`, `configurations.subdomain`, and `api.url/version/language`. It does not require `.env`, administrative keys, or tokens. The helper preserves existing flags, IDs, billing, socket, and integrations. Keep this checkout's current configuration; do not replace it with a distribution template or copy values between repositories. It does not open a login or register a new MCP or REST connection.
 
 `detect` checks the prepared helper at `~/ordering-dev-quickstart/ordering`, or the known path you supply with `--helper /known/path/ordering`. It requires the executable and `.clients/runtime-ready` marker. If present, it starts that helper's MCP and calls `whoami`, returning only status and project slug. It does not scan global client configuration or print tokens/user data. It cannot discover the agent's native MCP tools: the agent must inspect its current tools and verify the project with an authorized read. Confirm the slug before reusing it. Available tools alone do not prove a connection or access to every project.
@@ -22,6 +24,10 @@ Prompt:
 > Diagnose my local Dashboard. Read setup.md, run detect and doctor, and distinguish runtime requirements, configuration, public /current response, HTTP server, and browser loading. Keep tokens, emails, and full API responses out of product files. Store task-specific reports, logs, and captures in the private task evidence location outside the repository. Use only a confirmed path for an existing helper. Fix reversible local problems without changing backend data, publishing, or deploying.
 
 If the slug is still `your-project-slug`, configure your project. If `/current` fails, check the slug, URL/version/language, network, and response before saving. A login 401 requires the user's own account and permissions; copying another tenant's session is not a fix. If a port is occupied, identify its owner and choose a free port with `pnpm dev --host 127.0.0.1 --port 3002`.
+
+- Open `localhost:3001` instead of `0.0.0.0:3001` if needed.
+- If `pnpm run build` runs out of heap or memory, ensure enough RAM for the 8GB build heap; see [the Cloudflare guide](CLOUDFLARE.md).
+- If Docker containers exit during install or build, increase CPU/memory in Docker Desktop.
 
 ## First visible edit
 
