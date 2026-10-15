@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, ButtonLink, IconButton } from '../../../styles/Buttons'
+import { Button, IconButton } from '../../../styles/Buttons'
 
 export const Page = styled.section`
   flex: 1;
@@ -52,6 +52,11 @@ export const Product = styled.article`
   summary { cursor: pointer; min-height: 44px; padding: 10px 0; font-weight: 600; }
   @media (max-width: 600px) { padding: 16px; }
 `
+export const Quickstart = styled(Product)`
+  margin-top: 20px;
+  border-color: var(--od-action, ${props => props.theme.colors.primary});
+  > p { max-width: 75ch; }
+`
 export const Action = styled(Button)`
   min-height: 44px;
   border-radius: 4px;
@@ -84,21 +89,6 @@ export const State = styled.div`
   p { max-width: 65ch; }
 `
 
-export const RepositoryLink = styled(ButtonLink)`
-  min-height: 44px;
-  line-height: 22px;
-  padding: 10px 16px;
-  max-width: 100%;
-  white-space: normal;
-  && {
-    background: var(--od-action, ${props => props.theme.colors.btnSecondary || props.theme.colors.primary});
-    color: var(--od-action-foreground, ${props => props.theme.colors.primaryContrast || '#FFF'});
-    border-color: var(--od-action, ${props => props.theme.colors.btnSecondary || props.theme.colors.primary});
-    text-decoration: none;
-  }
-  &:focus-visible { outline: 2px solid var(--od-action, ${props => props.theme.colors.primary}); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { transition: none; }
-`
 export const RepositorySection = styled.section`
   margin-top: 32px;
 `
@@ -118,4 +108,7 @@ export const CopyBlock = styled.div`
   pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 12px 0; }
   pre code { overflow-wrap: anywhere; }
   ${Actions} { margin-bottom: 0; }
+  details { margin: 0; padding: 0; border: 0; }
+  summary { font-size: 13px; font-weight: 400; }
+
 `

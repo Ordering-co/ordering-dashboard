@@ -1,6 +1,6 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { screen, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import theme from '~/theme.json'
@@ -14,17 +14,24 @@ const renderUI = (overrides = {}, customTheme = theme) => renderWithProviders(<S
 beforeEach(() => { state.collapsed = false; state.collapse.mockClear(); state.language = { code: 'en' }; state.apiLabels = {} })
 afterEach(() => vi.restoreAllMocks())
 describe('public repository presentation', () => {
-  it('separates seven products from two tools and contains no package/download metadata', () => {
+  it('puts Dev Quick Start before seven products and the optional plugin', () => {
     renderUI()
     expect(within(screen.getByRole('region', { name: 'Products' })).getAllByRole('article')).toHaveLength(7)
-    expect(within(screen.getByRole('region', { name: 'Developer tools' })).getAllByRole('article')).toHaveLength(2)
+    expect(within(screen.getByRole('region', { name: 'Optional tools' })).getAllByRole('article')).toHaveLength(1)
+    const articles = screen.getAllByRole('article')
+    expect(articles[0]).toHaveAccessibleName('Dev Quick Start')
+    expect(articles.at(-1)).toHaveAccessibleName('MCP plugin and skill')
+    const quickstart = articles[0]
+    expect(within(quickstart).getByText(QUICKSTART_SETUP_PROMPT).closest('details')).toBeNull()
+    expect(within(quickstart).getByText(/configures all seven/)).toHaveTextContent(/asks which to start locally/)
     expect(screen.queryByText(/Download source code|checksum|ZIP|Published \(CST/)).not.toBeInTheDocument()
     expect(screen.getByText(/Creating a fork requires your own GitHub account/)).toBeInTheDocument()
     expect(screen.getByText(/appropriate permissions/)).toBeInTheDocument()
   })
-  it.each([...PUBLIC_SOURCE_PRODUCTS, ...PUBLIC_SOURCE_TOOLS])('offers verified public links and the exact clone for $name', repository => {
+  it.each([...PUBLIC_SOURCE_PRODUCTS, ...PUBLIC_SOURCE_TOOLS])('keeps safe repository links and clone in secondary developer options for $name', async repository => {
     renderUI()
-    const article = screen.getByRole('article', { name: repository.name })
+    const article = screen.getByRole('article', { name: repository.id === 'ordering-dev-quickstart' ? 'Dev Quick Start' : repository.name })
+    await userEvent.setup().click(within(article).getByText('Developer options'))
     expect(within(article).getByRole('link', { name: 'View repository' })).toHaveAttribute('href', repository.url)
     expect(within(article).getByRole('link', { name: 'README' })).toHaveAttribute('href', repository.readmeUrl)
     expect(within(article).getByRole('link', { name: 'Create a fork' })).toHaveAttribute('href', repository.forkUrl)
@@ -42,7 +49,8 @@ describe('public repository presentation', () => {
     renderUI()
     const repos = [...PUBLIC_SOURCE_PRODUCTS, ...PUBLIC_SOURCE_TOOLS]
     for (const repository of repos) {
-      const article = screen.getByRole('article', { name: repository.name })
+      const article = screen.getByRole('article', { name: repository.id === 'ordering-dev-quickstart' ? 'Dev Quick Start' : repository.name })
+      await user.click(within(article).getByText('Developer options'))
       await user.click(within(article).getByRole('button', { name: 'Copy clone command' }))
       expect(writeText).toHaveBeenLastCalledWith(repository.cloneCommand)
       expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copied')
@@ -55,33 +63,73 @@ describe('public repository presentation', () => {
     const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockRejectedValueOnce(new Error('denied')).mockResolvedValue()
     renderUI()
     const article = screen.getByRole('article', { name: 'Dashboard' })
-    const button = within(article).getByRole('button', { name: 'Copy clone command' })
+    const button = within(article).getByRole('button', { name: 'Copy setup prompt' })
     button.focus()
     await user.keyboard('{Enter}')
     expect(button).toHaveFocus()
-    expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copy failed. Select and copy the text above.')
-    expect(within(article).getByText(PUBLIC_SOURCE_PRODUCTS[0].cloneCommand)).toBeInTheDocument()
+    expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copy failed. Select and copy the text.')
+    expect(within(article).getByText(PUBLIC_SOURCE_PRODUCTS[0].setupPrompt)).toBeVisible()
     await user.keyboard('{Enter}')
-    expect(within(article).getByRole('status', { name: 'Clone command' })).toHaveTextContent('Copied')
+    expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copied')
     expect(writeText).toHaveBeenCalledTimes(2)
   })
-  it('offers only the published Quickstart MCP prompt, without implying product onboarding', async () => {
+  it('opens the exact prompt for manual copying when the clipboard API is unavailable', async () => {
+    const user = userEvent.setup()
+    const clipboard = navigator.clipboard
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    try {
+      renderUI()
+      const article = screen.getByRole('article', { name: 'Dashboard' })
+      await user.click(within(article).getByRole('button', { name: 'Copy setup prompt' }))
+      expect(within(article).getByText(PUBLIC_SOURCE_PRODUCTS[0].setupPrompt)).toBeVisible()
+      expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copy failed. Select and copy the text.')
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: clipboard })
+    }
+  })
+  it('disables the primary action while clipboard completion is pending', async () => {
+    const user = userEvent.setup()
+    let complete
+    vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(() => new Promise(resolve => { complete = resolve }))
+    renderUI()
+    const article = screen.getByRole('article', { name: 'Dashboard' })
+    const button = within(article).getByRole('button', { name: 'Copy setup prompt' })
+    await user.click(button)
+    expect(button).toBeDisabled()
+    expect(button).toHaveAttribute('aria-busy', 'true')
+    await act(async () => complete())
+    expect(button).toBeEnabled()
+    expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copied')
+  })
+  it('copies the canonical connection prompt and seven exact setup prompts as primary actions', async () => {
     const user = userEvent.setup()
     const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
     renderUI()
-    const quickstart = screen.getByRole('article', { name: 'Developer Quickstart' })
-    await user.click(within(quickstart).getByText('Connect your agent via MCP'))
+    const quickstart = screen.getByRole('article', { name: 'Dev Quick Start' })
     await user.click(within(quickstart).getByRole('button', { name: 'Copy setup prompt' }))
     expect(writeText).toHaveBeenLastCalledWith(QUICKSTART_SETUP_PROMPT)
-    expect(screen.getAllByRole('button', { name: 'Copy setup prompt' })).toHaveLength(1)
+    for (const repository of PUBLIC_SOURCE_PRODUCTS) {
+      const article = screen.getByRole('article', { name: repository.name })
+      const developerOptions = within(article).getByText('Developer options').closest('details')
+      const copy = within(article).getByRole('button', { name: 'Copy setup prompt' })
+      expect(developerOptions).not.toHaveAttribute('open')
+      expect(developerOptions).not.toContainElement(copy)
+      await user.click(copy)
+      expect(writeText).toHaveBeenLastCalledWith(repository.setupPrompt)
+      expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copied')
+      await user.click(within(article).getByText('View setup prompt'))
+      expect(within(article).getByText(repository.setupPrompt)).toBeVisible()
+    }
+    expect(screen.getAllByRole('button', { name: 'Copy setup prompt' })).toHaveLength(8)
     expect(screen.getByText(/it does not replace sign-in or configure the products/)).toBeInTheDocument()
   })
   it.each(['es', 'ar'])('uses the bundled %s translations with no API labels', locale => {
     state.language = { code: locale }
     renderUI({}, { ...theme, rtl: locale === 'ar' })
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(labels.SOURCE_CODE_TITLE[locale])
-    expect(screen.getByRole('region', { name: labels.SOURCE_CODE_TOOLS[locale] })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: labels.SOURCE_CODE_COPY_CLONE[locale] })).toHaveLength(9)
+    expect(labels).toHaveProperty('SOURCE_CODE_OPTIONAL_TOOLS')
+    expect(screen.getByRole('region', { name: labels.SOURCE_CODE_OPTIONAL_TOOLS[locale] })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: labels.SOURCE_CODE_COPY_PROMPT[locale] })).toHaveLength(8)
   })
   it('preserves nonempty namespaced API labels', () => {
     state.apiLabels = { DASHBOARD_SOURCE_CODE_TITLE: 'Controlled title' }

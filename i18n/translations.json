@@ -60871,6 +60871,20 @@
     "bg": "Копирането е неуспешно. Изберете и копирайте текста по-горе.",
     "tr": "Kopyalama başarısız. Yukarıdaki metni seçip kopyalayın."
   },
+  "SOURCE_CODE_COPY_MANUALLY": {
+    "en": "Copy failed. Select and copy the text.",
+    "es": "No se pudo copiar. Selecciona y copia el texto.",
+    "fr": "Échec de la copie. Sélectionnez et copiez le texte.",
+    "it": "Copia non riuscita. Seleziona e copia il testo.",
+    "de": "Kopieren fehlgeschlagen. Markiere und kopiere den Text.",
+    "pt": "Falha ao copiar. Selecione e copie o texto.",
+    "da": "Kopiering mislykkedes. Markér og kopiér teksten.",
+    "nl": "Kopiëren mislukt. Selecteer en kopieer de tekst.",
+    "ar": "تعذر النسخ. حدد النص وانسخه.",
+    "el": "Η αντιγραφή απέτυχε. Επιλέξτε και αντιγράψτε το κείμενο.",
+    "bg": "Копирането е неуспешно. Изберете и копирайте текста.",
+    "tr": "Kopyalama başarısız. Metni seçip kopyalayın."
+  },
   "SOURCE_CODE_COPY_PROMPT": {
     "en": "Copy setup prompt",
     "es": "Copiar prompt de configuración",
@@ -60912,6 +60926,20 @@
     "el": "Διαχειριστείτε τις επιχειρήσεις, τις παραγγελίες και τις ρυθμίσεις του έργου σας.",
     "bg": "Управлявайте бизнесите, поръчките и настройките на проекта си.",
     "tr": "İşletmelerinizi, siparişlerinizi ve proje ayarlarınızı yönetin."
+  },
+  "SOURCE_CODE_DEVELOPER_OPTIONS": {
+    "en": "Developer options",
+    "es": "Opciones para desarrolladores",
+    "fr": "Options pour les développeurs",
+    "it": "Opzioni per sviluppatori",
+    "de": "Entwickleroptionen",
+    "pt": "Opções para desenvolvedores",
+    "da": "Udviklerindstillinger",
+    "nl": "Ontwikkelaarsopties",
+    "ar": "خيارات المطورين",
+    "el": "Επιλογές προγραμματιστών",
+    "bg": "Опции за разработчици",
+    "tr": "Geliştirici seçenekleri"
   },
   "SOURCE_CODE_DOWNLOAD": {
     "en": "Download source code",
@@ -61024,6 +61052,20 @@
     "el": "Οι οδηγίες αυτής της έκδοσης εμφανίζονται στα αγγλικά.",
     "bg": "Инструкциите за тази версия се показват на английски.",
     "tr": "Bu sürümün talimatları İngilizce olarak gösteriliyor."
+  },
+  "SOURCE_CODE_EXISTING_CONNECTION": {
+    "en": "Already connected? Choose a product below, or use its manual setup instructions.",
+    "es": "¿Ya tienes conexión? Elige un producto abajo o usa sus instrucciones de configuración manual.",
+    "fr": "Déjà connecté ? Choisissez un produit ci-dessous ou suivez ses instructions de configuration manuelle.",
+    "it": "Sei già connesso? Scegli un prodotto qui sotto o segui le sue istruzioni di configurazione manuale.",
+    "de": "Schon verbunden? Wähle unten ein Produkt aus oder nutze dessen Anleitung zur manuellen Einrichtung.",
+    "pt": "Já está conectado? Escolha um produto abaixo ou use suas instruções de configuração manual.",
+    "da": "Allerede forbundet? Vælg et produkt nedenfor, eller følg dets vejledning til manuel opsætning.",
+    "nl": "Al verbonden? Kies hieronder een product of gebruik de instructies voor handmatige installatie.",
+    "ar": "هل لديك اتصال بالفعل؟ اختر منتجًا أدناه أو اتبع تعليمات إعداده اليدوي.",
+    "el": "Είστε ήδη συνδεδεμένοι; Επιλέξτε ένα προϊόν παρακάτω ή ακολουθήστε τις οδηγίες χειροκίνητης ρύθμισης.",
+    "bg": "Вече сте свързани? Изберете продукт по-долу или използвайте инструкциите му за ръчна настройка.",
+    "tr": "Zaten bağlı mısınız? Aşağıdan bir ürün seçin veya manuel kurulum talimatlarını kullanın."
   },
   "SOURCE_CODE_FILE": {
     "en": "ZIP file",
@@ -61263,6 +61305,20 @@
     "bg": "Мобилно приложение",
     "tr": "Mobil uygulama"
   },
+  "SOURCE_CODE_OPTIONAL_TOOLS": {
+    "en": "Optional tools",
+    "es": "Herramientas opcionales",
+    "fr": "Outils facultatifs",
+    "it": "Strumenti facoltativi",
+    "de": "Optionale Werkzeuge",
+    "pt": "Ferramentas opcionais",
+    "da": "Valgfrie værktøjer",
+    "nl": "Optionele tools",
+    "ar": "أدوات اختيارية",
+    "el": "Προαιρετικά εργαλεία",
+    "bg": "Незадължителни инструменти",
+    "tr": "İsteğe bağlı araçlar"
+  },
   "SOURCE_CODE_PLUGIN_DESCRIPTION": {
     "en": "Add Ordering platform knowledge to your agent. The plugin requires an existing MCP connection; it does not replace sign-in or configure the products.",
     "es": "Añade conocimiento de la plataforma Ordering a tu agente. El plugin requiere una conexión MCP existente; no sustituye el login ni configura los productos.",
@@ -61361,6 +61417,20 @@
     "bg": "Публикувано (CST · UTC−06:00)",
     "tr": "Yayımlandı (CST · UTC−06:00)"
   },
+  "SOURCE_CODE_QUICKSTART_ALL_PRODUCTS_DESCRIPTION": {
+    "en": "Connect your agent to Ordering, then choose whether to download all seven products. It configures all seven for your confirmed project by default and asks which to start locally. Website Marketplace and Dashboard are recommended together.",
+    "es": "Conecta tu agente a Ordering y decide si quieres descargar los siete productos. Configura los siete por defecto para el proyecto que confirmes y pregunta cuáles arrancar localmente. Recomendamos Website Marketplace y Dashboard juntos.",
+    "fr": "Connectez votre agent à Ordering, puis choisissez de télécharger ou non les sept produits. Il configure les sept par défaut pour votre projet confirmé, puis demande lesquels lancer en local. Website Marketplace et Dashboard sont recommandés ensemble.",
+    "it": "Collega il tuo agente a Ordering, poi scegli se scaricare tutti e sette i prodotti. Li configura tutti per impostazione predefinita per il progetto confermato e chiede quali avviare in locale. Consigliamo Website Marketplace e Dashboard insieme.",
+    "de": "Verbinde deinen Agenten mit Ordering und entscheide dann, ob du alle sieben Produkte herunterladen möchtest. Er richtet standardmäßig alle sieben für dein bestätigtes Projekt ein und fragt, welche lokal gestartet werden sollen. Website Marketplace und Dashboard werden zusammen empfohlen.",
+    "pt": "Conecte seu agente ao Ordering e escolha se deseja baixar os sete produtos. Ele configura todos por padrão para o projeto confirmado e pergunta quais iniciar localmente. Recomendamos Website Marketplace e Dashboard juntos.",
+    "da": "Forbind din agent til Ordering, og vælg derefter, om alle syv produkter skal hentes. Den konfigurerer som standard alle syv til dit bekræftede projekt og spørger, hvilke der skal startes lokalt. Website Marketplace og Dashboard anbefales sammen.",
+    "nl": "Verbind je agent met Ordering en kies daarna of je alle zeven producten wilt downloaden. De agent configureert standaard alle zeven voor je bevestigde project en vraagt welke lokaal moeten starten. Website Marketplace en Dashboard worden samen aanbevolen.",
+    "ar": "اربط وكيلك بمنصة Ordering، ثم اختر ما إذا كنت تريد تنزيل المنتجات السبعة. يهيئها جميعًا افتراضيًا للمشروع الذي تؤكده، ثم يسألك أيها تريد تشغيله محليًا. نوصي بتشغيل Website Marketplace وDashboard معًا.",
+    "el": "Συνδέστε τον βοηθό σας με το Ordering και επιλέξτε αν θέλετε να κατεβάσετε και τα επτά προϊόντα. Ρυθμίζει και τα επτά από προεπιλογή για το έργο που επιβεβαιώσατε και ρωτά ποια να ξεκινήσει τοπικά. Προτείνουμε Website Marketplace και Dashboard μαζί.",
+    "bg": "Свържете агента си с Ordering и изберете дали да изтеглите всичките седем продукта. Той настройва и седемте по подразбиране за потвърдения ви проект и пита кои да стартира локално. Препоръчваме Website Marketplace и Dashboard заедно.",
+    "tr": "Ajanınızı Ordering’e bağlayın, ardından yedi ürünün tamamını indirmek isteyip istemediğinizi seçin. Onayladığınız proje için varsayılan olarak yedisini de yapılandırır ve hangilerinin yerel olarak başlatılacağını sorar. Website Marketplace ve Dashboard birlikte önerilir."
+  },
   "SOURCE_CODE_QUICKSTART_DESCRIPTION": {
     "en": "Sign in to Ordering and connect your AI agent through MCP. Product setup follows each repository’s instructions.",
     "es": "Inicia sesión en Ordering y conecta tu agente de IA mediante MCP. Para configurar un producto, sigue las instrucciones de su repositorio.",
@@ -61431,6 +61501,20 @@
     "bg": "Инструкции за настройка",
     "tr": "Kurulum talimatları"
   },
+  "SOURCE_CODE_SETUP_PROMPT": {
+    "en": "Setup prompt",
+    "es": "Prompt de inicio",
+    "fr": "Prompt de configuration",
+    "it": "Prompt di configurazione",
+    "de": "Einrichtungs-Prompt",
+    "pt": "Prompt de configuração",
+    "da": "Opsætningsprompt",
+    "nl": "Installatieprompt",
+    "ar": "نص الإعداد",
+    "el": "Προτροπή ρύθμισης",
+    "bg": "Инструкция за настройка",
+    "tr": "Kurulum istemi"
+  },
   "SOURCE_CODE_SIGN_IN": {
     "en": "Sign in again",
     "es": "Iniciar sesión de nuevo",
@@ -61472,6 +61556,20 @@
     "el": "Commit πηγαίου κώδικα",
     "bg": "Commit на изходния код",
     "tr": "Kaynak commit'i"
+  },
+  "SOURCE_CODE_START_INTRO": {
+    "en": "Copy a setup prompt to open a product locally with your agent and make your first visible change.",
+    "es": "Copia un prompt de inicio para abrir un producto localmente con tu agente y hacer tu primer cambio visible.",
+    "fr": "Copiez un prompt de configuration pour ouvrir un produit en local avec votre agent et effectuer votre première modification visible.",
+    "it": "Copia un prompt di configurazione per aprire un prodotto in locale con il tuo agente e apportare la prima modifica visibile.",
+    "de": "Kopiere einen Einrichtungs-Prompt, um ein Produkt mit deinem Agenten lokal zu öffnen und die erste sichtbare Änderung vorzunehmen.",
+    "pt": "Copie um prompt de configuração para abrir um produto localmente com seu agente e fazer sua primeira alteração visível.",
+    "da": "Kopiér en opsætningsprompt for at åbne et produkt lokalt med din agent og foretage din første synlige ændring.",
+    "nl": "Kopieer een installatieprompt om een product lokaal met je agent te openen en je eerste zichtbare wijziging te maken.",
+    "ar": "انسخ نص الإعداد لفتح منتج محليًا بمساعدة وكيلك وإجراء أول تعديل مرئي.",
+    "el": "Αντιγράψτε μια προτροπή ρύθμισης για να ανοίξετε ένα προϊόν τοπικά με τον βοηθό σας και να κάνετε την πρώτη ορατή αλλαγή.",
+    "bg": "Копирайте инструкция за настройка, за да отворите продукт локално с вашия агент и да направите първата си видима промяна.",
+    "tr": "Bir ürünü ajanınızla yerel olarak açmak ve ilk görünür değişikliğinizi yapmak için bir kurulum istemi kopyalayın."
   },
   "SOURCE_CODE_SUBMODULES": {
     "en": "Included submodules",
@@ -61556,6 +61654,20 @@
     "el": "Έκδοση",
     "bg": "Версия",
     "tr": "Sürüm"
+  },
+  "SOURCE_CODE_VIEW_PROMPT": {
+    "en": "View setup prompt",
+    "es": "Ver prompt de inicio",
+    "fr": "Voir le prompt de configuration",
+    "it": "Mostra il prompt di configurazione",
+    "de": "Einrichtungs-Prompt anzeigen",
+    "pt": "Ver prompt de configuração",
+    "da": "Vis opsætningsprompt",
+    "nl": "Installatieprompt bekijken",
+    "ar": "عرض نص الإعداد",
+    "el": "Προβολή προτροπής ρύθμισης",
+    "bg": "Преглед на инструкцията за настройка",
+    "tr": "Kurulum istemini görüntüle"
   },
   "SOURCE_CODE_VIEW_REPOSITORY": {
     "en": "View repository",
