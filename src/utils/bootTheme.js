@@ -1,3 +1,5 @@
+import { getDashboardStorageKey } from './local-tenant'
+
 export const shouldResolveDashboardProject = ({
   auth,
   isOrderingSubdomain,
@@ -15,8 +17,9 @@ export const shouldResolveDashboardProjectAtBoot = ({
   useProjectDomain,
   useProjectSubdomain,
   storedProject,
-  firstLoadConfigs
-} = {}) => shouldResolveDashboardProject({
+  firstLoadConfigs,
+  localProjectPin
+} = {}) => !localProjectPin && (shouldResolveDashboardProject({
   auth,
   isOrderingSubdomain,
   useProjectDomain,
@@ -26,15 +29,16 @@ export const shouldResolveDashboardProjectAtBoot = ({
   !auth &&
   !storedProject &&
   !firstLoadConfigs
-)
+))
 
-export const readStoredDashboardAuth = (win = window) => {
-  const token = win?.localStorage?.getItem('token')
-  const project = win?.localStorage?.getItem('project')
-  if (!token || !project) return null
+export const readStoredDashboardAuth = (win = window, settings) => {
+  const read = key => win?.localStorage?.getItem(getDashboardStorageKey(settings, key))
+  const token = read('token')
+  const project = read('project')
+  if (!token || !project || (settings?.local_project_pin && project !== settings.local_project_pin)) return null
 
   try {
-    const user = JSON.parse(win?.localStorage?.getItem('user'))
+    const user = JSON.parse(read('user'))
     return user && typeof user === 'object' && !Array.isArray(user) ? token : null
   } catch {
     return null
@@ -48,6 +52,7 @@ export const resolveInitialDashboardProject = ({
   isDevelopment = false,
   isOrderingSubdomain
 } = {}) => {
+  if (settings?.local_project_pin) return settings.local_project_pin
   const shouldResolveProject = shouldResolveDashboardProject({
     auth,
     isOrderingSubdomain,

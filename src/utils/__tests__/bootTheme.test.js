@@ -343,3 +343,23 @@ describe('resolveBootRevealAction', () => {
     })).toBe('idle')
   })
 })
+
+describe('local project pin at boot', () => {
+  it('keeps the configured project over stale sessions and both domain discovery flags', () => {
+    const settings = {
+      project: 'tenant-a',
+      localProjectConfigured: true,
+      local_project_pin: 'tenant-a',
+      use_project_domain: true,
+      use_project_subdomain: true
+    }
+    expect(resolveInitialDashboardProject({ settings, auth: 'old-token', storedProject: 'tenant-b', isOrderingSubdomain: false })).toBe('tenant-a')
+    expect(shouldResolveDashboardProjectAtBoot({
+      auth: null,
+      useProjectDomain: true,
+      useProjectSubdomain: true,
+      isOrderingSubdomain: false,
+      localProjectPin: 'tenant-a'
+    })).toBe(false)
+  })
+})

@@ -1,10 +1,14 @@
 import baseSettings from './config.json'
+import { getLocalProjectPin } from './utils/local-tenant'
+
+const localProjectPin = getLocalProjectPin(baseSettings, import.meta.env.DEV)
 
 const runtimeOverride =
   typeof window !== 'undefined' &&
   window.__CONFIG__ &&
   typeof window.__CONFIG__ === 'object' &&
-  !Array.isArray(window.__CONFIG__)
+  !Array.isArray(window.__CONFIG__) &&
+  !localProjectPin
     ? window.__CONFIG__
     : {}
 
@@ -24,7 +28,9 @@ const settings = {
     ...(baseSettings.socket || {}),
     ...(runtimeOverride.socket || {})
   },
-  ai_api: baseSettings.ai_api || null
+  ai_api: baseSettings.ai_api || null,
+  localProjectConfigured: baseSettings.localProjectConfigured === true,
+  local_project_pin: localProjectPin
 }
 
 export default settings

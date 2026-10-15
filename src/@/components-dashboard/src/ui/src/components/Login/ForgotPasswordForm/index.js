@@ -46,7 +46,7 @@ const ForgotPasswordUI = (props) => {
   const [submitted, setSubmitted] = useState(false)
 
   const isOrderingSubdomain = getOrderingSubdomains()
-  const whiteLabelSubdomainValidation = (!useProjectDomain || (useProjectDomain && isOrderingSubdomain))
+  const whiteLabelSubdomainValidation = !configFile?.local_project_pin && (!useProjectDomain || (useProjectDomain && isOrderingSubdomain))
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -125,7 +125,7 @@ const ForgotPasswordUI = (props) => {
   useEffect(() => {
     setConfigFile({
       ...configFile,
-      project: window.localStorage.getItem('project') || null
+      project: configFile?.local_project_pin || window.localStorage.getItem('project') || null
     })
   }, [])
 

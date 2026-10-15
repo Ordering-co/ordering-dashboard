@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
+import { ConfigFileContext } from '../../ui/src/contexts/ConfigFileContext'
+import { getDashboardStorageKey } from '~/utils/local-tenant'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -29,6 +31,7 @@ export const UsersList = (props) => {
   } = props
 
   const [ordering] = useApi()
+  const [configFile] = useContext(ConfigFileContext) || []
   const [session] = useSession()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
@@ -505,7 +508,7 @@ export const UsersList = (props) => {
 
         if (isDriver && session?.user?.level === 5 && session?.user?.id) {
           try {
-            const storageKey = `drivers_cache_${session.user.id}`
+            const storageKey = getDashboardStorageKey(configFile, `drivers_cache_${session.user.id}`)
             let cachedDrivers = []
 
             const cachedData = localStorage.getItem(storageKey)
@@ -1074,7 +1077,7 @@ export const UsersList = (props) => {
   useEffect(() => {
     if (isDriver && session?.user?.level === 5 && session?.user?.id && usersList?.users?.length > 0 && !usersList.loading) {
       try {
-        const storageKey = `drivers_cache_${session.user.id}`
+        const storageKey = getDashboardStorageKey(configFile, `drivers_cache_${session.user.id}`)
         if (Array.isArray(usersList.users)) {
           const validDrivers = usersList.users.filter(driver => driver?.id)
           if (validDrivers.length > 0) {

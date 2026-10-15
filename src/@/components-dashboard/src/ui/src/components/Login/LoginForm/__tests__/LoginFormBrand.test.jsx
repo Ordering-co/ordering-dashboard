@@ -38,13 +38,24 @@ vi.mock('../../../../../../index.js', () => ({
 
 import { LoginForm } from '..'
 
-const renderLogin = (props = {}) => renderWithProviders(
-  <ConfigFileContext.Provider value={[{ project: 'demo' }, vi.fn()]}>
+const renderLogin = (props = {}, configFile = { project: 'demo' }) => renderWithProviders(
+  <ConfigFileContext.Provider value={[configFile, vi.fn()]}>
     <LoginForm {...props} />
   </ConfigFileContext.Provider>
 )
 
 describe('LoginForm on the Ordering.co brand', () => {
+  it('shows the configured local project instead of asking for a hidden project field', () => {
+    controllerProps = {}
+    configs = {}
+    renderLogin({}, { project: 'demo', localProjectConfigured: true, local_project_pin: 'demo' })
+
+    expect(screen.getByText('demo').closest('p')).toHaveTextContent('Project: demo')
+    expect(screen.queryByLabelText('Project')).toBeNull()
+    expect(screen.queryByText('Enter your project and account to continue.')).toBeNull()
+    expect(screen.getByLabelText('Email')).toBeInTheDocument()
+  })
+
   it('labels every field and lets the password be shown', () => {
     controllerProps = {}
     configs = {}
@@ -52,6 +63,7 @@ describe('LoginForm on the Ordering.co brand', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: 'Sign in to your dashboard' })).toBeInTheDocument()
     expect(screen.getByLabelText('Project')).toHaveAttribute('id', 'login-project')
+    expect(screen.getByText('Enter your project and account to continue.')).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toHaveAttribute('autocomplete', 'username')
     const password = screen.getByLabelText('Password')
     expect(password).toHaveAttribute('type', 'password')

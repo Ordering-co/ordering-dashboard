@@ -358,10 +358,11 @@ const PluginListUI = (props) => {
 }
 
 export const PluginList = (props) => {
+  const [ordering] = useApi()
   const pluginListProps = {
     ...props,
     UIComponent: PluginListUI,
-    projectCode: window.localStorage.getItem('project')
+    projectCode: ordering.project
   }
   return <PluginListController {...pluginListProps} />
 }

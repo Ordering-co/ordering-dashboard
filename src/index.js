@@ -25,6 +25,7 @@ import notificationOgg from './assets/sounds/notification.ogg'
 import settings from './config'
 import { publicAssetUrl } from './utils/publicAssetUrl'
 import { getStoredLanguageCode } from './utils/storage'
+import { applyLocalProjectPin } from './utils/local-tenant'
 import {
   readFirstLoadConfigs,
   readStoredDashboardAuth,
@@ -604,7 +605,7 @@ theme.videos = {
 
 const RouteApp = () => {
   const language = getStoredLanguageCode()
-  const auth = readStoredDashboardAuth()
+  const auth = readStoredDashboardAuth(window, settings)
   const isOrderingSubdomain = getOrderingSubdomains()
   const storedProject = window.localStorage.getItem('project')
   const project = resolveInitialDashboardProject({
@@ -615,13 +616,18 @@ const RouteApp = () => {
     isOrderingSubdomain
   })
 
-  const [configFile, setConfigFile] = useState({
+  const [configFile, updateConfigFile] = useState({
     ...settings,
     api: {
       ...settings.api,
       language
     },
     project
+  })
+
+  const setConfigFile = (value) => updateConfigFile(current => {
+    const next = typeof value === 'function' ? value(current) : value
+    return applyLocalProjectPin(settings, next)
   })
 
   useEffect(() => {
@@ -631,7 +637,8 @@ const RouteApp = () => {
       useProjectDomain: settings?.use_project_domain,
       useProjectSubdomain: settings?.use_project_subdomain,
       storedProject,
-      firstLoadConfigs: readFirstLoadConfigs()
+      firstLoadConfigs: readFirstLoadConfigs(),
+      localProjectPin: settings.local_project_pin
     })
     if (!shouldResolveProject) return
 

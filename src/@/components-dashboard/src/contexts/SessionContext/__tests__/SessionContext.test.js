@@ -56,3 +56,14 @@ describe('getSessionStorageValues', () => {
     expect(localStorage.getItem('user')).toBeNull()
   })
 })
+
+it('ignores a mismatched identity before reading or deleting that tenant user and token', async () => {
+  localStorage.setItem('project', 'tenant-b')
+  localStorage.setItem('token', 'other-token')
+  localStorage.setItem('user', '[object Object]')
+  await expect(getSessionStorageValues(new WebStrategy(), 'tenant-a')).resolves.toEqual({
+    auth: null, token: null, project: 'tenant-a', user: null
+  })
+  expect(localStorage.getItem('token')).toBe('other-token')
+  expect(localStorage.getItem('user')).toBe('[object Object]')
+})

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "product": "dashboard",
+  "configFile": "src/config.json",
+  "projectPaths": [
+    {
+      "path": [
+        "project"
+      ],
+      "required": true
+    },
+    {
+      "path": [
+        "configurations",
+        "subdomain"
+      ],
+      "required": false
+    }
+  ],
+  "projectPlaceholders": [
+    "",
+    "your-project-slug"
+  ],
+  "localSetupMarker": "localProjectConfigured"
+}

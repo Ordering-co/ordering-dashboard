@@ -40,6 +40,7 @@ import {
   PhoneNumberWrapper
 } from '../AuthLayout/styles'
 import { ArrowRightIcon, EyeIcon, EyeOffIcon, FolderIcon, LockIcon, MailIcon, PhoneIcon } from '../AuthLayout/icons'
+import { getDashboardStorageKey } from '~/utils/local-tenant'
 import { captureDashboardLoginValidation, getLoginAnalyticsAction } from '~/analytics/posthog'
 
 const LoginFormUI = (props) => {
@@ -94,7 +95,7 @@ const LoginFormUI = (props) => {
   const isOtpEmail = loginTab === 'otp' && otpType === 'email'
   const isOptCellphone = loginTab === 'otp' && otpType === 'cellphone'
   const isOrderingSubdomain = getOrderingSubdomains()
-  const whiteLabelSubdomainValidation = (!useProjectDomain || (useProjectDomain && isOrderingSubdomain))
+  const whiteLabelSubdomainValidation = !configFile?.local_project_pin && (!useProjectDomain || (useProjectDomain && isOrderingSubdomain))
 
   const onSubmit = (values) => {
     if (useLoginOptCellphone && loginTab === 'otp' && otpType === 'cellphone' && !credentials?.country_phone_code && !credentials?.cellphone) {
@@ -159,11 +160,11 @@ const LoginFormUI = (props) => {
 
   useEffect(() => {
     try {
-      const user = localStorage.getItem('user')
+      const user = localStorage.getItem(getDashboardStorageKey(configFile, 'user'))
       if (user) {
         const userData = JSON.parse(user)
         if (userData?.level === 5 && userData?.id) {
-          const storageKey = `drivers_cache_${userData.id}`
+          const storageKey = getDashboardStorageKey(configFile, `drivers_cache_${userData.id}`)
           localStorage.removeItem(storageKey)
         }
       }
@@ -283,7 +284,11 @@ const LoginFormUI = (props) => {
               {notice && <AuthNotice role='note'>{notice}</AuthNotice>}
               <TitleFormSide>
                 <h1>{t('LOGIN_PAGE_TITLE', 'Sign in to your dashboard')}</h1>
-                <p>{t('LOGIN_PAGE_SUBTITLE', 'Enter your project and account to continue.')}</p>
+                <p>
+                  {configFile?.local_project_pin
+                    ? <>{t('PROJECT', 'Project')}: <strong>{configFile.local_project_pin}</strong></>
+                    : t('LOGIN_PAGE_SUBTITLE', 'Enter your project and account to continue.')}
+                </p>
               </TitleFormSide>
 
               {ordering?.project && loginMethods.length > 1 && !willVerifyOtpState && (
