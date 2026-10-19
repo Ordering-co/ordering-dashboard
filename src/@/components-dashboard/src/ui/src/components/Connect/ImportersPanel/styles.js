@@ -125,6 +125,93 @@ export const ImporterNote = styled.p`
   color: ${props => props.theme.colors.warning || '#FFC700'};
 `
 
+const runToneColor = ($tone, theme) => {
+  if ($tone === 'success') return theme.colors.success || '#28A745'
+  if ($tone === 'danger') return theme.colors.danger || '#E63757'
+  if ($tone === 'warning') return theme.colors.warning || '#FFC700'
+  if ($tone === 'progress') return theme.colors.primary
+  return theme.colors.lightGray || '#909BA9'
+}
+
+const RUN_INDENT = '14px'
+
+export const RunStatus = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+`
+
+export const RunStatusLine = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+`
+
+export const RunStatusDot = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  background: ${({ $tone, theme }) => runToneColor($tone, theme)};
+
+  ${({ $tone }) => $tone === 'progress' && css`
+    animation: importerRunPulse 1.4s ease-in-out infinite;
+  `}
+
+  @keyframes importerRunPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+`
+
+export const RunStatusText = styled.p`
+  margin: 0 !important;
+  font-size: 12px;
+  line-height: 1.4;
+  min-width: 0;
+  color: ${({ $tone, theme }) => {
+    if ($tone === 'success' || $tone === 'danger') return runToneColor($tone, theme)
+    if ($tone === 'warning' || $tone === 'progress') return theme.colors.headingColor
+    return theme.colors.lightGray || '#909BA9'
+  }};
+
+  ${({ $block, theme }) => $block && css`
+    padding-${theme?.rtl ? 'right' : 'left'}: ${RUN_INDENT};
+  `}
+`
+
+export const RunActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding-${props => (props.theme?.rtl ? 'right' : 'left')}: ${RUN_INDENT};
+`
+
+export const RunActionButton = styled.button`
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ $muted, theme }) => ($muted ? (theme.colors.lightGray || '#909BA9') : theme.colors.primary)};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    color: ${({ $muted, theme }) => ($muted ? theme.colors.headingColor : theme.colors.primary)};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    text-decoration: none;
+  }
+`
+
 export const TabsRow = styled.div`
   display: flex;
   align-items: center;

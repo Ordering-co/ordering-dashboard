@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import dayjs from 'dayjs'
 import { useApi, useLanguage, useSession } from '~components'
-import { Modal, SpinnerLoader } from '../../../Shared'
+import { AppBootLoader, Modal } from '../../../Shared'
 import { Button } from '../../../../styles'
 import { useMenuImport } from '../useMenuImport'
+import { useMenuImportRun } from '../useMenuImportRun'
+import { clearRun, isRunResolved } from '../menuImportRuns'
 import { fetchMenuImportSync, parseStoredSourceUrl } from '../logMenuImportSync'
+import { ImportStatusView } from './ImportStatusView'
 
 import {
   ModalBody,
@@ -22,7 +26,6 @@ import {
   OrDivider,
   FooterActions,
   LoadingOverlay,
-  SuccessBody,
   StyledInput
 } from './styles'
 
@@ -41,14 +44,24 @@ export const MenuImportModal = (props) => {
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
   const history = useHistory()
-  const { triggerImport, isImporting } = useMenuImport(card?.id)
+  const { triggerImport, isImporting, status, error, result, startedAt, reset } = useMenuImport(card?.id)
+  const runRef = { project: ordering?.project, businessId: business?.id, source: card?.id }
+  const storedRun = useMenuImportRun(runRef)
+  // A run left importing or unknown by a previous session is shown instead of the empty form.
+  const resumedStatus = status === 'idle' &&
+    ['importing', 'unknown'].includes(storedRun?.status) &&
+    !isRunResolved(storedRun)
+    ? storedRun.status
+    : null
+  const viewStatus = resumedStatus || status
 
   const [urlInput, setUrlInput] = useState('')
   const [trackerInput, setTrackerInput] = useState('')
   const [orderingPlusProjectId, setOrderingPlusProjectId] = useState('')
   const [orderingBusinessSegment, setOrderingBusinessSegment] = useState('')
   const [includeAllMenuVariants, setIncludeAllMenuVariants] = useState(true)
-  const [importSuccess, setImportSuccess] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [lastParams, setLastParams] = useState(null)
   const [hasFetchedUrl, setHasFetchedUrl] = useState(false)
 
   const importForm = useMemo(() => ({
@@ -64,9 +77,12 @@ export const MenuImportModal = (props) => {
     orderingBusinessSegment.trim() !== ''
   )
 
+  const projectApiRoot = ordering?.root || ''
   const formValidation = useMemo(
-    () => (config?.validateForm ? config.validateForm(importForm) : { valid: true }),
-    [config, importForm]
+    () => (config?.validateForm
+      ? config.validateForm(importForm, { projectApiRoot })
+      : { valid: true }),
+    [config, importForm, projectApiRoot]
   )
 
   const showFormError = Boolean(formValidation.error) && (
@@ -89,7 +105,8 @@ export const MenuImportModal = (props) => {
       setOrderingPlusProjectId('')
       setOrderingBusinessSegment('')
       setIncludeAllMenuVariants(true)
-      setImportSuccess(false)
+      setEditing(false)
+      setLastParams(null)
       setHasFetchedUrl(false)
       return
     }
@@ -99,7 +116,8 @@ export const MenuImportModal = (props) => {
     setOrderingPlusProjectId('')
     setOrderingBusinessSegment('')
     setIncludeAllMenuVariants(true)
-    setImportSuccess(false)
+    setEditing(false)
+    setLastParams(null)
     setHasFetchedUrl(false)
 
     if (!business?.id || !card?.id || !token || !ordering?.project || !ordering?.root) {
@@ -144,11 +162,35 @@ export const MenuImportModal = (props) => {
       includeAllMenuVariants,
       user?.email
     )
+    setLastParams(params)
+    setEditing(false)
 
-    await triggerImport(params, {
-      onSuccess: () => setImportSuccess(true)
-    })
+    await triggerImport(params)
   }
+
+  const handleRetry = () => {
+    setEditing(false)
+    if (lastParams) {
+      triggerImport(lastParams)
+      return
+    }
+    clearRun(runRef)
+  }
+
+  const handleEdit = () => {
+    setEditing(true)
+    clearRun(runRef)
+  }
+
+  const handleImportAnother = () => {
+    setEditing(false)
+    reset()
+    clearRun(runRef)
+  }
+
+  const showImporting = viewStatus === 'importing'
+  const showOutcome = !editing && ['success', 'failed', 'unknown'].includes(viewStatus)
+  const shownStartedAt = startedAt || storedRun?.startedAt
 
   const handleGoToProducts = () => {
     if (business?.slug) {
@@ -172,23 +214,28 @@ export const MenuImportModal = (props) => {
       hideCloseDefault={isImporting}
     >
       <ModalBody>
-        {isImporting && (
+        {showImporting && (
           <LoadingOverlay aria-live='polite'>
-            <SpinnerLoader content='' />
+            <AppBootLoader variant='auth' />
             <p>{translateField(t, config.statusImportingKey, config.statusImportingDefault)}</p>
+            {shownStartedAt && <p>{dayjs(shownStartedAt).format('MMM D, YYYY h:mm A')}</p>}
           </LoadingOverlay>
         )}
 
-        {importSuccess
+        {showOutcome
           ? (
-            <SuccessBody>
-              <p>{t('IMPORTER_STATUS_SUCCESS', 'Menu imported successfully')}</p>
-              <FooterActions>
-                <Button color='primary' borderRadius='8px' onClick={handleGoToProducts}>
-                  {t('IMPORTER_GO_TO_PRODUCTS', 'Go to products')}
-                </Button>
-              </FooterActions>
-            </SuccessBody>
+            <ImportStatusView
+              status={viewStatus}
+              error={error}
+              result={result}
+              sourceName={translateField(t, card.titleKey, card.titleDefault)}
+              t={t}
+              onRetry={handleRetry}
+              onEdit={handleEdit}
+              onCheckProducts={handleGoToProducts}
+              onImportAnother={handleImportAnother}
+              onGoToProducts={handleGoToProducts}
+            />
             )
           : (
             <>
@@ -290,7 +337,12 @@ export const MenuImportModal = (props) => {
 
               {showFormError && (
                 <FieldError role='alert'>
-                  {t(formValidation.error, formValidation.error)}
+                  {formValidation.error === 'IMPORTER_VALIDATION_ORDERING_HOST_NOT_ALLOWED'
+                    ? t(
+                      'IMPORTER_VALIDATION_ORDERING_HOST_NOT_ALLOWED',
+                      'Only Ordering.co API URLs are accepted here.'
+                    )
+                    : t(formValidation.error, formValidation.error)}
                 </FieldError>
               )}
 

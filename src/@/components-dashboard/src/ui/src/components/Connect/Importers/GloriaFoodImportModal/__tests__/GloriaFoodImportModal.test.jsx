@@ -5,7 +5,17 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
-const mockTriggerImport = vi.fn()
+const { menuImportHook } = vi.hoisted(() => ({
+  menuImportHook: {
+    triggerImport: vi.fn(),
+    reset: vi.fn(),
+    isImporting: false,
+    status: 'idle',
+    error: null,
+    result: null,
+    startedAt: null
+  }
+}))
 
 vi.mock('~components', () => ({
   useLanguage: () => [null, (_key, fallback) => fallback],
@@ -16,11 +26,7 @@ vi.mock('~components', () => ({
 }))
 
 vi.mock('../../useMenuImport', () => ({
-  useMenuImport: () => ({
-    triggerImport: mockTriggerImport,
-    isImporting: false,
-    error: null
-  })
+  useMenuImport: () => menuImportHook
 }))
 
 vi.mock('../../menuImportConfig', () => ({
@@ -35,7 +41,7 @@ vi.mock('../../../../Shared', () => ({
   Modal: ({ open, title, children }) => (
     open ? <div data-testid='gloriafood-modal'><h2>{title}</h2>{children}</div> : null
   ),
-  SpinnerLoader: () => <div data-testid='spinner'>Loading</div>
+  AppBootLoader: () => <div data-testid='boot-auth' role='status' />
 }))
 
 vi.mock('../../../../../styles', () => ({
@@ -45,13 +51,22 @@ vi.mock('../../../../../styles', () => ({
 }))
 
 import { GloriaFoodImportModal } from '../index'
+import { getRun, saveRun } from '../../menuImportRuns'
 
 const business = { id: 42, name: 'Pizza Pro', slug: 'pizza-pro' }
+const runRef = { project: 'demo', businessId: 42, source: 'gloriafood' }
 
 describe('GloriaFoodImportModal', () => {
   beforeEach(() => {
-    mockTriggerImport.mockReset()
-    mockTriggerImport.mockResolvedValue({})
+    window.localStorage.clear()
+    menuImportHook.triggerImport.mockReset()
+    menuImportHook.triggerImport.mockResolvedValue({})
+    menuImportHook.reset.mockReset()
+    menuImportHook.isImporting = false
+    menuImportHook.status = 'idle'
+    menuImportHook.error = null
+    menuImportHook.result = null
+    menuImportHook.startedAt = null
   })
 
   it('shows help video step before credential fields', () => {
@@ -127,7 +142,7 @@ describe('GloriaFoodImportModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Synchronize Menu' }))
 
     await waitFor(() => {
-      expect(mockTriggerImport).toHaveBeenCalledWith(
+      expect(menuImportHook.triggerImport).toHaveBeenCalledWith(
         expect.objectContaining({
           gloriafoodRestaurantKey: 'restaurant-key',
           gloriafoodMasterKey: 'master-key',
@@ -135,8 +150,7 @@ describe('GloriaFoodImportModal', () => {
           businessIds: [42],
           project: 'demo',
           orderingApiBaseUrl: 'https://api.example.com'
-        }),
-        expect.any(Object)
+        })
       )
     })
   })
@@ -167,12 +181,110 @@ describe('GloriaFoodImportModal', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Synchronize Menu' }))
 
     await waitFor(() => {
-      expect(mockTriggerImport).toHaveBeenCalledWith(
+      expect(menuImportHook.triggerImport).toHaveBeenCalledWith(
         expect.objectContaining({
           ignoreGloriaFoodForceLimits: false
-        }),
-        expect.any(Object)
+        })
       )
     })
+  })
+
+  it('shows a failed GloriaFood import inside the modal', () => {
+    menuImportHook.status = 'failed'
+    menuImportHook.error = {
+      message: 'GloriaFood is not available right now. Try again later.',
+      retryable: false
+    }
+
+    renderWithProviders(
+      <GloriaFoodImportModal
+        open
+        business={business}
+        onClose={vi.fn()}
+      />
+    )
+
+    expect(screen.getByRole('alert')).toHaveTextContent('The GloriaFood menu was not imported')
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'GloriaFood is not available right now. Try again later.'
+    )
+    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Edit URL' })).toBeInTheDocument()
+    expect(screen.queryByTitle('GloriaFood setup guide')).not.toBeInTheDocument()
+  })
+
+  it('shows an unknown GloriaFood result with check and retry', () => {
+    menuImportHook.status = 'unknown'
+
+    renderWithProviders(
+      <GloriaFoodImportModal
+        open
+        business={business}
+        onClose={vi.fn()}
+      />
+    )
+
+    expect(screen.getByText('We lost the connection to the importer')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Check products' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+    expect(screen.queryByText('Menu imported successfully')).not.toBeInTheDocument()
+  })
+
+  it('reopens on the unknown block when the stored run is unknown and Edit URL clears it', () => {
+    vi.useFakeTimers({ now: Date.parse('2026-10-13T18:40:00.000Z'), toFake: ['Date'] })
+    saveRun(runRef, {
+      status: 'unknown',
+      startedAt: '2026-10-13T18:28:00.000Z',
+      finishedAt: null,
+      sourceUrl: null,
+      appliedCount: null,
+      errorMessage: null,
+      menuBefore: null,
+      menuAfter: null
+    })
+
+    renderWithProviders(
+      <GloriaFoodImportModal
+        open
+        business={business}
+        onClose={vi.fn()}
+      />
+    )
+
+    expect(screen.getByText('We lost the connection to the importer')).toBeInTheDocument()
+    expect(screen.queryByTitle('GloriaFood setup guide')).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
+
+    expect(getRun(runRef)).toBeNull()
+    expect(screen.getByLabelText('Restaurant Key')).toBeInTheDocument()
+    vi.useRealTimers()
+  })
+
+  it('does not reopen on a lost-connection run already resolved by a menu check', () => {
+    vi.useFakeTimers({ now: Date.parse('2026-10-13T18:40:00.000Z'), toFake: ['Date'] })
+    saveRun(runRef, {
+      status: 'unknown',
+      startedAt: '2026-10-13T18:28:00.000Z',
+      finishedAt: null,
+      sourceUrl: null,
+      appliedCount: null,
+      errorMessage: null,
+      checkedAt: '2026-10-13T18:35:00.000Z',
+      menuBefore: { categories: 1, products: 10 },
+      menuAfter: { categories: 2, products: 36 }
+    })
+
+    renderWithProviders(
+      <GloriaFoodImportModal
+        open
+        business={business}
+        onClose={vi.fn()}
+      />
+    )
+
+    expect(screen.getByTitle('GloriaFood setup guide')).toBeInTheDocument()
+    expect(screen.queryByText('We lost the connection to the importer')).not.toBeInTheDocument()
+    vi.useRealTimers()
   })
 })

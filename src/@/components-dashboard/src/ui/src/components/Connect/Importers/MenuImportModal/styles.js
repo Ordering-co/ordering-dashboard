@@ -149,6 +149,15 @@ export const LoadingOverlay = styled.div`
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.88);
 
+  .od-boot {
+    position: static;
+    inset: auto;
+    z-index: auto;
+    width: auto;
+    height: auto;
+    background: transparent;
+  }
+
   p {
     margin: 0;
     font-size: 13px;
@@ -166,6 +175,25 @@ export const SuccessBody = styled.div`
     margin: 0;
     font-size: 14px;
     color: ${props => props.theme.colors.headingColor};
+  }
+`
+
+export const StatusBlock = styled(SuccessBody)`
+  &:focus {
+    outline: 2px solid ${props => props.theme.colors.primary};
+    outline-offset: 2px;
+  }
+`
+
+export const StatusTitle = styled.p`
+  && {
+    font-size: 16px;
+    font-weight: 600;
+    color: ${({ $tone, theme }) => {
+      if ($tone === 'success') return theme.colors.success || '#28A745'
+      if ($tone === 'danger') return theme.colors.danger || '#E63757'
+      return theme.colors.headingColor
+    }};
   }
 `
 

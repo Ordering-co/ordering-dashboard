@@ -1,6 +1,8 @@
 import React from 'react'
 import { useLanguage } from '../../../../../index'
 import { Button } from '../../../styles'
+import { useMenuImportRun } from '../Importers/useMenuImportRun'
+import { ImportRunStatus } from './ImportRunStatus'
 
 import {
   ImporterRowContainer,
@@ -13,10 +15,15 @@ import {
 export const ImporterRow = (props) => {
   const {
     card,
-    onImportClick
+    business,
+    project,
+    onImportClick,
+    hideRunStatus = false
   } = props
 
   const [, t] = useLanguage()
+  const runRef = { project, businessId: business?.id, source: card.id }
+  const run = useMenuImportRun(runRef)
 
   const handleImportClick = (event) => {
     event.stopPropagation()
@@ -42,6 +49,9 @@ export const ImporterRow = (props) => {
                   'Product images cannot be migrated via the GloriaFood API.'
                 )}
               </ImporterNote>
+            )}
+            {run && !hideRunStatus && (
+              <ImportRunStatus run={run} runRef={runRef} onRetry={handleImportClick} />
             )}
           </ImporterText>
         </div>

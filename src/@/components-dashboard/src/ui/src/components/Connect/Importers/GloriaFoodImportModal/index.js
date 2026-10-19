@@ -1,12 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import dayjs from 'dayjs'
 import { useApi, useLanguage, useSession } from '~components'
-import { Modal, SpinnerLoader } from '../../../Shared'
+import { AppBootLoader, Modal } from '../../../Shared'
 import { Button } from '../../../../styles'
 import { validateGloriaFoodForm } from '../gloriaFoodImportConfig'
 import { useMenuImport } from '../useMenuImport'
+import { useMenuImportRun } from '../useMenuImportRun'
+import { clearRun, isRunResolved } from '../menuImportRuns'
 import { getMenuImportUseFixture } from '../menuImportConfig'
 import { fetchMenuImportSync } from '../logMenuImportSync'
+import { ImportStatusView } from '../MenuImportModal/ImportStatusView'
 
 import {
   ModalBody,
@@ -19,7 +23,6 @@ import {
   CheckboxRow,
   FooterActions,
   LoadingOverlay,
-  SuccessBody,
   StyledInput
 } from '../MenuImportModal/styles'
 import {
@@ -36,14 +39,24 @@ export const GloriaFoodImportModal = (props) => {
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
   const history = useHistory()
-  const { triggerImport, isImporting } = useMenuImport('gloriafood')
+  const { triggerImport, isImporting, status, error, result, startedAt, reset } = useMenuImport('gloriafood')
+  const runRef = { project: ordering?.project, businessId: business?.id, source: 'gloriafood' }
+  const storedRun = useMenuImportRun(runRef)
+  // A run left importing or unknown by a previous session is shown instead of the help step.
+  const resumedStatus = status === 'idle' &&
+    ['importing', 'unknown'].includes(storedRun?.status) &&
+    !isRunResolved(storedRun)
+    ? storedRun.status
+    : null
+  const viewStatus = resumedStatus || status
 
   const [step, setStep] = useState('help')
   const [resKey, setResKey] = useState('')
   const [masKey, setMasKey] = useState('')
   const [ignoreForceLimits, setIgnoreForceLimits] = useState(true)
   const [localError, setLocalError] = useState(null)
-  const [importSuccess, setImportSuccess] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [lastParams, setLastParams] = useState(null)
 
   const formValidation = useMemo(
     () => validateGloriaFoodForm({ res_key: resKey, mas_key: masKey }),
@@ -57,8 +70,7 @@ export const GloriaFoodImportModal = (props) => {
   const isImportEnabled = Boolean(
     business?.id &&
     formValidation.valid &&
-    !isImporting &&
-    !importSuccess
+    !isImporting
   )
 
   useEffect(() => {
@@ -68,7 +80,8 @@ export const GloriaFoodImportModal = (props) => {
     setMasKey('')
     setIgnoreForceLimits(true)
     setLocalError(null)
-    setImportSuccess(false)
+    setEditing(false)
+    setLastParams(null)
 
     if (!business?.id || !token || !ordering?.project || !ordering?.root) {
       return
@@ -104,25 +117,47 @@ export const GloriaFoodImportModal = (props) => {
 
     setLocalError(null)
 
-    await triggerImport(
-      {
-        gloriafoodRestaurantKey: resKey.trim(),
-        gloriafoodMasterKey: masKey.trim(),
-        ignoreGloriaFoodForceLimits: ignoreForceLimits,
-        businessIds: [business.id],
-        project: ordering?.project,
-        orderingApiBaseUrl: ordering?.root,
-        userEmail: user?.email || undefined,
-        useFixture: getMenuImportUseFixture()
-      },
-      {
-        onSuccess: () => setImportSuccess(true),
-        onError: (err) => {
-          setLocalError(err?.message || t('IMPORTER_STATUS_ERROR', 'Import failed'))
-        }
-      }
-    )
+    const params = {
+      gloriafoodRestaurantKey: resKey.trim(),
+      gloriafoodMasterKey: masKey.trim(),
+      ignoreGloriaFoodForceLimits: ignoreForceLimits,
+      businessIds: [business.id],
+      project: ordering?.project,
+      orderingApiBaseUrl: ordering?.root,
+      userEmail: user?.email || undefined,
+      useFixture: getMenuImportUseFixture()
+    }
+    setLastParams(params)
+    setEditing(false)
+    await triggerImport(params)
   }
+
+  const handleRetry = () => {
+    setEditing(false)
+    if (lastParams) {
+      triggerImport(lastParams)
+      return
+    }
+    setStep('credentials')
+    clearRun(runRef)
+  }
+
+  const handleEdit = () => {
+    setEditing(true)
+    setStep('credentials')
+    clearRun(runRef)
+  }
+
+  const handleImportAnother = () => {
+    setEditing(false)
+    setStep('credentials')
+    reset()
+    clearRun(runRef)
+  }
+
+  const showImporting = viewStatus === 'importing'
+  const showOutcome = !editing && ['success', 'failed', 'unknown'].includes(viewStatus)
+  const shownStartedAt = startedAt || storedRun?.startedAt
 
   const handleGoToProducts = () => {
     if (business?.slug) {
@@ -146,23 +181,28 @@ export const GloriaFoodImportModal = (props) => {
       hideCloseDefault={isImporting}
     >
       <ModalBody>
-        {isImporting && (
+        {showImporting && (
           <LoadingOverlay aria-live='polite'>
-            <SpinnerLoader content='' />
+            <AppBootLoader variant='auth' />
             <p>{t('SYNCHRONIZE_MENU_LOADING', 'Synchronize Menu .......')}</p>
+            {shownStartedAt && <p>{dayjs(shownStartedAt).format('MMM D, YYYY h:mm A')}</p>}
           </LoadingOverlay>
         )}
 
-        {importSuccess
+        {showOutcome
           ? (
-            <SuccessBody>
-              <p>{t('IMPORTER_STATUS_SUCCESS', 'Menu imported successfully')}</p>
-              <FooterActions>
-                <Button color='primary' borderRadius='8px' onClick={handleGoToProducts}>
-                  {t('IMPORTER_GO_TO_PRODUCTS', 'Go to products')}
-                </Button>
-              </FooterActions>
-            </SuccessBody>
+            <ImportStatusView
+              status={viewStatus}
+              error={error}
+              result={result}
+              sourceName='GloriaFood'
+              t={t}
+              onRetry={handleRetry}
+              onEdit={handleEdit}
+              onCheckProducts={handleGoToProducts}
+              onImportAnother={handleImportAnother}
+              onGoToProducts={handleGoToProducts}
+            />
             )
           : step === 'help'
             ? (

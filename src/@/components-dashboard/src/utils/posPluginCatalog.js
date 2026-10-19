@@ -1,5 +1,5 @@
 export const POS_PLUGIN_CATALOG = [
-  { key: 'square_pos_integration', name: 'Square', installUrl: 'https://square-pos.plugins.orderingplus.com', logo: 'https://cdn.freebiesupply.com/logos/large/2x/square-logo-black-and-white.png' },
+  { key: 'square_pos_integration', name: 'Square', installUrl: 'https://square-pos.plugins.orderingplus.com', logo: 'https://d3vj0kew82apqn.cloudfront.net/square-logo.png' },
   { key: 'clover_integration', name: 'Clover', installUrl: 'https://clover.plugins.orderingplus.com', logo: 'https://d3vj0kew82apqn.cloudfront.net/clover-logo.png' },
   { key: 'simphony_integration', name: 'Simphony', installUrl: 'https://simphony.plugins.orderingplus.com', logo: 'https://d3vj0kew82apqn.cloudfront.net/oracle-simphony-logo.png' },
   { key: 'wansoft_integration', name: 'Wansoft', installUrl: 'https://wansoft.plugins.orderingplus.com', logo: 'https://d3vj0kew82apqn.cloudfront.net/wansoft-logo.png' }
@@ -35,19 +35,4 @@ export const findConnectedPosIntegration = (business, integrations) => {
   return (Array.isArray(integrations) ? integrations : []).find(item => item?.type === 'pos' && connectedIds.has(item?.id)) || null
 }
 
-export const findInstalledIntegration = (integrations, { key, pluginRoot } = {}) => (
-  (Array.isArray(integrations) ? integrations : []).find(item => (
-    item?.plugin_id && (key ? item?.key === key : item?.plugin_root === pluginRoot)
-  )) || null
-)
-
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-export const waitForInstalledIntegration = async (loadIntegrations, target, { attempts = 10, interval = 1500, sleep = wait } = {}) => {
-  for (let attempt = 0; attempt < attempts; attempt++) {
-    const installed = findInstalledIntegration(await loadIntegrations(), target)
-    if (installed) return installed
-    if (attempt < attempts - 1) await sleep(interval)
-  }
-  return null
-}
+export { findInstalledIntegration, waitForInstalledIntegration } from './pluginInstall'

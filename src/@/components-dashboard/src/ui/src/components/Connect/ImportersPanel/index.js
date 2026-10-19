@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLanguage } from '../../../../../index'
+import { useApi, useLanguage } from '../../../../../index'
 import { SideBar } from '../../Shared'
 import { IMPORTER_CARDS } from '../Importers/importerCards'
 import { ImporterRow } from './ImporterRow'
@@ -20,10 +20,13 @@ export const ImportersPanel = (props) => {
     open,
     business,
     onClose,
-    onImportClick
+    onImportClick,
+    /** Card id whose import modal is open: that row hides its status so it is not shown twice. */
+    openImporterId = null
   } = props
 
   const [, t] = useLanguage()
+  const [ordering] = useApi()
   const [activeTab, setActiveTab] = useState('importers')
   const businessName = business?.name || t('BUSINESS', 'Business')
 
@@ -73,7 +76,10 @@ export const ImportersPanel = (props) => {
                 <ImporterRow
                   key={card.id}
                   card={card}
+                  business={business}
+                  project={ordering?.project}
                   onImportClick={onImportClick}
+                  hideRunStatus={card.id === openImporterId}
                 />
               ))}
             </ImportersList>

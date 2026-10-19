@@ -1,4 +1,4 @@
-import { getMenuImportUseFixture } from './menuImportConfig'
+import { getMenuImportUseFixture, MENU_IMPORT_ALLOWED_ORDERING_HOSTS } from './menuImportConfig'
 
 const DOORDASH_URL_PATTERN = /doordash\.com/i
 const UBER_EATS_URL_PATTERN = /ubereats\.com/i
@@ -24,7 +24,37 @@ const validateUberEatsUrl = (url) => {
 const validateDoorDashForm = (form) => validateDoorDashUrl(form.url)
 const validateUberEatsForm = (form) => validateUberEatsUrl(form.url)
 
-const validateOrderingBusinessUrl = (rawUrl) => {
+const LITERAL_IP = /^(?:\d{1,3}\.){3}\d{1,3}$/
+
+const hostnameOf = (rawUrl) => {
+  try {
+    return new URL(rawUrl).hostname.toLowerCase()
+  } catch {
+    return ''
+  }
+}
+
+const isBlockedOrderingHost = (host) =>
+  !host || host === 'localhost' || host.includes(':') || LITERAL_IP.test(host)
+
+const orderingHostAllowed = (rawUrl, projectApiRoot) => {
+  let parsed
+  try {
+    parsed = new URL(rawUrl)
+  } catch {
+    return false
+  }
+  if (parsed.protocol !== 'https:') return false
+  if (parsed.port && parsed.port !== '443') return false
+  const host = parsed.hostname.toLowerCase()
+  if (isBlockedOrderingHost(host)) return false
+  const allowed = new Set(MENU_IMPORT_ALLOWED_ORDERING_HOSTS.map((item) => item.toLowerCase()))
+  const projectHost = hostnameOf(projectApiRoot)
+  if (projectHost && !isBlockedOrderingHost(projectHost)) allowed.add(projectHost)
+  return allowed.has(host)
+}
+
+const validateOrderingBusinessUrl = (rawUrl, projectApiRoot) => {
   const trimmed = (rawUrl || '').trim()
   if (!trimmed) return { valid: false, error: 'IMPORTER_VALIDATION_URL_REQUIRED' }
   try {
@@ -39,18 +69,21 @@ const validateOrderingBusinessUrl = (rawUrl) => {
     if (!segment) {
       return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_INVALID_URL' }
     }
+    if (!orderingHostAllowed(trimmed, projectApiRoot)) {
+      return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_HOST_NOT_ALLOWED' }
+    }
     return { valid: true }
   } catch {
     return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_INVALID_URL' }
   }
 }
 
-const validateOrderingForm = (form) => {
+const validateOrderingForm = (form, context = {}) => {
   const url = (form.url || '').trim()
   const projectId = (form.orderingPlusProjectId || '').trim()
   const segment = (form.orderingBusinessSegment || '').trim()
 
-  if (url) return validateOrderingBusinessUrl(url)
+  if (url) return validateOrderingBusinessUrl(url, context.projectApiRoot)
   if (projectId && segment) return { valid: true }
   if (projectId || segment) {
     return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_INCOMPLETE_STRUCTURED' }

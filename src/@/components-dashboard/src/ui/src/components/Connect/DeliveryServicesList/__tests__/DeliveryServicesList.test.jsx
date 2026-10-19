@@ -48,3 +48,30 @@ describe('DeliveryServicesList enable switch', () => {
     expect(handleUpdateDeliveryService).toHaveBeenCalledWith(133, { enabled: false })
   })
 })
+
+describe('DeliveryServicesList install button', () => {
+  const pending = [
+    { id: 200, name: 'Pending One', enabled: false, plugin_id: null, plugin_root: 'https://one.plugins.test', driver_groups: [] },
+    { id: 201, name: 'Pending Two', enabled: false, plugin_id: null, plugin_root: 'https://two.plugins.test', driver_groups: [] }
+  ]
+
+  it('installs the company of the row without reloading the page', () => {
+    const handleInstallDeliveryService = vi.fn()
+    const handleOpenDetails = vi.fn()
+    const { getAllByText } = renderList({ deliveryServicesState: { loading: false, companies: pending }, handleInstallDeliveryService, handleOpenDetails })
+    fireEvent.click(getAllByText('Install')[1])
+    expect(handleInstallDeliveryService).toHaveBeenCalledWith(pending[1])
+    expect(handleOpenDetails).not.toHaveBeenCalled()
+  })
+
+  it('shows Installing on the company being installed and blocks the other installs', () => {
+    const handleInstallDeliveryService = vi.fn()
+    const { getByText, getAllByRole } = renderList({
+      deliveryServicesState: { loading: false, companies: pending },
+      handleInstallDeliveryService,
+      installingPluginRoot: 'https://one.plugins.test'
+    })
+    expect(getByText('Installing...')).toBeTruthy()
+    getAllByRole('button').forEach(button => expect(button.disabled).toBe(true))
+  })
+})

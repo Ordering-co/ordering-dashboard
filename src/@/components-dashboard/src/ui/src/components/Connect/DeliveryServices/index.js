@@ -36,7 +36,8 @@ const DeliveryServicesUI = (props) => {
     deliveryGroups,
     setDeliveryGroups,
     setAvailableModifyData,
-    handleInstallSysPlugin
+    handleInstallDeliveryService,
+    installingPluginRoot
   } = props
 
   const query = new URLSearchParams(useLocation().search)
@@ -151,7 +152,8 @@ const DeliveryServicesUI = (props) => {
           handleSelectGroup={handleSelectGroup}
           actionDisabled={actionDisabled}
           isUseQuery={isUseQuery}
-          handleInstallSysPlugin={handleInstallSysPlugin}
+          handleInstallDeliveryService={handleInstallDeliveryService}
+          installingPluginRoot={installingPluginRoot}
         />
       </DeliveryServicesContainer>
       {openDetails && (

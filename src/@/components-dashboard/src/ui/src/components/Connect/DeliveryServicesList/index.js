@@ -34,7 +34,8 @@ export const DeliveryServicesList = (props) => {
     actionDisabled,
     isUseQuery,
     deliveryServiceId,
-    handleInstallSysPlugin
+    handleInstallDeliveryService,
+    installingPluginRoot
   } = props
 
   const [, t] = useLanguage()
@@ -229,12 +230,17 @@ export const DeliveryServicesList = (props) => {
                               <Button
                                 borderRadius='8px'
                                 color='lightPrimary'
+                                disabled={!!installingPluginRoot}
                                 onClick={(e) => {
                                   e.stopPropagation()
-                                  handleInstallSysPlugin(company.plugin_root, () => window.location.reload())
+                                  handleInstallDeliveryService(company)
                                 }}
                               >
-                                <span>{t('INSTALL', 'Install')}</span>
+                                <span>
+                                  {installingPluginRoot && installingPluginRoot === company.plugin_root
+                                    ? t('INSTALLING', 'Installing...')
+                                    : t('INSTALL', 'Install')}
+                                </span>
                               </Button>
                               )}
                         </ActionsContainer>

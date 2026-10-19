@@ -175,6 +175,7 @@ export const ImportersUI = (props) => {
           business={detailsBusiness}
           onClose={handleBackRedirect}
           onImportClick={handleImportClick}
+          openImporterId={importModal.open ? importModal.card?.id : null}
         />
       )}
       {importModal.open && detailsBusiness && (

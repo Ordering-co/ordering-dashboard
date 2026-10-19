@@ -22,6 +22,12 @@ describe('posPluginCatalog', () => {
     expect(getPosCatalogItem('deliverect')).toBeNull()
   })
 
+  it('serves every catalog logo from our CDN', () => {
+    POS_PLUGIN_CATALOG.forEach(item => {
+      expect(new URL(item.logo).host).toBe('d3vj0kew82apqn.cloudfront.net')
+    })
+  })
+
   it('adds installable rows for the POS integrations the project does not have yet', () => {
     const merged = mergePosIntegrationsWithCatalog([])
 

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { waitForInstalledIntegration } from '../../utils/pluginInstall'
 
 export const DeliveryServices = (props) => {
   props = { ...defaultProps, ...props }
@@ -26,6 +27,8 @@ export const DeliveryServices = (props) => {
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [selectedGroupList, setSelectedGroupList] = useState([])
   const [actionDisabled, setActionDisabled] = useState(false)
+  const [installingPluginRoot, setInstallingPluginRoot] = useState(null)
+  const installingPluginRef = useRef(false)
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings?.controlType === 'pages' && paginationSettings?.initialPage && paginationSettings?.initialPage >= 1) ? paginationSettings?.initialPage : 1,
     pageSize: paginationSettings?.pageSize ?? 10,
@@ -33,23 +36,27 @@ export const DeliveryServices = (props) => {
     totalPages: null
   })
 
+  const requestDeliveryServices = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+    const filterConditons = []
+    filterConditons.push({ attribute: 'owner_type', value: 'system' })
+    const response = await fetch(`${ordering.root}/driver_companies?where=${JSON.stringify(filterConditons)}`, requestOptions)
+    return await response.json()
+  }
+
   /**
    * Method to get the drivers groups from API
    */
   const getDeliveryServices = async () => {
     try {
       setDeliveryServicesState({ ...deliveryServicesState, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const filterConditons = []
-      filterConditons.push({ attribute: 'owner_type', value: 'system' })
-      const response = await fetch(`${ordering.root}/driver_companies?where=${JSON.stringify(filterConditons)}`, requestOptions)
-      const content = await response.json()
+      const content = await requestDeliveryServices()
       if (!content.error) {
         setDeliveryServicesState({ ...deliveryServicesState, companies: content.result, loading: false })
         if (user?.level === 5) {
@@ -262,6 +269,9 @@ export const DeliveryServices = (props) => {
   }
 
   const handleInstallSysPlugin = async (pluginUrl, callback) => {
+    if (!pluginUrl || installingPluginRef.current) return false
+    installingPluginRef.current = true
+    setInstallingPluginRoot(pluginUrl)
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
@@ -280,13 +290,36 @@ export const DeliveryServices = (props) => {
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
         showToast(ToastType.Success, t('SYSTEM_PLUGIN_INSTALLED', 'Plugin installed'))
-        callback && callback(content)
-      } else {
-        setActionState({ loading: false, error: content.result })
+        callback && await callback(content)
+        return true
       }
+      setActionState({ loading: false, error: content.result })
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+    } finally {
+      installingPluginRef.current = false
+      setInstallingPluginRoot(null)
     }
+    return false
+  }
+
+  const handleInstallDeliveryService = async (company) => {
+    let installedCompany = null
+    const installed = await handleInstallSysPlugin(company?.plugin_root, async () => {
+      let companies = null
+      installedCompany = await waitForInstalledIntegration(async () => {
+        try {
+          const content = await requestDeliveryServices()
+          if (!content.error) companies = content.result
+        } catch (err) {}
+        return companies
+      }, { pluginRoot: company?.plugin_root })
+      if (companies) setDeliveryServicesState(prevState => ({ ...prevState, companies }))
+    })
+    if (installed && !installedCompany) {
+      showToast(ToastType.Info, t('INTEGRATION_INSTALL_PENDING', 'The plugin is installed and still finishing its setup. Try again in a few seconds.'))
+    }
+    return { installed, company: installedCompany }
   }
 
   useEffect(() => {
@@ -322,7 +355,8 @@ export const DeliveryServices = (props) => {
             getDeliveryGroups={getDeliveryGroups}
             deliveryGroups={deliveryGroups}
             setDeliveryGroups={setDeliveryGroups}
-            handleInstallSysPlugin={handleInstallSysPlugin}
+            handleInstallDeliveryService={handleInstallDeliveryService}
+            installingPluginRoot={installingPluginRoot}
           />
         )
       }
