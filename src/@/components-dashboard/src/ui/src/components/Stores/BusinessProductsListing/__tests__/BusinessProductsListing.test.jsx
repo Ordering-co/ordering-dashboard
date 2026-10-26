@@ -69,7 +69,8 @@ vi.mock('../../BatchImageForm', () => ({ BatchImageForm: () => null }))
 vi.mock('../../BusinessDetails', () => ({ BusinessDetails: () => null }))
 vi.mock('../../ImportersButton', () => ({ ImportersButton: () => null }))
 vi.mock('../../AddBusinessForm', () => ({ AddBusinessForm: () => null }))
-vi.mock('../../ProductStep', () => ({ ProductStep: () => null }))
+vi.mock('../../ProductStartGuide', () => ({ ProductStartGuide: () => null }))
+vi.mock('../../../Connect/BusinessImporters', () => ({ BusinessImporters: () => null }))
 vi.mock('../../BusinessAddStore', () => ({ BusinessAddStore: () => null }))
 
 import { BusinessProductsListing } from '../index'

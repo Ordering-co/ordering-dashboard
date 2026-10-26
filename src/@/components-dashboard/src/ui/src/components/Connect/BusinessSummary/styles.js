@@ -391,8 +391,8 @@ export const ActionSelectorWrapper = styled.div`
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
         }
       }
-      .dropdown-item:last-child {
-        color: #E63757;
+      .dropdown-item.danger {
+        color: ${props => props.theme.colors.danger};
       }
     }
   }
@@ -411,4 +411,75 @@ export const ButtonWrapper = styled.div`
     justify-content: flex-end;
     margin: -40px 0 10px 0;
   `}
+`
+
+export const IntegrationSection = styled.div`
+  margin-top: 30px;
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: ${props => props.theme.colors.headingColor};
+  }
+
+  .section-note {
+    font-size: 12px;
+    margin: 0 0 4px 0;
+    color: ${props => props.theme.colors.lightGray};
+  }
+`
+
+export const IntegrationRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+
+  ${({ clickable }) => clickable && css`
+    cursor: pointer;
+  `}
+
+  .integration-info {
+    display: flex;
+    align-items: center;
+
+    > div:first-child {
+      margin-right: 16px;
+    }
+  }
+
+  .integration-name {
+    margin: 0;
+    font-size: 14px;
+    color: ${props => props.theme.colors.headingColor};
+  }
+
+  .integration-info > .integration-name {
+    margin-left: 0;
+  }
+
+  .integration-note {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: ${props => props.theme.colors.lightGray};
+  }
+
+  > button, > a {
+    min-width: 120px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    justify-content: center;
+  }
+`
+
+// A logo inside the 45px frame, contained so wordmarks are not cropped.
+export const LogoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  background-color: ${props => props.theme.colors.backgroundPage};
 `

@@ -3,6 +3,7 @@ import { Modal } from '../Modal'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { XLg } from 'react-bootstrap-icons'
 import { IconButton } from '../../../styles/Buttons'
+import { MORE_SIDEBAR_MODAL_MAX_WIDTH } from './constants'
 
 import {
   MainContainer,
@@ -17,12 +18,12 @@ export const MoreSidebarLayout = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    if (width > 1000) setIsModalOpen(false)
+    if (width > MORE_SIDEBAR_MODAL_MAX_WIDTH) setIsModalOpen(false)
     else setIsModalOpen(true)
   }, [width])
   return (
     <>
-      {width > 1000
+      {width > MORE_SIDEBAR_MODAL_MAX_WIDTH
         ? (<MainContainer>
             <CloseButtonWrapper
               isExtendExtraOpen={isExtendExtraOpen}

@@ -14,6 +14,7 @@ describe('buildCreateActionEntries', () => {
     expect(byId['create:promotion'].path).toBe('/marketing/promotions-enterprise?view=advanced_offers&add=1')
     expect(byId['create:quick-offer-first_order'].path).toBe('/marketing/promotions-enterprise?view=journeys&template=first_order')
     expect(byId['create:gift_cards_setup'].path).toBe('/gift-cards?setup=1')
+    expect(byId['create:whatsapp_bot'].path).toBe('/connect/whatsapp-bots?add=1')
     expect(rankCommandEntries(entries, 'crear cliente')[0].id).toBe('create:customer')
     expect(rankCommandEntries(entries, 'envio gratis')[0].id).toBe('create:quick-offer-free_delivery')
   })
@@ -23,7 +24,8 @@ describe('buildCreateActionEntries', () => {
     expect(admin).toEqual(expect.arrayContaining([
       'create:quick-offer-loyalty_reward',
       'create:professional',
-      'create:gift_cards_setup'
+      'create:gift_cards_setup',
+      'create:whatsapp_bot'
     ]))
 
     const readOnly = ids(buildOpenActionEntries({ user: { level: 0, readOnlyAdmin: true }, configs: {} }))

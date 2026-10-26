@@ -307,28 +307,15 @@ import marketplace from './assets/images/preview/marketplace.avif'
 import franchise from './assets/images/preview/franchise.png'
 import singleStore from './assets/images/preview/single-store.png'
 
-const isAllowedDomain = () => {
-  const allowedDomain = 'orderingplus.com'
-  return window.location.hostname.endsWith(allowedDomain) && window?.location?.hostname !== 'localhost'
-}
-
-if (isAllowedDomain()) {
-  const sentryDNS = settings.sentry_key
+if (import.meta.env.VITE_SENTRY_RELEASE) {
   Sentry.init({
-    environment: process.env.NODE_ENV,
-    release: process.env.npm_package_version ? 'dashboard@' + process.env.npm_package_version : 'react-ordering-dashboard@' + '2.0.0',
-    dsn: sentryDNS,
+    environment: 'production',
+    release: `dashboard@${import.meta.env.VITE_SENTRY_RELEASE}`,
+    dsn: settings.sentry_key,
     integrations: [
       Sentry.browserTracingIntegration()
     ],
-    // Performance Monitoring
-    tracesSampleRate: 1.0, //  Capture 100% of the transactions
-    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-    tracePropagationTargets: [
-      /^https:\/\/dashboard\.tryordering\.com/,
-      /^https:\/\/dashboard\.orderingplus\.com/,
-      /^https:\/\/apiv4\.ordering\.co/
-    ],
+    tracesSampleRate: 0.1,
     autoSessionTracking: true
   })
 }

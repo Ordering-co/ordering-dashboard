@@ -123,6 +123,24 @@ export const RadioItemContainer = styled.div`
     `}
   }
 `
+export const RefundAllDisabledNote = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 5px;
+  padding: 10px 12px;
+  background: ${props => props.theme.colors.warning100};
+  border: 1px solid ${props => props.theme.colors.warning};
+  border-radius: 8px;
+  font-size: 13px;
+  color: ${props => props.theme.colors.headingColor};
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: ${props => props.theme.colors.warning};
+  }
+`
 export const RefundAmountWrapper = styled.div`
   ${props => props.theme?.rtl
 ? css`

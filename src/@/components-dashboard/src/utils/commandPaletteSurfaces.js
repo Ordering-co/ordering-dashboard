@@ -74,6 +74,7 @@ export const SURFACE_REGISTRY = {
 
   // Connect
   'Connect/BusinessDetails:section': record('integration section needs the integration chosen in the panel'),
+  'Connect/WhatsAppBots:add': indexed({ path: '/connect/whatsapp-bots?add=1' }),
   'Connect/DeliveryServiceDetails:tab': record('delivery company detail'),
 
   // Delivery

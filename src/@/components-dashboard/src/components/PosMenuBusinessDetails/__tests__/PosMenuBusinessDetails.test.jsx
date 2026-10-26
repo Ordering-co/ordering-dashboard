@@ -56,24 +56,6 @@ describe('PosMenuBusinessDetails controller', () => {
     vi.unstubAllGlobals()
   })
 
-  it('builds the plugin setup url from its template', async () => {
-    renderController()
-    const url = await controller.handleSync('/views/setup?project_code=@{project_code}&token=@{access_token}&business_id=@{business_id}', 'https://clover.plugins.test')
-    expect(url).toBe('https://clover.plugins.test/views/setup?project_code=demo&token=test-token&business_id=42')
-  })
-
-  it('does not fall back to the legacy Clover page when the plugin has no setup url', async () => {
-    renderController()
-    expect(await controller.handleSync(undefined, 'https://other.plugins.test')).toBeNull()
-    expect(await controller.handleSync('/setup', undefined)).toBeNull()
-  })
-
-  it('keeps an absolute or protocol-relative setup url instead of prepending the plugin root', async () => {
-    renderController()
-    expect(await controller.handleSync('https://calendly.com/pos/meet?business_id=@{business_id}', 'https://plugin.test')).toBe('https://calendly.com/pos/meet?business_id=42')
-    expect(await controller.handleSync('//calendly.com/pos/meet', 'https://plugin.test')).toBe('//calendly.com/pos/meet')
-  })
-
   it('connects the business and runs the callback on success', async () => {
     fetchMock.mockResolvedValue({ json: async () => ({ error: false, result: {} }) })
     const callback = vi.fn()

@@ -108,8 +108,6 @@ import { ServiceDetail } from './ServiceDetail'
 import { ProductVideos } from './ProductVideos'
 import { ProductStartGuide } from './ProductStartGuide'
 import { ImportersButton } from './ImportersButton'
-import { RestaurantSelectGuide } from './RestaurantSelectGuide'
-import { ProductStep } from './ProductStep'
 import { BusinessSync } from './BusinessSync'
 import { SpoonityApiKey } from './SpoonityApiKey'
 import { BusinessPlaceGroupList } from './BusinessPlaceGroupList'
@@ -240,8 +238,6 @@ export {
   ProductVideos,
   ProductStartGuide,
   ImportersButton,
-  RestaurantSelectGuide,
-  ProductStep,
   BusinessSync,
   SpoonityApiKey,
   BusinessPlaceGroupList,

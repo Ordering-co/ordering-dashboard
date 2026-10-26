@@ -23,7 +23,8 @@ const CREATE_ACTIONS = [
   { key: 'promotion', url: '/marketing/promotions-enterprise', query: { view: 'advanced_offers', add: '1' }, labelKey: 'COMMAND_PALETTE_ADD_PROMOTION', label: 'Add promotion', aliases: ['crear promocion', 'nuevo cupon', 'crear descuento', 'new coupon'] },
   { key: 'builder_app', url: '/builder', query: { add: '1' }, labelKey: 'BUILDER_CREATE_APP', label: 'Create app', parentKey: 'BUILDER', parent: 'Builder', aliases: ['crear app', 'nueva app', 'nueva aplicacion', 'crear aplicacion', 'new app'] },
   { key: 'markup', url: '/stores/markups', query: { add: '1' }, labelKey: 'ADD_MARKUP', label: 'Add markup', aliases: ['crear recargo', 'nuevo margen'] },
-  { key: 'gift_cards_setup', url: '/gift-cards', query: { setup: '1' }, labelKey: 'SETUP_GIFT_CARDS', label: 'Setup Gift Cards', aliases: ['configurar tarjetas de regalo', 'crear tarjeta de regalo', 'gift card'] }
+  { key: 'gift_cards_setup', url: '/gift-cards', query: { setup: '1' }, labelKey: 'SETUP_GIFT_CARDS', label: 'Setup Gift Cards', aliases: ['configurar tarjetas de regalo', 'crear tarjeta de regalo', 'gift card'] },
+  { key: 'whatsapp_bot', url: '/connect/whatsapp-bots', query: { add: '1' }, labelKey: 'ADD_WHATSAPP_BOT', label: 'Add WhatsApp bot', aliases: ['crear bot de whatsapp', 'nuevo bot de whatsapp', 'agregar bot'], when: ({ level }) => level === 0 }
 ]
 
 const QUICK_OFFERS = [

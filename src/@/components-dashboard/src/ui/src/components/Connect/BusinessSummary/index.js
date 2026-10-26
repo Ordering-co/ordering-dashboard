@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { usePluginMessages } from '../../../hooks/usePluginMessages'
+import { pluginModalSize } from '../../../../../utils/pluginMessages'
+import { PluginPageFrame } from '../PluginPageFrame'
+import { useShowPluginPage } from '../../../hooks/usePluginPage'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import BsChevronRight from '@meronex/icons/bs/BsChevronRight'
@@ -8,16 +12,20 @@ import { Dropdown, DropdownButton } from 'react-bootstrap'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 
-import { useLanguage, useSession, useToast, ToastType, useApi } from '~components'
+import { useLanguage, useSession, useToast, ToastType, useUtils } from '~components'
 import { Button, ButtonLink, IconButton, Switch } from '../../../styles'
 import {
-  isCalendlyUrl,
+  isSalesCallRestricted,
   isSetupCallIntegration,
-  parseTemplate,
   POS_SETUP_CALL_PROVIDERS,
   POS_SETUP_CALL_URL
 } from '../../../utils'
 import { findConnectedPosIntegration, getPluginSetupPath } from '../../../../../utils/posPluginCatalog'
+import { getIntegrationSetupStatus, getIntegrationSetupAction, getIntegrationPluginNote, isIntegrationPluginAvailable } from '../../../../../utils/integrationSetupStatus'
+import { WrapperImage, StatusCell } from '../shared/styles'
+import { IntegrationStatusBadge } from '../IntegrationStatusBadge'
+import { FeaturedWrapper } from '../IntegrationStatusBadge/styles'
+import { getPluginInstallState } from '../../../../../utils/pluginInstall'
 
 import { Confirm, Alert, Modal, useWindowSize } from '~ui'
 
@@ -33,7 +41,10 @@ import {
   ActionSelectorWrapper,
   RadioButton,
   MenuStatusWrapper,
-  SyncMenuWrapper
+  SyncMenuWrapper,
+  IntegrationSection,
+  IntegrationRow,
+  LogoImage
 } from './styles'
 
 export const BusinessSummary = (props) => {
@@ -52,29 +63,29 @@ export const BusinessSummary = (props) => {
     setIsExpand,
     formState,
     setFormState,
-    handleSync,
     fromSalesChannels,
     integrationsList,
     getIntegrations,
     updateBusiness,
     integrationActionLoading,
     installingPluginRoot,
-    handleInstallPosIntegration
+    handleInstallPosIntegration,
+    checkingPluginRoot,
+    handleCheckPluginInstall
   } = props
 
   const isHideSetupForm = true
 
-  const [languageState, t] = useLanguage()
-  const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [{ parseDate }] = useUtils()
   const theme = useTheme()
   const { width } = useWindowSize()
   const [sessionState] = useSession()
   const isBusinessOwner = sessionState?.user?.level === 2
   const isAdmin = sessionState?.user?.level === 0
-  const isCalendlyRestricted = (integration) => !fromSalesChannels && !isAdmin && (
-    isCalendlyUrl(getPluginSetupPath(integration?.plugin), integration?.plugin?.root) ||
-    (!integration?.plugin_id && isCalendlyUrl(integration?.plugin_root))
-  )
+  const isCalendlyRestricted = (integration) =>
+    isSalesCallRestricted(sessionState?.user, getPluginSetupPath(integration?.plugin), integration?.plugin?.root, fromSalesChannels) ||
+    (!integration?.plugin_id && isSalesCallRestricted(sessionState?.user, integration?.plugin_root, '', fromSalesChannels))
   const [, { showToast }] = useToast()
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
   const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
@@ -86,14 +97,35 @@ export const BusinessSummary = (props) => {
     open: false,
     url: null
   })
+  // The plugin page reports its result to the API, not to this page, so
+  // read the store again when it closes: its state shows without a reload.
+  const reloadStore = () => {
+    updateBusiness && updateBusiness()
+    getIntegrations && getIntegrations()
+  }
+  const handleClosePluginModal = () => {
+    setPluginSelected(prev => ({ ...prev, open: false }))
+    reloadStore()
+  }
+  // The plugin page can also say it finished, or ask to close
+  // (docs/PLUGIN_PAGES.md).
+  const pluginFrameRef = useRef(null)
+  const pluginFrame = usePluginMessages({
+    open: pluginSelected.open,
+    iframeRef: pluginFrameRef,
+    url: pluginSelected.url,
+    businessId: businessState?.business?.id ?? null,
+    name: pluginSelected.title,
+    closeModal: handleClosePluginModal,
+    reload: reloadStore,
+    fits: Boolean(pluginSelected.fits),
+    frameKey: pluginSelected.frameKey ?? null
+  })
+  const pluginModal = pluginModalSize({ fits: Boolean(pluginSelected.fits), ...pluginFrame })
 
   const [pendingToOpenIntegration, setPendingToOpenIntegration] = useState(null)
 
-  const variables = {
-    project_code: ordering.project,
-    access_token: sessionState?.token,
-    language_code: languageState?.language?.code
-  }
+  const showPluginPage = useShowPluginPage(setPluginSelected)
 
   const daysOfWeek = [
     { id: 'sunday', label: t('S', 'S') },
@@ -193,6 +225,32 @@ export const BusinessSummary = (props) => {
     setIsExpand(prev => !prev)
   }
 
+  // The integrations this store is connected to go first, with their state;
+  // the rest are the ones it can connect.
+  const visibleIntegrations = integrationsList?.thirdPartyIntegrations?.filter(integration => fromSalesChannels || !isSetupCallIntegration(integration)) || []
+  const connectedIntegrations = visibleIntegrations
+    .map(integration => {
+      const row = businessState?.business?.third_party_integrations?.find(item => item?.third_party_integration_id === integration?.id)
+      return row ? { integration, row, status: getIntegrationSetupStatus(row, t), setupAction: getIntegrationSetupAction(row, integration, t) } : null
+    })
+    .filter(Boolean)
+  // A store has one POS: while one is connected, another installed POS cannot
+  // connect directly. Installing one still works (it keeps the current POS).
+  // The detail open on the right already shows the connected integration's
+  // logo, state and action, so the panel stops repeating them meanwhile.
+  const isIntegrationDetailOpen = !!extraOpen && selectedItem === 'integration'
+  // In the POS view every integration listed is a POS.
+  const currentPos = !fromSalesChannels ? connectedIntegrations[0] || null : null
+  const blocksConnect = (integration) => !!currentPos && !!integration?.plugin_id
+  // An installed integration whose plugin is disabled, or failed its install,
+  // cannot be connected: nothing would answer its setup or syncs. Installing
+  // one is unaffected.
+  const isPluginDisabled = (integration) => !!integration?.plugin_id && !!integration?.plugin && !isIntegrationPluginAvailable(integration)
+
+  const availableIntegrations = visibleIntegrations.filter(integration =>
+    !connectedIntegrations.some(connected => connected.integration.id === integration.id)
+  )
+
   const getButtonText = (integration) => {
     if (!integration?.plugin_id) {
       return t('INSTALL', 'Install')
@@ -204,17 +262,37 @@ export const BusinessSummary = (props) => {
     return isConnected ? t('SETUP', 'Setup') : t('CONNECT', 'Connect')
   }
 
-  const getHideSetupButton = (integration) => {
-    const isConnected = businessState?.business?.third_party_integrations?.some(
-      item => item?.third_party_integration_id === integration?.id
-    )
-    return isConnected && !getPluginSetupPath(integration?.plugin)
-  }
-
   const handleInstallAndConnect = async (integration) => {
     const { installed, integration: installedIntegration } = await handleInstallPosIntegration(integration)
     if (!installed) return
     if (!installedIntegration) {
+      updateBusiness && updateBusiness()
+      return
+    }
+    handleConnectBusiness(installedIntegration.id, { enabled: true }, () => {
+      updateBusiness && updateBusiness()
+      setPendingToOpenIntegration(installedIntegration)
+    })
+  }
+
+  // A logo URL that does not load shows the default logo, not its alt text
+  // spilling out of the frame. Once only, in case the default fails too.
+  const handleLogoError = (e) => {
+    const fallback = theme.images?.dummies?.businessLogo
+    if (!fallback || e.currentTarget.dataset.fallback) return
+    e.currentTarget.dataset.fallback = 'true'
+    e.currentTarget.src = fallback
+  }
+
+  // "Check again" on a plugin still finishing its install. Once it is done,
+  // the store connects to it as after a quick install, unless it already
+  // uses another POS.
+  const handleCheckAgain = async (integration, e) => {
+    e?.stopPropagation()
+    if (!handleCheckPluginInstall) return
+    const { integration: installedIntegration } = await handleCheckPluginInstall(integration)
+    if (!installedIntegration) return
+    if (currentPos) {
       updateBusiness && updateBusiness()
       return
     }
@@ -277,16 +355,7 @@ export const BusinessSummary = (props) => {
   const handleOpenPluginDetails = async (e, plugin) => {
     if (!plugin) return
     e.stopPropagation()
-    const url = await handleSync(getPluginSetupPath(plugin), plugin?.root)
-    if (!url) {
-      showToast(ToastType.Error, t('INTEGRATION_SETUP_NOT_AVAILABLE', 'This integration has no setup page. Contact support to finish the connection.'))
-      return
-    }
-    setPluginSelected({
-      open: true,
-      title: plugin.name,
-      url
-    })
+    await showPluginPage(plugin, 'setup', { businessId: businessState?.business?.id ?? null })
   }
 
   useEffect(() => {
@@ -360,6 +429,7 @@ export const BusinessSummary = (props) => {
                 </Dropdown.Item>
                 {!isHideSetupForm && (
                   <Dropdown.Item
+                    className='danger'
                     onClick={() => onClickDeleteBusiness()}
                   >
                     {t('DELETE', 'Delete')}
@@ -377,21 +447,70 @@ export const BusinessSummary = (props) => {
         </DetailsHeader>
         {isHideSetupForm && (
           <>
-            {!fromSalesChannels && POS_SETUP_CALL_PROVIDERS.map(integration => (
-              <BusinessDetailsContent key={integration.name}>
-                <div className='connect-pos-wrapper'>
-                  <div className='connect-pos'>
-                    <img
-                      className='setup-call-logo'
-                      src={theme.images.general[integration.logoKey]}
-                      alt={integration.name}
-                    />
-                    <p>{integration.name}</p>
+            {connectedIntegrations.length > 0 && !isIntegrationDetailOpen && (
+              <IntegrationSection>
+                <p className='section-title'>{t('CONNECTED', 'Connected')}</p>
+                {connectedIntegrations.map(({ integration, row, status, setupAction }) => (
+                  <IntegrationRow key={integration.id} className='connect-pos-wrapper' clickable onClick={() => handleIntegrationClick(integration)}>
+                    <div className='integration-info'>
+                      <WrapperImage>
+                        <LogoImage src={integration?.logo || theme.images?.dummies?.businessLogo} alt={integration?.name} onError={handleLogoError} />
+                      </WrapperImage>
+                      <StatusCell>
+                        <p className='integration-name'>{integration.name}</p>
+                        <IntegrationStatusBadge row={row} integration={integration} />
+                        {status.message && <p className='status-detail'>{status.message}</p>}
+                        {getPluginInstallState(integration)?.state === 'failed' && getPluginInstallState(integration).message && (
+                          <p className='status-detail danger'>{getPluginInstallState(integration).message}</p>
+                        )}
+                        {row?.setup_status_updated_at && <p className='status-detail'>{parseDate(row.setup_status_updated_at)}</p>}
+                      </StatusCell>
+                    </div>
+                    {setupAction && (
+                      isCalendlyRestricted(integration)
+                        ? (
+                          <Button color='lightPrimary' borderRadius='8px' disabled>
+                            {t('CONTACT_ADMIN', 'Contact admin')}
+                          </Button>
+                          )
+                        : (
+                          <Button
+                            color='lightPrimary'
+                            borderRadius='8px'
+                            disabled={businessState?.loading || formState?.loading || integrationActionLoading}
+                            onClick={(e) => handleOpenPluginDetails(e, integration?.plugin)}
+                          >
+                            {setupAction.label}
+                          </Button>
+                          )
+                    )}
+                  </IntegrationRow>
+                ))}
+              </IntegrationSection>
+            )}
+            <IntegrationSection>
+              <p className='section-title'>
+                {fromSalesChannels
+                  ? t('AVAILABLE_SALES_CHANNELS', 'Available sales channels')
+                  : t('AVAILABLE_POS', 'Available POS')}
+              </p>
+              {currentPos && (
+                <p className='section-note'>
+                  {t('POS_ALREADY_CONNECTED_NOTE', 'This store already uses _name_. Disconnect it to switch POS.').replace('_name_', currentPos.integration?.name)}
+                </p>
+              )}
+              {!fromSalesChannels && POS_SETUP_CALL_PROVIDERS.map(integration => (
+                <IntegrationRow key={integration.name} className='connect-pos-wrapper'>
+                  <div className='integration-info'>
+                    <WrapperImage>
+                      <LogoImage src={theme.images.general[integration.logoKey]} alt={integration.name} />
+                    </WrapperImage>
+                    <p className='integration-name'>{integration.name}</p>
                   </div>
                   {isAdmin
                     ? (
                     <ButtonLink
-                      color='primary'
+                      color='lightPrimary'
                       borderRadius='8px'
                       href={POS_SETUP_CALL_URL}
                       target='_blank'
@@ -402,50 +521,85 @@ export const BusinessSummary = (props) => {
                     </ButtonLink>
                       )
                     : (
-                    <Button color='secundary' borderRadius='8px' disabled>
+                    <Button color='lightPrimary' borderRadius='8px' disabled>
                       {t('CONTACT_ADMIN', 'Contact admin')}
                     </Button>
                       )}
-                </div>
-              </BusinessDetailsContent>
-            ))}
-            {integrationsList?.thirdPartyIntegrations?.filter(integration => fromSalesChannels || !isSetupCallIntegration(integration)).map(integration => (
-              <BusinessDetailsContent key={integration.id} fromSalesChannels={fromSalesChannels} hasIntegration={businessState?.business?.third_party_integrations?.find(
-                item => item?.third_party_integration_id === integration?.id
-              )}
-              >
-                <div className='connect-pos-wrapper' onClick={() => handleIntegrationClick(integration)}>
-                  <div className='connect-pos'>
-                    {integration?.logo && <img src={integration?.logo} alt={integration?.name} />}
-                    <p>{t(integration.name.toUpperCase() || 'INTEGRATION', integration.name || 'Integration')}</p>
-                  </div>
-                  {!getHideSetupButton(integration) && (
-                    isCalendlyRestricted(integration) || (isBusinessOwner && !integration?.plugin_id)
+                </IntegrationRow>
+              ))}
+              {availableIntegrations.map(integration => {
+                const installState = getPluginInstallState(integration)
+                const isInstallingThis = !!installingPluginRoot && installingPluginRoot === integration?.plugin_root
+                const isCheckingThis = !!checkingPluginRoot && checkingPluginRoot === integration?.plugin_root
+                const pluginNote = getIntegrationPluginNote(integration, t)
+                return (
+                  <IntegrationRow key={integration.id} className='connect-pos-wrapper'>
+                    <div className='integration-info'>
+                      <WrapperImage>
+                        <LogoImage src={integration?.logo || theme.images?.dummies?.businessLogo} alt={integration?.name} onError={handleLogoError} />
+                      </WrapperImage>
+                      <StatusCell>
+                        <p className='integration-name'>{t(integration.name.toUpperCase() || 'INTEGRATION', integration.name || 'Integration')}</p>
+                        {isInstallingThis && (
+                          <p className='status-detail'>{t('INTEGRATION_PLUGIN_INSTALLING_REQUEST', 'Installing plugin...')}</p>
+                        )}
+                        {!isInstallingThis && installState?.state === 'installing' && (
+                          <>
+                            <FeaturedWrapper tone='warning'><p>{t('INTEGRATION_PLUGIN_INSTALLING', 'Installing')}</p></FeaturedWrapper>
+                            <p className='status-detail'>{t('INTEGRATION_PLUGIN_INSTALLING_NOTE', 'Still finishing its install. It can take a few minutes.')}</p>
+                          </>
+                        )}
+                        {!isInstallingThis && installState?.state === 'failed' && (
+                          <>
+                            <FeaturedWrapper tone='danger'><p>{t('INTEGRATION_PLUGIN_INSTALL_FAILED_NOTE', 'Install failed')}</p></FeaturedWrapper>
+                            {installState.message && <p className='status-detail danger'>{installState.message}</p>}
+                            <p className='status-detail'>{t('INTEGRATION_PLUGIN_INSTALL_FAILED_HELP', 'Uninstall it from Plugins and install it again, or contact support.')}</p>
+                          </>
+                        )}
+                        {!installState && pluginNote && (
+                          <p className='status-detail'>{pluginNote}</p>
+                        )}
+                      </StatusCell>
+                    </div>
+                    {isCalendlyRestricted(integration) || (isBusinessOwner && !integration?.plugin_id)
                       ? (
-                        <Button
-                          color='secundary'
-                          borderRadius='8px'
-                          disabled
-                        >
+                        <Button color='lightPrimary' borderRadius='8px' disabled>
                           {isCalendlyRestricted(integration)
                             ? t('CONTACT_ADMIN', 'Contact admin')
                             : t('CONTACT_ADMINISTRATOR', 'Contact administrator')}
                         </Button>
                         )
-                      : (
-                        <Button
-                          color={integration?.plugin_id ? 'green' : 'primary'}
-                          borderRadius='8px'
-                          onClick={(e) => handleButtonClick(integration, e)}
-                          disabled={businessState?.loading || formState?.loading || integrationActionLoading || !!installingPluginRoot}
-                        >
-                          {installingPluginRoot && installingPluginRoot === integration?.plugin_root ? t('INSTALLING', 'Installing...') : getButtonText(integration)}
-                        </Button>
-                        )
-                  )}
-                </div>
-              </BusinessDetailsContent>
-            ))}
+                      : !isInstallingThis && installState?.state === 'installing'
+                          ? (
+                            <Button
+                              color='lightPrimary'
+                              borderRadius='8px'
+                              onClick={(e) => handleCheckAgain(integration, e)}
+                              disabled={businessState?.loading || formState?.loading || integrationActionLoading || !!installingPluginRoot || !!checkingPluginRoot}
+                            >
+                              {isCheckingThis ? t('CHECKING', 'Checking...') : t('CHECK_AGAIN', 'Check again')}
+                            </Button>
+                            )
+                          : !isInstallingThis && installState?.state === 'failed'
+                              ? (
+                              <Button color='lightPrimary' borderRadius='8px' disabled>
+                                {t('CONNECT', 'Connect')}
+                              </Button>
+                                )
+                              : (
+                              <Button
+                                color='lightPrimary'
+                                borderRadius='8px'
+                                onClick={(e) => handleButtonClick(integration, e)}
+                                disabled={businessState?.loading || formState?.loading || integrationActionLoading || !!installingPluginRoot || !!checkingPluginRoot || blocksConnect(integration) || isPluginDisabled(integration)}
+                              >
+                                {isInstallingThis ? t('INSTALLING', 'Installing...') : getButtonText(integration)}
+                              </Button>
+                                )}
+                  </IntegrationRow>
+                )
+              })}
+            </IntegrationSection>
           </>
         )}
         {!isHideSetupForm && (
@@ -627,13 +781,18 @@ export const BusinessSummary = (props) => {
       <Modal
         open={pluginSelected.open}
         title={pluginSelected.title}
-        onClose={() => setPluginSelected({ ...pluginSelected, open: false })}
-        height='80vh'
-        width='80vw'
+        onClose={handleClosePluginModal}
+        height={pluginModal.height}
+        width={pluginModal.width}
+        anchorTop
       >
-        <iframe
-          src={parseTemplate(pluginSelected.url, variables, /@\{([^}]+)\}/g)}
-          style={{ width: '100%', height: '85%' }}
+        <PluginPageFrame
+          ref={pluginFrameRef}
+          url={pluginSelected.url}
+          name={pluginSelected.title}
+          height={pluginFrame.height}
+          fits={pluginSelected.fits}
+          initialHeight={pluginSelected.initialHeight}
         />
       </Modal>
       <Confirm

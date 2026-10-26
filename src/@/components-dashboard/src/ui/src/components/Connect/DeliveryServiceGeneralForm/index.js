@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useLanguage, useSession } from '../../../../../index'
 import { useForm } from 'react-hook-form'
-import { ButtonLink } from '../../../styles'
+import { Button, ButtonLink } from '../../../styles'
+import { usePluginPage } from '../../../hooks/usePluginPage'
+import { hasPluginLaunch } from '../../../../../utils/pluginPages'
 import { Alert } from '../../Shared'
 
 import {
@@ -32,6 +34,23 @@ export const DeliveryServiceGeneralForm = (props) => {
   const [{ token }] = useSession()
   const { handleSubmit, errors } = useForm()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const openPluginPage = usePluginPage()
+  const plugin = deliveryServiceState?.deliveryService?.plugin
+
+  // A plugin with links.launch gives a one-time URL instead of taking the
+  // session in the URL. The tab opens on the click, before the plugin
+  // answers, so the browser does not block it as a popup.
+  const handleStartSetup = async () => {
+    const setupWindow = window.open('', '_blank')
+    const url = await openPluginPage(plugin, 'setup', { driverCompanyId: deliveryServiceId })
+    if (!setupWindow) return
+    if (!url) {
+      setupWindow.close()
+      return
+    }
+    setupWindow.opener = null
+    setupWindow.location.href = url
+  }
 
   const onSubmit = () => {
     if (deliveryServiceState.deliveryService) {
@@ -76,13 +95,21 @@ export const DeliveryServiceGeneralForm = (props) => {
       {
         deliveryServiceState?.deliveryService?.plugin?.setup_url && ( // colocar texto de por favor sigue los pasos para terminar el setup, falta backend para evaluar si esta completo o no el setup
           <ButtonWrapper>
-            <ButtonLink
-              color='primary'
-              href={`${deliveryServiceState?.deliveryService?.plugin?.setup_url}?project_code=${projectCode}&access_token=${token}&driver_company_id=${deliveryServiceId}`}
-              target='_blank'
-            >
-              {t('START_SETUP', 'Start Setup')}
-            </ButtonLink>
+            {hasPluginLaunch(plugin)
+              ? (
+                <Button type='button' color='primary' onClick={handleStartSetup}>
+                  {t('START_SETUP', 'Start Setup')}
+                </Button>
+                )
+              : (
+                <ButtonLink
+                  color='primary'
+                  href={`${plugin?.setup_url}?project_code=${projectCode}&access_token=${token}&driver_company_id=${deliveryServiceId}`}
+                  target='_blank'
+                >
+                  {t('START_SETUP', 'Start Setup')}
+                </ButtonLink>
+                )}
           </ButtonWrapper>
         )
       }

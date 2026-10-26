@@ -94,7 +94,8 @@ export const ListenPageChanges = ({ children }) => {
     delivery_services: '/connect/delivery-services',
     importers: '/connect/importers',
     pos_menu: '/connect/pos-menu',
-    sales_channels: '/connect/sales-channels'
+    sales_channels: '/connect/sales-channels',
+    whatsapp_bots: '/connect/whatsapp-bots'
   }
 
   const handleGoToPage = ({ page, params = {}, search, replace = false, state = false }) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 const schedulesEqual = (left, right) => JSON.stringify(left || []) === JSON.stringify(right || [])
@@ -19,6 +19,11 @@ export const Schedule = (props) => {
   } = props
 
   const [scheduleState, setScheduleState] = useState([])
+  const scheduleRef = useRef(scheduleState)
+  const commitSchedule = (nextSchedule) => {
+    scheduleRef.current = nextSchedule
+    setScheduleState(nextSchedule)
+  }
   const [isConflict, setIsConflict] = useState(false)
   const [isTimeChangeError, setIsTimeChangeError] = useState(false)
   const [addScheduleTime, setAddScheduleTime] = useState({
@@ -27,11 +32,15 @@ export const Schedule = (props) => {
   })
   const [openAddSchedule, setOpenAddSchedule] = useState({})
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
+  const selectedCopyDaysRef = useRef(selectedCopyDays)
 
   /**
    * Clean selectedCopyDays
    */
-  const cleanSelectedCopyDays = () => setSelectedCopyDays([])
+  const cleanSelectedCopyDays = () => {
+    selectedCopyDaysRef.current = []
+    setSelectedCopyDays([])
+  }
 
   /**
    * Method to covert into minutes
@@ -66,9 +75,9 @@ export const Schedule = (props) => {
    * Method to control the schedule
    */
   const handleEnabledSchedule = (daysOfWeekIndex, checked) => {
-    const _schedule = cloneSchedule(scheduleState)
+    const _schedule = cloneSchedule(scheduleRef.current)
     _schedule[daysOfWeekIndex].enabled = checked
-    setScheduleState(_schedule)
+    commitSchedule(_schedule)
   }
 
   /**
@@ -79,7 +88,7 @@ export const Schedule = (props) => {
    * @param {Boolean} isOpen open or close
    */
   const handleChangeScheduleTime = (changeTime, daysOfWeekIndex, lapseIndex, isOpen, value) => {
-    const _schedule = cloneSchedule(scheduleState)
+    const _schedule = cloneSchedule(scheduleRef.current)
     const currentLapses = [..._schedule[daysOfWeekIndex].lapses]
 
     let changeScheduleTime
@@ -115,7 +124,7 @@ export const Schedule = (props) => {
       } else {
         _schedule[daysOfWeekIndex].lapses[lapseIndex] = changeScheduleTime
         _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-        setScheduleState(_schedule)
+        commitSchedule(_schedule)
       }
     }
   }
@@ -126,9 +135,9 @@ export const Schedule = (props) => {
    * @param {Number} index lapse index
    */
   const handleDeleteSchedule = (daysOfWeekIndex, index) => {
-    const _schedule = cloneSchedule(scheduleState)
+    const _schedule = cloneSchedule(scheduleRef.current)
     _schedule[daysOfWeekIndex].lapses.splice(index, 1)
-    setScheduleState(_schedule)
+    commitSchedule(_schedule)
   }
 
   const handleOpenAddSchedule = (daysOfWeekIndex) => {
@@ -249,7 +258,7 @@ export const Schedule = (props) => {
    * @param {Number} daysOfWeekIndex week day
    */
   const handleAddSchedule = (daysOfWeekIndex) => {
-    const _schedule = cloneSchedule(scheduleState)
+    const _schedule = cloneSchedule(scheduleRef.current)
     const currentLapses = [..._schedule[daysOfWeekIndex].lapses]
 
     // Find a free time slot
@@ -258,7 +267,7 @@ export const Schedule = (props) => {
     if (newTimeSlot) {
       _schedule[daysOfWeekIndex].lapses.push(newTimeSlot)
       _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-      setScheduleState(_schedule)
+      commitSchedule(_schedule)
       setOpenAddSchedule({
         [daysOfWeekIndex]: false
       })
@@ -273,28 +282,27 @@ export const Schedule = (props) => {
    * @param {Number} daysOfWeekIndex index of week days
    */
   const handleSelectCopyTimes = (index) => {
-    const _selectedCopyDays = selectedCopyDays.includes(index)
-      ? selectedCopyDays.filter(day => day !== index)
-      : [...selectedCopyDays, index]
-    setSelectedCopyDays(_selectedCopyDays)
+    const currentDays = selectedCopyDaysRef.current
+    const nextDays = currentDays.includes(index)
+      ? currentDays.filter(day => day !== index)
+      : [...currentDays, index]
+    selectedCopyDaysRef.current = nextDays
+    setSelectedCopyDays(nextDays)
   }
   /**
    * Method to apply copy times
    * @param {Number} daysOfWeekIndex index of week days
    */
   const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
-    const _schedule = scheduleState.map((option, index) => {
-      if (selectedCopyDays.includes(index)) {
-        const lapses = [...scheduleState[daysOfWeekIndex].lapses]
-        const original = {
-          enabled: scheduleState[daysOfWeekIndex].enabled,
-          lapses
-        }
-        return original
+    const currentSchedule = scheduleRef.current
+    const _schedule = currentSchedule.map((option, index) => {
+      if (selectedCopyDaysRef.current.includes(index)) {
+        const source = cloneSchedule([currentSchedule[daysOfWeekIndex]])[0]
+        return { enabled: source.enabled, lapses: source.lapses }
       }
       return option
     })
-    setScheduleState(_schedule)
+    commitSchedule(_schedule)
   }
 
   useEffect(() => {
@@ -305,7 +313,9 @@ export const Schedule = (props) => {
 
   useEffect(() => {
     if (scheduleList) {
-      setScheduleState(current => schedulesEqual(current, scheduleList) ? current : [...scheduleList])
+      if (!schedulesEqual(scheduleRef.current, scheduleList)) {
+        commitSchedule([...scheduleList])
+      }
     } else {
       const schedule = []
       for (let i = 0; i < 7; i++) {
@@ -325,7 +335,9 @@ export const Schedule = (props) => {
           ]
         })
       }
-      setScheduleState(current => schedulesEqual(current, schedule) ? current : schedule)
+      if (!schedulesEqual(scheduleRef.current, schedule)) {
+        commitSchedule(schedule)
+      }
     }
   }, [scheduleList])
 

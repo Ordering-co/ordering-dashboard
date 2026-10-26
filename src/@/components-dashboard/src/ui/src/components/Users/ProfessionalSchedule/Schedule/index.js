@@ -6,10 +6,6 @@ import {
   ScheduleContentWrapper
 } from '../styles'
 
-function SchedulePropsAreEqual (prevProps, nextProps) {
-  return JSON.stringify(prevProps.scheduleList) === JSON.stringify(nextProps.scheduleList)
-}
-
 export const Schedule = memo((props) => {
   const {
     handleChangeScheduleState,
@@ -29,6 +25,6 @@ export const Schedule = memo((props) => {
       </ScheduleContentWrapper>
     </ScheduleWrapper>
   )
-}, SchedulePropsAreEqual)
+})
 
 Schedule.displayName = 'Schedule'

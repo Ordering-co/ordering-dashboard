@@ -10,6 +10,7 @@ import { AnalyticsDriversFilter } from './components/AnalyticsDriversFilter'
 import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
 import { ApiKeysList } from './components/ApiKeysList'
 import { McpTokens } from './components/McpTokens'
+import { WhatsAppBotsList } from './components/WhatsAppBotsList'
 import { Appointments } from './components/Appointments'
 import { AppsController } from './components/AppsController'
 import { BaseComponent } from './components/BaseComponent'
@@ -226,7 +227,6 @@ import { ProductsListing } from './components/ProductsListing'
 import { ProfessionalBusinessService } from './components/ProfessionalBusinessService'
 import { ProfessionalSchedule } from './components/ProfessionalSchedule'
 import { ProfessionalServices } from './components/ProfessionalServices'
-import { ProductStep } from './components/ProductStep'
 import { QueryLogin } from './components/QueryLogin'
 import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
@@ -235,7 +235,6 @@ import { RecoveryActionDetail } from './components/RecoveryActionDetail'
 import { RecoveryNotificationList } from './components/RecoveryNotificationList'
 import { ReviewProductList } from './components/ReviewProductList'
 import { SearchOptions } from './components/SearchOptions'
-import { SelectPOS } from './components/SelectPOS'
 import { Schedule } from './components/Schedule'
 import { SidebarMenu } from './components/SidebarMenu'
 import { PaymentOptionStripeLink } from './components/PaymentOptionStripeLink'
@@ -247,7 +246,6 @@ import { SingleProductCard } from './components/SingleProductCard'
 import { SingleRecoveryNotification } from './components/SingleRecoveryNotification'
 import { SitesAuthSettings } from './components/SitesAuthSettings'
 import { SiteTheme } from './components/SiteTheme'
-import { UploadMenu } from './components/UploadMenu'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UsersExportCSV } from './components/UsersExportCSV'
 import { UsersFilter } from './components/UsersFilter'
@@ -329,6 +327,7 @@ export {
   AnalyticsStatusSubFilter,
   ApiKeysList,
   McpTokens,
+  WhatsAppBotsList,
   Appointments,
   AppsController,
   BaseComponent,
@@ -551,7 +550,6 @@ export {
   ProfessionalBusinessService,
   ProfessionalSchedule,
   ProfessionalServices,
-  ProductStep,
   PurchaseAddonDetails,
   PurchaseAddons,
   ReportsDriverFilter,
@@ -565,7 +563,6 @@ export {
   SingleRecoveryNotification,
   SitesAuthSettings,
   SearchOptions,
-  SelectPOS,
   Schedule,
   SidebarMenu,
   PaymentOptionStripeLink,
@@ -576,7 +573,6 @@ export {
   SingleProductCard,
   SingleBusinessProduct,
   SingleBusinessCategory,
-  UploadMenu,
   UserFormDetails,
   UsersExportCSV,
   UpsellingPage,

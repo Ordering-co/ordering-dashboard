@@ -70,6 +70,16 @@ describe('getDashboardNavSections', () => {
     expect(sections.connect.items.map(item => item.pageName)).toEqual(['pos_menu'])
   })
 
+  it('offers WhatsApp bots under Connect to admins only', () => {
+    const admin = getDashboardNavSections({ user: { level: 0 }, configs: {} })
+    expect(enabledUrls(admin.connect)).toContain('/connect/whatsapp-bots')
+    expect(admin.connect.items.map(item => item.pageName).slice(-1)).toEqual(['whatsapp_bots'])
+    expect(getDashboardRouteLevels('/connect/whatsapp-bots')).toEqual([0])
+    expect(canOpenDashboardRoute('/connect/whatsapp-bots', 2)).toBe(false)
+    expect(getDashboardNavSections({ user: { level: 2 }, configs: {} }).connect.items.map(item => item.url))
+      .not.toContain('/connect/whatsapp-bots')
+  })
+
   it('hides stores and reports from read-only roles', () => {
     const sections = getDashboardNavSections({ user: { level: 0, readOnlyAdmin: true }, configs: {} })
     expect(sections.stores.visible).toBe(false)

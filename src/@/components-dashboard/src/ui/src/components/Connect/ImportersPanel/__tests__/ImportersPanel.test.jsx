@@ -386,7 +386,7 @@ describe('ImportersPanel', () => {
     })
 
     it('shows Checking… and disables the button while the menu is being read', async () => {
-      saveRun(runRef, { ...baseRun, status: 'unknown' })
+      saveRun(runRef, { ...baseRun, status: 'unknown', menuBefore: null })
       let resolveGet
       menuSnapshotGet.mockReturnValue(new Promise((resolve) => { resolveGet = resolve }))
 
@@ -432,7 +432,7 @@ describe('ImportersPanel', () => {
       expect(menuSnapshotGet).toHaveBeenCalledTimes(1)
     })
 
-    it('keeps "may still be running" with the check time when the menu did not change', async () => {
+    it('closes as failed when Check now sees the menu did not grow', async () => {
       clockAt(checkedAt)
       saveRun(runRef, { ...baseRun, status: 'unknown' })
       menuSnapshotGet.mockResolvedValue(menuWith(120, 3))
@@ -444,11 +444,17 @@ describe('ImportersPanel', () => {
       })
 
       expect(statusOf()).toHaveTextContent(
-        `No menu changes yet — the import may still be running. Checked ${timeOf(checkedAt)}`
+        `Failed ${timeOf(checkedAt)} — The menu did not grow, so the import did not finish.`
       )
-      expect(statusOf()).toHaveAttribute('data-tone', 'warning')
+      expect(statusOf()).toHaveAttribute('data-tone', 'danger')
       expect(statusOf()).not.toHaveTextContent(/unknown/i)
-      expect(within(statusOf()).getByRole('button', { name: 'Check now' })).toBeInTheDocument()
+      expect(within(statusOf()).queryByRole('button', { name: 'Check now' })).not.toBeInTheDocument()
+      expect(within(statusOf()).getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+      expect(getRun(runRef)).toMatchObject({
+        status: 'failed',
+        finishedAt: checkedAt,
+        errorMessage: 'The menu did not grow, so the import did not finish.'
+      })
     })
 
     it('reports the current counts when there was no pre-import snapshot to compare with', async () => {
@@ -546,11 +552,11 @@ describe('ImportersPanel', () => {
       expect(statusOf()).not.toBeInTheDocument()
       third.unmount()
 
-      // A pending run checked within the last day stays visible.
+      // An unchanged check within the last day stays visible as failed.
       clockAt(checkedAt, RUN_EXPIRES_AFTER_MS - 1)
       saveRun(runRef, { ...baseRun, status: 'unknown', checkedAt, menuAfter: { categories: 1, products: 120 } })
       render()
-      expect(statusOf()).toHaveTextContent('No menu changes yet')
+      expect(statusOf()).toHaveTextContent('The menu did not grow, so the import did not finish.')
     })
   })
 

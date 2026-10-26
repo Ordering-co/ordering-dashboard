@@ -65,6 +65,7 @@ export const NAV_ALIASES = {
   pos_menu: ['pos', 'sincronizar menu', 'menu sync', 'punto de venta', 'deliverect', 'itsacheckmate', 'checkmate'],
   importers: ['importadores', 'importar', 'import', 'importar menu', 'doordash', 'uber eats', 'ubereats', 'gloriafood', 'ordering.co'],
   sales_channels: ['canales de venta', 'sales channels', 'marketplaces', 'doordash', 'uber eats', 'ubereats'],
+  whatsapp_bots: ['whatsapp', 'bots de whatsapp', 'whatsapp bots', 'chatbot', 'agentes de whatsapp'],
   customers: ['clientes', 'usuarios', 'customers', 'users', 'compradores'],
   business_owners: ['duenos de negocio', 'propietarios', 'business owners', 'owners'],
   callcenter_agents: ['agentes', 'call center', 'centro de llamadas'],

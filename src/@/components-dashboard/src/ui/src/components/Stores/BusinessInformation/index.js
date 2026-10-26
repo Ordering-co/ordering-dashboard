@@ -74,6 +74,9 @@ const BusinessInformationUI = (props) => {
   const isRestricted = useBusinessOwnerRestriction()
   const isAdmin = user?.level === 0
   const enableExternalId = !isRestricted
+  const isRibbonEnabled = formState?.changes?.ribbon?.enabled ?? businessState?.business?.ribbon?.enabled ?? false
+  const ribbonColor = formState?.changes?.ribbon?.color ?? businessState?.business?.ribbon?.color ?? ''
+  const ribbonShape = formState?.changes?.ribbon?.shape ?? businessState?.business?.ribbon?.shape ?? ''
 
   const priceList = [
     { key: '1', value: `${priceSymbol}` },
@@ -317,9 +320,8 @@ const BusinessInformationUI = (props) => {
   }
 
   const handleChangeEnable = (value) => {
-    if (!businessState?.business?.ribbon && !value) {
-      const ribbonChanges = { ...ribbonValues }
-      handleChangeSwtich('ribbon', ribbonChanges)
+    if (!businessState?.business?.ribbon) {
+      handleChangeRibbon({ ...ribbonValues, ...formState?.changes?.ribbon, enabled: value })
       return
     }
     handleChangeRibbon({ enabled: value })
@@ -345,7 +347,7 @@ const BusinessInformationUI = (props) => {
   }, [formState?.result])
 
   useEffect(() => {
-    if ((typeof (formState?.changes?.ribbon?.enabled) !== 'undefined' ? formState?.changes?.ribbon?.enabled : businessState?.business?.ribbon?.enabled)) {
+    if (isRibbonEnabled) {
       formMethods.register('colorhex', {
         required: t(
           'VALIDATION_RIBBON_COLOR_ERROR_REQUIRED',
@@ -364,7 +366,13 @@ const BusinessInformationUI = (props) => {
       formMethods.unregister('colorhex')
       formMethods.unregister('shape')
     }
-  }, [formState?.changes?.ribbon?.enabled, businessState?.business?.ribbon?.enabled])
+  }, [isRibbonEnabled])
+
+  useEffect(() => {
+    if (!isRibbonEnabled) return
+    formMethods.setValue('colorhex', ribbonColor)
+    formMethods.setValue('shape', ribbonShape)
+  }, [isRibbonEnabled, ribbonColor, ribbonShape])
 
   return (
     <>
@@ -571,7 +579,7 @@ const BusinessInformationUI = (props) => {
           />
         </RibbonSwitchWrapper>
         {
-          (typeof (formState?.changes?.ribbon?.enabled) !== 'undefined' ? formState?.changes?.ribbon?.enabled : businessState?.business?.ribbon?.enabled) && (
+          isRibbonEnabled && (
             <>
               <InputWrapper>
                 <label>{t('TEXT', 'Text')}</label>
@@ -584,7 +592,7 @@ const BusinessInformationUI = (props) => {
                   autoComplete='off'
                   ref={formMethods.register({
                     required:
-                      ((formState?.changes?.ribbon?.enabled || businessState?.business?.ribbon) && (typeof (formState?.changes?.ribbon?.enabled) !== 'undefined' ? formState?.changes?.ribbon?.enabled : businessState?.business?.ribbon?.enabled))
+                      isRibbonEnabled
                         ? t(
                           'VALIDATION_RIBBON_ERROR_REQUIRED',
                           'The _attribute_ text field is required'
@@ -597,7 +605,8 @@ const BusinessInformationUI = (props) => {
                 <ColorWrapper>
                   <label>{t('COLOR', 'Color')}</label>
                   <ColorPicker
-                    defaultColor={formState?.changes?.ribbon?.color ?? businessState?.business?.ribbon?.color}
+                    defaultColor={ribbonColor}
+                    debounce={false}
                     onChangeColor={(color) => {
                       formMethods.setValue('colorhex', color)
                       handleChangeRibbon({ color })
@@ -612,18 +621,14 @@ const BusinessInformationUI = (props) => {
                         key={i}
                         shapeRect={shape[key] === shape?.rectangleRound}
                         round={shape[key] === shape?.capsuleShape}
-                        active={formState?.changes?.ribbon?.shape
-                          ? (formState?.changes?.ribbon?.shape === shape[key])
-                          : (businessState?.business?.ribbon?.shape === shape[key])}
+                        active={ribbonShape === shape[key]}
                         onClick={() => {
                           formMethods.setValue('shape', shape[key])
                           handleChangeRibbon({ shape: shape[key] })
                         }}
                       >
                         <div />
-                        {(formState?.changes?.ribbon?.shape
-                          ? (formState?.changes?.ribbon?.shape === shape[key])
-                          : (businessState?.business?.ribbon?.shape === shape[key]))
+                        {ribbonShape === shape[key]
                           ? <RecordCircleFill />
                           : <Circle />}
                       </ShapeBoxWrapper>

@@ -68,7 +68,8 @@ const UI_EXPORT_NAMES = [
   'SchoolsManagement',
   'SettingsLogs',
   'Support',
-  'UsersListing'
+  'UsersListing',
+  'WhatsAppBots'
 ]
 
 export const createUiPageMocks = async () => {

@@ -282,6 +282,7 @@ describe('dashboard PostHog analytics', () => {
     expect(getDashboardRoute('/onboarding/store')).toEqual({ route: '/onboarding', module: 'stores' })
     expect(getDashboardRoute('/stores/products/987')).toEqual({ route: '/stores', module: 'stores' })
     expect(getDashboardRoute('/connect/sales-channels')).toEqual({ route: '/connect', module: 'connect' })
+    expect(getDashboardRoute('/connect/whatsapp-bots')).toEqual({ route: '/connect', module: 'connect' })
     expect(getDashboardRoute('/not-a-dashboard-route/secret')).toEqual({
       route: '/not-a-dashboard-route',
       module: 'other'

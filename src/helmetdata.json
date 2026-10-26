@@ -111,6 +111,13 @@
     "robots": "index, follow",
     "canonicalUrl": ""
   },
+  "whatsapp_bots": {
+    "title": "WhatsApp bots",
+    "description": "WhatsApp numbers that take orders through the guided webview.",
+    "keywords": "whatsapp, bots, connect",
+    "robots": "index, follow",
+    "canonicalUrl": ""
+  },
   "brand": {
     "title": "Businesse brand",
     "description": "a dummy description about this page",

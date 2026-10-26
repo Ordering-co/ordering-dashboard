@@ -19,7 +19,8 @@ const state = vi.hoisted(() => ({
   handleMenuCollapse: vi.fn(),
   assistant: { isAvailable: false, isOpen: false, setOpen: vi.fn() },
   language: { code: 'en' },
-  apiLabels: {}
+  apiLabels: {},
+  aiModuleEnabled: null
 }))
 
 vi.mock('../../../../../index', async () => {
@@ -31,7 +32,8 @@ vi.mock('../../../../../index', async () => {
       productsState: { loading: false, error: null, apps: [] },
       getBillingToken: vi.fn(),
       billingUrl: 'https://billing.example.com',
-      setShowBillingPayment: vi.fn()
+      setShowBillingPayment: vi.fn(),
+      aiModuleEnabled: state.aiModuleEnabled
     }),
     useApi: () => [{ root: 'https://api.example.com', project: state.project }, { configurations: state.configurations }],
     useConfig: () => [{ configs: state.configs }],
@@ -63,6 +65,17 @@ vi.mock('../../LogoutButton', () => ({
   LogoutButton: () => <button type='button'>Logout</button>
 }))
 
+vi.mock('../../AiAgentsUpgradeModal', () => ({
+  AiAgentsUpgradeModal: ({ open, onClose, formUrl }) => open
+    ? (
+      <div role='dialog' aria-label='Upgrade to use AI Agents'>
+        <a href={formUrl}>Upgrade form</a>
+        <button type='button' onClick={onClose}>Close upgrade</button>
+      </div>
+      )
+    : null
+}))
+
 import { SidebarMenu } from '../index'
 
 const renderSidebar = () => renderWithProviders(<SidebarMenu />)
@@ -81,6 +94,7 @@ describe('SidebarMenu external resources', () => {
     state.assistant = { isAvailable: false, isOpen: false, setOpen: vi.fn() }
     state.language = { code: 'en' }
     state.apiLabels = {}
+    state.aiModuleEnabled = null
   })
 
   it.each([
@@ -338,6 +352,56 @@ describe('SidebarMenu external resources', () => {
     try {
       await user.click(screen.getByRole('button', { name: 'AI Agents' }))
       expect(open).not.toHaveBeenCalled()
+    } finally {
+      open.mockRestore()
+    }
+  })
+
+  it('shows the upgrade form instead of opening AI Agents for a project without the AI module', async () => {
+    state.aiModuleEnabled = false
+    state.sessionState = {
+      token: 'session-token',
+      user: { level: 0, email: 'admin@example.com', name: 'Admin', lastname: 'User' }
+    }
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
+    const user = userEvent.setup()
+    renderSidebar()
+
+    try {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: 'AI Agents' }))
+
+      expect(open).not.toHaveBeenCalled()
+      const formUrl = new URL(screen.getByRole('link', { name: 'Upgrade form' }).getAttribute('href'))
+      expect(`${formUrl.origin}${formUrl.pathname}`).toBe('https://forms.ordering.co/r/A7GDBo')
+      expect(formUrl.searchParams.get('email')).toBe('admin@example.com')
+      expect(formUrl.searchParams.get('ref')).toBe('orderingplus')
+      expect(formUrl.toString()).not.toContain('session-token')
+
+      await user.click(screen.getByRole('button', { name: 'Close upgrade' }))
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    } finally {
+      open.mockRestore()
+    }
+  })
+
+  it('opens AI Agents for a project with the AI module', async () => {
+    state.aiModuleEnabled = true
+    state.sessionState = { token: 'session-token', user: { level: 0 } }
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
+    const user = userEvent.setup()
+    renderSidebar()
+
+    try {
+      await user.click(screen.getByRole('button', { name: 'AI Agents' }))
+
+      expect(open).toHaveBeenCalledExactlyOnceWith(
+        'https://ai.ordering.co/?access_token=session-token&project=orderingplus',
+        '_blank',
+        'noopener,noreferrer'
+      )
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     } finally {
       open.mockRestore()
     }

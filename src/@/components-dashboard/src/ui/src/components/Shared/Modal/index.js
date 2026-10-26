@@ -49,6 +49,7 @@ const ModalUI = (props) => {
       height={props.height}
       width={props.width}
       maxWidth={props.maxWidth}
+      $anchorTop={props.anchorTop}
     >
       <ModalDialogInnerContainer
         padding={props.padding}

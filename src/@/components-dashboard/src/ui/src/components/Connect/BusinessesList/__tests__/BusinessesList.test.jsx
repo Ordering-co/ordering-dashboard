@@ -79,15 +79,15 @@ describe('Connect BusinessesList — fromImporters', () => {
     renderWithProviders(<BusinessesList {...createProps({ fromImporters: true })} />)
 
     expect(getHeaderTexts()).toEqual(['ID', 'Business'])
-    expect(screen.queryByText('STATUS')).not.toBeInTheDocument()
+    expect(screen.queryByText('Status')).not.toBeInTheDocument()
     expect(screen.queryByText('POS')).not.toBeInTheDocument()
     expect(screen.queryByTestId('column-settings')).not.toBeInTheDocument()
   })
 
-  it('shows STATUS and column settings for default Connect list (PosMenu-style)', () => {
+  it('shows POS, Status and column settings for default Connect list (PosMenu-style)', () => {
     renderWithProviders(<BusinessesList {...createProps()} />)
 
-    expect(getHeaderTexts()).toEqual(['ID', 'Business', 'STATUS', 'Column settings'])
+    expect(getHeaderTexts()).toEqual(['ID', 'Business', 'POS', 'Status', 'Column settings'])
     expect(screen.getByTestId('column-settings')).toBeInTheDocument()
   })
 
@@ -96,8 +96,8 @@ describe('Connect BusinessesList — fromImporters', () => {
       <BusinessesList {...createProps({ fromSalesChannels: true })} />
     )
 
-    expect(getHeaderTexts()).toEqual(['ID', 'Business', 'POS', 'SALES CHANNELS', 'Column settings'])
-    expect(screen.queryByText('STATUS')).not.toBeInTheDocument()
+    expect(getHeaderTexts()).toEqual(['ID', 'Business', 'POS', 'Sales Channels', 'Column settings'])
+    expect(screen.queryByText('Status')).not.toBeInTheDocument()
   })
 
   it('passes importers column config to SingleBusiness rows', () => {

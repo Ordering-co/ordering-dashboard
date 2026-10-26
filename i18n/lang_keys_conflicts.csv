@@ -1,5 +1,5 @@
 key,value,app_uses,submodule_uses
-"LOADING","Loading",0,372
+"LOADING","Loading",0,369
 "LOADING","loading",0,4
 "LOADING","Loading...",0,3
 "VALIDATION_ERROR_REQUIRED","The link type is required",0,1
@@ -43,7 +43,7 @@ key,value,app_uses,submodule_uses
 "OK","OK",0,6
 "OK","Ok",0,4
 "OK","ok",0,1
-"ERROR","Error",0,74
+"ERROR","Error",0,73
 "ERROR","error",0,2
 "SCHEDULE_UPDATED","Schedule updated",0,2
 "SCHEDULE_UPDATED","Schedule Updated",0,1
@@ -111,7 +111,7 @@ key,value,app_uses,submodule_uses
 "SELECT_A_CARD","Select a card",0,1
 "PAYMENT_METHODS","Payment Methods",0,2
 "PAYMENT_METHODS","Payment methods",0,10
-"SAVE","Save",0,120
+"SAVE","Save",0,119
 "SAVE","SAVE",0,1
 "DESCRIPTION","Description",0,27
 "DESCRIPTION","Decription",0,4
@@ -158,12 +158,11 @@ key,value,app_uses,submodule_uses
 "ID","Id",0,2
 "SELECT_BUSINESS","Select a business",0,3
 "SELECT_BUSINESS","Select business",0,6
-"SELECT_BUSINESS","Select a Business",0,1
 "SELECT_PAYMENT_METHOD","Select a payment method",0,1
 "SELECT_PAYMENT_METHOD","Select payment method",0,3
 "INVOICE_ORDER_NO","Order No.",0,7
 "INVOICE_ORDER_NO","Order No",0,11
-"WEB_APPNAME","Ordering",0,167
+"WEB_APPNAME","Ordering",0,168
 "WEB_APPNAME","ORDERING",0,2
 "DRIVER_GROUP","Driver group",0,28
 "DRIVER_GROUP","Driver Group",0,1
@@ -223,8 +222,8 @@ key,value,app_uses,submodule_uses
 "DAYS","days",0,2
 "CUSTOM_FIELDS","Custom fields",0,18
 "CUSTOM_FIELDS","Custom Fields",0,10
-"POS","POS",0,1
-"POS","Pos",0,2
+"POS","POS",0,2
+"POS","Pos",0,1
 "SALES_CHANNELS","Sales Channels",0,3
 "SALES_CHANNELS","Sales channels",0,2
 "UPDATING","Updating...",0,4
@@ -238,7 +237,7 @@ key,value,app_uses,submodule_uses
 "METTERS","meters",0,1
 "METTERS","Meters",0,1
 "ADDRESS","Addresss",0,1
-"ADDRESS","Address",0,20
+"ADDRESS","Address",0,18
 "ADDRESS_NOTES","Address Notes",0,2
 "ADDRESS_NOTES","Address notes",0,2
 "ASSIGNED","assigned",0,1
@@ -262,7 +261,7 @@ key,value,app_uses,submodule_uses
 "MAX_DISTANCE_BETWEEN_BUSINESS","Maximum distance between businesses in meters",0,2
 "MAX_DISTANCE_BETWEEN_DELIVERY","Maxiumum distance between deliveries in meters",0,1
 "MAX_DISTANCE_BETWEEN_DELIVERY","Maximum distance between deliveries in meters",0,2
-"OR","Or",0,3
+"OR","Or",0,2
 "OR","or",0,2
 "INVALID_ERROR_PHONE_NUMBER","The Phone Number field is invalid.",0,5
 "INVALID_ERROR_PHONE_NUMBER","The Phone Number field is invalid",0,3
@@ -300,7 +299,7 @@ key,value,app_uses,submodule_uses
 "SELECT_OPTION","Select a option",0,7
 "END_DATE","End date",0,2
 "END_DATE","End Date",0,1
-"URL","URL",0,6
+"URL","URL",0,5
 "URL","Url",0,14
 "SCHEDULE_LIMIT","Schedule limit",0,2
 "SCHEDULE_LIMIT","Schedule",0,1
@@ -338,8 +337,6 @@ key,value,app_uses,submodule_uses
 "FOOTER_CONTENT","Footer content",0,1
 "POS_DESCRIPTION","Create orders in your system without the hassle and auto-complete information to give the best customer experience in every order.",0,1
 "POS_DESCRIPTION","After they purchase we install in 24 hours. Order and pay 99 per business. They can sell at whatever price. Also. If a business manager purchases then shared revenue?",0,1
-"FILE_MAXIMUM_SIZE","The maximum file size is 500 kilobytes",0,1
-"FILE_MAXIMUM_SIZE","The maximum file size is 2 megabytes",0,1
 "ORDERING_PRODUCTS","Ordering products",0,3
 "ORDERING_PRODUCTS","Ordering Products",0,1
 "DAY","Day",0,2
@@ -364,7 +361,7 @@ key,value,app_uses,submodule_uses
 "LOGISTIC_INFORMATION","Logistics Information",0,1
 "VIA","via",0,2
 "VIA","Via",0,1
-"QTY","Qty",0,2
+"QTY","Qty",0,1
 "QTY","QTY",0,1
 "SERVICE_FEE","Service fee",0,2
 "SERVICE_FEE","Service Fee",0,1
@@ -431,8 +428,6 @@ key,value,app_uses,submodule_uses
 "QUESTION_DELETE_VIDEO","Are you sure that you want to delete this video url?",0,1
 "IMPORTER_INSTRUCTIONS_8_CONTENT","Select your recently created importer from the importer list and upload your edited CSV file with the upload button.",0,1
 "IMPORTER_INSTRUCTIONS_8_CONTENT","Wait until the import process ends and verify the changes in the section that you select to use your importer.",0,1
-"UPLOAD_YOUR_MENU","Upload your Menu",0,1
-"UPLOAD_YOUR_MENU","Upload your menu",0,1
 "STORE_ONBOARDING_RETRY","Try again",1,8
 "STORE_ONBOARDING_RETRY","Retry",0,1
 "DRIVER_ARRIVED_BY_BUSINESS","Driver arrived by business",0,3

@@ -35,6 +35,7 @@ export const DASHBOARD_ROUTE_LEVELS = {
   '/connect/importers': getConnectLevels('importers'),
   '/connect/pos-menu': getConnectLevels('pos_menu'),
   '/connect/sales-channels': getConnectLevels('sales_channels'),
+  '/connect/whatsapp-bots': getConnectLevels('whatsapp_bots'),
   '/users/customers': [0],
   '/users/business-owners': [0],
   '/users/callcenter-agents': [0],
@@ -218,7 +219,8 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     { id: 2, title: t('CONNECT_DELIVERY_SERVICES', 'Delivery services'), pageName: 'delivery_services', url: '/connect/delivery-services', enabled: connectDeliveryServices },
     { id: 3, title: t('CONNECT_POS_MENU', 'POS & Menu Sync'), pageName: 'pos_menu', url: '/connect/pos-menu', enabled: connectPosMenuSync },
     { id: 4, title: t('CONNECT_IMPORTERS', 'Importers'), pageName: 'importers', url: '/connect/importers', enabled: connectImporters },
-    { id: 5, title: t('CONNECT_SALES_CHANNELS', 'Sales Channels'), pageName: 'sales_channels', url: '/connect/sales-channels', enabled: connectSalesChannels }
+    { id: 5, title: t('CONNECT_SALES_CHANNELS', 'Sales Channels'), pageName: 'sales_channels', url: '/connect/sales-channels', enabled: connectSalesChannels },
+    { id: 6, title: t('CONNECT_WHATSAPP_BOTS', 'WhatsApp bots'), pageName: 'whatsapp_bots', url: '/connect/whatsapp-bots', enabled: true }
   ].filter(menu => getConnectLevels(menu.pageName).includes(level))
 
   const users = [

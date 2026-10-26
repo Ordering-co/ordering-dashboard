@@ -34,7 +34,6 @@ export const BusinessDetailsUI = (props) => {
     handleUpdateBusinessState,
     handleDeleteBusiness,
     actionStatus,
-    handleSync,
     handleConnectBusiness,
     handleDisconnectBusiness,
     handlePushAction,
@@ -163,7 +162,6 @@ export const BusinessDetailsUI = (props) => {
           setIsExpand={setIsExpand}
           formState={formState}
           setFormState={setFormState}
-          handleSync={handleSync}
           fromSalesChannels={props.fromSalesChannels}
         />
       )}

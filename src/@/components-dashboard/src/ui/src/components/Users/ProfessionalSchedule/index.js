@@ -37,7 +37,7 @@ const ProfessionalScheduleUI = (props) => {
     handleUpdateClick && handleUpdateClick()
   }
 
-  const changeSchedule = useCallback((val) => handleChangeItem({ schedule: val }), [])
+  const changeSchedule = useCallback((val) => handleChangeItem({ schedule: val }), [handleChangeItem])
 
   useEffect(() => {
     if (typeof user?.max_days_in_future === 'number') setIsMaxDays(true)

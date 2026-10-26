@@ -36,7 +36,8 @@ export const MenuImportModal = (props) => {
     open,
     onClose,
     card,
-    business
+    business,
+    onGoToProducts
   } = props
 
   const config = card?.modalConfig
@@ -193,6 +194,11 @@ export const MenuImportModal = (props) => {
   const shownStartedAt = startedAt || storedRun?.startedAt
 
   const handleGoToProducts = () => {
+    if (onGoToProducts) {
+      onClose?.()
+      onGoToProducts()
+      return
+    }
     if (business?.slug) {
       history.push(`/stores/products/${business.slug}`)
     } else {

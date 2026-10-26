@@ -11,7 +11,8 @@ export const Switch = (props) => {
     disabled,
     onChange,
     className,
-    notAsync
+    notAsync,
+    ariaLabel
   } = props
   const [checked, setChecked] = useState(false)
 
@@ -31,7 +32,9 @@ export const Switch = (props) => {
     <ToggleSwitchContainer className={className} disabled={disabled}>
       <input
         type='checkbox'
+        aria-label={ariaLabel}
         checked={checked}
+        disabled={disabled}
         onChange={handleCheckBoxChange}
       />
       <Slider />

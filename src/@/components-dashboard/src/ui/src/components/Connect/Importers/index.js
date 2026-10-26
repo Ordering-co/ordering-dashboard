@@ -7,9 +7,7 @@ import { BusinessActiveStateFilter } from '../../Stores/BusinessActiveStateFilte
 
 import { BusinessesListingHeader } from '../BusinessesListingHeader'
 import { BusinessesList } from '../BusinessesList'
-import { ImportersPanel } from '../ImportersPanel'
-import { MenuImportModal } from './MenuImportModal'
-import { GloriaFoodImportModal } from './GloriaFoodImportModal'
+import { BusinessImporters } from '../BusinessImporters'
 
 import {
   BusinessListingContainer,
@@ -28,7 +26,7 @@ export const ImportersUI = (props) => {
     handleSucessRemoveBusiness,
     handleSucessAddBusiness,
     handleSucessUpdateBusiness,
-    loadBusinesses,
+    refreshBusinesses,
     onSearch,
     onBusinessRedirect,
     getPageBusinesses,
@@ -45,7 +43,6 @@ export const ImportersUI = (props) => {
   const [openImportersPanel, setOpenImportersPanel] = useState(false)
   const [detailsBusiness, setDetailsBusiness] = useState(null)
   const [detailsBusinessId, setDetailsBusinessId] = useState(null)
-  const [importModal, setImportModal] = useState({ open: false, card: null })
 
   const noBusinesses = useMemo(() => {
     return !businessList?.loading &&
@@ -62,7 +59,6 @@ export const ImportersUI = (props) => {
     setOpenImportersPanel(false)
     setDetailsBusiness(null)
     setDetailsBusinessId(null)
-    setImportModal({ open: false, card: null })
     onBusinessRedirect()
   }, [onBusinessRedirect])
 
@@ -120,14 +116,6 @@ export const ImportersUI = (props) => {
     handleSetStorage()
   }, [])
 
-  const handleImportClick = (card) => {
-    setImportModal({ open: true, card })
-  }
-
-  const handleCloseImportModal = () => {
-    setImportModal({ open: false, card: null })
-  }
-
   return (
     <>
       <BusinessListingContainer>
@@ -135,7 +123,7 @@ export const ImportersUI = (props) => {
           title={t('CONNECT_IMPORTERS', 'Importers')}
           searchValue={searchValue}
           onSearch={onSearch}
-          handleRefreshBusinesses={loadBusinesses}
+          handleRefreshBusinesses={refreshBusinesses}
           loading={businessList.loading}
           noBusinesses={noBusinesses}
         />
@@ -170,31 +158,11 @@ export const ImportersUI = (props) => {
         />
       </BusinessListingContainer>
       {openImportersPanel && detailsBusiness && (
-        <ImportersPanel
+        <BusinessImporters
           open={openImportersPanel}
           business={detailsBusiness}
           onClose={handleBackRedirect}
-          onImportClick={handleImportClick}
-          openImporterId={importModal.open ? importModal.card?.id : null}
         />
-      )}
-      {importModal.open && detailsBusiness && (
-        importModal.card?.id === 'gloriafood'
-          ? (
-            <GloriaFoodImportModal
-              open={importModal.open}
-              business={detailsBusiness}
-              onClose={handleCloseImportModal}
-            />
-            )
-          : (
-            <MenuImportModal
-              open={importModal.open}
-              card={importModal.card}
-              business={detailsBusiness}
-              onClose={handleCloseImportModal}
-            />
-            )
       )}
     </>
   )

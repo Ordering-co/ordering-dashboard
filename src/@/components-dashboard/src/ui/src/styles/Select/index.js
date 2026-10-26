@@ -109,7 +109,7 @@ export const Select = React.memo((props) => {
       window.removeEventListener('mouseup', handleClickOutside)
       window.removeEventListener('keydown', handleKeyDown, true)
     }
-  }, [open])
+  }, [open, isShowSearchBar, handleChangeSearch])
 
   useEffect(() => {
     if (isShowSearchBar && searchValue) return
@@ -239,11 +239,6 @@ export const Select = React.memo((props) => {
       </PopoverBody>
     </div>
   )
-}, (prevProps, nextProps) => {
-  return prevProps.defaultValue === nextProps.defaultValue &&
-  prevProps.options === nextProps.options &&
-  prevProps.searchValue === nextProps.searchValue &&
-  prevProps.pagination === nextProps.pagination
 })
 
 Select.displayName = 'Select'

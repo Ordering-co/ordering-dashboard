@@ -29,27 +29,23 @@ export const SideBar = (props) => {
   const [isExpand, setIsExpand] = useState(false)
   const sideBarWidth = defaultSideBarWidth || 500
 
-  const actionSidebar = (value) => {
-    if (!value) {
-      props.onClose()
-    }
-    setIsMenuOpen(value)
-  }
-
   useEffect(() => {
-    if (isMenuOpen) {
-      if (width <= 768 || width <= sideBarWidth) {
-        sideBarRef.current.style.width = 'var(--app-width, 100vw)'
-      } else {
-        sideBarRef.current.style.width = `${sideBarWidth}px`
-      }
+    if (!sideBarRef.current) return
+    if (!isMenuOpen) {
+      sideBarRef.current.style.width = '0px'
+      return
+    }
+    if (width <= 768 || width <= sideBarWidth) {
+      sideBarRef.current.style.width = 'var(--app-width, 100vw)'
+    } else {
+      sideBarRef.current.style.width = `${sideBarWidth}px`
     }
   }, [width, sideBarWidth, isMenuOpen])
 
   useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open, defaultSideBarWidth])
+    if (!open) setIsExpand(false)
+    setIsMenuOpen(Boolean(open))
+  }, [open])
 
   const onCloseSidebar = (e) => {
     if (e.code === 'Escape' && width >= 1000) {

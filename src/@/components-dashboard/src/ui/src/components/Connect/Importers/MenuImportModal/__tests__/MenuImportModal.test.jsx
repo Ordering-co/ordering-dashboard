@@ -233,6 +233,27 @@ describe('MenuImportModal', () => {
     expect(menuImportHook.reset).toHaveBeenCalled()
   })
 
+  it('hands Go to products to the caller when it is already on the store products', () => {
+    menuImportHook.status = 'success'
+    menuImportHook.result = { appliedCount: 1, jobId: 'job-1' }
+    const onClose = vi.fn()
+    const onGoToProducts = vi.fn()
+
+    renderWithProviders(
+      <MenuImportModal
+        open
+        card={doordashCard}
+        business={business}
+        onClose={onClose}
+        onGoToProducts={onGoToProducts}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Go to products' }))
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(onGoToProducts).toHaveBeenCalledTimes(1)
+  })
+
   it('shows the import start time while importing', () => {
     const startedAt = '2026-10-13T18:28:00.000Z'
     menuImportHook.status = 'importing'

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { Button } from '../../../styles'
 
 export const SingleBusinessContainer = styled.tbody`
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
@@ -13,26 +14,6 @@ export const SingleBusinessContainer = styled.tbody`
       border-top: 1px solid ${props => props.theme.colors.primary};
       border-bottom: 1px solid ${props => props.theme.colors.primary};
     }
-  `}
-`
-
-export const WrapperImage = styled.div`
-  max-width: 45px;
-  max-height: 45px;
-  height: 45px;
-  width: 45px;
-  ${({ isSkeleton }) => !isSkeleton && css`
-    border: 1px solid #E3E3E3;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  `}
-  border-radius: 10px;
-
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 10px;
-  `
-: css`
-    margin-right: 10px;
   `}
 `
 
@@ -120,6 +101,7 @@ export const BusinessEnableWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  white-space: nowrap;
 
   span {
     font-size: 14px;
@@ -295,25 +277,6 @@ export const CheckBoxWrapper = styled.div`
   `}
 `
 
-export const FeaturedWrapper = styled.div`
-  display: flex;
-  align-items: center;
-
-  p {
-    border-radius: 10px;
-    padding: 5px 10px;
-    background-color: ${props => props.theme.colors.lightPrimary};
-    font-size: 12px;
-    color: ${props => props.theme.colors.lightGray};
-    margin-bottom: 0px;
-
-    ${({ isConnected }) => isConnected && css`
-      background-color: ${props => props.theme.colors.primary};
-      color: ${props => props.theme.colors.white};
-    `}
-  }
-`
-
 export const BorderWrapper = styled.div`
   font-size: 12px;
   ${({ isHeader }) => isHeader
@@ -340,6 +303,9 @@ export const BorderWrapper = styled.div`
 
 export const ConnectToContainer = styled(BorderWrapper)`
   display: flex;
+  height: auto;
+  border-left: none;
+  border-right: none;
   align-items: center;
   font-size: 12px;
   ${({ isHeader }) => isHeader && css`
@@ -370,4 +336,43 @@ export const WrapperSalesChannelsImage = styled.div`
 : css`
     margin-right: 5px;
   `}
+`
+
+export const PosCell = styled.div`
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+`
+
+export const EmptyCell = styled.span`
+  color: ${props => props.theme.colors.lightGray};
+`
+
+export const RowAction = styled(Button)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 100%;
+  min-width: 120px;
+  height: 32px;
+  font-size: 13px;
+  padding: 0 14px;
+  white-space: nowrap;
+`
+
+// The action column is as wide as its longest label, so every button in it
+// has the same width in any language.
+export const ActionCell = styled.td`
+  width: 1%;
+  white-space: nowrap;
+`
+
+export const MoreChannels = styled.span`
+  font-size: 12px;
+  color: ${props => props.theme.colors.lightGray};
 `

@@ -316,14 +316,6 @@ export const PosMenuBusinessDetails = (props) => {
     }
   }
 
-  const handleSync = async (urlParam, root) => {
-    if (!urlParam) return null
-    const absolute = /^(?:https?:)?\/\//i.test(urlParam)
-    if (!absolute && !root) return null
-    const resolved = absolute ? urlParam : `${root}${urlParam}`
-    return resolved.replace('@{project_code}', ordering.project).replace('@{access_token}', session.token).replace('@{business_id}', businessState?.business?.id)
-  }
-
   const requestIntegrationChange = async (integrationId, method, data, successMessage) => {
     if (integrationRequestRef.current) return false
     integrationRequestRef.current = true
@@ -395,6 +387,11 @@ export const PosMenuBusinessDetails = (props) => {
     handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
   }, [businessState?.business])
 
+  // The list's Refresh reads the open store again (a new refreshSignal).
+  useEffect(() => {
+    if (props.refreshSignal) getBusiness()
+  }, [props.refreshSignal])
+
   useEffect(() => {
     if (business) {
       setBusinessState({
@@ -428,7 +425,6 @@ export const PosMenuBusinessDetails = (props) => {
             handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
             handleUpdateBusinessConfigs={handleUpdateBusinessConfigs}
             handleSyncEvent={handleSyncEvent}
-            handleSync={handleSync}
             handleConnectBusiness={handleConnectBusiness}
             integrationActionLoading={integrationActionLoading}
             handleDisconnectBusiness={handleDisconnectBusiness}

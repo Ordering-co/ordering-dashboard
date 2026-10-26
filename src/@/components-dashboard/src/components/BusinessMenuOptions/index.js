@@ -66,6 +66,9 @@ export const BusinessMenuOptions = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, result: { error: false } })
       const changes = { ...formState.changes }
+      if (changes.all_products ?? businessMenuState.menu?.all_products) {
+        delete changes.products
+      }
       for (const key in changes) {
         if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
           changes[key] = JSON.stringify(changes[key])

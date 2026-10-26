@@ -12,7 +12,8 @@ export const ColorPicker = (props) => {
   const {
     defaultColor,
     isDisabled,
-    onChangeColor
+    onChangeColor,
+    debounce = true
   } = props
 
   const [sketchPickerColor, setSketchPickerColor] = useState('#F5F9FF')
@@ -23,6 +24,10 @@ export const ColorPicker = (props) => {
   const handleChangePickerColor = (picker) => {
     setSketchPickerColor(picker.hex)
     clearTimeout(timeoutId)
+    if (!debounce) {
+      onChangeColor && onChangeColor(picker.hex)
+      return
+    }
     const newTimeoutId = setTimeout(() => {
       onChangeColor && onChangeColor(picker.hex)
     }, 750)

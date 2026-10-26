@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'styled-components'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -8,15 +8,17 @@ import { ChevronRight, PlusCircleFill } from 'react-bootstrap-icons'
 import {
   useLanguage,
   PluginList as PluginListController,
-  useApi,
-  useSession
+  useApi
 } from '../../../../../index'
 import {
   Modal
 } from '~ui'
 import { Button, IconButton, Switch } from '../../../styles'
 import { Alert, Confirm, Pagination, SearchBar } from '../../Shared'
-import { parseTemplate } from '../../../utils'
+import { useShowPluginPage } from '../../../hooks/usePluginPage'
+import { usePluginMessages } from '../../../hooks/usePluginMessages'
+import { pluginModalSize } from '../../../../../utils/pluginMessages'
+import { PluginPageFrame } from '../../Connect/PluginPageFrame'
 import {
   PluginListContainer,
   Header,
@@ -41,9 +43,7 @@ const PluginListUI = (props) => {
     handleUpdatePlugin,
     handleInstallSysPlugin
   } = props
-  const [languageState, t] = useLanguage()
-  const [ordering] = useApi()
-  const [{ token }] = useSession()
+  const [, t] = useLanguage()
   const theme = useTheme()
   const [searchValue, setSearchValue] = useState(null)
 
@@ -62,11 +62,22 @@ const PluginListUI = (props) => {
   const [currentPlugins, setCurrentPlugins] = useState({ plugins: [], sysPlugins: [] })
   const [totalPages, setTotalPages] = useState({ plugins: null, sysPlugins: null })
 
-  const variables = {
-    project_code: ordering.project,
-    access_token: token,
-    language_code: languageState?.language?.code
-  }
+  const showPluginPage = useShowPluginPage(setPluginSelected)
+  const closePluginModal = () => setPluginSelected(prev => ({ ...prev, open: false }))
+  // The page can report its height or ask to close (docs/PLUGIN_PAGES.md).
+  const pluginFrameRef = useRef(null)
+  const pluginFrame = usePluginMessages({
+    open: pluginSelected.open,
+    iframeRef: pluginFrameRef,
+    url: pluginSelected.url,
+    businessId: null,
+    name: pluginSelected.title,
+    closeModal: closePluginModal,
+    reload: null,
+    fits: Boolean(pluginSelected.fits),
+    frameKey: pluginSelected.frameKey ?? null
+  })
+  const pluginModal = pluginModalSize({ fits: Boolean(pluginSelected.fits), ...pluginFrame })
 
   const handleChangePage = (page, type) => {
     setCurrentPage({ ...currentPage, [type]: page })
@@ -89,14 +100,10 @@ const PluginListUI = (props) => {
     })
   }
 
-  const handleOpenPluginDetails = (e, plugin) => {
+  const handleOpenPluginDetails = async (e, plugin) => {
     if (!plugin?.links?.general_settings) return
     e.stopPropagation()
-    setPluginSelected({
-      open: true,
-      title: plugin.name,
-      url: plugin.root + plugin.links.general_settings
-    })
+    await showPluginPage(plugin, 'general_settings')
   }
 
   useEffect(() => {
@@ -344,13 +351,18 @@ const PluginListUI = (props) => {
       <Modal
         open={pluginSelected.open}
         title={pluginSelected.title}
-        onClose={() => setPluginSelected({ ...pluginSelected, open: false })}
-        height='80vh'
-        width='80vw'
+        onClose={closePluginModal}
+        height={pluginModal.height}
+        width={pluginModal.width}
+        anchorTop
       >
-        <iframe
-          src={parseTemplate(pluginSelected.url, variables, /@\{([^}]+)\}/g)}
-          style={{ width: '100%', height: '85%' }}
+        <PluginPageFrame
+          ref={pluginFrameRef}
+          url={pluginSelected.url}
+          name={pluginSelected.title}
+          height={pluginFrame.height}
+          fits={pluginSelected.fits}
+          initialHeight={pluginSelected.initialHeight}
         />
       </Modal>
     </>

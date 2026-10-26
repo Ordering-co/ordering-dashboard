@@ -1,9 +1,10 @@
 import styled, { css } from 'styled-components'
+import { MORE_SIDEBAR_MODAL_MAX_WIDTH } from './constants'
 
 export const MainContainer = styled.div`
   width: 0;
 
-  @media (min-width: 1000px) {
+  @media (min-width: ${MORE_SIDEBAR_MODAL_MAX_WIDTH}px) {
     display: block;
     position: relative;
     box-sizing: border-box;

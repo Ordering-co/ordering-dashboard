@@ -4,7 +4,15 @@ import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
-import { mergePosIntegrationsWithCatalog, waitForInstalledIntegration } from '../../utils/posPluginCatalog'
+import { mergePosIntegrationsWithCatalog, findInstalledIntegration, waitForInstalledIntegration } from '../../utils/posPluginCatalog'
+import {
+  attachPendingPluginInstalls,
+  findProvidedIntegration,
+  isPluginInstallFailed,
+  isPluginInstalling,
+  waitForPluginInstall
+} from '../../utils/pluginInstall'
+import { getRefreshFallbackPage } from '../../utils/listRefresh'
 
 export const PosMenuBusinessList = (props) => {
   props = { ...defaultProps, ...props }
@@ -21,7 +29,8 @@ export const PosMenuBusinessList = (props) => {
     isSearchByBusinessPhone,
     noActiveStatusCondition,
     defaultActive,
-    integrationType
+    integrationType,
+    installPolling
   } = props
 
   const [ordering] = useApi()
@@ -34,6 +43,7 @@ export const PosMenuBusinessList = (props) => {
   const [businessList, setBusinessList] = useState({ loading: false, error: null, businesses: [] })
   const [integrationsList, setIntegrationsList] = useState({ loading: false, error: null, thirdPartyIntegrations: [] })
   const [installingPluginRoot, setInstallingPluginRoot] = useState(null)
+  const [checkingPluginRoot, setCheckingPluginRoot] = useState(null)
   const installingPluginRef = useRef(false)
   const [countriesState, setCountriesState] = useState({ countries: [], loading: true, error: null, enabled: false })
   const [citiesList, setCitiesList] = useState([])
@@ -268,7 +278,10 @@ export const PosMenuBusinessList = (props) => {
       const content = await response.json()
       if (!content?.error) {
         const integrations = integrationType ? content?.result.filter(integration => integration?.type === integrationType) : content?.result
-        const thirdPartyIntegrations = integrationType === 'pos' ? mergePosIntegrationsWithCatalog(integrations) : integrations
+        const thirdPartyIntegrations = attachPendingPluginInstalls(
+          integrationType === 'pos' ? mergePosIntegrationsWithCatalog(integrations) : integrations,
+          await getInstalledPlugins()
+        )
         setIntegrationsList({ ...integrationsList, loading: false, error: null, thirdPartyIntegrations })
         return thirdPartyIntegrations
       } else {
@@ -281,16 +294,41 @@ export const PosMenuBusinessList = (props) => {
   }
 
   /**
+   * The project's plugins with their install state, to tell which "Install"
+   * rows are in fact installed and still finishing (attachPendingPluginInstalls).
+   * Only admins install plugins; anyone else, or a failed read, gets none.
+   */
+  const getInstalledPlugins = async (where = null) => {
+    if (session?.user?.level !== 0) return []
+    try {
+      const query = new URLSearchParams({ params: 'id,key,root,enabled,install_status,install_message' })
+      if (where) query.set('where', JSON.stringify(where))
+      const response = await fetch(`${ordering.root}/plugins?${query.toString()}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        }
+      })
+      const content = await response.json()
+      return !content?.error && Array.isArray(content?.result) ? content.result : []
+    } catch (err) {
+      return []
+    }
+  }
+
+  const getInstalledPlugin = async (pluginId) => (await getInstalledPlugins({ id: pluginId }))[0] || null
+
+  /**
    * Method to install system plugin
    * @param {string} pluginUrl plugin url
-   * @param {function} callback callback function
+   * @param {function} callback callback function, still showing "Installing..."
+   * @param {{ quiet: boolean }} options quiet: no success toast, the callback says how it went
    */
-  const handleInstallSysPlugin = async (pluginUrl, callback) => {
+  const handleInstallSysPlugin = async (pluginUrl, callback, { quiet = false } = {}) => {
     if (!pluginUrl || installingPluginRef.current) return false
     installingPluginRef.current = true
     setInstallingPluginRoot(pluginUrl)
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -304,7 +342,9 @@ export const PosMenuBusinessList = (props) => {
       const response = await fetch(`${ordering.root}/plugins`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        showToast(ToastType.Success, t('SYSTEM_PLUGIN_INSTALLED', 'Plugin installed'))
+        if (!quiet) {
+          showToast(ToastType.Success, t('SYSTEM_PLUGIN_INSTALLED', 'Plugin installed'))
+        }
         callback && await callback(content)
         return true
       }
@@ -318,15 +358,91 @@ export const PosMenuBusinessList = (props) => {
     return false
   }
 
+  /**
+   * After the plugin of an integration finished installing, or a check found
+   * it done: reload the integrations and find the one it serves. Shows why
+   * when it cannot be connected yet. Returns the integration, or null.
+   */
+  const resolvePluginInstall = async (integration, plugin) => {
+    const pluginName = integration?.name || t('INTEGRATION', 'Integration')
+    if (isPluginInstallFailed(plugin)) {
+      await getIntegrations()
+      showToast(ToastType.Error, t('INTEGRATION_PLUGIN_INSTALL_FAILED_TOAST', '_name_ could not finish installing: _reason_')
+        .replace('_name_', pluginName)
+        .replace('_reason_', plugin?.install_message || t('INTEGRATION_PLUGIN_INSTALL_FAILED_WARNING', 'The plugin of this integration did not finish installing.')))
+      return null
+    }
+    const target = { key: integration?.key, pluginRoot: integration?.plugin_root }
+    let installed = null
+    if (isPluginInstalling(plugin)) {
+      await getIntegrations()
+    } else {
+      const provided = findProvidedIntegration(plugin, { key: integration?.key })
+      // A plugin that declares its integration (provides) has it linked
+      // already: one reload. An older one registers it from its after
+      // install, so it may still need a moment.
+      installed = provided
+        ? findInstalledIntegration(await getIntegrations(), { key: provided.key })
+        : await waitForInstalledIntegration(getIntegrations, target, installPolling)
+    }
+    if (installed) return installed
+    showToast(ToastType.Info, t('INTEGRATION_INSTALL_STILL_RUNNING', '_name_ is still finishing its install. Use "Check again" in a moment.').replace('_name_', pluginName))
+    return null
+  }
+
+  /**
+   * Install the plugin of an integration and wait for it: "Installing..."
+   * while the request runs, then up to 15 seconds while the plugin reports
+   * `installing`. Ready: the integration to connect; failed: the reason;
+   * still installing: the row offers "Check again".
+   */
   const handleInstallPosIntegration = async (integration) => {
     let installedIntegration = null
-    const installed = await handleInstallSysPlugin(integration?.plugin_root, async () => {
-      installedIntegration = await waitForInstalledIntegration(getIntegrations, { key: integration?.key, pluginRoot: integration?.plugin_root })
-    })
-    if (installed && !installedIntegration) {
-      showToast(ToastType.Info, t('INTEGRATION_INSTALL_PENDING', 'The plugin is installed and still finishing its setup. Try again in a few seconds.'))
-    }
+    const installed = await handleInstallSysPlugin(integration?.plugin_root, async (content) => {
+      const plugin = await waitForPluginInstall(getInstalledPlugin, content?.result, installPolling)
+      installedIntegration = await resolvePluginInstall(integration, plugin)
+      if (installedIntegration) {
+        showToast(ToastType.Success, t('INTEGRATION_PLUGIN_INSTALLED', '_name_ installed.').replace('_name_', integration?.name || t('INTEGRATION', 'Integration')))
+      }
+    }, { quiet: true })
     return { installed, integration: installedIntegration }
+  }
+
+  /**
+   * "Check again" on an integration whose plugin is finishing its install:
+   * reads the plugin once. Returns the integration once it can be connected.
+   */
+  const handleCheckPluginInstall = async (integration) => {
+    const pluginId = integration?.plugin_id || integration?.pending_plugin?.id
+    if (!pluginId || checkingPluginRoot) return { integration: null }
+    setCheckingPluginRoot(integration?.plugin_root || null)
+    try {
+      const plugin = await getInstalledPlugin(pluginId)
+      if (!plugin) {
+        await getIntegrations()
+        return { integration: null }
+      }
+      return { integration: await resolvePluginInstall(integration, plugin) }
+    } finally {
+      setCheckingPluginRoot(null)
+    }
+  }
+
+  /**
+   * The Refresh button: reads again the page the user is on, with the same
+   * search and tab (the last page when that one no longer exists), and the
+   * integrations catalog, so plugins installed or disabled meanwhile show.
+   */
+  const refreshBusinesses = async () => {
+    const page = pagination.currentPage || 1
+    const pageSize = pagination.pageSize
+    getIntegrations()
+    const response = await getPageBusinesses(pageSize, page)
+    if (!response || response.content.error) return
+    const fallbackPage = getRefreshFallbackPage(page, response.content.pagination, response.content.result?.length || 0)
+    if (fallbackPage) {
+      await getPageBusinesses(pageSize, fallbackPage)
+    }
   }
 
   /**
@@ -436,6 +552,7 @@ export const PosMenuBusinessList = (props) => {
 
   /**
    * Method to get businesses for page and pageSize
+   * @returns the API response, or undefined when the request failed
    */
   const getPageBusinesses = async (pageSize, page) => {
     setBusinessList({ ...businessList, loading: true })
@@ -456,6 +573,7 @@ export const PosMenuBusinessList = (props) => {
           to: response.content.pagination.to
         })
       }
+      return response
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
         setBusinessList({ ...businessList, loading: false, error: [err.message] })
@@ -671,6 +789,7 @@ export const PosMenuBusinessList = (props) => {
             selectedBusinessActiveState={selectedBusinessActiveState}
             onSearch={setSearchValue}
             loadBusinesses={loadBusinesses}
+            refreshBusinesses={refreshBusinesses}
             setBusinessIds={setBusinessIds}
             getPageBusinesses={getPageBusinesses}
             loadMoreBusinesses={loadMoreBusinesses}
@@ -678,6 +797,8 @@ export const PosMenuBusinessList = (props) => {
             handleInstallSysPlugin={handleInstallSysPlugin}
             installingPluginRoot={installingPluginRoot}
             handleInstallPosIntegration={handleInstallPosIntegration}
+            checkingPluginRoot={checkingPluginRoot}
+            handleCheckPluginInstall={handleCheckPluginInstall}
             handleSucessAddBusiness={handleSucessAddBusiness}
             handleChangeBusinessIds={handleChangeBusinessIds}
             handleEnableAllBusiness={handleEnableAllBusiness}
@@ -728,5 +849,7 @@ PosMenuBusinessList.propTypes = {
 const defaultProps = {
   loadMorePageSize: 10,
   propsToFetch: ['disabled_reason', 'id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'ribbon', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'reviews', 'third_party_integrations'],
-  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
+  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
+  // How long an install waits for the plugin: 10 reads, 1.5 s apart.
+  installPolling: { attempts: 10, interval: 1500 }
 }

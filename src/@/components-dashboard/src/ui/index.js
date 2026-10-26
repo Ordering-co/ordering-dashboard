@@ -12,6 +12,7 @@ import {
   Importers,
   PosMenu,
   SalesChannels,
+  WhatsAppBots,
   InfoHelpBox as InfoVideoBox
 } from './src/components/Connect'
 import {
@@ -366,8 +367,6 @@ import {
   ProductVideos,
   ProductStartGuide,
   ImportersButton,
-  RestaurantSelectGuide,
-  ProductStep,
   BusinessSync,
   BusinessDelete,
   BusinessDeviceListing,
@@ -508,6 +507,7 @@ export {
   Importers,
   PosMenu,
   SalesChannels,
+  WhatsAppBots,
   InfoVideoBox,
   OrdersManager,
   PageNotFound,
@@ -859,8 +859,6 @@ export {
   ProductVideos,
   ProductStartGuide,
   ImportersButton,
-  RestaurantSelectGuide,
-  ProductStep,
   BusinessSync,
   BusinessDelete,
   BusinessDeviceListing,

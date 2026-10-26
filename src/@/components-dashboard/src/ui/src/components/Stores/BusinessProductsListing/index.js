@@ -29,7 +29,8 @@ import { BusinessDetails } from '../BusinessDetails'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { ImportersButton } from '../ImportersButton'
 import { AddBusinessForm } from '../AddBusinessForm'
-import { ProductStep } from '../ProductStep'
+import { ProductStartGuide } from '../ProductStartGuide'
+import { BusinessImporters } from '../../Connect/BusinessImporters'
 import { BusinessAddStore } from '../BusinessAddStore'
 import { addQueryToUrl, removeQueryToUrl, learnOptionsValues, stringToSlug } from '../../../utils'
 import { useStoreWebsiteUrl } from '../../../hooks/useWebsiteUrl'
@@ -139,6 +140,11 @@ const BusinessProductsListingUI = (props) => {
   const [openSidebar, setOpenSidebar] = useState(null)
   const [showPopup, setShowPopup] = useState(false)
   const [isAdd, setIsAdd] = useState(false)
+
+  const handleCloseImporters = () => {
+    setOpenSidebar(null)
+    getBusiness()
+  }
   const learnOptions = learnOptionsValues(
     [
       'categories_products_general_view',
@@ -637,13 +643,23 @@ const BusinessProductsListingUI = (props) => {
           open={showPopup}
           onClose={() => setShowPopup(false)}
         >
-          <ProductStep
+          <ProductStartGuide
+            business={businessState?.business}
             onClose={() => setShowPopup(false)}
-            orderingBusiness={businessState?.business}
-            getBusiness={getBusiness}
-            handleOpenCategoryDetails={handleOpenCategoryDetails}
+            onImportMenu={() => {
+              setShowPopup(false)
+              setOpenSidebar('importers')
+            }}
           />
         </Modal>
+      )}
+      {openSidebar === 'importers' && (
+        <BusinessImporters
+          open={openSidebar === 'importers'}
+          business={businessState?.business}
+          onClose={handleCloseImporters}
+          onGoToProducts={handleCloseImporters}
+        />
       )}
       {isAdd && (
         <Modal

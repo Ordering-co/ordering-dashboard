@@ -36,7 +36,8 @@ import { useProjectState } from '../../contexts/ProjectContext'
 import { LanguageSelector } from '../LanguageSelector'
 import { CommandPaletteTrigger } from '../CommandPalette'
 import { firstLetterCapital, getDashboardLogoUrl, getUserType } from '../../utils'
-import { buildAiAgentsUrl } from '../../utils/aiAgentsUrl'
+import { buildAiAgentsUrl, buildAiAgentsUpgradeUrl } from '../../utils/aiAgentsUrl'
+import { AiAgentsUpgradeModal } from '../AiAgentsUpgradeModal'
 import { getEnabledProductApps, isMyProductsPath, isProductAppActive } from '../../../../utils/myProductsNav'
 import { ASSISTANT_NAME, ASSISTANT_STAGE } from '../../../../contexts/AssistantContext/name'
 import { getDashboardNavSections } from '../../../../utils/dashboardNavigation'
@@ -61,7 +62,7 @@ import {
 } from './styles'
 
 const SidebarMenuUI = (props) => {
-  const { productsState, getBillingToken, billingUrl, setShowBillingPayment } = props
+  const { productsState, getBillingToken, billingUrl, setShowBillingPayment, aiModuleEnabled } = props
 
   const location = useLocation()
   const [events] = useEvent()
@@ -79,6 +80,7 @@ const SidebarMenuUI = (props) => {
   const isAssistantActive = assistant.isOpen && location.pathname !== '/assistant'
 
   const [showMessage, setShowMessage] = useState(false)
+  const [isAiAgentsUpgradeOpen, setIsAiAgentsUpgradeOpen] = useState(false)
   const [authenticateCannyLink, setAuthenticateCannyLink] = useState('')
   const isEnabledWhiteLabelModule = configs?.white_label_module?.value
   const enabledProductApps = getEnabledProductApps(productsState.apps)
@@ -838,6 +840,10 @@ const SidebarMenuUI = (props) => {
                   className='d-000flex align-items-center sidebar-footer-link ai-agents-sidebar-button'
                   variant=''
                   onClick={() => {
+                    if (aiModuleEnabled === false) {
+                      setIsAiAgentsUpgradeOpen(true)
+                      return
+                    }
                     const url = buildAiAgentsUrl({
                       accessToken: sessionState?.token,
                       project: ordering?.project
@@ -885,6 +891,14 @@ const SidebarMenuUI = (props) => {
           </SidebarMainContent>
         </SidebarInnerContainer>
       </SidebarContainer>
+      <AiAgentsUpgradeModal
+        open={isAiAgentsUpgradeOpen}
+        onClose={() => setIsAiAgentsUpgradeOpen(false)}
+        formUrl={buildAiAgentsUpgradeUrl({
+          email: sessionState?.user?.email,
+          project: ordering?.project
+        })}
+      />
     </>
   )
 }

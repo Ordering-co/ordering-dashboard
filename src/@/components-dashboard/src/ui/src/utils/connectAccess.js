@@ -24,6 +24,19 @@ export const isCalendlyUrl = (url, root = '') => {
   }
 }
 
+/**
+ * A plugin page that is a sales call (a Calendly link) only opens for admins
+ * (level 0). Sales channels have no such page, so the rule does not apply
+ * to them.
+ * @param {object|null} user the session user
+ * @param {string|null} url the page, absolute or relative to root
+ * @param {string} root the plugin root a relative url resolves against
+ * @param {boolean} fromSalesChannels whether the page is in the sales channels view
+ * @returns {boolean}
+ */
+export const isSalesCallRestricted = (user, url, root = '', fromSalesChannels = false) =>
+  !fromSalesChannels && user?.level !== 0 && isCalendlyUrl(url, root)
+
 const normalizeIdentifier = (value) =>
   String(value ?? '')
     .toLowerCase()

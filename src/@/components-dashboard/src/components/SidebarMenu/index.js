@@ -10,11 +10,12 @@ export const SidebarMenu = (props) => {
   } = props
 
   const [ordering] = useApi()
-  const [{ token }] = useSession()
+  const [{ token, user }] = useSession()
   const [, { showToast }] = useToast()
 
   const [state, setState] = useState({ loading: false, error: null, result: null })
   const [productsState, setProductsState] = useState({ loading: true, error: null, apps: [] })
+  const [aiModuleEnabled, setAiModuleEnabled] = useState(null)
 
   /**
    * Method to get billing token from core API
@@ -96,9 +97,32 @@ export const SidebarMenu = (props) => {
     }
   }
 
+  const getAiModuleAccess = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+    const response = await fetch(`${ordering.root}/ai/agents?page=1&page_size=1&params=id`, requestOptions)
+    if (response.status === 403) return false
+    return response.ok ? true : null
+  }
+
   useEffect(() => {
     getBuilderApps()
   }, [])
+
+  useEffect(() => {
+    setAiModuleEnabled(null)
+    if (user?.level !== 0 || !token) return
+    let active = true
+    getAiModuleAccess()
+      .then(enabled => active && setAiModuleEnabled(enabled))
+      .catch(() => {})
+    return () => { active = false }
+  }, [ordering.root, token, user?.level])
 
   return (
     UIComponent && (
@@ -107,6 +131,7 @@ export const SidebarMenu = (props) => {
         state={state}
         productsState={productsState}
         getBillingToken={getBillingToken}
+        aiModuleEnabled={aiModuleEnabled}
       />
     )
   )

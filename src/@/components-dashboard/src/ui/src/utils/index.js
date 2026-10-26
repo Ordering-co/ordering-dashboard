@@ -1391,6 +1391,7 @@ export {
   POS_SETUP_CALL_URL,
   getConnectAllowedLevels,
   isCalendlyUrl,
+  isSalesCallRestricted,
   isSetupCallIntegration
 } from './connectAccess'
 

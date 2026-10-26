@@ -25,12 +25,14 @@ const SalesChannelsUI = (props) => {
     handleInstallSysPlugin,
     installingPluginRoot,
     handleInstallPosIntegration,
+    checkingPluginRoot,
+    handleCheckPluginInstall,
     getIntegrations,
     loadMoreBusinesses,
     handleSucessRemoveBusiness,
     handleSucessAddBusiness,
     handleSucessUpdateBusiness,
-    loadBusinesses,
+    refreshBusinesses,
     onSearch,
     onBusinessRedirect,
     getPageBusinesses,
@@ -48,6 +50,13 @@ const SalesChannelsUI = (props) => {
   const [detailsBusiness, setDetailsBusiness] = useState(null)
   const [detailsBusinessId, setDetailsBusinessId] = useState(null)
   const [openAddBusiness, setOpenAddBusiness] = useState(false)
+  // Refresh also reads the open store panel again.
+  const [detailsRefreshSignal, setDetailsRefreshSignal] = useState(0)
+
+  const handleRefresh = () => {
+    refreshBusinesses()
+    setDetailsRefreshSignal(signal => signal + 1)
+  }
 
   const noBusinesses = useMemo(() => {
     return !businessList?.loading &&
@@ -106,7 +115,7 @@ const SalesChannelsUI = (props) => {
           title={t('SALES_CHANNELS', 'Sales Channels')}
           searchValue={searchValue}
           onSearch={onSearch}
-          handleRefreshBusinesses={loadBusinesses}
+          handleRefreshBusinesses={handleRefresh}
           loading={businessList.loading}
           noBusinesses={noBusinesses}
           openAddBusiness={openAddBusiness}
@@ -146,6 +155,7 @@ const SalesChannelsUI = (props) => {
           open={openBusinessDetails}
           business={detailsBusiness}
           businessId={detailsBusinessId}
+          refreshSignal={detailsRefreshSignal}
           integrationsList={integrationsList}
           getIntegrations={getIntegrations}
           handleSucessAddBusiness={handleSucessAddBusiness}
@@ -154,6 +164,8 @@ const SalesChannelsUI = (props) => {
           handleInstallSysPlugin={handleInstallSysPlugin}
           installingPluginRoot={installingPluginRoot}
           handleInstallPosIntegration={handleInstallPosIntegration}
+          checkingPluginRoot={checkingPluginRoot}
+          handleCheckPluginInstall={handleCheckPluginInstall}
           onClose={() => handleBackRedirect()}
           fromSalesChannels
         />

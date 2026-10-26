@@ -4,6 +4,12 @@ import { darken } from 'polished'
 export const BusinessOrderingChannelsContainer = styled.div`
   padding: 20px;
 
+  /* Below 1000px MoreSidebarLayout shows the detail in the shared Modal, which
+     already pads its content and places the close button at its top right. */
+  ${({ inModal }) => inModal && css`
+    padding: 0;
+  `}
+
 
   .integration-actions {
     display: flex;
@@ -134,6 +140,11 @@ export const TitleWrapper = styled.div`
   margin-bottom: 20px;
   max-width: 94%;
 
+  ${({ inModal }) => inModal && css`
+    max-width: none;
+    margin-right: 40px;
+  `}
+
   .title-wrapper {
     display: flex;
     align-items: center;
@@ -193,64 +204,108 @@ export const ActionSelectorWrapper = styled.div`
         }
       }
       .dropdown-item:last-child {
-        color: #E63757;
+        color: ${props => props.theme.colors.danger};
       }
     }
   }
 `
 
-export const MenuStatusWrapper = styled.div`
-  padding: 15px 0;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  > span {
-    font-size: 14px;
-    ${props => props.theme?.rtl
-      ? css`
-        margin-right: 15px;
-      `
-      : css`
-        margin-left: 15px;
-      `}
-  }
-`
-
-export const RadioButton = styled.div`
-  svg {
-    font-size: 16px;
-    color: ${props => props.theme.colors.secundaryLight};
-  }
-
-  ${({ active }) => active && css`
-    svg {
-      color: ${props => props.theme.colors.primary};
-    }
-  `}
-`
-
-export const SyncButtonsContainer = styled.div`
+export const StatusCard = styled.div`
+  border: 1px solid ${props => props.theme.colors.borderColor};
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-top: 20px;
-  padding-bottom: 20px;
-`
+  gap: 16px;
 
-export const StickyButtons = styled.div`
-  position: sticky;
-  top: 100%;
-  height: 42px;
-  display: flex;
-  margin-top: 20px;
+  ${({ tone }) => tone === 'danger' && css`
+    border-color: ${props => props.theme.colors.danger};
+  `}
 
-  > div {
+  .status-row {
     display: flex;
+    align-items: center;
+    gap: 12px;
+
+    > div:first-child {
+      margin-right: 4px;
+    }
+
+    > div:nth-child(2) {
+      flex: 1;
+    }
+
+    > button {
+      min-width: 120px;
+      white-space: nowrap;
+      justify-content: center;
+    }
   }
 
-  .save-button {
-    width: 100%;
-    justify-content: flex-end;
+  .integration-name {
+    margin: 0;
+    font-size: 14px;
+    color: ${props => props.theme.colors.headingColor};
+  }
+
+  .status-message {
+    margin: 0;
+    font-size: 14px;
+  }
+`
+
+export const SyncActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+
+  p { margin: 0; }
+
+  .title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .sync-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    > div {
+      flex: 1;
+      min-width: 0;
+    }
+
+    > button {
+      flex-shrink: 0;
+      min-width: 120px;
+      white-space: nowrap;
+      justify-content: center;
+    }
+  }
+
+  .name { font-size: 14px; }
+
+  .hint {
+    font-size: 12px;
+    color: ${props => props.theme.colors.lightGray};
+  }
+`
+
+export const MoreActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid ${props => props.theme.colors.borderColor};
+
+  > button {
+    min-width: 120px;
+    white-space: nowrap;
+    justify-content: center;
   }
 `

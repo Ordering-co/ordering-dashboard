@@ -33,7 +33,7 @@ import {
 } from './styles'
 
 export const GloriaFoodImportModal = (props) => {
-  const { open, onClose, business } = props
+  const { open, onClose, business, onGoToProducts } = props
 
   const [, t] = useLanguage()
   const [{ user, token }] = useSession()
@@ -160,6 +160,11 @@ export const GloriaFoodImportModal = (props) => {
   const shownStartedAt = startedAt || storedRun?.startedAt
 
   const handleGoToProducts = () => {
+    if (onGoToProducts) {
+      onClose?.()
+      onGoToProducts()
+      return
+    }
     if (business?.slug) {
       history.push(`/stores/products/${business.slug}`)
     } else {

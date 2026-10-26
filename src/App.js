@@ -106,6 +106,7 @@ import { DeliveryServices } from './pages/DeliveryServices'
 import { Importers } from './pages/Importers'
 import { PosMenu } from './pages/PosMenu'
 import { SalesChannels } from './pages/SalesChannels'
+import { WhatsAppBots } from './pages/WhatsAppBots'
 
 import { ScrollToTop } from './components/ScrollToTop'
 import { ListenPageChanges } from './components/ListenPageChanges'
@@ -558,6 +559,9 @@ const DashboardApp = () => {
                     </ProtectedRoute>
                     <ProtectedRoute path='/connect/sales-channels' allowedLevels={getConnectAllowedLevels('sales_channels')}>
                       {connectSalesChannels ? <SalesChannels /> : <Redirect to='/home' />}
+                    </ProtectedRoute>
+                    <ProtectedRoute path='/connect/whatsapp-bots' allowedLevels={getConnectAllowedLevels('whatsapp_bots')}>
+                      {showConnectTab ? <WhatsAppBots /> : <Redirect to='/home' />}
                     </ProtectedRoute>
 
                     <ProtectedRoute path='/users/customers' allowedLevels={[0]}>

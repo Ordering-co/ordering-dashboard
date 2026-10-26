@@ -14,6 +14,9 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 const createConfig = base => ({
   base,
+  define: {
+    'import.meta.env.VITE_SENTRY_RELEASE': JSON.stringify(process.env.WORKERS_CI_COMMIT_SHA || '')
+  },
   plugins: [
     sourceDownloadsLocalPlugin({ searchWorkspaceRoot: searchForWorkspaceRoot }),
     tailwindcss(),

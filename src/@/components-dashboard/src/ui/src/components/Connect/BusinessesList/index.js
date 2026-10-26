@@ -12,7 +12,6 @@ import {
   BusinessListBottomContainer,
   BusinessIdWrapper,
   ActionWrapper,
-  FeaturedWrapper,
   BusinessListEmptyState
 } from './styles'
 
@@ -58,7 +57,7 @@ export const BusinessesList = (props) => {
   const [allowColumns, setAllowColumns] = useState({
     business: true,
     status: !fromSalesChannels && !fromImporters,
-    pos: !!fromSalesChannels,
+    pos: !fromImporters,
     sales_channels: !!fromSalesChannels
   })
 
@@ -84,7 +83,7 @@ export const BusinessesList = (props) => {
   const columnConfig = [
     { value: 'business', show: true },
     { value: 'status', show: !fromSalesChannels && !fromImporters },
-    { value: 'pos', show: !!fromSalesChannels },
+    { value: 'pos', show: !fromImporters },
     { value: 'sales_channels', show: !!fromSalesChannels }
   ]
 
@@ -146,26 +145,14 @@ export const BusinessesList = (props) => {
                   {allowColumns?.business && (
                     <th className='business'>{t('BUSINESS', 'Business')}</th>
                   )}
-                  {allowColumns?.status && (
-                    <th>
-                      <FeaturedWrapper>
-                      {t('STATUS', 'Status')?.toUpperCase()}
-                      </FeaturedWrapper>
-                    </th>
-                  )}
                   {allowColumns?.pos && (
-                    <th>
-                      <FeaturedWrapper>
-                        {t('POS', 'Pos')?.toUpperCase()}
-                      </FeaturedWrapper>
-                    </th>
+                    <th>{t('POS', 'POS')}</th>
+                  )}
+                  {allowColumns?.status && (
+                    <th>{t('STATUS', 'Status')}</th>
                   )}
                   {allowColumns?.sales_channels && (
-                    <th>
-                      <FeaturedWrapper>
-                        {t('SALES_CHANNELS', 'Sales Channels')?.toUpperCase()}
-                      </FeaturedWrapper>
-                    </th>
+                    <th>{t('SALES_CHANNELS', 'Sales Channels')}</th>
                   )}
                   {!selectedBusinessActiveState && (
                     <th>{t('DISABLED_REASON', 'Disabled reason')}</th>

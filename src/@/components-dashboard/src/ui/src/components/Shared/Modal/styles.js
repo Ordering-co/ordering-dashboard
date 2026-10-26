@@ -23,6 +23,13 @@ export const ModalDialog = styled.div`
     max-width: ${maxWidth} !important;
   `}
 
+  /* A dialog whose height changes while it is open (a plugin window that
+     fits its page) stays near the top, so it grows downward and its title
+     does not move. */
+  ${({ $anchorTop }) => $anchorTop && css`
+    margin-top: calc(var(--vh, 1vh) * 8);
+  `}
+
   @media (max-width: 860px) {
     width: 80%;
   }
