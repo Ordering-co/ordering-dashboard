@@ -28,6 +28,16 @@ vi.mock('../BuilderAppSettings', () => ({
   BuilderAppFiles: ({ focusGroup }) => <div>files tab {focusGroup}</div>
 }))
 vi.mock('../BuilderAppConstants', () => ({ BuilderAppConstantsList: () => <div>constants tab</div> }))
+vi.mock('../BuilderWebTheme', () => ({
+  BuilderWebThemes: ({ onEditTheme }) => <button onClick={() => onEditTheme(10)}>themes list</button>,
+  BuilderThemeEditorView: ({ themeId, onBack, onUnsavedChange }) => (
+    <>
+      <button onClick={onBack}>editor of {themeId}</button>
+      <button onClick={() => onUnsavedChange(true)}>change the theme</button>
+    </>
+  )
+}))
+vi.mock('../BuilderWebSite', () => ({ BuilderWebSiteSettings: () => <div>website settings tab</div> }))
 vi.mock('../BuilderAppCredentials', () => ({ BuilderAppCredentialsForm: () => <div>credentials tab</div> }))
 vi.mock('../../Shared', () => ({
   Modal: ({ open, children }) => open ? <div>{children}</div> : null,
@@ -207,15 +217,64 @@ describe('BuilderProduct detail', () => {
       apps: []
     }
 
-    it('shows where it is online and its general data, without app tabs', () => {
+    it('shows where it is online and its general data, with only the website tabs', () => {
       renderDetail({ loading: false, product: web, errorKind: null })
       expect(screen.getByText('Marketplace website · Code fleet-mountain-7zoeit · Created date:2026-10-08 17:40:00')).toBeTruthy()
       expect(screen.getByRole('heading', { name: 'Your website is online' })).toBeTruthy()
       expect(screen.getByRole('link', { name: /Open website/ }).getAttribute('href')).toBe('https://fleet-mountain-7zoeit-stores.my-sites.app')
       expect(screen.getByText('Domains')).toBeTruthy()
-      expect(screen.queryByRole('tablist')).toBeNull()
+      expect(within(screen.getByRole('tablist')).getAllByRole('tab').map(tab => tab.textContent)).toEqual(['General', 'Website settings', 'Theme'])
       expect(screen.queryByText('This product has no app')).toBeNull()
       expect(screen.queryByRole('heading', { name: 'Builds' })).toBeNull()
+    })
+
+    it('goes back to the website from the theme’s breadcrumb, asking first with changes not saved', async () => {
+      renderDetail({ loading: false, product: web, errorKind: null })
+      await act(async () => { fireEvent.click(screen.getByRole('tab', { name: 'Theme' })) })
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'themes list' })) })
+      const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+      expect(within(breadcrumb).getByRole('link', { name: 'Prueba web' }).getAttribute('href')).toBe('/builder/43')
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'change the theme' })) })
+      await act(async () => { fireEvent.click(within(breadcrumb).getByRole('link', { name: 'Prueba web' })) })
+      const dialog = screen.getByRole('dialog', { name: 'Leave without saving?' })
+      await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' })) })
+      expect(screen.getByRole('button', { name: 'editor of 10' })).toBeTruthy()
+      await act(async () => { fireEvent.click(within(breadcrumb).getByRole('link', { name: 'Prueba web' })) })
+      await act(async () => { fireEvent.click(within(screen.getByRole('dialog', { name: 'Leave without saving?' })).getByRole('button', { name: 'Leave' })) })
+      expect(screen.getByRole('heading', { name: 'Your website is online' })).toBeTruthy()
+      expect(window.location.search).not.toContain('theme=')
+    })
+
+    it('opens the themes and a theme to edit, and goes back to them', async () => {
+      renderDetail({ loading: false, product: web, errorKind: null })
+      await act(async () => { fireEvent.click(screen.getByRole('tab', { name: 'Theme' })) })
+      expect(window.location.search).toContain('tab=theme')
+      expect(screen.queryByRole('heading', { name: 'Your website is online' })).toBeNull()
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'themes list' })) })
+      expect(window.location.search).toContain('theme=10')
+      expect(screen.getByText('Theme', { selector: '[aria-current="page"]' })).toBeTruthy()
+      expect(screen.queryByRole('tablist')).toBeNull()
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'editor of 10' })) })
+      expect(window.location.search).not.toContain('theme=10')
+      expect(screen.getByRole('button', { name: 'themes list' })).toBeTruthy()
+      await act(async () => { fireEvent.click(screen.getByRole('tab', { name: 'General' })) })
+      expect(window.location.search).not.toContain('tab=')
+    })
+
+    it('opens a theme’s editor from its link, and leaving it takes its section and item out of the URL', async () => {
+      window.history.replaceState(null, '', '/builder/43?tab=theme&theme=10&section=components&item=components.button')
+      renderDetail({ loading: false, product: web, errorKind: null })
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'editor of 10' })) })
+      expect(window.location.search).toBe('?tab=theme')
+      expect(screen.getByRole('button', { name: 'themes list' })).toBeTruthy()
+
+      // A section left in the URL doesn't reach the next theme opened, nor another tab
+      window.history.replaceState(null, '', '/builder/43?tab=theme&section=pages&item=pages.home')
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'themes list' })) })
+      expect(window.location.search).toBe('?tab=theme&theme=10')
+      window.history.replaceState(null, '', '/builder/43?tab=theme&theme=10&section=pages')
+      await act(async () => { fireEvent.click(within(screen.getByRole('navigation', { name: 'Breadcrumb' })).getByRole('link', { name: 'Prueba web' })) })
+      expect(window.location.search).toBe('')
     })
 
     it('keeps a website name to 100 characters', () => {
@@ -254,6 +313,56 @@ describe('BuilderProduct detail', () => {
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Activate' })) })
       expect(state.showToast).toHaveBeenCalledWith('ERROR', 'Complete the product before activating it.')
       expect(screen.queryByRole('alertdialog')).toBeNull()
+    })
+
+    describe('with its own domain', () => {
+      const lock = 'A website with its own domain can’t be moved to draft or archived. Remove the domain first.'
+
+      it.each(['active', 'archived'])('keeps an %s website from moving to draft, saying why', (status) => {
+        renderDetail({ loading: false, product: { ...web, product_status: status, domain: 'shop.burgertown.com' }, errorKind: null })
+        const draft = screen.getByRole('button', { name: 'Move to draft' })
+        expect(draft.disabled).toBe(true)
+        const hint = document.getElementById(draft.getAttribute('aria-describedby'))
+        expect(hint.textContent).toContain(lock)
+        expect(within(hint).getByRole('button', { name: 'Go to Domains' })).toBeTruthy()
+      })
+
+      it('keeps it from being archived, and activating stays open', async () => {
+        renderDetail({ loading: false, product: { ...web, domain: 'shop.burgertown.com' }, errorKind: null })
+        expect(screen.getByRole('button', { name: 'Activate' }).disabled).toBe(false)
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
+        const archive = await screen.findByRole('button', { name: 'Archive' })
+        expect(archive.disabled).toBe(true)
+        expect(document.getElementById(archive.getAttribute('aria-describedby')).textContent).toContain(lock)
+        fireEvent.click(archive)
+        expect(screen.queryByRole('dialog')).toBeNull()
+      })
+
+      it('takes the user to the Domains card of the General tab', async () => {
+        window.history.replaceState(null, '', '/builder/43?tab=site')
+        renderDetail({ loading: false, product: { ...web, product_status: 'active', domain: 'shop.burgertown.com' }, errorKind: null })
+        expect(screen.getByText('website settings tab')).toBeTruthy()
+        await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Go to Domains' })) })
+        expect(window.location.search).not.toContain('tab=')
+        expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Domains' }))
+      })
+
+      it('offers every status action without a domain', async () => {
+        renderDetail({ loading: false, product: { ...web, product_status: 'active' }, errorKind: null })
+        expect(screen.getByRole('button', { name: 'Move to draft' }).disabled).toBe(false)
+        expect(screen.getByRole('button', { name: 'Move to draft' }).getAttribute('aria-describedby')).toBeNull()
+        expect(screen.queryByText(lock)).toBeNull()
+        fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
+        expect((await screen.findByRole('button', { name: 'Archive' })).disabled).toBe(false)
+      })
+
+      it('explains a refusal of the API with the same message', async () => {
+        const changeStatus = vi.fn(async () => ({ product: null, errorKind: 'domain_configured', checks: null }))
+        renderDetail({ loading: false, product: { ...web, product_status: 'active' }, errorKind: null }, { changeStatus })
+        await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Move to draft' })) })
+        expect(changeStatus).toHaveBeenCalledWith('draft')
+        expect(state.showToast).toHaveBeenCalledWith('ERROR', lock)
+      })
     })
 
     it('says an archived website stays online', async () => {

@@ -35,6 +35,7 @@ vi.mock('../../Shared/SideBar', () => ({
 }))
 
 import { BuilderProducts } from '../BuilderProductsList'
+import { TypeFilterMenu } from '../BuilderProductsList/TypeFilterMenu'
 
 const product = {
   id: 41,
@@ -115,14 +116,12 @@ describe('BuilderProducts list', () => {
     expect(state.emit).toHaveBeenCalledWith('go_to_page', { page: 'builder_app', params: { productId: 41 } })
   })
 
-  it('sends search, type and status changes to the controller', () => {
+  it('sends search and status changes to the controller, with no type filter while only Marketplace websites are listed', () => {
     const props = baseProps()
     renderList(props)
     fireEvent.change(screen.getByRole('textbox', { name: 'Search by name' }), { target: { value: 'rep' } })
     expect(props.handleChangeSearch).toHaveBeenCalledWith('rep')
-    fireEvent.click(screen.getByRole('button', { name: 'Type: All' }))
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Driver app' }))
-    expect(props.handleChangeType).toHaveBeenCalledWith(['driver_app'])
+    expect(screen.queryByRole('button', { name: /^Type:/ })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'Archived' }))
     expect(props.handleChangeStatus).toHaveBeenCalledWith('archived')
   })
@@ -263,18 +262,19 @@ describe('BuilderProducts list', () => {
     })
 
     it('filters by type from a menu grouped in apps and websites', () => {
-      const props = baseProps()
-      const { rerender } = renderList(props)
+      const onChange = vi.fn()
+      const { rerender } = renderWithProviders(<TypeFilterMenu value={[]} onChange={onChange} />)
       fireEvent.click(screen.getByRole('button', { name: 'Type: All' }))
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Driver app' }))
+      expect(onChange).toHaveBeenCalledWith(['driver_app'])
       const websites = screen.getByRole('group', { name: /Websites/ })
       fireEvent.click(within(websites).getByRole('button', { name: 'Select all' }))
-      expect(props.handleChangeType).toHaveBeenCalledWith(['marketplace_website', 'franchise_website', 'dashboard'])
+      expect(onChange).toHaveBeenCalledWith(['marketplace_website', 'franchise_website', 'dashboard'])
 
-      state.props = { ...props, filters: { search: '', productTypes: ['marketplace_website', 'franchise_website', 'dashboard'], productStatus: 'all' } }
-      rerender(<BuilderProducts />)
+      rerender(<TypeFilterMenu value={['marketplace_website', 'franchise_website', 'dashboard']} onChange={onChange} />)
       expect(screen.getByRole('button', { name: 'Type: Websites' })).toBeTruthy()
       fireEvent.click(within(screen.getByRole('group', { name: /Websites/ })).getByRole('button', { name: 'Clear' }))
-      expect(props.handleChangeType).toHaveBeenLastCalledWith([])
+      expect(onChange).toHaveBeenLastCalledWith([])
       fireEvent.keyDown(screen.getByRole('button', { name: 'Type: Websites' }), { key: 'Escape' })
       expect(screen.queryByRole('group', { name: /Websites/ })).toBeNull()
     })

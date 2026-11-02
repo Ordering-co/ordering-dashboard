@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 import {
   useLanguage,
   useSession,
@@ -18,7 +20,8 @@ import {
   InputContainer,
   FieldRow,
   WeightWrapper,
-  PropertyOptionWrapper
+  PropertyOptionWrapper,
+  EmptyWrapper
 } from './styles'
 import { Select } from '../../../styles/Select/FirstSelect'
 import { MultiSelect } from '../../../styles/MultiSelect'
@@ -46,6 +49,7 @@ const TAX_MULTI_SELECT_PROPS = {
 }
 
 const ProductDetailsAdvancedUI = (props) => {
+  const { catalogState, retryCatalogs } = props
   const {
     formState,
     productState,
@@ -77,6 +81,22 @@ const ProductDetailsAdvancedUI = (props) => {
   const [feesSelected, setFeeSelected] = useState(null)
   const [, setTaxSelected] = useState(null)
   const [taxToDelete, setTaxToDelete] = useState({ action: null, id: null })
+
+  const renderCatalogFallback = (state, message) => {
+    if (!state || state.loaded !== false) return null
+    if (state.loading) return <Skeleton height={40} />
+    if (state.error) {
+      return (
+        <>
+          <EmptyWrapper>{message}</EmptyWrapper>
+          <Button type='button' color='primary' outline onClick={retryCatalogs}>
+            {t('RETRY', 'Retry')}
+          </Button>
+        </>
+      )
+    }
+    return <Skeleton height={40} />
+  }
 
   const estimatedPersons = [
     { value: 'no_apply', content: <Option>{t('NO_APPLY', 'No apply')}</Option>, showOnSelected: <Option>{t('NO_APPLY', 'No apply')}</Option> },
@@ -348,30 +368,40 @@ const ProductDetailsAdvancedUI = (props) => {
       </TypeSelectWrapper>
       <LabelCustom htmlFor='tax'>{t('TAXES', 'Taxes')}</LabelCustom>
       <TypeSelectWrapper>
-        <MultiSelect
-          placeholder={t('SELECT_TAXES', 'Select taxes')}
-          options={Object.values(taxes).map(tax => ({
-            value: tax.id,
-            content: `${tax.name} (${tax.rate}% ${tax.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
-          }))}
-          defaultValue={getProductTaxIds(productState, formState)}
-          onChange={(val) => {
-            const current = getProductTaxIds(productState, formState).map(Number)
-            const exists = current.some(id => id === Number(val))
-            const ids = exists
-              ? current.filter(id => id !== Number(val))
-              : [...current, Number(val)]
-            handleClickProperties({ taxes: ids })
-          }}
-          {...TAX_MULTI_SELECT_PROPS}
-        />
-        <OptionCenter onClick={() => handleAddTax('taxes')}>
-          {t('ADD_NEW_TAX', 'Add new tax')}
-        </OptionCenter>
+        {renderCatalogFallback(
+          catalogState?.taxes,
+          t('PRODUCT_TAX_CATALOG_LOAD_ERROR', 'Could not load taxes. Please try again.')
+        ) || (
+          <>
+            <MultiSelect
+              placeholder={t('SELECT_TAXES', 'Select taxes')}
+              options={Object.values(taxes).map(tax => ({
+                value: tax.id,
+                content: `${tax.name} (${tax.rate}% ${tax.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
+              }))}
+              defaultValue={getProductTaxIds(productState, formState)}
+              onChange={(val) => {
+                const current = getProductTaxIds(productState, formState).map(Number)
+                const exists = current.some(id => id === Number(val))
+                const ids = exists
+                  ? current.filter(id => id !== Number(val))
+                  : [...current, Number(val)]
+                handleClickProperties({ taxes: ids })
+              }}
+              {...TAX_MULTI_SELECT_PROPS}
+            />
+            <OptionCenter onClick={() => handleAddTax('taxes')}>
+              {t('ADD_NEW_TAX', 'Add new tax')}
+            </OptionCenter>
+          </>
+        )}
       </TypeSelectWrapper>
       <LabelCustom htmlFor='fees'>{t('FEES', 'Fees')}</LabelCustom>
       <TypeSelectWrapper>
-        {feesSelected && (
+        {renderCatalogFallback(
+          catalogState?.fees,
+          t('PRODUCT_FEE_CATALOG_LOAD_ERROR', 'Could not load fees. Please try again.')
+        ) || (feesSelected && (
           <Select
             placeholder={feesSelected.showOnSelected}
             defaultValue={feesSelected?.value ?? 'inherit'}
@@ -380,7 +410,7 @@ const ProductDetailsAdvancedUI = (props) => {
             onEdit={(val) => setTaxToEdit({ action: 'fees', payload: val })}
             onDelete={(val) => setTaxToDelete({ action: 'fees', id: val })}
           />
-        )}
+        ))}
       </TypeSelectWrapper>
       <FieldRow fullWidth>
         <InputContainer>

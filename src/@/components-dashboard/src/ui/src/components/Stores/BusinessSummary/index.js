@@ -28,7 +28,7 @@ import {
   ButtonWrapper
 } from './styles'
 import { getBusinessConfigSections } from '../../../../../utils/businessConfigSections'
-import { EATSTREET_PROJECTS, isBusinessSectionEnabled } from '../../../../../utils/businessDetailSections'
+import { isBusinessSectionEnabled, WHITE_LABEL_SITES_ENABLED } from '../../../../../utils/businessDetailSections'
 import { useSelectedAccessRole } from '../../../hooks/useUserSelectedAccess'
 import { useStoreWebsiteUrl } from '../../../hooks/useWebsiteUrl'
 
@@ -71,8 +71,8 @@ export const BusinessSummary = (props) => {
   const isWebsite26Enabled = !!configs?.web_marketplace_26?.value
   const isReservationsEnabled = configs?.reservation_enabled?.value === '1' && isWebsite26Enabled
   const hasBusinessConfigSections = getBusinessConfigSections(businessState?.business?.configs).length > 0
-  const isWhiteLabelStoresEnabled = configs?.whitelabel_stores_sites?.value === '1' || configs?.whitelabel_stores_sites?.value === true ||
-    ['luisv4plus', 'eatstreetstaging'].includes(ordering?.project)
+  const isWhiteLabelStoresEnabled = WHITE_LABEL_SITES_ENABLED && (configs?.whitelabel_stores_sites?.value === '1' || configs?.whitelabel_stores_sites?.value === true ||
+    ['luisv4plus', 'eatstreetstaging'].includes(ordering?.project))
   let timeout = null
 
   const handleOpenCategory = (e) => {
@@ -87,13 +87,11 @@ export const BusinessSummary = (props) => {
     window.open(storeUrl, '_blank')
   }
 
-  const isEatstreetProject = EATSTREET_PROJECTS.includes(ordering?.project)
   const isSelectedAccessRole = useSelectedAccessRole()
 
   const isEnabled = (key) => isBusinessSectionEnabled(key, {
     isAdmin,
     isSelectedAccessRole,
-    project: ordering?.project,
     configs,
     hasSpoonity: !!spoonityConfig
   })
@@ -419,19 +417,17 @@ export const BusinessSummary = (props) => {
             >
               {t('CATEGORIES_AND_PRODUCTS', 'Categories & products')}
             </ButtonLink>
-            {!(!isAdmin && isEatstreetProject) && (
-              <Input
-                type='text'
-                defaultValue={businessState?.business?.slug || ''}
-                placeholder={t('SLUG', 'Slug')}
-                onChange={(e) => changeCustomSlug(e.target.value)}
-                onKeyPress={(e) => {
-                  if (!/^[0-9a-zA-Z]$/.test(e.key)) {
-                    e.preventDefault()
-                  }
-                }}
-              />
-            )}
+            <Input
+              type='text'
+              defaultValue={businessState?.business?.slug || ''}
+              placeholder={t('SLUG', 'Slug')}
+              onChange={(e) => changeCustomSlug(e.target.value)}
+              onKeyPress={(e) => {
+                if (!/^[0-9a-zA-Z]$/.test(e.key)) {
+                  e.preventDefault()
+                }
+              }}
+            />
             {!isEnabledWhiteLabelModule && (
               <IconButton
                 className='redirect-website'

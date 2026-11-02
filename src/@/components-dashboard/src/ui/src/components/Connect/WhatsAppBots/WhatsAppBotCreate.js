@@ -65,7 +65,6 @@ const emptyDraft = () => ({
   wabaId: '',
   welcomeMessage: '',
   fallbackSupportMessage: '',
-  webviewBaseUrl: '',
   pin: ''
 })
 
@@ -106,10 +105,7 @@ export const WhatsAppBotCreate = (props) => {
 
   const connect = async () => {
     if (saving) return
-    if (!ready) {
-      notify(t('WHATSAPP_WEBVIEW_URL_INVALID', 'Use a full address, like https://example.com.'))
-      return
-    }
+    if (!ready) return
     if (!draft.pin) {
       setPinPrompt(true)
       return
@@ -363,17 +359,6 @@ export const WhatsAppBotCreate = (props) => {
                       aria-label={t('WHATSAPP_FALLBACK_MESSAGE', 'Fallback support message')}
                       value={draft.fallbackSupportMessage}
                       onChange={(event) => update('fallbackSupportMessage', event.target.value)}
-                    />
-                  </LabeledField>
-                  <LabeledField label={t('WHATSAPP_WEBVIEW_URL', 'Ordering webview URL')} help={t('WHATSAPP_WEBVIEW_HINT', 'Public URL of the WhatsApp ordering webview. Menu, cart, checkout and tracking links point here.')}>
-                    <Input
-                      type='url'
-                      inputMode='url'
-                      maxLength={500}
-                      spellCheck={false}
-                      aria-label={t('WHATSAPP_WEBVIEW_URL', 'Ordering webview URL')}
-                      value={draft.webviewBaseUrl}
-                      onChange={(event) => update('webviewBaseUrl', event.target.value)}
                     />
                   </LabeledField>
                 </FieldGrid>

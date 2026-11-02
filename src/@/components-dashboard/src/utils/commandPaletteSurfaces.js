@@ -133,6 +133,8 @@ export const SURFACE_REGISTRY = {
 
   // Builder
   'Builder/BuilderProductsList:add': indexed({ path: '/builder?add=1' }),
+  'Builder/BuilderWebTheme:item': record('theme of a Builder website (a component or page in its editor)'),
+  'Builder/BuilderWebTheme:section': record('theme of a Builder website (a section of its editor)'),
 
   // Stores
   'Stores/BusinessBrandListing:tab': record('brand detail'),
@@ -190,6 +192,8 @@ export const ROUTE_EXCLUSIONS = {
   '/multi-business-checkout': 'legacy redirect into /settings',
   '/stripe-connect': 'legacy redirect into /settings',
   '/reservations': 'legacy redirect into /settings',
+  '/connect/overview': 'retired page; redirects to /connect/pos-menu',
+  '/purchase/addons': 'retired page; redirects to /home',
   '/support': 'sidebar link is commented out',
   '/ordering-products': 'sidebar link is commented out',
   '/assistant': 'opened with its own shortcut (⌘J) and sidebar button',

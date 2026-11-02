@@ -22,7 +22,6 @@ export const BusinessesListingHeader = (props) => {
     onSearch,
     // handleOpenAddBusiness,
     handleStartTutorial,
-    handleOpenSync,
     handleRefreshBusinesses,
     loading,
     noBusinesses,
@@ -122,13 +121,6 @@ export const BusinessesListingHeader = (props) => {
                 {t('ADD_NEW_STORE', 'Add new store')}
               </Button>
             )}
-            <Button
-              color='lightPrimary'
-              borderRadius='8px'
-              onClick={() => handleOpenSync()}
-            >
-              {t('SYNC', 'Sync')}
-            </Button>
           </>
         )}
         <SearchBar

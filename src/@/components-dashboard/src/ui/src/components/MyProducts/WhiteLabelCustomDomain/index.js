@@ -54,7 +54,7 @@ const WhiteLabelCustomDomainUI = (props) => {
           <TitleWrapper>
             <label>{t('DOMAIN', 'Domain')}</label>
           </TitleWrapper>
-          <span>{t('CUSTOM_DOMAIN_NOTIFY_WHITE_LABEL', `Please make sure that your DNS CNAME is pointing ${CUSTOM_DOMAIN_CNAME}`)}</span>
+          <span>{t('CUSTOM_DOMAIN_CNAME_TARGET', 'Please make sure your DNS CNAME points to _target_').replace('_target_', CUSTOM_DOMAIN_CNAME)}</span>
           <Input
             placeholder='www.yourdomain.com'
             value={formState?.changes?.domain || ''}

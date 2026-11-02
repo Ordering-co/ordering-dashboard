@@ -38,7 +38,6 @@ import { CardFieldsSetting } from './CardFieldsSetting'
 import { GuestCheckoutFieldsSetting } from './GuestCheckoutFieldsSetting'
 import { SitesAuthSettings } from './SitesAuthSettings'
 import { SettingsImage } from './SettingsImage'
-import { PurchaseAddons } from './PurchaseAddons'
 import { AllSettings } from './AllSettings'
 import { SettingsHub } from './SettingsHub'
 import { CustomOrder } from './CustomOrder'
@@ -84,7 +83,6 @@ export {
   GuestCheckoutFieldsSetting,
   SitesAuthSettings,
   SettingsImage,
-  PurchaseAddons,
   AllSettings,
   SettingsHub,
   CustomOrder

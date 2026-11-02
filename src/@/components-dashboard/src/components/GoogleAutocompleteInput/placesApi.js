@@ -1,3 +1,5 @@
+import { fromLegacyPlace, fromNewPlace, isGoogleBusiness } from '../../utils/googleBusinessPrefill'
+
 export const PLACES_API_NEW = 'new'
 export const PLACES_API_LEGACY = 'legacy'
 
@@ -15,18 +17,40 @@ const NEW_BUSINESS_FIELDS = [
   'internationalPhoneNumber',
   'priceLevel',
   'formattedAddress',
+  'addressComponents',
   'regularOpeningHours',
   'location',
+  'websiteURI',
+  'googleMapsURI',
+  'primaryTypeDisplayName',
+  'businessStatus',
+  'types',
   'photos'
 ]
 
-const PRICE_LEVELS = {
-  FREE: 0,
-  INEXPENSIVE: 1,
-  MODERATE: 2,
-  EXPENSIVE: 3,
-  VERY_EXPENSIVE: 4
-}
+export const LEGACY_BUSINESS_FIELDS = [
+  'place_id',
+  'name',
+  'international_phone_number',
+  'price_level',
+  'formatted_address',
+  'address_components',
+  'opening_hours',
+  'geometry',
+  'website',
+  'url',
+  'business_status',
+  'types',
+  'photos'
+]
+
+const NEARBY_FIELDS = ['id', 'displayName', 'formattedAddress', 'primaryTypeDisplayName', 'types']
+
+const NEARBY_RADIUS_METERS = 50
+
+const NEARBY_MAX_RESULTS = 10
+
+const PLACES_READY_TIMEOUT_MS = 15000
 
 const PERMISSION_DENIED_CODES = [7, 'PERMISSION_DENIED']
 
@@ -85,6 +109,7 @@ export const fetchNewSuggestions = async ({ input, sessionToken, types, countryC
         text,
         mainText: placePrediction.mainText?.text ?? text,
         secondaryText: placePrediction.secondaryText?.text ?? '',
+        types: placePrediction.types || [],
         prediction: placePrediction
       }
     })
@@ -96,16 +121,18 @@ const toLegacyAddressComponents = (components) => (components || []).map(compone
   types: component.types || []
 }))
 
+const toLegacyAddressPlace = (place) => ({
+  place_id: place.id,
+  formatted_address: place.formattedAddress,
+  address_components: toLegacyAddressComponents(place.addressComponents),
+  geometry: { location: place.location },
+  utc_offset_minutes: place.utcOffsetMinutes
+})
+
 export const fetchNewPlace = async (prediction) => {
   const place = prediction.toPlace()
   await place.fetchFields({ fields: NEW_PLACE_FIELDS })
-  return {
-    place_id: place.id,
-    formatted_address: place.formattedAddress,
-    address_components: toLegacyAddressComponents(place.addressComponents),
-    geometry: { location: place.location },
-    utc_offset_minutes: place.utcOffsetMinutes
-  }
+  return toLegacyAddressPlace(place)
 }
 
 export const isValidLegacyPlace = (place) => {
@@ -179,54 +206,10 @@ export const placeToAddress = (place) => {
   }
 }
 
-const toLegacyPricePoint = (priceLevel) => {
-  if (priceLevel === null || priceLevel === undefined) return undefined
-  const key = `${priceLevel}`.replace('PRICE_LEVEL_', '')
-  return PRICE_LEVELS[key]
-}
+const createLegacyService = () => new window.google.maps.places.PlacesService(document.createElement('div'))
 
-const toLegacyTimePoint = (point) => {
-  if (!point) return point
-  const hours = point.hour ?? 0
-  const minutes = point.minute ?? 0
-  return {
-    day: point.day,
-    hours,
-    minutes,
-    time: `${String(hours).padStart(2, '0')}${String(minutes).padStart(2, '0')}`
-  }
-}
-
-const toLegacyPhoto = (photo) => ({
-  getUrl: (options) => photo.getURI(options || { maxWidth: 1600 })
-})
-
-export const fetchNewBusinessDetails = async (placeId) => {
-  const place = new window.google.maps.places.Place({ id: placeId })
-  await place.fetchFields({ fields: NEW_BUSINESS_FIELDS })
-  const periods = place.regularOpeningHours?.periods
-  return {
-    place_id: place.id,
-    name: place.displayName,
-    international_phone_number: place.internationalPhoneNumber,
-    price_level: toLegacyPricePoint(place.priceLevel),
-    formatted_address: place.formattedAddress,
-    geometry: { location: place.location },
-    opening_hours: periods
-      ? {
-          periods: periods.map(period => ({
-            open: toLegacyTimePoint(period.open),
-            close: toLegacyTimePoint(period.close)
-          }))
-        }
-      : undefined,
-    photos: (place.photos || []).map(toLegacyPhoto)
-  }
-}
-
-export const fetchLegacyBusinessDetails = (map, placeId) => new Promise((resolve, reject) => {
-  const service = new window.google.maps.places.PlacesService(map)
-  service.getDetails({ placeId }, (place, status) => {
+const fetchLegacyDetails = (placeId, fields) => new Promise((resolve, reject) => {
+  createLegacyService().getDetails({ placeId, fields }, (place, status) => {
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
       resolve(place)
       return
@@ -235,17 +218,94 @@ export const fetchLegacyBusinessDetails = (map, placeId) => new Promise((resolve
   })
 })
 
-export const fetchBusinessDetails = async (map, placeId) => {
-  const canUseNew = !!window.google?.maps?.places?.Place && getPlacesApiMode() !== PLACES_API_LEGACY
-  if (canUseNew) {
+const fetchLegacyNearby = (location) => new Promise((resolve, reject) => {
+  createLegacyService().nearbySearch({ location, radius: NEARBY_RADIUS_METERS, type: 'establishment' }, (results, status) => {
+    const statuses = window.google.maps.places.PlacesServiceStatus
+    if (status === statuses.OK || status === statuses.ZERO_RESULTS) {
+      resolve(results || [])
+      return
+    }
+    reject(new Error(`PlacesService.nearbySearch failed: ${status}`))
+  })
+})
+
+export const waitForGooglePlaces = (timeout = PLACES_READY_TIMEOUT_MS) => new Promise((resolve, reject) => {
+  const isReady = () => !!window.google?.maps?.places
+  if (isReady()) {
+    resolve()
+    return
+  }
+  const startedAt = Date.now()
+  const timer = setInterval(() => {
+    if (isReady()) {
+      clearInterval(timer)
+      resolve()
+    } else if (Date.now() - startedAt > timeout) {
+      clearInterval(timer)
+      reject(new Error('google_places_not_loaded'))
+    }
+  }, 100)
+})
+
+const canUseNewPlace = () => !!window.google?.maps?.places?.Place && getPlacesApiMode() !== PLACES_API_LEGACY
+
+const withLegacyFallback = async (runNew, runLegacy) => {
+  await waitForGooglePlaces()
+  if (canUseNewPlace()) {
     try {
-      const details = await fetchNewBusinessDetails(placeId)
+      const result = await runNew()
       setPlacesApiMode(PLACES_API_NEW)
-      return details
+      return result
     } catch (error) {
       if (getPlacesApiMode() === PLACES_API_NEW) throw error
       if (isPlacesApiNotEnabledError(error)) setPlacesApiMode(PLACES_API_LEGACY)
     }
   }
-  return fetchLegacyBusinessDetails(map, placeId)
+  return runLegacy()
 }
+
+const toNewPlace = ({ placeId, prediction }) => prediction?.toPlace
+  ? prediction.toPlace()
+  : new window.google.maps.places.Place({ id: placeId })
+
+export const fetchGoogleBusiness = async ({ placeId, prediction, place }) => {
+  if (place) return fromLegacyPlace(place)
+  return withLegacyFallback(
+    async () => {
+      const target = toNewPlace({ placeId, prediction })
+      await target.fetchFields({ fields: NEW_BUSINESS_FIELDS })
+      return fromNewPlace(target)
+    },
+    async () => fromLegacyPlace(await fetchLegacyDetails(placeId, LEGACY_BUSINESS_FIELDS))
+  )
+}
+
+export const fetchGoogleAddress = async ({ placeId, prediction, place }) => {
+  if (place) return placeToAddress(place)
+  return withLegacyFallback(
+    async () => {
+      const target = toNewPlace({ placeId, prediction })
+      await target.fetchFields({ fields: NEW_PLACE_FIELDS })
+      return placeToAddress(toLegacyAddressPlace(target))
+    },
+    async () => placeToAddress(await fetchLegacyDetails(placeId, ['place_id', 'formatted_address', 'address_components', 'geometry', 'utc_offset_minutes']))
+  )
+}
+
+export const searchNearbyBusinesses = async (location) => withLegacyFallback(
+  async () => {
+    const { places } = await window.google.maps.places.Place.searchNearby({
+      fields: NEARBY_FIELDS,
+      locationRestriction: { center: location, radius: NEARBY_RADIUS_METERS },
+      maxResultCount: NEARBY_MAX_RESULTS,
+      rankPreference: window.google.maps.places.SearchNearbyRankPreference?.DISTANCE
+    })
+    return (places || [])
+      .filter(place => isGoogleBusiness(place.types))
+      .map(place => ({ placeId: place.id, name: place.displayName || '', address: place.formattedAddress || '', category: place.primaryTypeDisplayName || '' }))
+  },
+  async () => (await fetchLegacyNearby(location))
+    .filter(place => isGoogleBusiness(place.types))
+    .slice(0, NEARBY_MAX_RESULTS)
+    .map(place => ({ placeId: place.place_id, name: place.name || '', address: place.vicinity || '', category: '' }))
+)

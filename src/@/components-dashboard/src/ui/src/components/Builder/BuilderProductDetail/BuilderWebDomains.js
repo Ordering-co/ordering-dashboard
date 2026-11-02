@@ -65,7 +65,7 @@ const CopyValue = ({ value }) => {
 }
 
 /** The CNAME record to create: `name` is its Name, or `nameHint` explains it. */
-const CnameRecord = ({ name, nameHint, target }) => {
+export const CnameRecord = ({ name, nameHint, target }) => {
   const [, t] = useLanguage()
   return (
     <RecordTable>
@@ -496,7 +496,8 @@ export const BuilderWebDomains = (props) => {
   return (
     <DomainsCard aria-labelledby='builder-web-domains'>
       <header>
-        <h2 id='builder-web-domains'>{t('BUILDER_DOMAINS', 'Domains')}</h2>
+        {/* Focusable for "Go to Domains" next to the status actions */}
+        <h2 id='builder-web-domains' tabIndex={-1}>{t('BUILDER_DOMAINS', 'Domains')}</h2>
         <p>{t('BUILDER_DOMAINS_HELP', 'The addresses where people open your website.')}</p>
       </header>
       <div>

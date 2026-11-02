@@ -81,6 +81,32 @@ const renderListing = (props, url) => renderWithProviders(
 )
 
 describe('BusinessProductsListing', () => {
+  it.each([
+    [
+      { taxes: { loading: false, error: 'Failed to fetch', loaded: false }, fees: { loading: false, error: null, loaded: true } },
+      'Could not load taxes. Please try again.'
+    ],
+    [
+      { taxes: { loading: false, error: null, loaded: true }, fees: { loading: false, error: 'Failed to fetch', loaded: false } },
+      'Could not load fees. Please try again.'
+    ],
+    [
+      { taxes: { loading: false, error: 'Failed to fetch', loaded: false }, fees: { loading: false, error: 'Failed to fetch', loaded: false } },
+      'Could not load taxes and fees. Please try again.'
+    ]
+  ])('offers a non-blocking retry with the complete message for each failed catalog combination', (catalogState, message) => {
+    const retryCatalogs = vi.fn()
+    renderListing({
+      slug: 'tastewine',
+      catalogState,
+      retryCatalogs
+    }, '/stores/products/tastewine')
+    expect(screen.getByRole('alert')).toHaveTextContent(message)
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    expect(retryCatalogs).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button', { name: 'Store website' })).toBeInTheDocument()
+  })
+
   it('opens the product panel from a product link', async () => {
     renderListing(
       { slug: 'tastewine', categoryId: '11', productId: '221' },

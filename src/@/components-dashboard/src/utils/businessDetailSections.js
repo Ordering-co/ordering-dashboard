@@ -7,7 +7,6 @@ import { PAYMENT_PLUGIN_CATALOG } from './paymentPluginCatalog'
  * section is only offered where the menu shows it.
  */
 
-export const EATSTREET_PROJECTS = ['eatstreet', 'eatstreetstaging']
 export const SELECTED_ACCESS_SECTION_KEYS = ['delivery_pickup_more', 'payment_methods']
 
 export const isSelectedAccessUser = (user) => user?.level !== 0 && user?.selected_access === true
@@ -18,18 +17,15 @@ export const isSelectedAccessUser = (user) => user?.level !== 0 && user?.selecte
 export const isBusinessSectionEnabled = (key, {
   isAdmin = false,
   isSelectedAccessRole = false,
-  project,
   configs = {},
   hasSpoonity = false
 } = {}) => {
   if (isSelectedAccessRole) return SELECTED_ACCESS_SECTION_KEYS.includes(key)
-  const eatstreetExclusions = EATSTREET_PROJECTS.includes(project) ? ['tax_fees', 'layout', 'webhooks', 'logs'] : []
-  if (!isAdmin && eatstreetExclusions.includes(key)) return false
   if (configs?.white_label_module?.value) return !['personalization', 'sales_channels'].includes(key)
   if (isAdmin) return true
   const itemsExcluded = hasSpoonity
-    ? ['publishing', 'personalization', 'markups', ...eatstreetExclusions]
-    : ['publishing', 'spoonity_key', 'personalization', 'markups', ...eatstreetExclusions]
+    ? ['publishing', 'personalization', 'markups']
+    : ['publishing', 'spoonity_key', 'personalization', 'markups']
   return !itemsExcluded.includes(key)
 }
 
@@ -37,6 +33,13 @@ const isConfigOn = (config) => {
   const value = config?.value
   return value === true || value === 1 || value === '1' || value === 'true'
 }
+
+/**
+ * Per-store and per-brand White Label sites (`/business/{id}/sites/current`,
+ * `/franchises/{id}/sites/current`) are hidden: the store section, the brand
+ * tab and the palette entry. Set to true to show them again.
+ */
+export const WHITE_LABEL_SITES_ENABLED = false
 
 /**
  * Sections the palette can open once a business is chosen. Each one needs a
@@ -67,22 +70,22 @@ export const BUSINESS_PALETTE_SECTIONS = [
   { key: 'sales_channels', labelKey: 'SALES_CHANNELS', label: 'Sales channels', aliases: ['canales de venta', 'facebook', 'instagram', 'tiktok', 'google my business', 'redes sociales'] },
   { key: 'layout', labelKey: 'LAYOUT', label: 'Layout', aliases: ['diseno', 'plantilla', 'vista', 'food', 'groceries'] },
   { key: 'business_payment_account', labelKey: 'BUSINESS_PAYMENT_ACCOUNT', label: 'Business Payment Account', aliases: ['cuenta de pago', 'cuenta bancaria', 'payouts', 'stripe connect'] },
-  { key: 'white_label', labelKey: 'WHITE_LABEL', label: 'White Label', aliases: ['marca blanca', 'sitio propio', 'white label'], adminOnly: true, when: ({ configs, project }) => isConfigOn(configs?.whitelabel_stores_sites) || WHITE_LABEL_STORE_PROJECTS.includes(project) },
+  { key: 'white_label', labelKey: 'WHITE_LABEL', label: 'White Label', aliases: ['marca blanca', 'sitio propio', 'white label'], adminOnly: true, when: ({ configs, project }) => WHITE_LABEL_SITES_ENABLED && (isConfigOn(configs?.whitelabel_stores_sites) || WHITE_LABEL_STORE_PROJECTS.includes(project)) },
   { key: 'reservations', labelKey: 'RESERVATIONS', label: 'Reservations', aliases: ['reservas', 'reservaciones', 'mesas'], when: ({ configs }) => configs?.reservation_enabled?.value === '1' && !!configs?.web_marketplace_26?.value },
   // Fixed tabs inside a section (`&tab=`): same gate as their section, plus the tab's own rule
   { key: 'store_details:owner', section: 'store_details', tab: 'owner', labelKey: 'OWNER_ID', label: 'Owner', aliases: ['dueno', 'propietario', 'owner'], when: ({ user }) => user?.level !== 2 },
   { key: 'store_details:categories', section: 'store_details', tab: 'categories', labelKey: 'CATEGORIES', label: 'Categories', aliases: ['categorias del negocio', 'tipo de negocio', 'business type'] },
   { key: 'store_details:location', section: 'store_details', tab: 'location', labelKey: 'LOCATION', label: 'Location', aliases: ['ubicacion', 'direccion', 'mapa', 'address'] },
-  { key: 'store_details:agents', section: 'store_details', tab: 'agents', labelKey: 'AGENTS', label: 'Agents', aliases: ['agentes', 'call center'], when: ({ isRestricted }) => !isRestricted },
+  { key: 'store_details:agents', section: 'store_details', tab: 'agents', labelKey: 'AGENTS', label: 'Agents', aliases: ['agentes', 'call center'] },
   { key: 'store_details:images', section: 'store_details', tab: 'images', labelKey: 'IMAGES', label: 'Images', aliases: ['imagenes', 'fotos', 'galeria', 'logo', 'portada', 'header'] },
   { key: 'store_details:videos', section: 'store_details', tab: 'videos', labelKey: 'VIDEOS', label: 'Videos', aliases: ['videos'] },
   { key: 'store_details:seo_options', section: 'store_details', tab: 'seo_options', labelKey: 'SEO_OPTIONS', label: 'SEO Options', aliases: ['seo', 'meta', 'google'] },
   { key: 'menu:shared_menus', section: 'menu', tab: 'shared_menus', labelKey: 'SHARED_MENUS', label: 'Shared menus', aliases: ['menus compartidos', 'shared menus'] },
   { key: 'delivery_pickup_more:delivery', section: 'delivery_pickup_more', tab: 'delivery', labelKey: 'DELIVERY', label: 'Delivery', aliases: ['zonas de entrega', 'zona de reparto', 'delivery zones', 'costo de envio', 'radio'] },
   { key: 'delivery_pickup_more:pickup', section: 'delivery_pickup_more', tab: 'pickup', labelKey: 'PICKUP', label: 'Pickup', aliases: ['recoger', 'para llevar', 'retiro en tienda'] },
-  { key: 'delivery_pickup_more:driver_delivery_group', section: 'delivery_pickup_more', tab: 'driver_delivery_group', labelKey: 'DRIVER_DELIVERY_GROUP', label: 'Driver Delivery Group', aliases: ['grupo de repartidores', 'driver group'], when: ({ isRestricted }) => !isRestricted },
+  { key: 'delivery_pickup_more:driver_delivery_group', section: 'delivery_pickup_more', tab: 'driver_delivery_group', labelKey: 'DRIVER_DELIVERY_GROUP', label: 'Driver Delivery Group', aliases: ['grupo de repartidores', 'driver group'] },
   { key: 'delivery_pickup_more:advanced_eta', section: 'delivery_pickup_more', tab: 'advanced_eta', labelKey: 'ADVANCED_ETA', label: 'Advanced ETA', aliases: ['tiempo estimado', 'eta', 'tiempo de entrega'] },
-  { key: 'ordering_channels:custom_slug', section: 'ordering_channels', tab: 'custom_slug', labelKey: 'CUSTOM_SLUG', label: 'Custom slug', aliases: ['slug', 'url de la tienda', 'enlace'], when: ({ isRestricted }) => !isRestricted },
+  { key: 'ordering_channels:custom_slug', section: 'ordering_channels', tab: 'custom_slug', labelKey: 'CUSTOM_SLUG', label: 'Custom slug', aliases: ['slug', 'url de la tienda', 'enlace'] },
   { key: 'ordering_channels:widgets', section: 'ordering_channels', tab: 'widgets', labelKey: 'WIDGETS', label: 'Widgets', aliases: ['widget', 'boton de pedido', 'embed'] },
   // Not on the detail: the store's products page (by slug) and its Connect panels
   { key: 'pos_menu', target: 'pos_menu', labelKey: 'CONNECT_POS_MENU', label: 'POS & Menu Sync', aliases: ['pos', 'sincronizar menu', 'menu sync', 'punto de venta', 'deliverect', 'itsacheckmate', 'checkmate'], navUrl: '/connect/pos-menu' },
@@ -94,23 +97,18 @@ export const BUSINESS_PALETTE_SECTIONS = [
 /** Projects where store White Label is on without the config (BusinessSummary) */
 export const WHITE_LABEL_STORE_PROJECTS = ['luisv4plus', 'eatstreetstaging']
 
-/** EatStreet store owners see fewer tabs (useBusinessOwnerRestriction) */
-export const isRestrictedBusinessOwner = ({ user, project } = {}) =>
-  EATSTREET_PROJECTS.includes(project) && user?.level !== 0
-
 /**
  * Palette business sections the user can open, with the menu rules applied.
  */
 export const getPaletteBusinessSections = ({ user, configs = {}, project } = {}) => {
   const isAdmin = user?.level === 0
   const isSelectedAccessRole = isSelectedAccessUser(user)
-  const isRestricted = isRestrictedBusinessOwner({ user, project })
   return BUSINESS_PALETTE_SECTIONS.filter(section => {
     if (section.adminOnly && !isAdmin) return false
-    if (section.when && !section.when({ configs, user, project, isRestricted })) return false
+    if (section.when && !section.when({ configs, user, project })) return false
     // Pages outside the detail follow their own menu (checked by the caller with navUrl)
     if (section.target) return !isSelectedAccessRole
-    return isBusinessSectionEnabled(section.section || section.key, { isAdmin, isSelectedAccessRole, project, configs })
+    return isBusinessSectionEnabled(section.section || section.key, { isAdmin, isSelectedAccessRole, configs })
   })
 }
 

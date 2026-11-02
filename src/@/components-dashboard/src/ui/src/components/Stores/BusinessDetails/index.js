@@ -35,6 +35,7 @@ import {
 
 import { MoreSidebarLayout, Personalization, Alert, NotFoundSource } from '../../Shared'
 import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
+import { WHITE_LABEL_SITES_ENABLED } from '../../../../../utils/businessDetailSections'
 
 import {
   BarContainer
@@ -463,7 +464,7 @@ export const BusinessDetailsUI = (props) => {
               businessId={businessState?.business?.id}
             />
           )}
-          {selectedItem === 'white_label' && isAdmin && (
+          {selectedItem === 'white_label' && isAdmin && WHITE_LABEL_SITES_ENABLED && (
             <BusinessWhiteLabel
               business={businessState?.business}
               handleUpdateBusinessState={handleUpdateBusinessState}

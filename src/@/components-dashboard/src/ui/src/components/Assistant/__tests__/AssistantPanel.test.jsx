@@ -446,4 +446,22 @@ describe('AssistantPanel', () => {
 
     expect(await screen.findByText('Your user can\'t use the assistant in this project.')).toBeInTheDocument()
   })
+
+  it('tells bottom bars the room the launcher takes while it shows', async () => {
+    window.sessionStorage.removeItem('assistant:demo:7:open')
+    route('GET', '/status', json(STATUS))
+    const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ left: 900, width: 84 })
+    const space = () => document.documentElement.style.getPropertyValue('--assistant-launcher-space')
+    try {
+      renderPanel()
+
+      const launcher = await screen.findByRole('button', { name: 'Mia' })
+      // From its left edge to the right of the window, plus a gap
+      expect(space()).toBe(`${window.innerWidth - 900 + 12}px`)
+      fireEvent.click(launcher)
+      expect(space()).toBe('')
+    } finally {
+      rect.mockRestore()
+    }
+  })
 })

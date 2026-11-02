@@ -49,6 +49,21 @@ describe('BuilderProductDetail controller', () => {
     expect(ui.current.statusState).toEqual({ loading: false, nextStatus: null })
   })
 
+  it('reports a website with its own domain that can’t leave active, and reads its domain again', async () => {
+    const web = { id: 41, name: 'Burger Town', kind: 'web', product_status: 'active', domain: null, apps: [] }
+    api.getBuilderProduct.mockReset()
+      .mockResolvedValueOnce(ok(web))
+      .mockResolvedValueOnce(ok({ ...web, domain: 'shop.burgertown.com' }))
+    api.updateBuilderProductStatus.mockResolvedValueOnce(fail(400, ['product.domain_configured']))
+    const ui = await renderController()
+    let result
+    await act(async () => { result = await ui.current.changeStatus('draft') })
+    expect(result).toEqual({ product: null, errorKind: 'domain_configured', checks: null })
+    await waitFor(() => expect(ui.current.productState.product.domain).toBe('shop.burgertown.com'))
+    expect(ui.current.productState.errorKind).toBeNull()
+    expect(api.getBuilderProduct).toHaveBeenCalledTimes(2)
+  })
+
   it('keeps the page and reports a plain failure', async () => {
     api.updateBuilderProductStatus.mockResolvedValueOnce(fail(400, ['product_status.in']))
     const ui = await renderController()

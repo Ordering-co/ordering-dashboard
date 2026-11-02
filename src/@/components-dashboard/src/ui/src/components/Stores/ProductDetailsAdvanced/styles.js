@@ -37,6 +37,13 @@ export const TypeSelectWrapper = styled.div`
   }
 `
 
+export const EmptyWrapper = styled.div`
+  text-align: center;
+  padding: 24px 0;
+  color: ${props => props.theme.colors?.disabled || '#748194'};
+  font-size: 13px;
+`
+
 export const Option = styled.div`
   font-size: 14px;
   /* white-space: nowrap;

@@ -5,7 +5,6 @@ import { PARAM_POLICY, ROUTE_EXCLUSIONS, SURFACE_REGISTRY } from '../commandPale
 import { buildNavigationEntries, buildStaticSettingsEntries } from '../commandPaletteCatalog'
 import { buildOpenActionEntries } from '../commandPaletteActions'
 import { buildIntegrationEntries } from '../commandPaletteIntegrations'
-import { BUILDER_PROJECTS } from '../dashboardFeatureAccess'
 
 /**
  * Auto-indexing guard for the ⌘K palette. When this fails, a page, panel,
@@ -66,9 +65,8 @@ const USERS = [{ level: 0, user_system_id: 1 }, { level: 2 }, { level: 5 }, { le
 const buildCatalogUnion = () => {
   const entries = []
   CONFIG_SETS.forEach(configs => USERS.forEach(user => {
-    // A Builder project, so the project-gated section is in the union
-    entries.push(...buildNavigationEntries({ user, configs, project: BUILDER_PROJECTS[0] }))
-    entries.push(...buildOpenActionEntries({ user, configs, project: BUILDER_PROJECTS[0] }))
+    entries.push(...buildNavigationEntries({ user, configs }))
+    entries.push(...buildOpenActionEntries({ user, configs }))
   }))
   entries.push(...buildStaticSettingsEntries())
   // Lists loaded from the API at runtime, with one sample row each

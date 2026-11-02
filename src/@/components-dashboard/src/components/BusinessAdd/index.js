@@ -5,7 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
-import { getUniqueId, stringToSlug, normalizeTimezone } from '../../utils'
+import { normalizeTimezone } from '../../utils'
 
 /**
  * Component to manage business form details behavior without UI component
@@ -32,7 +32,6 @@ export const BusinessAdd = (props) => {
   const [schedule, setSchedule] = useState([])
   const [kmlData, setKmlData] = useState(null)
   const [cityId, setCityId] = useState(null)
-  const [details, setDetails] = useState(null)
   let timeout = null
 
   const paymethodsNotAllowed = ['paypal_express', 'authorize', 'stripe_direct', 'stripe_redirect']
@@ -413,70 +412,6 @@ export const BusinessAdd = (props) => {
     }
   }
 
-  const getSchedule = (periods) => {
-    let extraHours = null
-    const schedule = []
-    for (let i = 0; i < 7; i++) {
-      const period = periods.find(item => item?.open?.day === i)
-      if (!period) {
-        (!extraHours || (extraHours?.close?.hour === 0 && extraHours?.close?.minute === 0))
-          ? schedule.push({ enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] })
-          : schedule.push({ enabled: true, lapses: [extraHours] })
-      }
-      if (period?.open?.day === i && period?.close?.day === i) {
-        const lapses = [{ open: { hour: period?.open?.hours, minute: period?.open?.minutes }, close: { hour: period?.close?.hours, minute: period?.close?.minutes } }]
-        extraHours && lapses.unshift(extraHours)
-        extraHours = null
-        schedule.push({ enabled: true, lapses })
-      }
-      if (period?.open?.day === i && period?.close && period?.close?.day !== i) {
-        const lapses = [{ open: { hour: period?.open?.hours, minute: period?.open?.minutes }, close: { hour: 23, minute: 59 } }]
-        extraHours && lapses.unshift(extraHours)
-        if (period?.close?.hours !== 0 && period?.close?.minutes !== 0) {
-          extraHours = { open: { hour: 0, minute: 0 }, close: { hour: period?.close?.hours, minute: period?.close?.minutes } }
-        }
-        schedule.push({ enabled: true, lapses })
-      }
-      if (period?.open?.day === i && !period?.close) {
-        const lapses = [{ open: { hour: period?.open?.hours, minute: period?.open?.minutes }, close: { hour: 23, minute: 59 } }]
-        extraHours = null
-        schedule.push({ enabled: true, lapses })
-      }
-    }
-
-    if (extraHours && schedule[0]?.enabled && !(extraHours?.close?.hour === 0 && extraHours?.close?.minute === 0)) schedule[0].lapses.unshift(extraHours)
-    if (extraHours && !schedule[0]?.enabled && !(extraHours?.close?.hour === 0 && extraHours?.close?.minute === 0)) schedule[0] = { enabled: true, lapses: [extraHours] }
-
-    return schedule
-  }
-
-  useEffect(() => {
-    if (details) {
-      const updateStoreData = async () => {
-        const photos = details?.photos?.map(photo => ({ temp_id: getUniqueId(), file: photo.getUrl() }))
-        photos?.length > 0 && setGallery(photos)
-        const timezone = await getTimeZone(details?.geometry?.location?.lat(), details?.geometry?.location?.lng())
-        const changes = {
-          name: details?.name,
-          slug: stringToSlug(details?.name),
-          cellphone: details?.international_phone_number,
-          price_level: details?.price_level?.toString(),
-          address: details?.formatted_address,
-          ...(details?.opening_hours?.periods && { schedule: getSchedule(details?.opening_hours?.periods) }),
-          location: {
-            lat: details?.geometry?.location?.lat(),
-            lng: details?.geometry?.location?.lng(),
-            zipcode: -1,
-            zoom: 15
-          },
-          timezone: timezone ?? 'America/New_York'
-        }
-        changeFormState(changes)
-      }
-      updateStoreData()
-    }
-  }, [details])
-
   useEffect(() => {
     if (!addressChange) return
     setFormState({
@@ -519,8 +454,7 @@ export const BusinessAdd = (props) => {
           paymethodIds={paymethodIds}
           handleChangePaymethodIds={setPaymethodIds}
           handleChangeSchedule={setSchedule}
-          details={details}
-          setDetails={setDetails}
+          schedule={schedule}
         />
       )}
     </>

@@ -110,6 +110,9 @@ import { BuilderAppCredentials } from './components/Builder/BuilderAppCredential
 import { BuilderAppBuilds } from './components/Builder/BuilderAppBuilds'
 import { BuilderProductPush } from './components/Builder/BuilderProductPush'
 import { BuilderProductDomain } from './components/Builder/BuilderProductDomain'
+import { BuilderProductThemes } from './components/Builder/BuilderProductThemes'
+import { BuilderThemeEditor } from './components/Builder/BuilderThemeEditor'
+import { BuilderSiteSettings } from './components/Builder/BuilderSiteSettings'
 import { WhiteLabelCustomDomain } from './components/WhiteLabelCustomDomain'
 import { CustomOrderDetails } from './components/CustomOrderDetails'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
@@ -147,6 +150,7 @@ import { FacebookLoginButton } from './components/FacebookLoginButton'
 import { ForgotPasswordForm } from './components/ForgotPasswordForm'
 import { GiftCardsList } from './components/GiftCardsList'
 import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
+import { GoogleBusinessSearch } from './components/GoogleBusinessSearch'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
 import { GoogleTagManager } from './components/GoogleTagManager'
@@ -184,6 +188,7 @@ import { OpenCartFilter } from './components/OpenCartFilter'
 import { OrderList } from './components/OrderList'
 import { OrderNotification } from './components/OrderNotification'
 import { OrderingWebsite } from './components/OrderingWebsite'
+import { WebsiteMigration } from './components/WebsiteMigration'
 import { Dashboard } from './components/Dashboard'
 import { OrdersFilter } from './components/OrdersFilter'
 import { OrdersManage } from './components/OrdersManage'
@@ -306,8 +311,6 @@ import { UserWallet } from './components/UserWallet'
 import { WebhookList } from './components/WebhookList'
 import { WebsocketStatus } from './components/WebsocketStatus'
 import { CalendarDriversList } from './components/CalendarDriversList'
-import { PurchaseAddonDetails } from './components/PurchaseAddonDetails'
-import { PurchaseAddons } from './components/PurchaseAddons'
 import { AllSettings } from './components/AllSettings'
 import { CommandPalette } from './components/CommandPalette'
 import { ProductItemAccordion } from './components/ProductItemAccordion'
@@ -432,6 +435,9 @@ export {
   BuilderAppBuilds,
   BuilderProductPush,
   BuilderProductDomain,
+  BuilderProductThemes,
+  BuilderThemeEditor,
+  BuilderSiteSettings,
   WhiteLabelCustomDomain,
   CustomOrderDetails,
   DashboardBusinessList,
@@ -468,6 +474,7 @@ export {
   ForgotPasswordForm,
   GiftCardsList,
   GoogleAutocompleteInput,
+  GoogleBusinessSearch,
   GoogleMaps,
   GoogleMapsMap,
   GpsButton,
@@ -501,6 +508,7 @@ export {
   OccupationSelector,
   OpenCartListing,
   OrderingWebsite,
+  WebsiteMigration,
   Dashboard,
   OpenCartsDetail,
   OpenCartFilter,
@@ -550,8 +558,6 @@ export {
   ProfessionalBusinessService,
   ProfessionalSchedule,
   ProfessionalServices,
-  PurchaseAddonDetails,
-  PurchaseAddons,
   ReportsDriverFilter,
   QueryLogin,
   ReCaptcha,

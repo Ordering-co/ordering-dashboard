@@ -101,7 +101,6 @@ import { ProductsBuilderList } from './pages/ProductsList'
 import { BusinessAdd } from './pages/BusinessAdd'
 import { AdBannersList } from './pages/AdBannersList'
 import { BusinessDevicesList } from './pages/BusinessDevicesList'
-import { ConnectOverview } from './pages/ConnectOverview'
 import { DeliveryServices } from './pages/DeliveryServices'
 import { Importers } from './pages/Importers'
 import { PosMenu } from './pages/PosMenu'
@@ -118,14 +117,12 @@ import { firebasePushSetup, getFirebaseWebConfig, isFirebasePushEnabled, getOpen
 import { getDashboardFaviconUrl } from './utils/dashboardBranding'
 import { useDashboardBootReveal } from './utils/useDashboardBootReveal'
 import { SettingsLogs } from './pages/SettingsLogs'
-import { PurchaseAddons } from './pages/PurchaseAddons'
 import { FreeProductsList } from './pages/FreeProductsList'
 import { OpenSourceCode } from './pages/OpenSourceCode'
 import { DriversTimeDisplay } from './pages/DriverTimeDisplay'
 import { EcommerceReports } from './pages/EcommerceReports'
 import { BusinessPaymentReports } from './pages/BusinessPaymentReports'
 import { DocsConnection, docsConnectMode } from '~components/components/DocsConnection'
-import { isBuilderProject } from '~components/utils/dashboardFeatureAccess'
 import { DocsConnectionConsent } from '~ui/src/components/DocsConnectionConsent'
 
 /**
@@ -545,9 +542,7 @@ const DashboardApp = () => {
                       <BusinessAdd setShowBillingPayment={setShowBillingPayment} />
                     </ProtectedRoute>
 
-                    <ProtectedRoute path='/connect/overview' allowedLevels={getConnectAllowedLevels('connect_overview')}>
-                      {showConnectTab ? <ConnectOverview /> : <Redirect to='/home' />}
-                    </ProtectedRoute>
+                    <Route exact path='/connect/overview'><Redirect to='/connect/pos-menu' /></Route>
                     <ProtectedRoute path='/connect/delivery-services' allowedLevels={getConnectAllowedLevels('delivery_services')}>
                       {deliveryServices ? <DeliveryServices /> : <Redirect to='/home' />}
                     </ProtectedRoute>
@@ -689,16 +684,12 @@ const DashboardApp = () => {
                       <ProductsBuilderList />
                     </ProtectedRoute>
 
-                    {isBuilderProject(ordering?.project) && (
-                      <ProtectedRoute path='/builder/:productId' allowedLevels={[0]}>
-                        <BuilderProduct />
-                      </ProtectedRoute>
-                    )}
-                    {isBuilderProject(ordering?.project) && (
-                      <ProtectedRoute path='/builder' allowedLevels={[0]}>
-                        <Builder />
-                      </ProtectedRoute>
-                    )}
+                    <ProtectedRoute path='/builder/:productId' allowedLevels={[0]}>
+                      <BuilderProduct />
+                    </ProtectedRoute>
+                    <ProtectedRoute path='/builder' allowedLevels={[0]}>
+                      <Builder />
+                    </ProtectedRoute>
 
                     <ProtectedRoute exact path='/settings' allowedLevels={[0]}>
                       <Settings />
@@ -745,9 +736,7 @@ const DashboardApp = () => {
                     <ProtectedRoute path='/free-downloads' allowedLevels={[0]}>
                       <FreeProductsList />
                     </ProtectedRoute>
-                    <ProtectedRoute path='/purchase/addons' allowedLevels={[0]}>
-                      <PurchaseAddons />
-                    </ProtectedRoute>
+                    <Route exact path='/purchase/addons'><Redirect to='/home' /></Route>
                     <ProtectedRoute path='/support' allowedLevels={[0]}>
                       <Support />
                     </ProtectedRoute>

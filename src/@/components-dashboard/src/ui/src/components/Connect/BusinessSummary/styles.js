@@ -442,6 +442,14 @@ export const IntegrationRow = styled.div`
     cursor: pointer;
   `}
 
+  ${({ active }) => active && css`
+    margin: -1px -15px 0;
+    padding: 14px 15px;
+    border-top: 1px solid ${props => props.theme.colors.primary};
+    border-bottom-color: ${props => props.theme.colors.primary};
+    background-color: ${props => props.theme.colors.lightPrimary};
+  `}
+
   .integration-info {
     display: flex;
     align-items: center;

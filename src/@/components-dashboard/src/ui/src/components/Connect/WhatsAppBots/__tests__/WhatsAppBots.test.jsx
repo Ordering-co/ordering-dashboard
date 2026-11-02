@@ -42,18 +42,20 @@ describe('WhatsApp bots list switch', () => {
     renderWithProviders(<WhatsAppBots />, { theme })
 
     const disable = await screen.findByRole('checkbox', { name: 'Disable' })
+    await waitFor(() => expect(disable).toBeChecked())
     expect(screen.queryByRole('button', { name: /delete/i })).toBeNull()
 
     fetchMock.mockImplementationOnce(() => respond({ error: false, result: { id: 4, enabled: false } }))
     fireEvent.click(disable)
 
-    await waitFor(() => expect(screen.getByRole('checkbox', { name: 'Enable' })).toBeTruthy())
+    const enable = await screen.findByRole('checkbox', { name: 'Enable' })
+    await waitFor(() => expect(enable).not.toBeChecked())
     const saveCall = fetchMock.mock.calls.find(([, options]) => options?.method === 'PUT')
     expect(saveCall[0]).toBe('https://api.test/v400/en/demo/ai/agents/4')
     expect(JSON.parse(saveCall[1].body)).toEqual({ enabled: false })
 
     fetchMock.mockImplementationOnce(() => respond({ error: true, result: ['ERROR_ACCESS_DENIED'] }, false))
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Enable' }))
+    fireEvent.click(enable)
 
     expect(await screen.findByRole('alert')).toHaveTextContent('The bot could not be updated.')
     expect(screen.getByRole('checkbox', { name: 'Enable' })).toBeTruthy()
@@ -100,6 +102,8 @@ describe('WhatsApp bots list switch', () => {
       : respond(list))
     renderWithProviders(<WhatsAppBots />, { theme })
     await screen.findByText('WhatsApp bot #8')
+    const [savingSwitch] = screen.getAllByRole('checkbox')
+    await waitFor(() => expect(savingSwitch).toBeChecked())
 
     let release
     fetchMock.mockImplementation((url, options) => {
@@ -112,7 +116,7 @@ describe('WhatsApp bots list switch', () => {
         ? respond({ error: false, result: [{ id: 67, name: 'Pizza Hat', logo: null }] })
         : respond(list)
     })
-    fireEvent.click(screen.getAllByRole('checkbox')[0])
+    fireEvent.click(savingSwitch)
 
     await waitFor(() => expect(screen.getAllByRole('checkbox')[0]).toBeDisabled())
     expect(screen.getAllByRole('checkbox')[1]).toBeEnabled()

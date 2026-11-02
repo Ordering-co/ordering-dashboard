@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useLanguage, useEvent, DashboardBusinessList as BusinessListController, useConfig, useSession } from '../../../../../index'
 import BsGrid from '@meronex/icons/bs/BsGrid'
 import BsViewList from '@meronex/icons/bs/BsViewList'
-import { getStorageItem, setStorageItem, removeQueryToUrl, addQueryToUrl } from '../../../utils'
+import { getStorageItem, setStorageItem, removeQueryToUrl } from '../../../utils'
 import { Modal, SideBar } from '../../Shared'
 import { useTheme } from 'styled-components'
 
@@ -185,11 +185,6 @@ const BusinessesListingUI = (props) => {
     }
   }
 
-  const handleOpenSync = () => {
-    setOpenSync(true)
-    addQueryToUrl({ header: 'sync' })
-  }
-
   const handleCloseSync = () => {
     setMoveDistance(0)
     setOpenSync(false)
@@ -216,7 +211,6 @@ const BusinessesListingUI = (props) => {
           handleOpenAddBusiness={handleOpenAddBusiness}
           handleGotToAdd={handleGotToAdd}
           handleStartTutorial={handleStartTutorial}
-          handleOpenSync={handleOpenSync}
           handleRefreshBusinesses={loadBusinesses}
           loading={businessList.loading}
           noBusinesses={noBusinesses}

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useApi } from '../../../contexts/ApiContext'
 import { useSession } from '../../../contexts/SessionContext'
 import {
+  BUILDER_ERROR_CODES,
   getBuilderAdHocInstallUrl,
   getBuilderAppChecks,
   getBuilderErrorKind,
@@ -80,7 +81,9 @@ export const BuilderProductDetail = (props) => {
    * activating is refused because something is missing
    * (`product.incomplete`), `errorKind` is `incomplete`, `checks` says what
    * each app misses and `missing` what the product itself misses (a
-   * website's `name`).
+   * website's `name`). A website with its own domain can't move to
+   * draft or archived (`product.domain_configured`): `errorKind` is
+   * `domain_configured`, and the product is read again for its domain.
    */
   const changeStatus = async (productStatus) => {
     setStatusState({ loading: true, nextStatus: productStatus })
@@ -95,6 +98,10 @@ export const BuilderProductDetail = (props) => {
           checks: Array.isArray(response.checks) ? response.checks : [],
           missing: Array.isArray(response.missing) ? response.missing : []
         }
+      }
+      if (response.errorCodes.includes(BUILDER_ERROR_CODES.domainConfigured)) {
+        getProduct()
+        return { product: null, errorKind: 'domain_configured', checks: null }
       }
       const errorKind = getBuilderErrorKind(response)
       if (PAGE_ERROR_KINDS.includes(errorKind)) {
@@ -131,6 +138,11 @@ export const BuilderProductDetail = (props) => {
       setProductState(prev => ({ ...prev, product: { ...prev.product, ...updated } }))
     }
     return answer
+  }
+
+  /** What another screen saved of the product (a website's settings), over what is loaded. */
+  const mergeProduct = (updated) => {
+    setProductState(prev => (prev.product ? { ...prev, product: { ...prev.product, ...updated } } : prev))
   }
 
   /** Keeps the app's base and builds, which the edit answers leave out. */
@@ -206,6 +218,7 @@ export const BuilderProductDetail = (props) => {
           getBuildDownload={builds.getBuildDownload}
           adHocInstallUrl={app ? getBuilderAdHocInstallUrl(ordering, app.id) : null}
           renameProduct={renameProduct}
+          mergeProduct={mergeProduct}
           updateApp={updateApp}
           updatePlatform={updatePlatform}
           failPage={failPage}

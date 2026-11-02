@@ -42,7 +42,6 @@ describe('readBotConnection', () => {
       wabaId: '2233445566',
       welcomeMessage: '',
       fallbackSupportMessage: '',
-      webviewBaseUrl: '',
       hasAccessToken: true,
       hasPin: true,
       pinDownloaded: true,
@@ -158,7 +157,7 @@ describe('manualCredentialsPayload', () => {
     })
   })
 
-  it('sends the chatbot copy and clears a webview URL that was removed', () => {
+  it('sends the chatbot copy and leaves a saved webview URL untouched', () => {
     const withCopy = readBotConnection({
       provider_external_id: '111',
       provider_settings: {
@@ -172,7 +171,7 @@ describe('manualCredentialsPayload', () => {
         webview_base_url: 'https://order.example'
       }
     })
-    expect(manualCredentialsPayload(withCopy, {
+    const payload = manualCredentialsPayload(withCopy, {
       phoneNumberId: '111',
       languageCode: 'en',
       countryCode: '1',
@@ -182,14 +181,15 @@ describe('manualCredentialsPayload', () => {
       welcomeMessage: '',
       fallbackSupportMessage: 'Te ayudamos',
       webviewBaseUrl: ''
-    })).toEqual({
+    })
+    expect(payload).toEqual({
       provider_settings: {
         language_code: 'en',
         welcome_message: null,
-        fallback_support_message: 'Te ayudamos',
-        webview_base_url: null
+        fallback_support_message: 'Te ayudamos'
       }
     })
+    expect(JSON.stringify(payload)).not.toContain('webview_base_url')
   })
 
   it('returns null when nothing changed', () => {
@@ -204,7 +204,7 @@ describe('manualCredentialsPayload', () => {
 })
 
 describe('chatbotMessagePayload', () => {
-  it('sends only the changed welcome, fallback or webview on a Business Login bot', () => {
+  it('sends a changed fallback and leaves the saved webview URL untouched', () => {
     const saved = readBotConnection({
       provider_settings: {
         auth_type: 'business_login',
@@ -212,17 +212,18 @@ describe('chatbotMessagePayload', () => {
         webview_base_url: 'https://order.example'
       }
     })
-    expect(chatbotMessagePayload(saved, {
+    const payload = chatbotMessagePayload(saved, {
       welcomeMessage: 'Hola',
       fallbackSupportMessage: 'Ayuda',
       webviewBaseUrl: '',
       languageCode: 'en'
-    })).toEqual({
+    })
+    expect(payload).toEqual({
       provider_settings: {
-        fallback_support_message: 'Ayuda',
-        webview_base_url: null
+        fallback_support_message: 'Ayuda'
       }
     })
+    expect(JSON.stringify(payload)).not.toContain('webview_base_url')
   })
 
   it('sends a changed language on a Business Login bot', () => {

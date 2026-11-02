@@ -38,6 +38,19 @@ export const HeaderTitleContainer = styled.div`
   display: flex;
 `
 
+export const CatalogError = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  border: 1px solid ${props => props.theme.colors.danger};
+  color: ${props => props.theme.colors.danger};
+  border-radius: 8px;
+`
+
 export const ActionsGroup = styled.div`
   display: flex;
   align-items: center;

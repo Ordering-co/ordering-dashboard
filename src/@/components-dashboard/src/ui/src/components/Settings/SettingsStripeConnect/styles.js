@@ -46,3 +46,56 @@ export const RuleFootnote = styled.p`
   line-height: 18px;
   color: ${props => props.theme.colors.secundaryContrast};
 `
+
+export const RedirectUriCard = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid ${props => props.theme.colors.borderColor};
+  border-radius: 12px;
+  min-width: 0;
+`
+
+export const RedirectUriTitle = styled.h3`
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: ${props => props.theme.colors.headingColor};
+`
+
+export const RedirectUriText = styled.p`
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: ${props => props.theme.colors.secundaryContrast};
+`
+
+export const RedirectUriRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+`
+
+export const RedirectUriValue = styled.code`
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  user-select: all;
+  color: ${props => props.theme.colors.headingColor};
+  background: ${props => props.theme.colors.backgroundInfo};
+`
+
+export const RedirectUriNotes = styled.ul`
+  margin: 0;
+  padding-inline-start: 18px;
+  font-size: 13px;
+  line-height: 18px;
+  color: ${props => props.theme.colors.secundaryContrast};
+`

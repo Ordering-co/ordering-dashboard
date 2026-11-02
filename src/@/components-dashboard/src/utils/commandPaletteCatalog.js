@@ -60,9 +60,8 @@ export const NAV_ALIASES = {
   devices: ['dispositivos', 'devices', 'kiosko', 'tablets', 'pos'],
   markups: ['recargos', 'margenes', 'markups', 'sobreprecio'],
   // Provider names are the integrations each Connect page offers today
-  connect_overview: ['connect', 'integraciones', 'conectar', 'integrations'],
   delivery_services: ['servicios de entrega', 'delivery services', 'doordash', 'doordash drive', 'uber direct', 'lalamove', 'picker express'],
-  pos_menu: ['pos', 'sincronizar menu', 'menu sync', 'punto de venta', 'deliverect', 'itsacheckmate', 'checkmate'],
+  pos_menu: ['connect', 'integraciones', 'conectar', 'integrations', 'pos', 'sincronizar menu', 'menu sync', 'punto de venta', 'deliverect', 'itsacheckmate', 'checkmate'],
   importers: ['importadores', 'importar', 'import', 'importar menu', 'doordash', 'uber eats', 'ubereats', 'gloriafood', 'ordering.co'],
   sales_channels: ['canales de venta', 'sales channels', 'marketplaces', 'doordash', 'uber eats', 'ubereats'],
   whatsapp_bots: ['whatsapp', 'bots de whatsapp', 'whatsapp bots', 'chatbot', 'agentes de whatsapp'],
@@ -91,7 +90,6 @@ export const NAV_ALIASES = {
   settings: ['configuracion', 'ajustes', 'settings', 'preferencias'],
   free_products: ['descargas gratis', 'free downloads', 'recursos'],
   open_source_code: ['codigo fuente', 'source code', 'open source code', 'download source code', 'descargar codigo fuente'],
-  purchase_addons: ['apps', 'addons', 'complementos', 'tienda de apps', 'marketplace'],
   profile: ['perfil', 'mi cuenta', 'profile', 'account', 'contrasena']
 }
 
@@ -165,9 +163,9 @@ const translateCopy = (t, copy = {}, fallback = '') => t(copy.labelKey, copy.lab
 /**
  * Sidebar destinations and footer routes the user can open.
  */
-export const buildNavigationEntries = ({ t = defaultT, user, configs = {}, project } = {}) => {
+export const buildNavigationEntries = ({ t = defaultT, user, configs = {}, sites = [] } = {}) => {
   const { level } = getDashboardRoleFlags(user)
-  const sections = getDashboardNavSections({ t, user, configs, project })
+  const sections = getDashboardNavSections({ t, user, configs, sites })
   const entries = []
 
   Object.values(sections).forEach(section => {

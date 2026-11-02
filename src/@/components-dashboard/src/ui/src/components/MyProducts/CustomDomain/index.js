@@ -13,7 +13,7 @@ import {
   TitleWrapper,
   CnameNotifyRow
 } from './styles'
-import { COPY_FEEDBACK_DURATION_MS, CUSTOM_DOMAIN_CNAME, CUSTOM_DOMAIN_NOTIFY_DEFAULT_SUFFIX } from './constants'
+import { COPY_FEEDBACK_DURATION_MS, CUSTOM_DOMAIN_CNAME } from './constants'
 
 const CustomDomainUI = (props) => {
   const {
@@ -71,10 +71,7 @@ const CustomDomainUI = (props) => {
   }
 
   const getCustomDomainNotifyMessage = () =>
-    t(
-      'CUSTOM_DOMAIN_NOTIFY',
-      `Please make sure that your DNS CNAME is pointing ${CUSTOM_DOMAIN_NOTIFY_DEFAULT_SUFFIX}`
-    ).replace(CUSTOM_DOMAIN_NOTIFY_DEFAULT_SUFFIX, CUSTOM_DOMAIN_CNAME)
+    t('CUSTOM_DOMAIN_CNAME_TARGET', 'Please make sure your DNS CNAME points to _target_').replace('_target_', CUSTOM_DOMAIN_CNAME)
 
   return (
     <>

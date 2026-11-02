@@ -17,7 +17,7 @@ export const PageContainer = styled.div`
   flex: 1;
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -344,8 +344,16 @@ export const DetailHeader = styled.div`
   }
 `
 
-export const DetailTop = styled.div`
+/** The detail of a product below its breadcrumb: every tab takes the same width. */
+export const DetailContent = styled.div`
   max-width: 1100px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
+
+export const DetailTop = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -366,6 +374,45 @@ export const HeaderActions = styled.div`
     min-height: 40px;
     display: flex;
     align-items: center;
+  }
+`
+
+/** The status buttons and, under them, why some are off. */
+export const StatusActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 360px;
+
+  @media (max-width: 576px) {
+    align-items: flex-start;
+  }
+`
+
+export const StatusLockHint = styled.p`
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: #5E6B7D;
+  font-size: 13px;
+  line-height: 1.4;
+
+  svg {
+    flex: none;
+    margin-top: 2px;
+  }
+
+  button {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: ${props => props.theme.colors.primary};
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
   }
 `
 
@@ -395,7 +442,6 @@ export const Card = styled.section`
   background: ${props => props.theme.colors.backgroundPage};
   border: 1px solid ${props => props.theme.colors.borderColor};
   border-radius: 12px;
-  max-width: 1100px;
 
   > header {
     padding: 20px 24px 8px;
@@ -725,7 +771,6 @@ export const RenameButton = styled.button`
 `
 
 export const ChecksPanel = styled.section`
-  max-width: 1100px;
   border-radius: 12px;
   border: 1px solid ${props => props.clean ? '#BFE8D4' : '#F3DFA2'};
   background: ${props => props.clean ? '#F2FBF6' : '#FFFBEF'};
@@ -845,7 +890,6 @@ export const LinkButton = styled.button`
 `
 
 export const TabList = styled.div`
-  max-width: 1100px;
   display: flex;
   gap: 4px;
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
@@ -865,7 +909,6 @@ export const TabButton = styled.button`
 `
 
 export const TabHint = styled.p`
-  max-width: 1100px;
   margin: 0;
   display: flex;
   align-items: center;
@@ -920,7 +963,6 @@ export const FormActions = styled.div`
 `
 
 export const SettingList = styled.div`
-  max-width: 1100px;
   background: ${props => props.theme.colors.backgroundPage};
   border: 1px solid ${props => props.theme.colors.borderColor};
   border-radius: 12px;
@@ -1083,7 +1125,6 @@ export const RowAside = styled.div`
 `
 
 export const FileGrid = styled.div`
-  max-width: 1100px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
@@ -1155,7 +1196,6 @@ export const FileActions = styled.div`
 `
 
 export const CredentialsGrid = styled.div`
-  max-width: 1100px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 16px;
@@ -1268,7 +1308,6 @@ export const ExternalLink = styled.a`
 `
 
 export const BuildsCard = styled.section`
-  max-width: 1100px;
   box-sizing: border-box;
   background: ${props => props.theme.colors.backgroundPage};
   border: 1px solid ${props => props.theme.colors.borderColor};
@@ -1895,7 +1934,6 @@ export const DomainLink = styled.a`
 `
 
 export const WebOnlineCard = styled.section`
-  max-width: 1100px;
   box-sizing: border-box;
   padding: 20px 24px;
   border-radius: 12px;

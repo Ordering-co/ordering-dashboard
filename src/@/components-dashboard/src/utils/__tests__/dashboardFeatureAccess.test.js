@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import * as dashboardFeatureAccess from '../dashboardFeatureAccess'
 
 const {
-  BUILDER_PROJECTS,
+  BUILDER_ALLOWED_LEVELS,
   DASHBOARD_FEATURE_RULES,
   SCHOOLS_ALLOWED_LEVELS,
   canAccessBuilder,
@@ -77,17 +77,17 @@ describe('isDashboardFeatureEnabled', () => {
 })
 
 describe('Builder access', () => {
-  it('is on only for the development and luisv4plus projects', () => {
-    expect(BUILDER_PROJECTS).toEqual(['development', 'luisv4plus'])
-    expect(canAccessBuilder({ project: 'development', level: 0 })).toBe(true)
-    expect(canAccessBuilder({ project: 'luisv4plus', level: 0 })).toBe(true)
-    expect(canAccessBuilder({ project: 'orderingplus', level: 0 })).toBe(false)
-    expect(canAccessBuilder({ project: undefined, level: 0 })).toBe(false)
+  it('is not limited to a list of projects', () => {
+    expect(dashboardFeatureAccess.BUILDER_PROJECTS).toBeUndefined()
+    expect(dashboardFeatureAccess.isBuilderProject).toBeUndefined()
   })
 
-  it('is for administrators only', () => {
-    expect(canAccessBuilder({ project: 'development', level: 2 })).toBe(false)
-    expect(canAccessBuilder({ project: 'development', level: 5 })).toBe(false)
+  it('is for administrators only, like My products', () => {
+    expect(BUILDER_ALLOWED_LEVELS).toEqual([0])
+    expect(canAccessBuilder(0)).toBe(true)
+    expect(canAccessBuilder(2)).toBe(false)
+    expect(canAccessBuilder(5)).toBe(false)
+    expect(canAccessBuilder(undefined)).toBe(false)
   })
 })
 
@@ -120,7 +120,6 @@ describe('getConnectVisualAccess', () => {
     const access = getConnectVisualAccess()
 
     expect(access.marketingCampaigns).toBe(true)
-    expect(access.connectOverview).toBe(true)
     expect(access.showConnectTab).toBe(true)
     expect(access.connectDeliveryServices).toBe(true)
     expect(access.connectPosMenuSync).toBe(true)

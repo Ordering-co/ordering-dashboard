@@ -90,11 +90,23 @@ export const getProductKind = (product) => {
 }
 
 /**
+ * The own domain a website has configured, active or still being set up:
+ * its name, or null. The product gives it as a string; a domain answer's
+ * `own` (`{ name, status }`) is read too.
+ */
+export const getOwnDomain = (product) => {
+  const domain = product?.domain
+  if (!domain) return null
+  const name = typeof domain === 'string' ? domain : domain.name
+  return typeof name === 'string' && name.trim() ? name.trim() : null
+}
+
+/**
  * A website's domains: its own (`domain`) when set, and its temporary one,
  * which it is always online at. `[{ domain, temporary }]`.
  */
 export const getProductDomains = (product) => [
-  product?.domain && { domain: product.domain, temporary: false },
+  getOwnDomain(product) && { domain: getOwnDomain(product), temporary: false },
   product?.temporal_domain && { domain: product.temporal_domain, temporary: true }
 ].filter(Boolean)
 
@@ -384,6 +396,16 @@ export const BUILDER_DETAIL_TABS = [
 
 export const getDetailTab = (value) =>
   BUILDER_DETAIL_TABS.some(tab => tab.value === value) ? value : 'general'
+
+/** Tabs of a website's detail. */
+export const BUILDER_WEB_TABS = [
+  { value: 'general', label: (t) => t('BUILDER_TAB_GENERAL', 'General') },
+  { value: 'site', label: (t) => t('BUILDER_TAB_SITE', 'Website settings') },
+  { value: 'theme', label: (t) => t('BUILDER_TAB_THEME', 'Theme') }
+]
+
+export const getWebDetailTab = (value) =>
+  BUILDER_WEB_TABS.some(tab => tab.value === value) ? value : 'general'
 
 /** Setting groups in the order the Images and files tab shows them. */
 export const BUILDER_SETTING_GROUPS = [

@@ -90,12 +90,6 @@ export const ButtonWrapper = styled.div`
   }
 `
 
-export const MapWrapper = styled.div`
-  max-height: 0px;
-  overflow: hidden;
-  display: none;
-`
-
 export const SlugEditWrapper = styled.div`
   p {
     font-size: 16px;

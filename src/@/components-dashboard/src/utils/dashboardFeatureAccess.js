@@ -6,15 +6,13 @@ export const SCHOOLS_ALLOWED_LEVELS = [0, 2]
 
 export const canAccessSchoolsPage = (level) => SCHOOLS_ALLOWED_LEVELS.includes(level)
 
-/** Project allowlist for the Builder section. */
-export const BUILDER_PROJECTS = ['development', 'luisv4plus']
-
-/** User levels that can open Builder. Same as My products. */
+/**
+ * User levels that can open Builder. Same as My products. Every
+ * project sees it: the API only offers what each project can use.
+ */
 export const BUILDER_ALLOWED_LEVELS = [0]
 
-export const isBuilderProject = (project) => BUILDER_PROJECTS.includes(project)
-
-export const canAccessBuilder = ({ project, level } = {}) => isBuilderProject(project) && BUILDER_ALLOWED_LEVELS.includes(level)
+export const canAccessBuilder = (level) => BUILDER_ALLOWED_LEVELS.includes(level)
 
 /**
  * Dashboard visual access.
@@ -26,7 +24,6 @@ export const canAccessBuilder = ({ project, level } = {}) => isBuilderProject(pr
 export const DASHBOARD_FEATURE_RULES = {
   campaign: { mode: 'always' },
   connect: { mode: 'always' },
-  connect_overview: { mode: 'always' },
   connect_delivery_services: { mode: 'always' },
   connect_pos_menu: { mode: 'always' },
   connect_importers: { mode: 'always' },
@@ -59,7 +56,6 @@ export const getConnectVisualAccess = ({ configs } = {}) => {
 
   return {
     showConnectTab: enabled('connect'),
-    connectOverview: enabled('connect_overview'),
     connectDeliveryServices: enabled('connect_delivery_services'),
     connectPosMenuSync,
     connectImporters: enabled('connect_importers') || connectPosMenuSync,

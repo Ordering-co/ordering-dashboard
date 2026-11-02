@@ -3,11 +3,12 @@ import { HelmetTags } from '../../components/HelmetTags'
 import { useLocation } from 'react-router-dom'
 import { BusinessAdd as BusinessAddController } from '~ui'
 export const BusinessAdd = (props) => {
-  const { search } = useLocation()
-  const placeId = search?.split('=')[1]
+  const { search, state } = useLocation()
+  const placeId = new URLSearchParams(search).get('placeId') || undefined
 
   const businessAddProps = {
     placeId,
+    googleBusiness: state?.googleBusiness,
     ...props
   }
 

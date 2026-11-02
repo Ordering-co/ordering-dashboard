@@ -1,5 +1,6 @@
 // Raw-fetch wrappers for the project Builder endpoints (not wrapped by the SDK).
 // Base: {root}/{backoffice internal_name}/builder, e.g. /v400/en/development/dashboard/builder
+import { parseRecordId } from '../../utils/commandPaletteBusinesses'
 
 /** App product types the Builder section lists and creates. */
 export const BUILDER_APP_TYPES = ['marketplace_app', 'franchise_app', 'store_app', 'driver_app', 'kiosk_app']
@@ -20,7 +21,9 @@ export const BUILDER_ERROR_CODES = {
   unauthorized: 'auth:00',
   notFound: 'product.not_found',
   baseNotOffered: 'builder_base.not_offered',
-  appNotFound: 'app.not_found'
+  appNotFound: 'app.not_found',
+  // A website with its own domain can't leave active, or move between draft and archived
+  domainConfigured: 'product.domain_configured'
 }
 
 const jsonHeaders = (token) => ({
@@ -55,7 +58,15 @@ const request = async (url, options) => {
       // Where a domain's CNAME record must point (domain.cname_missing)
       cnameTarget: body?.cname_target,
       // What a product misses besides its apps' checks (product.incomplete), like `name`
-      missing: body?.missing
+      missing: body?.missing,
+      // Each problem of a theme by path (theme.invalid): `[{ path, code }]`
+      errors: body?.errors,
+      // The limit a theme image broke: file.invalid_type, file.too_large,
+      // file.dimensions_too_large, file.too_many_pixels
+      formats: body?.formats,
+      maxBytes: body?.max_bytes,
+      maxSide: body?.max_side,
+      maxPixels: body?.max_pixels
     }
   } catch (err) {
     return { status: 0, error: true, result: [err.message], errorCodes: [] }
@@ -111,7 +122,9 @@ export const createBuilderProduct = (ordering, token, { builderBaseId, productTy
 
 /**
  * Moves a product to draft, active or archived. Going to active from another
- * status is refused with `product.incomplete` while an app misses something.
+ * status is refused with `product.incomplete` while an app misses something;
+ * any other move of a website with its own domain, with
+ * `product.domain_configured` until the domain is removed.
  */
 export const updateBuilderProductStatus = (ordering, token, productId, productStatus) =>
   request(`${getBuilderBaseUrl(ordering)}/products/${encodeURIComponent(productId)}/status`, {
@@ -120,13 +133,95 @@ export const updateBuilderProductStatus = (ordering, token, productId, productSt
     body: JSON.stringify({ product_status: productStatus })
   })
 
-/** Renames the product (the site). The app's name in the stores is separate. */
-export const updateBuilderProduct = (ordering, token, productId, { name }) =>
+/**
+ * Renames the product (the site); the app's name in the stores is separate.
+ * A website also takes here what it shows, whatever its theme: its scope, one
+ * store (`businessId`) or one franchise (`franchiseId`), null for neither, and
+ * its `settings` (`site` of its schema), merged key by key, a null taking a
+ * key's default back. Only what is given is sent; `name` always is.
+ */
+export const updateBuilderProduct = (ordering, token, productId, { name, businessId, franchiseId, settings }) =>
   request(`${getBuilderBaseUrl(ordering)}/products/${encodeURIComponent(productId)}`, {
     method: 'PUT',
     headers: jsonHeaders(token),
-    body: JSON.stringify({ name })
+    body: JSON.stringify({
+      name,
+      ...(businessId !== undefined ? { business_id: businessId } : {}),
+      ...(franchiseId !== undefined ? { franchise_id: franchiseId } : {}),
+      ...(settings !== undefined ? { settings } : {})
+    })
   })
+
+/*
+ * What a website's scope is picked from (its "Website type"): the project's
+ * stores and franchises, a page at a time, searched on the server.
+ */
+
+/** Rows per page of the scope pickers; the backoffice lists take up to 100. */
+export const BUILDER_SCOPE_PAGE_SIZE = 20
+
+/** What a picker row shows: its name, slug and logo, and whether it is enabled. */
+export const BUILDER_SCOPE_FIELDS = ['id', 'name', 'slug', 'logo', 'enabled']
+
+/** {root}/{backoffice internal_name}, e.g. /v400/en/development/dashboard (`dashboard|backoffice|admin`). */
+const backofficeUrl = (ordering) => `${ordering.root}/${ordering.appInternalName || 'dashboard'}`
+
+/**
+ * Where the franchises are listed and read: `GET /{internal_name}/franchises`,
+ * always paged like `/{internal_name}/businesses` (up to 100 a page), with the
+ * same `params`, `where` and `orderBy`; a missing one answers 404
+ * `franchise.not_found`.
+ */
+export const getBuilderScopeFranchisesUrl = (ordering) => `${backofficeUrl(ordering)}/franchises`
+
+/**
+ * The `where` of a picker: the enabled ones, and with a search, those whose
+ * name or slug has it, or whose id it is.
+ */
+export const buildScopeWhere = (search) => {
+  const conditions = [{ attribute: 'enabled', value: true }]
+  const text = String(search ?? '').trim()
+  if (text) {
+    const matches = [
+      { attribute: 'name', value: { condition: 'ilike', value: `%${text}%` } },
+      { attribute: 'slug', value: { condition: 'ilike', value: `%${text}%` } }
+    ]
+    const id = parseRecordId(text)
+    if (id !== null) matches.push({ attribute: 'id', value: id })
+    conditions.push({ conditions: matches, conector: 'OR' })
+  }
+  return { conditions, conector: 'AND' }
+}
+
+const scopeListQuery = ({ page = 1, pageSize = BUILDER_SCOPE_PAGE_SIZE, search } = {}) => new URLSearchParams({
+  params: BUILDER_SCOPE_FIELDS.join(','),
+  page: String(Math.max(1, page)),
+  page_size: String(Math.min(Math.max(1, pageSize), BUILDER_SCOPE_PAGE_SIZE)),
+  orderBy: 'name',
+  where: JSON.stringify(buildScopeWhere(search))
+}).toString()
+
+const scopeItemQuery = () => new URLSearchParams({ params: BUILDER_SCOPE_FIELDS.join(',') }).toString()
+
+/**
+ * A page of the project's enabled stores, by name, `GET /{internal_name}/businesses`
+ * (backoffice, forced pagination). Answers `result` and `pagination`
+ * (`current_page`, `page_size`, `total_pages`, `total`).
+ */
+export const listBuilderScopeBusinesses = (ordering, token, options) =>
+  request(`${backofficeUrl(ordering)}/businesses?${scopeListQuery(options)}`, { method: 'GET', headers: jsonHeaders(token) })
+
+/** One store by its id, enabled or not, for a scope that isn't on a loaded page. */
+export const getBuilderScopeBusiness = (ordering, token, businessId) =>
+  request(`${backofficeUrl(ordering)}/businesses/${encodeURIComponent(businessId)}?${scopeItemQuery()}`, { method: 'GET', headers: jsonHeaders(token) })
+
+/** A page of the project's enabled franchises, by name (see getBuilderScopeFranchisesUrl). */
+export const listBuilderScopeFranchises = (ordering, token, options) =>
+  request(`${getBuilderScopeFranchisesUrl(ordering)}?${scopeListQuery(options)}`, { method: 'GET', headers: jsonHeaders(token) })
+
+/** One franchise by its id, enabled or not (see getBuilderScopeFranchisesUrl). */
+export const getBuilderScopeFranchise = (ordering, token, franchiseId) =>
+  request(`${getBuilderScopeFranchisesUrl(ordering)}/${encodeURIComponent(franchiseId)}?${scopeItemQuery()}`, { method: 'GET', headers: jsonHeaders(token) })
 
 const productUrl = (ordering, productId) => `${getBuilderBaseUrl(ordering)}/products/${encodeURIComponent(productId)}`
 
@@ -175,6 +270,137 @@ export const removeBuilderProductDomain = (ordering, token, productId) =>
 /** Sets up a failed domain again, once its CNAME record points here. */
 export const verifyBuilderProductDomain = (ordering, token, productId) =>
   request(`${productUrl(ordering, productId)}/domain/verify`, { method: 'POST', headers: jsonHeaders(token) })
+
+/** Most themes a website keeps (`theme.limit` past it). */
+export const BUILDER_THEMES_MAX = 5
+
+const themesUrl = (ordering, productId) => `${productUrl(ordering, productId)}/themes`
+const themeUrl = (ordering, productId, themeId) => `${themesUrl(ordering, productId)}/${encodeURIComponent(themeId)}`
+
+/**
+ * The schema the website's themes follow and the common `format`: token
+ * names, `fonts` (id → family), and the `derived_colors` and
+ * `derived_roles` the API works out by itself, which the editor hides.
+ */
+export const getBuilderThemeSchema = (ordering, token, productId) =>
+  request(`${productUrl(ordering, productId)}/theme/schema`, { method: 'GET', headers: jsonHeaders(token) })
+
+/**
+ * The website's themes, the active one first: `{ id, name, active, version,
+ * preset: { id, name, version } | null, has_draft, updated_at, upgraded_from }`.
+ * A version 1 theme is the one made with the previous editor; `upgraded_from`
+ * names the version of the schema a theme was saved with while it is shown
+ * converted to the current one.
+ */
+export const listBuilderThemes = (ordering, token, productId) =>
+  listAllPages(themesUrl(ordering, productId), token)
+
+/** A new inactive theme from `blank`, the `current` one or a `preset` (`presetId`). */
+export const createBuilderTheme = (ordering, token, productId, { name, source, presetId }) =>
+  request(themesUrl(ordering, productId), {
+    method: 'POST',
+    headers: jsonHeaders(token),
+    body: JSON.stringify(source === 'preset' ? { name, source, preset_id: presetId } : { name, source })
+  })
+
+/**
+ * A theme with what the project changed (`values`, `draft_values`) and how
+ * it looks (`resolved`: the draft over the schema's defaults, aliases resolved).
+ * Saved with another version of the schema (an earlier one, or a later one
+ * the website went back from), it comes converted to
+ * `schema_version`: `upgraded_from` names the one it was saved with until it
+ * saves, and `upgrade_dropped` the paths converting it lost. `invalid`
+ * (`[{ path, code }]`) is what it saved that this version no longer takes,
+ * which saving drops; but a number out of its range (`.out_of_range`), which
+ * comes at the closest limit and saves there.
+ */
+export const getBuilderTheme = (ordering, token, productId, themeId) =>
+  request(themeUrl(ordering, productId, themeId), { method: 'GET', headers: jsonHeaders(token) })
+
+export const renameBuilderTheme = (ordering, token, productId, themeId, name) =>
+  request(themeUrl(ordering, productId, themeId), {
+    method: 'PUT',
+    headers: jsonHeaders(token),
+    body: JSON.stringify({ name })
+  })
+
+/** Only an inactive theme (`theme.active` otherwise). */
+export const deleteBuilderTheme = (ordering, token, productId, themeId) =>
+  request(themeUrl(ordering, productId, themeId), { method: 'DELETE', headers: jsonHeaders(token) })
+
+/**
+ * Merges `values` (partial, like the theme) over the draft; a null takes
+ * the default back. Refused with `theme.invalid` and `errors` by path. A
+ * theme shown converted saves converted, even with no `values`.
+ */
+export const saveBuilderThemeDraft = (ordering, token, productId, themeId, values) =>
+  request(`${themeUrl(ordering, productId, themeId)}/draft`, {
+    method: 'PUT',
+    headers: jsonHeaders(token),
+    body: JSON.stringify({ values })
+  })
+
+/**
+ * The theme resolved with `values` (partial changes over the draft, a null
+ * taking a default back) without saving them: `{ resolved, sources }`, where
+ * `sources` says by path where a value that isn't the schema's default comes
+ * from (own, inherited, identity, derived). Refused like the draft.
+ */
+export const resolveBuilderTheme = (ordering, token, productId, themeId, values) =>
+  request(`${themeUrl(ordering, productId, themeId)}/resolve`, {
+    method: 'POST',
+    headers: jsonHeaders(token),
+    body: JSON.stringify({ values })
+  })
+
+export const discardBuilderThemeDraft = (ordering, token, productId, themeId) =>
+  request(`${themeUrl(ordering, productId, themeId)}/draft`, { method: 'DELETE', headers: jsonHeaders(token) })
+
+/** The draft becomes the values; an active theme shows them on the website. */
+export const publishBuilderTheme = (ordering, token, productId, themeId) =>
+  request(`${themeUrl(ordering, productId, themeId)}/publish`, { method: 'POST', headers: jsonHeaders(token) })
+
+/** Makes it the website's theme; the others stop being active. */
+export const activateBuilderTheme = (ordering, token, productId, themeId) =>
+  request(`${themeUrl(ordering, productId, themeId)}/activate`, { method: 'POST', headers: jsonHeaders(token) })
+
+/** Puts the preset's values in the draft: all of them, or one `section` (`tokens.color`…). */
+/** The most paths one reset takes (`sections`); they apply together or not at all. */
+export const BUILDER_RESET_MAX = 500
+
+/**
+ * Takes the theme back to its preset: a path (`section`), several in one
+ * write (a list, up to BUILDER_RESET_MAX), or with neither the whole theme.
+ */
+export const resetBuilderTheme = (ordering, token, productId, themeId, section = null) =>
+  request(`${themeUrl(ordering, productId, themeId)}/reset`, {
+    method: 'POST',
+    headers: jsonHeaders(token),
+    body: JSON.stringify(Array.isArray(section) ? { sections: section } : section ? { section } : {})
+  })
+
+/**
+ * Uploads the file of `images.<key>` (a key of the schema's `images`) and
+ * answers its `{ url }`, to set in the draft. Checked against the key's
+ * formats and the limits of the schema's `format.images`.
+ */
+export const uploadBuilderThemeImage = (ordering, token, productId, themeId, key, file) => {
+  const body = new FormData()
+  body.append('key', key)
+  body.append('file', file)
+  return request(`${themeUrl(ordering, productId, themeId)}/images`, {
+    method: 'POST',
+    headers: authHeaders(token),
+    body
+  })
+}
+
+/** The presets a website of this type can start from: `{ id, code, name, version, preview }`. */
+export const listBuilderThemePresets = (ordering, token, productId) =>
+  request(`${getBuilderBaseUrl(ordering)}/theme_presets?${new URLSearchParams({ product_id: String(productId), page: '1', page_size: String(BUILDER_PAGE_SIZE_MAX) }).toString()}`, {
+    method: 'GET',
+    headers: jsonHeaders(token)
+  })
 
 const appUrl = (ordering, productId, appId) =>
   `${getBuilderBaseUrl(ordering)}/products/${encodeURIComponent(productId)}/apps/${encodeURIComponent(appId)}`

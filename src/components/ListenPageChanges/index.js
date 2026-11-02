@@ -43,7 +43,6 @@ export const ListenPageChanges = ({ children }) => {
     language: '/settings/language',
     logs: '/settings/logs',
     enterprise_settings: '/settings/enterprise',
-    purchase_addons: '/purchase/addons',
     free_products: '/free-downloads',
     business_analytics: '/intelligence/business',
     drivers_analytics: '/intelligence/drivers',
@@ -90,7 +89,6 @@ export const ListenPageChanges = ({ children }) => {
     gift_cards: '/gift-cards',
     gift_cards_settings: '/gift-cards-settings',
     reservations: '/reservations',
-    connect_overview: '/connect/overview',
     delivery_services: '/connect/delivery-services',
     importers: '/connect/importers',
     pos_menu: '/connect/pos-menu',
@@ -107,10 +105,7 @@ export const ListenPageChanges = ({ children }) => {
       if (Object.values(params).length === 0 && page === 'store') {
         path = path.replace(':store?', '')
       }
-      if (search) {
-        path = `${path}${search}`
-      }
-      history[replace ? 'replace' : 'push'](state ? { pathname: path, state } : path)
+      history[replace ? 'replace' : 'push'](state ? { pathname: path, search, state } : `${path}${search || ''}`)
     }
   }
 

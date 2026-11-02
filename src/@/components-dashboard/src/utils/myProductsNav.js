@@ -2,7 +2,7 @@
  * My products sidebar rules.
  *
  * Websites, dashboard and enabled apps share `/my-products`.
- * Config add-ons stay in Settings. The purchase catalog stays in Apps & Addons.
+ * Config add-ons stay in Settings.
  */
 
 export const MY_PRODUCTS_PATH = '/my-products'

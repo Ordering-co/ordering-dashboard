@@ -50,7 +50,8 @@ import {
   BusinessSelector,
   Breadcrumb,
   ColumnsAllowWrapper,
-  ButtonWrapper
+  ButtonWrapper,
+  CatalogError
 } from './styles'
 
 const BusinessProductsListingUI = (props) => {
@@ -74,6 +75,8 @@ const BusinessProductsListingUI = (props) => {
     openCategories,
     setFormTaxState,
     formTaxState,
+    catalogState,
+    retryCatalogs,
     taxes,
     setTaxes,
     fees,
@@ -186,6 +189,15 @@ const BusinessProductsListingUI = (props) => {
       [type]: !allowSpreadColumns[type]
     })
   }
+
+  const taxesCatalogError = !!catalogState?.taxes.error
+  const feesCatalogError = !!catalogState?.fees.error
+  const catalogError = taxesCatalogError || feesCatalogError
+  const catalogErrorMessage = taxesCatalogError && feesCatalogError
+    ? t('PRODUCT_FISCAL_CATALOGS_LOAD_ERROR', 'Could not load taxes and fees. Please try again.')
+    : taxesCatalogError
+      ? t('PRODUCT_TAX_CATALOG_LOAD_ERROR', 'Could not load taxes. Please try again.')
+      : t('PRODUCT_FEE_CATALOG_LOAD_ERROR', 'Could not load fees. Please try again.')
 
   const handleOpenCategoryDetails = (category = null, isInitialRender) => {
     setOpenSidebar(null)
@@ -450,6 +462,21 @@ const BusinessProductsListingUI = (props) => {
             </ActionsGroup>
           )}
         </HeaderContainer>
+        {catalogError && (
+          <CatalogError role='alert'>
+            {catalogErrorMessage}
+            <Button
+              type='button'
+              color='primary'
+              outline
+              borderRadius='8px'
+              onClick={retryCatalogs}
+              disabled={catalogState.taxes.loading && catalogState.fees.loading}
+            >
+              {t('RETRY', 'Retry')}
+            </Button>
+          </CatalogError>
+        )}
         {slug && (
           <ButtonWrapper>
             <Button
@@ -590,6 +617,8 @@ const BusinessProductsListingUI = (props) => {
           handleUpdateBusinessState={handleUpdateBusinessState}
           setFormTaxState={setFormTaxState}
           formTaxState={formTaxState}
+          catalogState={catalogState}
+          retryCatalogs={retryCatalogs}
           taxes={taxes}
           setTaxes={setTaxes}
           fees={fees}

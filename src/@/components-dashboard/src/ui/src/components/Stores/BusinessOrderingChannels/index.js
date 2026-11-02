@@ -4,7 +4,6 @@ import { useLanguage } from '../../../../../index'
 import { Button, Input } from '../../../styles'
 import { Alert } from '../../Shared'
 import { addQueryToUrl } from '../../../utils'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 
 import {
   BusinessOrderingChannelsContainer,
@@ -27,15 +26,14 @@ export const BusinessOrderingChannels = (props) => {
 
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
-  const isRestricted = useBusinessOwnerRestriction()
   const [slug, setSlug] = useState('')
-  const [selectedOption, setSelectedOption] = useState(isRestricted ? 'widgets' : 'custom_slug')
+  const [selectedOption, setSelectedOption] = useState('custom_slug')
   const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
 
   const optionList = [
-    !isRestricted && { key: 'custom_slug', name: t('CUSTOM_SLUG', 'Custom slug') },
+    { key: 'custom_slug', name: t('CUSTOM_SLUG', 'Custom slug') },
     { key: 'widgets', name: t('WIDGETS', 'Widgets') }
-  ].filter(Boolean)
+  ]
 
   const changeCustomslug = () => {
     if (slug === '') {
@@ -79,8 +77,7 @@ export const BusinessOrderingChannels = (props) => {
   useEffect(() => {
     const tab = query.get('tab')
     const includeTab = optionList.some(_tab => _tab?.key === tab)
-    const fallback = isRestricted ? 'widgets' : 'custom_slug'
-    handleChangeOption(tab && includeTab ? tab : fallback, !!(tab && includeTab))
+    handleChangeOption(tab && includeTab ? tab : 'custom_slug', !!(tab && includeTab))
   }, [])
 
   return (

@@ -2,6 +2,8 @@ import React from 'react'
 import { useApi } from '~components'
 import { parseJsonObject } from '../../../../../../utils/safeJsonParse'
 
+export const hasSetupGuide = (plugin) => Boolean(parseJsonObject(plugin?.links)?.info_setup && plugin?.root)
+
 export const DoordashContent = ({ plugin }) => {
   const [ordering] = useApi()
 

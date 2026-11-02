@@ -137,3 +137,25 @@ it('closes the suggestions on Escape without letting the key reach window listen
   expect(windowKeyDown).not.toHaveBeenCalled()
   window.removeEventListener('keydown', windowKeyDown)
 })
+
+it('hands the raw prediction to onSelectPlace without spending a second details request', async () => {
+  const prediction = { ...newPrediction(), types: ['restaurant', 'establishment'] }
+  setupNew(vi.fn(async () => ({ suggestions: [{ placePrediction: prediction }] })))
+  const selected = vi.fn()
+  const { container } = render(<GoogleAutocompleteInput apiKey='test-key' onSelectPlace={selected} />)
+  fireEvent.change(container.querySelector('input'), { target: { value: 'joe' } })
+  fireEvent.click(await screen.findByRole('option'))
+  expect(selected).toHaveBeenCalledWith({ placeId: 'new-place-1', types: ['restaurant', 'establishment'], prediction })
+  expect(prediction.toPlace().fetchFields).not.toHaveBeenCalled()
+})
+
+it('passes the legacy widget place to onSelectPlace', () => {
+  setup()
+  const selected = vi.fn()
+  render(<GoogleAutocompleteInput apiKey='test-key' onSelectPlace={selected} fields={['place_id', 'types']} />)
+  const widget = sdk.widgets[0]
+  expect(widget.options.fields).toEqual(['place_id', 'types'])
+  widget.place = { ...validPlace(), types: ['cafe', 'establishment'] }
+  widget.callback()
+  expect(selected).toHaveBeenCalledWith({ placeId: 'place-1', types: ['cafe', 'establishment'], place: widget.place })
+})

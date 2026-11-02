@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useLanguage } from '../../../../../index'
 import { SettingsList } from '../SettingsList'
 import { PayoutRuleForm } from '../../Shared/PayoutRuleForm'
+import { OAuthRedirectUri } from './OAuthRedirectUri'
 import {
   RuleFootnote,
   StripeConnectPanel,
@@ -39,6 +40,7 @@ export const SettingsStripeConnect = (props) => {
 
       {currentTab === 'settings' && (
         <StripeConnectPanel role='tabpanel'>
+          <OAuthRedirectUri />
           <SettingsList category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle focus={focus} />
         </StripeConnectPanel>
       )}

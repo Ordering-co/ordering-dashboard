@@ -1,11 +1,10 @@
 import React from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useUtils, useLanguage, BusinessDetails as BusinessController } from '../../../../../index'
+import { useUtils, useLanguage, useSession, BusinessDetails as BusinessController } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { Switch } from '../../../styles'
 import { StarFill, CheckSquareFill, Square } from 'react-bootstrap-icons'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 
 import {
   SingleBusinessContainer,
@@ -43,7 +42,8 @@ const SingleBusinessUI = (props) => {
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
   const theme = useTheme()
-  const isRestricted = useBusinessOwnerRestriction()
+  const [{ user }] = useSession()
+  const isAdmin = user?.level === 0
 
   const handleClickBusiness = (e) => {
     const isInvalid = e.target.closest('.business_enable_control') ||
@@ -86,7 +86,7 @@ const SingleBusinessUI = (props) => {
                     </BusinessGeneralInfo>
                   </td>
                 )}
-                {allowColumns?.featured && !isRestricted && (
+                {allowColumns?.featured && isAdmin && (
                   <td>
                     <InfoBlock>
                       <p className='bold'><Skeleton width={60} /></p>
@@ -147,7 +147,7 @@ const SingleBusinessUI = (props) => {
                     </BusinessGeneralInfo>
                   </td>
                 )}
-                {allowColumns?.featured && !isRestricted && (
+                {allowColumns?.featured && isAdmin && (
                   <td>
                     <FeaturedWrapper className='featured'>
                       <Switch

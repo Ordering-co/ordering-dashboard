@@ -1,5 +1,6 @@
 import { BUILDER_ALLOWED_LEVELS, canAccessBuilder, canAccessSchoolsPage, getConnectVisualAccess, SCHOOLS_ALLOWED_LEVELS } from './dashboardFeatureAccess'
 import { SIDEBAR_NAV_ORDER, orderSidebarItems } from './sidebarNavOrder'
+import { getMyProductsSite, shouldHideMigrated } from './websiteMigration'
 
 /**
  * Dashboard navigation.
@@ -30,7 +31,6 @@ export const DASHBOARD_ROUTE_LEVELS = {
   '/stores/brand': [0],
   '/stores/devices': [0],
   '/stores/add': [0, 2],
-  '/connect/overview': getConnectLevels('connect_overview'),
   '/connect/delivery-services': getConnectLevels('delivery_services'),
   '/connect/importers': getConnectLevels('importers'),
   '/connect/pos-menu': getConnectLevels('pos_menu'),
@@ -70,7 +70,6 @@ export const DASHBOARD_ROUTE_LEVELS = {
   '/settings/logs': [0],
   '/free-downloads': [0],
   '/open-source-code': [0],
-  '/purchase/addons': [0],
   '/support': [0],
   '/ordering-products': [0],
   '/profile': [0, 2, 5, 8]
@@ -119,11 +118,10 @@ const BUSINESS_OWNER_INTELLIGENCE_IDS = [1, 6]
  * Sidebar sections. Each section has `visible` (the accordion is shown) and
  * `items` (sub menus with `enabled`). Item titles are translated with `t`.
  */
-export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user, configs = {}, project } = {}) => {
+export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [] } = {}) => {
   const { level, readOnlyAdmin, readOnlyDeliveryManager, readOnlyBusinessOwner, isReadOnly } = getDashboardRoleFlags(user)
   const {
     showConnectTab,
-    connectOverview,
     connectDeliveryServices,
     connectPosMenuSync,
     connectImporters,
@@ -215,7 +213,6 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
   ]
 
   const connect = [
-    { id: 1, title: t('CONNECT_OVERVIEW', 'Overview'), pageName: 'connect_overview', url: '/connect/overview', enabled: connectOverview },
     { id: 2, title: t('CONNECT_DELIVERY_SERVICES', 'Delivery services'), pageName: 'delivery_services', url: '/connect/delivery-services', enabled: connectDeliveryServices },
     { id: 3, title: t('CONNECT_POS_MENU', 'POS & Menu Sync'), pageName: 'pos_menu', url: '/connect/pos-menu', enabled: connectPosMenuSync },
     { id: 4, title: t('CONNECT_IMPORTERS', 'Importers'), pageName: 'importers', url: '/connect/importers', enabled: connectImporters },
@@ -231,9 +228,11 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     { id: 5, title: t('PROFESSIONALS', 'Professionals'), pageName: 'professionals', url: '/users/professionals', enabled: true }
   ]
 
+  // A website migrated to the new website leaves My products some days later
+  const notMigratedAway = (id) => !shouldHideMigrated(getMyProductsSite(sites, id)?.migrated_at)
   const myProducts = [
-    { id: 'web', title: t('ORDERING_WEBSITE', 'Ordering website'), pageName: 'ordering_website', url: '/my-products/ordering-website', enabled: !configs?.web_franchises_x?.value, type: 'noapi' },
-    { id: 'web_marketplace_26', title: t('ORDERING_WEBSITE_2', 'Ordering website 2'), pageName: 'ordering_website_2', url: '/my-products/ordering-website-2', enabled: !!configs?.web_marketplace_26?.value, type: 'noapi' },
+    { id: 'web', title: t('ORDERING_WEBSITE', 'Ordering website'), pageName: 'ordering_website', url: '/my-products/ordering-website', enabled: !configs?.web_franchises_x?.value && notMigratedAway('web'), type: 'noapi' },
+    { id: 'web_marketplace_26', title: t('ORDERING_WEBSITE_2', 'Ordering website 2'), pageName: 'ordering_website_2', url: '/my-products/ordering-website-2', enabled: !!configs?.web_marketplace_26?.value && notMigratedAway('web_marketplace_26'), type: 'noapi' },
     { id: 'web_dashboard_x', title: t('ORDERING_DASHBOARD', 'Dashboard'), pageName: 'dashboard', url: '/my-products/dashboard', enabled: !!configs?.web_dashboard_x?.value, type: 'noapi' },
     { id: 'web_franchises_x', title: t('FRANCHISES_WEBSITE', 'Franchises website'), pageName: 'franchises_website', url: '/my-products/franchises-website', enabled: !!configs?.web_franchises_x?.value, type: 'noapi' }
   ]
@@ -324,7 +323,7 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     builder: {
       key: 'builder',
       title: t('BUILDER', 'Builder'),
-      visible: canAccessBuilder({ project, level }) && !isReadOnly,
+      visible: canAccessBuilder(level) && !isReadOnly,
       items: [{ id: 'builder', title: t('BUILDER', 'Builder'), pageName: 'builder', url: '/builder', enabled: true }]
     },
     logs: {
@@ -362,13 +361,6 @@ export const getDashboardFooterLinks = ({ t = (_key, fallback) => fallback, user
       pageName: 'open_source_code',
       url: '/open-source-code',
       enabled: level === 0
-    },
-    {
-      id: 'purchase_addons',
-      title: t('APPS_AND_ADDONS', 'Apps & Addons'),
-      pageName: 'purchase_addons',
-      url: '/purchase/addons',
-      enabled: level === 0 && !!user?.user_system_id && !isReadOnly
     },
     {
       id: 'profile',

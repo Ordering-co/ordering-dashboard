@@ -26,6 +26,7 @@ import { WhiteLabelCustomDomainBlock } from '../WhiteLabelCustomDomain/WhiteLabe
 import { bytesConverter, learnOptionsValues } from '../../../utils'
 import { getDefaultTemporalSiteUrl, getPreferredSiteUrl } from '../../../utils/getPreferredSiteUrl'
 import { SelectBusiness } from './SelectBusiness'
+import { WebsiteInBuilder, WebsiteMigration } from '../WebsiteMigration'
 import { OrderingWidgets } from '../OrderingWidgets'
 import { FilterSettings } from '../../Settings'
 
@@ -99,7 +100,11 @@ export const OrderingWebsiteUI = (props) => {
     isFranchise,
     setAppIdState,
     forcedSiteId,
-    business
+    business,
+    withMigration,
+    disableSiteCreation,
+    siteMissing,
+    appId
   } = props
 
   const [, t] = useLanguage()
@@ -110,9 +115,11 @@ export const OrderingWebsiteUI = (props) => {
   const [ordering, { configurations }] = useApi()
   const location = useLocation()
   const [projectStatus] = useProjectState()
+  const isMarketplace26 = appId === 'web_marketplace_26'
   const temporalIsFranchise = isFranchise || (
     !isDashboard &&
     !forcedSiteId &&
+    !isMarketplace26 &&
     projectStatus?.websiteProduct === 'web_franchises_x'
   )
 
@@ -131,6 +138,16 @@ export const OrderingWebsiteUI = (props) => {
   const [isCustomDomain, setIsCustomDomain] = useState(false)
   const [removeDomainConfirm, setRemoveDomainConfirm] = useState({ open: false })
   const [franchiseSelected, setFranchiseSelected] = useState(null)
+  const [migrationState, setMigrationState] = useState(null)
+
+  // A migrated site is edited in Builder: only its message stays, without the
+  // product card or the editor. Until its status is known they wait, so they
+  // don't flash before going away
+  const migratedSite = migrationState?.migration?.status === 'migrated' ? migrationState.migration : null
+  // No site, or without the migration's message one already migrated: it's made and edited in Builder
+  const inBuilder = siteMissing || (!withMigration && !!site?.migrated_at)
+  // A page that creates no site shows its editor only once it has one
+  const showEditor = !inBuilder && (!withMigration || (!site?.id && !disableSiteCreation) || (migrationState?.loading === false && !migratedSite))
 
   const canRemoveCustomDomain = site?.domain && site?.deployment_provider === CLOUDFLARE_DEPLOYMENT_PROVIDER
 
@@ -312,7 +329,7 @@ export const OrderingWebsiteUI = (props) => {
             )}
           </HeaderTitleContainer>
         )}
-        {(!isDashboard && !isFranchise && !forcedSiteId && location.pathname !== '/my-products/ordering-website-2') && (
+        {(showEditor && !isDashboard && !isFranchise && !forcedSiteId && location.pathname !== '/my-products/ordering-website-2') && (
           <WebsiteWrapper>
             <InfoWrapper>
               <TitleContainer>
@@ -345,6 +362,10 @@ export const OrderingWebsiteUI = (props) => {
             <img src={theme.images.myProducts.orderingWebsite} alt='ordering-website' />
           </WebsiteWrapper>
         )}
+        {withMigration && site?.id && (
+          <WebsiteMigration siteId={site.id} onChange={setMigrationState} />
+        )}
+        {inBuilder && <WebsiteInBuilder />}
         {isFranchise && franchiseSites?.length > 1 && (
           <SelectContainer>
             <Select
@@ -361,652 +382,656 @@ export const OrderingWebsiteUI = (props) => {
             />
           </SelectContainer>
         )}
-        <MoreSettingsHeader isDashboard={isDashboard} compact={!!forcedSiteId}>
-          {!isDashboard && !forcedSiteId && (
-            <>
-              <h2>{t('MORE_SETTINGS_FOR_YOUR', 'More settings for your')} <span>{isFranchise ? t('FRANCHISE_WEBSITE', 'Franchise website') : t('WEBSITE_ORIGINAL', 'website')}</span></h2>
-              <p>{t('MORE_SETTINGS_YOUR_WEBSITE_DESC', 'Change background, colors, fonts, style, branding and all the essentials of your brand.')}</p>
-            </>
-          )}
-          {settingsList.filter((setting) => setting.enabled).length > 1 && (
-            <TabWrapper>
-              <Tabs>
-                {settingsList.map(setting => (
-                  setting.enabled && (
-                    <Tab
-                      key={setting.key}
-                      active={selectedSetting === setting.key}
-                      onClick={() => !orderingTheme?.loading && handleChangeTab(setting.key)}
-                    >
-                      {setting.name}
-                    </Tab>
-                  )
-                ))}
-              </Tabs>
-            </TabWrapper>
-          )}
-        </MoreSettingsHeader>
-        {selectedSetting === 'basic' && (
-          <FormWrapper>
-            <InputFormWrapper>
-              <InnerBlock isDashboard={isDashboard}>
-                <TitleWrapper>
-                  <h4>{
-                    isDashboard
-                      ? t('SETTINGS_DASHBOARD', 'Dashboard settings')
-                      : isFranchise
-                        ? t('SETTINGS_FRANCHISE_WEBSITE', 'Settings franchise website')
-                        : t('WEBSITE_SETTINGS', 'Website settings')}</h4>
-                  <CustomDomainInfo>
-                    <IconButton
-                      color='primary'
-                    >
-                      <InfoCircleFill />
-                    </IconButton>
-                    <CustomDomainInfoContent>
-                      <span>{t('CUSTOM_DOMAIN_INFO_DESC_1', 'When creating a custom domain, add your domain or subdomain without http protocol or slashes.')}</span>
-                      <span>{t('EXAMPLE', 'Example')}: www.customerwebsite.{configurations?.subdomain}.com</span>
-                      <span>{t('CUSTOM_DOMAIN_INFO_DESC_2', 'If you have problems with the set-up, please contact our')}<a href={`https://www.${configurations?.subdomain}.com/contact-us`} rel='noopener noreferrer' target='_blank'>{t('CUSTOMER_SUPPORT_TEAM', 'customer support team')}</a></span>
-                    </CustomDomainInfoContent>
-                  </CustomDomainInfo>
-                </TitleWrapper>
-                <FormGroup>
-                  <label>
-                    {orderingTheme?.loading
-                      ? (
-                        <Skeleton height={20} width={150} />
-                        )
-                      : (
-                        <>
-                          {t('NAME', 'Name')}
-                        </>
-                        )}
-                  </label>
-                  {orderingTheme?.loading
-                    ? (
-                      <Skeleton height={40} style={{ width: '100%' }} />
-                      )
-                    : (
-                      <Input
-                        name='name'
-                        placeholder={
-                          isDashboard
-                            ? t('SOURCE_DEMO_DASHBOARD', 'Source demo dashboard')
-                              ? isFranchise
-                              : t('SOURCE_DEMO_FRANCHISE_WEBSITE', 'Source demo franchise website')
-                            : t('SOURCE_DEMO_WEBSITE', 'Source demo website')}
-                        value={site?.name || ''}
-                        onChange={handleChangeSiteSettings}
-                      />
-                      )}
-                </FormGroup>
-                <FormGroup>
-                  <label>
-                    {orderingTheme?.loading
-                      ? (
-                        <Skeleton height={20} width={150} />
-                        )
-                      : (
-                        <>
-                          {t('DESCRIPTION', 'Decription')}
-                        </>
-                        )}
-                  </label>
-                  {orderingTheme?.loading
-                    ? (
-                      <Skeleton height={65} style={{ width: '100%' }} />
-                      )
-                    : (
-                      <TextArea
-                        name='description'
-                        placeholder={t('DESCRIPTION', 'Decription')}
-                        value={site?.description || ''}
-                        onChange={handleChangeSiteSettings}
-                      />
-                      )}
-                </FormGroup>
-                <FormGroup>
-                  <label>
-                    {orderingTheme?.loading
-                      ? (
-                        <Skeleton height={20} width={150} />
-                        )
-                      : (
-                        <>
-                          {isDashboard || isFranchise ? t('DEFAULT_DOMAIN', 'Default domain') : t('TEMPORAL_DOMAIN', 'Temporal domain')}
-                        </>
-                        )}
-                  </label>
-                  {orderingTheme?.loading
-                    ? (
-                      <Skeleton height={20} style={{ width: '100%' }} />
-                      )
-                    : (
-                      <TemporalDomail>
-                        {(() => {
-                          if (!isDashboard && !isFranchise && !forcedSiteId && !projectStatus?.websiteProduct) return null
-                          const temporalDomainUrl = getDefaultTemporalSiteUrl({
-                            site: forcedSiteId ? site : { type: site?.type, code: site?.code },
-                            ordering,
-                            configurations,
-                            isDashboard,
-                            isFranchise: temporalIsFranchise,
-                            preserveExplicitSite: !!forcedSiteId
-                          })
-                          if (!temporalDomainUrl) return null
-                          return (
-                            <>
-                              {t('VISIT', 'Visit')}: <a
-                                href={temporalDomainUrl}
-                                rel='noopener noreferrer'
-                                target='_blank'
-                              >
-                                {temporalDomainUrl}
-                              </a>
-                            </>
-                          )
-                        })()}
-                      </TemporalDomail>
-                      )}
-                </FormGroup>
-                <FormGroup>
-                  <label>
-                    {orderingTheme?.loading
-                      ? (
-                        <Skeleton height={20} width={150} />
-                        )
-                      : (
-                        <>
-                          {t('CUSTOM_DOMAIN', 'Custom domain')}
-                        </>
-                        )}
-                  </label>
-                  {orderingTheme?.loading
-                    ? (
-                      <Skeleton height={40} style={{ width: '100%' }} />
-                      )
-                    : (
-                      <>
-                        {forcedSiteId
-                          ? (
-                            <WhiteLabelCustomDomainBlock
-                              site={site}
-                              setSite={setSite}
-                              onRequestEdit={() => setIsCustomDomain(true)}
-                            />
-                            )
-                          : (
-                        <>
-                        {site?.domain && site?.ssl_status !== 'error' && (
-                          <TemporalDomail marginBottom>
-                            {t('VISIT', 'Visit')}: <a href={`https://${site?.domain}`} rel='noopener noreferrer' target='_blank'>https://{site?.domain}</a>
-                          </TemporalDomail>
-                        )}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', margin: '10px 0' }}>
-                          <Button
-                            color='primary'
-                            outline
-                            borderRadius='8px'
-                            onClick={() => setIsCustomDomain(true)}
-                          >
-                            {site?.domain ? t('CHANGE_CUSTOM_DOMAIN', 'Change custom domain') : t('REQUEST_CUSTOM_DOMAIN', 'Request custom domain')}
-                          </Button>
-                          {canRemoveCustomDomain && (
-                            <DangerOutlineButton
-                              outline
-                              borderRadius='8px'
-                              disabled={formState?.loading}
-                              onClick={() => setRemoveDomainConfirm({ open: true })}
-                            >
-                              {t('REMOVE_CUSTOM_DOMAIN', 'Remove custom domain')}
-                            </DangerOutlineButton>
-                          )}
-                        </div>
-                        {site?.domain && (
-                          <>
-                            {site?.ssl_status === 'issued' && site?.ssl_process_status !== 'pending' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ISSUED', 'Your domain is now added , please verify the custom domain link above.')}</CustomeDomainDesc>
-                            )}
-                            {site?.ssl_status === 'pre-issued' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_PRE_ISSUED', 'Process almost finish, please wait')}</CustomeDomainDesc>
-                            )}
-                            {site?.ssl_status === 'error' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ERROR', 'Custom domain can\'t be created, please try again with valid data')}</CustomeDomainDesc>
-                            )}
-                            {((site?.ssl_status === 'pending_validation') || (site?.ssl_status === 'void' && site?.ssl_process_status === 'pending')) && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_PENDING_VALIDATION', 'A custom domain is being created, please wait')}</CustomeDomainDesc>
-                            )}
-                            {site?.ssl_status === 'revoked' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_REVOKED', 'Warning: Custom domain is revoked')}</CustomeDomainDesc>
-                            )}
-                            {site?.ssl_status === 'cancelled' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_CANCELLED', 'Custom domain is cancelled')}</CustomeDomainDesc>
-                            )}
-                            {site?.ssl_status === 'expired' && (
-                              <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_EXPIRED', 'Custom domain is expired')}</CustomeDomainDesc>
-                            )}
-                          </>
-                        )}
-                            </>
-                            )}
-                        {forcedSiteId && canRemoveCustomDomain && (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', margin: '10px 0' }}>
-                            <DangerOutlineButton
-                              outline
-                              borderRadius='8px'
-                              disabled={formState?.loading}
-                              onClick={() => setRemoveDomainConfirm({ open: true })}
-                            >
-                              {t('REMOVE_CUSTOM_DOMAIN', 'Remove custom domain')}
-                            </DangerOutlineButton>
-                          </div>
-                        )}
-                      </>
-                      )}
-                </FormGroup>
-              </InnerBlock>
-              {isDashboard && !!formState?.changes && Object.keys(formState?.changes).length > 0 && (
-                <Button
-                  className='save-site-settings'
-                  color='primary'
-                  borderRadius='8px'
-                  onClick={() => handleUpdateSite()}
-                  disabled={orderingTheme?.loading}
-                >
-                  {t('SAVE', 'Save')}
-                </Button>
-              )}
-            </InputFormWrapper>
-            {isDashboard && (
-              <InputFormWrapper>
-                <FilterSettings {...settingsFilterProps} />
-              </InputFormWrapper>
-            )}
-            {!isDashboard && (
+        {showEditor && (
+          <>
+          <MoreSettingsHeader isDashboard={isDashboard} compact={!!forcedSiteId}>
+            {!isDashboard && !forcedSiteId && (
               <>
-                {!isFranchise && !forcedSiteId && (
-                  <InputFormWrapper>
-                    <InnerBlock>
-                      <h4>{t('WEBSITE_THEME', 'Website Theme')}</h4>
+                <h2>{t('MORE_SETTINGS_FOR_YOUR', 'More settings for your')} <span>{isFranchise ? t('FRANCHISE_WEBSITE', 'Franchise website') : t('WEBSITE_ORIGINAL', 'website')}</span></h2>
+                <p>{t('MORE_SETTINGS_YOUR_WEBSITE_DESC', 'Change background, colors, fonts, style, branding and all the essentials of your brand.')}</p>
+              </>
+            )}
+            {settingsList.filter((setting) => setting.enabled).length > 1 && (
+              <TabWrapper>
+                <Tabs>
+                  {settingsList.map(setting => (
+                    setting.enabled && (
+                      <Tab
+                        key={setting.key}
+                        active={selectedSetting === setting.key}
+                        onClick={() => !orderingTheme?.loading && handleChangeTab(setting.key)}
+                      >
+                        {setting.name}
+                      </Tab>
+                    )
+                  ))}
+                </Tabs>
+              </TabWrapper>
+            )}
+          </MoreSettingsHeader>
+          {selectedSetting === 'basic' && (
+            <FormWrapper>
+              <InputFormWrapper>
+                <InnerBlock isDashboard={isDashboard}>
+                  <TitleWrapper>
+                    <h4>{
+                      isDashboard
+                        ? t('SETTINGS_DASHBOARD', 'Dashboard settings')
+                        : isFranchise
+                          ? t('SETTINGS_FRANCHISE_WEBSITE', 'Settings franchise website')
+                          : t('WEBSITE_SETTINGS', 'Website settings')}</h4>
+                    <CustomDomainInfo>
+                      <IconButton
+                        color='primary'
+                      >
+                        <InfoCircleFill />
+                      </IconButton>
+                      <CustomDomainInfoContent>
+                        <span>{t('CUSTOM_DOMAIN_INFO_DESC_1', 'When creating a custom domain, add your domain or subdomain without http protocol or slashes.')}</span>
+                        <span>{t('EXAMPLE', 'Example')}: www.customerwebsite.{configurations?.subdomain}.com</span>
+                        <span>{t('CUSTOM_DOMAIN_INFO_DESC_2', 'If you have problems with the set-up, please contact our')}<a href={`https://www.${configurations?.subdomain}.com/contact-us`} rel='noopener noreferrer' target='_blank'>{t('CUSTOMER_SUPPORT_TEAM', 'customer support team')}</a></span>
+                      </CustomDomainInfoContent>
+                    </CustomDomainInfo>
+                  </TitleWrapper>
+                  <FormGroup>
+                    <label>
                       {orderingTheme?.loading
                         ? (
                           <Skeleton height={20} width={150} />
                           )
                         : (
-                          <WebsiteThemeBlock>
-                            <div>
-                              <RadioItem
-                                onClick={() => handleChangeValue('marketplace', 'website_theme', 'type')}
+                          <>
+                            {t('NAME', 'Name')}
+                          </>
+                          )}
+                    </label>
+                    {orderingTheme?.loading
+                      ? (
+                        <Skeleton height={40} style={{ width: '100%' }} />
+                        )
+                      : (
+                        <Input
+                          name='name'
+                          placeholder={
+                            isDashboard
+                              ? t('SOURCE_DEMO_DASHBOARD', 'Source demo dashboard')
+                                ? isFranchise
+                                : t('SOURCE_DEMO_FRANCHISE_WEBSITE', 'Source demo franchise website')
+                              : t('SOURCE_DEMO_WEBSITE', 'Source demo website')}
+                          value={site?.name || ''}
+                          onChange={handleChangeSiteSettings}
+                        />
+                        )}
+                  </FormGroup>
+                  <FormGroup>
+                    <label>
+                      {orderingTheme?.loading
+                        ? (
+                          <Skeleton height={20} width={150} />
+                          )
+                        : (
+                          <>
+                            {t('DESCRIPTION', 'Decription')}
+                          </>
+                          )}
+                    </label>
+                    {orderingTheme?.loading
+                      ? (
+                        <Skeleton height={65} style={{ width: '100%' }} />
+                        )
+                      : (
+                        <TextArea
+                          name='description'
+                          placeholder={t('DESCRIPTION', 'Decription')}
+                          value={site?.description || ''}
+                          onChange={handleChangeSiteSettings}
+                        />
+                        )}
+                  </FormGroup>
+                  <FormGroup>
+                    <label>
+                      {orderingTheme?.loading
+                        ? (
+                          <Skeleton height={20} width={150} />
+                          )
+                        : (
+                          <>
+                            {isDashboard || isFranchise ? t('DEFAULT_DOMAIN', 'Default domain') : t('TEMPORAL_DOMAIN', 'Temporal domain')}
+                          </>
+                          )}
+                    </label>
+                    {orderingTheme?.loading
+                      ? (
+                        <Skeleton height={20} style={{ width: '100%' }} />
+                        )
+                      : (
+                        <TemporalDomail>
+                          {(() => {
+                            if (!isDashboard && !isFranchise && !forcedSiteId && !isMarketplace26 && !projectStatus?.websiteProduct) return null
+                            const temporalDomainUrl = getDefaultTemporalSiteUrl({
+                              site: forcedSiteId ? site : { type: site?.type, code: site?.code },
+                              ordering,
+                              configurations,
+                              isDashboard,
+                              isFranchise: temporalIsFranchise,
+                              preserveExplicitSite: !!forcedSiteId
+                            })
+                            if (!temporalDomainUrl) return null
+                            return (
+                              <>
+                                {t('VISIT', 'Visit')}: <a
+                                  href={temporalDomainUrl}
+                                  rel='noopener noreferrer'
+                                  target='_blank'
+                                >
+                                  {temporalDomainUrl}
+                                </a>
+                              </>
+                            )
+                          })()}
+                        </TemporalDomail>
+                        )}
+                  </FormGroup>
+                  <FormGroup>
+                    <label>
+                      {orderingTheme?.loading
+                        ? (
+                          <Skeleton height={20} width={150} />
+                          )
+                        : (
+                          <>
+                            {t('CUSTOM_DOMAIN', 'Custom domain')}
+                          </>
+                          )}
+                    </label>
+                    {orderingTheme?.loading
+                      ? (
+                        <Skeleton height={40} style={{ width: '100%' }} />
+                        )
+                      : (
+                        <>
+                          {forcedSiteId
+                            ? (
+                              <WhiteLabelCustomDomainBlock
+                                site={site}
+                                setSite={setSite}
+                                onRequestEdit={() => setIsCustomDomain(true)}
+                              />
+                              )
+                            : (
+                          <>
+                          {site?.domain && site?.ssl_status !== 'error' && (
+                            <TemporalDomail marginBottom>
+                              {t('VISIT', 'Visit')}: <a href={`https://${site?.domain}`} rel='noopener noreferrer' target='_blank'>https://{site?.domain}</a>
+                            </TemporalDomail>
+                          )}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', margin: '10px 0' }}>
+                            <Button
+                              color='primary'
+                              outline
+                              borderRadius='8px'
+                              onClick={() => setIsCustomDomain(true)}
+                            >
+                              {site?.domain ? t('CHANGE_CUSTOM_DOMAIN', 'Change custom domain') : t('REQUEST_CUSTOM_DOMAIN', 'Request custom domain')}
+                            </Button>
+                            {canRemoveCustomDomain && (
+                              <DangerOutlineButton
+                                outline
+                                borderRadius='8px'
+                                disabled={formState?.loading}
+                                onClick={() => setRemoveDomainConfirm({ open: true })}
                               >
-                                {themeValues?.website_theme?.components?.type === 'marketplace' ? <RecordCircleFill className='active' /> : <Circle />}
-                                <span>{t('MARKETPLACE', 'Marketplace')}</span>
-                              </RadioItem>
-                              <RadioItem
-                                onClick={() => handleChangeValue('single_store', 'website_theme', 'type')}
-                              >
-                                {themeValues?.website_theme?.components?.type === 'single_store' ? <RecordCircleFill className='active' /> : <Circle />}
-                                <span>{t('SINGLE_STORE', 'Single Store')}</span>
-                              </RadioItem>
-                              {themeValues?.website_theme?.components?.type === 'single_store' && (
-                                <SelectBusiness
-                                  defaultValue={themeValues?.website_theme?.components?.business_slug}
-                                  businessesList={businessesList}
-                                  onChange={value => handleChangeValue(value, 'website_theme', 'business_slug')}
-                                />
-                              )}
-                            </div>
-                            {themeValues?.website_theme?.components?.type && (
-                              <WebsitePriviewImageWrapper>
-                                <img src={franchiseSelected?.header || previewImages?.[themeValues?.website_theme?.components?.type]} />
-                              </WebsitePriviewImageWrapper>
+                                {t('REMOVE_CUSTOM_DOMAIN', 'Remove custom domain')}
+                              </DangerOutlineButton>
                             )}
-                          </WebsiteThemeBlock>
+                          </div>
+                          {site?.domain && (
+                            <>
+                              {site?.ssl_status === 'issued' && site?.ssl_process_status !== 'pending' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ISSUED', 'Your domain is now added , please verify the custom domain link above.')}</CustomeDomainDesc>
+                              )}
+                              {site?.ssl_status === 'pre-issued' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_PRE_ISSUED', 'Process almost finish, please wait')}</CustomeDomainDesc>
+                              )}
+                              {site?.ssl_status === 'error' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ERROR', 'Custom domain can\'t be created, please try again with valid data')}</CustomeDomainDesc>
+                              )}
+                              {((site?.ssl_status === 'pending_validation') || (site?.ssl_status === 'void' && site?.ssl_process_status === 'pending')) && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_PENDING_VALIDATION', 'A custom domain is being created, please wait')}</CustomeDomainDesc>
+                              )}
+                              {site?.ssl_status === 'revoked' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_REVOKED', 'Warning: Custom domain is revoked')}</CustomeDomainDesc>
+                              )}
+                              {site?.ssl_status === 'cancelled' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_CANCELLED', 'Custom domain is cancelled')}</CustomeDomainDesc>
+                              )}
+                              {site?.ssl_status === 'expired' && (
+                                <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_EXPIRED', 'Custom domain is expired')}</CustomeDomainDesc>
+                              )}
+                            </>
+                          )}
+                              </>
+                              )}
+                          {forcedSiteId && canRemoveCustomDomain && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', margin: '10px 0' }}>
+                              <DangerOutlineButton
+                                outline
+                                borderRadius='8px'
+                                disabled={formState?.loading}
+                                onClick={() => setRemoveDomainConfirm({ open: true })}
+                              >
+                                {t('REMOVE_CUSTOM_DOMAIN', 'Remove custom domain')}
+                              </DangerOutlineButton>
+                            </div>
+                          )}
+                        </>
+                        )}
+                  </FormGroup>
+                </InnerBlock>
+                {isDashboard && !!formState?.changes && Object.keys(formState?.changes).length > 0 && (
+                  <Button
+                    className='save-site-settings'
+                    color='primary'
+                    borderRadius='8px'
+                    onClick={() => handleUpdateSite()}
+                    disabled={orderingTheme?.loading}
+                  >
+                    {t('SAVE', 'Save')}
+                  </Button>
+                )}
+              </InputFormWrapper>
+              {isDashboard && (
+                <InputFormWrapper>
+                  <FilterSettings {...settingsFilterProps} />
+                </InputFormWrapper>
+              )}
+              {!isDashboard && (
+                <>
+                  {!isFranchise && !forcedSiteId && (
+                    <InputFormWrapper>
+                      <InnerBlock>
+                        <h4>{t('WEBSITE_THEME', 'Website Theme')}</h4>
+                        {orderingTheme?.loading
+                          ? (
+                            <Skeleton height={20} width={150} />
+                            )
+                          : (
+                            <WebsiteThemeBlock>
+                              <div>
+                                <RadioItem
+                                  onClick={() => handleChangeValue('marketplace', 'website_theme', 'type')}
+                                >
+                                  {themeValues?.website_theme?.components?.type === 'marketplace' ? <RecordCircleFill className='active' /> : <Circle />}
+                                  <span>{t('MARKETPLACE', 'Marketplace')}</span>
+                                </RadioItem>
+                                <RadioItem
+                                  onClick={() => handleChangeValue('single_store', 'website_theme', 'type')}
+                                >
+                                  {themeValues?.website_theme?.components?.type === 'single_store' ? <RecordCircleFill className='active' /> : <Circle />}
+                                  <span>{t('SINGLE_STORE', 'Single Store')}</span>
+                                </RadioItem>
+                                {themeValues?.website_theme?.components?.type === 'single_store' && (
+                                  <SelectBusiness
+                                    defaultValue={themeValues?.website_theme?.components?.business_slug}
+                                    businessesList={businessesList}
+                                    onChange={value => handleChangeValue(value, 'website_theme', 'business_slug')}
+                                  />
+                                )}
+                              </div>
+                              {themeValues?.website_theme?.components?.type && (
+                                <WebsitePriviewImageWrapper>
+                                  <img src={franchiseSelected?.header || previewImages?.[themeValues?.website_theme?.components?.type]} />
+                                </WebsitePriviewImageWrapper>
+                              )}
+                            </WebsiteThemeBlock>
+                            )}
+                      </InnerBlock>
+                    </InputFormWrapper>
+                  )}
+                  <InputFormWrapper>
+                    <h4>{t('IMAGES', 'Images')}</h4>
+                    <InnerBlock>
+                      {orderingTheme?.loading
+                        ? (
+                          <>
+                            <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
+                            <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                          </>
+                          )
+                        : (
+                          <ImageFormGroup>
+                            <ImageBoxContainer
+                              onClick={() => handleClickImage('logo')}
+                            >
+                              <ExamineClick
+                                onFiles={files => handleFiles(files, 'logo')}
+                                childRef={(e) => { logoRef.current = e }}
+                                accept='image/jpeg, image/jpg, image/webp'
+                              >
+                                <DragAndDrop
+                                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo')}
+                                  accept='image/jpeg, image/jpg, image/webp'
+                                  disabled={orderingTheme.loading}
+                                >
+                                  {site?.logo && <img src={site?.logo} alt='logo image' loading='lazy' />}
+                                  <UploadImageIconContainer bgimage={site?.logo || ''}>
+                                    <UploadImageIcon>
+                                      <DumyPhoto />
+                                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                    </UploadImageIcon>
+                                  </UploadImageIconContainer>
+                                </DragAndDrop>
+                              </ExamineClick>
+                            </ImageBoxContainer>
+                            <ImgInfoWrapper>
+                              <h4>{t('SITE_LOGO', 'Site logo')}</h4>
+                              <p>512 x 512 px</p>
+                              <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                            </ImgInfoWrapper>
+                          </ImageFormGroup>
+                          )}
+                      {orderingTheme?.loading
+                        ? (
+                          <>
+                            <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
+                            <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                          </>
+                          )
+                        : (
+                          <ImageFormGroup>
+                            <LogoImage
+                              onClick={() => handleClickImage('header')}
+                            >
+                              <ExamineClick
+                                onFiles={files => handleFiles(files, 'header')}
+                                childRef={(e) => { headerRef.current = e }}
+                                accept='image/jpeg, image/jpg, image/webp'
+                              >
+                                <DragAndDrop
+                                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'header')}
+                                  accept='image/jpeg, image/jpg, image/webp'
+                                  disabled={orderingTheme.loading}
+                                >
+                                  {themeValues?.images?.components?.logo?.components?.image && <img src={themeValues?.images?.components?.logo?.components?.image} alt='header image' loading='lazy' />}
+                                  <UploadImageIconContainer bgimage={themeValues?.images?.components?.logo?.components?.image}>
+                                    <UploadImageIcon>
+                                      <DumyPhoto />
+                                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                    </UploadImageIcon>
+                                  </UploadImageIconContainer>
+                                </DragAndDrop>
+                              </ExamineClick>
+                            </LogoImage>
+                            <ImgInfoWrapper>
+                              <h4>{t('HEADER_LOGO', 'Header logo')}</h4>
+                              <p>900 x 200 px</p>
+                              <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                            </ImgInfoWrapper>
+                          </ImageFormGroup>
+                          )}
+                      {orderingTheme?.loading
+                        ? (
+                          <>
+                            <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
+                            <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                          </>
+                          )
+                        : (
+                          <ImageFormGroup>
+                            <ImageBoxContainer
+                              onClick={() => handleClickImage('logo_mobile')}
+                            >
+                              <ExamineClick
+                                onFiles={files => handleFiles(files, 'logo_mobile')}
+                                childRef={(e) => { headerMobileRef.current = e }}
+                                accept='image/jpeg, image/jpg, image/webp'
+                              >
+                                <DragAndDrop
+                                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo_mobile')}
+                                  accept='image/jpeg, image/jpg, image/webp'
+                                  disabled={orderingTheme.loading}
+                                >
+                                  {themeValues?.images?.components?.logo_mobile?.components?.image && <img src={themeValues?.images?.components?.logo_mobile?.components?.image} alt='header mobile image' loading='lazy' />}
+                                  <UploadImageIconContainer bgimage={themeValues?.images?.components?.logo_mobile?.components?.image}>
+                                    <UploadImageIcon>
+                                      <DumyPhoto />
+                                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                    </UploadImageIcon>
+                                  </UploadImageIconContainer>
+                                </DragAndDrop>
+                              </ExamineClick>
+                            </ImageBoxContainer>
+                            <ImgInfoWrapper>
+                              <h4>{t('HEADER_MOBILE_LOGO', 'Header mobile logo')}</h4>
+                              <p>512 x 512 px</p>
+                              <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                            </ImgInfoWrapper>
+                          </ImageFormGroup>
+                          )}
+                      {!isFranchise && (
+                        <>
+                          {orderingTheme?.loading
+                            ? (
+                              <>
+                                <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
+                                <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                              </>
+                              )
+                            : (
+                              <ImageFormGroup>
+                                <BackgroundImage
+                                  onClick={() => handleClickImage('image')}
+                                >
+                                  <ExamineClick
+                                    onFiles={files => handleFiles(files, 'image')}
+                                    childRef={(e) => { imageRef.current = e }}
+                                    accept='image/jpeg, image/jpg, image/webp'
+                                  >
+                                    <DragAndDrop
+                                      onDrop={dataTransfer => handleFiles(dataTransfer.files, 'image')}
+                                      accept='image/jpeg, image/jpg, image/webp'
+                                      disabled={orderingTheme.loading}
+                                    >
+                                      {site?.image && <img src={site?.image} alt='logo image' loading='lazy' />}
+                                      <UploadImageIconContainer bgimage={site?.image}>
+                                        <UploadImageIcon>
+                                          <DumyPhoto />
+                                          <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                        </UploadImageIcon>
+                                      </UploadImageIconContainer>
+                                    </DragAndDrop>
+                                  </ExamineClick>
+                                </BackgroundImage>
+                                <ImgInfoWrapper>
+                                  <h4>{t('SITE_IMAGE', 'Site image')}</h4>
+                                  <p>1920 x 1280 px</p>
+                                  <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                                </ImgInfoWrapper>
+                              </ImageFormGroup>
+                              )}
+                        </>
+                      )}
+                      {orderingTheme?.loading
+                        ? (
+                          <>
+                            <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
+                            <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                          </>
+                          )
+                        : (
+                          <ImageFormGroup>
+                            <BackgroundImage
+                              onClick={() => handleClickImage('homepage_background')}
+                            >
+                              <ExamineClick
+                                onFiles={files => handleFiles(files, 'homepage_background')}
+                                childRef={(e) => { backgroundRef.current = e }}
+                                accept='image/jpeg, image/jpg, image/webp'
+                              >
+                                <DragAndDrop
+                                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'homepage_background')}
+                                  accept='image/jpeg, image/jpg, image/webp'
+                                  disabled={orderingTheme.loading}
+                                >
+                                  {themeValues?.images?.components?.homepage_background?.components?.image && <img src={themeValues?.images?.components?.homepage_background?.components?.image} alt='backgrond image' loading='lazy' />}
+                                  <UploadImageIconContainer bgimage={!!themeValues?.images?.components?.homepage_background?.components?.image}>
+                                    <UploadImageIcon>
+                                      <DumyPhoto />
+                                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                    </UploadImageIcon>
+                                  </UploadImageIconContainer>
+                                </DragAndDrop>
+                              </ExamineClick>
+                            </BackgroundImage>
+                            <ImgInfoWrapper>
+                              <h4>{t('HOMEPAGE_BACKGROUND', 'Homepage background')}</h4>
+                              <p>1920 x 1280 px</p>
+                              <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                            </ImgInfoWrapper>
+                          </ImageFormGroup>
+                          )}
+                      {orderingTheme?.loading
+                        ? (
+                          <>
+                            <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
+                            <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
+                          </>
+                          )
+                        : (
+                          <ImageFormGroup>
+                            <BackgroundImage
+                              onClick={() => handleClickImage('homepage_mobile_background')}
+                            >
+                              <ExamineClick
+                                onFiles={files => handleFiles(files, 'homepage_mobile_background')}
+                                childRef={(e) => { mobileBackgroundRef.current = e }}
+                                accept='image/jpeg, image/jpg, image/webp'
+                              >
+                                <DragAndDrop
+                                  onDrop={dataTransfer => handleFiles(dataTransfer.files, 'homepage_mobile_background')}
+                                  accept='image/jpeg, image/jpg, image/webp'
+                                  disabled={orderingTheme.loading}
+                                >
+                                  {themeValues?.images?.components?.homepage_mobile_background?.components?.image && <img src={themeValues?.images?.components?.homepage_mobile_background?.components?.image} alt='backgrond image' loading='lazy' />}
+                                  <UploadImageIconContainer bgimage={!!themeValues?.images?.components?.homepage_mobile_background?.components?.image}>
+                                    <UploadImageIcon>
+                                      <DumyPhoto />
+                                      <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                                    </UploadImageIcon>
+                                  </UploadImageIconContainer>
+                                </DragAndDrop>
+                              </ExamineClick>
+                            </BackgroundImage>
+                            <ImgInfoWrapper>
+                              <h4>{t('HOMEPAGE_MOBILE_BACKGROUND', 'Homepage mobile background')}</h4>
+                              <p>1440 x 770 px</p>
+                              <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
+                            </ImgInfoWrapper>
+                          </ImageFormGroup>
+                          )}
+                      {orderingTheme?.loading
+                        ? (
+                          <Skeleton width={200} height={20} />
+                          )
+                        : (
+                          <CheckBoxWrapper
+                            onClick={() => handleChangeValue(!themeValues?.images?.components?.homepage_image_fullscreen, 'images', 'homepage_image_fullscreen')}
+                          >
+                            {themeValues?.images?.components?.homepage_image_fullscreen
+                              ? (
+                                <CheckedIcon className='active' />
+                                )
+                              : (
+                                <UnCheckedIcon />
+                                )}
+                            <span>{t('HOMEPAGE_IMAGE_FULLSCREEN', 'Homepage  image fullscreen')}</span>
+                          </CheckBoxWrapper>
                           )}
                     </InnerBlock>
                   </InputFormWrapper>
-                )}
-                <InputFormWrapper>
-                  <h4>{t('IMAGES', 'Images')}</h4>
-                  <InnerBlock>
-                    {orderingTheme?.loading
-                      ? (
-                        <>
-                          <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
-                          <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                        </>
-                        )
-                      : (
-                        <ImageFormGroup>
-                          <ImageBoxContainer
-                            onClick={() => handleClickImage('logo')}
-                          >
-                            <ExamineClick
-                              onFiles={files => handleFiles(files, 'logo')}
-                              childRef={(e) => { logoRef.current = e }}
-                              accept='image/jpeg, image/jpg, image/webp'
-                            >
-                              <DragAndDrop
-                                onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo')}
-                                accept='image/jpeg, image/jpg, image/webp'
-                                disabled={orderingTheme.loading}
-                              >
-                                {site?.logo && <img src={site?.logo} alt='logo image' loading='lazy' />}
-                                <UploadImageIconContainer bgimage={site?.logo || ''}>
-                                  <UploadImageIcon>
-                                    <DumyPhoto />
-                                    <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                  </UploadImageIcon>
-                                </UploadImageIconContainer>
-                              </DragAndDrop>
-                            </ExamineClick>
-                          </ImageBoxContainer>
-                          <ImgInfoWrapper>
-                            <h4>{t('SITE_LOGO', 'Site logo')}</h4>
-                            <p>512 x 512 px</p>
-                            <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                          </ImgInfoWrapper>
-                        </ImageFormGroup>
-                        )}
-                    {orderingTheme?.loading
-                      ? (
-                        <>
-                          <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
-                          <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                        </>
-                        )
-                      : (
-                        <ImageFormGroup>
-                          <LogoImage
-                            onClick={() => handleClickImage('header')}
-                          >
-                            <ExamineClick
-                              onFiles={files => handleFiles(files, 'header')}
-                              childRef={(e) => { headerRef.current = e }}
-                              accept='image/jpeg, image/jpg, image/webp'
-                            >
-                              <DragAndDrop
-                                onDrop={dataTransfer => handleFiles(dataTransfer.files, 'header')}
-                                accept='image/jpeg, image/jpg, image/webp'
-                                disabled={orderingTheme.loading}
-                              >
-                                {themeValues?.images?.components?.logo?.components?.image && <img src={themeValues?.images?.components?.logo?.components?.image} alt='header image' loading='lazy' />}
-                                <UploadImageIconContainer bgimage={themeValues?.images?.components?.logo?.components?.image}>
-                                  <UploadImageIcon>
-                                    <DumyPhoto />
-                                    <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                  </UploadImageIcon>
-                                </UploadImageIconContainer>
-                              </DragAndDrop>
-                            </ExamineClick>
-                          </LogoImage>
-                          <ImgInfoWrapper>
-                            <h4>{t('HEADER_LOGO', 'Header logo')}</h4>
-                            <p>900 x 200 px</p>
-                            <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                          </ImgInfoWrapper>
-                        </ImageFormGroup>
-                        )}
-                    {orderingTheme?.loading
-                      ? (
-                        <>
-                          <Skeleton height={100} width={100} style={{ marginBottom: '15px' }} />
-                          <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                        </>
-                        )
-                      : (
-                        <ImageFormGroup>
-                          <ImageBoxContainer
-                            onClick={() => handleClickImage('logo_mobile')}
-                          >
-                            <ExamineClick
-                              onFiles={files => handleFiles(files, 'logo_mobile')}
-                              childRef={(e) => { headerMobileRef.current = e }}
-                              accept='image/jpeg, image/jpg, image/webp'
-                            >
-                              <DragAndDrop
-                                onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo_mobile')}
-                                accept='image/jpeg, image/jpg, image/webp'
-                                disabled={orderingTheme.loading}
-                              >
-                                {themeValues?.images?.components?.logo_mobile?.components?.image && <img src={themeValues?.images?.components?.logo_mobile?.components?.image} alt='header mobile image' loading='lazy' />}
-                                <UploadImageIconContainer bgimage={themeValues?.images?.components?.logo_mobile?.components?.image}>
-                                  <UploadImageIcon>
-                                    <DumyPhoto />
-                                    <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                  </UploadImageIcon>
-                                </UploadImageIconContainer>
-                              </DragAndDrop>
-                            </ExamineClick>
-                          </ImageBoxContainer>
-                          <ImgInfoWrapper>
-                            <h4>{t('HEADER_MOBILE_LOGO', 'Header mobile logo')}</h4>
-                            <p>512 x 512 px</p>
-                            <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                          </ImgInfoWrapper>
-                        </ImageFormGroup>
-                        )}
-                    {!isFranchise && (
-                      <>
-                        {orderingTheme?.loading
-                          ? (
-                            <>
-                              <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
-                              <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                            </>
-                            )
-                          : (
-                            <ImageFormGroup>
-                              <BackgroundImage
-                                onClick={() => handleClickImage('image')}
-                              >
-                                <ExamineClick
-                                  onFiles={files => handleFiles(files, 'image')}
-                                  childRef={(e) => { imageRef.current = e }}
-                                  accept='image/jpeg, image/jpg, image/webp'
-                                >
-                                  <DragAndDrop
-                                    onDrop={dataTransfer => handleFiles(dataTransfer.files, 'image')}
-                                    accept='image/jpeg, image/jpg, image/webp'
-                                    disabled={orderingTheme.loading}
-                                  >
-                                    {site?.image && <img src={site?.image} alt='logo image' loading='lazy' />}
-                                    <UploadImageIconContainer bgimage={site?.image}>
-                                      <UploadImageIcon>
-                                        <DumyPhoto />
-                                        <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                      </UploadImageIcon>
-                                    </UploadImageIconContainer>
-                                  </DragAndDrop>
-                                </ExamineClick>
-                              </BackgroundImage>
-                              <ImgInfoWrapper>
-                                <h4>{t('SITE_IMAGE', 'Site image')}</h4>
-                                <p>1920 x 1280 px</p>
-                                <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                              </ImgInfoWrapper>
-                            </ImageFormGroup>
-                            )}
-                      </>
-                    )}
-                    {orderingTheme?.loading
-                      ? (
-                        <>
-                          <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
-                          <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                        </>
-                        )
-                      : (
-                        <ImageFormGroup>
-                          <BackgroundImage
-                            onClick={() => handleClickImage('homepage_background')}
-                          >
-                            <ExamineClick
-                              onFiles={files => handleFiles(files, 'homepage_background')}
-                              childRef={(e) => { backgroundRef.current = e }}
-                              accept='image/jpeg, image/jpg, image/webp'
-                            >
-                              <DragAndDrop
-                                onDrop={dataTransfer => handleFiles(dataTransfer.files, 'homepage_background')}
-                                accept='image/jpeg, image/jpg, image/webp'
-                                disabled={orderingTheme.loading}
-                              >
-                                {themeValues?.images?.components?.homepage_background?.components?.image && <img src={themeValues?.images?.components?.homepage_background?.components?.image} alt='backgrond image' loading='lazy' />}
-                                <UploadImageIconContainer bgimage={!!themeValues?.images?.components?.homepage_background?.components?.image}>
-                                  <UploadImageIcon>
-                                    <DumyPhoto />
-                                    <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                  </UploadImageIcon>
-                                </UploadImageIconContainer>
-                              </DragAndDrop>
-                            </ExamineClick>
-                          </BackgroundImage>
-                          <ImgInfoWrapper>
-                            <h4>{t('HOMEPAGE_BACKGROUND', 'Homepage background')}</h4>
-                            <p>1920 x 1280 px</p>
-                            <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                          </ImgInfoWrapper>
-                        </ImageFormGroup>
-                        )}
-                    {orderingTheme?.loading
-                      ? (
-                        <>
-                          <Skeleton height={100} style={{ marginBottom: '15px', width: '100%' }} />
-                          <Skeleton height={15} count={3} width={150} style={{ display: 'block', marginBottom: '7px' }} />
-                        </>
-                        )
-                      : (
-                        <ImageFormGroup>
-                          <BackgroundImage
-                            onClick={() => handleClickImage('homepage_mobile_background')}
-                          >
-                            <ExamineClick
-                              onFiles={files => handleFiles(files, 'homepage_mobile_background')}
-                              childRef={(e) => { mobileBackgroundRef.current = e }}
-                              accept='image/jpeg, image/jpg, image/webp'
-                            >
-                              <DragAndDrop
-                                onDrop={dataTransfer => handleFiles(dataTransfer.files, 'homepage_mobile_background')}
-                                accept='image/jpeg, image/jpg, image/webp'
-                                disabled={orderingTheme.loading}
-                              >
-                                {themeValues?.images?.components?.homepage_mobile_background?.components?.image && <img src={themeValues?.images?.components?.homepage_mobile_background?.components?.image} alt='backgrond image' loading='lazy' />}
-                                <UploadImageIconContainer bgimage={!!themeValues?.images?.components?.homepage_mobile_background?.components?.image}>
-                                  <UploadImageIcon>
-                                    <DumyPhoto />
-                                    <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                                  </UploadImageIcon>
-                                </UploadImageIconContainer>
-                              </DragAndDrop>
-                            </ExamineClick>
-                          </BackgroundImage>
-                          <ImgInfoWrapper>
-                            <h4>{t('HOMEPAGE_MOBILE_BACKGROUND', 'Homepage mobile background')}</h4>
-                            <p>1440 x 770 px</p>
-                            <p>{t('FORMAT', 'Format')}: JPG, WEBP</p>
-                          </ImgInfoWrapper>
-                        </ImageFormGroup>
-                        )}
-                    {orderingTheme?.loading
-                      ? (
-                        <Skeleton width={200} height={20} />
-                        )
-                      : (
-                        <CheckBoxWrapper
-                          onClick={() => handleChangeValue(!themeValues?.images?.components?.homepage_image_fullscreen, 'images', 'homepage_image_fullscreen')}
-                        >
-                          {themeValues?.images?.components?.homepage_image_fullscreen
-                            ? (
-                              <CheckedIcon className='active' />
-                              )
-                            : (
-                              <UnCheckedIcon />
-                              )}
-                          <span>{t('HOMEPAGE_IMAGE_FULLSCREEN', 'Homepage  image fullscreen')}</span>
-                        </CheckBoxWrapper>
-                        )}
-                  </InnerBlock>
-                </InputFormWrapper>
-                {!orderingTheme?.loading && (
-                  <InputFormWrapper>
-                    <h4>{t('THEME_SETTINGS', 'Theme Settings')}</h4>
-                    <InnerBlock>
-                      <ContentWrapper>
-                        <ColorPickerWrapper>
+                  {!orderingTheme?.loading && (
+                    <InputFormWrapper>
+                      <h4>{t('THEME_SETTINGS', 'Theme Settings')}</h4>
+                      <InnerBlock>
+                        <ContentWrapper>
+                          <ColorPickerWrapper>
+                            <div>
+                              <p>{t('BACKGROUND_COLOR', 'Background color')}</p>
+                              <ColorPicker
+                                defaultColor={themeValues?.theme_settings?.components?.style?.background_page ?? '#FFFFFF'}
+                                onChangeColor={(color) => handleChangeValue(color, 'theme_settings', 'style.background_page')}
+                              />
+                            </div>
+                          </ColorPickerWrapper>
+                          <ColorPickerWrapper>
+                            <div>
+                              <p>{t('PRIMARY_COLOR_BUTTONS', 'Primary Color for Buttons')}</p>
+                              <ColorPicker
+                                defaultColor={themeValues?.theme_settings?.components?.style?.primary_btn_color}
+                                onChangeColor={(color) => handleChangeValue(color, 'theme_settings', 'style.primary_btn_color')}
+                              />
+                            </div>
+                          </ColorPickerWrapper>
+                        </ContentWrapper>
+                        <ContentWrapper>
                           <div>
-                            <p>{t('BACKGROUND_COLOR', 'Background color')}</p>
-                            <ColorPicker
-                              defaultColor={themeValues?.theme_settings?.components?.style?.background_page ?? '#FFFFFF'}
-                              onChangeColor={(color) => handleChangeValue(color, 'theme_settings', 'style.background_page')}
-                            />
+                            <p>{t('HOMEPAGE_CONTENT', 'Homepage Content')}</p>
+                            <Button
+                              color='primary'
+                              borderRadius='8px'
+                              outline
+                              onClick={() => setHomePageContent(true)}
+                            >
+                              {t('HOMEPAGE_CONTENT', 'Homepage content')}
+                            </Button>
                           </div>
-                        </ColorPickerWrapper>
-                        <ColorPickerWrapper>
                           <div>
-                            <p>{t('PRIMARY_COLOR_BUTTONS', 'Primary Color for Buttons')}</p>
-                            <ColorPicker
-                              defaultColor={themeValues?.theme_settings?.components?.style?.primary_btn_color}
-                              onChangeColor={(color) => handleChangeValue(color, 'theme_settings', 'style.primary_btn_color')}
-                            />
+                            <p>{t('FOOTER_CONTENT', 'Footer Content')}</p>
+                            <Button
+                              color='primary'
+                              borderRadius='8px'
+                              outline
+                              onClick={() => setFooterContent(true)}
+                            >
+                              {t('FOOTER_CONTENT', 'Footer content')}
+                            </Button>
                           </div>
-                        </ColorPickerWrapper>
-                      </ContentWrapper>
-                      <ContentWrapper>
-                        <div>
-                          <p>{t('HOMEPAGE_CONTENT', 'Homepage Content')}</p>
-                          <Button
-                            color='primary'
-                            borderRadius='8px'
-                            outline
-                            onClick={() => setHomePageContent(true)}
-                          >
-                            {t('HOMEPAGE_CONTENT', 'Homepage content')}
-                          </Button>
-                        </div>
-                        <div>
-                          <p>{t('FOOTER_CONTENT', 'Footer Content')}</p>
-                          <Button
-                            color='primary'
-                            borderRadius='8px'
-                            outline
-                            onClick={() => setFooterContent(true)}
-                          >
-                            {t('FOOTER_CONTENT', 'Footer content')}
-                          </Button>
-                        </div>
-                      </ContentWrapper>
-                    </InnerBlock>
-                  </InputFormWrapper>
-                )}
+                        </ContentWrapper>
+                      </InnerBlock>
+                    </InputFormWrapper>
+                  )}
 
-                <Button
-                  color='primary'
-                  borderRadius='8px'
-                  onClick={() => handleUpdateSiteTheme()}
-                  disabled={orderingTheme?.loading}
-                >
-                  {t('SAVE', 'Save')}
-                </Button>
-              </>
-            )}
-          </FormWrapper>
-        )}
-        {selectedSetting === 'advanced' && (
-          <>
-            {!orderingTheme?.loading && (
-              <AdvancedSettings
-                themesList={themesList}
-                advancedValues={advancedValues}
-                setAdvancedValues={setAdvancedValues}
-                handleUpdateSiteTheme={handleUpdateSiteTheme}
-                isFranchise={isFranchise}
-                forcedSiteId={forcedSiteId}
-                siteLogo={site?.logo}
-              />
-            )}
+                  <Button
+                    color='primary'
+                    borderRadius='8px'
+                    onClick={() => handleUpdateSiteTheme()}
+                    disabled={orderingTheme?.loading}
+                  >
+                    {t('SAVE', 'Save')}
+                  </Button>
+                </>
+              )}
+            </FormWrapper>
+          )}
+          {selectedSetting === 'advanced' && (
+            <>
+              {!orderingTheme?.loading && (
+                <AdvancedSettings
+                  themesList={themesList}
+                  advancedValues={advancedValues}
+                  setAdvancedValues={setAdvancedValues}
+                  handleUpdateSiteTheme={handleUpdateSiteTheme}
+                  isFranchise={isFranchise}
+                  forcedSiteId={forcedSiteId}
+                  siteLogo={site?.logo}
+                />
+              )}
+            </>
+          )}
+          {selectedSetting === 'ordering_widgets' && (
+            <OrderingWidgets hideSideBar />
+          )}
           </>
-        )}
-        {selectedSetting === 'ordering_widgets' && (
-          <OrderingWidgets hideSideBar />
         )}
       </Container>
       <Alert

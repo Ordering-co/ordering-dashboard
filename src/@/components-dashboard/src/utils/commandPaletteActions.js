@@ -106,9 +106,9 @@ const withQuery = (path, params) => `${path}?${new URLSearchParams(params).toStr
  * Every open action the user can reach. `requires: 'business'` actions carry
  * `section` and are completed with `buildBusinessDetailPath`.
  */
-export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user, configs = {}, project } = {}) => {
+export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [], project } = {}) => {
   const { level, isReadOnly } = getDashboardRoleFlags(user)
-  const sections = getDashboardNavSections({ t, user, configs, project })
+  const sections = getDashboardNavSections({ t, user, configs, sites })
   const can = (url) => canOpenNavDestination({ sections, url, level })
   const entries = []
   const add = (entry) => entries.push({ group: 'actions', ...entry })

@@ -38,23 +38,13 @@ const chosenAuthType = (value) => (
   value === 'manual' || value === 'business_login' ? value : ''
 )
 
-const webviewUrlOk = (value) => {
-  const url = text(value)
-  if (!url) return true
-  try {
-    const parsed = new URL(url)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
-
 /**
  * Body for `POST /ai/agents`. Provider and type are fixed: this screen only
  * creates a WhatsApp guided bot. Nothing else is filled in for the user.
  * Returns null until the brand, language, branch mode and connection method
  * are chosen, and until manual credentials are complete.
  * An empty color is left out so the webview default is not stored.
+ * The ordering webview URL is not part of this form, so it is never sent.
  * @param {Object} input form values
  * @returns {Object|null}
  */
@@ -64,7 +54,6 @@ export const createBotPayload = (input = {}) => {
   const branchMode = chosenBranchMode(input.branchSelectionMode)
   const authType = chosenAuthType(input.authType)
   if (!Number.isInteger(franchiseId) || franchiseId <= 0 || !languageCode || !branchMode || !authType) return null
-  if (!webviewUrlOk(input.webviewBaseUrl)) return null
 
   const settings = { branch_selection_mode: branchMode }
   const primary = colorText(input.primaryColor)
@@ -78,10 +67,8 @@ export const createBotPayload = (input = {}) => {
   }
   const welcome = text(input.welcomeMessage)
   const fallback = text(input.fallbackSupportMessage)
-  const webview = text(input.webviewBaseUrl)
   if (welcome) providerSettings.welcome_message = welcome
   if (fallback) providerSettings.fallback_support_message = fallback
-  if (webview) providerSettings.webview_base_url = webview
 
   const body = {
     provider: 'whatsapp',

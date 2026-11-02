@@ -3,7 +3,6 @@ import { useLanguage, DragAndDrop, ExamineClick, useUtils } from '../../../../..
 import { Button, Input, TextArea } from '../../../styles'
 import { Alert, Modal, ImageCrop } from '../../Shared'
 import { bytesConverter } from '../../../utils'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Camera, Image as ImageIcon } from 'react-bootstrap-icons'
@@ -37,8 +36,6 @@ export const SeoOptions = (props) => {
 
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
-  const isRestricted = useBusinessOwnerRestriction()
-  const hideSlug = isRestricted && isBusinessSeo
   const productImageInputRef = useRef(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [cropState, setCropState] = useState({ name: null, data: null, open: false })
@@ -263,24 +260,22 @@ export const SeoOptions = (props) => {
             />
           </WrapperDescription>
         )}
-        {!hideSlug && (
-          <WrapperDescription>
-            <label>{t('SLUG', 'Slug')}</label>
-            <Input
-              name='slug'
-              placeholder={t('SLUG', 'Slug')}
-              defaultValue={
-                formState?.result?.result
-                  ? formState?.result?.result?.slug
-                  : formState?.changes?.slug ?? data?.slug ?? ''
-              }
-              onChange={(e) => {
-                if (isBusinessSeo) handleChangeInput(e)
-                if (isProductSeo || isCategorySeo) handleProductCategoryChangeInput(e)
-              }}
-            />
-          </WrapperDescription>
-        )}
+        <WrapperDescription>
+          <label>{t('SLUG', 'Slug')}</label>
+          <Input
+            name='slug'
+            placeholder={t('SLUG', 'Slug')}
+            defaultValue={
+              formState?.result?.result
+                ? formState?.result?.result?.slug
+                : formState?.changes?.slug ?? data?.slug ?? ''
+            }
+            onChange={(e) => {
+              if (isBusinessSeo) handleChangeInput(e)
+              if (isProductSeo || isCategorySeo) handleProductCategoryChangeInput(e)
+            }}
+          />
+        </WrapperDescription>
         <ActionButtons>
           <Button
             color='primary'

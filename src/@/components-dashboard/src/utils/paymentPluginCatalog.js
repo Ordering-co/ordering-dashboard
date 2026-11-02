@@ -13,7 +13,7 @@ export const PAYMENT_PLUGIN_CATALOG = [
   { key: 'freshpay', gateway: 'freshpay', name: 'FreshPay', installUrl: 'https://freshpay.plugins.orderingplus.com' },
   { key: 'redsys', gateway: 'redsys', name: 'Redsys', installUrl: 'https://redsys.plugins.orderingplus.com' },
   { key: 'yappy_paymethod', gateway: 'yappy_paymethod', name: 'Yappy', installUrl: 'https://yappy-paymethod.plugins.orderingplus.com' },
-  { key: 'mercado_pago_checkout_pro', gateway: 'checkout_pro_mercadopago', name: 'Mercado Pago Checkout Pro', installUrl: 'https://mercado-pago-checkout-pro.plugins.orderingplus.com' },
+  { key: 'mercado_pago_checkout_pro', gateway: 'mercado_pago_checkout_pro', name: 'Mercado Pago Checkout Pro', installUrl: 'https://mercado-pago-checkout-pro.plugins.orderingplus.com' },
   { key: 'square_redirect', gateway: 'square_redirect', name: 'Square Redirect', installUrl: 'https://square-redirect.plugins.orderingplus.com' },
   { key: 'izipay', gateway: 'izipay', name: 'Izipay', installUrl: 'https://integrations.ordering.co/izipay_paymethod' },
   { key: 'interswitch', gateway: 'interswitch', name: 'Interswitch', installUrl: 'https://integrations.ordering.co/interswitch_paymethod' },

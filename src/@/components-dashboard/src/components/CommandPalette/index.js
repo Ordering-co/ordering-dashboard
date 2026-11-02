@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useConfig } from '../../contexts/ConfigContext'
+import { useSite } from '../../contexts/SiteContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useSettingsCatalog } from './useSettingsCatalog'
 import { useBusinessSearch } from './useBusinessSearch'
@@ -72,6 +73,7 @@ export const CommandPalette = (props) => {
   const [ordering] = useApi()
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
+  const [{ sites }] = useSite()
 
   const [query, setQuery] = useState('')
   const [businessContext, setBusinessContext] = useState(null)
@@ -95,7 +97,7 @@ export const CommandPalette = (props) => {
 
   const trimmed = query.trim()
   const { level } = getDashboardRoleFlags(user)
-  const navSections = useMemo(() => getDashboardNavSections({ t, user, configs, project: ordering?.project }), [t, user, configs, ordering?.project])
+  const navSections = useMemo(() => getDashboardNavSections({ t, user, configs, sites }), [t, user, configs, sites])
   const businessesAllowed = canOpenNavDestination({ sections: navSections, url: '/stores/list', level })
   const settingsAllowed = canOpenSettings(user)
 
@@ -115,12 +117,13 @@ export const CommandPalette = (props) => {
     t,
     user,
     configs,
+    sites,
     project: ordering?.project,
     settingsHub: settingsCatalog.hub,
     integrations: integrationsCatalog.integrations,
     deliveryCompanies: integrationsCatalog.deliveryCompanies,
     builderApps: integrationsCatalog.builderApps
-  }), [t, user, configs, ordering?.project, settingsCatalog.hub, integrationsCatalog.integrations, integrationsCatalog.deliveryCompanies, integrationsCatalog.builderApps])
+  }), [t, user, configs, sites, ordering?.project, settingsCatalog.hub, integrationsCatalog.integrations, integrationsCatalog.deliveryCompanies, integrationsCatalog.builderApps])
   const { navigationEntries, settingsEntries, actionEntries } = destinationCatalog
 
   useEffect(() => {

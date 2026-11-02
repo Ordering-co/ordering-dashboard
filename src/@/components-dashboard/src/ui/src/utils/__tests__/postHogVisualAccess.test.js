@@ -7,7 +7,6 @@ describe('getConnectVisualAccess', () => {
     const access = getConnectVisualAccess()
 
     expect(access.marketingCampaigns).toBe(true)
-    expect(access.connectOverview).toBe(true)
     expect(access.showConnectTab).toBe(true)
   })
 })

@@ -230,7 +230,7 @@ const BuilderProductPushUI = (props) => {
   }
 
   if (loading && !firebase) {
-    return <div aria-busy='true' style={{ maxWidth: 1100 }}><Skeleton height={180} borderRadius={12} /></div>
+    return <div aria-busy='true'><Skeleton height={180} borderRadius={12} /></div>
   }
 
   const source = firebase?.source === 'site' || firebase?.source === 'project' ? firebase.source : 'none'

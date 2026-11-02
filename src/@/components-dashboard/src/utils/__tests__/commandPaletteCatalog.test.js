@@ -11,9 +11,16 @@ import { rankCommandEntries } from '../commandPaletteSearch'
 const ids = (entries) => entries.map(entry => entry.id)
 
 describe('buildNavigationEntries', () => {
+  it('offers Builder to admins of any project, not to business owners or read-only admins', () => {
+    const ids = (user) => buildNavigationEntries({ user, configs: {} }).map(entry => entry.id)
+    expect(ids({ level: 0 })).toContain('nav:builder')
+    expect(ids({ level: 2 })).not.toContain('nav:builder')
+    expect(ids({ level: 0, readOnlyAdmin: true })).not.toContain('nav:builder')
+  })
+
   it('gives the admin sidebar and footer destinations with aliases', () => {
     const entries = buildNavigationEntries({ user: { level: 0, user_system_id: 1 }, configs: {} })
-    expect(ids(entries)).toEqual(expect.arrayContaining(['nav:home', 'nav:orders', 'nav:businesses', 'nav:customers', 'nav:settings', 'nav:open_source_code', 'nav:purchase_addons']))
+    expect(ids(entries)).toEqual(expect.arrayContaining(['nav:home', 'nav:orders', 'nav:businesses', 'nav:customers', 'nav:settings', 'nav:open_source_code']))
     const stores = entries.find(entry => entry.id === 'nav:businesses')
     expect(stores.path).toBe('/stores/list')
     expect(stores.aliases).toContain('negocios')

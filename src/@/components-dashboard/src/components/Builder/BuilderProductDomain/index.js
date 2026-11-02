@@ -25,10 +25,12 @@ const isDomainChange = (event) => Object.keys(event || {}).some(key => key === '
  * its own, a subdomain of the client's with a CNAME record to
  * `cname_target`. Cloudflare sets the own domain up in the background, so
  * while it is `pending` it is read again every 30 s and when the site's
- * `sites_update` brings its `ssl_*` fields.
+ * `sites_update` brings its `ssl_*` fields. `onOwnDomainChange` gets the own
+ * domain's name (or null) each time it is read or changed, for the product
+ * to keep its `domain` up to date.
  */
 export const BuilderProductDomain = (props) => {
-  const { UIComponent, productId, onPageFailure } = props
+  const { UIComponent, productId, onPageFailure, onOwnDomainChange } = props
 
   const [ordering] = useApi()
   const [{ token, user }] = useSession()
@@ -128,6 +130,11 @@ export const BuilderProductDomain = (props) => {
   }, [ioSocket, user?.id])
 
   useEffect(() => () => clearTimeout(refreshTimer.current), [])
+
+  useEffect(() => {
+    if (!domainState.domain || !onOwnDomainChange) return
+    onOwnDomainChange(domainState.domain.own?.name ?? null)
+  }, [domainState.domain])
 
   return (
     <>

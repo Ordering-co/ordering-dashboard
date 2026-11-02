@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ArrowsAngleContract, ArrowsAngleExpand, PlusLg, Stars, XLg } from 'react-bootstrap-icons'
 import { useLanguage, useAssistant } from '../../../../index'
 import { ASSISTANT_NAME, ASSISTANT_STAGE } from '../../../../contexts/AssistantContext/name'
-import { ASSISTANT_DOCK_MIN_WIDTH, ASSISTANT_PANEL_WIDTH, setAssistantOffset } from '../../utils/assistantDock'
+import { ASSISTANT_DOCK_MIN_WIDTH, ASSISTANT_PANEL_WIDTH, setAssistantLauncherSpace, setAssistantOffset } from '../../utils/assistantDock'
 import { setAssistantIntercomHidden } from '../../utils/assistantIntercom'
 import { useAssistantViewport } from '../../hooks/useAssistantViewport'
 import { useInfoShare } from '../../contexts/InfoShareContext'
@@ -74,6 +74,34 @@ const AssistantHeader = ({ page }) => {
   )
 }
 
+// Space between the launcher and what a bottom bar shows next to it
+const LAUNCHER_GAP = 12
+
+/** Opens the assistant, floating at the bottom right; tells bottom bars the room it takes */
+const AssistantLauncher = ({ onOpen }) => {
+  const ref = useRef(null)
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const rect = ref.current?.getBoundingClientRect()
+      setAssistantLauncherSpace(rect?.width ? window.innerWidth - rect.left + LAUNCHER_GAP : 0)
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => {
+      window.removeEventListener('resize', measure)
+      setAssistantLauncherSpace(0)
+    }
+  }, [])
+
+  return (
+    <Launcher ref={ref} type='button' onClick={onOpen} aria-label={ASSISTANT_NAME} aria-expanded={false} aria-controls='assistant_panel'>
+      <Stars size={22} aria-hidden />
+      <span>{ASSISTANT_NAME}</span>
+    </Launcher>
+  )
+}
+
 /**
  * The assistant as a column on the right of the dashboard. On wide screens it
  * docks (the rest of the dashboard makes room, see utils/assistantDock); on
@@ -120,12 +148,7 @@ export const AssistantPanel = () => {
 
   if (!visible) {
     if (!isAvailable || location.pathname === ASSISTANT_ROUTE) return null
-    return (
-      <Launcher type='button' onClick={() => setOpen(true)} aria-label={ASSISTANT_NAME} aria-expanded={false} aria-controls='assistant_panel'>
-        <Stars size={22} aria-hidden />
-        <span>{ASSISTANT_NAME}</span>
-      </Launcher>
-    )
+    return <AssistantLauncher onOpen={() => setOpen(true)} />
   }
 
   return (

@@ -9,7 +9,6 @@ import {
   digitsOnly,
   errorActionFor,
   formatWhatsAppPhone,
-  isOrderingWebviewUrl,
   manualCredentialsPayload,
   missingManualFields
 } from '../../../../../components/WhatsAppBotsList/botConnection'
@@ -125,8 +124,7 @@ const draftFrom = (connection) => ({
   wabaId: connection?.wabaId || '',
   accessToken: '',
   welcomeMessage: connection?.welcomeMessage || '',
-  fallbackSupportMessage: connection?.fallbackSupportMessage || '',
-  webviewBaseUrl: connection?.webviewBaseUrl || ''
+  fallbackSupportMessage: connection?.fallbackSupportMessage || ''
 })
 
 const formatDate = (value) => {
@@ -213,10 +211,9 @@ export const WhatsAppBotConnection = (props) => {
   const manualPayload = connection ? manualCredentialsPayload(connection, draft) : null
   const manualMissing = connection ? missingManualFields(connection, draft) : []
   const savedTokenVisible = connection?.authType === AUTH_MANUAL && connection?.hasAccessToken && !draft.accessToken
-  const webviewUrlValid = isOrderingWebviewUrl(draft.webviewBaseUrl)
-  const canSaveManual = !busy && Boolean(manualPayload) && manualMissing.length === 0 && webviewUrlValid
+  const canSaveManual = !busy && Boolean(manualPayload) && manualMissing.length === 0
   const copyPayload = savedAsBusinessLogin ? chatbotMessagePayload(connection, draft) : null
-  const canSaveCopy = !busy && Boolean(copyPayload) && webviewUrlValid
+  const canSaveCopy = !busy && Boolean(copyPayload)
   const showOAuthIdentity = isBusinessLogin && status === 'connected'
   const businessValues = savedAsBusinessLogin
     ? draft
@@ -226,8 +223,7 @@ export const WhatsAppBotConnection = (props) => {
         phoneNumber: '',
         wabaId: '',
         welcomeMessage: '',
-        fallbackSupportMessage: '',
-        webviewBaseUrl: ''
+        fallbackSupportMessage: ''
       }
 
   const reasonMessage = (reason) => reasonMessages(t)[reason] || t('WHATSAPP_STATUS_ERROR', 'Configuration error')
@@ -531,21 +527,6 @@ export const WhatsAppBotConnection = (props) => {
                     onChange={(event) => updateDraft('fallbackSupportMessage', event.target.value)}
                   />
                 </Field>
-                <Field>
-                  {t('WHATSAPP_WEBVIEW_URL', 'Ordering webview URL')}
-                  <Input
-                    type='url'
-                    inputMode='url'
-                    maxLength={500}
-                    spellCheck={false}
-                    value={draft.webviewBaseUrl}
-                    disabled={busy}
-                    onChange={(event) => updateDraft('webviewBaseUrl', event.target.value)}
-                  />
-                  {!webviewUrlValid && (
-                    <Hint>{t('WHATSAPP_WEBVIEW_URL_INVALID', 'Use a full address, like https://example.com.')}</Hint>
-                  )}
-                </Field>
               </FieldGrid>
               {!(connection.authType === AUTH_MANUAL && connection.hasAccessToken) && (
                 <Hint>{t('WHATSAPP_MANUAL_HINT', 'All fields are required. The API checks them with Meta before saving.')}</Hint>
@@ -615,21 +596,6 @@ export const WhatsAppBotConnection = (props) => {
                   disabled={busy || !savedAsBusinessLogin}
                   onChange={(event) => updateDraft('fallbackSupportMessage', event.target.value)}
                 />
-              </Field>
-              <Field className='half'>
-                {t('WHATSAPP_WEBVIEW_URL', 'Ordering webview URL')}
-                <Input
-                  type='url'
-                  inputMode='url'
-                  maxLength={500}
-                  spellCheck={false}
-                  value={businessValues.webviewBaseUrl}
-                  disabled={busy || !savedAsBusinessLogin}
-                  onChange={(event) => updateDraft('webviewBaseUrl', event.target.value)}
-                />
-                {savedAsBusinessLogin && !webviewUrlValid && (
-                  <Hint>{t('WHATSAPP_WEBVIEW_URL_INVALID', 'Use a full address, like https://example.com.')}</Hint>
-                )}
               </Field>
               {savedAsBusinessLogin && (
                 <ConnectionActions>

@@ -7,7 +7,6 @@ import {
   BillingPaymentOptions
 } from './src/components/Billing'
 import {
-  ConnectOverview,
   DeliveryServices,
   Importers,
   PosMenu,
@@ -258,7 +257,6 @@ import {
   GuestCheckoutFieldsSetting,
   SitesAuthSettings,
   SettingsImage,
-  PurchaseAddons,
   AllSettings,
   SettingsHub
 } from './src/components/Settings'
@@ -502,7 +500,6 @@ export {
   ChatContactList,
   ChatBusinessesList,
   BillingPaymentOptions,
-  ConnectOverview,
   DeliveryServices,
   Importers,
   PosMenu,
@@ -749,7 +746,6 @@ export {
   GuestCheckoutFieldsSetting,
   SitesAuthSettings,
   SettingsImage,
-  PurchaseAddons,
   AllSettings,
   SettingsHub,
 

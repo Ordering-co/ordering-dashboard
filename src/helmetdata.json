@@ -76,13 +76,6 @@
     "robots": "index, follow",
     "canonicalUrl": ""
   },
-  "connect_overview": {
-    "title": "Overview",
-    "description": "a dummy description about this page",
-    "keywords": "test, dummy, data",
-    "robots": "index, follow",
-    "canonicalUrl": ""
-  },
   "delivery_services": {
     "title": "Delivery Services",
     "description": "a dummy description about this page",
@@ -190,13 +183,6 @@
   },
   "enterprise_settings": {
     "title": "Enterprise integrations",
-    "description": "a dummy description about this page",
-    "keywords": "test, dummy, data",
-    "robots": "index, follow",
-    "canonicalUrl": ""
-  },
-  "purchase_addons": {
-    "title": "Add-ons",
     "description": "a dummy description about this page",
     "keywords": "test, dummy, data",
     "robots": "index, follow",

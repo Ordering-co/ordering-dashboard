@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Dropdown } from 'react-bootstrap'
@@ -25,19 +25,24 @@ import { BuilderProductPushSettings } from '../BuilderProductPush'
 import { BuilderMessage } from '../BuilderShared'
 import {
   BUILDER_DETAIL_TABS,
+  BUILDER_WEB_TABS,
   getAppFieldError,
   getCheckProblems,
   getDetailTab,
   getNameMaxLength,
   getNameTooLongMessage,
+  getOwnDomain,
   getPlatformRows,
   getProductApp,
   getProductDomains,
   getProductKind,
   getStatusLabel,
   getTypeLabel,
-  getUntitledName
+  getUntitledName,
+  getWebDetailTab
 } from '../utils'
+import { BuilderThemeEditorView, BuilderWebThemes } from '../BuilderWebTheme'
+import { BuilderWebSiteSettings } from '../BuilderWebSite'
 import { BuilderAppGeneral } from './BuilderAppGeneral'
 import { BuilderWebOverview } from './BuilderWebOverview'
 import { BuilderChecksPanel } from './BuilderChecksPanel'
@@ -45,6 +50,7 @@ import { IncompleteDialog } from './IncompleteDialog'
 import { NameRequiredDialog } from './NameRequiredDialog'
 import {
   Breadcrumb,
+  DetailContent,
   DetailHeader,
   DetailTop,
   FieldHelp,
@@ -55,14 +61,27 @@ import {
   Pill,
   RenameButton,
   RenameForm,
+  StatusActions,
+  StatusLockHint,
   TabButton,
   TabHint,
   TabList
 } from '../styles'
 
+/** The `tab` of the URL as it is: an app and a website have different tabs. */
 const readTab = () => {
   if (typeof window === 'undefined') return 'general'
-  return getDetailTab(new URLSearchParams(window.location.search).get('tab'))
+  return new URLSearchParams(window.location.search).get('tab') || 'general'
+}
+
+/** The theme being edited, and what its editor has open (ThemeEditor): they go when it closes. */
+const THEME_PARAMS = ['theme', 'section', 'item']
+
+/** The theme being edited, from `?theme=`. */
+const readThemeId = () => {
+  if (typeof window === 'undefined') return null
+  const value = Number(new URLSearchParams(window.location.search).get('theme'))
+  return Number.isInteger(value) && value > 0 ? value : null
 }
 
 const BuilderProductDetailUI = (props) => {
@@ -76,6 +95,7 @@ const BuilderProductDetailUI = (props) => {
     reloadChecks,
     onAppChanged,
     renameProduct,
+    mergeProduct,
     updateApp,
     updatePlatform,
     failPage,
@@ -98,7 +118,8 @@ const BuilderProductDetailUI = (props) => {
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [, { showToast }] = useToast()
   const [archiveOpen, setArchiveOpen] = useState(false)
-  const [tab, setTab] = useState(readTab)
+  const [rawTab, setTab] = useState(readTab)
+  const [editingThemeId, setEditingThemeId] = useState(readThemeId)
   const [focusGroup, setFocusGroup] = useState(null)
   const [renaming, setRenaming] = useState(false)
   const [nameDraft, setNameDraft] = useState('')
@@ -107,22 +128,63 @@ const BuilderProductDetailUI = (props) => {
   const [incompleteChecks, setIncompleteChecks] = useState(null)
   const [nameRequiredOpen, setNameRequiredOpen] = useState(false)
   const [renameHint, setRenameHint] = useState(false)
+  const [focusDomains, setFocusDomains] = useState(false)
 
   const { loading, product, errorKind } = productState
   const app = getProductApp(product)
   const isWeb = !!product && getProductKind(product) === 'web'
+  const tab = isWeb ? getWebDetailTab(rawTab) : getDetailTab(rawTab)
+  const editingTheme = isWeb && tab === 'theme' && editingThemeId
   const kind = isWeb ? 'web' : 'app'
   const nameMaxLength = getNameMaxLength(kind)
   // Only a website classified by hand can come without a name
   const displayName = product?.name?.trim() ? product.name : getUntitledName(kind, t)
   const platformRows = getPlatformRows(app)
   const platformOrder = platformRows.map(row => row.platform)
+  // A website at its own domain can't go to draft or be archived until the domain is removed (product.domain_configured)
+  const ownDomain = isWeb ? getOwnDomain(product) : null
+  const statusLockMessage = t('BUILDER_STATUS_DOMAIN_LOCK', 'A website with its own domain can’t be moved to draft or archived. Remove the domain first.')
 
   const goToTab = (next, group = null) => {
     setTab(next)
     setFocusGroup(next === 'files' ? group : null)
-    if (next === 'general') removeQueryToUrl(['tab'])
-    else addQueryToUrl({ tab: next })
+    setEditingThemeId(null)
+    if (next === 'general') removeQueryToUrl(['tab', ...THEME_PARAMS])
+    else {
+      removeQueryToUrl(THEME_PARAMS)
+      addQueryToUrl({ tab: next })
+    }
+  }
+
+  /** The Domains card of the General tab, where the own domain is removed. */
+  const goToDomains = () => {
+    if (tab !== 'general') goToTab('general')
+    setFocusDomains(true)
+  }
+
+  useEffect(() => {
+    if (!focusDomains || tab !== 'general') return
+    setFocusDomains(false)
+    const heading = document.getElementById('builder-web-domains')
+    if (!heading) return
+    heading.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+    heading.focus({ preventScroll: true })
+  }, [focusDomains, tab])
+
+  /** What the Domains card read of the own domain, so the status actions follow it. */
+  const handleOwnDomainChange = (name) => {
+    if ((ownDomain ?? null) !== name) mergeProduct({ domain: name })
+  }
+
+  const editTheme = (themeId) => {
+    setEditingThemeId(themeId)
+    removeQueryToUrl(THEME_PARAMS)
+    addQueryToUrl({ tab: 'theme', theme: themeId })
+  }
+
+  const closeThemeEditor = () => {
+    setEditingThemeId(null)
+    removeQueryToUrl(THEME_PARAMS)
   }
 
   const formatDate = (value, format = 'MMM D, YYYY') => value ? parseDate(value, { outputFormat: format }) : ''
@@ -205,6 +267,16 @@ const BuilderProductDetailUI = (props) => {
     events.emit('go_to_page', { page: 'builder' })
   }
 
+  // Leaving the theme editor from the breadcrumb asks first while it has changes not saved
+  const [themeUnsaved, setThemeUnsaved] = useState(false)
+  const [leaveTo, setLeaveTo] = useState(null)
+  const leaveThemeTo = (go) => (e) => {
+    e?.preventDefault()
+    if (themeUnsaved) setLeaveTo(() => go)
+    else go()
+  }
+  const goToSite = () => goToTab('general')
+
   const handleChangeStatus = async (nextStatus) => {
     if (statusState?.loading) return
     setArchiveOpen(false)
@@ -228,6 +300,10 @@ const BuilderProductDetailUI = (props) => {
       setIncompleteChecks(checks)
       return
     }
+    if (failure === 'domain_configured') {
+      showToast(ToastType.Error, statusLockMessage)
+      return
+    }
     if (failure === 'error') {
       showToast(ToastType.Error, t('BUILDER_TOAST_STATUS_ERROR', 'Couldn’t change the status. Try again.'))
     }
@@ -236,34 +312,46 @@ const BuilderProductDetailUI = (props) => {
   const renderStatusActions = () => {
     const status = product.product_status
     const busy = !!statusState?.loading
+    const lockHintId = ownDomain ? 'builder-status-lock-hint' : undefined
     const activate = (
       <Button key='activate' color='primary' borderRadius='8px' disabled={busy} onClick={() => handleChangeStatus('active')}>
         {t('BUILDER_ACTIVATE', 'Activate')}
       </Button>
     )
     const moveToDraft = (
-      <Button key='draft' color='primary' outline borderRadius='8px' disabled={busy} onClick={() => handleChangeStatus('draft')}>
+      <Button key='draft' color='primary' outline borderRadius='8px' disabled={busy || !!ownDomain} aria-describedby={lockHintId} onClick={() => handleChangeStatus('draft')}>
         {t('BUILDER_MOVE_TO_DRAFT', 'Move to draft')}
       </Button>
     )
     return (
-      <HeaderActions>
-        {status !== 'archived' && (
-          <Dropdown>
-            <Dropdown.Toggle as={MoreToggle} id='builder-status-more' aria-label={t('BUILDER_MORE_ACTIONS', 'More actions')} disabled={busy}>
-              <ThreeDots aria-hidden='true' />
-            </Dropdown.Toggle>
-            <Dropdown.Menu align={theme?.rtl ? 'left' : 'right'}>
-              <Dropdown.Item as='button' onClick={() => setArchiveOpen(true)}>
-                {t('BUILDER_ARCHIVE', 'Archive')}
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+      <StatusActions>
+        <HeaderActions>
+          {status !== 'archived' && (
+            <Dropdown>
+              <Dropdown.Toggle as={MoreToggle} id='builder-status-more' aria-label={t('BUILDER_MORE_ACTIONS', 'More actions')} disabled={busy}>
+                <ThreeDots aria-hidden='true' />
+              </Dropdown.Toggle>
+              <Dropdown.Menu align={theme?.rtl ? 'left' : 'right'}>
+                <Dropdown.Item as='button' disabled={!!ownDomain} aria-describedby={lockHintId} onClick={() => setArchiveOpen(true)}>
+                  {t('BUILDER_ARCHIVE', 'Archive')}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+          {status === 'active' && moveToDraft}
+          {status === 'archived' && moveToDraft}
+          {status !== 'active' && activate}
+        </HeaderActions>
+        {ownDomain && (
+          <StatusLockHint id={lockHintId}>
+            <InfoCircle aria-hidden='true' />
+            <span>
+              {statusLockMessage}{' '}
+              <button type='button' onClick={goToDomains}>{t('BUILDER_GO_TO_DOMAINS', 'Go to Domains')}</button>
+            </span>
+          </StatusLockHint>
         )}
-        {status === 'active' && moveToDraft}
-        {status === 'archived' && moveToDraft}
-        {status !== 'active' && activate}
-      </HeaderActions>
+      </StatusActions>
     )
   }
 
@@ -314,155 +402,203 @@ const BuilderProductDetailUI = (props) => {
           </IconButton>
         )}
         <Breadcrumb aria-label={t('BREADCRUMB', 'Breadcrumb')}>
-          <a href='/builder' onClick={goToList}>{t('BUILDER', 'Builder')}</a>
+          <a href='/builder' onClick={editingTheme ? leaveThemeTo(goToList) : goToList}>{t('BUILDER', 'Builder')}</a>
           <span aria-hidden='true'>/</span>
-          <span aria-current='page'>{product ? displayName : t('BUILDER_APP', 'App')}</span>
+          {editingTheme
+            ? (
+              <>
+                <a href={`/builder/${product.id}`} onClick={leaveThemeTo(goToSite)}>{displayName}</a>
+                <span aria-hidden='true'>/</span>
+                <span aria-current='page'>{t('BUILDER_TAB_THEME', 'Theme')}</span>
+              </>
+              )
+            : <span aria-current='page'>{product ? displayName : t('BUILDER_APP', 'App')}</span>}
         </Breadcrumb>
       </HeaderTitle>
 
-      {loading && !product && (
-        <div aria-busy='true'>
-          <Skeleton height={32} width={280} />
-          <Skeleton height={140} style={{ marginTop: 20 }} />
-          <Skeleton height={180} style={{ marginTop: 20 }} />
-        </div>
+      {product && !errorKind && editingTheme && (
+        <BuilderThemeEditorView product={product} themeId={editingThemeId} onBack={closeThemeEditor} onPageFailure={failPage} onUnsavedChange={setThemeUnsaved} />
       )}
 
-      {!loading && errorKind && renderState()}
-
-      {product && !errorKind && (
-        <>
-          <DetailTop>
-            <DetailHeader>
-              {renaming
-                ? (
-                  <RenameForm onSubmit={handleRename} noValidate>
-                    <label htmlFor='builder-product-name' className='sr-only'>{t('BUILDER_NAME_IN_ORDERING', 'Name in Ordering')}</label>
-                    <div>
-                      <Input
-                        id='builder-product-name'
-                        type='text'
-                        value={nameDraft}
-                        maxLength={nameMaxLength}
-                        autoComplete='off'
-                        autoFocus
-                        aria-invalid={nameError ? 'true' : 'false'}
-                        aria-describedby={nameError ? 'builder-product-name-error' : renameHint ? 'builder-product-name-hint' : undefined}
-                        onChange={(e) => { setNameDraft(e.target.value); setNameError(null) }}
-                        onKeyDown={(e) => { if (e.key === 'Escape') stopRename() }}
-                      />
-                      {nameError && (
-                        <FieldHelp><span id='builder-product-name-error' role='alert'>{nameError}</span></FieldHelp>
-                      )}
-                      {!nameError && renameHint && (
-                        <FieldHelp><span id='builder-product-name-hint'>{t('BUILDER_RENAME_THEN_ACTIVATE', 'Then activate the website again.')}</span></FieldHelp>
-                      )}
-                    </div>
-                    <Button type='submit' color='primary' borderRadius='8px' disabled={renameSaving}>
-                      {renameSaving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
-                    </Button>
-                    <Button type='button' color='secundary' borderRadius='8px' onClick={stopRename}>
-                      {t('CANCEL', 'Cancel')}
-                    </Button>
-                  </RenameForm>
-                  )
-                : (
-                  <div>
-                    <h1>{product.name?.trim() ? product.name : <em>{displayName}</em>}</h1>
-                    <RenameButton type='button' aria-label={t('BUILDER_RENAME', 'Rename')} title={t('BUILDER_RENAME', 'Rename')} onClick={() => startRename()}>
-                      <PencilSquare aria-hidden='true' />
-                    </RenameButton>
-                    <Pill status={product.product_status}>{getStatusLabel(product.product_status, t)}</Pill>
-                  </div>
-                  )}
-              <p>
-                {[
-                  getTypeLabel(product.product_type, t),
-                  product.code && t('BUILDER_CODE', 'Code _code_').replace('_code_', product.code),
-                  product.created_at && t('BUILDER_CREATED_ON', 'Created _date_').replace('_date_', formatDate(product.created_at))
-                ].filter(Boolean).join(' · ')}
-              </p>
-            </DetailHeader>
-            {renderStatusActions()}
-          </DetailTop>
-
-          {isWeb && <BuilderWebOverview product={product} onPageFailure={failPage} />}
-
-          {!app && !isWeb && (
-            <BuilderMessage
-              icon={<Phone aria-hidden='true' />}
-              title={t('BUILDER_NO_APP', 'This product has no app')}
-            />
+      {!(product && !errorKind && editingTheme) && (
+        <DetailContent>
+          {loading && !product && (
+            <div aria-busy='true'>
+              <Skeleton height={32} width={280} />
+              <Skeleton height={140} style={{ marginTop: 20 }} />
+              <Skeleton height={180} style={{ marginTop: 20 }} />
+            </div>
           )}
 
-          {app && (
-            <>
-              <BuilderBuildsCard
-                latestState={latestBuildsState || { loading: true, platforms: null, error: false }}
-                reloadLatest={reloadLatestBuilds}
-                platformOrder={platformOrder}
-                productStatus={product.product_status}
-                actions={buildActions}
-                installUrl={adHocInstallUrl}
-                guides={buildGuides}
-                formatDate={formatDate}
-                onSeeAll={() => goToTab('builds')}
-                onChangeStatus={handleChangeStatus}
-                statusBusy={!!statusState?.loading}
-              />
+          {!loading && errorKind && renderState()}
 
-              {checksEnabled && (
-                <BuilderChecksPanel checksState={checksState} reloadChecks={reloadChecks} onGoToTab={goToTab} />
+          {product && !errorKind && (
+            <>
+              <DetailTop>
+                <DetailHeader>
+                  {renaming
+                    ? (
+                      <RenameForm onSubmit={handleRename} noValidate>
+                        <label htmlFor='builder-product-name' className='sr-only'>{t('BUILDER_NAME_IN_ORDERING', 'Name in Ordering')}</label>
+                        <div>
+                          <Input
+                            id='builder-product-name'
+                            type='text'
+                            value={nameDraft}
+                            maxLength={nameMaxLength}
+                            autoComplete='off'
+                            autoFocus
+                            aria-invalid={nameError ? 'true' : 'false'}
+                            aria-describedby={nameError ? 'builder-product-name-error' : renameHint ? 'builder-product-name-hint' : undefined}
+                            onChange={(e) => { setNameDraft(e.target.value); setNameError(null) }}
+                            onKeyDown={(e) => { if (e.key === 'Escape') stopRename() }}
+                          />
+                          {nameError && (
+                            <FieldHelp><span id='builder-product-name-error' role='alert'>{nameError}</span></FieldHelp>
+                          )}
+                          {!nameError && renameHint && (
+                            <FieldHelp><span id='builder-product-name-hint'>{t('BUILDER_RENAME_THEN_ACTIVATE', 'Then activate the website again.')}</span></FieldHelp>
+                          )}
+                        </div>
+                        <Button type='submit' color='primary' borderRadius='8px' disabled={renameSaving}>
+                          {renameSaving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
+                        </Button>
+                        <Button type='button' color='secundary' borderRadius='8px' onClick={stopRename}>
+                          {t('CANCEL', 'Cancel')}
+                        </Button>
+                      </RenameForm>
+                      )
+                    : (
+                      <div>
+                        <h1>{product.name?.trim() ? product.name : <em>{displayName}</em>}</h1>
+                        <RenameButton type='button' aria-label={t('BUILDER_RENAME', 'Rename')} title={t('BUILDER_RENAME', 'Rename')} onClick={() => startRename()}>
+                          <PencilSquare aria-hidden='true' />
+                        </RenameButton>
+                        <Pill status={product.product_status}>{getStatusLabel(product.product_status, t)}</Pill>
+                      </div>
+                      )}
+                  <p>
+                    {[
+                      getTypeLabel(product.product_type, t),
+                      product.code && t('BUILDER_CODE', 'Code _code_').replace('_code_', product.code),
+                      product.created_at && t('BUILDER_CREATED_ON', 'Created _date_').replace('_date_', formatDate(product.created_at))
+                    ].filter(Boolean).join(' · ')}
+                  </p>
+                </DetailHeader>
+                {renderStatusActions()}
+              </DetailTop>
+
+              {isWeb && (
+                <>
+                  <TabList role='tablist' aria-label={t('BUILDER_WEB_SECTIONS', 'Website sections')}>
+                    {BUILDER_WEB_TABS.map(item => (
+                      <TabButton
+                        key={item.value}
+                        type='button'
+                        role='tab'
+                        id={`builder-tab-${item.value}`}
+                        aria-selected={tab === item.value ? 'true' : 'false'}
+                        aria-controls='builder-tab-panel'
+                        selected={tab === item.value}
+                        onClick={() => goToTab(item.value)}
+                      >
+                        {item.label(t)}
+                      </TabButton>
+                    ))}
+                  </TabList>
+                  <div role='tabpanel' id='builder-tab-panel' aria-labelledby={`builder-tab-${tab}`} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    {tab === 'general' && <BuilderWebOverview product={product} onPageFailure={failPage} onOwnDomainChange={handleOwnDomainChange} />}
+                    {tab === 'site' && <BuilderWebSiteSettings product={product} onPageFailure={failPage} onProductChange={mergeProduct} />}
+                    {tab === 'theme' && (
+                      <>
+                        <TabHint>
+                          <InfoCircle aria-hidden='true' />
+                          {t('BUILDER_HINT_THEME', 'How your website looks. Your customers see the active theme; changes reach them after you publish.')}
+                        </TabHint>
+                        <BuilderWebThemes product={product} onPageFailure={failPage} onEditTheme={editTheme} />
+                      </>
+                    )}
+                  </div>
+                </>
               )}
 
-              <TabList role='tablist' aria-label={t('BUILDER_APP_SECTIONS', 'App sections')}>
-                {BUILDER_DETAIL_TABS.map(item => (
-                  <TabButton
-                    key={item.value}
-                    type='button'
-                    role='tab'
-                    id={`builder-tab-${item.value}`}
-                    aria-selected={tab === item.value ? 'true' : 'false'}
-                    aria-controls='builder-tab-panel'
-                    selected={tab === item.value}
-                    onClick={() => goToTab(item.value)}
-                  >
-                    {item.label(t)}
-                  </TabButton>
-                ))}
-              </TabList>
+              {!app && !isWeb && (
+                <BuilderMessage
+                  icon={<Phone aria-hidden='true' />}
+                  title={t('BUILDER_NO_APP', 'This product has no app')}
+                />
+              )}
 
-              <div role='tabpanel' id='builder-tab-panel' aria-labelledby={`builder-tab-${tab}`} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <TabHint>
-                  <InfoCircle aria-hidden='true' />
-                  {tabHints[tab]}
-                </TabHint>
-                {tab === 'general' && (
-                  <BuilderAppGeneral app={app} updateApp={updateApp} updatePlatform={updatePlatform} />
-                )}
-                {tab === 'appearance' && <BuilderAppColors {...tabProps} />}
-                {tab === 'files' && <BuilderAppFiles {...tabProps} focusGroup={focusGroup} />}
-                {tab === 'constants' && <BuilderAppConstantsList {...tabProps} />}
-                {tab === 'credentials' && <BuilderAppCredentialsForm {...tabProps} guides={buildGuides} />}
-                {tab === 'push' && (
-                  <BuilderProductPushSettings productId={product.id} productName={product.name} onPageFailure={failPage} />
-                )}
-                {tab === 'builds' && (
-                  <BuilderAppBuildsHistory
-                    productId={product.id}
-                    appId={app.id}
-                    version={buildsHistoryVersion}
-                    onPageFailure={failPage}
+              {app && (
+                <>
+                  <BuilderBuildsCard
+                    latestState={latestBuildsState || { loading: true, platforms: null, error: false }}
+                    reloadLatest={reloadLatestBuilds}
                     platformOrder={platformOrder}
                     productStatus={product.product_status}
                     actions={buildActions}
+                    installUrl={adHocInstallUrl}
+                    guides={buildGuides}
                     formatDate={formatDate}
+                    onSeeAll={() => goToTab('builds')}
+                    onChangeStatus={handleChangeStatus}
+                    statusBusy={!!statusState?.loading}
                   />
-                )}
-              </div>
+
+                  {checksEnabled && (
+                    <BuilderChecksPanel checksState={checksState} reloadChecks={reloadChecks} onGoToTab={goToTab} />
+                  )}
+
+                  <TabList role='tablist' aria-label={t('BUILDER_APP_SECTIONS', 'App sections')}>
+                    {BUILDER_DETAIL_TABS.map(item => (
+                      <TabButton
+                        key={item.value}
+                        type='button'
+                        role='tab'
+                        id={`builder-tab-${item.value}`}
+                        aria-selected={tab === item.value ? 'true' : 'false'}
+                        aria-controls='builder-tab-panel'
+                        selected={tab === item.value}
+                        onClick={() => goToTab(item.value)}
+                      >
+                        {item.label(t)}
+                      </TabButton>
+                    ))}
+                  </TabList>
+
+                  <div role='tabpanel' id='builder-tab-panel' aria-labelledby={`builder-tab-${tab}`} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <TabHint>
+                      <InfoCircle aria-hidden='true' />
+                      {tabHints[tab]}
+                    </TabHint>
+                    {tab === 'general' && (
+                      <BuilderAppGeneral app={app} updateApp={updateApp} updatePlatform={updatePlatform} />
+                    )}
+                    {tab === 'appearance' && <BuilderAppColors {...tabProps} />}
+                    {tab === 'files' && <BuilderAppFiles {...tabProps} focusGroup={focusGroup} />}
+                    {tab === 'constants' && <BuilderAppConstantsList {...tabProps} />}
+                    {tab === 'credentials' && <BuilderAppCredentialsForm {...tabProps} guides={buildGuides} />}
+                    {tab === 'push' && (
+                      <BuilderProductPushSettings productId={product.id} productName={product.name} onPageFailure={failPage} />
+                    )}
+                    {tab === 'builds' && (
+                      <BuilderAppBuildsHistory
+                        productId={product.id}
+                        appId={app.id}
+                        version={buildsHistoryVersion}
+                        onPageFailure={failPage}
+                        platformOrder={platformOrder}
+                        productStatus={product.product_status}
+                        actions={buildActions}
+                        formatDate={formatDate}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
-        </>
+        </DetailContent>
       )}
 
       <Confirm
@@ -481,6 +617,19 @@ const BuilderProductDetailUI = (props) => {
               .replace('_domain_', getProductDomains(product)[0]?.domain || '')
             : t('BUILDER_ARCHIVE_HELP_BUILDS', 'Archived apps can’t build from here. Installed apps keep working, and you can bring it back at any time.')}
         </p>
+      </Confirm>
+
+      <Confirm
+        open={!!leaveTo}
+        width='min(440px, calc(100vw - 72px))'
+        title={t('BUILDER_THEME_LEAVE_TITLE', 'Leave without saving?')}
+        acceptText={t('BUILDER_THEME_LEAVE', 'Leave')}
+        cancelText={t('BUILDER_THEME_STAY', 'Stay')}
+        onAccept={() => { const go = leaveTo; setLeaveTo(null); setThemeUnsaved(false); go() }}
+        onCancel={() => setLeaveTo(null)}
+        onClose={() => setLeaveTo(null)}
+      >
+        <p>{t('BUILDER_THEME_LEAVE_HELP', 'You have changes you haven’t saved. They’ll be lost.')}</p>
       </Confirm>
 
       {buildActions.dialogs}

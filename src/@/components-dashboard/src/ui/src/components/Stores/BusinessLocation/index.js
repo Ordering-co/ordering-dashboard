@@ -4,7 +4,6 @@ import { CitySelector } from '../../Shared'
 import { Button, TextArea, DefaultSelect } from '../../../styles'
 import { timezones } from '../../../config/constants'
 import { normalizeTimezone } from '../../../../../utils'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 
 import {
   Container,
@@ -26,7 +25,6 @@ export const BusinessLocation = (props) => {
   } = props
   const [{ configs }] = useConfig()
   const [, t] = useLanguage()
-  const isRestricted = useBusinessOwnerRestriction()
 
   const [timezonesOptions, setTimezonesOptions] = useState([])
   const [timezoneSearchValue, setTimezoneSearchValue] = useState('')
@@ -121,68 +119,62 @@ export const BusinessLocation = (props) => {
           <GoogleMapsMap
             apiKey={configs?.google_maps_api_key?.value}
             location={location}
-            mapControls={{ ...googleMapsControls, isMarkerDraggable: isRestricted ? false : googleMapsControls.isMarkerDraggable }}
-            handleChangeCenter={isRestricted ? undefined : handleChangeCenter}
+            mapControls={googleMapsControls}
+            handleChangeCenter={handleChangeCenter}
             onlyMarkerChangeCenter
           />
         </WrapperMap>
       )}
       <Section>
-        {!isRestricted && (
-          <WrapperCitySelector>
-            <p>{t('CITY', 'City')}</p>
-            <CitySelector
-              isDefault
-              position='left'
+        <WrapperCitySelector>
+          <p>{t('CITY', 'City')}</p>
+          <CitySelector
+            isDefault
+            position='left'
+            optionInnerMaxHeight='300px'
+            defaultValue={business?.city_id}
+            handleChangeCity={handleChangeFormState}
+          />
+        </WrapperCitySelector>
+        <WrapperTimezone>
+          <p>{t('TIMEZONE', 'Timezone')}</p>
+          <InputWrapper>
+            <DefaultSelect
+              placeholder={t('SELECT_TIMEZONE', 'Select a timezone')}
+              defaultValue={formState.changes?.timezone ?? normalizeTimezone(business?.timezone) ?? ''}
+              options={timezonesOptions}
+              onChange={val => handleChangeFormState(val, 'timezone')}
               optionInnerMaxHeight='300px'
-              defaultValue={business?.city_id}
-              handleChangeCity={handleChangeFormState}
+              isShowSearchBar
+              searchBarIsCustomLayout
+              searchBarIsNotLazyLoad
+              searchValue={timezoneSearchValue}
+              handleChangeSearch={setTimezoneSearchValue}
             />
-          </WrapperCitySelector>
-        )}
-        {!isRestricted && (
-          <WrapperTimezone>
-            <p>{t('TIMEZONE', 'Timezone')}</p>
-            <InputWrapper>
-              <DefaultSelect
-                placeholder={t('SELECT_TIMEZONE', 'Select a timezone')}
-                defaultValue={formState.changes?.timezone ?? normalizeTimezone(business?.timezone) ?? ''}
-                options={timezonesOptions}
-                onChange={val => handleChangeFormState(val, 'timezone')}
-                optionInnerMaxHeight='300px'
-                isShowSearchBar
-                searchBarIsCustomLayout
-                searchBarIsNotLazyLoad
-                searchValue={timezoneSearchValue}
-                handleChangeSearch={setTimezoneSearchValue}
-              />
-            </InputWrapper>
-          </WrapperTimezone>
-        )}
+          </InputWrapper>
+        </WrapperTimezone>
       </Section>
 
-      {!isRestricted && (
-        <WrapperGoogleAutoCompleteInput>
-          <label>{t('ADDRESS', 'Address')}</label>
-          <GoogleAutocompleteInput
-            className='input-autocomplete'
-            apiKey={googleMapsApiKey}
-            placeholder={t('ADDRESS', 'Address')}
-            onChangeAddress={(e) => {
-              handleChangeAddress(e)
-            }}
-            onChange={(e) => {
-              handleChangeFormState(e.target.value, 'address')
-            }}
-            defaultValue={formState?.changes?.address ?? business?.address ?? ''}
-            childRef={(ref) => {
-              googleInputRef.current = ref
-            }}
-            autoComplete='new-password'
-            countryCode={configs?.country_autocomplete?.value || '*'}
-          />
-        </WrapperGoogleAutoCompleteInput>
-      )}
+      <WrapperGoogleAutoCompleteInput>
+        <label>{t('ADDRESS', 'Address')}</label>
+        <GoogleAutocompleteInput
+          className='input-autocomplete'
+          apiKey={googleMapsApiKey}
+          placeholder={t('ADDRESS', 'Address')}
+          onChangeAddress={(e) => {
+            handleChangeAddress(e)
+          }}
+          onChange={(e) => {
+            handleChangeFormState(e.target.value, 'address')
+          }}
+          defaultValue={formState?.changes?.address ?? business?.address ?? ''}
+          childRef={(ref) => {
+            googleInputRef.current = ref
+          }}
+          autoComplete='new-password'
+          countryCode={configs?.country_autocomplete?.value || '*'}
+        />
+      </WrapperGoogleAutoCompleteInput>
       <WrapperAddressnotes>
         <label>{t('ADDRESS_NOTES', 'Address notes')}</label>
         <TextArea

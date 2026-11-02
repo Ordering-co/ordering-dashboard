@@ -6,14 +6,17 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useWebsocket, useSocketInstance } from '../../contexts/WebsocketContext'
 import { applySiteLogoHeaderSync } from '../../utils'
+import { findLegacySiteOfType } from '../../utils/websiteMigration'
 
 export const OrderingWebsite = (props) => {
   const {
     UIComponent,
+    app,
     appId,
     type,
     name,
     disableReplaceCode,
+    disableSiteCreation,
     forcedSiteId
   } = props
 
@@ -30,6 +33,8 @@ export const OrderingWebsite = (props) => {
   const [orderingTheme, setOrderingTheme] = useState({ loading: true, themes: [], error: null, siteId: null })
   const [themesList, setThemesList] = useState({ loading: true, themes: [], error: null })
   const [site, setSite] = useState(null)
+  // A page that creates no site says so when there is none
+  const [siteMissing, setSiteMissing] = useState(false)
   const [businessesList, setBusinessesList] = useState({ businesses: [], loading: false, error: null })
   const [franchisesList, setFranchisesList] = useState({ loading: false, franchises: [], error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
@@ -77,7 +82,8 @@ export const OrderingWebsite = (props) => {
       const response = await fetch(`${ordering.root}/sites`, requestOptions)
       const { error, result } = await response.json()
 
-      const findByType = result.find(site => site.type === type)
+      // A migrated site or a Builder product shares the type but is edited in Builder: never re-coded
+      const findByType = findLegacySiteOfType(result, type)
       const found = result.find(site => site.code === appId)
 
       if (error) return
@@ -99,6 +105,8 @@ export const OrderingWebsite = (props) => {
             setSite(siteFound)
             await getSiteTheme(siteFound.id)
           }
+        } else if (disableSiteCreation) {
+          setSiteMissing(true)
         } else {
           await handleAddSite(type)
         }
@@ -106,6 +114,8 @@ export const OrderingWebsite = (props) => {
         if (found) {
           await getSiteTheme(found.id)
           setSite(found)
+        } else if (disableSiteCreation) {
+          setSiteMissing(true)
         } else {
           await handleAddSite()
         }
@@ -211,7 +221,7 @@ export const OrderingWebsite = (props) => {
     try {
       const initialData = {
         code: appId,
-        name: name || configurations?.subdomain
+        name: name || app?.name
       }
       if (type) {
         initialData.type = type
@@ -577,6 +587,7 @@ export const OrderingWebsite = (props) => {
           handleUpdateSiteTheme={handleUpdateSiteTheme}
           themesList={themesList}
           site={site}
+          siteMissing={siteMissing}
           setSite={setSite}
           businessesList={businessesList}
           franchisesList={franchisesList}

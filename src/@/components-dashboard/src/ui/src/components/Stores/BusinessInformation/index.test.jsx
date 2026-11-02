@@ -138,6 +138,8 @@ const pickedHexValue = (container) => {
 const ACCESS = { accessToken: 'local-test-token' }
 
 beforeEach(() => {
+  h.session.user = { id: 7, level: 0 }
+  h.ordering.project = 'local-test'
   h.businesses.mockReturnValue({ save: h.save })
   h.save.mockImplementation((changes) => Promise.resolve({
     content: {
@@ -149,6 +151,45 @@ beforeEach(() => {
       }
     }
   }))
+})
+
+it.each([0, 2, undefined])('shows Featured only for admin level (level %s)', (level) => {
+  h.session.user = level === undefined ? null : { id: 7, level }
+  setup()
+  if (level === 0) {
+    expect(screen.getByText('Featured')).toBeInTheDocument()
+  } else {
+    expect(screen.queryByText('Featured')).not.toBeInTheDocument()
+  }
+})
+
+it('lets an admin toggle and save Featured', async () => {
+  setup()
+  const featuredSwitch = screen.getByText('Featured').nextElementSibling.querySelector('input[type=checkbox]')
+  expect(featuredSwitch).not.toBeChecked()
+  fireEvent.click(featuredSwitch)
+  clickSave()
+  await waitFor(() => expect(h.save).toHaveBeenCalledWith({ featured: true }, ACCESS))
+})
+
+it('shows normal store fields to an EatStreet owner without Featured', () => {
+  h.session.user = { id: 7, level: 2 }
+  h.ordering.project = 'eatstreet'
+  setup()
+  expect(screen.getByText('Phone number')).toBeInTheDocument()
+  expect(screen.getByText('Mobile number')).toBeInTheDocument()
+  expect(screen.getByText('Price filter')).toBeInTheDocument()
+  expect(screen.getByText('External Id')).toBeInTheDocument()
+  expect(screen.queryByText('Featured')).not.toBeInTheDocument()
+})
+
+it.each([true, false])('preserves Featured=%s when an owner edits another field', async (featured) => {
+  h.session.user = { id: 7, level: 2 }
+  const { container } = setup({ ...businessFixture, featured })
+  expect(screen.queryByText('Featured')).not.toBeInTheDocument()
+  changeName(container, 'Owner edit')
+  clickSave()
+  await waitFor(() => expect(h.save).toHaveBeenCalledWith({ name: 'Owner edit' }, ACCESS))
 })
 
 it('sends only the dirty name field when a persisted enabled ribbon is present', async () => {

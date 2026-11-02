@@ -16,7 +16,7 @@ export const BusinessDetails = (props) => {
     formState,
     handleChangeAddress,
     handleChangeInput,
-    placeId,
+    addressKey,
     addressOnly = false,
     disabled,
     handleChangeCenter
@@ -77,6 +77,7 @@ export const BusinessDetails = (props) => {
           <label htmlFor={addressOnly ? 'onboarding-business-address' : undefined}>{t('ADDRESS', 'Address')}</label>
           {googleMapsApiKey && (
             <GoogleAutocompleteInput
+              key={addressKey}
               id={addressOnly ? 'onboarding-business-address' : undefined}
               managedLifecycle={addressOnly}
               disabled={addressOnly ? disabled : undefined}
@@ -97,7 +98,6 @@ export const BusinessDetails = (props) => {
           )}
         </FormControl>
         <GoogleMapContainer>
-          {!addressOnly && placeId && <><label>{t('GOOGLE_PLACE_ID', 'Google place ID')}</label><p>{placeId}</p></>}
           {configs?.google_maps_api_key?.value && (
             <WrapperMap>
               <GoogleMapsMap

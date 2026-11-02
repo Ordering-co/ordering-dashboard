@@ -58,6 +58,7 @@ export const BusinessSummary = (props) => {
     handleUpdateBusinessClick,
     handleConnectBusiness,
     handleSelectIntegration,
+    selectedIntegration,
     extraOpen,
     isExpand,
     setIsExpand,
@@ -236,9 +237,8 @@ export const BusinessSummary = (props) => {
     .filter(Boolean)
   // A store has one POS: while one is connected, another installed POS cannot
   // connect directly. Installing one still works (it keeps the current POS).
-  // The detail open on the right already shows the connected integration's
-  // logo, state and action, so the panel stops repeating them meanwhile.
   const isIntegrationDetailOpen = !!extraOpen && selectedItem === 'integration'
+  const isOpenIntegration = (integration) => isIntegrationDetailOpen && selectedIntegration?.id === integration?.id
   // In the POS view every integration listed is a POS.
   const currentPos = !fromSalesChannels ? connectedIntegrations[0] || null : null
   const blocksConnect = (integration) => !!currentPos && !!integration?.plugin_id
@@ -447,11 +447,18 @@ export const BusinessSummary = (props) => {
         </DetailsHeader>
         {isHideSetupForm && (
           <>
-            {connectedIntegrations.length > 0 && !isIntegrationDetailOpen && (
+            {connectedIntegrations.length > 0 && (
               <IntegrationSection>
                 <p className='section-title'>{t('CONNECTED', 'Connected')}</p>
                 {connectedIntegrations.map(({ integration, row, status, setupAction }) => (
-                  <IntegrationRow key={integration.id} className='connect-pos-wrapper' clickable onClick={() => handleIntegrationClick(integration)}>
+                  <IntegrationRow
+                    key={integration.id}
+                    className='connect-pos-wrapper'
+                    clickable
+                    active={isOpenIntegration(integration)}
+                    aria-current={isOpenIntegration(integration) ? 'true' : undefined}
+                    onClick={() => handleIntegrationClick(integration)}
+                  >
                     <div className='integration-info'>
                       <WrapperImage>
                         <LogoImage src={integration?.logo || theme.images?.dummies?.businessLogo} alt={integration?.name} onError={handleLogoError} />

@@ -143,6 +143,8 @@ export const EmptyMessage = styled.div`
 `
 
 // For a payment method with tabs of its own, which do not all fit in the panel
+// It never shrinks: with overflow set, a long tab content would squeeze it to nothing in the panel's column
 export const ScrollableTabsContainer = styled(TabsContainer)`
   overflow-x: auto;
+  flex-shrink: 0;
 `

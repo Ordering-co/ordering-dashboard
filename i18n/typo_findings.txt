@@ -19,7 +19,6 @@ DRIVER_TIPS_REQUIRED	Driver tips is required, please select a driver tip before 
 FULL_ADDRESS	Full Addres
 SELECT_PAYMETHOD	Select paymethod
 PAYMETHODS_LOADING	Paymethods loading
-ADDON_PURCHASED_SUCCESSFULLY	Addon Purchased Successfully
 PAYMETHOD_ID	Paymethod
 ERROR_ID_EQUAL_SPLIT_RECIEVE	Id cannot be equal to another split recieve id
 PAYMETHOD	Paymethod

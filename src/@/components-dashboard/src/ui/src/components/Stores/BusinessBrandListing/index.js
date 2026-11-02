@@ -18,6 +18,7 @@ import { BusinessBrandGENDetail } from '../BusinessBrandGENDetail'
 import { BusinessBrandBUSIDetail } from '../BusinessBrandBUSIDetail'
 import { BrandWhiteLabel } from '../BrandWhiteLabel'
 import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
+import { WHITE_LABEL_SITES_ENABLED } from '../../../../../utils/businessDetailSections'
 
 import {
   BrandListingContainer,
@@ -65,8 +66,8 @@ const BusinessBrandListingUI = (props) => {
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [ordering] = useApi()
   const [{ configs }] = useConfig()
-  const isWhiteLabelBrandsEnabled = configs?.whitelabel_brands_sites?.value === '1' || configs?.whitelabel_brands_sites?.value === true ||
-    ['luisv4plus', 'eatstreetstaging'].includes(ordering?.project)
+  const isWhiteLabelBrandsEnabled = WHITE_LABEL_SITES_ENABLED && (configs?.whitelabel_brands_sites?.value === '1' || configs?.whitelabel_brands_sites?.value === true ||
+    ['luisv4plus', 'eatstreetstaging'].includes(ordering?.project))
   const [brandList, setBrandList] = useState([])
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [selectedType, setSelectedType] = useState('general')

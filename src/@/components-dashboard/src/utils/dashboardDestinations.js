@@ -24,6 +24,7 @@ export const buildDashboardDestinationCatalog = ({
   t = noopT,
   user,
   configs = {},
+  sites = [],
   project,
   settingsHub = null,
   integrations = [],
@@ -31,11 +32,11 @@ export const buildDashboardDestinationCatalog = ({
   builderApps = []
 } = {}) => {
   const { level } = getDashboardRoleFlags(user)
-  const navSections = getDashboardNavSections({ t, user, configs, project })
+  const navSections = getDashboardNavSections({ t, user, configs, sites })
   const can = (url) => canOpenNavDestination({ sections: navSections, url, level })
   const canMyProducts = !!navSections.myProducts?.visible && canOpenDashboardRoute('/my-products', level)
   const settingsAllowed = canOpenSettings(user)
-  const navigationEntries = buildNavigationEntries({ t, user, configs, project })
+  const navigationEntries = buildNavigationEntries({ t, user, configs, sites })
   const baseSettings = settingsAllowed ? buildStaticSettingsEntries({ t }) : []
   const hubEntries = settingsAllowed && settingsHub
     ? buildSettingsHubEntries({ t, hub: settingsHub })
@@ -54,7 +55,7 @@ export const buildDashboardDestinationCatalog = ({
     canMyProducts
   })
   const actionEntries = [
-    ...buildOpenActionEntries({ t, user, configs, project }),
+    ...buildOpenActionEntries({ t, user, configs, sites, project }),
     ...integrationEntries
   ]
   const entries = [...navigationEntries, ...settingsEntries, ...actionEntries].map(entry => ({

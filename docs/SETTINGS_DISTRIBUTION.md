@@ -106,7 +106,6 @@ These are not project-config lists. Do not move them into `/settings`.
 | School module on/off | Schools tab | Module switch, not a Settings category |
 | DoorDash, Uber Direct, and similar **credentials** | Connect | Plugin credentials for delivery companies |
 | Gift card **inventory** | Orders > Gift cards | Stock, not configs |
-| Apps purchase catalog | Footer Apps & Addons | Buying apps. Enabled app **configs** live in the matching Settings group |
 | Logs Audit | `/settings/logs` | Separate tool. Not part of the hub |
 
 `notification_toast` left dashboard theme and now lives in Emails & notifications (order alerts). `preorder_maximum_days` left catering and now lives with Scheduled orders.

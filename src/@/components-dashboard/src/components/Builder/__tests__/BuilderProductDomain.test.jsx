@@ -77,6 +77,18 @@ describe('BuilderProductDomain controller', () => {
     expect(ui.current.domainAction).toBe(null)
   })
 
+  it('tells the product its own domain each time it is read or changed', async () => {
+    const onOwnDomainChange = vi.fn()
+    api.saveBuilderProductDomain.mockResolvedValueOnce(ok(domain(pending)))
+    api.removeBuilderProductDomain.mockResolvedValueOnce(ok(domain()))
+    const { ui } = await renderController({ onOwnDomainChange })
+    expect(onOwnDomainChange).toHaveBeenLastCalledWith(null)
+    await act(async () => { await ui.current.saveDomain('shop.burgertown.com') })
+    expect(onOwnDomainChange).toHaveBeenLastCalledWith('shop.burgertown.com')
+    await act(async () => { await ui.current.removeDomain() })
+    expect(onOwnDomainChange).toHaveBeenLastCalledWith(null)
+  })
+
   it('answers a missing CNAME record with where it must point', async () => {
     api.saveBuilderProductDomain.mockResolvedValueOnce(fail(400, ['domain.cname_missing'], { cnameTarget: 'cname.my-sites.app' }))
     const { ui } = await renderController()

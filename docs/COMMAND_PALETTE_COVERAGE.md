@@ -26,8 +26,8 @@ Every covered row uses the same visibility rule as the UI (sidebar section, rout
 | Cart recovery | pages; Add recovery action | Cart and action detail: record. |
 | Gift cards | Pending / Redeemed tabs; Setup Gift Cards (`?setup=1`) | Gift card product detail: record. |
 | Reports | Business, drivers, payment reports; 21 enterprise reports; 4 ecommerce reports (no sidebar item, admin only); invoice types and tabs; reviews tabs (professionals with the appointments addon) | Review detail, invoice detail: record. Report filters: local state. Downloads: excluded. |
-| My products, Apps & Addons, Free downloads, Profile, Logs Audit | pages | App and addon detail: record (`?id=`). Buy addon, session deletion: excluded. External links: excluded. |
-| Builder (project visibility rules apply) | page; Create app (`?add=1`, opens only when the catalog offers Create) | App detail (`/builder/:productId`): record. Search and filters: local state. |
+| My products, Free downloads, Profile, Logs Audit | pages | Session deletion: excluded. External links: excluded. |
+| Builder (every project, admins only) | page; Create app (`?add=1`, opens only when the catalog offers Create) | App detail (`/builder/:productId`): record. Search and filters: local state. |
 | Schools | page | Tabs need a school (`school=`): record. Module toggle: excluded (changes data). |
 
 ## Stores
@@ -36,7 +36,7 @@ Every covered row uses the same visibility rule as the UI (sidebar section, rout
 | --- | --- |
 | Stores list, Inactive stores, Importers panel, Sync with Deliverect / ItsaCheckmate, Add new store (`allowBusinessRegister` rule) | covered |
 | Store detail sections: details, schedule, menu, delivery & pickup, notifications, payment methods, tax & fees, promotions, ordering channels, preorders (catering), custom fields (metafields), webhooks, logs, sales channels, layout, payment account, QR codes, business fees, markups, white label, reservations | store first |
-| Section tabs: owner, categories, location, agents, images, videos, SEO; shared menus; delivery, pickup, driver group, advanced ETA; custom slug, widgets | store first (each tab keeps its own rule: owner hidden for level 2, agents / driver group / custom slug hidden for EatStreet owners) |
+| Section tabs: owner, categories, location, agents, images, videos, SEO; shared menus; delivery, pickup, driver group, advanced ETA; custom slug, widgets | store first (tabs retain their normal role, config and selected-access rules; owner remains hidden for level 2) |
 | Connect clover button | store first (opens the detail; the person presses the button, which goes to Clover) |
 | Store products page, Connect POS & Menu Sync, Connect Sales Channels, Payment reports for a store | store first |
 | Menu, zone, paymethod, wallet, business type, place group, product, category, tag, extra, ingredient | record. `paymethod=` and `business_type=` / `tag=` with a bad id change data or open an empty form: never deep-linked. |
@@ -87,4 +87,3 @@ These four lists are loaded from the same endpoints the pages use (`/third_party
 - Mercado Pago writes `payemthod_tab` (typo) and it is never cleared.
 - Store detail opens any `?section=` without re-checking the menu rule; the palette applies the rule.
 - `/settings/logs` page-size change calls an undefined function.
-- Apps & Addons `?id=` only opens recurring, unpurchased addons.

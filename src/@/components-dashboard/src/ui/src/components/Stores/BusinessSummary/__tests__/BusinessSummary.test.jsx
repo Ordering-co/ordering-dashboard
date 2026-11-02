@@ -42,7 +42,6 @@ vi.mock('../../../../hooks/useWebsiteUrl', () => ({
 vi.mock('../../../../hooks/useUserSelectedAccess', () => ({ useSelectedAccessRole: () => false }))
 vi.mock('../../../../../utils/businessConfigSections', () => ({ getBusinessConfigSections: () => [] }))
 vi.mock('../../../../../utils/businessDetailSections', () => ({
-  EATSTREET_PROJECTS: [],
   isBusinessSectionEnabled: () => false
 }))
 vi.mock('../../BusinessPreview', async () => {

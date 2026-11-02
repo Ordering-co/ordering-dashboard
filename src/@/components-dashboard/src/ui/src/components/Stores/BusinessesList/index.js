@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useLanguage } from '../../../../../index'
+import { useLanguage, useSession } from '../../../../../index'
 import { ColumnAllowSettingPopover, Pagination } from '../../Shared'
 import { Button, Switch, LinkButton } from '../../../styles'
 import { useTheme } from 'styled-components'
 import { SingleBusiness } from '../SingleBusiness'
 import { CheckSquareFill, Square } from 'react-bootstrap-icons'
 import { addQueryToUrl } from '../../../utils'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 
 import {
   BusinessListContainer,
@@ -49,7 +48,8 @@ export const BusinessesList = (props) => {
 
   const theme = useTheme()
   const [, t] = useLanguage()
-  const isRestricted = useBusinessOwnerRestriction()
+  const [{ user }] = useSession()
+  const isAdmin = user?.level === 0
   const [isAllChecked, setIsAllChecked] = useState(false)
   const [isAllFeatured, setIsAllFeatured] = useState(false)
 
@@ -64,7 +64,7 @@ export const BusinessesList = (props) => {
       value: 'business',
       content: t('BUSINESS', 'Business')
     },
-    !isRestricted && {
+    isAdmin && {
       value: 'featured',
       content: t('FEATURE', 'Featured')
     },
@@ -167,7 +167,7 @@ export const BusinessesList = (props) => {
                   {allowColumns?.business && (
                     <th className='business'>{t('BUSINESS', 'Business')}</th>
                   )}
-                  {allowColumns?.featured && !isRestricted && (
+                  {allowColumns?.featured && isAdmin && (
                     <th>
                       <FeaturedWrapper>
                         {businessIds?.length > 0 && (

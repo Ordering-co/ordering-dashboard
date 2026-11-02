@@ -6,12 +6,14 @@ import { act, render, screen, waitFor } from '@testing-library/react'
 const mocks = vi.hoisted(() => ({
   token: 'a-token',
   root: 'https://api.example.com',
-  project: 'current'
+  project: 'current',
+  config: { configs: {}, fetchedWithToken: true }
 }))
 
 vi.mock('../../../../../index', () => ({
   useApi: () => [{ root: mocks.root, project: mocks.project }],
-  useSession: () => [{ token: mocks.token }]
+  useSession: () => [{ token: mocks.token }],
+  useConfig: () => [mocks.config]
 }))
 vi.mock('~/analytics/posthog', () => ({ captureDashboardOperation: vi.fn() }))
 
@@ -36,6 +38,7 @@ describe('ProjectProvider', () => {
     mocks.token = 'a-token'
     mocks.root = 'https://api.example.com'
     mocks.project = 'current'
+    mocks.config = { configs: {}, fetchedWithToken: true }
     vi.restoreAllMocks()
   })
 
@@ -104,7 +107,71 @@ describe('ProjectProvider', () => {
 
     const state = JSON.parse(screen.getByTestId('state').textContent)
     expect(state.trialSubscription).toBeNull()
-    expect(state.websiteProduct).toBeNull()
+    expect(state.websiteProduct).toBe('web_marketplace_26')
+  })
+
+  it('resolves the franchise website from configs when the subscriptions request errors', async () => {
+    mocks.config = { configs: { web_franchises_x: { value: true } }, fetchedWithToken: true }
+    mockFetchSequence([
+      { error: false, result: { id: 1, code: 'acme', current_status: 'active' } },
+      { error: true, result: [{}] }
+    ])
+
+    render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => {
+      expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false)
+    })
+    expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBe('web_franchises_x')
+  })
+
+  it('prefers the marketplace website from configs when both websites are enabled', async () => {
+    mocks.config = { configs: { web_franchises_x: { value: true }, web_marketplace_26: { value: true } }, fetchedWithToken: true }
+    mockFetchSequence([
+      { error: false, result: { id: 1, code: 'acme', current_status: 'active' } },
+      { error: true, result: ['Limited access to the billing manager for this project, contact them.'] }
+    ])
+
+    render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => {
+      expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false)
+    })
+    expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBe('web_marketplace_26')
+  })
+
+  it('waits for the session configs before resolving a website without subscriptions', async () => {
+    mocks.config = { configs: {}, fetchedWithToken: false }
+    mockFetchSequence([
+      { error: false, result: { id: 1, code: 'acme', current_status: 'active' } },
+      { error: true, result: [{}] }
+    ])
+
+    const { rerender } = render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => {
+      expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false)
+    })
+    expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBeNull()
+
+    mocks.config = { configs: { web_franchises_x: { value: true } }, fetchedWithToken: true }
+    rerender(<ProjectProvider><Probe /></ProjectProvider>)
+    expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBe('web_franchises_x')
+  })
+
+  it('does not carry the configs fallback into the next session', async () => {
+    mockFetchSequence([
+      { error: false, result: { id: 1, code: 'acme', current_status: 'active' } },
+      { error: true, result: [{}] }
+    ])
+
+    const { rerender } = render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => {
+      expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBe('web_marketplace_26')
+    })
+
+    mocks.token = 'next-token'
+    global.fetch = vi.fn(() => new Promise(() => {}))
+    rerender(<ProjectProvider><Probe /></ProjectProvider>)
+
+    expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBeNull()
   })
 
   it('keeps the website product unresolved when the project request errors', async () => {

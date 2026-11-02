@@ -38,7 +38,6 @@ export const readBotConnection = (agent = {}) => {
     wabaId: text(settings.waba_id),
     welcomeMessage: text(settings.welcome_message),
     fallbackSupportMessage: text(settings.fallback_support_message),
-    webviewBaseUrl: text(settings.webview_base_url),
     hasAccessToken: Boolean(settings.access_token),
     hasPin: Boolean(settings.pin),
     pinDownloaded: Boolean(settings.pin_downloaded_at),
@@ -119,26 +118,10 @@ export const errorActionFor = (reason) => {
 }
 
 /**
- * An empty webview address is valid and clears the saved one. Anything else
- * has to be an http or https URL, which is what the API accepts.
- * @param {string} value field value
- */
-export const isOrderingWebviewUrl = (value) => {
-  const url = text(value)
-  if (!url) return true
-  try {
-    const parsed = new URL(url)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
-
-/**
  * Body of `PUT /ai/agents/{id}` for manual credentials. Switching from
  * Business Login sends every credential, since the API requires them all then.
- * An empty token field keeps the saved token. An empty message or webview
- * URL clears that key.
+ * An empty token field keeps the saved token. An empty message clears that key.
+ * The ordering webview URL is not edited here, so it is never sent.
  * @param {Object} saved result of `readBotConnection`
  * @param {Object} draft form values
  * @returns {Object|null} null when nothing changed
@@ -153,8 +136,7 @@ export const manualCredentialsPayload = (saved, draft) => {
     wabaId: text(draft?.wabaId),
     accessToken: text(draft?.accessToken),
     welcomeMessage: text(draft?.welcomeMessage),
-    fallbackSupportMessage: text(draft?.fallbackSupportMessage),
-    webviewBaseUrl: text(draft?.webviewBaseUrl)
+    fallbackSupportMessage: text(draft?.fallbackSupportMessage)
   }
   const body = {}
   const settings = switching ? { auth_type: AUTH_MANUAL } : {}
@@ -167,15 +149,15 @@ export const manualCredentialsPayload = (saved, draft) => {
   if (next.languageCode !== normalizeLanguageCode(saved?.languageCode)) settings.language_code = next.languageCode
   if (next.welcomeMessage !== text(saved?.welcomeMessage)) settings.welcome_message = next.welcomeMessage || null
   if (next.fallbackSupportMessage !== text(saved?.fallbackSupportMessage)) settings.fallback_support_message = next.fallbackSupportMessage || null
-  if (next.webviewBaseUrl !== text(saved?.webviewBaseUrl)) settings.webview_base_url = next.webviewBaseUrl || null
 
   if (Object.keys(settings).length) body.provider_settings = settings
   return Object.keys(body).length ? body : null
 }
 
 /**
- * Welcome, fallback, webview and language changes for a bot that is already
+ * Welcome, fallback and language changes for a bot that is already
  * on Business Login. Credential fields stay with Meta, so they are not sent.
+ * The ordering webview URL is not edited here, so it is never sent.
  * Language is shared with the manual form.
  * @param {Object} saved result of `readBotConnection`
  * @param {Object} draft form values
@@ -185,11 +167,9 @@ export const chatbotMessagePayload = (saved, draft) => {
   const settings = {}
   const welcome = text(draft?.welcomeMessage)
   const fallback = text(draft?.fallbackSupportMessage)
-  const webview = text(draft?.webviewBaseUrl)
   const language = normalizeLanguageCode(draft?.languageCode)
   if (welcome !== text(saved?.welcomeMessage)) settings.welcome_message = welcome || null
   if (fallback !== text(saved?.fallbackSupportMessage)) settings.fallback_support_message = fallback || null
-  if (webview !== text(saved?.webviewBaseUrl)) settings.webview_base_url = webview || null
   if (language !== normalizeLanguageCode(saved?.languageCode)) settings.language_code = language
   return Object.keys(settings).length ? { provider_settings: settings } : null
 }

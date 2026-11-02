@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect, useRef } from 'react'
-import { useApi, useSession } from '../../../../index'
+import { useApi, useSession, useConfig } from '../../../../index'
 import { captureDashboardOperation } from '~/analytics/posthog'
 import { getSubscribedWebsiteProduct } from '../../utils/getPreferredSiteUrl'
 /**
@@ -15,15 +15,20 @@ export const ProjectContext = createContext()
 export const ProjectProvider = ({ children }) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
-  const [state, setState] = useState({ loading: false, project: {}, trialSubscription: null, websiteProduct: null })
+  const [{ configs, fetchedWithToken }] = useConfig()
+  const [state, setState] = useState({ loading: false, project: {}, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
   const identity = `${ordering.root}:${ordering.project}:${token}`
   const [sessionIdentity, setSessionIdentity] = useState(identity)
   const requestSeq = useRef(0)
 
   if (identity !== sessionIdentity) {
     setSessionIdentity(identity)
-    setState(prev => ({ ...prev, trialSubscription: null, websiteProduct: null }))
+    setState(prev => ({ ...prev, trialSubscription: null, websiteProduct: null, billingUnavailable: false }))
   }
+
+  const websiteProduct = state.websiteProduct || (state.billingUnavailable && fetchedWithToken
+    ? (configs?.web_franchises_x?.value && !configs?.web_marketplace_26?.value ? 'web_franchises_x' : 'web_marketplace_26')
+    : null)
 
   const getProjectStatus = async () => {
     const seq = ++requestSeq.current
@@ -48,6 +53,7 @@ export const ProjectProvider = ({ children }) => {
       const { error, result } = await response.json()
       const resPlan = await reqPlan.json()
 
+      const billingReadable = !resPlan?.error && Array.isArray(resPlan?.result)
       const activePlan = resPlan?.result?.length ? resPlan?.result?.find(plan => plan?.status === 'active')?.plan?.plan : null
       const trialSubscription = resPlan?.result?.length ? resPlan?.result?.find(subscription => subscription?.status === 'trialing') : null
 
@@ -68,14 +74,15 @@ export const ProjectProvider = ({ children }) => {
         trialSubscription: resPlan?.error
           ? null
           : (trialSubscription || null),
-        websiteProduct: !error && !resPlan?.error && Array.isArray(resPlan?.result)
+        websiteProduct: !error && billingReadable
           ? getSubscribedWebsiteProduct(resPlan.result)
-          : null
+          : null,
+        billingUnavailable: !error && !billingReadable
       })
     } catch (error) {
       captureDashboardOperation({ status: 'failed', module: 'project', action: 'load_project', failureType: 'network' })
       if (seq !== requestSeq.current) return
-      setState(prev => ({ ...prev, loading: false, websiteProduct: null }))
+      setState(prev => ({ ...prev, loading: false, websiteProduct: null, billingUnavailable: false }))
     }
   }
 
@@ -91,7 +98,7 @@ export const ProjectProvider = ({ children }) => {
   }, [token, ordering.root, ordering.project])
 
   return (
-    <ProjectContext.Provider value={[state, functions]}>
+    <ProjectContext.Provider value={[{ ...state, websiteProduct }, functions]}>
       {children}
     </ProjectContext.Provider>
   )

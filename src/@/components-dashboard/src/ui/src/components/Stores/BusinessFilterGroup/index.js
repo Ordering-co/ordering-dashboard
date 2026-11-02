@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLanguage, BusinessFilter } from '../../../../../index'
+import { useLanguage, useSession, BusinessFilter } from '../../../../../index'
 import { Input, DefaultSelect, Button } from '../../../styles'
 import { CitySelector, Modal } from '../../Shared'
 
@@ -24,6 +24,8 @@ const BusinessFilterGroupUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
+  const [{ user }] = useSession()
+  const isAdmin = user?.level === 0
 
   // const conditions = [
   //   { value: '>', content: <Option>{'>'}</Option> },
@@ -81,17 +83,19 @@ const BusinessFilterGroupUI = (props) => {
             </FormControl>
           </FormGroup>
           <FormGroup>
-            <FormControl>
-              <label>{t('FEATURED', 'Featured')}</label>
-              <DefaultSelect
-                placeholder={t('SELECT_OPTION', 'Select a option')}
-                defaultValue={filterValues?.featured}
-                options={enableOptions}
-                onChange={val => handleChangeValue({ featured: val })}
-                optionInnerMaxHeight='300px'
-                className='full-select'
-              />
-            </FormControl>
+            {isAdmin && (
+              <FormControl>
+                <label>{t('FEATURED', 'Featured')}</label>
+                <DefaultSelect
+                  placeholder={t('SELECT_OPTION', 'Select a option')}
+                  defaultValue={filterValues?.featured}
+                  options={enableOptions}
+                  onChange={val => handleChangeValue({ featured: val })}
+                  optionInnerMaxHeight='300px'
+                  className='full-select'
+                />
+              </FormControl>
+            )}
             <FormControl>
               <label>{t('CITY', 'City')}</label>
               <CitySelector

@@ -1,5 +1,5 @@
 key,value,app_uses,submodule_uses
-"LOADING","Loading",0,369
+"LOADING","Loading",0,373
 "LOADING","loading",0,4
 "LOADING","Loading...",0,3
 "VALIDATION_ERROR_REQUIRED","The link type is required",0,1
@@ -111,7 +111,7 @@ key,value,app_uses,submodule_uses
 "SELECT_A_CARD","Select a card",0,1
 "PAYMENT_METHODS","Payment Methods",0,2
 "PAYMENT_METHODS","Payment methods",0,10
-"SAVE","Save",0,119
+"SAVE","Save",0,121
 "SAVE","SAVE",0,1
 "DESCRIPTION","Description",0,27
 "DESCRIPTION","Decription",0,4
@@ -162,7 +162,7 @@ key,value,app_uses,submodule_uses
 "SELECT_PAYMENT_METHOD","Select payment method",0,3
 "INVOICE_ORDER_NO","Order No.",0,7
 "INVOICE_ORDER_NO","Order No",0,11
-"WEB_APPNAME","Ordering",0,168
+"WEB_APPNAME","Ordering",0,167
 "WEB_APPNAME","ORDERING",0,2
 "DRIVER_GROUP","Driver group",0,28
 "DRIVER_GROUP","Driver Group",0,1
@@ -186,7 +186,7 @@ key,value,app_uses,submodule_uses
 "DRIVER_TIP","Driver tip",0,7
 "DRIVER_TIP","Driver Tip",0,1
 "EXPORT_BUSINESS_NAME","Business name",0,3
-"EXPORT_BUSINESS_NAME","Business Name",0,1
+"EXPORT_BUSINESS_NAME","Business Name",0,2
 "SELECT_DRIVER","Select a driver",0,1
 "SELECT_DRIVER","Select driver",0,4
 "SELECT_DRIVER","Select Driver",0,1
@@ -237,7 +237,7 @@ key,value,app_uses,submodule_uses
 "METTERS","meters",0,1
 "METTERS","Meters",0,1
 "ADDRESS","Addresss",0,1
-"ADDRESS","Address",0,18
+"ADDRESS","Address",0,19
 "ADDRESS_NOTES","Address Notes",0,2
 "ADDRESS_NOTES","Address notes",0,2
 "ASSIGNED","assigned",0,1
@@ -282,8 +282,6 @@ key,value,app_uses,submodule_uses
 "WELCOME","Welcome!",0,1
 "VISIT_MY_WEBSITE","Visit my Website",0,1
 "VISIT_MY_WEBSITE","Visit My Website",0,1
-"CONTACT_US","Contact Us",0,1
-"CONTACT_US","Contact us",0,7
 "SUBTITLE_FORGOT_PASSWORD","Enter your email address and we'll send you a link to reset your password.",0,1
 "SUBTITLE_FORGOT_PASSWORD","Enter your email addres and we'll send you a link to reset your password.",0,1
 "CELLPHONE","Cellphone",0,6
@@ -317,7 +315,7 @@ key,value,app_uses,submodule_uses
 "AUTOMATIC_OFFER","Automatic",0,1
 "CATERING_PICKUP","CATERING_PICKUP",0,1
 "CATERING_PICKUP","Catering pickup",0,9
-"BUSINESS_LOGO","Business logo",0,3
+"BUSINESS_LOGO","Business logo",0,4
 "BUSINESS_LOGO","Business Logo",0,1
 "COMMENTS","Comments",0,3
 "COMMENTS","COMMENTS",0,2

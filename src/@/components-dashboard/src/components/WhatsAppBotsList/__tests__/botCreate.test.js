@@ -65,6 +65,13 @@ describe('createBotPayload', () => {
     expect(createBotPayload(businessLogin({ authType: 'manual', phoneNumber: '555' }))).toBeNull()
   })
 
+  it('does not send a webview URL, even when one is typed', () => {
+    const body = createBotPayload(businessLogin({ webviewBaseUrl: 'https://order.example' }))
+    expect(body).not.toBeNull()
+    expect(JSON.stringify(body)).not.toContain('webview_base_url')
+    expect(createBotPayload(businessLogin({ webviewBaseUrl: 'not a url' }))).not.toBeNull()
+  })
+
   it('sends a typed color and leaves an empty one out', () => {
     const body = createBotPayload(businessLogin({
       franchiseId: 3,

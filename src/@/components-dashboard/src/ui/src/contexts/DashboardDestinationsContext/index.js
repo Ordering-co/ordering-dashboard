@@ -4,6 +4,7 @@ import { useApi } from '../../../../contexts/ApiContext'
 import { useConfig } from '../../../../contexts/ConfigContext'
 import { useLanguage } from '../../../../contexts/LanguageContext'
 import { useSession } from '../../../../contexts/SessionContext'
+import { useSite } from '../../../../contexts/SiteContext'
 import { useSettingsCatalog } from '../../../../components/CommandPalette/useSettingsCatalog'
 import { useIntegrationsCatalog } from '../../../../components/CommandPalette/useIntegrationsCatalog'
 import { createDashboardDestinationsController } from '../../../../components/CommandPalette/dashboardDestinationsController'
@@ -38,6 +39,7 @@ const makeScope = (scopeKey) => {
 export const DashboardDestinationsProvider = ({ children }) => {
   const [ordering] = useApi()
   const [{ configs }] = useConfig()
+  const [{ sites }] = useSite()
   const [{ token, user }] = useSession()
   const [languageState, t] = useLanguage()
   const location = useLocation()
@@ -46,7 +48,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
   const { open: openPalette } = useCommandPalette()
   const { level } = getDashboardRoleFlags(user)
   const project = ordering?.project
-  const navCatalog = useMemo(() => buildDashboardDestinationCatalog({ t, user, configs, project }), [configs, project, t, user])
+  const navCatalog = useMemo(() => buildDashboardDestinationCatalog({ t, user, configs, sites, project }), [configs, sites, project, t, user])
   const settingsCatalog = useSettingsCatalog({ enabled: false })
   const loadIntegrations = Object.values(INTEGRATION_TYPES).some(item => navCatalog.can(item.url))
   const loadDeliveryCompanies = navCatalog.can(DELIVERY_SERVICES_URL)
@@ -61,6 +63,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
     t,
     user,
     configs,
+    sites,
     project,
     settingsHub: settingsCatalog.hub,
     integrations: integrationsCatalog.integrations,
@@ -68,6 +71,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
     builderApps: integrationsCatalog.builderApps
   }), [
     configs,
+    sites,
     integrationsCatalog.builderApps,
     integrationsCatalog.deliveryCompanies,
     integrationsCatalog.integrations,
@@ -143,6 +147,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
       t,
       user,
       configs,
+      sites,
       project,
       settingsHub,
       integrations: dynamic.integrations,
@@ -156,6 +161,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
     return { catalog: refreshedCatalog, catalogErrors }
   }, [
     configs,
+    sites,
     getCatalogErrors,
     integrationsCatalog,
     navCatalog.settingsAllowed,

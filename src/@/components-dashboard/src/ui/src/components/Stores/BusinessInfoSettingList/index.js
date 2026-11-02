@@ -1,7 +1,6 @@
 import React from 'react'
 import { useLanguage, useSession } from '../../../../../index'
 import { DragScroll } from '../../Shared'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 import {
   SettingListConatiner,
   Tab
@@ -14,7 +13,6 @@ export const BusinessInfoSettingList = (props) => {
   } = props
   const [, t] = useLanguage()
   const [{ user }] = useSession()
-  const isRestricted = useBusinessOwnerRestriction()
 
   const listOptions = [
     { key: 'information', content: t('INFORMATION', 'Information') },
@@ -31,7 +29,7 @@ export const BusinessInfoSettingList = (props) => {
       <SettingListConatiner>
         <DragScroll>
           {listOptions.map(option => (
-            !(user?.level === 2 && option.key === 'owner') && !(isRestricted && option.key === 'agents') && (
+            !(user?.level === 2 && option.key === 'owner') && (
               <Tab
                 key={option.key}
                 active={selectedInfoItem === option.key}

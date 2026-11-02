@@ -4,7 +4,6 @@ import { WrapperGoogleMaps } from '../WrapperGoogleMaps'
 import { GoogleMapsHeatmapLayer } from '../GoogleMapsHeatmapLayer'
 import { useEvent } from '../../contexts/EventContext'
 import { useUtils } from '../../contexts/UtilsContext'
-import { fetchBusinessDetails } from '../GoogleAutocompleteInput/placesApi'
 
 export const GoogleMaps = (props) => {
   const {
@@ -23,8 +22,6 @@ export const GoogleMaps = (props) => {
     markerIcon,
     isFitCenter,
     handleChangeCenter,
-    placeId,
-    setDetails,
     onlyMarkerChangeCenter
   } = props
 
@@ -411,18 +408,6 @@ export const GoogleMaps = (props) => {
       return () => clearInterval(interval)
     }
   }, [locations, isHeatMap])
-
-  useEffect(() => {
-    if (googleMap && placeId) {
-      let active = true
-      fetchBusinessDetails(googleMap, placeId)
-        .then(place => {
-          if (active) setDetails && setDetails(place)
-        })
-        .catch(error => console.error('Google Places details request failed', error))
-      return () => { active = false }
-    }
-  }, [googleMap, placeId])
 
   return (
     googleReady && (

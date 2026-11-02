@@ -352,7 +352,6 @@ describe('connectAccess helpers', () => {
   })
 
   it('keeps every other connect page admin only', () => {
-    expect(getConnectAllowedLevels('connect_overview')).toEqual([0])
     expect(getConnectAllowedLevels('delivery_services')).toEqual([0])
     expect(getConnectAllowedLevels('importers')).toEqual([0])
     expect(getConnectAllowedLevels('sales_channels')).toEqual([0])

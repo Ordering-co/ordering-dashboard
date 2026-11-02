@@ -57,7 +57,6 @@ These stay outside the hub on purpose. Do not move them in without a product dec
 | School module toggle | Schools tab | `schools` is not a hub category. |
 | Delivery-company plugin credentials | Connect | DoorDash, Uber Direct, and similar plugin categories are filtered out of Apps & developers. |
 | Gift card inventory | Orders > Gift cards (`/gift-cards`) | Inventory, not project config. Configs are Settings > Payments. |
-| Apps catalog | Footer Apps & Addons (`/purchase/addons`) | Purchase catalog. Enabled app configs live in the matching Settings group. |
 | Logs Audit | `/settings/logs` | Out of scope. |
 | Store Stripe account, platform fee and payouts | Stores > store > Payment methods > Stripe Connect v2 | Per-store records; account connection follows store-owner permissions. |
 | Driver Stripe account and payment rule | Delivery > Drivers > driver > Stripe Connect | Per-driver records; available to administrators when the payouts flag is enabled. |

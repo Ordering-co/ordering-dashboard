@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { BusinessDetails } from './BusinessDetails'
-import { useLanguage, useEvent, useConfig, GoogleMapsMap, BusinessAdd as BusinessAddController } from '../../../../../index'
+import { useLanguage, useEvent, useConfig, BusinessAdd as BusinessAddController } from '../../../../../index'
 import { List as MenuIcon } from 'react-bootstrap-icons'
 import { Images } from './Images'
 import { Schedule } from './Schedule'
@@ -11,6 +11,8 @@ import { ReceiveOrders } from './ReceiveOrders'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { Button, IconButton, Input } from '../../../styles'
 import { DeliveryZone } from './DeliveryZone'
+import { GoogleBusinessSearch } from '../GoogleBusinessSearch'
+import { getUniqueId, stringToSlug } from '../../../utils'
 import { useHistory } from 'react-router-dom'
 import { Alert, Modal } from '../../Shared'
 import {
@@ -18,11 +20,15 @@ import {
   BoxLayout,
   ButtonWrapper,
   HeaderTitleContainer,
-  MapWrapper,
   SlugEditWrapper,
   SlugFormControl
 } from './styles'
 import { ButtonLink } from '../../../styles/Buttons'
+
+const DEFAULT_SCHEDULE = Array.from({ length: 7 }, () => ({
+  enabled: true,
+  lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }]
+}))
 
 const BusinessAddUI = (props) => {
   const {
@@ -43,8 +49,9 @@ const BusinessAddUI = (props) => {
     handleChangePaymethodIds,
     paymethodIds,
     handleChangeSchedule,
+    schedule,
     placeId,
-    setDetails,
+    googleBusiness,
     setShowBillingPayment
   } = props
 
@@ -54,6 +61,8 @@ const BusinessAddUI = (props) => {
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isSlugEdit, setIsSlugEdit] = useState(false)
+  const [googleApplied, setGoogleApplied] = useState({})
+  const [addressVersion, setAddressVersion] = useState(0)
   const configTypes = configs?.order_types_allowed?.value?.split('|').map(value => Number(value)) || []
   const isDeliveryAllowed = configTypes.includes(1)
 
@@ -100,19 +109,30 @@ const BusinessAddUI = (props) => {
 
   const changeSchedule = useCallback((e) => handleChangeSchedule(e), [])
 
-  const googleMapsControls = {
-    defaultZoom: 15,
-    zoomControl: true,
-    streetViewControl: false,
-    fullscreenControl: false,
-    mapTypeId: 'roadmap', // 'roadmap', 'satellite', 'hybrid', 'terrain'
-    mapTypeControl: false,
-    mapTypeControlOptions: {
-      mapTypeIds: ['roadmap', 'satellite']
-    }
+  const getGoogleFields = (business) => ({
+    name: { name: business.name, slug: business.name ? stringToSlug(business.name) : '' },
+    phone: { cellphone: business.phone },
+    address: {
+      address: business.address,
+      location: business.location && { ...business.location, zipcode: business.zipcode || -1, zoom: 15 },
+      timezone: business.timezone
+    },
+    schedule: { schedule: business.schedule },
+    priceLevel: { price_level: business.priceLevel >= 1 ? `${business.priceLevel}` : null }
+  })
+
+  const handleGoogleChange = (changes) => {
+    if (changes.schedule) handleChangeSchedule(changes.schedule)
+    if (Object.prototype.hasOwnProperty.call(changes, 'address')) setAddressVersion(version => version + 1)
+    changeFormState(changes)
   }
 
-  const defaultPosition = { lat: 40.77473399999999, lng: -73.9653844 }
+  const handleGooglePhotos = (photos) => {
+    const galleryPhotos = photos.filter(photo => photo.role === 'gallery').map(photo => ({ file: photo.file, type: 1, temp_id: getUniqueId() }))
+    if (galleryPhotos.length) handleChangeGallery([...gallery, ...galleryPhotos])
+    const images = Object.fromEntries(photos.filter(photo => photo.role !== 'gallery').map(photo => [photo.role, photo.file]))
+    if (Object.keys(images).length) changeFormState(images)
+  }
 
   return (
     <>
@@ -129,12 +149,27 @@ const BusinessAddUI = (props) => {
           <h1>{t('NEW_BUSINESS', 'New business')}</h1>
         </HeaderTitleContainer>
         <BoxLayout>
+          <GoogleBusinessSearch
+            initialBusiness={googleBusiness}
+            initialPlaceId={googleBusiness ? undefined : placeId}
+            getFields={getGoogleFields}
+            values={{ ...formState?.changes, schedule }}
+            defaults={{ schedule: DEFAULT_SCHEDULE }}
+            applied={googleApplied}
+            onAppliedChange={setGoogleApplied}
+            onChange={handleGoogleChange}
+            photoRoles={['gallery', 'header', 'logo']}
+            onPhotos={handleGooglePhotos}
+            disabled={formState?.loading}
+          />
+        </BoxLayout>
+        <BoxLayout>
           <BusinessDetails
             formState={formState}
             handleChangeAddress={handleChangeAddress}
             handleChangeInput={handleChangeInput}
             handleChangeCenter={handleChangeCenter}
-            placeId={placeId}
+            addressKey={addressVersion}
             setShowBillingPayment={setShowBillingPayment}
           />
         </BoxLayout>
@@ -202,18 +237,6 @@ const BusinessAddUI = (props) => {
             {t('CONFIRM', 'Confirm')}
           </Button>
         </ButtonWrapper>
-        <MapWrapper>
-          {placeId && configs?.google_maps_api_key?.value && (
-            <GoogleMapsMap
-              apiKey={configs?.google_maps_api_key?.value}
-              location={defaultPosition}
-              mapControls={googleMapsControls}
-              isFitCenter
-              setDetails={setDetails}
-              placeId={placeId}
-            />
-          )}
-        </MapWrapper>
       </AddNewBusinessContainer>
       <Alert
         title={t('WEB_APPNAME', 'Ordering')}

@@ -16,7 +16,6 @@ import {
   GraphUp,
   BoxArrowUpRight,
   BagCheck,
-  BagPlus,
   X as CloseIcon,
   FileEarmarkTextFill as LogsIcon,
   InfoCircle,
@@ -90,7 +89,7 @@ const SidebarMenuUI = (props) => {
   const isCannyActivated = false
 
   // Same sections the command palette searches (utils/dashboardNavigation)
-  const navSections = getDashboardNavSections({ t, user: sessionState?.user, configs, project: ordering?.project })
+  const navSections = getDashboardNavSections({ t, user: sessionState?.user, configs, sites })
   const ordersSubMenus = navSections.orders.items
   const deliverySubmenus = navSections.delivery.items
   const storesSubMenus = navSections.stores.items
@@ -99,7 +98,6 @@ const SidebarMenuUI = (props) => {
   const myProductMenus = navSections.myProducts.items
   const businessIntelligenceSubMenus = navSections.intelligence.items
   const marketingSubmenus = navSections.marketing.items
-  const logsSubMenus = navSections.logs.items
 
   const websiteDestinations = getPreferredSiteDestinations({
     sites,
@@ -714,18 +712,6 @@ const SidebarMenuUI = (props) => {
                   )}
                   {!(readOnlyAdmin || readOnlyDeliveryManager || readOnlyBusinessOwner) && (
                     <>
-                      {sessionState?.user?.level === 0 && sessionState?.user?.user_system_id && (
-                        <Button
-                          className='d-flex align-items-center'
-                          variant={false}
-                          onClick={(e) => handleGoToPage(e, { page: 'purchase_addons' })}
-                          href='/purchase_addons'
-                          role='link'
-                        >
-                          <BagPlus />
-                          <span>{t('APPS_AND_ADDONS', 'Apps & Addons')}</span>
-                        </Button>
-                      )}
                       {sessionState?.user?.level === 0 && sessionState?.user?.user_system_id && projectStatus?.plan?.upgrade_plan_id && (
                         <Button
                           className='d-flex align-items-center upgrade-to-pro-button'
@@ -750,36 +736,17 @@ const SidebarMenuUI = (props) => {
                         </Button>
                       )}
                       {navSections.logs.visible && (
-                        <Accordion data-testid='logs-audit-menu'>
-                          <MenuContainer>
-                            <ContextAwareToggle
-                              eventKey='11'
-                              active={
-                                location.pathname === '/settings/logs'
-                              }
-                            >
-                              <LogsIcon />
-                              <span>{t('LOGS_AUDIT', 'Logs Audit')}</span>
-                            </ContextAwareToggle>
-                            <Accordion.Collapse eventKey='11'>
-                              <MenuContent>
-                                {logsSubMenus.map(item => (
-                                  item.enabled && (
-                                    <SubMenu
-                                      key={item.id}
-                                      active={location.pathname.includes(item.url)}
-                                      onClick={(e) => handleGoToPage(e, { page: item.pageName })}
-                                      href={item.url}
-                                      role='link'
-                                    >
-                                      {firstLetterCapital(item.title)}
-                                    </SubMenu>
-                                  )
-                                ))}
-                              </MenuContent>
-                            </Accordion.Collapse>
-                          </MenuContainer>
-                        </Accordion>
+                        <Button
+                          active={location.pathname === '/settings/logs'}
+                          className='d-flex align-items-center'
+                          variant={location.pathname === '/settings/logs' ? 'primary' : false}
+                          onClick={(e) => handleGoToPage(e, { page: 'logs' })}
+                          href='/settings/logs'
+                          role='link'
+                        >
+                          <LogsIcon />
+                          <span>{t('LOGS_AUDIT', 'Logs Audit')}</span>
+                        </Button>
                       )}
                       {sessionState?.user?.level === 0 && (
                         <Button

@@ -46,8 +46,8 @@ const BuilderWebOverviewUI = (props) => {
             <h2 id='builder-web-online'>{t('BUILDER_WEB_ONLINE', 'Your website is online')}</h2>
             <p>
               {ownActive && temporary
-                ? withLinks(t('BUILDER_WEB_ONLINE_OWN', 'It’s at _domain_ and at its temporary address, _temporary_. Theme and stores come in an upcoming update.'), { _domain_: ownActive, _temporary_: temporary }, t)
-                : withLinks(t('BUILDER_WEB_ONLINE_TEMPORARY', 'It’s at _domain_, a temporary address, even while it’s a draft. You can add your own domain below. Theme and stores come in an upcoming update.'), { _domain_: main }, t)}
+                ? withLinks(t('BUILDER_WEB_ONLINE_OWN', 'It’s at _domain_ and at its temporary address, _temporary_. Stores come in an upcoming update.'), { _domain_: ownActive, _temporary_: temporary }, t)
+                : withLinks(t('BUILDER_WEB_ONLINE_TEMPORARY', 'It’s at _domain_, a temporary address, even while it’s a draft. You can add your own domain below. Stores come in an upcoming update.'), { _domain_: main }, t)}
             </p>
           </div>
           <a

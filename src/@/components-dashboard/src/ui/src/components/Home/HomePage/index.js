@@ -8,13 +8,10 @@ import HubspotForm from 'react-hubspot-form'
 import {
   List as MenuIcon,
   Basket as OrdersIcon,
-  Cash as SalesIcon,
-  FileEarmarkCode,
-  Gear
+  Cash as SalesIcon
 } from 'react-bootstrap-icons'
 
 import { useLanguage, useUtils, useEvent, useSession, useApi, useSite, Home as HomeController, useConfig } from '../../../../../index'
-import { useSourceCodeTranslator } from '../../../../../components/SourceCodeDownloads/useSourceCodeTranslator'
 import { IconButton, Button, ButtonLink } from '../../../styles/Buttons'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { useProjectState } from '../../../contexts/ProjectContext'
@@ -50,20 +47,8 @@ import {
   ProjectStatusWrapper,
   CloseButtonWrapper,
   HubspotFormWrapper,
-  OnboardingLessonsContainer,
-  MoreServicesSection,
-  MoreServicesTitle,
-  MoreServicesGrid,
-  MoreServiceCard,
-  MoreServiceCardBody,
-  MoreServiceTextContent,
-  MoreServiceIconBox,
-  MoreServiceCardHeading,
-  MoreServiceCardDescription,
-  MoreServiceCardFooter
+  OnboardingLessonsContainer
 } from './styles'
-
-const PLATFORM_DEMO_PRICING_URL = 'https://www.ordering.co/platform-demo-and-pricing'
 
 const HomeUI = (props) => {
   const {
@@ -75,8 +60,7 @@ const HomeUI = (props) => {
   } = props
 
   const theme = useTheme()
-  const [languageState, apiTranslator] = useLanguage()
-  const t = useSourceCodeTranslator(apiTranslator, languageState.language)
+  const [, t] = useLanguage()
   const [{ configs, loading: loadingConfigs }] = useConfig()
   const [{ sites }] = useSite()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
@@ -400,66 +384,6 @@ const HomeUI = (props) => {
             </OrdersOrSalesContainer>
           </OrdersAndSalesWrapper>
         </Reports>
-        {sessionState?.user?.level === 0 && (
-          <MoreServicesSection aria-labelledby='more-services-heading'>
-            <MoreServicesTitle id='more-services-heading'>
-              {t('MORE_SERVICES', 'More Services')}
-            </MoreServicesTitle>
-            <MoreServicesGrid>
-              <MoreServiceCard>
-                <MoreServiceCardBody>
-                  <MoreServiceIconBox>
-                    <FileEarmarkCode aria-hidden />
-                  </MoreServiceIconBox>
-                  <MoreServiceTextContent>
-                    <MoreServiceCardHeading>
-                      {t('SOURCE_CODE_HOME_TITLE', 'Website Marketplace source code')}
-                    </MoreServiceCardHeading>
-                    <MoreServiceCardDescription>
-                      {t('SOURCE_CODE_HOME_DESCRIPTION', 'Find the available Website Marketplace version, installation instructions, and license.')}
-                    </MoreServiceCardDescription>
-                  </MoreServiceTextContent>
-                </MoreServiceCardBody>
-                <MoreServiceCardFooter>
-                  <ButtonLink
-                    color='black'
-                    borderRadius='8px'
-                    href='/open-source-code'
-                  >
-                    {t('SOURCE_CODE_HOME_CTA', 'View source code')}
-                  </ButtonLink>
-                </MoreServiceCardFooter>
-              </MoreServiceCard>
-              <MoreServiceCard>
-                <MoreServiceCardBody>
-                  <MoreServiceIconBox $variant='custom'>
-                    <Gear aria-hidden />
-                  </MoreServiceIconBox>
-                  <MoreServiceTextContent>
-                    <MoreServiceCardHeading>
-                      {t('CUSTOM_WORK_AND_TEMPLATES', 'CUSTOM WORK & TEMPLATES')}
-                    </MoreServiceCardHeading>
-                    <MoreServiceCardDescription>
-                      {t('CUSTOM_WORK_DESCRIPTION', 'Tailored integrations, specific features, and unique UI design templates.')}
-                    </MoreServiceCardDescription>
-                  </MoreServiceTextContent>
-                </MoreServiceCardBody>
-                <MoreServiceCardFooter>
-                  <ButtonLink
-                    color='black'
-                    borderRadius='8px'
-                    href={PLATFORM_DEMO_PRICING_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    aria-label={t('CONTACT_US_CUSTOM_WORK_ARIA', 'Contact us about custom work and templates — opens Ordering demo and pricing in a new tab')}
-                  >
-                    {t('CONTACT_US', 'Contact Us')}
-                  </ButtonLink>
-                </MoreServiceCardFooter>
-              </MoreServiceCard>
-            </MoreServicesGrid>
-          </MoreServicesSection>
-        )}
         {sessionState?.user?.level !== 2 && !disableSupportModule && (
           <>
             <ParagraphHeaders>

@@ -154,7 +154,7 @@ describe('WhatsApp bot connection', () => {
     expect(screen.queryByLabelText('WhatsApp Business Account ID')).toBeNull()
     expect(screen.getByLabelText('Welcome message').value).toBe('')
     expect(screen.getByLabelText('Fallback support message').value).toBe('')
-    expect(screen.getByLabelText('Ordering webview URL').value).toBe('')
+    expect(screen.queryByLabelText('Ordering webview URL')).toBeNull()
     expect(screen.getByText('Connected')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Diagnose' })).toBeTruthy()
     expect(screen.queryByRole('button', { name: 'Connect with WhatsApp Business' })).toBeNull()
@@ -291,7 +291,7 @@ describe('WhatsApp bot connection', () => {
     })
   })
 
-  it('shows the chatbot language, messages and webview URL on manual credentials', () => {
+  it('shows the chatbot language and messages on manual credentials', () => {
     const actions = renderConnection({
       ...manualConnection,
       languageCode: 'es',
@@ -303,7 +303,7 @@ describe('WhatsApp bot connection', () => {
     expect(screen.getByRole('combobox', { name: 'Agent Default Language' }).value).toBe('es')
     expect(screen.getByLabelText('Welcome message').value).toBe('Hola')
     expect(screen.getByLabelText('Fallback support message')).toBeTruthy()
-    expect(screen.getByLabelText('Ordering webview URL').value).toBe('https://order.example')
+    expect(screen.queryByLabelText('Ordering webview URL')).toBeNull()
     expect(screen.queryByRole('button', { name: 'Need another language? Contact us.' })).toBeNull()
 
     fireEvent.change(screen.getByLabelText('Fallback support message'), { target: { value: 'Te ayudamos' } })

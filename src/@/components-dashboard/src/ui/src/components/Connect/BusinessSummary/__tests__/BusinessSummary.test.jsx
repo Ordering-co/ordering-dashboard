@@ -378,27 +378,39 @@ describe('Connected POS first', () => {
 })
 
 describe('Connected section while the detail is open', () => {
-  const clover = { id: 9, name: 'Clover', plugin_id: 9, plugin: { root: 'https://clover.test', setup_url: '/setup' } }
+  const rappi = { id: 3, name: 'Rappi', plugin_id: 3, plugin: { root: 'https://rappi.test', setup_url: '/setup' } }
+  const uberEats = { id: 4, name: 'Uber Eats', plugin_id: 4, plugin: { root: 'https://uber-eats.test', setup_url: '/setup' } }
   const props = {
-    integrationsList: { thirdPartyIntegrations: [clover] },
-    businessState: { business: { third_party_integrations: [{ third_party_integration_id: 9, setup_status: null }] } }
+    fromSalesChannels: true,
+    integrationsList: { thirdPartyIntegrations: [rappi, uberEats] },
+    businessState: {
+      business: {
+        third_party_integrations: [
+          { third_party_integration_id: 3, setup_status: null },
+          { third_party_integration_id: 4, setup_status: null }
+        ]
+      }
+    }
   }
+  const rowOf = (name) => screen.getByText(name).closest('.connect-pos-wrapper')
 
-  it('hides the connected integration while its detail is open, and shows it again when it closes', () => {
+  it('keeps every connected integration listed and marks the one whose detail is open', () => {
     state.level = 0
-    renderSummary({ ...props, extraOpen: true, selectedItem: 'integration' })
-
-    expect(screen.queryByText('Connected', { selector: 'p.section-title' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Continue setup' })).not.toBeInTheDocument()
-    expect(screen.getByText('Available POS')).toBeInTheDocument()
-  })
-
-  it('shows the connected integration when no detail is open', () => {
-    state.level = 0
-    renderSummary({ ...props, extraOpen: false, selectedItem: null })
+    renderSummary({ ...props, extraOpen: true, selectedItem: 'integration', selectedIntegration: uberEats })
 
     expect(screen.getByText('Connected', { selector: 'p.section-title' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continue setup' })).toBeInTheDocument()
+    expect(rowOf('Uber Eats')).toHaveAttribute('aria-current', 'true')
+    expect(rowOf('Rappi')).not.toHaveAttribute('aria-current')
+    expect(screen.getAllByRole('button', { name: 'Continue setup' })).toHaveLength(2)
+  })
+
+  it('marks no row when no detail is open', () => {
+    state.level = 0
+    renderSummary({ ...props, extraOpen: false, selectedItem: null, selectedIntegration: uberEats })
+
+    expect(screen.getByText('Connected', { selector: 'p.section-title' })).toBeInTheDocument()
+    expect(rowOf('Uber Eats')).not.toHaveAttribute('aria-current')
+    expect(rowOf('Rappi')).not.toHaveAttribute('aria-current')
   })
 })
 

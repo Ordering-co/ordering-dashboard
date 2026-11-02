@@ -4,6 +4,12 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { BusinessProductsListing } from './index'
 
+const catalogResponse = (result = []) => ({
+  ok: true,
+  status: 200,
+  json: vi.fn().mockResolvedValue({ error: false, result })
+})
+
 vi.mock('../../contexts/SessionContext', () => ({
   useSession: () => [{ token: 'test-token' }]
 }))
@@ -14,6 +20,195 @@ vi.mock('../../contexts/EventContext', () => ({
 
 global.IS_REACT_ACT_ENVIRONMENT = true
 
+describe('BusinessProductsListing catalogs', () => {
+  let root
+  let controllerProps
+  const UIComponent = props => {
+    controllerProps = props
+    return null
+  }
+
+  const mount = async (apiRoot = 'https://api.test') => {
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    root = createRoot(container)
+    await act(async () => {
+      root.render(<BusinessProductsListing ordering={{ root: apiRoot }} UIComponent={UIComponent} />)
+    })
+  }
+
+  afterEach(() => {
+    if (root) act(() => root.unmount())
+    root = null
+    document.body.innerHTML = ''
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  test.each([
+    ['network rejection', () => Promise.reject(new TypeError('Failed to fetch'))],
+    ['HTTP 401', () => ({
+      ok: false,
+      status: 401,
+      json: vi.fn().mockResolvedValue({ error: false, result: [{ id: 1 }] })
+    })],
+    ['HTTP 503', () => ({
+      ok: false,
+      status: 503,
+      json: vi.fn().mockResolvedValue({ error: false, result: [{ id: 1 }] })
+    })],
+    ['invalid JSON', () => ({ ok: true, json: () => Promise.reject(new SyntaxError('Invalid JSON')) })],
+    ['API error', () => ({ ok: true, json: async () => ({ error: true, result: ['Unavailable'] }) })],
+    ['invalid result', () => catalogResponse({})],
+    ['invalid entry', () => catalogResponse([null])],
+    ['missing entry id', () => catalogResponse([{ name: 'Missing id' }])]
+  ])('handles %s without leaving catalog loads pending', async (_name, response) => {
+    vi.stubGlobal('fetch', vi.fn(url => /\/(taxes|fees)/.test(url) ? response() : catalogResponse()))
+    await mount()
+
+    for (const resource of ['taxes', 'fees']) {
+      expect(controllerProps.catalogState[resource].loading).toBe(false)
+      expect(controllerProps.catalogState[resource].error).toBeTruthy()
+      expect(controllerProps.catalogState[resource].loaded).toBe(false)
+      expect(controllerProps[resource]).toEqual({})
+    }
+    expect(controllerProps.formTaxState.loading).toBe(false)
+  })
+
+  test('loads both catalogs initially and retries only the failed catalog', async () => {
+    let failTaxes = true
+    const fee = { id: 2, name: 'Service fee' }
+    const fetch = vi.fn(url => {
+      if (url.endsWith('/taxes') && failTaxes) return Promise.reject(new TypeError('Failed to fetch'))
+      return catalogResponse(url.includes('/fees?') ? [fee] : [])
+    })
+    vi.stubGlobal('fetch', fetch)
+    await mount()
+    expect(controllerProps.catalogState.taxes.error).toBeTruthy()
+    expect(controllerProps.catalogState.taxes.loaded).toBe(false)
+    expect(controllerProps.catalogState.fees).toEqual({ loading: false, error: null, loaded: true })
+    expect(controllerProps.fees).toEqual({ 'id:2': fee })
+    expect(fetch.mock.calls.filter(([url]) => url.endsWith('/taxes')).length).toBe(1)
+    const feeRequests = fetch.mock.calls.filter(([url]) => url.includes('/fees?')).length
+    expect(fetch).toHaveBeenCalledWith('https://api.test/fees?where={"type":"product"}', expect.objectContaining({
+      method: 'GET', headers: expect.objectContaining({ Authorization: 'Bearer test-token' })
+    }))
+
+    failTaxes = false
+    await act(async () => { await controllerProps.retryCatalogs() })
+    expect(fetch.mock.calls.filter(([url]) => url.includes('/fees?')).length).toBe(feeRequests)
+    expect(fetch.mock.calls.filter(([url]) => url.endsWith('/taxes')).length).toBe(2)
+    expect(controllerProps.catalogState.taxes).toEqual({ loading: false, error: null, loaded: true })
+    expect(controllerProps.taxes).toEqual({})
+  })
+
+  test('does not refetch successfully loaded catalogs on retry', async () => {
+    const tax = { id: 1, name: 'VAT' }
+    const fee = { id: 2, name: 'Fee' }
+    const fetch = vi.fn(url => catalogResponse(url.endsWith('/taxes') ? [tax] : url.includes('/fees?') ? [fee] : []))
+    vi.stubGlobal('fetch', fetch)
+    await mount()
+    const catalogRequests = fetch.mock.calls.filter(([url]) => /\/(taxes|fees)/.test(url)).length
+    await act(async () => { await controllerProps.retryCatalogs() })
+    expect(controllerProps.taxes).toEqual({ 'id:1': tax })
+    expect(controllerProps.fees).toEqual({ 'id:2': fee })
+    expect(fetch.mock.calls.filter(([url]) => /\/(taxes|fees)/.test(url))).toHaveLength(catalogRequests)
+    expect(controllerProps.catalogState).toEqual({
+      taxes: { loading: false, error: null, loaded: true },
+      fees: { loading: false, error: null, loaded: true }
+    })
+  })
+
+  test('does not retry catalogs that are still loading', async () => {
+    let resolveTax
+    const fetch = vi.fn(url => {
+      if (url.endsWith('/taxes')) return new Promise(resolve => { resolveTax = resolve })
+      return catalogResponse()
+    })
+    vi.stubGlobal('fetch', fetch)
+    await mount()
+
+    await act(async () => { await controllerProps.retryCatalogs() })
+    expect(fetch.mock.calls.filter(([url]) => url.endsWith('/taxes'))).toHaveLength(1)
+    expect(controllerProps.catalogState.taxes).toEqual({ loading: true, error: null, loaded: false })
+
+    await act(async () => { resolveTax(catalogResponse()) })
+    expect(controllerProps.catalogState.taxes).toEqual({ loading: false, error: null, loaded: true })
+  })
+
+  test('ignores superseded responses after an API root change and aborts pending loads on unmount', async () => {
+    let resolveOldTax
+    let oldSignal
+    const fetch = vi.fn((url, options) => {
+      if (url === 'https://api.test/taxes') {
+        oldSignal = options.signal
+        return new Promise(resolve => { resolveOldTax = resolve })
+      }
+      if (url.startsWith('https://api.changed/')) return new Promise(() => {})
+      return catalogResponse()
+    })
+    vi.stubGlobal('fetch', fetch)
+    await mount()
+    expect(controllerProps.catalogState.taxes.loading).toBe(true)
+
+    await act(async () => {
+      root.render(<BusinessProductsListing ordering={{ root: 'https://api.changed' }} UIComponent={UIComponent} />)
+    })
+    expect(oldSignal.aborted).toBe(true)
+
+    await act(async () => { resolveOldTax(catalogResponse([{ id: 99 }])) })
+    expect(controllerProps.taxes).toEqual({})
+    expect(controllerProps.catalogState.taxes).toEqual({ loading: true, error: null, loaded: false })
+    act(() => root.unmount())
+    root = null
+    expect(fetch.mock.calls.filter(([url]) => /\/(taxes|fees)/.test(url)).every(([, options]) => options.signal.aborted)).toBe(true)
+  })
+
+  test('resets loaded catalogs and maps when the API root changes', async () => {
+    const tax = { id: 1, name: 'VAT' }
+    const fee = { id: 2, name: 'Fee' }
+    let pending = false
+    const newSignals = []
+    const fetch = vi.fn((url, { signal }) => {
+      if (pending) {
+        newSignals.push(signal)
+        return new Promise(() => {})
+      }
+      return catalogResponse(url.endsWith('/taxes') ? [tax] : url.includes('/fees?') ? [fee] : [])
+    })
+    vi.stubGlobal('fetch', fetch)
+    await mount()
+    expect(controllerProps.catalogState).toEqual({
+      taxes: { loading: false, error: null, loaded: true },
+      fees: { loading: false, error: null, loaded: true }
+    })
+    expect(controllerProps.taxes).toEqual({ 'id:1': tax })
+    expect(controllerProps.fees).toEqual({ 'id:2': fee })
+
+    pending = true
+    await act(async () => {
+      root.render(<BusinessProductsListing ordering={{ root: 'https://api.changed' }} UIComponent={UIComponent} />)
+    })
+
+    expect(controllerProps.catalogState).toEqual({
+      taxes: { loading: true, error: null, loaded: false },
+      fees: { loading: true, error: null, loaded: false }
+    })
+    expect(controllerProps.taxes).toEqual({})
+    expect(controllerProps.fees).toEqual({})
+    expect(fetch).toHaveBeenCalledWith('https://api.changed/taxes', expect.objectContaining({
+      signal: expect.any(AbortSignal)
+    }))
+    expect(fetch).toHaveBeenCalledWith('https://api.changed/fees?where={"type":"product"}', expect.objectContaining({
+      signal: expect.any(AbortSignal)
+    }))
+    expect(newSignals).toHaveLength(2)
+    act(() => root.unmount())
+    root = null
+    expect(newSignals.every(signal => signal.aborted)).toBe(true)
+  })
+})
+
 describe('BusinessProductsListing', () => {
   afterEach(() => {
     document.body.innerHTML = ''
@@ -23,6 +218,8 @@ describe('BusinessProductsListing', () => {
 
   test('defers the initial product fetch until the business is loaded when requested', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 
@@ -87,6 +284,8 @@ describe('BusinessProductsListing', () => {
 
   test('restores the cached unfiltered product snapshot when an opted-in consumer clears search', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 
@@ -184,6 +383,8 @@ describe('BusinessProductsListing', () => {
     ['returns an invalid', 'invalid']
   ])('preserves an omitted-prop consumer page size when a response %s page-size value and search changes', async (_scenario, responsePageSize) => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 
@@ -283,6 +484,8 @@ describe('BusinessProductsListing', () => {
 
   test('isolates pagination by search term so a failed replacement retries page one without stale products', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 
@@ -442,6 +645,8 @@ describe('BusinessProductsListing', () => {
 
   test('clears a product error when a retry request begins and succeeds', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 
@@ -514,6 +719,8 @@ describe('BusinessProductsListing', () => {
 
   test('ignores a stale product failure while a replacement request is still loading', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
       json: vi.fn().mockResolvedValue({ error: false, result: [] })
     }))
 

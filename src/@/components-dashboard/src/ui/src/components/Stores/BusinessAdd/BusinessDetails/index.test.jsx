@@ -15,11 +15,10 @@ afterEach(cleanup)
 const props = { formState: { changes: { name: 'Existing', address: 'Old address', slug: 'existing', cellphone: '12345', location: { lat: 0, lng: 2 } } }, handleChangeAddress: vi.fn(), handleChangeInput: vi.fn() }
 const renderDetails = extra => render(<ThemeProvider theme={theme}><BusinessDetails {...props} {...extra} /></ThemeProvider>)
 it('preserves the current business form when the new mode is omitted', () => {
-  const { container } = renderDetails({ placeId: 'existing-place' })
+  const { container } = renderDetails()
   expect(container.querySelector('input[name=name]').value).toBe('Existing')
   expect(container.querySelector('input[name=slug]').value).toBe('existing')
   expect(container.querySelector('input[name=cellphone]').value).toBe('12345')
-  expect(screen.getByText('Google place ID')).toBeTruthy(); expect(screen.getByText('existing-place')).toBeTruthy()
   expect(native.input.defaultValue).toBe('Old address'); expect(native.input.apiKey).toBe('native-test-key'); expect(native.input.managedLifecycle).not.toBe(true)
   expect(native.map.isFitCenter).toBe(true)
 })
@@ -32,7 +31,7 @@ it('uses the same native address/map section without duplicate details or API ke
   expect(native.map.isFitCenter).toBe(false); expect(native.map.location).toEqual({ lat: 0, lng: 2 }); expect(native.map.onlyMarkerChangeCenter).toBe(true); expect(native.map.mapControls.isMarkerDraggable).toBe(false)
 })
 it('never shows the Google Maps API key while the new business has no place yet', () => {
-  renderDetails({ placeId: undefined })
+  renderDetails()
   expect(screen.queryByText('native-test-key')).toBeNull()
   expect(screen.queryByText('Google place ID')).toBeNull()
 })

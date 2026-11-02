@@ -18,6 +18,20 @@ let assistantOffset = 0
 export const getAssistantOffset = () => assistantOffset
 
 /**
+ * Room the floating launcher takes from the right edge, as
+ * `--assistant-launcher-space` on <html>: bars fixed to the bottom of a page
+ * pad their right side with it so the launcher doesn't cover their buttons.
+ * @param {Number} width px from the right edge, 0 when it isn't shown
+ */
+export const setAssistantLauncherSpace = (width) => {
+  if (typeof document === 'undefined') return
+  const next = Math.max(0, Math.round(Number(width) || 0))
+  const rootStyle = document.documentElement.style
+  if (next) rootStyle.setProperty('--assistant-launcher-space', `${next}px`)
+  else rootStyle.removeProperty('--assistant-launcher-space')
+}
+
+/**
  * Dock (or undock, with 0) the assistant panel
  * @param {Number} width px the panel takes
  */

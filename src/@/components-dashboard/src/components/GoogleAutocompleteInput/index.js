@@ -69,6 +69,7 @@ const AutocompleteInput = (props) => {
   const {
     googleReady,
     onChangeAddress,
+    onSelectPlace,
     types,
     fields,
     countryCode,
@@ -97,7 +98,7 @@ const AutocompleteInput = (props) => {
   const inputProps = {}
 
   Object.entries(props).forEach(([key, value]) => {
-    if (['googleReady', 'apiKey', 'onChangeAddress', 'setValue', 'childRef', 'countryCode', 'types', 'fields', 'managedLifecycle', 'onChange', 'onKeyDown', 'onBlur'].indexOf(key) === -1) {
+    if (['googleReady', 'apiKey', 'onChangeAddress', 'onSelectPlace', 'setValue', 'childRef', 'countryCode', 'types', 'fields', 'managedLifecycle', 'onChange', 'onKeyDown', 'onBlur'].indexOf(key) === -1) {
       inputProps[key] = value
     }
   })
@@ -168,6 +169,10 @@ const AutocompleteInput = (props) => {
     }
     closeSuggestions()
     sessionTokenRef.current = null
+    if (current.current.onSelectPlace) {
+      current.current.onSelectPlace({ placeId: suggestion.placeId, types: suggestion.types, prediction: suggestion.prediction })
+      return
+    }
     try {
       const place = await fetchNewPlace(suggestion.prediction)
       if (managedLifecycle && (current.current.disabled || !isValidLegacyPlace(place))) return
@@ -182,7 +187,7 @@ const AutocompleteInput = (props) => {
 
   const handleChange = (e) => {
     onChange && onChange(e)
-    if (!googleReady || !onChangeAddress || legacyAttachedRef.current) return
+    if (!googleReady || !(onChangeAddress || onSelectPlace) || legacyAttachedRef.current) return
     if (useLegacyWidget || getPlacesApiMode() === PLACES_API_LEGACY) {
       setLegacyRequested(true)
       return
@@ -233,7 +238,7 @@ const AutocompleteInput = (props) => {
   }
 
   useEffect(() => {
-    if (googleReady && onChangeAddress && useLegacyWidget && window.google?.maps?.places?.Autocomplete) {
+    if (googleReady && (onChangeAddress || onSelectPlace) && useLegacyWidget && window.google?.maps?.places?.Autocomplete) {
       const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, options)
       legacyAttachedRef.current = true
       if (managedLifecycle) ownedWidget.current = autocomplete
@@ -241,6 +246,10 @@ const AutocompleteInput = (props) => {
       const listener = autocomplete.addListener('place_changed', () => {
         if (managedLifecycle && (!active || current.current.disabled)) return
         const place = autocomplete.getPlace()
+        if (current.current.onSelectPlace) {
+          if (place?.place_id) current.current.onSelectPlace({ placeId: place.place_id, types: place.types, place })
+          return
+        }
         if (managedLifecycle && !isValidLegacyPlace(place)) return
         const address = placeToAddress(place)
         if (!address) return

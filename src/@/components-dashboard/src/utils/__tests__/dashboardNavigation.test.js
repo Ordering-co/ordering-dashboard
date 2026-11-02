@@ -26,6 +26,16 @@ describe('DASHBOARD_ROUTE_LEVELS', () => {
     })
   })
 
+  it('registers the Builder routes for every project', () => {
+    const app = readFileSync(resolve(process.cwd(), 'src/App.js'), 'utf8')
+    expect(app).not.toMatch(/isBuilderProject|BUILDER_PROJECTS/)
+    // Not behind a condition
+    expect(app).not.toMatch(/&& \(\s*<ProtectedRoute path='\/builder/)
+    expect(app).toMatch(/\n\s*<ProtectedRoute path='\/builder\/:productId' allowedLevels=\{\[0\]\}>/)
+    expect(app).toMatch(/\n\s*<ProtectedRoute path='\/builder' allowedLevels=\{\[0\]\}>/)
+    expect(DASHBOARD_ROUTE_LEVELS['/builder']).toEqual([0])
+  })
+
   it('lists every guarded top level destination used by the sidebar', () => {
     const sections = getDashboardNavSections({ user: { level: 0 }, configs: {} })
     Object.values(sections).forEach(section => {
@@ -52,6 +62,18 @@ describe('getDashboardRoleFlags', () => {
 })
 
 describe('getDashboardNavSections', () => {
+  it('leaves a migrated website out of My products 15 days after its migration', () => {
+    const daysAgo = (days) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+    const configs = { web_marketplace_26: { value: true } }
+    const enabledIds = (sites) => getDashboardNavSections({ user: { level: 0 }, configs, sites }).myProducts.items
+      .filter(item => item.enabled).map(item => item.id)
+    expect(enabledIds([])).toEqual(expect.arrayContaining(['web', 'web_marketplace_26']))
+    expect(enabledIds([{ code: 'website', migrated_at: daysAgo(10) }, { code: 'web_marketplace_26', migrated_at: null }])).toEqual(expect.arrayContaining(['web', 'web_marketplace_26']))
+    const later = enabledIds([{ code: 'website', migrated_at: daysAgo(16) }, { code: 'web_marketplace_26', migrated_at: daysAgo(15.5) }])
+    expect(later).not.toContain('web')
+    expect(later).not.toContain('web_marketplace_26')
+  })
+
   it('shows the admin every main section', () => {
     const sections = getDashboardNavSections({ user: { level: 0 }, configs: {} })
     expect(sections.users.visible).toBe(true)
@@ -88,12 +110,11 @@ describe('getDashboardNavSections', () => {
     expect(sections.logs.visible).toBe(false)
   })
 
-  it('shows Builder only to editing admins of a Builder project', () => {
-    expect(getDashboardNavSections({ user: { level: 0 }, configs: {}, project: 'development' }).builder.visible).toBe(true)
-    expect(getDashboardNavSections({ user: { level: 0 }, configs: {}, project: 'orderingplus' }).builder.visible).toBe(false)
-    expect(getDashboardNavSections({ user: { level: 0 }, configs: {} }).builder.visible).toBe(false)
-    expect(getDashboardNavSections({ user: { level: 2 }, configs: {}, project: 'development' }).builder.visible).toBe(false)
-    expect(getDashboardNavSections({ user: { level: 0, readOnlyAdmin: true }, configs: {}, project: 'development' }).builder.visible).toBe(false)
+  it('shows Builder to editing admins of every project', () => {
+    expect(getDashboardNavSections({ user: { level: 0 }, configs: {} }).builder.visible).toBe(true)
+    expect(getDashboardNavSections({ user: { level: 0 }, configs: {}, project: 'orderingplus' }).builder.visible).toBe(true)
+    expect(getDashboardNavSections({ user: { level: 2 }, configs: {} }).builder.visible).toBe(false)
+    expect(getDashboardNavSections({ user: { level: 0, readOnlyAdmin: true }, configs: {} }).builder.visible).toBe(false)
     expect(canOpenDashboardRoute('/builder/41', 0)).toBe(true)
     expect(canOpenDashboardRoute('/builder', 2)).toBe(false)
   })
@@ -115,7 +136,7 @@ describe('getDashboardFooterLinks', () => {
     const admin = getDashboardFooterLinks({ user: { level: 0, user_system_id: 1 } })
     const owner = getDashboardFooterLinks({ user: { level: 2 } })
     const driver = getDashboardFooterLinks({ user: { level: 5 } })
-    expect(admin.filter(link => link.enabled).map(link => link.url)).toEqual(['/settings', '/free-downloads', '/open-source-code', '/purchase/addons', '/profile'])
+    expect(admin.filter(link => link.enabled).map(link => link.url)).toEqual(['/settings', '/free-downloads', '/open-source-code', '/profile'])
     expect(owner.filter(link => link.enabled).map(link => link.url)).toEqual(['/profile'])
     expect(driver.filter(link => link.enabled).map(link => link.url)).toEqual(['/profile'])
   })

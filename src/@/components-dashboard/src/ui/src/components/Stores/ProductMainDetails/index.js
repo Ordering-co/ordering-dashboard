@@ -102,6 +102,8 @@ export const ProductMainDetails = (props) => {
           handleSuccessUpdate={handleSuccessUpdate}
           setFormTaxState={setFormTaxState}
           formTaxState={formTaxState}
+          catalogState={props.catalogState}
+          retryCatalogs={props.retryCatalogs}
           taxes={taxes}
           setTaxes={setTaxes}
           fees={fees}

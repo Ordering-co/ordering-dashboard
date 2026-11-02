@@ -260,14 +260,14 @@ describe('SidebarMenu external resources', () => {
     const { rerender } = renderSidebar()
 
     const scrollContent = screen.getByTestId('sidebar-scroll-content')
-    const logsAuditMenu = screen.getByTestId('logs-audit-menu')
-    const logsAudit = screen.getByRole('button', { name: 'Logs Audit' })
+    const logsAudit = screen.getByRole('link', { name: 'Logs Audit' })
     const shareIdeas = screen.getByRole('link', { name: 'Share ideas' })
 
     expect(scrollContent).toContainElement(logsAudit)
     expect(scrollContent).toContainElement(shareIdeas)
-    expect(logsAuditMenu).toContainElement(logsAudit)
-    expect(logsAuditMenu.nextElementSibling).toBe(shareIdeas)
+    expect(logsAudit).toHaveAttribute('href', '/settings/logs')
+    expect(screen.queryByRole('link', { name: 'Settings logs' })).not.toBeInTheDocument()
+    expect(logsAudit.nextElementSibling).toBe(shareIdeas)
     expect(shareIdeas).toHaveAttribute('href', 'https://tally.so/r/WO4pdJ')
     expect(shareIdeas).toHaveAttribute('target', '_blank')
     expect(shareIdeas).toHaveAttribute('rel', 'noopener noreferrer')

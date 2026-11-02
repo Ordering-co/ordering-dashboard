@@ -149,7 +149,7 @@ export const AppsController = (props) => {
     try {
       const initialData = {
         code: appId,
-        name: configurations?.subdomain
+        name: app?.name
       }
       const requestOptions = {
         method: 'POST',

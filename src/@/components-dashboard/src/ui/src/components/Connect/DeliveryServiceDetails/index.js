@@ -24,7 +24,7 @@ import {
   ActionsForm
 } from './styles'
 import { DeliveryServiceBusinesses } from '../DeliveryServicesBusinesses'
-import { DoordashContent } from './DoordashContent'
+import { DoordashContent, hasSetupGuide } from './DoordashContent'
 
 const DeliveryServiceDetailsUI = (props) => {
   const {
@@ -43,7 +43,7 @@ const DeliveryServiceDetailsUI = (props) => {
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
   const { width } = useWindowSize()
-  const deliveryPluginKey = deliveryServiceState?.deliveryService?.plugin?.key
+  const deliveryPlugin = deliveryServiceState?.deliveryService?.plugin
   const learnOptions = learnOptionsValues([], t)
 
   const [showMenu, setShowMenu] = useState('general')
@@ -100,22 +100,11 @@ const DeliveryServiceDetailsUI = (props) => {
     setIsExpand(prev => !prev)
   }
 
-  const getButtonTitle = (pluginKey) => {
-    if (pluginKey === 'doordash_drive_integration') {
-      return t('SETTING_UP_ON_DOORDASH', 'Setting up on Doordash')
-    }
-    return t('SETTING_UP', 'Setting up')
-  }
-
-  const handleOpenSetupModal = (pluginKey) => {
+  const handleOpenSetupModal = () => {
     setOpenSetupModal({
       open: true,
-      title: pluginKey === 'doordash_drive_integration'
-        ? t('SETTING_UP_ON_DOORDASH', 'Setting up on Doordash')
-        : pluginKey === 'uber_direct_integration'
-          ? t('SETTING_UP_ON_UBER_DIRECT', 'Setting up on Uber Direct')
-          : t('SETTING_UP', 'Setting up'),
-      content: <DoordashContent pluginKey={pluginKey} plugin={deliveryServiceState?.deliveryService?.plugin} />
+      title: t('SETUP_GUIDE', 'Setup guide'),
+      content: <DoordashContent plugin={deliveryPlugin} />
     })
   }
 
@@ -212,14 +201,16 @@ const DeliveryServiceDetailsUI = (props) => {
         </MenusContainer>
         {(showMenu === 'general') && (
           <>
-            <Button
-              color='primary'
-              borderRadius='5px'
-              style={{ marginBottom: 20 }}
-              onClick={() => handleOpenSetupModal(deliveryPluginKey)}
-            >
-              {getButtonTitle(deliveryPluginKey)}
-            </Button>
+            {hasSetupGuide(deliveryPlugin) && (
+              <Button
+                color='primary'
+                borderRadius='5px'
+                style={{ marginBottom: 20 }}
+                onClick={handleOpenSetupModal}
+              >
+                {t('SETUP_GUIDE', 'Setup guide')}
+              </Button>
+            )}
             <DeliveryServiceGeneralForm
               {...props}
               curDeliveryService={deliveryServiceState.deliveryService}

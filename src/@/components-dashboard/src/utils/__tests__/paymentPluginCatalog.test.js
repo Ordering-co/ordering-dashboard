@@ -22,9 +22,9 @@ describe('PAYMENT_PLUGIN_CATALOG', () => {
     })
   })
 
-  it('maps Mercado Pago Checkout Pro plugin key to the dashboard gateway', () => {
+  it('maps Mercado Pago Checkout Pro to its own gateway, not the legacy plugin one', () => {
     const item = PAYMENT_PLUGIN_CATALOG.find(row => row.key === 'mercado_pago_checkout_pro')
-    expect(item.gateway).toBe('checkout_pro_mercadopago')
+    expect(item.gateway).toBe('mercado_pago_checkout_pro')
   })
 })
 
@@ -96,13 +96,44 @@ describe('mergePaymethodsWithCatalog', () => {
 
   it('drops excluded gateways from API and catalog', () => {
     const rows = mergePaymethodsWithCatalog({
-      paymethods: [cash, { id: 9, name: 'Mercado Pago', gateway: 'checkout_pro_mercadopago' }],
+      paymethods: [cash, paystackPaymethod],
+      plugins: [],
+      excludeGateways: ['paystack'],
+      includeCatalog: true
+    })
+    expect(rows.some(row => row.gateway === 'paystack' || row.pluginKey === 'paystack')).toBe(false)
+  })
+
+  it('offers Mercado Pago Checkout Pro when the legacy Mercado Pago gateway is hidden', () => {
+    const rows = mergePaymethodsWithCatalog({
+      paymethods: [cash],
       plugins: [],
       excludeGateways: ['checkout_pro_mercadopago'],
       includeCatalog: true
     })
-    expect(rows.some(row => row.gateway === 'checkout_pro_mercadopago')).toBe(false)
-    expect(rows.some(row => row.pluginKey === 'mercado_pago_checkout_pro')).toBe(false)
+    expect(rows.find(row => row.pluginKey === 'mercado_pago_checkout_pro')).toMatchObject({
+      gateway: 'mercado_pago_checkout_pro',
+      source: 'catalog',
+      installState: 'installable'
+    })
+  })
+
+  it('offers Mercado Pago Checkout Pro next to an installed legacy Mercado Pago', () => {
+    const legacy = { id: 9, name: 'Checkout-pro Mercadopago', gateway: 'checkout_pro_mercadopago' }
+    const rows = mergePaymethodsWithCatalog({
+      paymethods: [cash, legacy],
+      plugins: [{ key: 'mercadopago' }],
+      excludeGateways: [],
+      includeCatalog: true
+    })
+    expect(rows.find(row => row.gateway === 'checkout_pro_mercadopago')).toMatchObject({
+      source: 'api',
+      pluginKey: null
+    })
+    expect(rows.find(row => row.pluginKey === 'mercado_pago_checkout_pro')).toMatchObject({
+      source: 'catalog',
+      installState: 'installable'
+    })
   })
 })
 
@@ -118,6 +149,13 @@ describe('findPaymethodAfterInstall', () => {
     expect(findPaymethodAfterInstall([{ id: 1, gateway: 'cash' }], 'paystack')).toBeNull()
     expect(findPaymethodAfterInstall([{ id: 11, gateway: 'paystack' }], 'unknown')).toBeNull()
     expect(findPaymethodAfterInstall([{ gateway: 'paystack' }], 'paystack')).toBeNull()
+  })
+
+  it('opens the new Mercado Pago paymethod, not the legacy one', () => {
+    expect(findPaymethodAfterInstall([
+      { id: 9, gateway: 'checkout_pro_mercadopago' },
+      { id: 12, gateway: 'mercado_pago_checkout_pro' }
+    ], 'mercado_pago_checkout_pro')).toEqual({ id: 12, gateway: 'mercado_pago_checkout_pro' })
   })
 })
 

@@ -8,7 +8,6 @@ import { bytesConverter, shape, ribbonValues, disableReasons } from '../../../ut
 import BiImage from '@meronex/icons/bi/BiImage'
 import { Button, Input, Switch, SecondSelect } from '../../../styles'
 import { RecordCircleFill, Circle, Facebook, Instagram, Tiktok, Pinterest, Whatsapp, Snapchat } from 'react-bootstrap-icons'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 import { BUSINESS_VERTICALS } from '../../../../../constants/school'
 
 import {
@@ -71,9 +70,7 @@ const BusinessInformationUI = (props) => {
   const [cropState, setCropState] = useState({ name: null, data: null, open: false })
   const priceSymbol = configs?.format_number_currency?.value?.trim()
   const disableReasonDictionary = disableReasons()
-  const isRestricted = useBusinessOwnerRestriction()
   const isAdmin = user?.level === 0
-  const enableExternalId = !isRestricted
   const isRibbonEnabled = formState?.changes?.ribbon?.enabled ?? businessState?.business?.ribbon?.enabled ?? false
   const ribbonColor = formState?.changes?.ribbon?.color ?? businessState?.business?.ribbon?.color ?? ''
   const ribbonShape = formState?.changes?.ribbon?.shape ?? businessState?.business?.ribbon?.shape ?? ''
@@ -505,24 +502,22 @@ const BusinessInformationUI = (props) => {
             />
           </VerticalField>
         </InputWrapper>
-        {enableExternalId && (
-          <InputWrapper>
-            <label>{t('EXTERNAL_ID', 'External Id')}</label>
-            <Input
-              name='external_id'
-              placeholder={t('EXTERNAL_ID', 'External Id')}
-              defaultValue={formState?.changes?.external_id ?? businessState?.business?.external_id}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-              onKeyPress={(e) => {
-                if (!/^[0-9]$/.test(e.key)) {
-                  e.preventDefault()
-                }
-              }}
-            />
-          </InputWrapper>
-        )}
+        <InputWrapper>
+          <label>{t('EXTERNAL_ID', 'External Id')}</label>
+          <Input
+            name='external_id'
+            placeholder={t('EXTERNAL_ID', 'External Id')}
+            defaultValue={formState?.changes?.external_id ?? businessState?.business?.external_id}
+            onChange={handleChangeInput}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={(e) => {
+              if (!/^[0-9]$/.test(e.key)) {
+                e.preventDefault()
+              }
+            }}
+          />
+        </InputWrapper>
         <InputWrapper>
           <label>{t('SHORT_DESCRIPTION', 'Short description')}</label>
           <Input
@@ -535,34 +530,30 @@ const BusinessInformationUI = (props) => {
           />
         </InputWrapper>
         <PhoneWrapper>
-          {!isRestricted && (
-            <InputWrapper>
-              <label>{t('PHONE_NUMBER', 'Phone number')}</label>
-              <Input
-                name='phone'
-                placeholder='(000) 0000 000'
-                defaultValue={formState?.changes?.phone ?? businessState?.business?.phone}
-                onChange={handleChangeInput}
-                disabled={formState.loading}
-                autoComplete='off'
-              />
-            </InputWrapper>
-          )}
-          {!isRestricted && (
-            <InputWrapper>
-              <label>{t('MOBILE_NUMBER', 'Mobile number')} <span>{t('OPTIONAL', 'Optional')}</span></label>
-              <Input
-                name='cellphone'
-                placeholder='(000) 0000 000'
-                defaultValue={formState?.changes?.cellphone ?? businessState?.business?.cellphone}
-                onChange={handleChangeInput}
-                disabled={formState.loading}
-                autoComplete='off'
-              />
-            </InputWrapper>
-          )}
+          <InputWrapper>
+            <label>{t('PHONE_NUMBER', 'Phone number')}</label>
+            <Input
+              name='phone'
+              placeholder='(000) 0000 000'
+              defaultValue={formState?.changes?.phone ?? businessState?.business?.phone}
+              onChange={handleChangeInput}
+              disabled={formState.loading}
+              autoComplete='off'
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <label>{t('MOBILE_NUMBER', 'Mobile number')} <span>{t('OPTIONAL', 'Optional')}</span></label>
+            <Input
+              name='cellphone'
+              placeholder='(000) 0000 000'
+              defaultValue={formState?.changes?.cellphone ?? businessState?.business?.cellphone}
+              onChange={handleChangeInput}
+              disabled={formState.loading}
+              autoComplete='off'
+            />
+          </InputWrapper>
         </PhoneWrapper>
-        {!isRestricted && (
+        {isAdmin && (
           <SwitchWrapper>
             <span>{t('FEATURED', 'Featured')}</span>
             <Switch
@@ -663,23 +654,21 @@ const BusinessInformationUI = (props) => {
             />
           </InputWrapper>
         )}
-        {!isRestricted && (
-          <PriceFilterWrapper>
-            <label>{t('PRICE_FILTER', 'Price filter')}</label>
-            <PriceFilterListWrapper>
-              {priceList.map((item, i) => (
-                <PriceFilterItem
-                  key={i}
-                  onClick={() => handleChangeSwtich('price_level', item.key)}
-                  active={(formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key}
-                >
-                  {((formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key) ? <RecordCircleFill /> : <Circle />}
-                  <span>{item.value}</span>
-                </PriceFilterItem>
-              ))}
-            </PriceFilterListWrapper>
-          </PriceFilterWrapper>
-        )}
+        <PriceFilterWrapper>
+          <label>{t('PRICE_FILTER', 'Price filter')}</label>
+          <PriceFilterListWrapper>
+            {priceList.map((item, i) => (
+              <PriceFilterItem
+                key={i}
+                onClick={() => handleChangeSwtich('price_level', item.key)}
+                active={(formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key}
+              >
+                {((formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key) ? <RecordCircleFill /> : <Circle />}
+                <span>{item.value}</span>
+              </PriceFilterItem>
+            ))}
+          </PriceFilterListWrapper>
+        </PriceFilterWrapper>
         <SocialWrapper>
           <h2>{t('SOCIAL_NETWORKS', 'Social networks')}</h2>
           <SocialItemWrapper>

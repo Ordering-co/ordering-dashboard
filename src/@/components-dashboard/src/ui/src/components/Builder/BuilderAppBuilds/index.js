@@ -148,7 +148,7 @@ const BuildHistoryUI = (props) => {
   }
 
   return (
-    <TableCard as='section' aria-label={t('BUILDER_BUILDS_HISTORY', 'Build history')} style={{ maxWidth: 1100 }}>
+    <TableCard as='section' aria-label={t('BUILDER_BUILDS_HISTORY', 'Build history')}>
       <HistoryFilters>
         <label>
           {t('BUILDER_PLATFORM', 'Platform')}

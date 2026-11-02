@@ -146,6 +146,24 @@ describe('createAssistantClient', () => {
     expect(onEvent.mock.calls).toEqual([['conversation', { id: 'c1' }], ['done', { aborted: false }]])
   })
 
+  it('uses the current language for each message without replacing the conversation', async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      body: bodyOf(['event: done\ndata: {"aborted":false}\n\n'])
+    }))
+    let language = 'en'
+    const client = createAssistantClient({ baseUrl: 'https://ai.test', projectCode: 'demo', token: 'jwt', language: () => language, fetchImpl })
+
+    await client.sendMessage({ message: '? how much', conversationId: 'c1', onEvent: vi.fn() })
+    language = 'es'
+    await client.sendMessage({ message: '? how much', conversationId: 'c1', onEvent: vi.fn() })
+
+    expect(fetchImpl.mock.calls.map(([, options]) => JSON.parse(options.body))).toEqual([
+      { message: '? how much', conversation_id: 'c1', language: 'en' },
+      { message: '? how much', conversation_id: 'c1', language: 'es' }
+    ])
+  })
+
   it('opts into dashboard search only when the caller provides the registered capability', async () => {
     const { client, fetchImpl } = setup({
       ok: true,

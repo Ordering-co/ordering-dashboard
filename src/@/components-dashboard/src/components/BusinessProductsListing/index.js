@@ -98,7 +98,11 @@ export const BusinessProductsListing = (props) => {
   const [taxes, setTaxes] = useState({})
   const [fees, setFees] = useState({})
   const [formTaxState, setFormTaxState] = useState({ loading: false, changes: {}, result: { error: false } })
-  const [formFeeState, setFormFeeState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [catalogState, setCatalogState] = useState({
+    taxes: { loading: true, error: null, loaded: false },
+    fees: { loading: true, error: null, loaded: false }
+  })
+  const catalogRequests = useRef({})
   const [businessTypes, setBusinessTypes] = useState([])
   const [siteState, setSiteState] = useState({ site: null, loading: false, error: null })
   const canLoadProducts = !deferProductsUntilBusinessLoaded || !businessState.loading
@@ -393,64 +397,56 @@ export const BusinessProductsListing = (props) => {
     }
   }
 
-  const getTaxes = async () => {
-    const taxesObject = {}
-    setFormTaxState({
-      ...formTaxState,
-      loading: true
-    })
-    const response = await fetch(`${ordering.root}/taxes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+  const loadCatalog = async (resource) => {
+    catalogRequests.current[resource]?.abort()
+    const request = new AbortController()
+    catalogRequests.current[resource] = request
+    const isCurrent = () => catalogRequests.current[resource] === request && !request.signal.aborted
+    setCatalogState(prev => ({
+      ...prev,
+      [resource]: { ...prev[resource], loading: true, error: null }
+    }))
+    try {
+      const query = resource === 'fees' ? `?where=${JSON.stringify({ type: 'product' })}` : ''
+      const response = await fetch(`${ordering.root}/${resource}${query}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        signal: request.signal
+      })
+      if (!response.ok) throw new Error(`Unable to load ${resource} (HTTP ${response.status})`)
+      const { error, result } = await response.json()
+      if (error || !Array.isArray(result) || result.some(item => !item || item.id == null)) {
+        throw new Error(`Invalid ${resource} response`)
       }
-    })
-    const { error, result } = await response.json()
-    if (!error) {
-      result.forEach(tax => (taxesObject[`id:${tax?.id}`] = tax))
-      setTaxes(taxesObject)
-      return
+      if (!isCurrent()) return
+      const catalog = Object.fromEntries(result.map(item => [`id:${item.id}`, item]))
+      if (resource === 'taxes') setTaxes(catalog)
+      else setFees(catalog)
+      setCatalogState(prev => ({
+        ...prev,
+        [resource]: { ...prev[resource], loading: false, error: null, loaded: true }
+      }))
+    } catch (err) {
+      if (!isCurrent()) return
+      setCatalogState(prev => ({
+        ...prev,
+        [resource]: {
+          ...prev[resource],
+          loading: false,
+          error: err?.message || `Unable to load ${resource}`
+        }
+      }))
     }
-    setFormTaxState({
-      ...formTaxState,
-      result: {
-        error: true,
-        result: taxesObject
-      },
-      loading: false
-    })
   }
 
-  const getFees = async () => {
-    const feesObject = {}
-    setFormFeeState({
-      ...formFeeState,
-      loading: true
-    })
-    const where = JSON.stringify({ type: 'product' })
-    const response = await fetch(`${ordering.root}/fees?where=${where}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    })
-    const { error, result } = await response.json()
-    if (!error) {
-      result.forEach(fee => (feesObject[`id:${fee?.id}`] = fee))
-      setFees(feesObject)
-      return
-    }
-    setFormFeeState({
-      ...formFeeState,
-      result: {
-        error: true,
-        result: feesObject
-      },
-      loading: false
-    })
-  }
+  const retryCatalogs = () => Promise.all(
+    Object.entries(catalogState)
+      .filter(([, state]) => state.error && !state.loading)
+      .map(([resource]) => loadCatalog(resource))
+  )
 
   /**
    * Method to get the themes from API
@@ -721,8 +717,21 @@ export const BusinessProductsListing = (props) => {
   }, [])
 
   useEffect(() => {
-    getTaxes()
-    getFees()
+    setTaxes({})
+    setFees({})
+    setCatalogState({
+      taxes: { loading: true, error: null, loaded: false },
+      fees: { loading: true, error: null, loaded: false }
+    })
+    loadCatalog('taxes')
+    loadCatalog('fees')
+    return () => {
+      Object.values(catalogRequests.current).forEach(request => request.abort())
+      catalogRequests.current = {}
+    }
+  }, [ordering.root, token])
+
+  useEffect(() => {
     getBusinessTypes()
     getSites()
   }, [])
@@ -753,6 +762,8 @@ export const BusinessProductsListing = (props) => {
           handleUpdateCategoryState={handleUpdateCategoryState}
           setFormTaxState={setFormTaxState}
           formTaxState={formTaxState}
+          catalogState={catalogState}
+          retryCatalogs={retryCatalogs}
           taxes={taxes}
           setTaxes={setTaxes}
           fees={fees}

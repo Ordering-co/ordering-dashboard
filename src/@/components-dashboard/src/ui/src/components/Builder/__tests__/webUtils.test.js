@@ -4,6 +4,7 @@ import {
   BUILDER_TYPE_OPTIONS,
   getDomainErrorMessage,
   getDomainUrl,
+  getOwnDomain,
   getOwnDomainError,
   getProductDomains,
   getRecordName,
@@ -29,6 +30,15 @@ describe('Builder website helpers', () => {
     expect(getProductKind({ product_type: 'dashboard' })).toBe('web')
     expect(getProductKind({ product_type: 'driver_app' })).toBe('app')
     expect(getProductKind(null)).toBe('app')
+  })
+
+  it('reads the own domain configured, as a string or as the domain answer gives it', () => {
+    expect(getOwnDomain({ domain: 'shop.brand.com' })).toBe('shop.brand.com')
+    expect(getOwnDomain({ domain: { name: 'shop.brand.com', status: 'pending' } })).toBe('shop.brand.com')
+    expect(getOwnDomain({ domain: { name: 'shop.brand.com', status: 'error' } })).toBe('shop.brand.com')
+    expect(getOwnDomain({ domain: null })).toBeNull()
+    expect(getOwnDomain({ domain: '  ' })).toBeNull()
+    expect(getOwnDomain(null)).toBeNull()
   })
 
   it('lists its own domain before the temporary one', () => {

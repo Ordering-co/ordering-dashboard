@@ -6,7 +6,6 @@ import { BusinessPickupDetails } from '../BusinessPickupDetails'
 import { BusinessEta } from '../BusinessEta'
 import { DragScroll } from '../../Shared'
 import { addQueryToUrl } from '../../../utils'
-import { useBusinessOwnerRestriction } from '../../../hooks/useBusinessOwnerRestriction'
 
 import {
   Container,
@@ -22,15 +21,14 @@ export const BusinessDeliveryPickupMore = (props) => {
 
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
-  const isRestricted = useBusinessOwnerRestriction()
 
   const [selectedTab, setSelectedTab] = useState('delivery')
 
   const tabs = [
-    { key: 'delivery', content: t('DELIVERY', 'Delivery'), enabled: true },
-    { key: 'pickup', content: t('PICKUP', 'Pickup'), enabled: true },
-    { key: 'driver_delivery_group', content: t('DRIVER_DELIVERY_GROUP', 'Driver Delivery Group'), enabled: !isRestricted },
-    { key: 'advanced_eta', content: t('ADVANCED_ETA', 'Advanced ETA'), enabled: true }
+    { key: 'delivery', content: t('DELIVERY', 'Delivery') },
+    { key: 'pickup', content: t('PICKUP', 'Pickup') },
+    { key: 'driver_delivery_group', content: t('DRIVER_DELIVERY_GROUP', 'Driver Delivery Group') },
+    { key: 'advanced_eta', content: t('ADVANCED_ETA', 'Advanced ETA') }
   ]
 
   useEffect(() => {
@@ -55,7 +53,7 @@ export const BusinessDeliveryPickupMore = (props) => {
       <h1>{t('DELIVERY_PICKUP_MORE', 'Delivery, pickup & more')}</h1>
       <TabsContainer>
         <DragScroll>
-          {tabs.filter((tab) => (tab.enabled)).map(tab => (
+          {tabs.map(tab => (
             <Tab
               key={tab.key}
               active={tab.key === selectedTab}

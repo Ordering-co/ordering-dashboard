@@ -9,6 +9,8 @@ vi.mock('../../../../../contexts/LanguageContext', () => ({ useLanguage: () => [
 vi.mock('./HoursEditor', () => ({ HoursEditor: () => <div>Native schedule editor</div> }))
 vi.mock('./BusinessAddressEditor', () => ({ BusinessAddressEditor: () => <div>Native business address</div> }))
 vi.mock('./ZoneEditor', () => ({ ZoneEditor: () => <div>Zone map</div> }))
+const googleSearch = vi.hoisted(() => ({ props: null }))
+vi.mock('../GoogleBusinessSearch', () => ({ GoogleBusinessSearch: props => { googleSearch.props = props; return <div>Google business search</div> } }))
 const render = element => { const result = rtlRender(<ThemeProvider theme={theme}>{element}</ThemeProvider>); return { ...result, rerender: next => result.rerender(<ThemeProvider theme={theme}>{next}</ThemeProvider>) } }
 afterEach(cleanup)
 const props = step => ({ appearance: { siteId: 1, themeId: 2, color: '#112233' }, draft: { ...createDraft('owner@example.com'), step }, meta: { configs: {}, paymethods: [{ gateway: 'cash' }, { gateway: 'card_delivery' }] }, site: {}, update: vi.fn(), move: vi.fn(), chooseMenu: vi.fn(), publish: vi.fn(), errors: [], project: 'Test restaurant' })
@@ -193,4 +195,33 @@ it('binds the chosen website color to its actual theme and offers a preview', ()
   fireEvent.change(screen.getByLabelText('Color code'), { target: { value: '#abcdef' } })
   expect(p.update).toHaveBeenCalledWith({ websiteColor: '#abcdef', websiteAppearanceTarget: { siteId: 1, themeId: 2 } })
   expect(screen.getByRole('button', { name: 'Website preview' })).toBeEnabled()
+})
+
+it('prefills the restaurant from Google on the first step without overwriting what the owner typed', () => {
+  const p = props(0)
+  p.draft.form.name = 'Typed name'
+  render(<StoreOnboardingUI {...p} />)
+  expect(screen.getByText('Google business search')).toBeTruthy()
+  expect(googleSearch.props.values).toMatchObject({ name: 'Typed name', phone: '', address: '', location: null })
+  expect(googleSearch.props.defaults).toEqual({ timezone: p.draft.form.timezone })
+  expect(googleSearch.props.photoRoles).toEqual(['logo'])
+  expect(googleSearch.props.getFields({ name: 'Joe’s', phone: '+1 212-366-1182', address: '7 Carmine St', location: { lat: 1, lng: 2 }, timezone: 'America/New_York', schedule: null })).toEqual({
+    name: { name: 'Joe’s' },
+    phone: { phone: '+12123661182' },
+    address: { address: '7 Carmine St', location: { lat: 1, lng: 2 }, timezone: 'America/New_York' },
+    schedule: { schedule: null }
+  })
+  googleSearch.props.onChange({ phone: '+12123661182' })
+  expect(p.update).toHaveBeenCalledWith({ phone: '+12123661182' })
+  googleSearch.props.onAppliedChange({ phone: { phone: '+12123661182' } })
+  expect(p.update).toHaveBeenCalledWith({ googleApplied: { phone: { phone: '+12123661182' } } })
+  googleSearch.props.onPhotos([{ role: 'logo', file: 'data:image/jpeg;base64,abc' }])
+  expect(p.update).toHaveBeenCalledWith({ logo: 'data:image/jpeg;base64,abc' })
+})
+
+it('stops treating the timezone as a default once the owner edited it', () => {
+  const p = props(0)
+  p.draft.timezoneEdited = true
+  render(<StoreOnboardingUI {...p} />)
+  expect(googleSearch.props.defaults).toEqual({})
 })

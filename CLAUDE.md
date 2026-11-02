@@ -7,3 +7,5 @@ Settings use one editor at /settings; consult docs/SETTINGS.md and docs/SETTINGS
 Quality commands are listed in setup.md. Keep the license scope and source provenance explicit and preserve all third-party notices. Do not infer access to Ordering.co production from this public source.
 
 Plugin pages use the launch and postMessage contracts documented in [docs/PLUGIN_PAGES.md](docs/PLUGIN_PAGES.md). Read that guide before changing plugin page behavior.
+
+Builder theme and website settings follow [docs/THEMING.md](docs/THEMING.md). Read that guide before changing the schema editor or theme API contracts.

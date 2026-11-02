@@ -8,6 +8,8 @@ import { Shop } from 'react-bootstrap-icons'
 import { InputPhoneNumber } from '../../../components/Shared/InputPhoneNumber'
 import { HoursEditor } from './HoursEditor'
 import { BusinessAddressEditor } from './BusinessAddressEditor'
+import { GoogleBusinessSearch } from '../GoogleBusinessSearch'
+import { toE164 } from '../../../../../utils/googleBusinessPrefill'
 import { WebsitePreview } from './WebsitePreview'
 import dashboardTheme from '~/theme.json'
 import { validWebsiteColor, normalizeWebsiteColor } from '../../../../../utils/storeOnboardingAppearance'
@@ -39,6 +41,18 @@ export const StoreOnboardingUI = ({ mediaReady = true, draft, update, updateMenu
   const setWebsiteColor = value => update({ websiteColor: value, websiteAppearanceTarget: { siteId: appearance.siteId, themeId: appearance.themeId } })
   const [menuEditing, setMenuEditing] = useState(false)
   const frozen = publishing || journal.started || !mediaReady
+  const googleFields = business => ({
+    name: { name: business.name },
+    phone: { phone: toE164(business.phone) },
+    address: { address: business.address, location: business.location, timezone: business.timezone },
+    schedule: { schedule: business.schedule }
+  })
+  const googleValues = { name: f.name, phone: f.phone, address: f.address, location: f.location, timezone: f.timezone, schedule: f.schedule }
+  const googleDefaults = draft.timezoneEdited ? {} : { timezone: f.timezone }
+  const handleGooglePhotos = photos => {
+    const logoPhoto = photos.find(photo => photo.role === 'logo')
+    if (logoPhoto) update({ logo: logoPhoto.file })
+  }
   const logoReader = useRef(null)
   const cancelLogoRead = () => {
     const pending = logoReader.current
@@ -79,7 +93,7 @@ export const StoreOnboardingUI = ({ mediaReady = true, draft, update, updateMenu
           {meta.error && <ErrorBox role='alert'>{t('STORE_ONBOARDING_METADATA_ERROR', 'We could not load your project settings. Try again before publishing.')} <Button onClick={retryMetadata}>{t('STORE_ONBOARDING_RETRY', 'Try again')}</Button></ErrorBox>}
           {(errors.length > 0 || notice) && <ErrorBox role='alert' tabIndex={-1} ref={alert}>{errors.length > 0 ? <>{t('STORE_ONBOARDING_FIX_FIELDS', 'Complete or check these fields:')} {errors.map(e => errorLabels[e]).join(', ')}</> : notice === 'storage' ? <>{t('STORE_ONBOARDING_STORAGE_ERROR', 'Your browser could not save your progress. Free up browser storage and try again.')} {!mediaReady && <Button onClick={retryMetadata}>{t('STORE_ONBOARDING_RETRY', 'Try again')}</Button>}</> : t('STORE_ONBOARDING_PUBLISH_ERROR', 'We could not finish publishing. Your progress is saved. Try again to complete the same store.')}</ErrorBox>}
           {journal.started && !journal.published && !publishing && <ErrorBox>{t('STORE_ONBOARDING_RESUME_PUBLICATION', 'Publication has started. We have kept your settings so you can safely retry without creating another store.')}</ErrorBox>}
-          {step === 0 && <Grid><Card><Fields>{field('name', t('STORE_NAME', 'Restaurant name'))}<Field>{t('PHONE', 'Phone')}<InputPhoneNumber value={f.phone} disabled={frozen} handleIsValid={valid => { if (f.phoneValid !== valid) update({ phoneValid: valid }) }} setValue={(value, valid) => update({ phone: value || '', phoneValid: Boolean(valid) })} /></Field>{field('email', t('EMAIL', 'Email'), 'email')}</Fields></Card><Card $muted><h2>{t('STORE_ONBOARDING_PREVIEW', 'Your restaurant preview')}</h2><PreviewLogo>{f.logo ? <img src={f.logo} alt={t('LOGO', 'Logo')} /> : <Shop aria-hidden='true' />}</PreviewLogo><h3>{f.name || t('STORE_ONBOARDING_RESTAURANT_PLACEHOLDER', 'Your restaurant name')}</h3><p>{f.phone || t('STORE_ONBOARDING_PHONE_PLACEHOLDER', 'Your contact phone')}</p></Card></Grid>}
+          {step === 0 && <Fields><Card><GoogleBusinessSearch getFields={googleFields} values={googleValues} defaults={googleDefaults} applied={f.googleApplied || {}} onAppliedChange={applied => update({ googleApplied: applied })} onChange={changes => update(changes)} photoRoles={['logo']} onPhotos={handleGooglePhotos} disabled={frozen} /></Card><Grid><Card><Fields>{field('name', t('STORE_NAME', 'Restaurant name'))}<Field>{t('PHONE', 'Phone')}<InputPhoneNumber value={f.phone} disabled={frozen} handleIsValid={valid => { if (f.phoneValid !== valid) update({ phoneValid: valid }) }} setValue={(value, valid) => update({ phone: value || '', phoneValid: Boolean(valid) })} /></Field>{field('email', t('EMAIL', 'Email'), 'email')}</Fields></Card><Card $muted><h2>{t('STORE_ONBOARDING_PREVIEW', 'Your restaurant preview')}</h2><PreviewLogo>{f.logo ? <img src={f.logo} alt={t('LOGO', 'Logo')} /> : <Shop aria-hidden='true' />}</PreviewLogo><h3>{f.name || t('STORE_ONBOARDING_RESTAURANT_PLACEHOLDER', 'Your restaurant name')}</h3><p>{f.phone || t('STORE_ONBOARDING_PHONE_PLACEHOLDER', 'Your contact phone')}</p></Card></Grid></Fields>}
           {step === 1 && <Grid><Card><Fields><BusinessAddressEditor address={f.address} location={f.location} disabled={frozen} onChange={patch => update(patch)} /></Fields></Card><Card><h2>{t('STORE_ONBOARDING_LOGO_OPTIONAL', 'Your logo (optional)')}</h2><p>{t('STORE_ONBOARDING_LOGO_HINT', 'A square image works best. JPG or PNG, up to 1 MB.')}</p>{f.logo && <img src={f.logo} alt={t('LOGO', 'Logo')} style={{ width: 100, height: 100, objectFit: 'contain', margin: '20px 0' }} />}<Field>{t('UPLOAD_LOGO', 'Upload logo')}<Input type='file' accept='image/png,image/jpeg' disabled={frozen} onChange={e => {
             cancelLogoRead()
             const file = e.target.files[0]

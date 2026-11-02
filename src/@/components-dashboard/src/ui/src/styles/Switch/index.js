@@ -14,7 +14,7 @@ export const Switch = (props) => {
     notAsync,
     ariaLabel
   } = props
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(Boolean(defaultChecked))
 
   useEffect(() => {
     setChecked(defaultChecked)

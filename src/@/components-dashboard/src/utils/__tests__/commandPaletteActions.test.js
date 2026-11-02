@@ -48,15 +48,35 @@ describe('buildOpenActionEntries', () => {
     expect(byId['action:stores-add'].path).toBe('/stores/add')
   })
 
-  it('applies tab rules for EatStreet owners and store registration', () => {
+  it('keeps owner tab rules and store registration restrictions', () => {
     const owner = buildOpenActionEntries({ user: { level: 2 }, configs: { allow_business_owner_register_business: { value: '0' } }, project: 'eatstreet' })
     const ids = owner.map(entry => entry.id)
-    expect(ids).not.toContain('action:business-store_details:agents')
+    expect(ids).toContain('action:business-store_details:agents')
     expect(ids).not.toContain('action:business-store_details:owner')
-    expect(ids).not.toContain('action:business-ordering_channels:custom_slug')
+    expect(ids).toContain('action:business-delivery_pickup_more:driver_delivery_group')
+    expect(ids).toContain('action:business-ordering_channels:custom_slug')
     expect(ids).not.toContain('action:stores-add')
     expect(ids).not.toContain('action:business-store_sales_channels')
     expect(ids).toContain('action:business-pos_menu')
+  })
+
+  it('restores EatStreet owner sections without relaxing unrelated section rules', () => {
+    const ownerSections = getPaletteBusinessSections({ user: { level: 2 }, project: 'eatstreet' })
+    const ownerIds = ownerSections.map(section => section.key)
+    expect(ownerIds).toEqual(expect.arrayContaining([
+      'tax_fees',
+      'layout',
+      'webhooks',
+      'logs',
+      'store_details:agents',
+      'delivery_pickup_more:driver_delivery_group',
+      'ordering_channels:custom_slug'
+    ]))
+    expect(ownerIds).not.toContain('store_details:owner')
+    expect(ownerIds).not.toContain('publishing')
+    expect(getPaletteBusinessSections({ user: { level: 0 }, project: 'eatstreet' }).map(section => section.key)).toContain('publishing')
+    expect(getPaletteBusinessSections({ user: { level: 2, selected_access: true }, project: 'eatstreet' }).map(section => section.key))
+      .toEqual(expect.arrayContaining(['delivery_pickup_more', 'payment_methods']))
   })
 
   it('limits business owners to their own surfaces', () => {
@@ -77,7 +97,10 @@ describe('business detail sections', () => {
   it('mirrors the store menu rules', () => {
     expect(isBusinessSectionEnabled('publishing', { isAdmin: false })).toBe(false)
     expect(isBusinessSectionEnabled('publishing', { isAdmin: true })).toBe(true)
-    expect(isBusinessSectionEnabled('webhooks', { isAdmin: false, project: 'eatstreet' })).toBe(false)
+    expect(isBusinessSectionEnabled('webhooks', { isAdmin: false, project: 'eatstreet' })).toBe(true)
+    expect(isBusinessSectionEnabled('tax_fees', { isAdmin: false, project: 'eatstreet' })).toBe(true)
+    expect(isBusinessSectionEnabled('layout', { isAdmin: false, project: 'eatstreet' })).toBe(true)
+    expect(isBusinessSectionEnabled('logs', { isAdmin: false, project: 'eatstreet' })).toBe(true)
     expect(isBusinessSectionEnabled('schedule', { isSelectedAccessRole: true })).toBe(false)
     expect(isBusinessSectionEnabled('payment_methods', { isSelectedAccessRole: true })).toBe(true)
     expect(isBusinessSectionEnabled('sales_channels', { configs: { white_label_module: { value: true } } })).toBe(false)

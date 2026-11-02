@@ -19,7 +19,7 @@ export const SIDEBAR_NAV_ORDER = {
     'drivers_time_display'
   ],
   stores: ['businesses', 'store', 'brand', 'devices', 'markups'],
-  connect: ['connect_overview', 'delivery_services', 'pos_menu', 'importers', 'sales_channels', 'whatsapp_bots'],
+  connect: ['delivery_services', 'pos_menu', 'importers', 'sales_channels', 'whatsapp_bots'],
   users: ['customers', 'professionals', 'callcenter_agents', 'business_owners', 'admins'],
   intelligence: [
     'business_analytics',

@@ -43,6 +43,10 @@ import {
   MutedText
 } from '../styles'
 
+// The Builder only lists Marketplace websites for now (api-core), so the
+// type filter has nothing to choose: hidden until it offers more types
+const SHOW_TYPE_FILTER = false
+
 const BuilderProductsListUI = (props) => {
   const {
     productsState,
@@ -286,7 +290,7 @@ const BuilderProductsListUI = (props) => {
                   placeholder={t('BUILDER_SEARCH', 'Search by name')}
                 />
               </SearchWrapper>
-              <TypeFilterMenu value={filters.productTypes} onChange={handleChangeType} />
+              {SHOW_TYPE_FILTER && <TypeFilterMenu value={filters.productTypes} onChange={handleChangeType} />}
               <Segmented role='group' aria-label={t('STATUS', 'Status')}>
                 <SegmentButton type='button' active={filters.productStatus === 'all'} aria-pressed={filters.productStatus === 'all'} onClick={() => handleChangeStatus('all')}>
                   {t('ALL', 'All')}
