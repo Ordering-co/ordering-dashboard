@@ -332,17 +332,17 @@ describe('BusinessIntegration status and actions', () => {
 
     it('only saves a changed external id', () => {
       const handleConnectBusiness = vi.fn()
-      renderChannel({ setup_status: 'success', external_id: '900162964' }, { handleConnectBusiness })
+      renderChannel({ setup_status: 'success', external_id: '000000001' }, { handleConnectBusiness })
       const save = screen.getByRole('button', { name: 'Save' })
-      const externalId = screen.getByDisplayValue('900162964')
+      const externalId = screen.getByDisplayValue('000000001')
 
       expect(save).toBeDisabled()
-      fireEvent.change(externalId, { target: { value: '900162965' } })
+      fireEvent.change(externalId, { target: { value: '000000002' } })
       expect(save).toBeEnabled()
       fireEvent.click(save)
-      expect(handleConnectBusiness).toHaveBeenCalledWith(430, { external_id: '900162965', enabled: true }, expect.any(Function), expect.any(String))
+      expect(handleConnectBusiness).toHaveBeenCalledWith(430, { external_id: '000000002', enabled: true }, expect.any(Function), expect.any(String))
 
-      fireEvent.change(externalId, { target: { value: '900162964' } })
+      fireEvent.change(externalId, { target: { value: '000000001' } })
       expect(save).toBeDisabled()
     })
   })
