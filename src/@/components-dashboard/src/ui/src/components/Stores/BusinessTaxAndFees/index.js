@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import { Pencil, Trash } from 'react-bootstrap-icons'
 import { useLanguage } from '../../../../../index'
 import { Button, Input, Switch } from '../../../styles'
@@ -11,7 +12,8 @@ import {
   SelectedTaxesList,
   SelectedTaxItem,
   SelectedTaxInfo,
-  TaxItemActions
+  TaxItemActions,
+  CatalogError
 } from './styles'
 import { Alert, Modal, Tab, Tabs } from '../../Shared'
 import { MultiSelect } from '../../../styles/MultiSelect'
@@ -49,6 +51,8 @@ export const BusinessTaxAndFees = (props) => {
     business,
     handleUpdateBusinessClick,
     taxes,
+    taxCatalogState,
+    getTaxes,
     handleSaveTax,
     setTaxToEdit,
     taxToEdit,
@@ -171,6 +175,15 @@ export const BusinessTaxAndFees = (props) => {
       </Tabs>
       {showOption === TAX && (
         <>
+          {taxCatalogState?.error && (
+            <CatalogError role='alert'>
+              <span>{t('PRODUCT_TAX_CATALOG_LOAD_ERROR', 'Could not load taxes. Please try again.')}</span>
+              <Button color='primary' borderRadius='8px' isDisabled={taxCatalogState.loading} onClick={getTaxes}>
+                {t('RETRY', 'Retry')}
+              </Button>
+            </CatalogError>
+          )}
+          {taxCatalogState?.loading && !taxCatalogState.loaded && <Skeleton height={38} />}
           {!activeAdvancedTax
             ? (
               <>
@@ -208,7 +221,7 @@ export const BusinessTaxAndFees = (props) => {
                 <FormController>
                   <Button
                     color='primary'
-                    isDisabled={formState.loading || formTaxState.loading}
+                    isDisabled={formState.loading || formTaxState.loading || (taxCatalogState && !taxCatalogState.loaded)}
                     borderRadius='8px'
                     onClick={() => setActiveAdvancedTax(true)}>
                     {t('USE_ADVANCED_TAX', 'Use advanced tax settings')}
@@ -216,7 +229,7 @@ export const BusinessTaxAndFees = (props) => {
                 </FormController>
               </>
               )
-            : (
+            : (!taxCatalogState || taxCatalogState.loaded) && (
               <>
                 <FormController>
                   <label>{t('CUSTOM_TAXES', 'Custom taxes')}</label>

@@ -390,8 +390,8 @@ key,value,app_uses,submodule_uses
 "CANCELLED","Cancelled",0,2
 "DELIVERY_TYPE","Delivery Type",0,3
 "DELIVERY_TYPE","Delivery type",0,1
+"PAYMENT_METHOD","Payment method",0,4
 "PAYMENT_METHOD","Payment Method",0,2
-"PAYMENT_METHOD","Payment method",0,3
 "BUSINESS_PHONE","Business cellphone",0,1
 "BUSINESS_PHONE","Business Phone",0,1
 "SETTINGS","Settings",0,16

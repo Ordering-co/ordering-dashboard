@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { useLanguage, CampaignEmail as CampaignEmailController, useApi } from '../../../../../index'
+import { useLanguage, CampaignEmail as CampaignEmailController } from '../../../../../index'
 import { Input, Button } from '../../../styles'
 import $ from 'jquery'
 import ReactSummernote from 'react-summernote'
@@ -47,7 +47,6 @@ const CampaignEmailUI = (props) => {
 
   const [, t] = useLanguage()
   const { defaultBodyContent, defaultSubjectContent } = getUtils()
-  const [, { configurations }] = useApi()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [openModal, setOpenModal] = useState(null)
   const [editorContext, setEditorContext] = useState(null)
@@ -178,10 +177,10 @@ const CampaignEmailUI = (props) => {
             <>
               <ContactWrapper>
                 <p>{t('IF_YOU_NEED_HELP_WITH_SETUP_CONTACT_SUPPORT_TEAM', 'If you need help with your setup, contact our support team.')}</p>
-                <Button color='primary' outline onClick={() => window.open(`https://www.${configurations?.subdomain}.com/contact-ordering`, '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
+                <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
               </ContactWrapper>
               <Description>
-                <span onClick={() => window.open(`https://help.${configurations?.subdomain}.com/en/articles/9368332-white-label`)}>
+                <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/white-label/')}>
                   {t('SMTP_SETTINGS_LINK_DESC', 'You need to complete SMTP configuration first')}
                 </span>
               </Description>

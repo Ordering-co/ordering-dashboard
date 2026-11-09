@@ -9,18 +9,6 @@ export const BusinessOrderingChannelsContainer = styled.div`
   ${({ inModal }) => inModal && css`
     padding: 0;
   `}
-
-
-  .integration-actions {
-    display: flex;
-    gap: 5px;
-    overflow-x: auto;
-    margin-bottom: 20px;
-
-    button {
-      min-width: fit-content;
-    }
-  }
 `
 
 export const Title = styled.h1`
@@ -128,8 +116,10 @@ export const IntegrationActions = styled.div`
     height: 20px;
   }
 
-  button {
-    height: 50px;
+  > button {
+    align-self: flex-start;
+    min-width: 120px;
+    justify-content: center;
   }
 `
 

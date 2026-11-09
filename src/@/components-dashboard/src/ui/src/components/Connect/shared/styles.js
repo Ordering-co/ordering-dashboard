@@ -9,6 +9,7 @@ export const WrapperImage = styled.div`
   max-height: 45px;
   height: 45px;
   width: 45px;
+  flex-shrink: 0;
   ${({ isSkeleton }) => !isSkeleton && css`
     border: 1px solid #E3E3E3;
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);

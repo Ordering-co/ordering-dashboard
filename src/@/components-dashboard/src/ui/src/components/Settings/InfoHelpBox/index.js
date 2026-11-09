@@ -54,7 +54,7 @@ export const InfoHelpBox = (props) => {
             style={{ marginRight: 10 }}
             color='primary'
             borderRadius='8px'
-            onClick={() => window.open(category?.more_info ?? 'https://help.orderingplus.com/en/collections/9439739-settings', '_blank')}
+            onClick={() => window.open(category?.more_info ?? 'https://docs.ordering.co/docs/products/dashboard/settings-overview/', '_blank')}
           >
             {t('MORE_INFO', 'More info')}
           </Button>

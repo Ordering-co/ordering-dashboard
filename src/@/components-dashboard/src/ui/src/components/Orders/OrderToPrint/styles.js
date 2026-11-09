@@ -14,5 +14,12 @@ export const PrintContainer = styled.div`
     display: block;
 
     @page { size: portrait; }
+
+    /* Six classes beat the status label color !important (0,4,6). */
+    &&&&&&,
+    &&&&&& * {
+      color: #000 !important;
+      -webkit-text-fill-color: #000 !important;
+    }
   }
 `

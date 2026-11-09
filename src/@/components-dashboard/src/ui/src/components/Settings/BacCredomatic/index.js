@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useLanguage, ApiKeysList as ApiKeysListController, useApi } from '../../../../../index'
+import { useLanguage, ApiKeysList as ApiKeysListController } from '../../../../../index'
 import { Button, IconButton } from '../../../styles'
 import { Alert, Confirm, Modal } from '../../Shared'
 import BsArrowRight from '@meronex/icons/bs/BsArrowRight'
@@ -28,7 +28,6 @@ const BacCredomaticUI = (props) => {
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
   const { width } = useWindowSize()
-  const [, { configurations }] = useApi()
 
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
@@ -119,7 +118,7 @@ const BacCredomaticUI = (props) => {
               {t('BAC_CREDOMATIC_CONNECT_SUPPORT', 'Are you having trouble connecting this')}
             </p>
             <p>
-              <a onClick={() => handleGoToLink(t('BAC_CREDOMATIC_CONNECT_SUPPORT_LINK', `https://www.${configurations?.subdomain}.com/contact-ordering`))}>{t('CONTACT_US', 'Contact us')}</a>; <span>{t('WE_ARE_HAPPY_TO_HELP', 'we are happy to help.')}</span>
+              <a onClick={() => handleGoToLink(t('BAC_CREDOMATIC_CONNECT_SUPPORT_LINK', 'https://www.ordering.co/contact/'))}>{t('CONTACT_US', 'Contact us')}</a>; <span>{t('WE_ARE_HAPPY_TO_HELP', 'we are happy to help.')}</span>
             </p>
           </Paragraph>
         </div>

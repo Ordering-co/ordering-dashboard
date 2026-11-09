@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { Button, IconButton } from '../../../styles'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { useTheme } from 'styled-components'
@@ -14,7 +14,6 @@ import {
 
 export const CustomProject = () => {
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const theme = useTheme()
 
@@ -39,7 +38,7 @@ export const CustomProject = () => {
           <Button
             color='primary'
             borderRadius='8px'
-            onClick={() => window.open(`https://www.${configurations?.subdomain}.com/quote-project-request`, '_blank')}
+            onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}
           >
             {t('CONTACT_US', 'Contact us')}
           </Button>

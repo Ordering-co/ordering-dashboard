@@ -35,6 +35,17 @@ export const SwitchWrapper = styled.div`
     `}
   }
 `
+export const CatalogError = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  border: 1px solid ${props => props.theme.colors.danger};
+  color: ${props => props.theme.colors.danger};
+  border-radius: 8px;
+`
 export const FormController = styled.div`
   display: flex;
   flex-direction: column;

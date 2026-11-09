@@ -281,7 +281,7 @@ export const UsersList = (props) => {
                           <UserEnableWrapper className='user_busy_control'>
                             <span>{t('BUSY', 'Busy')}</span>
                             <Switch
-                              disabled={actionDisabled || !user?.busy}
+                              disabled={actionDisabled}
                               notAsync={user.level === 0}
                               defaultChecked={user?.busy}
                               onChange={busy => handleBusy(user, busy)}

@@ -1,11 +1,10 @@
 import React from 'react'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { AppLayout } from '../AppLayout'
 
 export const CallCenterApp = () => {
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const theme = useTheme()
 
   const appInfo = {
@@ -18,7 +17,7 @@ export const CallCenterApp = () => {
     brand_description: t('CALL_CENTER_BRANDED_DESCRIPTION', 'The Call Center is delivered in less than five working days, fully branded with your guidelines, and ready to be used on any tablet or device you add it to.'),
     demo_book_message: 'I would like to book a Demo about the Call center , can you assist me?',
     purchase_message: 'I would like to know about the Call center, can you assist me?',
-    demo_link: `https://www.${configurations?.subdomain}.com/platform-demo-and-pricing`
+    demo_link: 'https://www.ordering.co/book-a-demo/'
   }
 
   return (

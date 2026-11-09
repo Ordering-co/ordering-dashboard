@@ -70,6 +70,8 @@ export const BusinessDetailsUI = (props) => {
     getCustomTaxes,
     setCustomTaxes,
     taxes,
+    taxCatalogState,
+    getTaxes,
     fees,
     formTaxState,
     taxToEdit,
@@ -327,6 +329,8 @@ export const BusinessDetailsUI = (props) => {
               getCustomTaxes={getCustomTaxes}
               setCustomTaxes={setCustomTaxes}
               taxes={taxes}
+              taxCatalogState={taxCatalogState}
+              getTaxes={getTaxes}
               fees={fees}
               formTaxState={formTaxState}
               formTaxChanges={formTaxChanges}

@@ -2,7 +2,7 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { List as MenuIcon, InfoCircle } from 'react-bootstrap-icons'
 
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { LearnDropDown } from '../../Shared'
 import { learnOptionsValues } from '../../../utils'
@@ -25,7 +25,6 @@ import {
 export const AppLayout = (props) => {
   const { appInfo, isDriver, hideBuyBlocks, children, appId } = props
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const location = useLocation()
 
@@ -143,7 +142,7 @@ export const AppLayout = (props) => {
               </IconButton>
               <InfoContent>
                 {t('MY_PRODUCTS_INFO', 'Use the advanced configurations below to customize your products changing the images, colors, available options and others with a few clicks. If you have doubts, please contact our team here:')}
-                <a href={`https://www.${configurations?.subdomain}.com/support`} rel='noopener noreferrer' target='_blank'>{`https://www.${configurations?.subdomain}.com/support`}</a>
+                <a href={'https://www.ordering.co/support/'} rel='noopener noreferrer' target='_blank'>{'https://www.ordering.co/support/'}</a>
               </InfoContent>
             </HeaderInfoWrapper>
           )}

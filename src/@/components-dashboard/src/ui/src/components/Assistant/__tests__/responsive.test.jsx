@@ -7,7 +7,7 @@ import theme from '~/theme.json'
 import { AssistantPanel, AssistantPage } from '../AssistantPanel'
 import { useAssistantViewport } from '../../../hooks/useAssistantViewport'
 import { getAssistantOffset } from '../../../utils/assistantDock'
-import { setAssistantIntercomHidden } from '../../../utils/assistantIntercom'
+import { setAssistantIntercomHidden, setIntercomAccess } from '../../../utils/assistantIntercom'
 import { setIntercomSettings } from '~/components/Utils'
 import { InfoShareProvider, useInfoShare } from '../../../contexts/InfoShareContext'
 
@@ -34,14 +34,16 @@ beforeEach(() => {
   assistant.isAllowed = true
   assistant.isAvailable = true
   assistant.setOpen.mockClear()
+  setIntercomAccess(true, 'eligible-assistant-fixture')
   window.Intercom = vi.fn()
-  window.intercomSettings = { hide_default_launcher: false, hide_notifications: true }
+  window.intercomSettings = { user_hash: 'verified-fixture-hash', hide_default_launcher: false, hide_notifications: true }
   vi.stubGlobal('innerWidth', 390)
 })
 
 afterEach(() => {
   cleanup()
   setAssistantIntercomHidden(false)
+  setIntercomAccess(false)
   delete window.Intercom
   delete window.intercomSettings
   vi.unstubAllGlobals()

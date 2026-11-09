@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useLanguage, ApiKeysList as ApiKeysListController, useApi } from '../../../../../index'
+import { useLanguage, ApiKeysList as ApiKeysListController } from '../../../../../index'
 import { Button, IconButton } from '../../../styles'
 import { Alert, Confirm, DragScroll, Modal } from '../../Shared'
 import BsArrowRight from '@meronex/icons/bs/BsArrowRight'
@@ -30,7 +30,6 @@ const LalaMoveConnectUI = (props) => {
   const history = useHistory()
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const { width } = useWindowSize()
 
   const [alertState, setAlertState] = useState({ open: false, content: [] })
@@ -141,7 +140,7 @@ const LalaMoveConnectUI = (props) => {
             <p>
               {t('LALAMOVE_CONNECT_ARTICLE', 'To connect with LalaMove, you’ll have to use plugins, put in your LalaMove credentials, connect your LalaMove account, and create a driver company inside this dashboard; follow the next article step by step and get this connected in less than 5 minutes.')}
             </p>
-            <a onClick={() => handleGoToLink(t('LALAMOVE_CONNECT_ARTICLE_LINK', `https://support.${configurations?.subdomain}.com/hc/en-us/articles/10673894748941`))}>
+            <a onClick={() => handleGoToLink(t('LALAMOVE_CONNECT_ARTICLE_LINK', 'https://docs.ordering.co/docs/products/dashboard/addons/delivery-companies/lalamove/'))}>
               {t('VIEW_ARTICLE', 'View Article')}
             </a>
           </Paragraph>
@@ -151,7 +150,7 @@ const LalaMoveConnectUI = (props) => {
               {t('LALAMOVE_CONNECT_SUPPORT', 'Are you having trouble connecting this?')}
             </p>
             <p>
-              <a onClick={() => handleGoToLink(t('LALAMOVE_CONNECT_SUPPORT_LINK', `https://www.${configurations?.subdomain}.com/contact-ordering`))}>{t('CONTACT_US', 'Contact us')}</a>; <span>{t('WE_ARE_HAPPY_TO_HELP', 'we are happy to help.')}</span>
+              <a onClick={() => handleGoToLink(t('LALAMOVE_CONNECT_SUPPORT_LINK', 'https://www.ordering.co/contact/'))}>{t('CONTACT_US', 'Contact us')}</a>; <span>{t('WE_ARE_HAPPY_TO_HELP', 'we are happy to help.')}</span>
             </p>
           </Paragraph>
           <Paragraph>
@@ -164,7 +163,7 @@ const LalaMoveConnectUI = (props) => {
             <Button
               outline
               color='primary'
-              onClick={() => handleGoToLink(t('PURCHASE_INTEGRATION_LINK', `https://www.${configurations?.subdomain}.com/en-us/contact-ordering`))}
+              onClick={() => handleGoToLink(t('PURCHASE_INTEGRATION_LINK', 'https://www.ordering.co/contact/'))}
             >
               {t('PURCHASE_INTEGRATION', 'Purchase Integration')}
             </Button>

@@ -1,11 +1,10 @@
 import React from 'react'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { AppLayout } from '../AppLayout'
 
 export const KioskApp = () => {
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const theme = useTheme()
 
   const appInfo = {
@@ -22,7 +21,7 @@ export const KioskApp = () => {
       { id: 1, icon: theme.images.myProducts.appStoreSmall, link: 'https://apps.apple.com/us/app/ordering-kiosk-2-0/id1615828153' },
       { id: 2, icon: theme.images.myProducts.playStoreSmall, link: 'https://play.google.com/store/apps/details?id=com.ordering.orderingkioskv5&hl=en&gl=US' }
     ],
-    demo_link: `https://www.${configurations?.subdomain}.com/platform-demo-and-pricing`
+    demo_link: 'https://www.ordering.co/book-a-demo/'
   }
 
   return (

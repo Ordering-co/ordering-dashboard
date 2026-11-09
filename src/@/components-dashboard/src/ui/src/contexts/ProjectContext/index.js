@@ -16,14 +16,16 @@ export const ProjectProvider = ({ children }) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [{ configs, fetchedWithToken }] = useConfig()
-  const [state, setState] = useState({ loading: false, project: {}, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
+  const [state, setState] = useState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
   const identity = `${ordering.root}:${ordering.project}:${token}`
   const [sessionIdentity, setSessionIdentity] = useState(identity)
   const requestSeq = useRef(0)
+  const currentIdentity = useRef(identity)
+  currentIdentity.current = identity
 
   if (identity !== sessionIdentity) {
     setSessionIdentity(identity)
-    setState(prev => ({ ...prev, trialSubscription: null, websiteProduct: null, billingUnavailable: false }))
+    setState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
   }
 
   const websiteProduct = state.websiteProduct || (state.billingUnavailable && fetchedWithToken
@@ -33,57 +35,63 @@ export const ProjectProvider = ({ children }) => {
   const getProjectStatus = async () => {
     const seq = ++requestSeq.current
     captureDashboardOperation({ status: 'started', module: 'project', action: 'load_project' })
-    try {
-      setState(prev => seq === requestSeq.current ? { ...prev, loading: true } : prev)
-      const response = await fetch(`${ordering.root}/current`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+    setState(prev => ({ ...prev, loading: true, intercomAllowed: null, planResolved: false }))
 
-      const reqPlan = await fetch(`${ordering.root}/billing/subscriptions`, {
+    // Project support is available to project-local users without billing access.
+    // Support settles independently: neither its loading nor billing can block the other.
+    const read = async (path, authenticated = false) => {
+      const response = await fetch(`${ordering.root}${path}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          ...(authenticated ? { Authorization: `Bearer ${token}` } : {})
         }
       })
-
-      const { error, result } = await response.json()
-      const resPlan = await reqPlan.json()
-
-      const billingReadable = !resPlan?.error && Array.isArray(resPlan?.result)
-      const activePlan = resPlan?.result?.length ? resPlan?.result?.find(plan => plan?.status === 'active')?.plan?.plan : null
-      const trialSubscription = resPlan?.result?.length ? resPlan?.result?.find(subscription => subscription?.status === 'trialing') : null
-
-      captureDashboardOperation({
-        status: error ? 'failed' : 'succeeded',
-        module: 'project',
-        action: 'load_project',
-        ...(error && { failureType: 'api' })
-      })
-
-      if (seq !== requestSeq.current) return
-      setState({
-        loading: false,
-        project: error ? {} : result,
-        plan: resPlan?.error
-          ? null
-          : activePlan,
-        trialSubscription: resPlan?.error
-          ? null
-          : (trialSubscription || null),
-        websiteProduct: !error && billingReadable
-          ? getSubscribedWebsiteProduct(resPlan.result)
-          : null,
-        billingUnavailable: !error && !billingReadable
-      })
-    } catch (error) {
-      captureDashboardOperation({ status: 'failed', module: 'project', action: 'load_project', failureType: 'network' })
-      if (seq !== requestSeq.current) return
-      setState(prev => ({ ...prev, loading: false, websiteProduct: null, billingUnavailable: false }))
+      return { response, data: await response.json() }
     }
+    const isCurrentRequest = () => seq === requestSeq.current && identity === currentIdentity.current
+    read('/current/support', true).then(({ response, data }) => {
+      if (!isCurrentRequest()) return
+      const intercomAllowed = response.ok === true && data?.error === false && typeof data?.result?.intercom_allowed === 'boolean'
+        ? data.result.intercom_allowed
+        : null
+      setState(prev => ({ ...prev, intercomAllowed }))
+    }, () => {
+      if (isCurrentRequest()) setState(prev => ({ ...prev, intercomAllowed: null }))
+    })
+    const [projectRequest, billingRequest] = await Promise.allSettled([
+      read('/current'),
+      read('/billing/subscriptions', true)
+    ])
+    if (!isCurrentRequest()) return
+
+    const projectResponse = projectRequest.value?.response
+    const { error = true, result } = projectRequest.value?.data || {}
+    const billingResponse = billingRequest.value?.response
+    const resPlan = billingRequest.value?.data
+    const projectId = result?.id
+    const projectReadable = !error && ['number', 'string'].includes(typeof projectId) && Number.isInteger(Number(projectId)) && Number(projectId) > 0
+    const billingReadable = !resPlan?.error && Array.isArray(resPlan?.result)
+    const subscriptions = billingReadable ? resPlan.result : []
+    const activePlan = subscriptions.length ? subscriptions.find(plan => plan?.status === 'active')?.plan?.plan : null
+    const trialSubscription = subscriptions.find(subscription => subscription?.status === 'trialing') || null
+
+    captureDashboardOperation({
+      status: error ? 'failed' : 'succeeded',
+      module: 'project',
+      action: 'load_project',
+      ...(error && { failureType: projectRequest.status === 'rejected' ? 'network' : 'api' })
+    })
+    setState(prev => ({
+      ...prev,
+      loading: false,
+      project: error ? {} : result,
+      plan: activePlan,
+      planResolved: projectResponse?.ok === true && billingResponse?.ok === true && projectReadable && billingReadable,
+      trialSubscription,
+      websiteProduct: !error && billingReadable ? getSubscribedWebsiteProduct(subscriptions) : null,
+      billingUnavailable: !error && !billingReadable
+    }))
   }
 
   const functions = {

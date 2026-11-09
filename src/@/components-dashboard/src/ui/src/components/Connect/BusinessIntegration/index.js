@@ -122,22 +122,37 @@ export const BusinessIntegration = (props) => {
   // A sync runs the plugin's hook: it needs the plugin enabled and, when its
   // hooks are loaded, a hook for that action.
   const pluginSupports = (hook) => !Array.isArray(plugin?.hooks) || plugin.hooks.some(item => item?.hook === hook)
-  const syncActions = [
-    {
-      hook: 'sync_business',
-      name: t('SYNC_BUSINESS', 'Sync business'),
-      hint: t('SYNC_BUSINESS_HINT', 'Name, address, schedule and settings from the POS.'),
-      startedMessage: t('BUSINESS_SYNC_STARTED', 'Business sync started. It can take a few minutes.'),
-      supported: pluginSupports('sync_business')
-    },
-    {
-      hook: 'sync_menu',
-      name: t('SYNC_MENU', 'Sync menu'),
-      hint: t('SYNC_MENU_HINT', 'Products, options and prices from the POS.'),
-      startedMessage: t('MENU_SYNC_STARTED', 'Menu sync started. It can take a few minutes.'),
-      supported: pluginSupports('sync_menu')
-    }
-  ]
+  // A POS sends its data to the store; a sales channel receives the store's menu.
+  const syncActions = fromSalesChannels
+    ? [
+        {
+          hook: 'push_menu',
+          name: t('PUSH_MENU', 'Push menu'),
+          hint: t('PUSH_MENU_HINT', 'Sends products, options and prices to _name_.').replace('_name_', selectedIntegration?.name || ''),
+          button: t('PUSH_NOW', 'Push now'),
+          startedMessage: t('MENU_PUSH_STARTED', 'Menu push started. It can take a few minutes.'),
+          supported: pluginSupports('push_menu')
+        }
+      ]
+    : [
+        {
+          hook: 'sync_business',
+          name: t('SYNC_BUSINESS', 'Sync business'),
+          hint: t('SYNC_BUSINESS_HINT', 'Name, address, schedule and settings from the POS.'),
+          button: t('SYNC_NOW', 'Sync now'),
+          startedMessage: t('BUSINESS_SYNC_STARTED', 'Business sync started. It can take a few minutes.'),
+          supported: pluginSupports('sync_business')
+        },
+        {
+          hook: 'sync_menu',
+          name: t('SYNC_MENU', 'Sync menu'),
+          hint: t('SYNC_MENU_HINT', 'Products, options and prices from the POS.'),
+          button: t('SYNC_NOW', 'Sync now'),
+          startedMessage: t('MENU_SYNC_STARTED', 'Menu sync started. It can take a few minutes.'),
+          supported: pluginSupports('sync_menu')
+        }
+      ]
+  const hasExternalIdChanges = externalId !== (businessIntegration?.external_id || '')
 
   const handleOpenSetup = async () => {
     await showPluginPage(plugin, 'setup', { businessId: business?.id ?? null })
@@ -234,18 +249,6 @@ export const BusinessIntegration = (props) => {
             </DropdownButton>
           </ActionSelectorWrapper>
         </TitleWrapper>
-        {fromSalesChannels && (
-          <div className='integration-actions'>
-            <Button
-              color='lightPrimary'
-              borderRadius='8px'
-              disabled={formState?.loading}
-              onClick={() => handlePushAction(selectedIntegration?.id, 'push_menu', t('MENU_PUSH_STARTED', 'Menu push started. It can take a few minutes.'))}
-            >
-              {t('PUSH_MENU', 'Push menu')}
-            </Button>
-          </div>
-        )}
 
         <StatusCard tone={setupStatus.tone}>
           {/* Same layout as the integration's row in the business panel. */}
@@ -276,7 +279,9 @@ export const BusinessIntegration = (props) => {
                 : t('INTEGRATION_STATUS_PLUGIN_DISABLED_HELP', 'The plugin of this integration is disabled, so syncing is paused.')
               : setupStatus.message || (
                 setupStatus.state === INTEGRATION_SETUP_STATES.CONNECTED
-                  ? t('INTEGRATION_STATUS_CONNECTED_HELP', 'The POS is connected and syncing with this store.')
+                  ? fromSalesChannels
+                    ? t('INTEGRATION_STATUS_SALES_CHANNEL_CONNECTED_HELP', 'The sales channel is connected and syncing with this store.')
+                    : t('INTEGRATION_STATUS_CONNECTED_HELP', 'The POS is connected and syncing with this store.')
                   : setupStatus.state === INTEGRATION_SETUP_STATES.FAILED
                     ? t('INTEGRATION_STATUS_FAILED_HELP', 'The connection stopped working. Reconnect to resume orders and menu sync.')
                     : t('INTEGRATION_STATUS_PENDING_HELP', 'The connection was started but not finished.')
@@ -296,45 +301,51 @@ export const BusinessIntegration = (props) => {
               />
             </FormControl>
             {fromSalesChannels && (
-              <Button color='primary' onClick={() => handleSaveIntegration()}>
+              <Button
+                color='primary'
+                borderRadius='8px'
+                disabled={!hasExternalIdChanges || formState?.loading || integrationActionLoading}
+                onClick={() => handleSaveIntegration()}
+              >
                 {t('SAVE', 'Save')}
               </Button>
             )}
           </IntegrationActions>
         </IntegrationContainer>
-        {!fromSalesChannels && (
-          <>
-            <IntegrationContainer>
-              <SyncActions>
-                <p className='title'>{t('SYNCHRONIZE', 'Synchronize')}</p>
-                {syncActions.map(action => (
-                  <div className='sync-action' key={action.hook}>
-                    <div>
-                      <p className='name'>{action.name}</p>
-                      <p className='hint'>{action.hint}</p>
-                      {!needsSetup && pluginAvailable && !action.supported && (
-                        <p className='hint'>{t('SYNC_NOT_SUPPORTED', 'This integration does not support it.')}</p>
-                      )}
-                    </div>
-                    <Button
-                      color='lightPrimary'
-                      borderRadius='8px'
-                      disabled={needsSetup || !pluginAvailable || !action.supported || formState?.loading}
-                      onClick={() => handlePushAction(selectedIntegration?.id, action.hook, action.startedMessage)}
-                    >
-                      {t('SYNC_NOW', 'Sync now')}
-                    </Button>
-                  </div>
-                ))}
-                {needsSetup && <p className='hint'>{t('SYNC_DISABLED_UNTIL_CONNECTED', 'Available once the POS is connected.')}</p>}
-                {!needsSetup && !pluginAvailable && (
-                  <p className='hint'>{t('SYNC_PLUGIN_UNAVAILABLE', 'The plugin of this integration is disabled or uninstalled.')}</p>
-                )}
-              </SyncActions>
-            </IntegrationContainer>
-
-          </>
-        )}
+        <IntegrationContainer>
+          <SyncActions>
+            <p className='title'>{t('SYNCHRONIZE', 'Synchronize')}</p>
+            {syncActions.map(action => (
+              <div className='sync-action' key={action.hook}>
+                <div>
+                  <p className='name'>{action.name}</p>
+                  <p className='hint'>{action.hint}</p>
+                  {!needsSetup && pluginAvailable && !action.supported && (
+                    <p className='hint'>{t('SYNC_NOT_SUPPORTED', 'This integration does not support it.')}</p>
+                  )}
+                </div>
+                <Button
+                  color='lightPrimary'
+                  borderRadius='8px'
+                  disabled={needsSetup || !pluginAvailable || !action.supported || formState?.loading}
+                  onClick={() => handlePushAction(selectedIntegration?.id, action.hook, action.startedMessage)}
+                >
+                  {action.button}
+                </Button>
+              </div>
+            ))}
+            {needsSetup && (
+              <p className='hint'>
+                {fromSalesChannels
+                  ? t('SYNC_DISABLED_UNTIL_SALES_CHANNEL_CONNECTED', 'Available once the sales channel is connected.')
+                  : t('SYNC_DISABLED_UNTIL_CONNECTED', 'Available once the POS is connected.')}
+              </p>
+            )}
+            {!needsSetup && !pluginAvailable && (
+              <p className='hint'>{t('SYNC_PLUGIN_UNAVAILABLE', 'The plugin of this integration is disabled or uninstalled.')}</p>
+            )}
+          </SyncActions>
+        </IntegrationContainer>
         <MoreActions>
           {pluginLinkKeys.map(key => (
             <Button

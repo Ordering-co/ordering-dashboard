@@ -1,7 +1,8 @@
 import settings from '../../config'
-import { getAssistantIntercomSettings, hideAssistantIntercomMessenger } from '../../@/components-dashboard/src/ui/src/utils/assistantIntercom'
+import { getAssistantIntercomSettings, hideAssistantIntercomMessenger, isIntercomAllowed } from '../../@/components-dashboard/src/ui/src/utils/assistantIntercom'
 
 export const setIntercomSettings = (values, user) => {
+  if (!isIntercomAllowed() || String(values?.project_plan) === '581') return
   let _settings = { ...window.intercomSettings, ...values }
   if (user) {
     _settings = {
@@ -19,10 +20,8 @@ export const setIntercomSettings = (values, user) => {
       level: user?.level
     }
   }
-  const email = values?.email ?? window.intercomSettings?.email
-  const isBlockUpdate = email?.includes('@ordering.co')
-  if (!isBlockUpdate) {
-    window.intercomSettings = getAssistantIntercomSettings(_settings)
+  window.intercomSettings = getAssistantIntercomSettings(_settings)
+  if (typeof _settings.user_hash === 'string' && _settings.user_hash.trim()) {
     window?.Intercom?.('boot', window.intercomSettings)
     hideAssistantIntercomMessenger()
   }
@@ -39,8 +38,9 @@ export const getIntercomHash = async ({ userId, token }) => {
       },
       body: JSON.stringify({ user_email: userId })
     })
+    if (!req.ok) return null
     const { error, result } = await req.json()
-    const userHash = error ? null : result?.intercom_hash
+    const userHash = !error && typeof result?.intercom_hash === 'string' && result.intercom_hash.trim() ? result.intercom_hash : null
     return userHash
   } catch {
     return null

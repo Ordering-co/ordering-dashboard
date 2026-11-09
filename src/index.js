@@ -33,6 +33,7 @@ import {
   shouldResolveDashboardProjectAtBoot
 } from './utils/bootTheme'
 import { AutologinParams } from './components/AutologinParams'
+import { AutologinNotice } from './components/AutologinParams/AutologinNotice'
 import { PostHogIdentify } from './components/PostHogIdentify'
 import {
   preparePostHogEventForSending,
@@ -692,6 +693,7 @@ const RouteApp = () => {
                     <AssistantProvider baseUrl={settings?.ai_api?.url}>
                       <Router />
                       <Toast />
+                      <AutologinNotice />
                     </AssistantProvider>
                   </FilterValuesProvider>
                 </ProjectProvider>

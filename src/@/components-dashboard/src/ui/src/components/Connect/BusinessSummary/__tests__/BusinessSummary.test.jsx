@@ -392,10 +392,14 @@ describe('Connected section while the detail is open', () => {
       }
     }
   }
+
+  beforeEach(() => {
+    state.level = 0
+  })
+
   const rowOf = (name) => screen.getByText(name).closest('.connect-pos-wrapper')
 
-  it('keeps every connected integration listed and marks the one whose detail is open', () => {
-    state.level = 0
+  it('keeps every sales channel listed and marks the one whose detail is open', () => {
     renderSummary({ ...props, extraOpen: true, selectedItem: 'integration', selectedIntegration: uberEats })
 
     expect(screen.getByText('Connected', { selector: 'p.section-title' })).toBeInTheDocument()
@@ -404,13 +408,94 @@ describe('Connected section while the detail is open', () => {
     expect(screen.getAllByRole('button', { name: 'Continue setup' })).toHaveLength(2)
   })
 
+  it('keeps a store\'s only sales channel listed too', () => {
+    renderSummary({
+      ...props,
+      integrationsList: { thirdPartyIntegrations: [uberEats] },
+      businessState: { business: { third_party_integrations: [{ third_party_integration_id: 4, setup_status: null }] } },
+      extraOpen: true,
+      selectedItem: 'integration',
+      selectedIntegration: uberEats
+    })
+
+    expect(rowOf('Uber Eats')).toHaveAttribute('aria-current', 'true')
+  })
+
   it('marks no row when no detail is open', () => {
-    state.level = 0
     renderSummary({ ...props, extraOpen: false, selectedItem: null, selectedIntegration: uberEats })
 
-    expect(screen.getByText('Connected', { selector: 'p.section-title' })).toBeInTheDocument()
-    expect(rowOf('Uber Eats')).not.toHaveAttribute('aria-current')
     expect(rowOf('Rappi')).not.toHaveAttribute('aria-current')
+    expect(rowOf('Uber Eats')).not.toHaveAttribute('aria-current')
+  })
+
+  it('marks no row while another detail of the store is open', () => {
+    renderSummary({ ...props, extraOpen: true, selectedItem: 'logs', selectedIntegration: uberEats })
+
+    expect(rowOf('Uber Eats')).not.toHaveAttribute('aria-current')
+  })
+
+  it('hides the section with the connected POS open, and keeps the note about it', () => {
+    const clover = { id: 9, name: 'Clover', plugin_id: 9, plugin: { root: 'https://clover.test', setup_url: '/setup' } }
+    renderSummary({
+      integrationsList: { thirdPartyIntegrations: [clover] },
+      businessState: { business: { third_party_integrations: [{ third_party_integration_id: 9, setup_status: null }] } },
+      extraOpen: true,
+      selectedItem: 'integration',
+      selectedIntegration: clover
+    })
+
+    expect(screen.queryByText('Connected', { selector: 'p.section-title' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Continue setup' })).not.toBeInTheDocument()
+    expect(screen.getByText('Available POS')).toBeInTheDocument()
+    expect(screen.getByText('This store already uses Clover. Disconnect it to switch POS.')).toBeInTheDocument()
+  })
+})
+
+describe('No sales channels left to connect', () => {
+  const rappi = { id: 3, name: 'Rappi', plugin_id: 3, plugin: { root: 'https://rappi.test', setup_url: '/setup' } }
+  const uberEats = { id: 4, name: 'Uber Eats', plugin_id: 4, plugin: { root: 'https://uber-eats.test', setup_url: '/setup' } }
+  const connectedRappi = { business: { third_party_integrations: [{ third_party_integration_id: 3, setup_status: null }] } }
+  const allConnected = 'All available sales channels are connected.'
+  const noneAvailable = 'No sales channels available.'
+
+  beforeEach(() => {
+    state.level = 0
+  })
+
+  it('says so when every channel is connected', () => {
+    renderSummary({ fromSalesChannels: true, integrationsList: { thirdPartyIntegrations: [rappi] }, businessState: connectedRappi })
+
+    expect(screen.getByText(allConnected)).toBeInTheDocument()
+    expect(screen.queryByText(noneAvailable)).not.toBeInTheDocument()
+  })
+
+  it('says none are available when the project has no channels', () => {
+    renderSummary({ fromSalesChannels: true })
+
+    expect(screen.getByText(noneAvailable)).toBeInTheDocument()
+    expect(screen.queryByText(allConnected)).not.toBeInTheDocument()
+  })
+
+  it('does not show while a channel can still be connected', () => {
+    renderSummary({ fromSalesChannels: true, integrationsList: { thirdPartyIntegrations: [rappi, uberEats] }, businessState: connectedRappi })
+
+    expect(screen.queryByText(allConnected)).not.toBeInTheDocument()
+    expect(screen.queryByText(noneAvailable)).not.toBeInTheDocument()
+  })
+
+  it.each([
+    ['loading', { loading: true, thirdPartyIntegrations: [] }],
+    ['failed to load', { error: ['Network error'], thirdPartyIntegrations: [] }]
+  ])('does not show while the list has %s', (_state, integrationsList) => {
+    renderSummary({ fromSalesChannels: true, integrationsList })
+
+    expect(screen.queryByText(noneAvailable)).not.toBeInTheDocument()
+  })
+
+  it('does not show in the POS view', () => {
+    renderSummary()
+
+    expect(screen.queryByText(noneAvailable)).not.toBeInTheDocument()
   })
 })
 

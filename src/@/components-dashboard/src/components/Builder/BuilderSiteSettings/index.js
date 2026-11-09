@@ -10,6 +10,7 @@ import {
   getBuilderThemeSchema,
   listBuilderScopeBusinesses,
   listBuilderScopeFranchises,
+  listBuilderThemes,
   updateBuilderProduct
 } from '../builderApi'
 
@@ -163,7 +164,9 @@ export const BuilderSiteSettings = (props) => {
   const [schemaState, setSchemaState] = useState({ loading: true, schema: null, format: null, error: false })
   // The picked store or franchise when no loaded page has it, by `${kind}:${id}`
   const [picked, setPicked] = useState({})
+  const [hasActiveTheme, setHasActiveTheme] = useState(null)
   const schemaRequest = useRef(0)
+  const themesRequest = useRef(0)
 
   const [stores, loadStores] = useScopeList((options) => listBuilderScopeBusinesses(ordering, token, options))
   const [franchises, loadFranchises] = useScopeList((options) => listBuilderScopeFranchises(ordering, token, options))
@@ -289,9 +292,19 @@ export const BuilderSiteSettings = (props) => {
     setSchemaState({ loading: false, schema: response.result?.schema ?? null, format: response.result?.format ?? null, error: false })
   }
 
+  const loadActiveTheme = async () => {
+    const requestId = ++themesRequest.current
+    setHasActiveTheme(null)
+    const response = await listBuilderThemes(ordering, token, productId)
+    if (requestId !== themesRequest.current) return
+    setHasActiveTheme(response.error ? null : Array.isArray(response.result) && response.result.some(theme => theme?.active === true))
+  }
+
   useEffect(() => {
     discard()
-    if (token && productId) loadSchema()
+    if (!token || !productId) return
+    loadSchema()
+    loadActiveTheme()
   }, [token, productId])
 
   return (
@@ -301,6 +314,7 @@ export const BuilderSiteSettings = (props) => {
           {...props}
           schemaState={schemaState}
           reloadSchema={loadSchema}
+          hasActiveTheme={hasActiveTheme}
           current={current}
           edits={edits}
           fieldErrors={fieldErrors}

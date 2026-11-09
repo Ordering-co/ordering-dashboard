@@ -49,6 +49,8 @@ My Products' legacy website pages never create a website and send to Builder: a 
 
 In Website settings, `SiteSettingsEditor` gives `site.mode` the `scope` control whatever its schema declares (the published `marketplace_website` schema says `cards`), so the renderer has no special case for it. A `scope` node reads the product's `business_id` / `franchise_id`, never `settings.mode`: the selected type shows the project's store or franchise picker, and Marketplace clears both IDs. It shows as changed while it isn't its default (Marketplace), and its reset sets Marketplace with `setScopeMode`. Read-only, it shows the product's type. Other nodes still use their schema's control.
 
+The website reads its type and settings from `values.site` of the active theme's `first_load`: api-core serves no theme, and so no `values.site`, while the website has no active theme, and the website is then a marketplace without them. `BuilderSiteSettings` lists the website's themes (`hasActiveTheme`: `null` while it doesn't know), and while none is active the Website settings tab says these settings wait for one, with a button to the Theme tab (`onGoToTheme`).
+
 ## Editing a theme
 
 - Changes stay in the editor (`edits`, shaped like the theme; `null` takes the default back) until saved. A moment after the last change (`RESOLVE_DELAY`, 300 ms) `POST …/resolve` shows how the theme looks with them, and where each value comes from (`sources`).

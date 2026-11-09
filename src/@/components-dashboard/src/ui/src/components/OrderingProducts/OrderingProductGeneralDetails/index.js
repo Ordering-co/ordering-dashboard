@@ -11,8 +11,7 @@ import { InfoCircle } from 'react-bootstrap-icons'
 import {
   useLanguage,
   DragAndDrop,
-  ExamineClick,
-  useApi
+  ExamineClick
 } from '../../../../../index'
 
 import {
@@ -50,7 +49,6 @@ export const OrderingProductGeneralDetails = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const { handleSubmit, register, errors, watch, setValue } = useForm()
   const businessUrlTemplate = watch('business_url_template', '')
 
@@ -265,7 +263,7 @@ export const OrderingProductGeneralDetails = (props) => {
             outline
             borderRadius='8px'
             color='primary'
-            onClick={() => window.open(`https://www.${configurations?.subdomain}.com/ordering-sales`, '_blank')}
+            onClick={() => window.open('https://www.ordering.co/pricing/', '_blank')}
           >
             {t('CONTACT_US', 'Contact us')}
           </Button>

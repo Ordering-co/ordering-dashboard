@@ -8,18 +8,36 @@ import {
 } from '../paymentPluginCatalog'
 
 describe('PAYMENT_PLUGIN_CATALOG', () => {
-  it('has 20 unique keys, gateways, and install URLs', () => {
-    expect(PAYMENT_PLUGIN_CATALOG).toHaveLength(20)
+  it('has 16 unique keys, gateways, and install URLs', () => {
+    expect(PAYMENT_PLUGIN_CATALOG).toHaveLength(16)
     const keys = PAYMENT_PLUGIN_CATALOG.map(item => item.key)
     const gateways = PAYMENT_PLUGIN_CATALOG.map(item => item.gateway)
     const urls = PAYMENT_PLUGIN_CATALOG.map(item => item.installUrl)
-    expect(new Set(keys).size).toBe(20)
-    expect(new Set(gateways).size).toBe(20)
-    expect(new Set(urls).size).toBe(20)
+    expect(new Set(keys).size).toBe(16)
+    expect(new Set(gateways).size).toBe(16)
+    expect(new Set(urls).size).toBe(16)
     PAYMENT_PLUGIN_CATALOG.forEach(item => {
       expect(item.installUrl).toMatch(/^https:\/\//)
       expect(item.name).toBeTruthy()
     })
+  })
+
+  it('only offers plugins hosted on plugins.orderingplus.com, none of the legacy integrations server', () => {
+    PAYMENT_PLUGIN_CATALOG.forEach(item => {
+      expect(new URL(item.installUrl).hostname).toMatch(/\.plugins\.orderingplus\.com$/)
+    })
+    ;['izipay', 'interswitch', 'computop', 'epayco'].forEach(gateway => {
+      expect(PAYMENT_PLUGIN_CATALOG.find(row => row.gateway === gateway)).toBeUndefined()
+    })
+  })
+
+  it('keeps showing an installed payment method that is no longer in the catalog', () => {
+    const rows = mergePaymethodsWithCatalog({
+      paymethods: [{ id: 9, name: 'ePayco', gateway: 'epayco' }],
+      plugins: []
+    })
+    const epayco = rows.find(row => row.gateway === 'epayco')
+    expect(epayco).toMatchObject({ id: 9, source: 'api', installState: 'ready', pluginKey: null })
   })
 
   it('maps Mercado Pago Checkout Pro to its own gateway, not the legacy plugin one', () => {

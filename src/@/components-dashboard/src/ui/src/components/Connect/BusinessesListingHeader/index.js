@@ -29,7 +29,7 @@ export const BusinessesListingHeader = (props) => {
   const infoHelpBoxData = {
     name: title || t('POS_MENU_SYNC', 'POS & Menu Sync'),
     description: t('INTEGRATION_DESCRIPTION', 'Connect with any of our available integrations with a few steps. Open the store where you want to connect your POS to our system. Configure the integration settings with your own keys and sync your products and stores to your POS or to our dashboard. For more info, please contact our Support team'),
-    more_info: 'https://help.orderingplus.com/en/articles/10056965-create-support-ticket'
+    more_info: 'https://docs.ordering.co/docs/products/dashboard/help-community-ai-agents/'
   }
 
   return (

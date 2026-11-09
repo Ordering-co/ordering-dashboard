@@ -63,6 +63,20 @@ describe('Settings of a website', () => {
     expect(state.site.reloadSchema).toHaveBeenCalled()
   })
 
+  it('says the settings wait for an active theme, and goes to the themes', () => {
+    const onGoToTheme = vi.fn()
+    renderSettings({ hasActiveTheme: false, onGoToTheme })
+    expect(screen.getByText('Your website doesn’t use these settings yet')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Go to Theme' }))
+    expect(onGoToTheme).toHaveBeenCalled()
+    expect(screen.getByRole('textbox', { name: 'Website name' })).toHaveValue('Burger Town')
+  })
+
+  it.each([true, null])('says nothing about the theme when it has an active one, or before it knows (%s)', (hasActiveTheme) => {
+    renderSettings({ hasActiveTheme })
+    expect(screen.queryByText('Your website doesn’t use these settings yet')).toBeNull()
+  })
+
   it('says when the website’s schema isn’t in the new format yet', () => {
     renderSettings({ schemaState: { loading: false, error: false, schema: { site: {} } } })
     expect(screen.getByText('The editor for this website isn’t ready yet')).toBeTruthy()

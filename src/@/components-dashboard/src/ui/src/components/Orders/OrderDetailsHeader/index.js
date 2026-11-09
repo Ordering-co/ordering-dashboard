@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import EnDotSingle from '@meronex/icons/en/EnDotSingle'
-import ReactToPrint from 'react-to-print'
+import ReactToPrint, { useReactToPrint } from 'react-to-print'
 import {
   // Wallet2,
   Printer,
+  Gear,
   Diagram3,
   ThreeDots,
   XLg as CloseIcon,
@@ -18,8 +19,10 @@ import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { useLanguage, useSession, useConfig, useUtils } from '../../../../../index'
 import { capitalize, getCurrenySymbol } from '../../../utils'
-import { Button, IconButton as ButtonLink } from '../../../styles'
+import { Button, IconButton as ButtonLink, Switch } from '../../../styles'
+import { Modal } from '../../Shared'
 import { OrderTrackingLink } from '../OrderTrackingLink'
+import { defaultTicketSections, ticketSectionList } from '../OrderToPrintTicket/ticketSections'
 import {
   OrderDetailsHeaderContainer,
   UreadMessageAlert,
@@ -27,7 +30,12 @@ import {
   StripeLink,
   PrinterSelect,
   PrinterSelectContainer,
-  ActionSelectorWrapper
+  TicketSectionsFooter,
+  TicketSectionActions,
+  ActionSelectorWrapper,
+  TicketSectionList,
+  TicketSectionRow,
+  TicketSectionHint
 } from './styles'
 
 export const OrderDetailsHeader = (props) => {
@@ -46,7 +54,10 @@ export const OrderDetailsHeader = (props) => {
     printTicketRef,
     isExpand,
     setIsExpand,
-    getPluginRefundProvider
+    getPluginRefundProvider,
+    ticketSections,
+    onTicketSectionChange,
+    onTicketSectionsLoad
   } = props
 
   const [, t] = useLanguage()
@@ -57,6 +68,12 @@ export const OrderDetailsHeader = (props) => {
   const [{ configs }] = useConfig()
   const theme = useTheme()
   const [showPrinterOptions, setShowPrinterOptions] = useState(false)
+  const [showTicketSections, setShowTicketSections] = useState(false)
+  const sections = ticketSections ?? defaultTicketSections
+  const printTicket = useReactToPrint({
+    content: () => printTicketRef.current,
+    removeAfterPrint: true
+  })
 
   const showExternalId = configs?.change_order_id?.value === '1'
 
@@ -171,9 +188,56 @@ export const OrderDetailsHeader = (props) => {
                   content={() => printTicketRef.current}
                   removeAfterPrint
                 />
+                <TicketSectionsFooter>
+                  <ButtonLink
+                    color='black'
+                    onClick={() => {
+                      setShowPrinterOptions(false)
+                      onTicketSectionsLoad?.()
+                      setShowTicketSections(true)
+                    }}
+                  >
+                    <Gear />
+                    {t('TICKET_SECTIONS', 'Ticket sections')}
+                  </ButtonLink>
+                </TicketSectionsFooter>
               </PrinterSelect>
             )}
           </PrinterSelectContainer>
+          <Modal
+            width='440px'
+            open={showTicketSections}
+            onClose={() => setShowTicketSections(false)}
+            title={t('TICKET_SECTIONS', 'Ticket sections')}
+          >
+            <TicketSectionHint>
+              {t('TICKET_SECTIONS_HINT', 'Choose the sections, then print the ticket. The total always prints.')}
+            </TicketSectionHint>
+            <TicketSectionList>
+              {ticketSectionList.map(section => (
+                <TicketSectionRow key={section.key}>
+                  {t(section.labelKey, section.label)}
+                  <Switch
+                    defaultChecked={sections[section.key] !== false}
+                    ariaLabel={t(section.labelKey, section.label)}
+                    onChange={(enabled) => onTicketSectionChange?.(section.key, enabled)}
+                  />
+                </TicketSectionRow>
+              ))}
+            </TicketSectionList>
+            <TicketSectionActions>
+              <Button
+                color='primary'
+                borderRadius='8px'
+                onClick={() => {
+                  setShowTicketSections(false)
+                  printTicket()
+                }}
+              >
+                {t('PRINT_TICKET', 'Print ticket')}
+              </Button>
+            </TicketSectionActions>
+          </Modal>
           <ButtonLink
             color='black'
             active={openMessage?.history}

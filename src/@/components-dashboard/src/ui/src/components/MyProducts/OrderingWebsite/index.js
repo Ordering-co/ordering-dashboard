@@ -323,7 +323,7 @@ export const OrderingWebsiteUI = (props) => {
                 </IconButton>
                 <InfoContent>
                   {t('MY_PRODUCTS_INFO', 'Use the advanced configurations below to customize your products changing the images, colors, available options and others with a few clicks. If you have doubts, please contact our team here:')}
-                  <a href={`https://www.${configurations?.subdomain}/support`} rel='noopener noreferrer' target='_blank'>https://www.{configurations?.subdomain}/support</a>
+                  <a href='https://www.ordering.co/support/' rel='noopener noreferrer' target='_blank'>https://www.ordering.co/support/</a>
                 </InfoContent>
               </HeaderInfoWrapper>
             )}
@@ -428,8 +428,8 @@ export const OrderingWebsiteUI = (props) => {
                       </IconButton>
                       <CustomDomainInfoContent>
                         <span>{t('CUSTOM_DOMAIN_INFO_DESC_1', 'When creating a custom domain, add your domain or subdomain without http protocol or slashes.')}</span>
-                        <span>{t('EXAMPLE', 'Example')}: www.customerwebsite.{configurations?.subdomain}.com</span>
-                        <span>{t('CUSTOM_DOMAIN_INFO_DESC_2', 'If you have problems with the set-up, please contact our')}<a href={`https://www.${configurations?.subdomain}.com/contact-us`} rel='noopener noreferrer' target='_blank'>{t('CUSTOMER_SUPPORT_TEAM', 'customer support team')}</a></span>
+                        <span>{t('EXAMPLE', 'Example')}: www.customerwebsite.com</span>
+                        <span>{t('CUSTOM_DOMAIN_INFO_DESC_2', 'If you have problems with the set-up, please contact our')}<a href={'https://www.ordering.co/contact/'} rel='noopener noreferrer' target='_blank'>{t('CUSTOMER_SUPPORT_TEAM', 'customer support team')}</a></span>
                       </CustomDomainInfoContent>
                     </CustomDomainInfo>
                   </TitleWrapper>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 vi.mock('~ui', () => ({
   SpinnerLoader: () => {
@@ -14,6 +14,7 @@ vi.mock('~ui', () => ({
 }))
 
 import { AutologinParams } from '../index'
+import { consumeAutologinNotice } from '../autologinSession'
 import { WebStrategy } from '../../../@/components-dashboard/src/webStrategy'
 
 const Dashboard = ({ settings }) => (
@@ -181,6 +182,261 @@ describe('AutologinParams', () => {
     expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'tenant-project')
     expect(window.localStorage.getItem('token')).toBe('level-8-token')
     expect(window.localStorage.getItem('project')).toBe('tenant-project')
+  })
+})
+
+const jsonResponse = (status, body) => ({
+  ok: status >= 200 && status < 300,
+  status,
+  json: vi.fn().mockResolvedValue(body)
+})
+
+describe('AutologinParams handoff code', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    consumeAutologinNotice()
+  })
+
+  afterEach(() => {
+    delete window.__ORDERING_AUTOLOGIN__
+    window.localStorage.clear()
+    window.history.replaceState(null, '', '/')
+    vi.unstubAllGlobals()
+  })
+
+  it('exchanges the code once and logs in through the token path', async () => {
+    window.__ORDERING_AUTOLOGIN__ = { token: null, code: 'handoff-ok', project: 'tenant-project' }
+    window.history.replaceState(null, '', '/?project=tenant-project')
+    const fetchMock = vi.fn((url) => Promise.resolve(url.endsWith('/auth/handoff')
+      ? jsonResponse(200, { error: false, result: { id: 1, level: 0, session: { access_token: 'handoff-jwt', token_type: 'bearer', expires_in: 3600 } } })
+      : jsonResponse(200, { error: false, result: { id: 1, level: 0 } })))
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(
+      <React.StrictMode>
+        <AutologinParams configFile={{ project: 'default-project' }}>
+          <Dashboard />
+        </AutologinParams>
+      </React.StrictMode>
+    )
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'tenant-project')
+    const handoffCalls = fetchMock.mock.calls.filter(([url]) => url.endsWith('/tenant-project/auth/handoff'))
+    expect(handoffCalls).toHaveLength(1)
+    expect(handoffCalls[0][1]).toEqual({
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: 'handoff-ok' })
+    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/tenant-project/users/me'),
+      expect.objectContaining({ headers: expect.objectContaining({ Authorization: 'Bearer handoff-jwt' }) })
+    )
+    expect(window.localStorage.getItem('token')).toBe('handoff-jwt')
+    expect(window.localStorage.getItem('project')).toBe('tenant-project')
+    expect(window.location.search).toBe('')
+    expect(window.__ORDERING_AUTOLOGIN__).toBeUndefined()
+    expect(consumeAutologinNotice()).toBeNull()
+  })
+
+  it('falls back to the login screen and leaves a notice when the code is rejected', async () => {
+    window.history.replaceState(null, '', '/?project=tenant-project&code=handoff-expired')
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(401, {
+      error: true,
+      result: ['The access link expired.'],
+      error_codes: ['auth_handoff.invalid']
+    }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(
+      <AutologinParams configFile={{ project: 'default-project' }}>
+        <Dashboard />
+      </AutologinParams>
+    )
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'default-project')
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.getItem('token')).toBeNull()
+    expect(window.location.search).toBe('')
+    expect(consumeAutologinNotice()).toBe('handoff_expired')
+  })
+
+  it('ignores `code` outside the root path', async () => {
+    window.history.replaceState(null, '', '/password/reset?code=reset-code&random=abc')
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(
+      <AutologinParams configFile={{ project: 'default-project' }}>
+        <Dashboard />
+      </AutologinParams>
+    )
+
+    expect(await screen.findByTestId('dashboard')).toBeInTheDocument()
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(window.location.search).toBe('?code=reset-code&random=abc')
+  })
+})
+
+const storeSession = ({ token, project, user }) => {
+  window.localStorage.setItem('token', token)
+  window.localStorage.setItem('project', project)
+  window.localStorage.setItem('user', JSON.stringify(user))
+}
+
+const handoffFetch = ({ handoff, me, logout } = {}) => vi.fn((url) => {
+  if (url.endsWith('/auth/handoff')) return Promise.resolve(handoff ?? jsonResponse(200, { error: false, result: { session: { access_token: 'support-jwt' } } }))
+  if (url.endsWith('/users/me')) return Promise.resolve(me ?? jsonResponse(200, { error: false, result: { id: 99, level: 0, email: 'support@ordering.co' } }))
+  if (url.endsWith('/auth/logout')) return logout ? logout() : Promise.resolve(jsonResponse(200, { error: false, result: 'OK' }))
+  return Promise.reject(new Error(`unexpected ${url}`))
+})
+
+const callsTo = (fetchMock, suffix) => fetchMock.mock.calls.filter(([url]) => url.endsWith(suffix))
+
+const renderHandoff = (configFile = { project: 'project-a' }) => render(
+  <AutologinParams configFile={configFile}>
+    <Dashboard />
+  </AutologinParams>
+)
+
+describe('AutologinParams handoff over an existing session', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    consumeAutologinNotice()
+  })
+
+  afterEach(() => {
+    delete window.__ORDERING_AUTOLOGIN__
+    window.localStorage.clear()
+    window.history.replaceState(null, '', '/')
+    vi.unstubAllGlobals()
+  })
+
+  it('asks before switching to another project and Stay keeps the session without calling the API', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0, email: 'owner@store.com' } })
+    window.history.replaceState(null, '', '/?project=project-b&code=handoff-stay')
+    const fetchMock = handoffFetch()
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+
+    const dialog = await screen.findByRole('alertdialog')
+    expect(dialog).toHaveTextContent('You are signed in to project-a as owner@store.com. Switch to project-b as support?')
+    expect(fetchMock).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Stay' }))
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-a')
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(window.localStorage.getItem('token')).toBe('owner-token')
+    expect(window.localStorage.getItem('project')).toBe('project-a')
+    expect(window.location.search).toBe('')
+    expect(window.__ORDERING_AUTOLOGIN__).toBeUndefined()
+  })
+
+  it('Switch to another project exchanges the code and logs out the old session on its project', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0, email: 'owner@store.com' } })
+    window.history.replaceState(null, '', '/?project=project-b&code=handoff-switch')
+    const fetchMock = handoffFetch()
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+    fireEvent.click(await screen.findByRole('button', { name: 'Switch' }))
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-b')
+    expect(callsTo(fetchMock, '/project-b/auth/handoff')).toHaveLength(1)
+    expect(window.localStorage.getItem('token')).toBe('support-jwt')
+    expect(window.localStorage.getItem('project')).toBe('project-b')
+    const logoutCalls = callsTo(fetchMock, '/auth/logout')
+    expect(logoutCalls).toHaveLength(1)
+    expect(logoutCalls[0][0]).toMatch(/\/project-a\/auth\/logout$/)
+    expect(logoutCalls[0][1]).toMatchObject({ method: 'POST', headers: { Authorization: 'Bearer owner-token' } })
+  })
+
+  it('keeps the new session when the old session logout fails', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0 } })
+    window.history.replaceState(null, '', '/?project=project-b&code=handoff-logout-fails')
+    const fetchMock = handoffFetch({ logout: () => Promise.reject(new Error('offline')) })
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+    fireEvent.click(await screen.findByRole('button', { name: 'Switch' }))
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-b')
+    await waitFor(() => expect(callsTo(fetchMock, '/auth/logout')).toHaveLength(1))
+    expect(window.localStorage.getItem('token')).toBe('support-jwt')
+    expect(window.localStorage.getItem('project')).toBe('project-b')
+  })
+
+  it('fires no logout when the exchange fails', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0 } })
+    window.history.replaceState(null, '', '/?project=project-a&code=handoff-fails')
+    const fetchMock = handoffFetch({ handoff: jsonResponse(401, { error: true, result: ['expired'], error_codes: ['auth_handoff.invalid'] }) })
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-a')
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    expect(callsTo(fetchMock, '/auth/logout')).toHaveLength(0)
+    expect(window.localStorage.getItem('token')).toBe('owner-token')
+  })
+
+  it('same project and same user replaces the session without asking', async () => {
+    storeSession({ token: 'old-support-token', project: 'project-a', user: { id: 99, level: 0, email: 'support@ordering.co' } })
+    window.history.replaceState(null, '', '/?project=project-a&code=handoff-same-user')
+    const fetchMock = handoffFetch()
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-a')
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    expect(window.localStorage.getItem('token')).toBe('support-jwt')
+    const logoutCalls = callsTo(fetchMock, '/project-a/auth/logout')
+    expect(logoutCalls).toHaveLength(1)
+    expect(logoutCalls[0][1].headers.Authorization).toBe('Bearer old-support-token')
+  })
+
+  it('same project and a different user asks after the exchange; Stay logs out the new token', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0, email: 'owner@store.com' } })
+    window.history.replaceState(null, '', '/?project=project-a&code=handoff-user-stay')
+    const fetchMock = handoffFetch()
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+
+    const dialog = await screen.findByRole('alertdialog')
+    expect(dialog).toHaveTextContent('You are signed in to project-a as owner@store.com. Switch to support@ordering.co (support)?')
+    expect(callsTo(fetchMock, '/auth/handoff')).toHaveLength(1)
+    expect(window.localStorage.getItem('token')).toBe('owner-token')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Stay' }))
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-a')
+    expect(window.localStorage.getItem('token')).toBe('owner-token')
+    expect(JSON.parse(window.localStorage.getItem('user')).id).toBe(2)
+    const logoutCalls = callsTo(fetchMock, '/project-a/auth/logout')
+    expect(logoutCalls).toHaveLength(1)
+    expect(logoutCalls[0][1].headers.Authorization).toBe('Bearer support-jwt')
+  })
+
+  it('same project and a different user: Switch persists and logs out the old token', async () => {
+    storeSession({ token: 'owner-token', project: 'project-a', user: { id: 2, level: 0, email: 'owner@store.com' } })
+    window.history.replaceState(null, '', '/?project=project-a&code=handoff-user-switch')
+    const fetchMock = handoffFetch()
+    vi.stubGlobal('fetch', fetchMock)
+
+    renderHandoff()
+    fireEvent.click(await screen.findByRole('button', { name: 'Switch' }))
+
+    expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'project-a')
+    expect(window.localStorage.getItem('token')).toBe('support-jwt')
+    expect(JSON.parse(window.localStorage.getItem('user')).id).toBe(99)
+    expect(callsTo(fetchMock, '/auth/handoff')).toHaveLength(1)
+    const logoutCalls = callsTo(fetchMock, '/project-a/auth/logout')
+    expect(logoutCalls).toHaveLength(1)
+    expect(logoutCalls[0][1].headers.Authorization).toBe('Bearer owner-token')
   })
 })
 

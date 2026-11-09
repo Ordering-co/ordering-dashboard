@@ -19,6 +19,7 @@ import { useWindowSize } from '../../../hooks/useWindowSize'
 import { getCurrentDiffDays } from '../../../utils'
 import { getPreferredSiteUrl } from '../../../utils/getPreferredSiteUrl'
 import { getIntercomHash, setIntercomSettings } from '~/components/Utils'
+import { isIntercomAllowed, isProjectIntercomAllowed } from '../../../utils/assistantIntercom'
 import { Modal } from '../../Shared'
 import { TrialExtensionHomeCard } from '../../TrialExtension'
 import { ProjectStatusBadge } from '../ProjectStatusBadge'
@@ -92,10 +93,10 @@ const HomeUI = (props) => {
 
   const goToLink = (location) => {
     if (location === 'sales') {
-      window.open(`https://www.${configurations?.subdomain}.com/contact-ordering`, '_blank')
+      window.open('https://www.ordering.co/contact/', '_blank')
     }
     if (location === 'tech') {
-      window.open(`https://support.${configurations?.subdomain}.com`, '_blank')
+      window.open('https://docs.ordering.co/', '_blank')
     }
     if (location === 'onboarding') {
       window.open(`https://calendly.com/luisana/group-onboarding-conference?month=${moment().format('YYYY-MM')}`, '_blank')
@@ -236,7 +237,8 @@ const HomeUI = (props) => {
   }
 
   useEffect(() => {
-    if (monthSalesList?.loading || loadingConfigs || projectStatus?.loading) return
+    if (monthSalesList?.loading || loadingConfigs || !isProjectIntercomAllowed(projectStatus) || !isIntercomAllowed()) return
+    let cancelled = false
     const values = {
       project_code: projectStatus?.project?.code,
       ...(sessionState?.user?.user_system_id ? { project_owner_id: sessionState?.user?.user_system_id } : {}),
@@ -248,7 +250,7 @@ const HomeUI = (props) => {
     }
     const setIntercom = async () => {
       const userIntercomHash = await getIntercomHash({ userId: sessionState?.user?.email, token: sessionState?.token })
-      if (userIntercomHash) {
+      if (!cancelled && userIntercomHash) {
         setIntercomSettings({
           ...values,
           user_hash: userIntercomHash,
@@ -260,7 +262,8 @@ const HomeUI = (props) => {
       }
     }
     setIntercom()
-  }, [monthSalesList?.loading, projectStatus?.loading, loadingConfigs])
+    return () => { cancelled = true }
+  }, [monthSalesList?.loading, monthSalesList?.sales, projectStatus, loadingConfigs, configs, sessionState?.token, sessionState?.user])
 
   return (
     <>

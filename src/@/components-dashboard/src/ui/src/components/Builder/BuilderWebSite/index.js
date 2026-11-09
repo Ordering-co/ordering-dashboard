@@ -6,10 +6,11 @@ import { ExclamationCircle, Gear } from 'react-bootstrap-icons'
 import { BuilderSiteSettings as BuilderSiteSettingsController, ToastType, useLanguage, useToast } from '../../../../../index'
 import { Button } from '../../../styles'
 import { BuilderMessage } from '../BuilderShared'
+import { NoticeBox } from '../BuilderWebTheme/styles'
 import { SiteSettingsEditor } from '../ThemeSchemaEditor'
 
 const BuilderWebSiteSettingsUI = (props) => {
-  const { schemaState, reloadSchema, hasEdits, save } = props
+  const { schemaState, reloadSchema, hasEdits, save, hasActiveTheme, onGoToTheme } = props
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
   const { schema, format } = schemaState
@@ -67,7 +68,25 @@ const BuilderWebSiteSettingsUI = (props) => {
     }
   }
 
-  return <SiteSettingsEditor schema={schema} format={format} site={site} />
+  return (
+    <>
+      {hasActiveTheme === false && (
+        <NoticeBox role='status'>
+          <ExclamationCircle aria-hidden='true' />
+          <div>
+            <strong>{t('BUILDER_SITE_NO_ACTIVE_THEME_TITLE', 'Your website doesn’t use these settings yet')}</strong>
+            {t('BUILDER_SITE_NO_ACTIVE_THEME', 'It has no active theme. Its type, store or franchise and these settings apply once you create a theme and activate it.')}
+            {onGoToTheme && (
+              <div style={{ marginTop: 12 }}>
+                <Button type='button' color='primary' borderRadius='8px' onClick={onGoToTheme}>{t('BUILDER_SITE_GO_TO_THEME', 'Go to Theme')}</Button>
+              </div>
+            )}
+          </div>
+        </NoticeBox>
+      )}
+      <SiteSettingsEditor schema={schema} format={format} site={site} />
+    </>
+  )
 }
 
 /** What a Builder website shows whatever its theme: its scope, name, own HTML and code. */

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { Input, TextArea, Button } from '../../../styles'
 import { SettingsList } from '../../Settings/SettingsList'
 import { useTheme } from 'styled-components'
@@ -31,7 +31,6 @@ export const CampaignSMS = (props) => {
     categoryList
   } = props
 
-  const [, { configurations }] = useApi()
   const [, t] = useLanguage()
   const theme = useTheme()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
@@ -140,10 +139,10 @@ export const CampaignSMS = (props) => {
         <>
           <ContactWrapper>
             <p>{t('IF_YOU_NEED_HELP_WITH_SETUP_CONTACT_SUPPORT_TEAM', 'If you need help with your setup, contact our support team.')}</p>
-            <Button color='primary' outline onClick={() => window.open(`https://www.${configurations?.subdomain}.com/contact-ordering`, '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
+            <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
           </ContactWrapper>
           <Description>
-            <span onClick={() => window.open(`https://help.${configurations?.subdomain}.com/en/articles/9376380-twilio-auth-codes-sms-whatsapp`, '_blank')}>
+            <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/social-login-options/twilio-otp/', '_blank')}>
               {t('TWILIO_SETTINGS_LINK_DESC', 'You need to complete Twilio configuration first')}
             </span>
           </Description>

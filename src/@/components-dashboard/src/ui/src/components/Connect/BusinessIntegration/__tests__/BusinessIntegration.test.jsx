@@ -278,6 +278,75 @@ describe('BusinessIntegration status and actions', () => {
     expect(menuItem('Disconnect')).toBeInTheDocument()
   })
 
+  describe('in a sales channel', () => {
+    const rappi = { ...square, name: 'Rappi', plugin: { ...square.plugin, hooks: [{ hook: 'push_menu' }] } }
+    const renderChannel = (row, overrides = {}) => renderPanel({
+      fromSalesChannels: true,
+      selectedIntegration: rappi,
+      business: withRow(row),
+      ...overrides
+    })
+    const pushNow = () => screen.getByRole('button', { name: 'Push now' })
+
+    it('pushes the menu from Synchronize, below the state', () => {
+      const handlePushAction = vi.fn()
+      renderChannel({ setup_status: 'success' }, { handlePushAction })
+
+      expect(screen.getByText('Synchronize')).toBeInTheDocument()
+      expect(screen.getByText('Sends products, options and prices to Rappi.')).toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: 'Sync now' })).not.toBeInTheDocument()
+      expect(screen.getByText('Rappi', { selector: '.integration-name' }).compareDocumentPosition(pushNow()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+
+      fireEvent.click(pushNow())
+      expect(handlePushAction).toHaveBeenCalledWith(430, 'push_menu', expect.any(String))
+    })
+
+    it('does not push the menu of a channel that is not connected', () => {
+      renderChannel({ setup_status: null })
+
+      expect(pushNow()).toBeDisabled()
+      expect(screen.getByText('Available once the sales channel is connected.')).toBeInTheDocument()
+      expect(screen.queryByText('Available once the POS is connected.')).not.toBeInTheDocument()
+    })
+
+    it('does not push the menu while the plugin is disabled, and says why', () => {
+      renderChannel({ setup_status: 'success' }, { selectedIntegration: { ...rappi, plugin: { ...rappi.plugin, enabled: false } } })
+
+      expect(pushNow()).toBeDisabled()
+      expect(screen.getByText('The plugin of this integration is disabled or uninstalled.')).toBeInTheDocument()
+    })
+
+    it('does not offer a push the plugin cannot run', () => {
+      renderChannel({ setup_status: 'success' }, { selectedIntegration: { ...rappi, plugin: { ...rappi.plugin, hooks: [{ hook: 'orders_update' }] } } })
+
+      expect(pushNow()).toBeDisabled()
+      expect(screen.getByText('This integration does not support it.')).toBeInTheDocument()
+    })
+
+    it('calls it a sales channel, not a POS, once connected', () => {
+      renderChannel({ setup_status: 'success' })
+
+      expect(screen.getByText('The sales channel is connected and syncing with this store.')).toBeInTheDocument()
+      expect(screen.queryByText('The POS is connected and syncing with this store.')).not.toBeInTheDocument()
+    })
+
+    it('only saves a changed external id', () => {
+      const handleConnectBusiness = vi.fn()
+      renderChannel({ setup_status: 'success', external_id: '900162964' }, { handleConnectBusiness })
+      const save = screen.getByRole('button', { name: 'Save' })
+      const externalId = screen.getByDisplayValue('900162964')
+
+      expect(save).toBeDisabled()
+      fireEvent.change(externalId, { target: { value: '900162965' } })
+      expect(save).toBeEnabled()
+      fireEvent.click(save)
+      expect(handleConnectBusiness).toHaveBeenCalledWith(430, { external_id: '900162965', enabled: true }, expect.any(Function), expect.any(String))
+
+      fireEvent.change(externalId, { target: { value: '900162964' } })
+      expect(save).toBeDisabled()
+    })
+  })
+
   it('labels the external id of a POS as its location id', () => {
     renderPanel({ business: withRow({ setup_status: 'success', external_id: 'L1NGAY5M6KJRX' }) })
 

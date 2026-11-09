@@ -1,4 +1,5 @@
 import { getMenuImportUseFixture, MENU_IMPORT_ALLOWED_ORDERING_HOSTS } from './menuImportConfig'
+import { ORDERING_BRAND } from '../../../styles/OrderingBrand/tokens.generated'
 
 const DOORDASH_URL_PATTERN = /doordash\.com/i
 const UBER_EATS_URL_PATTERN = /ubereats\.com/i
@@ -233,26 +234,26 @@ export const IMPORTER_CARDS = [
     titleKey: 'IMPORTER_ORDERING_TITLE',
     titleDefault: 'Ordering.co',
     descriptionKey: 'IMPORTER_ORDERING_DESCRIPTION',
-    descriptionDefault: 'Import menu from OrderingPlus (URL or project + store)',
+    descriptionDefault: 'Import menu from Ordering.co (URL or project + store)',
     importButtonKey: 'IMPORTER_IMPORT_MENU',
     importButtonDefault: 'Import Menu',
-    logoColor: '#7C3AED',
-    logoLabel: 'OP',
+    logoColor: ORDERING_BRAND.light['--od-action'],
+    logoLabel: 'OC',
     modalConfig: {
       titleKey: 'IMPORTER_MODAL_ORDERING_TITLE',
       titleDefault: 'Import from Ordering.co',
       subtitleKey: 'IMPORTER_MODAL_ORDERING_SUBTITLE',
-      subtitleDefault: 'Paste an OrderingPlus business URL or enter project and store details',
+      subtitleDefault: 'Paste an Ordering.co business URL or enter project and store details',
       urlLabelKey: 'IMPORTER_MODAL_ORDERING_URL_LABEL',
-      urlLabelDefault: 'OrderingPlus business URL',
+      urlLabelDefault: 'Ordering.co business URL',
       urlPlaceholderKey: 'IMPORTER_MODAL_ORDERING_URL_PLACEHOLDER',
-      urlPlaceholderDefault: 'https://api.orderingplus.com/v400/en/yourproject/business/yourstore_…',
+      urlPlaceholderDefault: 'https://apiv4.ordering.co/v400/en/yourproject/business/yourstore_…',
       urlHelperKey: 'IMPORTER_MODAL_ORDERING_URL_HELPER',
       urlHelperDefault: 'Long URLs are shortened automatically on the server (only the menu fetch query is kept).',
       orderingOrKey: 'IMPORTER_MODAL_ORDERING_OR',
       orderingOrDefault: 'Or enter project and store without a full URL:',
       orderingProjectLabelKey: 'IMPORTER_MODAL_ORDERING_PROJECT_LABEL',
-      orderingProjectLabelDefault: 'OrderingPlus project ID',
+      orderingProjectLabelDefault: 'Ordering.co project ID',
       orderingProjectPlaceholderKey: 'IMPORTER_MODAL_ORDERING_PROJECT_PLACEHOLDER',
       orderingProjectPlaceholderDefault: 'e.g. yourproject',
       orderingBusinessSegmentLabelKey: 'IMPORTER_MODAL_ORDERING_SEGMENT_LABEL',
@@ -260,9 +261,9 @@ export const IMPORTER_CARDS = [
       orderingBusinessSegmentPlaceholderKey: 'IMPORTER_MODAL_ORDERING_SEGMENT_PLACEHOLDER',
       orderingBusinessSegmentPlaceholderDefault: 'e.g. yourstore',
       orderingStructuredHintKey: 'IMPORTER_MODAL_ORDERING_STRUCTURED_HINT',
-      orderingStructuredHintDefault: 'Use the project segment and the value after /business/ in the OrderingPlus API path (slug or numeric id).',
+      orderingStructuredHintDefault: 'Use the project segment and the value after /business/ in the Ordering.co API path (slug or numeric id).',
       statusImportingKey: 'IMPORTER_STATUS_IMPORTING_ORDERING',
-      statusImportingDefault: 'Importing menu from OrderingPlus…',
+      statusImportingDefault: 'Importing menu from Ordering.co…',
       includeAllMenuVariantsKey: null,
       validateForm: validateOrderingForm,
       buildImportParams: buildOrderingImportParams

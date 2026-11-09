@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useApi } from '../ApiContext'
 import { getDashboardStorageKey } from '../../../../../utils/local-tenant'
+import { clearTicketSections } from '../../utils/ticketSectionStorage'
 import { getSessionStorageSyncAction } from './sessionStorageSync'
 import { getSessionCheckAction, getSessionCheckUrl } from './sessionCheck'
 import { getDocsConnectMode } from '../../components/DocsConnection/mode'
@@ -112,6 +113,7 @@ export const SessionProvider = ({ children, strategy, settings }) => {
       console.error('Error clearing driver cache on logout:', error)
     }
 
+    clearTicketSections()
     await strategy.removeItem('token')
     await strategy.removeItem('user')
     const userCustomer = await strategy.getItem('user-customer')

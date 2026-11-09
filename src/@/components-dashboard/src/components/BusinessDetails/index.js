@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -63,6 +63,8 @@ export const BusinessDetails = (props) => {
   const [siteState, setSiteState] = useState({ site: null, loading: false, error: null })
   const [formTaxChanges, setFormTaxChanges] = useState({})
   const [taxes, setTaxes] = useState({})
+  const [taxCatalogState, setTaxCatalogState] = useState({ loading: !notGetTaxes, loaded: false, error: null })
+  const taxRequest = useRef(null)
   const [fees, setFees] = useState({})
   const [taxToEdit, setTaxToEdit] = useState({ action: null, payload: null })
   const [formTaxState, setFormTaxState] = useState({ loading: false, changes: {}, result: { error: false } })
@@ -519,34 +521,34 @@ export const BusinessDetails = (props) => {
     }
   }
 
-  const getTaxes = async () => {
-    const taxesObject = {}
-    setFormTaxState({
-      ...formTaxState,
-      loading: true
-    })
-    const response = await fetch(`${ordering.root}/taxes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.token}`
+  const getTaxes = useCallback(async () => {
+    taxRequest.current?.abort()
+    const request = new AbortController()
+    taxRequest.current = request
+    const isCurrent = () => taxRequest.current === request && !request.signal.aborted
+    setTaxCatalogState(prev => ({ ...prev, loading: true, error: null }))
+    try {
+      const response = await fetch(`${ordering.root}/taxes`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        },
+        signal: request.signal
+      })
+      if (!response.ok) throw new Error(`Unable to load taxes (HTTP ${response.status})`)
+      const { error, result } = await response.json()
+      if (error || !Array.isArray(result) || result.some(tax => !tax || tax.id == null)) {
+        throw new Error('Invalid taxes response')
       }
-    })
-    const { error, result } = await response.json()
-    if (!error) {
-      result.forEach(tax => (taxesObject[`id:${tax?.id}`] = tax))
-      setTaxes(taxesObject)
-      return
+      if (!isCurrent()) return
+      setTaxes(Object.fromEntries(result.map(tax => [`id:${tax.id}`, tax])))
+      setTaxCatalogState({ loading: false, loaded: true, error: null })
+    } catch (err) {
+      if (!isCurrent()) return
+      setTaxCatalogState(prev => ({ ...prev, loading: false, error: err?.message || 'Unable to load taxes' }))
     }
-    setFormTaxState({
-      ...formTaxState,
-      result: {
-        error: true,
-        result: taxesObject
-      },
-      loading: false
-    })
-  }
+  }, [ordering.root, session.token])
 
   const handleSaveTax = async (id, action, _data) => {
     try {
@@ -746,10 +748,14 @@ export const BusinessDetails = (props) => {
     if (!notGetSites) {
       getSites()
     }
-    if (!notGetTaxes) {
-      getTaxes()
-    }
   }, [])
+
+  useEffect(() => {
+    setTaxes({})
+    setTaxCatalogState({ loading: !notGetTaxes, loaded: false, error: null })
+    if (!notGetTaxes) getTaxes()
+    return () => taxRequest.current?.abort()
+  }, [getTaxes, notGetTaxes])
 
   useEffect(() => {
     if (!businessId || notGetStreamConnection) return
@@ -863,6 +869,7 @@ export const BusinessDetails = (props) => {
             spoonityKeyState={spoonityKeyState}
             siteState={siteState}
             taxes={taxes}
+            taxCatalogState={taxCatalogState}
             fees={fees}
             taxToEdit={taxToEdit}
             setTaxToEdit={setTaxToEdit}

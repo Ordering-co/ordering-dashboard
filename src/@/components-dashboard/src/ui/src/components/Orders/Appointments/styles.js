@@ -192,7 +192,3 @@ export const EventProfessionalPhoto = styled.div`
     height: 85%;
   }
 `
-export const WarningText = styled.p`
-  margin-top: 30px;
-  color: ${props => props.theme.colors.danger};
-`

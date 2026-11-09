@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { Button, IconButton } from '../../../styles'
 import { SideBar } from '../../Shared'
@@ -23,7 +23,6 @@ import {
 export const PurchasedProductsList = (props) => {
   const theme = useTheme()
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const productsRef = useRef(null)
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -38,8 +37,8 @@ export const PurchasedProductsList = (props) => {
       long_description: t('STORE_APP_PURCHASE_LONG_DESCRIPTION', 'Give your business owners or managers a tool to manage their whole business´s incoming orders on the go by installing a branded app on any mobile device they have.<br /><sub>This App is delivered in less than 5 working days, fully branded with your guidelines.</sub>'),
       icon: <CartPlusFill />,
       image: theme.images.apps.storeApp,
-      app_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1717`,
-      google_play_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1717`
+      app_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1717',
+      google_play_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1717'
     },
     {
       key: 'driver_app',
@@ -49,8 +48,8 @@ export const PurchasedProductsList = (props) => {
       long_description: t('DRIVER_APP_PURCHASE_LONG_DESCRIPTION', 'Your fleets best companion gives drivers a tool to receive orders, follow optimal routes, add delivery evidence, set orders timing, and control their busy times.<br /><sub>This App is delivered in less than 5 working days, fully branded with your guidelines.</sub>'),
       icon: <img src={theme.images.icons.delivery} alt='delivery app icon' />,
       image: theme.images.apps.driverApp,
-      app_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1718`,
-      google_play_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1718`
+      app_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1718',
+      google_play_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1718'
     },
     {
       key: 'pos_app',
@@ -60,8 +59,8 @@ export const PurchasedProductsList = (props) => {
       long_description: t('POS_APP_PURCHASE_LONG_DESCRIPTION', 'Create a loyal and returning community by offering the best customer experience; customer service is always the definite factor for users to keep returning; this fast software will help you understand customers, save their numbers, and order quickly.<br /><sub>This App is delivered in less than 5 working days, fully branded with your guidelines.</sub>'),
       icon: <img src={theme.images.icons.posTerminal} alt='pos app icon' />,
       image: theme.images.apps.posApp,
-      app_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1793`,
-      google_play_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1793`
+      app_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1793',
+      google_play_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1793'
     },
     {
       key: 'kiosk_app',
@@ -71,8 +70,8 @@ export const PurchasedProductsList = (props) => {
       long_description: t('KIOSK_APP_PURCHASE_LONG_DESCRIPTION', 'Simplify the ordering process inside your store. Allow your customers to select what they want to purchase products and pay directly in this kiosk—made with the highest tech, intuitive, and modern.<br /><sub>This App is delivered in less than 5 working days, fully branded with your guidelines.</sub>'),
       icon: <img src={theme.images.icons.poster} alt='kiosk app icon' />,
       image: theme.images.apps.kioskApp,
-      app_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1794`,
-      google_play_store: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1794`
+      app_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1794',
+      google_play_store: 'https://apps.ordering.co/store/marketplace?category=306&product=1794'
     },
     {
       key: 'call_center',
@@ -82,7 +81,7 @@ export const PurchasedProductsList = (props) => {
       long_description: t('CALL_CENTER_PURCHASE_LONG_DESCRIPTION', 'Take orders over the phone, too; agents will take orders over the phone and create the order for your customers in just a few minutes, using this friendly and intuitive software.<br /><sub>This App is delivered in less than 5 working days, fully branded with your guidelines.</sub>'),
       icon: <Headset />,
       image: theme.images.apps.callCenterApp,
-      web_url: `https://apps.${configurations?.subdomain}.com/store/marketplace?category=306&product=1792`
+      web_url: 'https://apps.ordering.co/store/marketplace?category=306&product=1792'
     }
   ]
 

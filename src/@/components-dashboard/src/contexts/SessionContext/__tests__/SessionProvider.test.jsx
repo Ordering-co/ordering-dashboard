@@ -9,6 +9,7 @@ vi.mock('../../ApiContext', () => ({
 
 import { WebStrategy } from '../../../webStrategy'
 import { SessionProvider, useSession } from '..'
+import { TICKET_SECTIONS_STORAGE_KEY } from '../../../utils/ticketSectionStorage'
 
 const billingUrl = 'https://partners.test'
 const trialExpire = 'Your project is not active, please pay your invoice or contact the Ordering.co sales team for assistance.'
@@ -236,6 +237,7 @@ it('local driver logout removes only its scoped cache and identity', async () =>
   await strategy.setItem('drivers_cache_5', 'local-cache')
   localStorage.setItem('drivers_cache_5', 'other-tenant-cache')
   localStorage.setItem('token', 'other-tenant-token')
+  localStorage.setItem(TICKET_SECTIONS_STORAGE_KEY, '{"customer":false}')
   vi.stubGlobal('fetch', respond(200, { error: false, result: { id: 5, level: 5, enabled: true } }))
   const SessionActions = () => {
     const [, { logout }] = useSession()
@@ -254,5 +256,6 @@ it('local driver logout removes only its scoped cache and identity', async () =>
   expect(await strategy.getItem('token')).toBeNull()
   expect(localStorage.getItem('drivers_cache_5')).toBe('other-tenant-cache')
   expect(localStorage.getItem('token')).toBe('other-tenant-token')
+  expect(localStorage.getItem(TICKET_SECTIONS_STORAGE_KEY)).toBeNull()
   vi.unstubAllGlobals()
 })

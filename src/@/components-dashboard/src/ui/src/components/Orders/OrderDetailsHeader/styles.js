@@ -103,6 +103,7 @@ export const PrinterSelectContainer = styled.div`
 export const PrinterSelect = styled.div`
   position: absolute;
   right: 0;
+  min-width: 220px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -119,11 +120,67 @@ export const PrinterSelect = styled.div`
     font-size: 12px;
     border-radius: 0px;
     font-weight: 400;
+    white-space: nowrap;
     color: ${props => props.theme.colors.headingColor};
     &:hover {
       background-color: #f5f5f5;
     }
   }
+`
+
+export const TicketSectionsFooter = styled.div`
+  border-top: 1px solid ${props => props.theme.colors.borderColor};
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    text-align: start;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      flex: 0 0 auto;
+    }
+  }
+`
+
+export const TicketSectionList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 4px 8px;
+`
+
+export const TicketSectionRow = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  font-size: 14px;
+  color: ${props => props.theme.colors.headingColor};
+`
+
+export const TicketSectionActions = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+
+  button {
+    min-width: 220px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+`
+
+export const TicketSectionHint = styled.p`
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: ${props => props.theme.colors.lightGray};
 `
 
 export const ActionSelectorWrapper = styled.div`

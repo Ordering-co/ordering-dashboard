@@ -140,7 +140,7 @@ const SidebarMenuUI = (props) => {
   useEffect(() => {
     if (window.Canny && isCannyActivated && sessionState?.user?.user_system_id) {
       const authenticateCallback = () => {
-        const _authenticatedLink = window.Canny('authenticateCannyLink', 'orderingplus.canny.io')
+        const _authenticatedLink = window.Canny('authenticateCannyLink', 'ordering.canny.io')
         setAuthenticateCannyLink(`https://${_authenticatedLink}`)
       }
       window.Canny('identify', {
@@ -229,7 +229,7 @@ const SidebarMenuUI = (props) => {
                     <Button
                       className='d-flex align-items-center'
                       variant={false}
-                      onClick={() => handleGoToLink(`https://apps.{configurations?.subdomain}.com/store/marketplace`)}
+                      onClick={() => handleGoToLink('https://apps.ordering.co/store/marketplace')}
                     >
                       <BoxArrowUpRight />
                       <span>{t('MARKETPLACE', 'Marketplace')}</span>

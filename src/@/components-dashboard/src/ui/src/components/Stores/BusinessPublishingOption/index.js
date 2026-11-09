@@ -3,7 +3,7 @@ import MdcClose from '@meronex/icons/mdc/MdcClose'
 import EnFacebook from '@meronex/icons/en/EnFacebook'
 import RiFileCopyLine from '@meronex/icons/ri/RiFileCopyLine'
 import { useTheme } from 'styled-components'
-import { useApi, useLanguage } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 
 import {
   Container,
@@ -25,13 +25,12 @@ export const BusinessPublishingOption = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const theme = useTheme()
   const { width } = useWindowSize()
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const linkToBusiness = `${t('LINK_BUSINESS_REDIRECT', `https://reactdemo.${configurations?.subdomain}.com/`)}${business?.slug}`
+  const linkToBusiness = `${t('LINK_BUSINESS_REDIRECT', 'https://reactdemo.ordering.co/')}${business?.slug}`
 
   const actionSidebar = (value) => {
     if (!value) {

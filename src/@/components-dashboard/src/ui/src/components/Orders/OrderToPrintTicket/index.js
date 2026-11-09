@@ -14,6 +14,7 @@ import {
 } from '../../../utils'
 import { useUtils, useLanguage, useConfig } from '../../../../../index'
 import { getTicketExcludedIngredientLines } from './getTicketExcludedIngredientLines'
+import { showTicketSection } from './ticketSections'
 import { PrintContainer, PrintTextContainer, ProductComments, ProdcutCommentsContainer, Products, InfoContainer, InsideInfo2, InsideInfo, PrintProductsContainer, PrintProducts } from './styles'
 
 const getTranslationKeyFromLabelName = (value) => {
@@ -24,8 +25,11 @@ const getTranslationKeyFromLabelName = (value) => {
 export const OrderToPrintTicket = forwardRef((props, ref) => {
   const {
     order,
-    getOrderStatus
+    getOrderStatus,
+    sections
   } = props
+
+  const showSection = (key) => showTicketSection(sections, key)
 
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
@@ -124,6 +128,8 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
 
   return (
     <PrintContainer ref={ref}>
+      {showSection('orderNumber') && (
+        <>
       <h1>{t('ORDER_NO', 'Order No.')} {order.id}</h1>
       <PrintTextContainer>
         {isReservationPreorder ? t('RESERVATION', 'Reservation') : getOrderStatus(order?.status)?.value}
@@ -134,9 +140,13 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
           ? parseDate(order?.delivery_datetime_utc)
           : parseDate(order?.delivery_datetime, { utc: false })}
         <br />
-        {t('PAYMENT_METHOD')}: {order?.paymethod?.name}
+        {t('PAYMENT_METHOD', 'Payment method')}: {order?.paymethod?.name}
       </PrintTextContainer>
+        </>
+      )}
 
+      {showSection('customer') && (
+        <>
       <h1>{t('CUSTOMER_DETAILS', 'Customer details')}</h1>
       <PrintTextContainer>
         {t('FULL_NAME', 'Full Name')}: {customerName}
@@ -155,7 +165,11 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
         `${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}`
         )}
       </PrintTextContainer>
+        </>
+      )}
 
+      {showSection('business') && (
+        <>
       <h1>{t('BUSINESS_DETAILS', 'Business details')}</h1>
       <PrintTextContainer>
         {order?.business?.name}
@@ -183,6 +197,10 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
           </>
         )}
       </PrintTextContainer>
+        </>
+      )}
+      {showSection('orderDetails') && (
+        <>
       <h1>{t('ORDER_DETAILS', 'Order Details')}</h1>
       <br />
       <PrintProductsContainer>
@@ -206,8 +224,10 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
               </ProdcutCommentsContainer>
             </PrintProducts>
           )}
-      </PrintProductsContainer>
+        </PrintProductsContainer>
       <br />
+        </>
+      )}
       <InfoContainer>
         <InsideInfo>
           {t('SUBTOTAL', 'Subtotal')}

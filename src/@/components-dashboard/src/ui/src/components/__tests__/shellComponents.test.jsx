@@ -98,7 +98,7 @@ describe('shell UI components', () => {
     })
     expect(screen.getByText('Your package does not include this function')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Get this feature' }))
-      .toHaveAttribute('href', 'https://www.ordering.com/ordering-sales')
+      .toHaveAttribute('href', 'https://www.ordering.co/pricing/')
   })
 
   it('hides connectivity image while online and shows it offline', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { IconButton, Button } from '../../styles/Buttons'
-import { useApi, useLanguage } from '../../../../index'
+import { useLanguage } from '../../../../index'
 import { useInfoShare } from '../../contexts/InfoShareContext'
 import { List as MenuIcon } from 'react-bootstrap-icons'
 
@@ -15,7 +15,6 @@ import {
 
 export const Support = (props) => {
   const [, t] = useLanguage()
-  const [, { configurations }] = useApi()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
 
   const handleGoToLink = (link) => {
@@ -46,7 +45,7 @@ export const Support = (props) => {
             <Button
               borderRadius='7.6px'
               color='primary'
-              onClick={() => handleGoToLink(`https://www.${configurations?.subdomain}.com/contact-ordering`)}
+              onClick={() => handleGoToLink('https://www.ordering.co/contact/')}
               outline
             >
               {t('SALES_CONTACT', 'Sales Contact')}
@@ -60,7 +59,7 @@ export const Support = (props) => {
             <Button
               borderRadius='7.6px'
               color='primary'
-              onClick={() => handleGoToLink(`https://support.${configurations?.subdomain}.com`)}
+              onClick={() => handleGoToLink('https://docs.ordering.co/')}
               outline
             >
               {t('TECH_SUPPORT', 'Tech Support')}

@@ -13,7 +13,6 @@ import { StandardField } from '../../../styles/StandardField'
 
 import {
   useLanguage,
-  useConfig,
   DragAndDrop,
   ExamineClick,
   BusinessProductCreator as BusinessProductCreatorController
@@ -49,14 +48,12 @@ export const BusinessProductAddFormUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
 
   const isSchool = business?.vertical === SCHOOL_VERTICAL
   const allergenOptions = SCHOOL_ALLERGENS.map((a) => ({ value: a.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_ALLERGEN_${a.value.toUpperCase()}`, a.name)}</span> }))
   const dietaryOptions = SCHOOL_DIETARY_TAGS.map((d) => ({ value: d.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_DIETARY_${d.value.toUpperCase()}`, d.name)}</span> }))
 
   const productImageInputRef = useRef(null)
-  const isEnabledAppointmentsFeature = !onboardingMode && configs?.appointments?.value
   const imageRead = useDraftImageRead(onboardingMode)
 
   const [hours, setHours] = useState([])
@@ -222,7 +219,7 @@ export const BusinessProductAddFormUI = (props) => {
             </DragAndDrop>
           </ExamineClick>
         </ProductImage>
-        {isEnabledAppointmentsFeature && typeList?.length > 1 && (
+        {!onboardingMode && typeList?.length > 1 && (
           <SelectWrapper notAllow>
             <label>{t('TYPE', 'Type')}</label>
             <Select

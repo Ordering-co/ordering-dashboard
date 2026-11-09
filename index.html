@@ -8,7 +8,7 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Admin dashboard by ordering.inc" />
+    <meta name="description" content="Admin dashboard by Ordering.co" />
     <!-- PWA disabled -->
     <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
     <!-- <meta name="mobile-web-app-capable" content="yes" /> -->
@@ -37,7 +37,7 @@
       @keyframes od-boot-bar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
     </style>
 
-    <link rel="preconnect" href="https://apiv4.orderingplus" />
+    <link rel="preconnect" href="https://apiv4.ordering.co" />
     <link rel="preconnect" href="https://maps.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <!-- PWA disabled -->
@@ -195,12 +195,18 @@
         try {
           var url = new URL(window.location.href);
           var token = url.searchParams.get("token");
-          if (!token) return;
+          // One-time handoff codes are only read on the root path; other
+          // pages (password reset) use `code` for their own purposes.
+          var code =
+            url.pathname === "/" ? url.searchParams.get("code") : null;
+          if (!token && !code) return;
           window.__ORDERING_AUTOLOGIN__ = {
             token: token,
+            code: code,
             project: url.searchParams.get("project"),
           };
           url.searchParams.delete("token");
+          if (code) url.searchParams.delete("code");
           history.replaceState(
             history.state,
             "",

@@ -18,7 +18,7 @@ export const LearnDropDown = (props) => {
 
   const handleClickOption = (val) => {
     const url = learnOptions.find((option) => (option.value === val))?.url
-    window.open(url ?? 'https://help.orderingplus.com', '_blank')
+    window.open(url ?? 'https://docs.ordering.co/', '_blank')
   }
 
   useEffect(() => {

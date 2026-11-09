@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useLanguage, useConfig, UsersList as UsersListController } from '../../../../../index'
+import { useLanguage, UsersList as UsersListController } from '../../../../../index'
 import { ProfessionalList } from '../ProfessionalList'
 import { UsersListingHeader } from '../UsersListingHeader'
 import { UserActiveStateFilter } from '../UserActiveStateFilter'
@@ -16,8 +16,7 @@ import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
 import {
   UsersListingContainer,
   ActionsContainer,
-  ActionButtonsGroup,
-  WarningText
+  ActionButtonsGroup
 } from './styles'
 import { useOpenFromQuery } from '../../../hooks/useOneShotQuery'
 import { useListingSearchSeed } from '../../../hooks/useListingSearchSeed'
@@ -57,7 +56,6 @@ const ProfessionalListingUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
 
   const query = new URLSearchParams(useLocation().search)
   const [queryId, setQueryId] = useState(null)
@@ -65,8 +63,6 @@ const ProfessionalListingUI = (props) => {
   const [openUser, setOpenUser] = useState(null)
   const [openUserAddForm, setOpenUserAddForm] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-
-  const isEnabledAppointmentsFeature = configs?.appointments?.value
 
   const handleBackRedirect = () => {
     setIsOpenUserDetails(false)
@@ -120,67 +116,59 @@ const ProfessionalListingUI = (props) => {
   return (
     <>
       <UsersListingContainer>
-        {isEnabledAppointmentsFeature
-          ? (
-          <>
-            <UsersListingHeader
-              isProfessionals
-              title={headerTitle}
-              searchValue={searchValue}
-              onSearch={onSearch}
-              handleChangeMultiFilterValues={handleChangeMultiFilterValues}
-              multiFilterValues={multiFilterValues}
-            />
-            <UserActiveStateFilter
+        <UsersListingHeader
+          isProfessionals
+          title={headerTitle}
+          searchValue={searchValue}
+          onSearch={onSearch}
+          handleChangeMultiFilterValues={handleChangeMultiFilterValues}
+          multiFilterValues={multiFilterValues}
+        />
+        <UserActiveStateFilter
+          selectedUserActiveState={selectedUserActiveState}
+          handleChangeUserActiveState={handleChangeUserActiveState}
+        />
+        <ActionsContainer>
+          <OccupationsFilter
+            occupationsState={occupationsState}
+            selectedOccupation={selectedOccupation}
+            handleSelectOccupation={handleSelectOccupation}
+          />
+          <ActionButtonsGroup>
+            <Button
+              borderRadius='8px'
+              color='lightPrimary'
+              onClick={() => handleOpenUserAddForm()}
+            >
+              {t('ADD_PROFESSIONAL', 'Add professional')}
+            </Button>
+            <UsersExportCSV
+              defaultUserTypesSelected={defaultUserTypesSelected}
+              disabledActiveStateCondition={disabledActiveStateCondition}
+              userTypesSelected={userTypesSelected}
               selectedUserActiveState={selectedUserActiveState}
-              handleChangeUserActiveState={handleChangeUserActiveState}
             />
-            <ActionsContainer>
-              <OccupationsFilter
-                occupationsState={occupationsState}
-                selectedOccupation={selectedOccupation}
-                handleSelectOccupation={handleSelectOccupation}
-              />
-              <ActionButtonsGroup>
-                <Button
-                  borderRadius='8px'
-                  color='lightPrimary'
-                  onClick={() => handleOpenUserAddForm()}
-                >
-                  {t('ADD_PROFESSIONAL', 'Add professional')}
-                </Button>
-                <UsersExportCSV
-                  defaultUserTypesSelected={defaultUserTypesSelected}
-                  disabledActiveStateCondition={disabledActiveStateCondition}
-                  userTypesSelected={userTypesSelected}
-                  selectedUserActiveState={selectedUserActiveState}
-                />
-                <UsersDeleteButton
-                  selectedUsers={selectedUsers}
-                  deleteUsersActionState={deleteUsersActionState}
-                  handleDeleteSeveralUsers={handleDeleteSeveralUsers}
-                />
-              </ActionButtonsGroup>
-            </ActionsContainer>
-            <ProfessionalList
-              usersList={usersList}
-              getUsers={getUsers}
-              paginationProps={paginationProps}
-              paginationDetail={paginationDetail}
-              handleChangeActiveUser={handleChangeActiveUser}
+            <UsersDeleteButton
               selectedUsers={selectedUsers}
-              handleSelectedUsers={handleSelectedUsers}
-              userDetailsId={openUser?.id || queryId}
-              handleOpenUserDetails={handleOpenUserDetails}
-              handleOpenUserAddForm={handleOpenUserAddForm}
-              setSelectedUsers={setSelectedUsers}
-              isUseQuery={isUseQuery}
+              deleteUsersActionState={deleteUsersActionState}
+              handleDeleteSeveralUsers={handleDeleteSeveralUsers}
             />
-          </>
-            )
-          : (
-          <WarningText>{t('APPOINTMENTS_FEATURE_NOT_ENABLED', 'The appointments feature is not enabled.')}</WarningText>
-            )}
+          </ActionButtonsGroup>
+        </ActionsContainer>
+        <ProfessionalList
+          usersList={usersList}
+          getUsers={getUsers}
+          paginationProps={paginationProps}
+          paginationDetail={paginationDetail}
+          handleChangeActiveUser={handleChangeActiveUser}
+          selectedUsers={selectedUsers}
+          handleSelectedUsers={handleSelectedUsers}
+          userDetailsId={openUser?.id || queryId}
+          handleOpenUserDetails={handleOpenUserDetails}
+          handleOpenUserAddForm={handleOpenUserAddForm}
+          setSelectedUsers={setSelectedUsers}
+          isUseQuery={isUseQuery}
+        />
       </UsersListingContainer>
 
       {isOpenUserDetails && (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useApi, useLanguage, useSession } from '../../../../../index'
+import { useLanguage, useSession } from '../../../../../index'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { List as MenuIcon, InfoCircle } from 'react-bootstrap-icons'
 import { SearchBar } from '../../Shared'
@@ -26,7 +26,6 @@ export const CampaignHeader = (props) => {
 
   const [, t] = useLanguage()
   const [sessionState] = useSession()
-  const [, { configurations }] = useApi()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
 
   const handleReloadCampaigns = () => {
@@ -54,7 +53,7 @@ export const CampaignHeader = (props) => {
             </IconButton>
             <InfoContent>
               {t('MARKETING_INFO', 'Create campaigns to reach your customer with news, offers and new products. Need help with the set-up? Contact our team here:')}
-              <a href={`https://www.${configurations?.subdomain}.com/support`} target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>
+              <a href={'https://www.ordering.co/support/'} target='_blank' rel='noopener noreferrer'>{t('CUSTOMER_SUPPORT', 'Customer support')}</a>
             </InfoContent>
           </InfoWrapper>
         )}

@@ -237,8 +237,14 @@ export const BusinessSummary = (props) => {
     .filter(Boolean)
   // A store has one POS: while one is connected, another installed POS cannot
   // connect directly. Installing one still works (it keeps the current POS).
+  // The detail open on the right already shows the POS's logo, state and
+  // action, so the panel stops repeating it meanwhile. Sales channels are a
+  // list to move through: they all stay, with the open one marked.
   const isIntegrationDetailOpen = !!extraOpen && selectedItem === 'integration'
   const isOpenIntegration = (integration) => isIntegrationDetailOpen && selectedIntegration?.id === integration?.id
+  const listedConnectedIntegrations = fromSalesChannels
+    ? connectedIntegrations
+    : connectedIntegrations.filter(({ integration }) => !isOpenIntegration(integration))
   // In the POS view every integration listed is a POS.
   const currentPos = !fromSalesChannels ? connectedIntegrations[0] || null : null
   const blocksConnect = (integration) => !!currentPos && !!integration?.plugin_id
@@ -250,6 +256,12 @@ export const BusinessSummary = (props) => {
   const availableIntegrations = visibleIntegrations.filter(integration =>
     !connectedIntegrations.some(connected => connected.integration.id === integration.id)
   )
+  // The POS list always has its setup-call providers. Sales channels can run
+  // out: say so instead of leaving the section's title alone.
+  const hasNoAvailableSalesChannels = fromSalesChannels &&
+    availableIntegrations.length === 0 &&
+    !integrationsList?.loading &&
+    !integrationsList?.error
 
   const getButtonText = (integration) => {
     if (!integration?.plugin_id) {
@@ -447,10 +459,10 @@ export const BusinessSummary = (props) => {
         </DetailsHeader>
         {isHideSetupForm && (
           <>
-            {connectedIntegrations.length > 0 && (
+            {listedConnectedIntegrations.length > 0 && (
               <IntegrationSection>
                 <p className='section-title'>{t('CONNECTED', 'Connected')}</p>
-                {connectedIntegrations.map(({ integration, row, status, setupAction }) => (
+                {listedConnectedIntegrations.map(({ integration, row, status, setupAction }) => (
                   <IntegrationRow
                     key={integration.id}
                     className='connect-pos-wrapper'
@@ -504,6 +516,13 @@ export const BusinessSummary = (props) => {
               {currentPos && (
                 <p className='section-note'>
                   {t('POS_ALREADY_CONNECTED_NOTE', 'This store already uses _name_. Disconnect it to switch POS.').replace('_name_', currentPos.integration?.name)}
+                </p>
+              )}
+              {hasNoAvailableSalesChannels && (
+                <p className='section-note'>
+                  {connectedIntegrations.length > 0
+                    ? t('ALL_SALES_CHANNELS_CONNECTED', 'All available sales channels are connected.')
+                    : t('NO_SALES_CHANNELS_AVAILABLE', 'No sales channels available.')}
                 </p>
               )}
               {!fromSalesChannels && POS_SETUP_CALL_PROVIDERS.map(integration => (

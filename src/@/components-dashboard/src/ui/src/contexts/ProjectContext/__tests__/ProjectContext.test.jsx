@@ -26,7 +26,8 @@ const Probe = () => {
 
 const mockFetchSequence = (responses) => {
   let call = 0
-  global.fetch = vi.fn(() => {
+  global.fetch = vi.fn((url) => {
+    if (url.endsWith('/current/support')) return Promise.resolve({ ok: true, status: 200, json: async () => ({ error: false, result: { intercom_allowed: true } }) })
     const response = responses[Math.min(call, responses.length - 1)]
     call += 1
     return Promise.resolve({ ok: true, status: 200, json: async () => response })
@@ -305,5 +306,69 @@ describe('ProjectProvider', () => {
     })
 
     expect(JSON.parse(screen.getByTestId('state').textContent).websiteProduct).toBe('web_marketplace_26')
+  })
+
+  it('clears project and plan before a changed identity resolves, including logout', async () => {
+    mockFetchSequence([
+      { error: false, result: { id: 1, code: 'acme' } },
+      { error: false, result: [{ status: 'active', plan: { plan: { id: 100 } } }] }
+    ])
+    const view = render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => expect(JSON.parse(screen.getByTestId('state').textContent).plan?.id).toBe(100))
+    mocks.token = null
+    view.rerender(<ProjectProvider><Probe /></ProjectProvider>)
+    let state = JSON.parse(screen.getByTestId('state').textContent)
+    expect(state.plan).toBeNull()
+    expect(state.project).toEqual({})
+    expect(state.planResolved).toBe(false)
+    mocks.token = 'next-token'
+    global.fetch = vi.fn(() => new Promise(() => {}))
+    view.rerender(<ProjectProvider><Probe /></ProjectProvider>)
+    state = JSON.parse(screen.getByTestId('state').textContent)
+    expect(state.plan).toBeNull()
+    expect(state.planResolved).toBe(false)
+  })
+
+  it('distinguishes a confirmed empty plan from unreadable billing', async () => {
+    mockFetchSequence([
+      { error: false, result: { id: 1 } },
+      { error: false, result: [] }
+    ])
+    const view = render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false))
+    expect(JSON.parse(screen.getByTestId('state').textContent).planResolved).toBe(true)
+    mocks.token = 'next-token'
+    mockFetchSequence([
+      { error: false, result: { id: 1 } },
+      { error: true, result: null }
+    ])
+    view.rerender(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false))
+    expect(JSON.parse(screen.getByTestId('state').textContent).planResolved).toBe(false)
+  })
+
+  it.each([null, {}])('keeps plan unresolved when current returns %j without a project identity', async project => {
+    mockFetchSequence([
+      { error: false, result: project },
+      { error: false, result: [] }
+    ])
+    render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false))
+    expect(JSON.parse(screen.getByTestId('state').textContent).planResolved).toBe(false)
+  })
+
+  it.each(['current', 'billing'])('keeps plan unresolved after an unsuccessful %s HTTP response', async failedRequest => {
+    global.fetch = vi.fn(async url => {
+      const isCurrent = url.endsWith('/current')
+      const failed = failedRequest === (isCurrent ? 'current' : 'billing')
+      return {
+        ok: !failed,
+        status: failed ? 503 : 200,
+        json: async () => ({ error: false, result: isCurrent ? { id: 1 } : [] })
+      }
+    })
+    render(<ProjectProvider><Probe /></ProjectProvider>)
+    await waitFor(() => expect(JSON.parse(screen.getByTestId('state').textContent).loading).toBe(false))
+    expect(JSON.parse(screen.getByTestId('state').textContent).planResolved).toBe(false)
   })
 })

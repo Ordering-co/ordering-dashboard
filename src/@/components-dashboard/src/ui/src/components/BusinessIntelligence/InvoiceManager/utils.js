@@ -12,7 +12,7 @@ export const invoiceOptionValues = (props) => {
       key: 'business',
       name: t('BUSINESS_INVOICE', 'Business invoice'),
       icon: <BusinessIcon />,
-      description: t('BUSINESS_INVOICE_DESCRIPTION', 'Efficiently handle business payments with tailored invoices using Orderingplus.'),
+      description: t('BUSINESS_INVOICE_DESCRIPTION', 'Efficiently handle business payments with tailored invoices using Ordering.co.'),
       enabled: true
     },
     {
@@ -20,7 +20,7 @@ export const invoiceOptionValues = (props) => {
       key: 'driver',
       name: t('DRIVER_INVOICE', 'Driver invoice'),
       icon: <DriverIcon />,
-      description: t('DRIVER_INVOICE_DESCRIPTION', 'Effortlessly manage driver payments with detailed, customizable invoices on Orderingplus.'),
+      description: t('DRIVER_INVOICE_DESCRIPTION', 'Effortlessly manage driver payments with detailed, customizable invoices on Ordering.co.'),
       enabled: true
     }
   ]

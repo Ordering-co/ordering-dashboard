@@ -8,7 +8,8 @@ const api = vi.hoisted(() => ({
   listBuilderScopeBusinesses: vi.fn(),
   listBuilderScopeFranchises: vi.fn(),
   getBuilderScopeBusiness: vi.fn(),
-  getBuilderScopeFranchise: vi.fn()
+  getBuilderScopeFranchise: vi.fn(),
+  listBuilderThemes: vi.fn()
 }))
 
 vi.mock('../../../contexts/ApiContext', () => ({
@@ -48,7 +49,22 @@ describe('BuilderSiteSettings controller', () => {
     // So is a picked store or franchise read by its id
     api.getBuilderScopeBusiness.mockReturnValue(new Promise(() => {}))
     api.getBuilderScopeFranchise.mockReturnValue(new Promise(() => {}))
+    api.listBuilderThemes.mockReturnValue(new Promise(() => {}))
     global.fetch = vi.fn()
+  })
+
+  it.each([
+    ['one of its themes is active', ok([{ id: 1, active: false }, { id: 2, active: true }]), true],
+    ['none of its themes is active', ok([{ id: 1, active: false }]), false],
+    ['it has no themes', ok([]), false],
+    ['its themes don’t load', { error: true, status: 500, result: ['Server error'], errorCodes: [] }, null]
+  ])('knows whether the website has an active theme when %s', async (_case, response, expected) => {
+    api.listBuilderThemes.mockResolvedValue(response)
+    const { ui } = renderSettings()
+    expect(ui.current.hasActiveTheme).toBe(null)
+    expect(api.listBuilderThemes).toHaveBeenCalledWith(expect.anything(), 'tok', 45)
+    await act(async () => {})
+    expect(ui.current.hasActiveTheme).toBe(expected)
   })
 
   it('loads the website’s schema, and reads the product’s settings under site and its scope', async () => {

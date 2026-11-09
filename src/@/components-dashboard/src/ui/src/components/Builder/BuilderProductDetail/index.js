@@ -508,7 +508,7 @@ const BuilderProductDetailUI = (props) => {
                   </TabList>
                   <div role='tabpanel' id='builder-tab-panel' aria-labelledby={`builder-tab-${tab}`} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                     {tab === 'general' && <BuilderWebOverview product={product} onPageFailure={failPage} onOwnDomainChange={handleOwnDomainChange} />}
-                    {tab === 'site' && <BuilderWebSiteSettings product={product} onPageFailure={failPage} onProductChange={mergeProduct} />}
+                    {tab === 'site' && <BuilderWebSiteSettings product={product} onPageFailure={failPage} onProductChange={mergeProduct} onGoToTheme={() => goToTab('theme')} />}
                     {tab === 'theme' && (
                       <>
                         <TabHint>

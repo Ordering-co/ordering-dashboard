@@ -16,6 +16,8 @@ import { NotFoundSource, Modal, Alert } from '../../Shared'
 import { Button, IconButton, TextArea } from '../../../styles'
 import { OrderToPrint } from '../OrderToPrint'
 import { OrderToPrintTicket } from '../OrderToPrintTicket'
+import { defaultTicketSections } from '../OrderToPrintTicket/ticketSections'
+import { readTicketSections, writeTicketSections } from '../../../../../utils/ticketSectionStorage'
 import { getOrderStatuPickUp, getOrderStatus, getCurrenySymbol, addQueryToUrl, removeQueryToUrl, getUserType } from '../../../utils'
 import { useForm } from 'react-hook-form'
 import { CloneOrder } from '../CloneOrder'
@@ -110,6 +112,13 @@ const OrderDetailsUI = (props) => {
   const [forterPluginInstalled, setForterPluginInstalled] = useState(false)
   const printRef = useRef()
   const printTicketRef = useRef()
+  const [ticketSections, setTicketSections] = useState(() => ({
+    ...defaultTicketSections,
+    ...readTicketSections()
+  }))
+  const applyTicketSections = (sections) => {
+    setTicketSections({ ...defaultTicketSections, ...sections })
+  }
 
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false, customer: false })
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -414,6 +423,15 @@ const OrderDetailsUI = (props) => {
             setIsTourOpen={setIsTourOpen}
             printRef={printRef}
             printTicketRef={printTicketRef}
+            ticketSections={ticketSections}
+            onTicketSectionChange={(key, enabled) => {
+              setTicketSections(prev => {
+                const next = { ...prev, [key]: enabled }
+                writeTicketSections(next)
+                return next
+              })
+            }}
+            onTicketSectionsLoad={() => applyTicketSections(readTicketSections())}
             isExpand={isExpand}
             setIsExpand={setIsExpand}
             getPluginRefundProvider={getPluginRefundProvider}
@@ -703,6 +721,7 @@ const OrderDetailsUI = (props) => {
           ref={printTicketRef}
           order={order}
           getOrderStatus={progressBarObjt}
+          sections={ticketSections}
         />
       )}
 

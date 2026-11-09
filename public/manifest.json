@@ -1,7 +1,7 @@
 {
-  "name": "Ordering Dashboard with PWA",
-  "short_name": "Ordering Admin",
-  "description": "Food ordering app by ordering.inc",
+  "name": "Ordering.co Dashboard",
+  "short_name": "Ordering.co",
+  "description": "Admin dashboard by Ordering.co",
   "icons": [
     {
       "src": "/favicon.ico",
