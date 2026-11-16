@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { getOrderingAction } from '~/brand/adapter'
+
 export const Contatiner = styled.div`
   display: flex;
   align-items: center;
@@ -7,18 +9,12 @@ export const Contatiner = styled.div`
   > button {
     height: 41px;
     ${({ isDegraded }) => isDegraded && css`
-      border: 1px solid #E63757 !important;
+      border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'} !important;
     `}
   }
 
   @media (min-width: 576px) {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 10px;
-    `
-: css`
-      margin-right: 10px;
-    `}
+    margin-inline-end: 10px;
   }
 `
 
@@ -28,13 +24,7 @@ export const StatusContainer = styled.div`
   justify-content: space-between;
 
   > span:first-child {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 6px;
-    `
-: css`
-      margin-right: 6px;
-    `}
+    margin-inline-end: 6px;
   }
 `
 
@@ -45,13 +35,13 @@ export const WebsocketStatusDot = styled.span`
   display: inline-block;
 
   ${({ status }) => status === 0 && css`
-    background-color: #FF9922;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? '#FF9922'};
   `}
   ${({ status }) => status === 1 && css`
-    background-color: #00D27A;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.success?.signal ?? '#00D27A'};
   `}
   ${({ status }) => status === 2 && css`
-    background-color: #E63757;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'};
   `}
 
   ${({ isDegraded, status }) => isDegraded && status === 2 && css`
@@ -68,18 +58,16 @@ export const WebsocketStatusDot = styled.span`
   `}
 `
 export const DateWrapper = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
+  direction: ltr;
+  unicode-bidi: isolate;
   text-align: center;
 `
 export const InfoWrapper = styled.div`
   position: relative;
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 4px;
-  `
-: css`
-    margin-right: 4px;
-  `}
+  margin-inline-end: 4px;
 
   > button {
     height: 25px;
@@ -99,14 +87,14 @@ export const InfoContent = styled.div`
   ${props => props.position !== 'RB' && css`
     top: calc(100% - 50px);
   `}
-  z-index: 999;
-  background: ${props => props.theme.colors.backgroundInfo};
-  border: 1px solid ${props => props.theme.colors.primary};
+  z-index: calc(var(--od-x-layer-chrome) - 1);
+  background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.backgroundInfo};
+  border: 1px solid ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
   box-sizing: border-box;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
-  border-radius: 7.6px;
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '7.6px'};
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;
@@ -120,14 +108,10 @@ export const InfoContent = styled.div`
   `}
 
   a {
-    color: ${props => props.theme.colors.primary};
+    color: ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
     transition: all 0.3s linear;
     cursor: pointer;
-    margin-left: 5px;
-    ${props => props.theme.rtl && css`
-      margin-left: 0px;
-      margin-right: 5px;
-    `}
+    margin-inline-start: 5px;
     &:hover {
       text-decoration: underline;
     }
@@ -153,12 +137,14 @@ export const InfoContent = styled.div`
 export const DetailContainer = styled.div`
   h2 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     line-height: 30px;
   }
 
   > span {
-    font-size: 12px;
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
     font-weight: 100;
     position: absolute;
 
@@ -170,26 +156,26 @@ export const DetailContainer = styled.div`
 
   > p {
     margin-top: 25px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 export const StatusItemWrapper = styled.div`
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '8px'};
   margin-bottom: 4px;
   transition: background-color 0.2s ease;
 
   ${({ isActive }) => isActive && css`
-    background-color: ${props => props.theme.colors.lightPrimary || '#f0f4ff'};
-    border-left: 3px solid ${props => props.theme.colors.primary};
+    background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.lightPrimary ?? '#f0f4ff'};
+    border-inline-start: 3px solid ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
 
     > div > span:last-child {
       font-weight: 700;
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     }
 
     p {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     }
   `}
 
@@ -198,55 +184,53 @@ export const StatusItemWrapper = styled.div`
     align-items: center;
 
     > span:first-child {
-      margin: 0 16px 0 0;
+      margin-inline-end: 16px;
     }
   }
   p {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
-    color: ${props => props.theme.colors.lightGray};
-
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 24px;
-    `
-: css`
-      margin-left: 24px;
-    `}
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
+    margin-inline-start: 24px;
   }
 `
 
 export const TroubleshootingSection = styled.div`
   margin-top: 20px;
   padding: 16px;
-  border-radius: 8px;
-  background-color: ${props => props.theme.colors.warning100 || '#fff8e6'};
-  border: 1px solid ${props => props.theme.colors.warning || '#ffc107'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '8px'};
+  background-color: ${props => props.theme?.ordering?.semantic?.state?.warning?.soft ?? props.theme.colors.warning100 ?? '#fff8e6'};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? props.theme.colors.warning ?? '#ffc107'};
 
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 700;
     margin: 0 0 8px;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   }
 
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     margin: 0 0 8px;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   }
 
   button {
     background: none;
     border: none;
     padding: 0;
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
-    color: ${props => props.theme.colors.primary};
+    color: ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
     cursor: pointer;
     text-decoration: underline;
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? getOrderingAction(props.theme)};
+      outline-offset: 2px;
+    }
   }
 `
 export const ButtonsContainer = styled.div`
@@ -255,7 +239,7 @@ export const ButtonsContainer = styled.div`
   margin-top: 40px;
 
   > button {
-    border-radius: 8px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '8px'};
     height: 40px;
     &:last-child {
       margin: 0 10px;

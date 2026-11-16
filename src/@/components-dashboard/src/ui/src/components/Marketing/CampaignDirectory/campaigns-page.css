@@ -1,0 +1,102 @@
+/*
+ * redesign CA-B3 (decisions 1 and 2) · Campaigns page: the header with the menu button, the help line with its support link.
+ * The filter bar needs no rule of its own (it is Product's FilterBar). The page shell of CA-B7 (split view, frame, foot) goes here later.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Class prefix odc-campaign-.
+ */
+
+/* ── Head: .odc-campaign-head is the PageHeader's own class (: the open-menu button is PageHeader's `leading`) ── */
+
+/* The header stays on ONE line when the list is narrow (beside the panel; on a phone), as /users/customers (UC-R1, I-01): under 768px of the
+   header's own width (the page header is its container) «Refresh» keeps only its icon, and «New campaign» does under 600px by the page
+   header's own rule (its label is marked `data-collapse-label`). The words are clipped, not removed: the accessible name stays and the
+   button carries its `title`. Not measured in a browser yet (CA-B3 is unit-tested; the page spec of CA-B7 must check it). */
+@container (max-width: 767px) {
+  /* a text node in the button, which only the font can take away; the icon (its own size) stays centred */
+  .odc-campaign-head .odc-campaign-refresh {
+    gap: 0;
+    inline-size: var(--od-x-control-height);
+    padding-inline: 0;
+    font-size: 0;
+  }
+}
+
+/* Beside the panel at 1280 the header is under 600px and the page header drops its title to the section size: on a screen that has a panel
+   (768px and up) the title keeps its size, so opening or closing the detail moves nothing; on a phone the page header's narrow size stays. */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-campaign-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* ── The help line: the text and the link to customer support ── */
+.odc-campaign-support {
+  position: relative;
+  border-radius: var(--od-radius-component);
+  color: var(--od-action-content);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-campaign-support:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* Touch (decision 12): the link is seen at its text size and keeps a 44px area, a centred pseudo-element, as Product's buttons */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-campaign-support::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* CA-B7 · The page shell: the list's frame beside the campaign panel (split view), as /users/customers (.odc-cpg-*) and /orders. */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-campaign-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, filters, table and foot, one under the other. */
+.odc-campaign-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-campaign-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-campaign-frame {
+    display: none;
+  }
+}
+
+/* redesign CA-R1 (live check at 1280: opening the panel wrapped the help line and moved the filter bar 17px down). On screens that can
+   show the panel (768px and up) the help line always takes two lines of height and never more, so the bar stays where it was whether the
+   line wraps or not; a longer translation is clipped with an ellipsis. */
+@media (min-width: 768px) {
+  .odc-campaign-head .odc-pagehead-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    min-block-size: calc(2 * var(--od-x-leading-ui) * var(--od-x-type-ui-size));
+  }
+}

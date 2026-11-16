@@ -1,0 +1,20 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b4-business-delivery-schedule-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b4-businessschedule-title-root-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSchedule/styles.js",
+   "component": "Title",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  }
+ ],
+ "preservations": []
+}

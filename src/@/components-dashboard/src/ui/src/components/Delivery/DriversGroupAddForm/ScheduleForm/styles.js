@@ -7,7 +7,7 @@ export const HeaderWrapper = styled.div`
 
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin: 0 0 29px 0;
     ${props => props.theme?.rtl
@@ -26,7 +26,7 @@ export const CheckboxContainer = styled.div`
   margin: 0 0 29px 0;
 
   p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin: 0px;
     ${props => props.theme?.rtl
 ? css`
@@ -39,7 +39,7 @@ export const CheckboxContainer = styled.div`
 `
 
 export const Description = styled.p`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   margin: 0 0 25px 0;
   color: ${props => props.theme.colors.lightGray};
 `
@@ -50,7 +50,7 @@ export const InputWrapper = styled.div`
   margin-bottom: 35px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   .select {
@@ -58,7 +58,7 @@ export const InputWrapper = styled.div`
     padding-bottom: 4px;
     border: none;
     background-color: ${props => props.theme.colors.secundary};
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
 
     ${({ isTimezone }) => isTimezone && css`
       > div:first-child {
@@ -67,7 +67,7 @@ export const InputWrapper = styled.div`
         }
       }
       .list-wrapper {
-        font-size: 12px;
+        font-size: var(--od-type-control-value-size);
       }
     `}
   }

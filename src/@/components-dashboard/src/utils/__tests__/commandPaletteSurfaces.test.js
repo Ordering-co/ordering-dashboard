@@ -65,8 +65,9 @@ const USERS = [{ level: 0, user_system_id: 1 }, { level: 2 }, { level: 5 }, { le
 const buildCatalogUnion = () => {
   const entries = []
   CONFIG_SETS.forEach(configs => USERS.forEach(user => {
-    entries.push(...buildNavigationEntries({ user, configs }))
-    entries.push(...buildOpenActionEntries({ user, configs }))
+    // with the project showing Order with Google, so its page and store section count as indexed
+    entries.push(...buildNavigationEntries({ user, configs, googleActionsVisible: true }))
+    entries.push(...buildOpenActionEntries({ user, configs, googleActionsVisible: true }))
   }))
   entries.push(...buildStaticSettingsEntries())
   // Lists loaded from the API at runtime, with one sample row each

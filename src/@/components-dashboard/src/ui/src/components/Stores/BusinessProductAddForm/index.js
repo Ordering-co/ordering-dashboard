@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { Alert, ImageCrop, Modal } from '../../Shared'
+import { Alert } from '../../Shared/Confirm'
+import { ImageCrop } from '../../Shared/ImageCrop'
+import { Modal } from '../../Shared/Modal'
 import { bytesConverter } from '../../../utils'
 import BiImage from '@meronex/icons/bi/BiImage'
 import { Button, Input, TextArea } from '../../../styles'
@@ -72,8 +74,10 @@ export const BusinessProductAddFormUI = (props) => {
     { value: 15, content: <Option>15 <span>{t('MINUTES', 'minutes')}</span></Option> },
     { value: 30, content: <Option>30 <span>{t('MINUTES', 'minutes')}</span></Option> },
     { value: 45, content: <Option>45 <span>{t('MINUTES', 'minutes')}</span></Option> },
-    { value: 60, content: <Option>1 <span>{('HOUR', 'hour')}</span></Option> },
-    { value: 'custom', content: <Option><span>{('CUSTOME', 'custom')}</span></Option> }
+    // bugs E D17a: these two were `('HOUR', 'hour')` and `('CUSTOME', 'custom')`, comma expressions that never called t(), so they
+    // stayed in English. HOUR and CUSTOM are the dictionary's keys (CUSTOME has no entry in any locale).
+    { value: 60, content: <Option>1 <span>{t('HOUR', 'hour')}</span></Option> },
+    { value: 'custom', content: <Option><span>{t('CUSTOM', 'custom')}</span></Option> }
   ]
 
   const setTimeList = () => {
@@ -356,6 +360,8 @@ export const BusinessProductAddFormUI = (props) => {
         <ActionsForm>
           {isTutorialMode && (
             <SkipButton
+              as='button'
+              type='button'
               onClick={() => handleTutorialSkip()}
             >
               {t('TUTORIAL_SKIP', 'Skip')}

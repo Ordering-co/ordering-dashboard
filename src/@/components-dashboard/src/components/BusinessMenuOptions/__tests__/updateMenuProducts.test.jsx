@@ -44,7 +44,8 @@ const renderMenu = async (menu, menuProducts) => {
       setCurrentMenu={setCurrentMenu}
     />
   )
-  await waitFor(() => expect(setCurrentMenu).toHaveBeenCalledWith(expect.objectContaining({ loading: false })))
+  // redesign a menu that is not shared takes its products from the menu it opens with (no product request), so the
+  // wait is for the products to reach the form, not for setCurrentMenu
   await waitFor(() => expect(controller.formState.changes.products).toEqual(menuProducts.map(product => product.id)))
 }
 

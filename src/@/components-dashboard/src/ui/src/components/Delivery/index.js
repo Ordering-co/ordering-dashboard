@@ -3,13 +3,7 @@ import { AddressForm } from './AddressForm'
 import { DeliveryUsersListing } from './DeliveryUsersListing'
 import { DriversCompaniesListing } from './DriversCompaniesListing'
 import { DriversGroupsListing } from './DriversGroupsListing'
-import { WizardDelivery } from './WizardDelivery'
 import { DriverGroupSetting } from './DriverGroupSetting'
-import { DriversCompaniesList } from './DriversCompaniesList'
-import { DriversCompanyDetailsForm } from './DriversCompanyDetailsForm'
-import { DriversCompanyGeneralDetails } from './DriversCompanyGeneralDetails'
-import { DriversCompanyScheduleDetails } from './DriversCompanyScheduleDetails'
-import { DriversCompanyWebhooksDetails } from './DriversCompanyWebhooksDetails'
 import { DriversGroupDetails } from './DriversGroupDetails'
 import { DriversGroupsList } from './DriversGroupsList'
 import { DriversGroupGeneralForm } from './DriversGroupGeneralForm'
@@ -36,13 +30,7 @@ export {
   DriversTimeDisplay,
   DriverTemporalSchedule,
   DriversGroupsListing,
-  WizardDelivery,
   DriverGroupSetting,
-  DriversCompaniesList,
-  DriversCompanyDetailsForm,
-  DriversCompanyGeneralDetails,
-  DriversCompanyScheduleDetails,
-  DriversCompanyWebhooksDetails,
   DriversGroupDetails,
   DriversGroupsList,
   DriversGroupGeneralForm,

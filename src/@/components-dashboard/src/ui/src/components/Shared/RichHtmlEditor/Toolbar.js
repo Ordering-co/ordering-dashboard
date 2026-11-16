@@ -1,35 +1,83 @@
 import React, { useState } from 'react'
 import { useEditorState } from '@tiptap/react'
 import {
-  ArrowBarDown,
-  ArrowBarRight,
-  ArrowsCollapse,
-  ArrowsCollapseVertical,
-  CameraVideo,
-  CodeSlash,
-  Eraser,
-  Fonts,
-  Highlighter,
-  Image,
-  Justify,
-  Link45deg,
-  ListOl,
-  ListUl,
-  Table,
-  TextCenter,
-  TextLeft,
-  TextRight,
-  Trash3,
-  TypeBold,
-  TypeItalic,
-  TypeUnderline
-} from 'react-bootstrap-icons'
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  BetweenHorizontalEnd,
+  BetweenVerticalEnd,
+  Bold,
+  CodeXml,
+  Eraser as EraserIcon,
+  FoldHorizontal,
+  FoldVertical,
+  Highlighter as HighlighterIcon,
+  Image as ImageIcon,
+  IndentDecrease,
+  IndentIncrease,
+  Italic,
+  Link as LinkIcon,
+  List,
+  ListOrdered,
+  Table as TableIcon,
+  Trash2,
+  Type,
+  Underline,
+  Video
+} from 'lucide-react'
 
 import { ColorTool, ToolButton, ToolGroup, ToolSelect, ToolbarBar } from './styles'
+
+// The icons take the size of the button's text, as the toolbar is laid out for.
+const sized = (Icon) => function ToolIcon (props) {
+  return <Icon size='1em' aria-hidden='true' {...props} />
+}
+
+const ArrowBarDown = sized(BetweenHorizontalEnd)
+const ArrowBarRight = sized(BetweenVerticalEnd)
+const ArrowsCollapse = sized(FoldVertical)
+const ArrowsCollapseVertical = sized(FoldHorizontal)
+const CameraVideo = sized(Video)
+const CodeSlash = sized(CodeXml)
+const Eraser = sized(EraserIcon)
+const Fonts = sized(Type)
+const Highlighter = sized(HighlighterIcon)
+const Image = sized(ImageIcon)
+const Justify = sized(AlignJustify)
+const Link45deg = sized(LinkIcon)
+const ListOl = sized(ListOrdered)
+const ListUl = sized(List)
+const Table = sized(TableIcon)
+const TextCenter = sized(AlignCenter)
+const TextIndentLeft = sized(IndentIncrease)
+const TextIndentRight = sized(IndentDecrease)
+const TextLeft = sized(AlignLeft)
+const TextRight = sized(AlignRight)
+const Trash3 = sized(Trash2)
+const TypeBold = sized(Bold)
+const TypeItalic = sized(Italic)
+const TypeUnderline = sized(Underline)
 
 const HEADINGS = [1, 2, 3, 4, 5, 6]
 const FONT_SIZES = [8, 9, 10, 11, 12, 14, 18, 24, 36]
 const ALIGNMENTS = ['left', 'center', 'right', 'justify']
+const INDENT_STEP = 25
+const INDENTED = ['paragraph', 'heading']
+
+// Inside a list it nests the item; elsewhere it moves the block by the margin Summernote used, so pages written with it keep their steps.
+const indent = (chain, editor, step) => {
+  if (editor.isActive('listItem')) return step > 0 ? chain.sinkListItem('listItem') : chain.liftListItem('listItem')
+  return chain.command(({ tr, state }) => {
+    const { from, to } = state.selection
+    state.doc.nodesBetween(from, to, (node, position) => {
+      if (!INDENTED.includes(node.type.name)) return
+      const margin = Math.max(0, (parseInt(node.attrs.marginLeft, 10) || 0) + step)
+      tr.setNodeMarkup(position, undefined, { ...node.attrs, marginLeft: margin ? `${margin}px` : null })
+    })
+    return true
+  })
+}
 
 const blockOf = (editor) => {
   if (editor.isActive('codeBlock')) return 'pre'
@@ -55,7 +103,7 @@ const ColorPicker = ({ label, Icon, color, disabled, onChange }) => (
   </ColorTool>
 )
 
-export const Toolbar = ({ editor, t, codeView, onToggleCode, onInsert }) => {
+export const Toolbar = ({ editor, t, codeView, video = true, onToggleCode, onCodeIntent, onInsert }) => {
   const [textColor, setTextColor] = useState('#000000')
   const [background, setBackground] = useState('#FFFF00')
   const state = useEditorState({
@@ -152,6 +200,8 @@ export const Toolbar = ({ editor, t, codeView, onToggleCode, onInsert }) => {
         {tool(t('HTML_EDITOR_ALIGN_CENTER', 'Center'), TextCenter, chain => chain.setTextAlign('center'), state.align === 'center')}
         {tool(t('HTML_EDITOR_ALIGN_RIGHT', 'Align right'), TextRight, chain => chain.setTextAlign('right'), state.align === 'right')}
         {tool(t('HTML_EDITOR_ALIGN_JUSTIFY', 'Justify'), Justify, chain => chain.setTextAlign('justify'), state.align === 'justify')}
+        {tool(t('HTML_EDITOR_OUTDENT', 'Decrease indent'), TextIndentRight, chain => indent(chain, editor, -INDENT_STEP))}
+        {tool(t('HTML_EDITOR_INDENT', 'Increase indent'), TextIndentLeft, chain => indent(chain, editor, INDENT_STEP))}
       </ToolGroup>
       <ToolGroup>
         {tool(t('HTML_EDITOR_INSERT_TABLE', 'Insert table'), Table, chain => chain.insertTable({ rows: 3, cols: 3, withHeaderRow: false }))}
@@ -168,7 +218,7 @@ export const Toolbar = ({ editor, t, codeView, onToggleCode, onInsert }) => {
       <ToolGroup>
         <ToolButton type='button' aria-label={t('INSERT_LINK', 'Insert link')} title={t('INSERT_LINK', 'Insert link')} disabled={disabled} onClick={() => onInsert('link')}><Link45deg /></ToolButton>
         <ToolButton type='button' aria-label={t('INSERT_IMAGE', 'Insert image')} title={t('INSERT_IMAGE', 'Insert image')} disabled={disabled} onClick={() => onInsert('image')}><Image /></ToolButton>
-        <ToolButton type='button' aria-label={t('INSERT_VIDEO', 'Insert video')} title={t('INSERT_VIDEO', 'Insert video')} disabled={disabled} onClick={() => onInsert('video')}><CameraVideo /></ToolButton>
+        {video && <ToolButton type='button' aria-label={t('INSERT_VIDEO', 'Insert video')} title={t('INSERT_VIDEO', 'Insert video')} disabled={disabled} onClick={() => onInsert('video')}><CameraVideo /></ToolButton>}
       </ToolGroup>
       <ToolGroup>
         <ToolButton
@@ -177,6 +227,9 @@ export const Toolbar = ({ editor, t, codeView, onToggleCode, onInsert }) => {
           title={t('HTML_EDITOR_CODE_VIEW', 'Edit as HTML')}
           aria-pressed={codeView}
           disabled={!editor}
+          // Pointing at or focusing the button starts loading the code editor, so the click rarely has to wait for it.
+          onMouseEnter={onCodeIntent}
+          onFocus={onCodeIntent}
           onClick={onToggleCode}
         >
           <CodeSlash />

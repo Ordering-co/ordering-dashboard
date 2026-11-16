@@ -35,6 +35,13 @@ My Products' legacy website pages never create a website and send to Builder: a 
 | Editor drawn from the schema | | `ThemeSchemaEditor/` (`index.js` sections and lists, `SchemaGroup.js` groups and fields, `controls.js` the controls, `schemaNodes.js` schema and path helpers) |
 | Website settings (`site` of the schema, scope) | `BuilderSiteSettings` | `ThemeSchemaEditor/SiteSettings.js`, `ScopeControl.js` |
 
+The API advertises theme support through `has_themes`. An app with that flag uses
+the same themes list and editor as a website, and its colors come from the theme.
+An app without theme support keeps its Appearance tab. When the flag is absent,
+the Dashboard offers the theme editor for websites. Without an active theme the
+runtime uses schema defaults. The previous theme format can be imported only
+where the API supplies a compatible schema.
+
 ## How the editor is drawn
 
 1. `GET …/products/{id}/theme/schema` gives the `schema` and the common `format` (token names, `fonts`, derived colors and roles the API works out and the editor hides). A schema without `editor.sections` shows "The editor for this website isn't ready yet".
@@ -50,6 +57,13 @@ My Products' legacy website pages never create a website and send to Builder: a 
 In Website settings, `SiteSettingsEditor` gives `site.mode` the `scope` control whatever its schema declares (the published `marketplace_website` schema says `cards`), so the renderer has no special case for it. A `scope` node reads the product's `business_id` / `franchise_id`, never `settings.mode`: the selected type shows the project's store or franchise picker, and Marketplace clears both IDs. It shows as changed while it isn't its default (Marketplace), and its reset sets Marketplace with `setScopeMode`. Read-only, it shows the product's type. Other nodes still use their schema's control.
 
 The website reads its type and settings from `values.site` of the active theme's `first_load`: api-core serves no theme, and so no `values.site`, while the website has no active theme, and the website is then a marketplace without them. `BuilderSiteSettings` lists the website's themes (`hasActiveTheme`: `null` while it doesn't know), and while none is active the Website settings tab says these settings wait for one, with a button to the Theme tab (`onGoToTheme`).
+
+Rich HTML fields use the shared editor. Read the warning before editing markup
+that the visual editor cannot round-trip. Where HTML, CSS and Preview tabs are
+available, saving CSS scopes its selectors to the content wrapper; existing
+content stays unchanged until edited. Preview is sandboxed and renders the saved
+markup without executing scripts. Test round-tripping HTML that uses classes,
+inline styles, tables, media conditions or data attributes.
 
 ## Editing a theme
 

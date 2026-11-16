@@ -81,7 +81,7 @@ describe('shell UI components', () => {
   it('wires logout button click', () => {
     const handleLogoutClick = vi.fn()
     renderWithProviders(<LogoutButton handleLogoutClick={handleLogoutClick} />)
-    fireEvent.click(screen.getByRole('button', { name: /Logout/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Log out/i }))
     expect(handleLogoutClick).toHaveBeenCalledOnce()
   })
 
@@ -101,21 +101,22 @@ describe('shell UI components', () => {
       .toHaveAttribute('href', 'https://www.ordering.co/pricing/')
   })
 
-  it('hides connectivity image while online and shows it offline', () => {
+  // redesign (D6): online the offline page paints nothing; offline it is one empty state with a heading, no image.
+  it('paints nothing while online and the offline state when the network drops', () => {
     useOnlineStatus.mockReturnValue(true)
-    const { unmount } = renderWithProviders(<NotNetworkConnectivity />, {
-      theme: { colors: {}, images: { general: { notNetwork: '/offline.svg' } } }
+    const { container, unmount } = renderWithProviders(<NotNetworkConnectivity />, {
+      theme: { colors: {}, images: {} }
     })
-    expect(screen.getByAltText('Not network').closest('div').parentElement)
-      .toHaveStyle({ display: 'none' })
+    expect(container).toBeEmptyDOMElement()
     unmount()
 
     useOnlineStatus.mockReturnValue(false)
     renderWithProviders(<NotNetworkConnectivity />, {
-      theme: { colors: {}, images: { general: { notNetwork: '/offline.svg' } } }
+      theme: { colors: {}, images: {} }
     })
-    expect(screen.getByAltText('Not network').closest('div').parentElement)
-      .toHaveStyle({ display: 'flex' })
+    expect(screen.getByRole('heading', { level: 1, name: "You're offline" })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Check your connection. This page comes back when you reconnect.')
+    expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 
   it('shows websocket banner after connection failure and dismisses it', () => {

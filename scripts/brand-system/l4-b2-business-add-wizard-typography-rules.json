@@ -1,0 +1,323 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b2-business-add-wizard-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b2-businessadd-businessdetails-businessdetailscontainer-h2-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "BusinessDetailsContainer",
+   "property": "font-size",
+   "context": "h2",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-formcontrol-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-formcontrol-label-sup-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "label > sup",
+   "match": "13px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-formcontrol-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": ".select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-formcontrol-input-autocomplete-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": ".input-autocomplete",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-googlemapcontainer-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "GoogleMapContainer",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b2-businessadd-businessdetails-googlemapcontainer-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "component": "GoogleMapContainer",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "replace": "var(--od-type-identifier-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "b2-preview-addresswrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "AddressWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-momentwrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "MomentWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-ordertypewrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "OrderTypeWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-cartwrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "CartWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-businessinfoitem-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "BusinessInfoItem",
+   "property": "font-size",
+   "context": null,
+   "match": "20px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-businessinfoitem-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "BusinessInfoItem",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-businessdetail-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "BusinessDetail",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-businessdetail-15px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "BusinessDetail",
+   "property": "font-size",
+   "context": null,
+   "match": "15px",
+   "reason": "This font-size controls icon glyph geometry inside the BusinessPreview simulation. Preserved on both counts: glyph geometry and simulation contract.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-businessmoredetail-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "BusinessMoreDetail",
+   "property": "font-size",
+   "context": null,
+   "match": "20px",
+   "reason": "This font-size controls icon glyph geometry inside the BusinessPreview simulation. Preserved on both counts: glyph geometry and simulation contract.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-tab-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-cardinfo-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "CardInfo",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-cardinfo-8px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "CardInfo",
+   "property": "font-size",
+   "context": null,
+   "match": "8px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-cardinfo-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "CardInfo",
+   "property": "font-size",
+   "context": null,
+   "match": "10px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-pricewrapper-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "PriceWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "10px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-pricewrapper-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "PriceWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "13px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-soldout-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "SoldOut",
+   "property": "font-size",
+   "context": null,
+   "match": "10px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-wrapallcategories-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "WrapAllCategories",
+   "property": "font-size",
+   "context": null,
+   "match": "18px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-emptycart-35px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "EmptyCart",
+   "property": "font-size",
+   "context": null,
+   "match": "35px",
+   "reason": "This font-size controls icon glyph geometry inside the BusinessPreview simulation. Preserved on both counts: glyph geometry and simulation contract.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-emptycart-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "EmptyCart",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-emptybtnwrapper-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "EmptyBtnWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "14px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-emptybtnwrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "EmptyBtnWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "12px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  },
+  {
+   "id": "b2-preview-mobilecartviewwrapper-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "component": "MobileCartViewWrapper",
+   "property": "font-size",
+   "context": null,
+   "match": "14px",
+   "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Its type scale reproduces another product UI at reduced fidelity. Applying the dashboard roles would enlarge an 8px product description to 14px inside a 270px frame and destroy the preview fidelity. Preserved as a simulation contract; any change to component, value, context or cardinality reopens classification.",
+   "evidence": "Evidence: Stores/BusinessPreview/styles.js Container sets width 270px height 540px with a phone mockup background-image under isMobileView, growing to 325x650 above 576px; BusinessSummary/index.js opens the component inside a preview Modal. This is the same class of decision L3 took when it preserved Arial in OrderToPrintTicket as a physical contract."
+  }
+ ]
+}

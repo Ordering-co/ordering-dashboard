@@ -14,7 +14,7 @@ export const PaymethodTypeSelector = (props) => {
   const [, t] = useLanguage()
   const [paymethodsTypes, setPaymethodsTypes] = useState([])
   const [searchValue, setSearchValue] = useState('')
-  const placeholder = <PlaceholderTitle>{t('SELECT_PAYMETHOD', 'Select paymethod')}</PlaceholderTitle>
+  const placeholder = <PlaceholderTitle>{t('SELECT_PAYMETHOD', 'Select payment method')}</PlaceholderTitle>
   const paymthodsLoading = [{ value: 'default', content: <Option>{t('PAYMETHODS_LOADING', 'Paymethods loading')}...</Option> }]
   const [pagination, setPagination] = useState({
     currentPage: 1,

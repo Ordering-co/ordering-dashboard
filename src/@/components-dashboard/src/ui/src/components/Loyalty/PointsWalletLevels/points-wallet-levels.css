@@ -1,0 +1,139 @@
+/*
+ * redesign  (lot C; AD-8, AD-9, AD-10) · Points-based loyalty program: the list of levels.
+ * One native button per level (whole row), a 40px thumbnail or a neutral marker, the name, the points it starts at and a chevron.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+.pwl {
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--od-space-4);
+}
+
+.pwl-title {
+  margin-block: 0 var(--od-space-3);
+  font-size: var(--od-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.pwl-list {
+  display: flex;
+  flex-direction: column;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.pwl-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-lg);
+  margin: 0;
+  padding: var(--od-space-3);
+  border: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  border-radius: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.pwl-row:hover { background: var(--od-surface-subtle); }
+
+/* The open level keeps a quiet mark: the subtle surface plus the indicator at the start edge. */
+.pwl-row[aria-current='true'] {
+  background: var(--od-surface-subtle);
+  box-shadow: inset var(--od-x-indicator) 0 0 var(--od-focus-ring-color);
+}
+
+[dir='rtl'] .pwl-row[aria-current='true'] {
+  box-shadow: inset calc(var(--od-x-indicator) * -1) 0 0 var(--od-focus-ring-color);
+}
+
+.pwl-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.pwl-thumb {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.pwl-thumb img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.pwl-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.pwl-name {
+  overflow-wrap: anywhere;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.pwl-points {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.pwl-chevron {
+  flex: none;
+  color: var(--od-x-text-subtle);
+}
+
+[dir='rtl'] .pwl-chevron { transform: scaleX(-1); }
+
+.pwl-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.pwl-skeleton-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.pwl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  margin-block: var(--od-space-4);
+}
+
+/* Touch (C3): stacked rows touch each other, so the rows themselves are 44px visible. */
+@media (pointer: coarse), (max-width: 767px) {
+  .pwl-row { min-block-size: var(--od-x-target-coarse); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwl-row { transition: none; }
+}

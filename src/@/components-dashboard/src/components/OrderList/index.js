@@ -5,6 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import { isOrderStatusRegressionError } from '../../utils'
+import { numericSearchText } from '../DashboardOrdersList/orderSearchInput'
 
 export const OrderList = (props) => {
   props = { ...defaultProps, ...props }
@@ -161,15 +162,16 @@ export const OrderList = (props) => {
     if (searchValue) {
       const searchConditions = []
       if (isSearchByOrderId) {
-        searchConditions.push(
-          {
+        const orderId = numericSearchText(searchValue)
+        if (orderId !== null) {
+          searchConditions.push({
             attribute: 'id',
             value: {
               condition: 'ilike',
-              value: encodeURI(`%${searchValue}%`)
+              value: encodeURI(`%${orderId}%`)
             }
-          }
-        )
+          })
+        }
       }
       if (isSearchByCustomerEmail) {
         searchConditions.push(

@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { changesForStore, effectiveDeviceChanges, ownerAfterSave } from '../../utils/devices'
 
 /**
  * Component to manage BusinessDeviceDetail behavior without UI component
@@ -15,11 +16,12 @@ export const BusinessDeviceDetail = (props) => {
     selectedDevice,
     devices,
     handleUpdateDeviceList,
-    onClose
+    onClose,
+    onCreated
   } = props
 
   const [, t] = useLanguage()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
   const [{ token, user }] = useSession()
   const [ordering] = useApi()
 
@@ -28,6 +30,8 @@ export const BusinessDeviceDetail = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: null } })
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], error: null })
   const [logoutDeviceState, setLogoutDeviceState] = useState({ loading: false, error: null })
+  const [chosenBusiness, setChosenBusiness] = useState(null)
+  const [adminList, setAdminList] = useState({ loading: false, users: null, error: null })
   const [businessSearchValue, setBusinessSearchValue] = useState('')
   const [businessPagination, setBusinessPagination] = useState({
     currentPage: 1,
@@ -36,12 +40,15 @@ export const BusinessDeviceDetail = (props) => {
     totalItems: null
   })
 
+  // redesign stores-devices: every action answers `{ ok: true }` or `{ ok: false, error }`, so the panel can keep its
+  // confirmation open on a failure and close it on success. The requests, bodies and toasts are main's.
+
   /**
    * Method to delete all sessions for the device user from API
    */
   const logoutDevice = async () => {
     const userId = selectedDevice?.user_id
-    if (!userId) return
+    if (!userId) return { ok: false, error: null }
     try {
       setLogoutDeviceState({ loading: true, error: null })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -57,16 +64,18 @@ export const BusinessDeviceDetail = (props) => {
       if (!content?.error) {
         setLogoutDeviceState({ loading: false, error: null })
         showToast(ToastType.Success, t('LOGOUT_ALL_DEVICES_SUCCESS', 'All devices logged out successfully'))
-      } else {
-        setLogoutDeviceState({ loading: false, error: content })
-        showToast(ToastType.Error, content?.result?.message || content?.result || t('ERROR', 'Error'))
+        return { ok: true }
       }
+      setLogoutDeviceState({ loading: false, error: content })
+      showToast(ToastType.Error, content?.result?.message || content?.result || t('ERROR', 'Error'))
+      return { ok: false, error: content?.result }
     } catch (err) {
       setLogoutDeviceState({
         loading: false,
         error: err.message
       })
       showToast(ToastType.Error, err.message || t('ERROR', 'Error'))
+      return { ok: false, error: err.message }
     }
   }
 
@@ -79,7 +88,7 @@ export const BusinessDeviceDetail = (props) => {
    */
   const deleteDevice = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'DELETE',
@@ -91,40 +100,63 @@ export const BusinessDeviceDetail = (props) => {
       const response = await fetch(`${ordering.root}/devices/${selectedDevice?.id}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        setFormState({
-          ...formState,
-          result: content,
-          loading: false
-        })
-        const updatedDevices = devices.filter(device => device?.id !== selectedDevice?.id)
+        setFormState(prev => ({ ...prev, result: content, loading: false }))
+        const updatedDevices = (devices || []).filter(device => device?.id !== selectedDevice?.id)
         handleUpdateDeviceList && handleUpdateDeviceList(updatedDevices)
         showToast(ToastType.Success, t('DEVICE_DELETED', 'Device deleted'))
         onClose && onClose()
+        return { ok: true }
+      }
+      // redesign bugs F row 19: the panel's alert says the failure, so the «Loading» toast must not stay
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: content, loading: false }))
+      return { ok: false, error: content?.result }
+    } catch (err) {
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: { error: true, result: err.message }, loading: false }))
+      return { ok: false, error: err.message }
+    }
+  }
+
+  // redesign stores-devices (R-1): the chosen store as an object, so paging or searching the store list does not lose it
+  // (main's select then said «Select an option» while the store was still set, and the new row had no store until a reload)
+  const businessById = (businessId) => businessList?.businesses?.find(business => business?.id === businessId) ??
+    (chosenBusiness?.id === businessId ? chosenBusiness : null)
+  const ownersOf = (businessId) => businessById(businessId)?.owners
+  const hasNoOwners = (businessId) => {
+    const owners = ownersOf(businessId)
+    return Array.isArray(owners) && owners.length === 0
+  }
+  const linkableUsersOf = (businessId) => (
+    hasNoOwners(businessId) && adminList.users?.length ? adminList.users : ownersOf(businessId)
+  )
+
+  const getAdmins = async () => {
+    try {
+      setAdminList(prev => ({ ...prev, loading: true }))
+      const { content: { error, result } } = await ordering
+        .setAccessToken(token)
+        .users()
+        .where([{ attribute: 'level', value: 0 }, { attribute: 'enabled', value: true }])
+        .select(['name', 'lastname', 'email', 'photo']).get()
+      if (!error) {
+        setAdminList({ loading: false, users: result || [], error: null })
       } else {
-        setFormState({
-          ...formState,
-          result: content,
-          loading: false
-        })
+        setAdminList({ loading: false, users: null, error: result })
       }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      setAdminList({ loading: false, users: null, error: [err.message] })
     }
   }
 
   /**
    * Method to create a device from API
+   * redesign stores-devices (DV-06): with `onCreated` the page keeps the panel on the new device (its code is what the
+   * person came for); without it the panel closes as in main.
    */
   const addDevice = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
@@ -137,46 +169,48 @@ export const BusinessDeviceDetail = (props) => {
       const response = await fetch(`${ordering.root}/devices`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        setFormState({
-          ...formState,
-          result: content.result,
-          loading: false
-        })
-        const business = businessList?.businesses?.find(item => item?.id === content?.result?.business_id)
-        const updatedDevices = [...devices, { ...content?.result, business }]
-        handleUpdateDeviceList && handleUpdateDeviceList(updatedDevices)
+        setFormState(prev => ({ ...prev, changes: {}, result: content.result, loading: false }))
+        const business = businessById(content?.result?.business_id)
+        const device = {
+          ...content?.result,
+          business,
+          user: ownerAfterSave({ device: null, changes: formState?.changes, owners: linkableUsersOf(content?.result?.business_id) })
+        }
+        handleUpdateDeviceList && handleUpdateDeviceList([...(devices || []), device])
         showToast(ToastType.Success, t('DEVICE_CREATED', 'Device created'))
-        onClose && onClose()
-      } else {
-        setFormState({
-          ...formState,
-          result: content,
-          loading: false
-        })
+        if (onCreated) onCreated(device)
+        else onClose && onClose()
+        return { ok: true, device }
       }
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: content, loading: false }))
+      return { ok: false, error: content?.result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: { error: true, result: err.message }, loading: false }))
+      return { ok: false, error: err.message }
     }
   }
 
   /**
    * Method to update a device from API
+   * redesign stores-devices (DV-05): nothing changed, nothing is sent (main sent `{ business_id }` and said «updated»).
+   * After a save the changes are cleared, so the panel is clean again, and the list's row carries the owner it now has.
    */
   const updateDevice = async () => {
+    // R-2: a value typed back to what the device has is not a change
+    const sent = effectiveDeviceChanges(formState?.changes, selectedDevice)
+    if (!Object.keys(sent).length) {
+      setFormState(prev => ({ ...prev, changes: {} }))
+      return { ok: true, unchanged: true }
+    }
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = {
         business_id: selectedDevice?.business_id,
         user_id: selectedDevice?.user_id,
-        ...formState?.changes
+        ...sent
       }
       const requestOptions = {
         method: 'PUT',
@@ -189,38 +223,30 @@ export const BusinessDeviceDetail = (props) => {
       const response = await fetch(`${ordering.root}/devices/${selectedDevice?.id}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        setFormState({
-          ...formState,
-          result: content,
-          loading: false
-        })
-        const updatedDevices = devices.map(device => {
+        setFormState(prev => ({ ...prev, changes: {}, result: content, loading: false }))
+        const owners = linkableUsersOf(selectedDevice?.business_id)
+        const updatedDevices = (devices || []).map(device => {
           if (device?.id === selectedDevice?.id) {
             return {
               ...device,
-              ...content.result
+              ...content.result,
+              business: device.business,
+              user: ownerAfterSave({ device, changes: sent, owners })
             }
           }
           return device
         })
         handleUpdateDeviceList && handleUpdateDeviceList(updatedDevices)
         showToast(ToastType.Success, t('DEVICE_UPDATED', 'Device updated'))
-      } else {
-        setFormState({
-          ...formState,
-          result: content,
-          loading: false
-        })
+        return { ok: true }
       }
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: content, loading: false }))
+      return { ok: false, error: content?.result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      hideToast?.()
+      setFormState(prev => ({ ...prev, result: { error: true, result: err.message }, loading: false }))
+      return { ok: false, error: err.message }
     }
   }
 
@@ -313,7 +339,7 @@ export const BusinessDeviceDetail = (props) => {
    */
   const enrichBusinessOwners = async (businessId) => {
     if (!businessId) return
-    const target = businessList?.businesses?.find(business => business.id === businessId)
+    const target = businessById(businessId)
     if (!target || Array.isArray(target.owners)) return
     try {
       const { content } = await ordering.setAccessToken(token).businesses(businessId).select(['id', 'owners']).asDashboard().get()
@@ -324,19 +350,25 @@ export const BusinessDeviceDetail = (props) => {
             business.id === businessId ? { ...business, owners: content.result.owners } : business
           ))
         }))
+        setChosenBusiness(prev => (prev?.id === businessId ? { ...prev, owners: content.result.owners } : prev))
       }
     } catch {}
   }
 
+  // redesign stores-devices (DV-03): a new store drops the owner chosen for the previous one
   const handleChangeFormState = (changes) => {
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState?.changes,
-        ...changes
-      }
+    if ('business_id' in changes) {
+      setChosenBusiness(businessList?.businesses?.find(business => business?.id === changes.business_id) ?? null)
+    }
+    setFormState(prev => {
+      if (!('business_id' in changes)) return { ...prev, changes: { ...prev?.changes, ...changes } }
+      const { business_id: businessId, ...rest } = changes
+      return { ...prev, changes: changesForStore({ ...prev?.changes, ...rest }, businessId) }
     })
   }
+
+  // redesign stores-devices: «Discard» in the panel's guard empties the draft
+  const clearFormChanges = () => setFormState(prev => ({ ...prev, changes: {}, result: { error: null } }))
 
   useEffect(() => {
     getBusinessList()
@@ -348,8 +380,15 @@ export const BusinessDeviceDetail = (props) => {
     if (businessId) enrichBusinessOwners(businessId)
   }, [formState?.changes?.business_id, selectedDevice?.business_id, businessList?.businesses?.length])
 
+  const needsAdmins = user?.level === 0 && hasNoOwners(formState?.changes?.business_id || selectedDevice?.business_id)
+
   useEffect(() => {
-    setFormState({ ...formState, changes: {} })
+    if (!needsAdmins || adminList.users || adminList.loading || adminList.error) return
+    getAdmins()
+  }, [needsAdmins])
+
+  useEffect(() => {
+    setFormState(prev => ({ ...prev, changes: {} }))
   }, [selectedDevice?.id])
 
   return (
@@ -364,8 +403,11 @@ export const BusinessDeviceDetail = (props) => {
           logoutDeviceState={logoutDeviceState}
           clearLogoutError={clearLogoutError}
           formState={formState}
+          clearFormChanges={clearFormChanges}
           handleChangeFormState={handleChangeFormState}
           businessList={businessList}
+          chosenBusiness={chosenBusiness}
+          adminList={needsAdmins ? adminList : null}
           businessPagination={businessPagination}
           handleChangeBusinessPage={handleChangeBusinessPage}
           searchBusinesses={searchBusinesses}

@@ -1,0 +1,89 @@
+/* Scoped DragScroll surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-drag-scroll) {
+  --od-drag-scroll-edge-inset: calc(var(--od-entity-selector-focus-width) + var(--od-entity-selector-focus-offset) + 1px);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-drag-scroll-scrollport) {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: calc(var(--od-entity-selector-touch-target) + var(--od-drag-scroll-edge-inset) + var(--od-drag-scroll-edge-inset));
+  padding-block: var(--od-drag-scroll-edge-inset);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.od-ui:where(.od-drag-scroll-scrollport)[data-dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.od-ui:where(.od-drag-scroll-scrollport)::-webkit-scrollbar {
+  display: none;
+}
+
+.od-ui:where(.od-drag-scroll-content) {
+  @apply od-inline-flex;
+  flex: 0 0 auto;
+  height: 100%;
+  min-width: max-content;
+}
+
+.od-ui.od-icon-button.od-drag-scroll-arrow {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .od-ui.od-icon-button.od-drag-scroll-arrow {
+    @apply od-flex od-items-center od-justify-center;
+    position: absolute;
+    top: 50%;
+    z-index: calc(var(--od-x-layer-raised) + 9);
+    width: var(--od-entity-selector-touch-target);
+    height: var(--od-entity-selector-touch-target);
+    min-width: var(--od-entity-selector-touch-target);
+    min-height: var(--od-entity-selector-touch-target);
+    padding: 0;
+    color: var(--od-entity-selector-text);
+    background: var(--od-entity-selector-subtle);
+    border: 1px solid var(--od-entity-selector-border);
+    border-radius: 999px;
+    opacity: 0.9;
+    transform: translateY(-50%);
+  }
+
+  .od-ui.od-icon-button.od-drag-scroll-arrow[data-scroll-action='left'] {
+    left: var(--od-drag-scroll-edge-inset);
+  }
+
+  .od-ui.od-icon-button.od-drag-scroll-arrow[data-scroll-action='right'] {
+    right: var(--od-drag-scroll-edge-inset);
+  }
+
+  .od-ui.od-icon-button.od-drag-scroll-arrow > svg {
+    width: 24px;
+    height: 24px;
+    color: currentColor;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui.od-icon-button.od-drag-scroll-arrow {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

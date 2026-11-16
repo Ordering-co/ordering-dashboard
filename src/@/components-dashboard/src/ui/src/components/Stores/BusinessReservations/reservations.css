@@ -1,0 +1,49 @@
+/*
+ * redesign stores 5.4 · Reservations section of the store editor. Values: --od-* and --od-x-* only
+ * (guard: productLiteralGuard.test.js). Logical properties only. The save bar is P/SaveBar (sticky by its own CSS).
+ */
+
+.odc-store-reservations {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-store-reservations-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* The master switch saves at once, so it sits apart from the form with a rule under it. */
+.odc-store-reservations-master {
+  padding-block-end: var(--od-space-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-store-reservations-form {
+  display: flex;
+  flex-direction: column;
+  /* >= 12px between stacked fields keeps their 44px touch areas from crossing (field.css) */
+  gap: var(--od-space-4);
+  max-inline-size: calc(var(--od-space-10) * 5);
+  min-inline-size: 0;
+}
+
+.odc-store-reservations-form > * {
+  min-inline-size: 0;
+}
+
+.odc-store-reservations-preorder {
+  padding-block-start: var(--od-space-2);
+}

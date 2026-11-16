@@ -10,32 +10,10 @@ main = "./worker/index.js"
 
 [assets]
 directory = "./dist"
-not_found_handling = "single-page-application"
+not_found_handling = "none"
 binding = "ASSETS"
 
-run_worker_first = [
-  "/*",
-  "!/*.png",
-  "!/*.svg",
-  "!/*.webp",
-  "!/*.jpg",
-  "!/*.jpeg",
-  "!/*.gif",
-  "!/*.ico",
-  "!/*.css",
-  "!/*.js",
-  "!/*.map",
-  "!/*.woff",
-  "!/*.woff2",
-  "!/*.ttf",
-  "!/*.eot",
-  "!/*.json",
-  "!/*.txt",
-  "!/*.xml",
-  "!/*.avif",
-  "!/*.mp4",
-  "!/*.webm"
-]
+run_worker_first = ["/"]
 
 [vars]
 ASSET_BASE_URL = "/"

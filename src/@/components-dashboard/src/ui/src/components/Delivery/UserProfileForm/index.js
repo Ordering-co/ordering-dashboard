@@ -1,91 +1,85 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { Camera as CameraIcon } from 'react-bootstrap-icons'
-import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
+import React, { useEffect, useId, useRef, useState } from 'react'
 
 import {
   UserFormDetails as UserProfileController,
   useLanguage,
-  DragAndDrop,
-  ExamineClick
+  DragAndDrop
 } from '../../../../../index'
 
-import { UserFormDetailsUI } from '../UserFormDetails'
-import { Alert, Modal, ImageCrop } from '../../Shared'
+import { UserFormDetailsUI, userFormErrorText } from '../UserFormDetails'
+import { Avatar, Button, Dialog, Skeleton } from '../../Shared/Product'
+import { CircleAlert, Image } from '../../Shared/Icon'
+import { ImageCrop } from '../../Shared/UI/ImageCrop'
 import { bytesConverter } from '../../../utils'
+import './user-profile-form.css'
 
-import {
-  Container,
-  UserProfileContainer,
-  UserImage,
-  Image,
-  Camera,
-  UploadImageIcon,
-  SkeletonWrapper,
-  WrapperForm
-} from './styles'
+// redesign UF-B3 (decision 3, M-UF3, M-UF16, M-UF17): the photo of the profile in Product. A 56px avatar (initials
+// when there is no photo), a real «Change photo» button, the crop in a Product dialog, and ONE upload: the cropped image, when
+// it is accepted (main uploaded the original at pick time and the crop again after it, and closing the crop kept the original).
+// The checks of main stay (type, 2 MB) and their messages show under the avatar, not in an alert. Drag and drop keeps working
+// through the same checks and the same crop.
+
+const ACCEPT = 'image/png, image/jpeg, image/jpg'
+const MAXIMUM_KILOBYTES = 2048
 
 const UserProfileFormUI = (props) => {
   const {
     handleButtonUpdateClick,
-    handlechangeImage,
     formState,
-    isHiddenAddress,
     userState,
     handleChangeSwtich
   } = props
 
   const [, t] = useLanguage()
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
-  const inputRef = useRef(null)
+  const hintId = useId()
+  const fileRef = useRef(null)
+  const buttonRef = useRef(null)
+  const [fileMessage, setFileMessage] = useState(null)
+  const [crop, setCrop] = useState({ open: false, photo: null })
+
+  const user = userState?.result?.result
+  const changes = formState?.changes ?? {}
+  const uploading = !!formState?.loading && !!changes.photo
+  const fullName = [user?.name, user?.lastname].filter(Boolean).join(' ')
+  const justUploaded = changes.photo && !formState?.result?.error ? changes.photo : null
+
+  // an upload that failed leaves its `photo` in the changes: its answer is the error under the avatar (never empty)
+  const uploadError = !formState?.loading && formState?.result?.error && changes.photo
+    ? userFormErrorText(t, formState.result.result)
+    : null
+  const photoError = fileMessage || uploadError
+
+  const closeCrop = () => setCrop(current => ({ ...current, open: false }))
 
   const handleFiles = (files) => {
-    if (files.length === 1) {
-      const type = files[0].type.split('/')[0]
-      if (type !== 'image') {
-        setAlertState({
-          open: true,
-          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
-        })
-        return
-      }
-
-      if (bytesConverter(files[0]?.size) > 2048) {
-        setAlertState({
-          open: true,
-          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
-        })
-        return
-      }
-
-      const reader = new window.FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = () => {
-        setCropState({ name: 'photo', data: reader.result, open: true })
-      }
-
-      handlechangeImage(files[0])
+    if (!files || files.length !== 1) return
+    const file = files[0]
+    setFileMessage(null)
+    if (file.type.split('/')[0] !== 'image') {
+      setFileMessage(t('ERROR_ONLY_IMAGES', 'Only images can be accepted'))
+      return
     }
+    if (bytesConverter(file?.size) > MAXIMUM_KILOBYTES) {
+      setFileMessage(t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes'))
+      return
+    }
+    const reader = new window.FileReader()
+    reader.onload = () => setCrop({ open: true, photo: reader.result })
+    reader.readAsDataURL(file)
   }
 
-  const handleClickImage = () => {
-    inputRef.current.click()
-  }
-
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
+  const handlePick = (event) => {
+    const files = Array.from(event.target.files ?? [])
+    event.target.value = '' // the same file can be picked again
+    handleFiles(files)
   }
 
   const handleChangePhoto = (croppedImg) => {
-    handleChangeSwtich(cropState?.name, croppedImg)
-    setCropState({ name: null, data: null, open: false })
+    handleChangeSwtich('photo', croppedImg)
+    closeCrop()
   }
 
+  // The saved photo is what the cropped image becomes: the controller keeps it in `changes.photo` until the upload ends.
   useEffect(() => {
     if (formState.changes?.photo) {
       const isImage = true
@@ -94,65 +88,69 @@ const UserProfileFormUI = (props) => {
   }, [formState.changes?.photo])
 
   return (
-    <>
-      <Container>
-        <UserProfileContainer mbottom={isHiddenAddress && 25}>
-          <UserImage className='user-image'>
-            <Image onClick={() => handleClickImage()} isImage={userState?.result?.result?.photo || (formState?.changes?.photo && !formState.result.error)}>
-              <ExamineClick onFiles={handleFiles} childRef={(e) => { inputRef.current = e }} accept='image/png, image/jpeg, image/jpg' disabled={formState.loading}>
-                <DragAndDrop onDrop={dataTransfer => handleFiles(dataTransfer.files)} accept='image/png, image/jpeg, image/jpg' disabled={formState.loading}>
-                  {formState.loading
-                    ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
-                    : ((!formState.changes?.result?.photo || formState.result?.result === 'Network Error' || formState.result.error)
-                        ? userState?.result?.result?.photo
-                          ? (<img src={userState?.result?.result?.photo} alt='user image' width='90px' height='90px' loading='lazy' />)
-                          : (
-                          <UploadImageIcon>
-                            <FaUserAlt />
-                          </UploadImageIcon>
-                            )
-                        : formState?.changes?.photo &&
-                        <img src={formState?.changes?.photo} alt='user image' loading='lazy' />
-                      )}
-                </DragAndDrop>
-              </ExamineClick>
-              <Camera><CameraIcon /></Camera>
-            </Image>
-          </UserImage>
-        </UserProfileContainer>
-        <WrapperForm>
-          <UserFormDetailsUI
-            {...props}
-            userData={userState?.result?.result}
-            isHiddenAddress={isHiddenAddress}
-          />
-        </WrapperForm>
-      </Container>
-      <Alert
-        title={t('PROFILE', 'Profile')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+    <div className='odc-uf-profile'>
+      <DragAndDrop
+        className='odc-uf-photo'
+        onDrop={dataTransfer => handleFiles(dataTransfer.files)}
+        disabled={formState.loading}
+      >
+        <div className='odc-uf-photo-row'>
+          {uploading
+            ? <Skeleton shape='round' size='var(--odc-uf-avatar)' block='var(--odc-uf-avatar)' />
+            : <Avatar name={fullName} src={justUploaded || user?.photo} size='lg' className='odc-uf-photo-avatar' />}
+          <div className='odc-uf-photo-actions'>
+            <Button
+              ref={buttonRef}
+              icon={Image}
+              disabled={!!formState.loading}
+              aria-describedby={hintId}
+              onClick={() => fileRef.current?.click()}
+            >
+              {t('USER_FORM_CHANGE_PHOTO', 'Change photo')}
+            </Button>
+            <p id={hintId} className='odc-uf-photo-hint'>
+              {t('USER_FORM_PHOTO_HINT', 'JPG or PNG, up to 2 MB. Saved when you choose it.')}
+            </p>
+          </div>
+        </div>
+        <input
+          ref={fileRef}
+          type='file'
+          accept={ACCEPT}
+          hidden
+          tabIndex={-1}
+          aria-hidden='true'
+          disabled={!!formState.loading}
+          onChange={handlePick}
+        />
+        {photoError && (
+          <p className='odc-uf-photo-error' role='alert'>
+            <CircleAlert className='odc-icon' aria-hidden='true' />
+            <span>{photoError}</span>
+          </p>
+        )}
+      </DragAndDrop>
+      <UserFormDetailsUI
+        {...props}
+        userData={user}
       />
-      {cropState?.open && (
-        <Modal
-          width='700px'
-          height='80vh'
-          padding='30px'
-          title={t('IMAGE_CROP', 'Image crop')}
-          open={cropState?.open}
-          onRemove={() => setCropState({ ...cropState, open: false })}
-        >
+      <Dialog
+        open={crop.open}
+        onOpenChange={closeCrop}
+        title={t('IMAGE_CROP', 'Image crop')}
+        closeLabel={t('CLOSE', 'Close')}
+        size='lg'
+        returnFocus={buttonRef}
+      >
+        {crop.photo && (
           <ImageCrop
-            photo={cropState?.data}
+            photo={crop.photo}
             handleChangePhoto={handleChangePhoto}
+            onClose={closeCrop}
           />
-        </Modal>
-      )}
-    </>
+        )}
+      </Dialog>
+    </div>
   )
 }
 

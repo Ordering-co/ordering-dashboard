@@ -1,0 +1,244 @@
+/*
+ * redesign IM-C (, D3): the menu import dialogs of /connect/importers (MenuImportDialog, GloriaFoodImportDialog) inside
+ * P/Dialog. Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else.
+ * Logical properties only (C17). Classes use the `odc-imp-` prefix. No fixed widths: the Dialog is a bottom sheet under 768px.
+ */
+
+/* The body of the dialog: one column, the same voice as the Dialog's own text */
+.odc-imp-body {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A field and, when it has one, the «Clear» that sits at the end of the label row */
+.odc-imp-field {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.odc-imp-clear {
+  position: absolute;
+  inset-block-start: calc((var(--od-x-leading-ui) * var(--od-x-type-ui-size) - var(--od-x-control-height-sm)) / 2);
+  inset-inline-end: 0;
+}
+
+.odc-imp-mono {
+  font-family: var(--od-font-mono);
+  font-feature-settings: normal;
+}
+
+/* The store: read-only data, «Store · name» */
+.odc-imp-store {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  margin: 0;
+  min-inline-size: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-store-label {
+  color: var(--od-text-muted);
+}
+
+.odc-imp-store-name {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+/* «Or enter project and store…»: a divider with the words in it */
+.odc-imp-structured {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-imp-or {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-or::before,
+.odc-imp-or::after {
+  content: '';
+  flex: 1 1 0;
+  min-inline-size: 0;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-imp-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* The consequence, neutral, above the footer */
+.odc-imp-consequence {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A validation message or a failed import */
+.odc-imp-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-alert .odc-icon {
+  flex: none;
+  margin-block-start: var(--od-x-space-half);
+}
+
+.odc-imp-alert span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A failed import says first what was not imported, then why */
+.odc-imp-alert-title {
+  display: block;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* Importing: the state, with a loading indicator of Product */
+.odc-imp-status {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+.odc-imp-status p {
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The message and, under it, since when */
+.odc-imp-status-text {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-imp-spinner {
+  flex: none;
+  animation: odc-imp-spin var(--od-duration-slow) linear infinite;
+}
+
+@keyframes odc-imp-spin { to { rotate: 1turn; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-imp-spinner { animation: none; }
+}
+
+/* Done */
+.odc-imp-success {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-imp-success .odc-icon {
+  flex: none;
+  color: var(--od-success-signal);
+}
+
+/* The lost connection: the same verdict line, not a success */
+.odc-imp-success[data-tone='warning'] .odc-icon {
+  color: var(--od-warning-signal);
+}
+
+/* The verdict of a finished import and its detail under it (the applied count, what to do after a lost connection) */
+.odc-imp-outcome {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-imp-detail {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* : the stores of a partial import that did not get the menu, one per line */
+.odc-imp-failures {
+  display: grid;
+  gap: var(--od-space-2);
+  padding-inline-start: var(--od-space-5);
+}
+
+/* : the project's stores to import into, and the count against the cap under them */
+.odc-imp-stores {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* GloriaFood step 1: the guide, full width at 16:9 */
+.odc-imp-video {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+/* GloriaFood step 2: «Back» and the step heading in a row */
+.odc-imp-step {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-imp-step-title {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* The option with its help under it */
+.odc-imp-option {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}

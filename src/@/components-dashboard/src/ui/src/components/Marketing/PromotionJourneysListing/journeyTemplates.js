@@ -1,13 +1,14 @@
+// redesign AC-D (G5): Lucide through the Ordering icon barrel (it was react-bootstrap-icons)
 import {
-  BagCheck,
-  Basket,
-  ClockHistory,
   Gift,
-  PersonCheck,
+  History,
   Repeat,
+  ShoppingBag,
+  ShoppingBasket,
   Star,
-  Truck
-} from 'react-bootstrap-icons'
+  Truck,
+  UserCheck
+} from '../../Shared/Icon'
 
 export const JOURNEY_TEMPLATES = [
   {
@@ -16,7 +17,7 @@ export const JOURNEY_TEMPLATES = [
     title: 'First purchase',
     description: 'Welcome customers who have not placed an order yet.',
     audience: 'Customers with exactly 0 orders',
-    icon: PersonCheck,
+    icon: UserCheck,
     fields: { orderCount: 0, orderCountCondition: '=', rateType: 1, limitPerUser: 1, hideLimit: true }
   },
   {
@@ -43,7 +44,7 @@ export const JOURNEY_TEMPLATES = [
     title: 'Minimum purchase reward',
     description: 'Encourage customers to reach a higher subtotal.',
     audience: 'Orders that meet the minimum subtotal',
-    icon: Basket,
+    icon: ShoppingBasket,
     fields: { rateType: 1 }
   },
   {
@@ -71,7 +72,7 @@ export const JOURNEY_TEMPLATES = [
     title: 'Happy hour',
     description: 'Drive demand during selected days and hours.',
     audience: 'Orders placed during the configured schedule',
-    icon: ClockHistory,
+    icon: History,
     requiresSchedule: true,
     fields: { rateType: 1 }
   },
@@ -81,7 +82,7 @@ export const JOURNEY_TEMPLATES = [
     title: 'We miss you',
     description: 'Reward customers after a period without ordering.',
     audience: 'Customers inactive for the configured number of days',
-    icon: BagCheck,
+    icon: ShoppingBag,
     requiresInactivity: true,
     fields: { orderCount: 0, orderCountCondition: '>', rateType: 1 }
   }

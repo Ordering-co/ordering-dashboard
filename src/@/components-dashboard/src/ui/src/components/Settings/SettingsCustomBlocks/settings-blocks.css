@@ -1,0 +1,88 @@
+/*
+ * redesign settings C · The 8 custom blocks of the Settings hub (date, reCAPTCHA, location checks, preorder, OneSignal,
+ * order alerts, multi-checkout, reservation). Rows, labels, hints, tables and the one-line layout come from
+ * `SettingsHubForm/settings-hub-form.css` (`odc-hub-*`); this file only adds what is specific to a block.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ */
+
+.odc-block {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-block-header {
+  display: grid;
+  gap: var(--od-x-space-half);
+}
+
+.odc-block-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-block-help {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The v2 / v3 key groups of the reCAPTCHA block. */
+.odc-block-subtitle {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The row `?focus=` landed on: a start indicator, as the legacy `$focused` mark. Not colour alone: the row also takes the focus. */
+.odc-hub-row[data-focused] {
+  padding-inline-start: var(--od-space-3);
+  border-inline-start: var(--od-x-indicator) solid var(--od-action-content);
+}
+
+/* A checkbox row that has a hint under it. */
+.odc-block .odc-hub-group > .odc-hub-hint {
+  padding-inline-start: var(--od-space-6);
+}
+
+/* The date block preview: how the chosen format reads. */
+.odc-block-preview {
+  display: grid;
+  gap: var(--od-x-space-half);
+  margin: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  list-style: none;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-x-selected);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-block-preview > li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-block-preview > li > span:last-child {
+  font-weight: var(--od-font-weight-semibold);
+  text-align: end;
+}
+
+/* Table cells: the control fills its cell; the last column of the wide tables is not squeezed to 40%. */
+.odc-block .odc-hub-table td > .odc-field,
+.odc-block .odc-hub-table td > .odc-checkbox {
+  min-inline-size: 0;
+}
+
+.odc-block .odc-hub-table td:last-child { inline-size: auto; }

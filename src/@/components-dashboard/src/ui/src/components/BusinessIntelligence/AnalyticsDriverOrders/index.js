@@ -170,8 +170,12 @@ export const AnalyticsDriverOrders = (props) => {
         <ChartHeaderContainer>
           <p>{isOrders ? t('ORDERS', 'Orders') : t('SALES', 'Sales')}</p>
           <ActionBlock disabled={!(isOrders ? chartDataList?.data?.dataset?.dataset?.data : chartDataList?.data?.dataset?.dataset[0]?.data)?.length}>
-            <BsArrowsAngleExpand onClick={previewChart} />
-            <BsDownload className='download-view' onClick={downloadCSV} />
+            <button type='button' aria-label={t('EXPAND', 'Expand')} onClick={previewChart}>
+              <BsArrowsAngleExpand />
+            </button>
+            <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+              <BsDownload className='download-view' />
+            </button>
           </ActionBlock>
         </ChartHeaderContainer>
         <ChartContentWrapper>
@@ -184,7 +188,7 @@ export const AnalyticsDriverOrders = (props) => {
               </div>
                 )
               : (
-                  ((isOrders ? chartDataList?.data?.dataset?.dataset?.data : chartDataList?.data?.dataset?.dataset[0]?.data)?.length > 0 && dataOptions) ? <Line data={dataOptions} options={options} ref={chartRef} /> : <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+                  ((isOrders ? chartDataList?.data?.dataset?.dataset?.data : chartDataList?.data?.dataset?.dataset[0]?.data)?.length > 0 && dataOptions) ? <Line data={dataOptions} options={options} ref={chartRef} /> : <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                 )
           }
         </ChartContentWrapper>

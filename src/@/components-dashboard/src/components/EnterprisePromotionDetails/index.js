@@ -1,9 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+
+// redesign review r1 (R1): `GET offers/:id` without `params` brings no relations (no sites, users, loyalty levels, businesses…), so a
+// promotion opened by ?id= showed every section empty and a Save replaced what was stored; and that endpoint fails with
+// `params=loyalty_levels` (measured on orderingv1). So the record is read through the list endpoint, filtered by its id, with the fields
+// the list asks for (C/components/EnterprisePromotionList `propsToFetch`), relations included: the same GET the list sends.
+const PROMOTION_PARAMS = [
+  'name', 'auto', 'enabled', 'end', 'description', 'image', 'label', 'order_priority', 'sites', 'stackable', 'start', 'target', 'type',
+  'limit_per_user', 'user_order_count', 'user_order_count_condition', 'valid_from_after_user_last_order_minutes', 'valid_until_after_user_last_order_minutes',
+  'users', 'delivery_zones', 'paymethods', 'order_types_allowed', 'max_discount', 'rank', 'rate_type', 'rate', 'public', 'coupon', 'businesses', 'condition_type',
+  'minimum', 'products', 'categories', 'schedule', 'limit', 'include_options', 'loyalty_levels'
+].join(',')
 
 export const EnterprisePromotionDetails = (props) => {
   const {
@@ -11,6 +23,7 @@ export const EnterprisePromotionDetails = (props) => {
     promotionId,
     promotionsList,
     businessesList,
+    getAllBusinessIds,
     sitesState,
     UIComponent,
     handleSuccessUpdatePromotions,
@@ -21,13 +34,15 @@ export const EnterprisePromotionDetails = (props) => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ token }] = useSession()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
 
   const [promotionState, setPromotionState] = useState({ promotion, loading: !promotion, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {} })
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
   const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
+  const [isSelectingAllBusinesses, setIsSelectingAllBusinesses] = useState(false)
+  const selectingAllBusinesses = useRef(false)
   const [selectedSitesIds, setSelectedSitesIds] = useState([])
   const [selectedProductsIds, setSelectedProductsIds] = useState({})
   const [selectedCategoryIds, setSelectedCategoryIds] = useState({})
@@ -98,13 +113,17 @@ export const EnterprisePromotionDetails = (props) => {
   /**
    * Method to change the sites
    */
+  // redesign review r1 (R1): the record the sections edit is the one loaded by the GET when the page opened it by ?id= (the prop is then
+  // empty); a change to its sites, users or loyalty levels starts from that record, or a Save would replace them with one item
+  const storedRecord = () => (promotionState.promotion && Object.keys(promotionState.promotion).length ? promotionState.promotion : promotion)
+
   const handleSelectSite = (checked, siteId) => {
     let sites = []
     if (formState.changes?.sites) {
       sites = [...formState.changes?.sites]
     } else {
-      if (promotion?.sites) {
-        sites = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
+      if (storedRecord()?.sites) {
+        sites = storedRecord()?.sites?.reduce((ids, site) => [...ids, site.id], [])
       }
     }
     if (checked) {
@@ -122,22 +141,43 @@ export const EnterprisePromotionDetails = (props) => {
     })
   }
 
-  const handleSelectAllBusiness = (isAll) => {
-    const businessIds = businessesList?.businesses?.reduce((ids, business) => [...ids, business.id], []) || []
-    let filteredIds = []
-    if (isAll) {
-      filteredIds = [...businessIds]
-    } else {
-      filteredIds = []
-    }
-    setSelectedBusinessIds(filteredIds)
-    setFormState({
-      ...formState,
+  // owner decision 14 B: «Select all» takes every business of the project (or every match of the search) from the list's
+  // `getAllBusinessIds`, not only the loaded page. While it reads, `isSelectingAllBusinesses` is true (the UI freezes the control, and a
+  // second click does nothing). On a failure the selection stays as it was and the error toast says so. «Select none» is synchronous as before.
+  // Without a reader (another host of this controller) it keeps the old behavior: the loaded page.
+  const applyBusinessIds = (businessIds) => {
+    setSelectedBusinessIds(businessIds)
+    setFormState(current => ({
+      ...current,
       changes: {
-        ...formState.changes,
-        businesses: filteredIds
+        ...current.changes,
+        businesses: businessIds
       }
-    })
+    }))
+  }
+
+  const handleSelectAllBusiness = async (isAll) => {
+    if (!isAll) {
+      applyBusinessIds([])
+      return
+    }
+    if (typeof getAllBusinessIds !== 'function') {
+      applyBusinessIds(businessesList?.businesses?.reduce((ids, business) => [...ids, business.id], []) || [])
+      return
+    }
+    if (selectingAllBusinesses.current) return
+    selectingAllBusinesses.current = true
+    setIsSelectingAllBusinesses(true)
+    try {
+      // W1 review F1: it adds; a business already selected that the search does not find keeps the promotion
+      const found = await getAllBusinessIds()
+      applyBusinessIds([...found, ...selectedBusinessIds.filter(id => !found.includes(id))])
+    } catch (err) {
+      showToast(ToastType.Error, translateApiMessage(t, err?.message, t('STORES_LOAD_FAILED', "We couldn't load the stores.")))
+    } finally {
+      selectingAllBusinesses.current = false
+      setIsSelectingAllBusinesses(false)
+    }
   }
 
   const handleSelectBusiness = (businessId, checked) => {
@@ -181,8 +221,8 @@ export const EnterprisePromotionDetails = (props) => {
     if (formState.changes?.users) {
       users = [...formState.changes?.users]
     } else {
-      if (promotion?.users) {
-        users = promotion?.users?.reduce((ids, user) => [...ids, user.id], [])
+      if (storedRecord()?.users) {
+        users = storedRecord()?.users?.reduce((ids, user) => [...ids, user.id], [])
       }
     }
     if (checked) {
@@ -216,8 +256,8 @@ export const EnterprisePromotionDetails = (props) => {
     if (formState.changes?.loyalty_levels) {
       loyaltyLevels = [...formState.changes?.loyalty_levels]
     } else {
-      if (promotion?.loyalty_levels) {
-        loyaltyLevels = promotion?.loyalty_levels?.reduce((ids, level) => [...ids, level.id], [])
+      if (storedRecord()?.loyalty_levels) {
+        loyaltyLevels = storedRecord()?.loyalty_levels?.reduce((ids, level) => [...ids, level.id], [])
       }
     }
     if (checked) {
@@ -352,7 +392,11 @@ export const EnterprisePromotionDetails = (props) => {
    * Method to delete the business promotion
    * @param {Number} promotionId promotion id
    */
+  // redesign PE-B3 (PE-14): deletes the id it can find (a record opened by ?id= has `promotion={}`, so `promotion.id` was undefined and the
+  // request went to /offers/undefined), RESOLVES its outcome (`{ ok: true }` or `{ ok: false, error }`) and, on an API error or a throw,
+  // frees the Save buttons (`loading` stayed true). Same request and toasts as before.
   const handleDeletePromotion = async () => {
+    const offerId = promotionState.promotion?.id ?? promotion?.id ?? promotionId
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
@@ -363,15 +407,22 @@ export const EnterprisePromotionDetails = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/offers/${promotion.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/offers/${offerId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        handleSuccessDeletePromotion && handleSuccessDeletePromotion(promotion.id)
+        handleSuccessDeletePromotion && handleSuccessDeletePromotion(offerId)
         showToast(ToastType.Success, t('OFFER_DELETED', 'Offer deleted'))
         props.onClose && props.onClose()
+        return { ok: true }
       }
+      hideToast?.() // redesign (row 81, review r1 R10): the «Loading» toast must not outlive a failed delete
+      setActionState({ loading: false, error: content.result })
+      return { ok: false, error: content.result }
     } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
+      hideToast?.()
+      const error = [err.message]
+      setActionState({ loading: false, error })
+      return { ok: false, error }
     }
   }
 
@@ -406,14 +457,19 @@ export const EnterprisePromotionDetails = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/offers/${promotionId}`, requestOptions)
-      const { result, error } = await response.json()
+      const where = JSON.stringify({ conditions: [{ attribute: 'id', value: Number(promotionId) }], conector: 'AND' })
+      const response = await fetch(`${ordering.root}/offers?page=1&page_size=1&params=${PROMOTION_PARAMS}&where=${where}`, requestOptions)
+      const content = await response.json()
+      const error = content.error || (Array.isArray(content.result) && content.result.length === 0)
+      const result = Array.isArray(content.result) ? (content.result[0] ?? [t('NOT_FOUND', 'Not found')]) : content.result
       if (!error) {
         setPromotionState({
           loading: false,
           promotion: result,
           error: null
         })
+        // redesign PE-B3 (PE-13): a record opened by ?id= is not on the loaded page, so only this GET knows its businesses, sites, users and levels
+        initSetting(result)
       } else {
         setPromotionState({
           ...promotionState,
@@ -478,6 +534,7 @@ export const EnterprisePromotionDetails = (props) => {
             formState={formState}
             actionState={actionState}
             selectedBusinessIds={selectedBusinessIds}
+            isSelectingAllBusinesses={isSelectingAllBusinesses}
             selectedSitesIds={selectedSitesIds}
             selectedProductsIds={selectedProductsIds}
             setSelectedProductsIds={setSelectedProductsIds}
@@ -488,6 +545,7 @@ export const EnterprisePromotionDetails = (props) => {
             handleUpdateClick={handleUpdateClick}
             handleAddPromotion={handleAddPromotion}
             handleDeletePromotion={handleDeletePromotion}
+            getPromotion={getPromotion}
             handleChangeItem={handleChangeItem}
             handleRemoveKey={handleRemoveKey}
             handleSelectSite={handleSelectSite}

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 export const CountrySelectWrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
-  z-index: 100;
+  z-index: var(--od-x-layer-sticky);
   position: relative;
   margin-bottom: 20px;
 
@@ -11,14 +11,14 @@ export const CountrySelectWrapper = styled.div`
     margin-top: 0;
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme?.colors.headingColor};
   }
 
   > p {
     margin-top: 0;
     margin-bottom: 5px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme?.colors.headingColor};
   }
 `
@@ -51,7 +51,7 @@ export const CountrySearchInput = styled.input`
   border: 1px solid #DEE2E6;
   box-sizing: border-box;
   border-radius: 7.6px;
-  font-size: 13px;
+  font-size: var(--od-type-control-value-size);
   padding: 11px 30px 11px 14px;
   width: 100%;
   outline: none;
@@ -68,7 +68,7 @@ export const CountryListContainer = styled.div`
   position: absolute;
   min-width: 100%;
   background-color: ${props => props.theme?.colors.primaryContrast};
-  z-index: 10000;
+  z-index: calc(var(--od-x-layer-notice) - 10);
   border-width: 1px;
   border-style: solid;
   border-color: ${props => props.theme?.colors.borderColor};
@@ -79,7 +79,7 @@ export const CountryListContainer = styled.div`
 export const CountryListItem = styled.div`
   padding: 10px 7px;
   border-bottom: 1px solid ${props => props.theme?.colors.borderColor};
-  font-size: 13px;
+  font-size: var(--od-type-control-value-size);
   color: ${props => props.theme?.colors.headingColor};
   cursor: pointer;
   transition: all 0.3s;

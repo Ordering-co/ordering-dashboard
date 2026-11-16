@@ -77,6 +77,7 @@ const WalletUI = (props) => {
         {width > 576 && moveDistance === 0 && (
           <IconButton
             color='black'
+            aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
             onClick={expandSidebar}
           >
             {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -86,8 +87,11 @@ const WalletUI = (props) => {
       <Tabs>
         {walletOptionList.map(option => (
           <Tab
+            as='button'
+            type='button'
             key={option.key}
             active={selectedOption === option.key}
+            aria-pressed={selectedOption === option.key}
             onClick={() => handleTabClick(option.key)}
           >
             {option.name}

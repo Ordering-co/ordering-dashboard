@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import theme from '~/theme.json'
 import { getDisplayPaymethods } from '../getDisplayPaymethods'
@@ -9,6 +12,13 @@ import { PaymethodRow } from '../PaymethodRow'
 vi.mock('../../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback]
 }))
+
+// jsdom does not load the stylesheet (vitest replaces CSS with nothing), so the rules the row depends on are read from the file
+const CSS = readFileSync(path.resolve(__dirname, '../payment-methods.css'), 'utf8')
+const rule = (selector) => {
+  const start = CSS.indexOf(`\n${selector} {`)
+  return start === -1 ? '' : CSS.slice(start, CSS.indexOf('}', start))
+}
 
 const cashRow = {
   id: 1,
@@ -35,85 +45,76 @@ const longNameRow = {
   name: 'A'.repeat(80)
 }
 
+// redesign stores 5.9: the row is an `li` of the list's `ul`, with an AsyncSwitch and a name button; the props changed
+// (`onToggle(paymethod, next)`, `onOpen(paymethod)`, `record`, `configs`).
 const renderRow = (overrides = {}) => {
   const props = {
     paymethod: cashRow,
     displayName: cashRow.name,
+    record: undefined,
     isEnabled: false,
-    showChevron: false,
+    configs: {},
     installingPluginKey: null,
-    onOpenEdit: vi.fn(),
-    onToggle: vi.fn(),
+    onOpen: vi.fn(),
+    onToggle: vi.fn(() => ({ ok: true })),
     onRequestInstall: vi.fn(),
-    isTutorialMode: false,
+    active: false,
     ...overrides
   }
-  renderWithProviders(<PaymethodRow {...props} />, { theme })
+  renderWithProviders(<ul><PaymethodRow {...props} /></ul>, { theme })
   return props
 }
 
 describe('getDisplayPaymethods', () => {
-  it('hides catalog Install rows in tutorial mode', () => {
-    const rows = getDisplayPaymethods({
-      paymethods: [cashRow],
-      plugins: [],
-      excludeGateways: [],
-      isTutorialMode: true
-    })
-    expect(rows.every(row => row.source === 'api')).toBe(true)
-    expect(rows.some(row => row.installState === 'installable')).toBe(false)
-  })
-
   it('adds catalog Install rows in store details', () => {
     const rows = getDisplayPaymethods({
       paymethods: [cashRow],
       plugins: [],
-      excludeGateways: [],
-      isTutorialMode: false
+      excludeGateways: []
     })
     expect(rows.some(row => row.pluginKey === 'paystack' && row.installState === 'installable')).toBe(true)
+  })
+
+  // redesign stores 4.A (decision 11)
+  it('leaves the catalog rows out when the person may not install, and keeps the store\'s methods', () => {
+    const rows = getDisplayPaymethods({ paymethods: [cashRow], plugins: [], excludeGateways: [], canInstall: false })
+    expect(rows.some(row => row.installState === 'installable')).toBe(false)
+    expect(rows.map(row => row.gateway)).toEqual([cashRow.gateway])
   })
 })
 
 describe('PaymethodRow', () => {
-  it('shows a checkbox and no Install for a ready API paymethod', () => {
+  // adapted (5.9): the enable box (`.paymethod-checkbox`) is a switch now
+  it('shows a switch and no Install for a ready API paymethod', () => {
     renderRow()
-    expect(document.querySelector('.paymethod-checkbox')).toBeTruthy()
+    expect(screen.getByRole('switch', { name: 'Cash' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Install' })).not.toBeInTheDocument()
     expect(screen.getByText('Cash')).toBeInTheDocument()
   })
 
-  it('shows Install and no checkbox for an installable catalog row', () => {
+  // adapted (5.9): no switch on a catalog row
+  it('shows Install and no switch for an installable catalog row', () => {
     renderRow({
       paymethod: paystackInstallable,
       displayName: 'Paystack'
     })
-    expect(document.querySelector('.paymethod-checkbox')).toBeFalsy()
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Install' })).toBeInTheDocument()
   })
 
-  it('keeps the same lead padding and name inset as checkbox rows', () => {
-    renderRow()
-    const readyLead = document.querySelector('.paymethod-checkbox')
-    const readyName = screen.getByText('Cash')
-    const readyLeadStyle = window.getComputedStyle(readyLead)
-    const readyNameStyle = window.getComputedStyle(readyName)
-
-    document.body.innerHTML = ''
-    renderRow({
-      paymethod: paystackInstallable,
-      displayName: 'Paystack'
-    })
-    const catalogLead = document.querySelector('.paymethod-lead')
-    const catalogName = screen.getByText('Paystack')
-    const catalogLeadStyle = window.getComputedStyle(catalogLead)
-    const catalogNameStyle = window.getComputedStyle(catalogName)
-
-    expect(catalogLead).toBeTruthy()
-    expect(catalogLeadStyle.paddingTop).toBe(readyLeadStyle.paddingTop)
-    expect(catalogLeadStyle.paddingBottom).toBe(readyLeadStyle.paddingBottom)
-    expect(catalogNameStyle.marginLeft).toBe(readyNameStyle.marginLeft)
-    expect(catalogLead.querySelector('.paymethod-lead-spacer')).toBeTruthy()
+  // adapted (5.9): the lead padding and the name inset were styled-components computed styles. The row has no padding of its own per kind
+  // now: a catalog row keeps the room of the switch with a spacer as wide as a control, and the name sits in the same flex slot.
+  it('keeps the room of the switch on a catalog row so the names line up', () => {
+    renderRow({ paymethod: paystackInstallable, displayName: 'Paystack' })
+    const lead = document.querySelector('.odc-pm-lead')
+    expect(lead).toBeTruthy()
+    expect(lead).toHaveAttribute('aria-hidden', 'true')
+    expect(rule('.odc-pm-lead')).toMatch(/inline-size: var\(--od-x-control-height\)/)
+    expect(rule('.odc-pm-lead')).toMatch(/flex: none/)
+    // the name of a catalog row is the same flex slot as a name that opens nothing (tutorial)
+    expect(screen.getByText('Paystack').closest('.odc-pm-label')).toBeTruthy()
+    expect(rule('.odc-pm-label')).toMatch(/flex: 1 1 0/)
+    expect(rule('.odc-paym-name')).toMatch(/flex: 1 1 0/)
   })
 
   it('does not open config when an installable row is clicked', () => {
@@ -122,7 +123,7 @@ describe('PaymethodRow', () => {
       displayName: 'Paystack'
     })
     fireEvent.click(screen.getByText('Paystack'))
-    expect(props.onOpenEdit).not.toHaveBeenCalled()
+    expect(props.onOpen).not.toHaveBeenCalled()
   })
 
   it('asks to install only after Confirm accept', () => {
@@ -132,17 +133,17 @@ describe('PaymethodRow', () => {
       const [confirm, setConfirm] = useState({ open: false, pluginKey: null, name: '' })
       return (
         <>
-          <PaymethodRow
-            paymethod={paystackInstallable}
-            displayName='Paystack'
-            isEnabled={false}
-            showChevron={false}
-            installingPluginKey={null}
-            onOpenEdit={vi.fn()}
-            onToggle={vi.fn()}
-            onRequestInstall={(row) => setConfirm({ open: true, pluginKey: row.pluginKey, name: row.name })}
-            isTutorialMode={false}
-          />
+          <ul>
+            <PaymethodRow
+              paymethod={paystackInstallable}
+              displayName='Paystack'
+              isEnabled={false}
+              installingPluginKey={null}
+              onOpen={vi.fn()}
+              onToggle={vi.fn()}
+              onRequestInstall={(row) => setConfirm({ open: true, pluginKey: row.pluginKey, name: row.name })}
+            />
+          </ul>
           {confirm.open && (
             <div>
               <p>Install payment method</p>
@@ -163,6 +164,7 @@ describe('PaymethodRow', () => {
     expect(handleInstallPaymentPlugin).toHaveBeenCalledWith('paystack')
   })
 
+  // adapted (5.9): the styled-components computed style is the rule of the stylesheet now
   it('ellipsis long names so they do not collide with Install', () => {
     renderRow({
       paymethod: longNameRow,
@@ -170,9 +172,73 @@ describe('PaymethodRow', () => {
     })
     const name = screen.getByText(longNameRow.name)
     expect(name).toHaveAttribute('title', longNameRow.name)
-    const style = window.getComputedStyle(name)
-    expect(style.overflow).toBe('hidden')
-    expect(style.textOverflow).toBe('ellipsis')
-    expect(style.whiteSpace).toBe('nowrap')
+    expect(name).toHaveClass('odc-pm-name-text')
+    const style = rule('.odc-pm-name-text')
+    expect(style).toMatch(/overflow: hidden/)
+    expect(style).toMatch(/text-overflow: ellipsis/)
+    expect(style).toMatch(/white-space: nowrap/)
+    expect(style).toMatch(/min-inline-size: 0/)
+  })
+
+  it('Install says it is installing, and is not pressable meanwhile', () => {
+    renderRow({ paymethod: paystackInstallable, displayName: 'Paystack', installingPluginKey: 'paystack' })
+    expect(screen.getByRole('button', { name: 'Installing...' })).toBeDisabled()
+  })
+
+  it('shows Sandbox and Keys missing only on an enabled row', () => {
+    renderRow({
+      paymethod: { ...cashRow, id: 5, name: 'Paypal', gateway: 'paypal', data_template: null },
+      displayName: 'Paypal',
+      isEnabled: true,
+      record: { id: 35, paymethod_id: 5, enabled: true, sandbox: true, data: null }
+    })
+    expect(screen.getByText('Sandbox')).toBeInTheDocument()
+    expect(screen.getByText('Keys missing')).toBeInTheDocument()
+  })
+
+  it('the open row says so', () => {
+    renderRow({ active: true })
+    expect(document.querySelector('li')).toHaveAttribute('aria-current', 'true')
+    expect(document.querySelector('li')).toHaveAttribute('data-section-split-key', '1')
+  })
+})
+
+// redesign stores 1.B (G4-05): the switch that enables a gateway and the row that opens its settings were
+// `div`s with `onClick`: unreachable with Tab and unnamed for assistive tech.
+describe('PaymethodRow · keyboard (G4-05)', () => {
+  // adapted (5.9): the named checkbox is a named switch; a press turns it the other way and opens nothing
+  it('the enable switch is named, reached with Tab and toggled with Space', async () => {
+    const user = userEvent.setup()
+    const props = renderRow({ isEnabled: true })
+    const toggle = screen.getByRole('switch', { name: 'Cash' })
+    expect(toggle).toHaveAttribute('aria-checked', 'true')
+    await user.tab()
+    expect(toggle).toHaveFocus()
+    await user.keyboard('[Space]')
+    expect(props.onToggle).toHaveBeenCalledWith(cashRow, false)
+    expect(props.onOpen).not.toHaveBeenCalled()
+  })
+
+  it('the name opens the settings with Enter', async () => {
+    const user = userEvent.setup()
+    const props = renderRow()
+    const open = screen.getByRole('button', { name: /^Cash/ })
+    await user.tab()
+    await user.tab()
+    expect(open).toHaveFocus()
+    await user.keyboard('[Enter]')
+    expect(props.onOpen).toHaveBeenCalledWith(cashRow)
+    expect(props.onToggle).not.toHaveBeenCalled()
+  })
+
+  it('an off switch says so', () => {
+    renderRow({ isEnabled: false })
+    expect(screen.getByRole('switch', { name: 'Cash' })).toHaveAttribute('aria-checked', 'false')
+  })
+
+  it('a catalog row has no switch and its name is not a button', () => {
+    renderRow({ paymethod: paystackInstallable, displayName: 'Paystack' })
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Paystack/ })).not.toBeInTheDocument()
   })
 })

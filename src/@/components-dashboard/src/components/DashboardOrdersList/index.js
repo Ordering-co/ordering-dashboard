@@ -11,8 +11,64 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import { applyInlineOrderStatusToList } from './inlineOrderStatusList'
+import { numericSearchText } from './orderSearchInput'
 dayjs.extend(utc)
 dayjs.extend(timezone)
+
+// Delivery moment used to order the list: the UTC one when the order has it.
+const getDeliveryTime = (order) => {
+  const value = order?.delivery_datetime_utc || order?.delivery_datetime
+  if (!value) return null
+  const time = moment(value, moment.ISO_8601).valueOf()
+  return Number.isNaN(time) ? null : time
+}
+
+/**
+ * Places orders the way the list is sorted (in place, like the array sort it wraps).
+ * Orders that arrive by socket go through here, so every sortable option of the
+ * list has to be known: `id`, `last_direct_message_at` and `delivery_datetime`.
+ */
+export const sortOrdersByOption = (option, orderDirection, array) => {
+  if (option === 'id') {
+    if (orderDirection === 'desc') {
+      return array.sort((a, b) => b.id - a.id)
+    }
+    if (orderDirection === 'asc') {
+      return array.sort((a, b) => a.id - b.id)
+    }
+  }
+  if (option === 'last_direct_message_at') {
+    return array.sort((a, b) => new Date(b.last_direct_message_at) - new Date(a.last_direct_message_at))
+  }
+  if (option === 'delivery_datetime') {
+    const direction = orderDirection === 'desc' ? -1 : 1
+    return array.sort((a, b) => {
+      const timeA = getDeliveryTime(a)
+      const timeB = getDeliveryTime(b)
+      // Orders without a usable delivery time go last, whatever the direction.
+      if (timeA === null || timeB === null) {
+        if (timeA === timeB) return a.id - b.id
+        return timeA === null ? 1 : -1
+      }
+      return (timeA - timeB) * direction || a.id - b.id
+    })
+  }
+  return array
+}
+
+// «Select all N» on /orders: the ids of everything the list matches are read page by page.
+// 100 per page is the largest page the dashboard already asks of any list endpoint; there is no
+// evidence of the orders endpoint's own maximum, so the walk follows the `total_pages` the API
+// answers with (a smaller page than asked for only means more requests).
+export const MATCHING_ORDER_IDS_PAGE_SIZE = 100
+// Safety stop: 100 pages of 100 are 10,000 orders. Past that the walk fails instead of returning a
+// partial list, because acting on an incomplete «all» would be worse than not offering it.
+export const MAX_MATCHING_ORDER_PAGES = 100
+
+// redesign messages B2 (B2-2): a `message` event for an order that is not in the page pulls it in by id.
+// At most 2 of those fetches run at once; the ids waiting keep the latest 10 distinct ones.
+export const PULL_IN_MAX_IN_FLIGHT = 2
+export const PULL_IN_MAX_QUEUED = 10
 
 export const DashboardOrdersList = (props) => {
   props = { ...defaultProps, ...props }
@@ -43,7 +99,11 @@ export const DashboardOrdersList = (props) => {
     orderIdForUnreadCountUpdate,
     driversList,
     allowColumns,
-    setAllowColumns
+    setAllowColumns,
+    withMessagesOnly, // redesign messages B2 (B2-1)
+    pullInOnMessage, // redesign messages B2 (B2-2)
+    unreadByAuthor, // redesign messages R2.2 (M-D12)
+    unreadResetSignal // redesign messages R2.2 (M-08)
   } = props
 
   const [ordering] = useApi()
@@ -66,20 +126,20 @@ export const DashboardOrdersList = (props) => {
   const isRegressionValidationEnabled = configState?.configs?.order_status_regression_validation_enabled?.value === '1'
   const filterDefaultOrderValues = ['today', 'last_seven_days']
 
-  const sortOrdersArray = (option, array) => {
-    if (option === 'id') {
-      if (orderDirection === 'desc') {
-        return array.sort((a, b) => b.id - a.id)
-      }
-      if (orderDirection === 'asc') {
-        return array.sort((a, b) => a.id - b.id)
-      }
-    }
-    if (option === 'last_direct_message_at') {
-      return array.sort((a, b) => new Date(b.last_direct_message_at) - new Date(a.last_direct_message_at))
-    }
-    return array
-  }
+  const sortOrdersArray = (option, array) => sortOrdersByOption(option, orderDirection, array)
+
+  // redesign messages B2 (B2-2): state of the opt-in «pull in on message» behaviour.
+  const [outsideMessages, setOutsideMessages] = useState(0)
+  const [arrival, setArrival] = useState(null)
+  const mounted = useRef(true)
+  const pullState = useRef({ inFlight: new Set(), queued: [], messages: new Map() })
+  // Always the latest render's closure: a fetch that ends later (or a queued id that starts later) must read
+  // the where, the page and the sort of NOW, and be dropped when they changed while it was in flight.
+  const latest = useRef({})
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
 
   /**
    * Method to change order status from API
@@ -127,8 +187,12 @@ export const DashboardOrdersList = (props) => {
   /**
    * Method to get orders from API
    * @param {number} page page number
+   * @param {string[]} [selectAttributes] attributes to ask for instead of `propsToFetch` (the id walk
+   * of «Select all N» asks for `id` only). Same where, same order, same everything else.
+   * @param {object[]} [extraConditions] conditions ANDed at the end of the where (redesign messages B2: the
+   * pull-in of one order asks with the list's own where plus its id).
    */
-  const getOrders = async (pageSize, page) => {
+  const getOrders = async (pageSize, page, selectAttributes, extraConditions) => {
     let where = []
     const conditions = []
     const options = {
@@ -250,15 +314,16 @@ export const DashboardOrdersList = (props) => {
     if (searchValue) {
       const searchConditions = []
       if (isSearchByOrderId) {
-        searchConditions.push(
-          {
+        const orderId = numericSearchText(searchValue)
+        if (orderId !== null) {
+          searchConditions.push({
             attribute: 'id',
             value: {
               condition: 'ilike',
-              value: encodeURIComponent(`%${searchValue}%`)
+              value: encodeURIComponent(`%${orderId}%`)
             }
-          }
-        )
+          })
+        }
         searchConditions.push(
           {
             attribute: 'external_id',
@@ -686,6 +751,22 @@ export const DashboardOrdersList = (props) => {
       }
     }
 
+    // redesign messages B2 (B2-1): only orders with direct messages, ANDed with everything above. Every path
+    // that asks for orders goes through here, so page loads, page changes, reloads and the id walk all carry it.
+    if (withMessagesOnly) {
+      conditions.push({
+        attribute: 'last_direct_message_at',
+        value: {
+          condition: '!=',
+          value: null
+        }
+      })
+    }
+    // redesign messages B2 (B2-2): the pull-in of one order adds its id to the list's own where.
+    if (extraConditions?.length) {
+      conditions.push(...extraConditions)
+    }
+
     if (conditions.length) {
       where = {
         conditions,
@@ -694,15 +775,39 @@ export const DashboardOrdersList = (props) => {
     }
 
     const source = {}
-    requestsState.orders = source
+    // the id walk is not the list's own request: it must not become what the list cancels
+    if (!selectAttributes && !extraConditions) requestsState.orders = source
     options.cancelToken = source
+    const attributes = selectAttributes ?? propsToFetch
     let functionFetch
-    if (propsToFetch) {
-      functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().select(propsToFetch).where(where)
+    if (attributes) {
+      functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().select(attributes).where(where)
     } else {
       functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().where(where)
     }
     return await functionFetch.get(options)
+  }
+  /**
+   * Ids of every order the list matches (current tab, filters and search), not just the page.
+   * Reuses `getOrders`, so the where cannot drift from the list's. Rejects on an API error or past
+   * `MAX_MATCHING_ORDER_PAGES`; it never returns a partial list. Does not touch the list state.
+   * @returns {Promise<number[]>}
+   */
+  const getAllMatchingOrderIds = async () => {
+    const ids = []
+    let page = 1
+    let totalPages = 1
+    while (page <= totalPages) {
+      if (page > MAX_MATCHING_ORDER_PAGES) throw new Error('Too many orders to select at once')
+      const { content } = await getOrders(MATCHING_ORDER_IDS_PAGE_SIZE, page, ['id'])
+      if (content.error) {
+        throw new Error(String(Array.isArray(content.result) ? content.result[0] : content.result))
+      }
+      ids.push(...content.result.map(order => order.id))
+      totalPages = content.pagination?.total_pages ?? 1
+      page += 1
+    }
+    return ids
   }
 
   /**
@@ -715,7 +820,9 @@ export const DashboardOrdersList = (props) => {
       let searchCheck = false
       const lowerCaseSearchValue = searchValue.toLowerCase()
       if (isSearchByOrderId) {
-        if ((order?.id?.toString() || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
+        const orderId = numericSearchText(searchValue)
+        if (orderId !== null && (order?.id?.toString() || '').includes(orderId)) searchCheck = true
+        if ((order?.external_id || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
       }
       if (isSearchByCustomerName) {
         if ((order?.customer?.name || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
@@ -854,6 +961,8 @@ export const DashboardOrdersList = (props) => {
           from: response.content.pagination.from,
           to: response.content.pagination.to
         })
+        // redesign messages B2 (B2-2): a fresh page 1 has no «outside» messages left to announce
+        if (response.content.pagination.current_page === 1) setOutsideMessages(0)
       }
 
       setOrderList({
@@ -903,6 +1012,8 @@ export const DashboardOrdersList = (props) => {
         error: response.content.error ? response.content.result : null
       })
       if (!response.content.error) {
+        // redesign messages B2 (B2-2): loading page 1 resets the count of messages that arrived for other pages
+        if (page === 1) setOutsideMessages(0)
         setPagination({
           currentPage: response.content.pagination.current_page,
           pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
@@ -981,6 +1092,22 @@ export const DashboardOrdersList = (props) => {
   }, [orderIdForUnreadCountUpdate])
 
   /**
+   * redesign messages R2.2 (M-08): the inbox hands a `{ orderId, seq }` signal instead of an id, so a second read of the same
+   * conversation (same id, new seq) zeroes its counters again. The effect above stays as it is for the other consumers.
+   */
+  useEffect(() => {
+    if (!unreadResetSignal) return
+    setOrderList(prevState => ({
+      ...prevState,
+      orders: prevState.orders.map(order => (
+        order?.id === unreadResetSignal.orderId
+          ? { ...order, unread_count: 0, unread_general_count: 0, unread_direct_count: 0 }
+          : order
+      ))
+    }))
+  }, [unreadResetSignal?.seq])
+
+  /**
    * Listening deleted order
    */
   useEffect(() => {
@@ -1036,7 +1163,10 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [JSON.stringify(filterValues)])
+    // redesign F6d-1 (Q3-01): with a filter on, the main effect above skips, so this one has to listen to
+    // everything that shapes the request too: the Status pill (`orderStatus`, serialized: a new array with the
+    // same statuses is no change), the search, the sort and the context ids.
+  }, [JSON.stringify(filterValues), JSON.stringify(orderStatus), searchValue, orderBy, isOnlyDelivery, driverId, customerId, businessId])
 
   const getLastUpdates = (history, sendOnlyStatus) => {
     const attributesToFind = ['status', 'logistic_status', 'driver_id']
@@ -1150,27 +1280,131 @@ export const DashboardOrdersList = (props) => {
     })
   }
 
+  // redesign messages B2 (B2-2): the order id of a `message` event, as `message.order.id` or `message.order_id`.
+  const getMessageOrderId = (message) => {
+    const rawId = message?.order?.id ?? message?.order_id
+    return rawId != null && rawId !== '' && !Number.isNaN(Number(rawId)) ? Number(rawId) : rawId
+  }
+
+  // redesign messages B2 (B2-2): fetches one order with the list's where plus its id (page size 1) and puts it
+  // on top of page 1 when it matches. Never rejects: a failed fetch is dropped silently, without retry.
+  const pullOrderIn = async (orderId) => {
+    const startedWith = latest.current.key
+    try {
+      const { content } = await getOrders(1, 1, undefined, [{ attribute: 'id', value: orderId }])
+      if (!mounted.current || content.error) return
+      const pulled = content.result?.[0]
+      if (!pulled || String(pulled.id) !== String(orderId)) return
+      // the list changed (tab, filters, search, page) while the order was on its way: it may not belong anymore
+      if (latest.current.key !== startedWith || latest.current.currentPage !== 1) return
+      if (latest.current.orders.some(_order => _order?.id === pulled.id)) return
+      const message = pullState.current.messages.get(String(orderId))
+      // redesign messages integration (live): the server may not show this message yet, so the event's time wins when it is
+      // newer; otherwise a pulled order sorted by the newest message falls out of the page it was pulled into.
+      const at = message?.created_at
+      if (at) {
+        const isNewer = (current) => !current || moment.utc(at).isAfter(moment.utc(current))
+        const field = message.type === 1 ? 'last_general_message_at' : 'last_direct_message_at'
+        if (isNewer(pulled[field])) pulled[field] = at
+        if (isNewer(pulled.last_message_at)) pulled.last_message_at = at
+      }
+      // redesign messages R1 (Q-02): the pulled order matches the list's own where, so the server's total already counts it: the
+      // total is never raised. It is inserted, and announced, only when it lands inside page 1 once sorted and cut to the page size
+      // (sorted by order number it may belong to a later page); otherwise nothing changes.
+      const pageSize = latest.current.pageSize
+      const insideFirstPage = sortOrdersArray(orderBy, [pulled, ...latest.current.orders].filter(Boolean))
+        .slice(0, pageSize)
+        .some(_order => _order?.id === pulled.id)
+      if (!insideFirstPage) return
+      setOrderList(prevState => {
+        if (prevState.orders.some(_order => _order?.id === pulled.id)) return prevState
+        const sortedOrders = sortOrdersArray(orderBy, [pulled, ...prevState.orders].filter(Boolean))
+        return { ...prevState, orders: sortedOrders.slice(0, pageSize) }
+      })
+      setArrival({
+        orderId: pulled.id,
+        at: message?.created_at ?? Date.now(),
+        authorName: message?.author?.name ?? null,
+        fromOutside: true
+      })
+    } catch (err) {
+      // dropped on purpose: no alert, no retry loop
+    }
+  }
+
+  // Starts queued ids while fewer than PULL_IN_MAX_IN_FLIGHT fetches are running.
+  const pumpPullQueue = () => {
+    const state = pullState.current
+    while (mounted.current && state.inFlight.size < PULL_IN_MAX_IN_FLIGHT && state.queued.length > 0) {
+      const orderId = state.queued.shift()
+      state.inFlight.add(String(orderId))
+      latest.current.pullOrderIn(orderId).then(() => {
+        state.inFlight.delete(String(orderId))
+        state.messages.delete(String(orderId))
+        latest.current.pumpPullQueue()
+      })
+    }
+  }
+
+  const enqueuePull = (orderId, message) => {
+    const state = pullState.current
+    const key = String(orderId)
+    state.messages.set(key, message)
+    // one request in flight per id, and a queued id is already waiting: later events for it are dropped
+    if (state.inFlight.has(key) || state.queued.some(id => String(id) === key)) return
+    state.queued.push(orderId)
+    if (state.queued.length > PULL_IN_MAX_QUEUED) {
+      state.queued.splice(0, state.queued.length - PULL_IN_MAX_QUEUED).forEach(id => state.messages.delete(String(id)))
+    }
+    pumpPullQueue()
+  }
+
+  // redesign messages R2.2 (M-D12): off, the admin rule it always was (a level-0 author does not count). On, only a message written by
+  // someone other than the session user counts, whatever the level of either.
+  const countsAsUnread = (message) => {
+    if (!unreadByAuthor) return message.author?.level !== 0
+    const authorId = message.author_id ?? message.author?.id
+    return authorId == null || user?.id == null || String(authorId) !== String(user.id)
+  }
+
   const handleNewMessage = (message) => {
-    if (orderList.orders.length === 0) return
-    const found = orderList.orders.find(order => order?.id === message.order?.id)
+    // redesign messages B2 (B2-2): off, this is exactly what it always was (`message.order?.id`, nothing for the rest)
+    const messageOrderId = pullInOnMessage ? getMessageOrderId(message) : message.order?.id
+    if (!pullInOnMessage && orderList.orders.length === 0) return
+    const found = orderList.orders.find(order => order?.id === messageOrderId)
+    if (pullInOnMessage) {
+      const authorName = message?.author?.name ?? null
+      const at = message?.created_at ?? Date.now()
+      if (found) {
+        setArrival({ orderId: messageOrderId, at, authorName, fromOutside: false })
+      } else if (messageOrderId != null) {
+        if (pagination.currentPage === 1) {
+          // the arrival is announced when the order is inserted: a fetch that does not match shows nothing
+          enqueuePull(messageOrderId, message)
+        } else {
+          setOutsideMessages(count => count + 1)
+          setArrival({ orderId: messageOrderId, at, authorName, fromOutside: true })
+        }
+      }
+    }
     if (found) {
       setOrderList(prevState => {
         const _orders = prevState.orders.filter(order => {
-          if (order?.id === message.order?.id) {
+          if (order?.id === messageOrderId) {
             if (order.last_message_at !== message.created_at) {
               if (message.type === 1) {
                 order.last_general_message_at = message.created_at
-                if (message.author?.level !== 0) {
+                if (countsAsUnread(message)) {
                   order.unread_general_count = order.unread_general_count + 1
                 }
               } else {
                 order.last_direct_message_at = message.created_at
-                if (message.author?.level !== 0) {
+                if (countsAsUnread(message)) {
                   order.unread_direct_count = order.unread_direct_count + 1
                 }
               }
               order.last_message_at = message.created_at
-              if (message.author.level !== 0) {
+              if (unreadByAuthor ? countsAsUnread(message) : message.author?.level !== 0) {
                 order.unread_count = order.unread_count + 1
               }
             }
@@ -1181,6 +1415,16 @@ export const DashboardOrdersList = (props) => {
         return { ...prevState, orders: _sortedOrders }
       })
     }
+  }
+
+  // redesign messages B2 (B2-2): what an async pull-in reads when it ends, always from the latest render
+  latest.current = {
+    key: JSON.stringify([orderStatus, filterValues, searchValue, orderIds, isOnlyDelivery, driverId, customerId, businessId, franchiseId, withMessagesOnly, orderBy, orderDirection]),
+    currentPage: pagination.currentPage,
+    pageSize: pagination.pageSize,
+    orders: orderList.orders,
+    pullOrderIn,
+    pumpPullQueue
   }
 
   const isDeepEmptyObject = (obj) => {
@@ -1260,11 +1504,14 @@ export const DashboardOrdersList = (props) => {
           pagination={pagination}
           loadMoreOrders={loadMoreOrders}
           getPageOrders={getPageOrders}
+          getAllMatchingOrderIds={getAllMatchingOrderIds}
           handleUpdateOrderStatus={handleUpdateOrderStatus}
           allowColumns={allowColumns}
           setAllowColumns={setAllowColumns}
           handleDrop={handleDrop}
           saveUserSettings={saveUserSettings}
+          outsideMessages={outsideMessages}
+          arrival={arrival}
         />
       )}
     </>
@@ -1305,6 +1552,16 @@ DashboardOrdersList.propTypes = {
    */
   orderIdForUnreadCountUpdate: PropTypes.number,
   /**
+   * redesign messages R2.2 (M-D12): opt-in, default off. A socket message raises the unread counters only when its author
+   * (`author_id ?? author.id`) is not the session user. Off keeps the admin rule (a level-0 author does not count).
+   */
+  unreadByAuthor: PropTypes.bool,
+  /**
+   * redesign messages R2.2 (M-08): opt-in. `{ orderId, seq }` or null. A new `seq` zeroes the three unread counters of that
+   * order, even when the id is the one of the previous signal.
+   */
+  unreadResetSignal: PropTypes.shape({ orderId: PropTypes.number, seq: PropTypes.number }),
+  /**
    * Array of id of orders
    * Get a list of orders by status form Ordering API
    * This can be use together `orderIds` option but not has effect with `orders` option
@@ -1329,11 +1586,23 @@ DashboardOrdersList.propTypes = {
     initialPage: PropTypes.number,
     pageSize: PropTypes.number,
     controlType: PropTypes.oneOf(['infinity', 'pages'])
-  })
+  }),
+  /**
+   * redesign messages B2 (B2-1): only orders with direct messages (`last_direct_message_at != null`), ANDed with
+   * the tab statuses, filters, search and `orderIds`. Default `false`.
+   */
+  withMessagesOnly: PropTypes.bool,
+  /**
+   * redesign messages B2 (B2-2): a `message` event for an order that is not in the page pulls it in by id (page 1)
+   * or counts it in `outsideMessages` (other pages), and sets `arrival`. Default `false`.
+   */
+  pullInOnMessage: PropTypes.bool
 }
 
 const defaultProps = {
   orderBy: 'id',
   orderDirection: 'desc',
-  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
+  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
+  withMessagesOnly: false, // redesign messages B2 (B2-1)
+  pullInOnMessage: false // redesign messages B2 (B2-2)
 }

@@ -1,0 +1,43 @@
+.od-ui:where(.od-tabs-generic),
+.od-ui:where(.od-tabs-shared) {
+  @apply od-flex;
+}
+
+.od-ui:where(.od-tabs-generic) { color: var(--od-tabs-generic-color); }
+
+.od-ui:where(.od-tab-generic),
+.od-ui:where(.od-tab-shared) {
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+}
+
+.od-ui:where(.od-tab-generic) {
+  padding: 10px 15px;
+  color: var(--od-tab-generic-color);
+}
+
+.od-ui:where(.od-tabs-shared) { border-bottom: 1px solid var(--od-tabs-border); }
+
+.od-ui:where(.od-tab-shared) {
+  padding: 10px 0;
+  color: var(--od-tab-shared-color);
+  border-bottom: var(--od-tab-shared-border-width) solid currentColor;
+  white-space: nowrap;
+  font-family: var(--od-tabs-font);
+  font-size: 14px;
+}
+
+.od-ui:where(.od-tab-generic):focus-visible,
+.od-ui:where(.od-tab-shared):focus-visible {
+  outline: var(--od-tabs-focus-width) solid var(--od-tabs-focus);
+  outline-offset: var(--od-tabs-focus-offset);
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-tab-generic),
+  .od-ui:where(.od-tab-shared) {
+    min-width: var(--od-tabs-touch-target);
+    min-height: var(--od-tabs-touch-target);
+  }
+}

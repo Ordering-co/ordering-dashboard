@@ -62,6 +62,13 @@ const ProductOptionSubOptionUI = (props) => {
     changePosition(position)
   }
 
+  // redesign fix-qa: E3. The whole row marks the sub option (main did); a press on a control of the row keeps its own action,
+  // and the name button, which is the keyboard way in, is not counted twice.
+  const handleRowClick = (event) => {
+    if (event.target.closest('button, a, input, select, textarea')) return
+    handleSuboptionClick()
+  }
+
   const handleSuboptionClick = () => {
     dirtyRef.current = true
     toggleSelect()
@@ -92,9 +99,14 @@ const ProductOptionSubOptionUI = (props) => {
   }, [suboption, dirtyRef, option])
   return (
     <>
-      <Container onClick={() => handleSuboptionClick()}>
-        <LeftOptionContainer>
-          <IconControl>
+      <Container onClick={handleRowClick}>
+        <LeftOptionContainer
+          as='button'
+          type='button'
+          aria-pressed={Boolean(state?.selected)}
+          onClick={() => handleSuboptionClick()}
+        >
+          <IconControl aria-hidden='true'>
             {((option?.min === 0 && option?.max === 1) || option?.max > 1)
               ? (
                   state?.selected
@@ -119,7 +131,7 @@ const ProductOptionSubOptionUI = (props) => {
             <SubOptionThumbnail src={suboption.image} />
           )}
           <Text>
-            <div>{suboption?.name}</div>
+            <span className='name'>{suboption?.name}</span>
           </Text>
         </LeftOptionContainer>
         <RightOptionContainer>
@@ -127,15 +139,29 @@ const ProductOptionSubOptionUI = (props) => {
           <QuantityControl>
             {option?.allow_suboption_quantity && state?.selected && (
               <>
-                <BsDashCircle
+                <button
+                  type='button'
+                  aria-label={t('DECREMENT_SUBOPTION', 'Decrease quantity')}
                   disabled={state.quantity === 0 || isSoldOut}
                   onClick={handleDecrement}
-                />
+                >
+                  <BsDashCircle
+                    disabled={state.quantity === 0 || isSoldOut}
+                    aria-hidden='true'
+                  />
+                </button>
                 {state.quantity}
-                <BsPlusCircle
+                <button
+                  type='button'
+                  aria-label={t('INCREMENT_SUBOPTION', 'Increase quantity')}
                   disabled={disableIncrement || isSoldOut}
                   onClick={handleIncrement}
-                />
+                >
+                  <BsPlusCircle
+                    disabled={disableIncrement || isSoldOut}
+                    aria-hidden='true'
+                  />
+                </button>
               </>
             )}
           </QuantityControl>
@@ -143,18 +169,39 @@ const ProductOptionSubOptionUI = (props) => {
             {
               option?.with_half_option && state?.selected && (
                 <>
-                  <BsCircleHalf
-                    className={['reverse', state.selected && state.position === 'left' ? 'selected' : null].filter(classname => classname).join(' ')}
+                  <button
+                    type='button'
+                    aria-label={t('LEFT_HALF', 'Left half')}
+                    aria-pressed={Boolean(state.selected && state.position === 'left')}
                     onClick={(e) => handlePosition(e, 'left')}
-                  />
-                  <BsCircleFill
-                    className={[state.selected && state.position === 'whole' ? 'selected' : null].filter(classname => classname).join(' ')}
+                  >
+                    <BsCircleHalf
+                      className={['reverse', state.selected && state.position === 'left' ? 'selected' : null].filter(classname => classname).join(' ')}
+                      aria-hidden='true'
+                    />
+                  </button>
+                  <button
+                    type='button'
+                    aria-label={t('WHOLE', 'Whole')}
+                    aria-pressed={Boolean(state.selected && state.position === 'whole')}
                     onClick={(e) => handlePosition(e, 'whole')}
-                  />
-                  <BsCircleHalf
-                    className={[state.selected && state.position === 'right' ? 'selected' : null].filter(classname => classname).join(' ')}
+                  >
+                    <BsCircleFill
+                      className={[state.selected && state.position === 'whole' ? 'selected' : null].filter(classname => classname).join(' ')}
+                      aria-hidden='true'
+                    />
+                  </button>
+                  <button
+                    type='button'
+                    aria-label={t('RIGHT_HALF', 'Right half')}
+                    aria-pressed={Boolean(state.selected && state.position === 'right')}
                     onClick={(e) => handlePosition(e, 'right')}
-                  />
+                  >
+                    <BsCircleHalf
+                      className={[state.selected && state.position === 'right' ? 'selected' : null].filter(classname => classname).join(' ')}
+                      aria-hidden='true'
+                    />
+                  </button>
                 </>
               )
             }

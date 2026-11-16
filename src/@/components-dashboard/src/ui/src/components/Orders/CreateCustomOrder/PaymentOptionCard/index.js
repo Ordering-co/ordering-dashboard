@@ -44,7 +44,7 @@ const PaymentOptionCardUI = (props) => {
 
       {token && !cardsList.loading && (!cardSelected || !paymethodsWithoutSaveCards.includes(gateway)) && (
         <AddNewCard>
-          <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
+          <button type='button' onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</button>
         </AddNewCard>
       )}
       {addCardOpen && (

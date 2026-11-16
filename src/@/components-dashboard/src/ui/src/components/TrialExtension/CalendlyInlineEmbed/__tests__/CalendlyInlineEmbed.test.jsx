@@ -214,4 +214,45 @@ describe('CalendlyInlineEmbed', () => {
     fireEvent.contextMenu(screen.getByText('Open in a new tab'))
     expect(screen.getByRole('button', { name: "I've booked my call" })).toBeInTheDocument()
   })
+
+  // with an ad blocker Calendly never answers; the 700px iframe stayed blank and pushed the notice and the link below the window
+  describe('when Calendly never answers', () => {
+    const comesBefore = (first, second) => Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
+
+    it('keeps "Open in a new tab" above the iframe, so it is visible without scrolling', () => {
+      const { container } = renderWithProviders(<CalendlyInlineEmbed embedUrl={EMBED_URL} fallbackUrl={FALLBACK_URL} />)
+      expect(comesBefore(screen.getByText('Open in a new tab'), container.querySelector('iframe'))).toBe(true)
+    })
+
+    it('shows the loading status above the iframe', () => {
+      const { container } = renderWithProviders(<CalendlyInlineEmbed embedUrl={EMBED_URL} fallbackUrl={FALLBACK_URL} />)
+      expect(comesBefore(screen.getByRole('status'), container.querySelector('iframe'))).toBe(true)
+    })
+
+    it('shows the notice with its new-tab link above the iframe once the load times out, and no blank block is left', () => {
+      const { container } = renderWithProviders(<CalendlyInlineEmbed embedUrl={EMBED_URL} fallbackUrl={FALLBACK_URL} />)
+      const iframe = container.querySelector('iframe')
+      expect(getComputedStyle(iframe).minHeight).toBe('700px')
+
+      act(() => {
+        vi.advanceTimersByTime(12000)
+      })
+
+      expect(comesBefore(screen.getByRole('alert'), iframe)).toBe(true)
+      expect(comesBefore(screen.getByText('Open the calendar in a new tab'), iframe)).toBe(true)
+      expect(parseFloat(getComputedStyle(iframe).minHeight)).toBe(0)
+      expect(parseFloat(getComputedStyle(iframe.parentElement).height)).toBe(0)
+      expect(iframe.getAttribute('src')).toBe(EMBED_URL)
+    })
+
+    it('gives the iframe its room back when Calendly answers after the timeout', () => {
+      const { container } = renderWithProviders(<CalendlyInlineEmbed embedUrl={EMBED_URL} fallbackUrl={FALLBACK_URL} />)
+      act(() => {
+        vi.advanceTimersByTime(12000)
+      })
+      dispatchCalendlyMessage(getIframeWindow(container), { event: 'calendly.page_height', payload: { height: '711px' } })
+      expect(screen.queryByRole('alert')).toBeNull()
+      expect(getComputedStyle(container.querySelector('iframe')).minHeight).not.toBe('700px')
+    })
+  })
 })

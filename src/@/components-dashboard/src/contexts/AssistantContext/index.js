@@ -350,13 +350,20 @@ export const AssistantProvider = ({ children, baseUrl }) => {
     dispatch({ type: 'reset' })
   }
 
+  // redesign J5 row 49 (assistant P-1) and review J5 #2: the UI now offers it, so the chat is cleared only once api-ai
+  // deleted the conversation (a 404 means it was already gone). A failure keeps the conversation and answers `{ ok: false }`.
   const deleteConversation = async () => {
     const id = conversationIdRef.current
+    if (id && client) {
+      stopMessage()
+      try {
+        await client.deleteConversation(id)
+      } catch (error) {
+        if (error?.status !== 404) return { ok: false, error }
+      }
+    }
     newConversation()
-    if (!id || !client) return
-    try {
-      await client.deleteConversation(id)
-    } catch {}
+    return { ok: true }
   }
 
   // Load the status (and the conversation of this tab) when the assistant becomes available

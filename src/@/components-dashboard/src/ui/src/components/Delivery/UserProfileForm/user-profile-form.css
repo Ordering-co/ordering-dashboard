@@ -1,0 +1,74 @@
+/*
+ * redesign UF-B3 (, decision 3, M-UF16, M-UF17) · The photo block of the Delivery profile form.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * `.odc-uf-profile` does not scroll by itself: the save bar of the form below sticks to whatever scrolls the host
+ * (the side panel), so the bar stays in view at any length of the form.
+ */
+
+.odc-uf-profile {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The avatar and the button are the drop zone (the real DragAndDrop adds `dragover` while a file is over it). */
+.odc-uf-photo {
+  /* 56px (decision 3) from the large avatar token, until the avatar scale has a step of its own */
+  --odc-uf-avatar: calc(var(--od-x-avatar-lg) * 1.75);
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-2);
+  border: var(--od-x-hairline) dashed transparent;
+  border-radius: var(--od-radius-component);
+}
+
+.odc-uf-photo.dragover { border-color: var(--od-text-muted); }
+
+.odc-uf-photo-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-uf-photo .odc-avatar {
+  inline-size: var(--odc-uf-avatar);
+  block-size: var(--odc-uf-avatar);
+  font-size: var(--od-x-type-lead-size);
+}
+
+.odc-uf-photo-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-uf-photo-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-type-secondary-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-photo-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-type-secondary-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-uf-photo-error > .odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}

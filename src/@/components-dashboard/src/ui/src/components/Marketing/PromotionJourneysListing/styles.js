@@ -1,3 +1,6 @@
+// redesign review r1: Quick offers is drawn with Product now (quick-offers.css); the page only imports the product-picker
+// pieces from here. The other styled components stay exported because the brand harness (scripts/brand-system/harness/marketing-a3-
+// styles.jsx, l8-wave4-styles.jsx) and the l5-a3 rulesets still measure them; retire them together with those fixtures.
 import styled, { css } from 'styled-components'
 
 const primary = p => p.theme.colors?.primary || '#266DF0'
@@ -29,8 +32,8 @@ export const Hero = styled.div`
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 20px;
-  h2 { margin: 0 0 4px; color: ${text}; font-size: 20px; font-weight: 600; line-height: 1.3; }
-  p { max-width: 680px; margin: 0; color: ${muted}; font-size: 14px; line-height: 1.5; }
+  h2 { margin: 0 0 4px; color: ${text}; font-size: var(--od-type-title-size); font-weight: 600; line-height: 1.3; }
+  p { max-width: 680px; margin: 0; color: ${muted}; font-size: var(--od-type-content-size); line-height: 1.5; }
   @media (max-width: 600px) { flex-direction: column; }
 `
 
@@ -68,13 +71,13 @@ export const TemplateContent = styled.span`
   flex-direction: column;
   justify-content: center;
   padding: 16px;
-  h3 { margin: 0 0 6px; color: ${text}; font-size: 15px; font-weight: 600; line-height: 1.35; }
-  p { margin: 0 0 8px; color: ${muted}; font-size: 13px; line-height: 1.45; }
+  h3 { margin: 0 0 6px; color: ${text}; font-size: var(--od-type-section-title-size); font-weight: 600; line-height: 1.35; }
+  p { margin: 0 0 8px; color: ${muted}; font-size: var(--od-type-content-size); line-height: 1.45; }
 `
 
 export const TemplateMeta = styled.span`
   color: ${muted};
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 500;
   line-height: 1.35;
 `
@@ -108,8 +111,8 @@ export const TemplateAction = styled.span`
 
 export const Section = styled.section`
   margin-top: 32px;
-  > h2 { margin: 0 0 4px; color: ${text}; font-size: 18px; font-weight: 600; }
-  > p { margin: 0 0 14px; color: ${muted}; font-size: 14px; line-height: 1.5; }
+  > h2 { margin: 0 0 4px; color: ${text}; font-size: var(--od-type-section-title-size); font-weight: 600; }
+  > p { margin: 0 0 14px; color: ${muted}; font-size: var(--od-type-content-size); line-height: 1.5; }
 `
 
 export const PromotionGrid = styled.div`
@@ -126,13 +129,13 @@ export const PromotionCard = styled.article`
   border-radius: 6px;
   background: ${surface};
   header { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; gap: 12px; }
-  h3 { min-width: 0; margin: 2px 0 0; color: ${text}; font-size: 14px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+  h3 { min-width: 0; margin: 2px 0 0; color: ${text}; font-size: var(--od-type-section-title-size); font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
   > p {
     display: -webkit-box;
     min-height: 40px;
     margin: 10px 0;
     color: ${muted};
-    font-size: 13px;
+    font-size: var(--od-type-content-size);
     line-height: 1.5;
     overflow: hidden;
     -webkit-box-orient: vertical;
@@ -152,7 +155,7 @@ export const Status = styled.span`
   border-radius: 4px;
   background: ${p => p.active ? '#E7F7ED' : subtle(p)};
   color: ${p => p.active ? '#176B3A' : muted(p)};
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 600;
 `
 
@@ -200,7 +203,7 @@ export const PromotionAction = styled.button`
   color: ${primary};
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   ${focusRing}
   svg { margin-left: 4px; vertical-align: -2px; }
@@ -233,7 +236,7 @@ export const PromotionPagination = styled.nav`
   gap: 12px;
   margin-top: 14px;
   color: ${muted};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   @media (max-width: 480px) { justify-content: space-between; }
 `
 
@@ -252,8 +255,8 @@ export const BuilderHeader = styled.header`
   gap: 16px;
   padding: 14px 20px;
   border-bottom: 1px solid ${border};
-  h2 { margin: 0 0 2px; color: ${text}; font-size: 18px; font-weight: 600; }
-  p { margin: 0; color: ${muted}; font-size: 13px; }
+  h2 { margin: 0 0 2px; color: ${text}; font-size: var(--od-type-section-title-size); font-weight: 600; }
+  p { margin: 0; color: ${muted}; font-size: var(--od-type-content-size); }
 `
 
 export const CloseButton = styled.button`
@@ -290,7 +293,7 @@ export const Field = styled.label`
   flex-direction: column;
   gap: 6px;
   color: ${text};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   input, select, textarea {
     width: 100%;
@@ -302,7 +305,7 @@ export const Field = styled.label`
     color: ${text};
     box-sizing: border-box;
     font: inherit;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     font-weight: 400;
   }
   input[type='number'] { appearance: textfield; -moz-appearance: textfield; }
@@ -321,7 +324,7 @@ export const Field = styled.label`
 
 export const FieldHint = styled.span`
   color: ${muted};
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 400;
   line-height: 1.4;
 `
@@ -333,11 +336,11 @@ export const UnavailableNotice = styled.div`
   border-radius: 6px;
   background: ${subtle};
   color: ${muted};
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   font-weight: 400;
   line-height: 1.45;
 `
-export const ErrorText = styled.span`color: #B4232D; font-size: 12px; font-weight: 500;`
+export const ErrorText = styled.span`color: #B4232D; font-size: var(--od-type-secondary-size); font-weight: 500;`
 
 export const ScopeBox = styled.div`
   grid-column: 1 / -1;
@@ -345,8 +348,8 @@ export const ScopeBox = styled.div`
   border: 1px solid ${p => p.error ? '#C8323E' : border(p)};
   border-radius: 6px;
   background: ${surface};
-  > h3 { margin: 0 0 4px; color: ${text}; font-size: 14px; font-weight: 600; }
-  > p { margin: 0 0 12px; color: ${muted}; font-size: 13px; line-height: 1.45; }
+  > h3 { margin: 0 0 4px; color: ${text}; font-size: var(--od-type-section-title-size); font-weight: 600; }
+  > p { margin: 0 0 12px; color: ${muted}; font-size: var(--od-type-content-size); line-height: 1.45; }
 `
 
 export const ScopeMode = styled.div`
@@ -370,7 +373,7 @@ export const ScopeModeButton = styled.button`
   color: ${text};
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 500;
   text-align: left;
   ${focusRing}
@@ -396,7 +399,7 @@ export const BusinessOption = styled.label`
   background: ${p => p.selected ? `${primary(p)}0D` : surface(p)};
   color: ${text};
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   input { width: 18px; height: 18px; accent-color: ${primary}; }
 `
 
@@ -407,15 +410,15 @@ export const ChoiceGroup = styled.div`
   gap: 10px;
   margin-top: 10px;
   color: ${muted};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   span { min-width: 40px; text-align: center; }
 `
-export const ScopeHint = styled.p`margin: 8px 0 0 !important; color: ${muted}; font-size: 12px !important;`
+export const ScopeHint = styled.p`margin: 8px 0 0 !important; color: ${muted}; font-size: var(--od-type-secondary-size) !important;`
 export const CheckGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 8px;
-  label { display: flex; min-height: 44px; align-items: center; gap: 8px; font-size: 13px; }
+  label { display: flex; min-height: 44px; align-items: center; gap: 8px; font-size: var(--od-type-control-size); }
 `
 
 export const ProductPickerHeader = styled.div`
@@ -424,8 +427,8 @@ export const ProductPickerHeader = styled.div`
   justify-content: space-between;
   gap: 12px;
   margin: 16px 0 10px;
-  h4 { margin: 0 0 3px; color: ${text}; font-size: 13px; font-weight: 600; }
-  p { margin: 0; color: ${muted}; font-size: 12px; line-height: 1.4; }
+  h4 { margin: 0 0 3px; color: ${text}; font-size: var(--od-type-control-size); font-weight: 600; }
+  p { margin: 0; color: ${muted}; font-size: var(--od-type-secondary-size); line-height: 1.4; }
   p + p { margin-top: 4px; }
 `
 
@@ -435,7 +438,7 @@ export const ProductSelectionCount = styled.span`
   border-radius: 4px;
   background: ${subtle};
   color: ${muted};
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 600;
 `
 
@@ -449,7 +452,7 @@ export const ProductPickerSearch = styled.input`
   color: ${text};
   box-sizing: border-box;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   &:focus {
     border-color: ${primary};
     outline: 2px solid ${p => `${primary(p)}33`};
@@ -482,7 +485,7 @@ export const ProductOption = styled.label`
   background: ${p => p.selected ? `${primary(p)}0D` : surface(p)};
   color: ${text};
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 500;
   input { width: 18px; height: 18px; flex: 0 0 auto; accent-color: ${primary}; }
   span { min-width: 0; flex: 1; overflow-wrap: anywhere; }
@@ -505,7 +508,7 @@ export const ProductCategoryHeader = styled.div`
   border-radius: 6px;
   background: ${p => p.selected ? `${primary(p)}0D` : surface(p)};
   color: ${text};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   > span:not(:last-child) { min-width: 0; flex: 1; overflow-wrap: anywhere; }
 `
@@ -561,7 +564,7 @@ export const ProductCategoryMeta = styled.span`
   border-radius: 4px;
   background: ${subtle};
   color: ${muted};
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 600;
 `
 
@@ -579,7 +582,7 @@ export const ProductPickerEmpty = styled.div`
   border: 1px dashed ${border};
   border-radius: 6px;
   color: ${muted};
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   text-align: center;
 `
 
@@ -593,7 +596,7 @@ export const ProductPickerLoadMore = styled.button`
   color: ${text};
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   ${focusRing}
   &:disabled { cursor: wait; opacity: 0.55; }
@@ -624,7 +627,7 @@ export const ActionButton = styled.button`
   cursor: ${p => p.disabled ? 'not-allowed' : 'pointer'};
   opacity: ${p => p.disabled ? 0.55 : 1};
   font: inherit;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   ${focusRing}
 `
@@ -636,7 +639,7 @@ export const ApiError = styled.div`
   border-radius: 6px;
   background: #FFF2F3;
   color: #8C1D27;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 1.45;
 `
 export const EmptyState = styled.div`
@@ -644,6 +647,6 @@ export const EmptyState = styled.div`
   border: 1px dashed ${border};
   border-radius: 6px;
   color: ${muted};
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   text-align: center;
 `

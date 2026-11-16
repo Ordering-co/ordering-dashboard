@@ -1,4 +1,5 @@
 import styled, { css, keyframes } from 'styled-components'
+import { brandFocusOutline } from '../../../styles/touchTarget'
 
 const statusColor = (theme, status) => {
   const colors = theme?.colors || {}
@@ -8,7 +9,7 @@ const statusColor = (theme, status) => {
   return colors.secundaryLight || '#B1BCCC'
 }
 
-const muted = props => props.theme.colors?.secundaryContrast || '#748194'
+const muted = () => 'var(--od-x-text-subtle)'
 const heading = props => props.theme.colors?.headingColor || '#344050'
 const border = props => props.theme.colors?.borderColor || '#E9ECEF'
 
@@ -40,7 +41,7 @@ export const SearchWrapper = styled.div`
     height: 36px;
     padding-top: 0;
     padding-bottom: 0;
-    font-size: 13px;
+    font-size: var(--od-type-control-value-size);
   }
 `
 
@@ -63,7 +64,7 @@ export const RefreshButton = styled.button`
   border: 1px solid ${border};
   border-radius: 7.6px;
   background: transparent;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   color: ${heading};
   cursor: pointer;
 
@@ -80,6 +81,8 @@ export const RefreshButton = styled.button`
   &:not(:disabled):hover {
     border-color: ${props => props.theme.colors?.primary || '#2C7BE5'};
   }
+
+  ${brandFocusOutline}
 `
 
 const drain = keyframes`
@@ -114,7 +117,7 @@ export const CooldownBar = styled.span`
 export const Notice = styled.div`
   padding: 12px 14px;
   border-radius: 7.6px;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 18px;
   color: ${heading};
   background: ${props => props.$tone === 'danger'
@@ -130,14 +133,14 @@ export const EmptyState = styled.div`
 
   h3 {
     margin: 0 0 6px;
-    font-size: 15px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 600;
     color: ${heading};
   }
 
   p {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--od-type-content-size);
     line-height: 18px;
     color: ${muted};
   }
@@ -170,7 +173,7 @@ export const CardHeader = styled.div`
 
 export const CardTitle = styled.h3`
   margin: 0;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   font-weight: 600;
   line-height: 20px;
   color: ${heading};
@@ -179,7 +182,7 @@ export const CardTitle = styled.h3`
 
 export const CardMeta = styled.p`
   margin: 2px 0 0;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 16px;
   color: ${muted};
 `
@@ -188,7 +191,7 @@ export const StatusBadge = styled.span`
   flex-shrink: 0;
   padding: 2px 8px;
   border-radius: 50px;
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 600;
   line-height: 16px;
   white-space: nowrap;
@@ -222,7 +225,7 @@ export const CardFooter = styled.div`
   justify-content: space-between;
   gap: 8px 16px;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   color: ${heading};
 `
 
@@ -239,6 +242,6 @@ export const Percent = styled.span`
 `
 
 export const FooterMeta = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: ${muted};
 `

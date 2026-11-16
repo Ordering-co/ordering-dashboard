@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import { useLanguage, useUtils } from '../../../../../index'
-import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
+import { User } from '../../Shared/Icon'
+import { getMarkerStatus, useMarkerDisclosure } from '../mapMarkerShared'
 import { useTheme } from 'styled-components'
 import {
   InfoContainer,
@@ -22,19 +23,26 @@ export const InterActOrderMarker = (props) => {
   const [{ parseDate }] = useUtils()
 
   const theme = useTheme()
-  const [infoShow, setInfoShow] = useState(false)
-  const infoRef = useRef(null)
-  const [infoTop, setInfoTop] = useState('0px')
-
-  useEffect(() => {
-    if (!infoShow) return
-    setInfoTop(`-${infoRef.current.scrollHeight + 55}px`)
-  }, [infoShow])
+  const { infoShow, infoId, infoRef, infoTop, markerRef, handlers } = useMarkerDisclosure()
+  const entityName = business?.name || `${customer?.name || driver?.name || ''} ${customer?.lastname || driver?.lastname || ''}`.trim()
+  const entityType = business
+    ? t('BUSINESS', 'Business')
+    : customer
+      ? t('CUSTOMER', 'Customer')
+      : t('DRIVER', 'Driver')
+  const status = getMarkerStatus({ timeStatus, driver })
+  const markerStatus = status && {
+    delayed: t('DELAYED', 'Delayed'),
+    offline: t('OFFLINE', 'Offline'),
+    busy: t('BUSY', 'Busy'),
+    available: t('AVAILABLE', 'Available')
+  }[status]
+  const detailsLabel = `${t('SHOW_DETAILS_FOR', 'Show details for')} ${entityName || entityType}${markerStatus ? `, ${markerStatus}` : ''}`
 
   return (
     <>
       {infoShow && (
-        <InfoContainer ref={infoRef} style={{ transform: `translate(-50%, ${infoTop})` }}>
+        <InfoContainer id={infoId} role='tooltip' ref={infoRef} style={{ transform: `translate(-50%, ${infoTop})` }}>
           {business && (
             <>
               <TextContainer>
@@ -72,7 +80,7 @@ export const InterActOrderMarker = (props) => {
               {customer?.order_id && (
                 <TextContainer>
                   <Text fontWeight='bold'>
-                    {t('INVOICE_ORDER_NO', 'Order No')}
+                    {t('INVOICE_ORDER_NO', 'Order number')}
                   </Text>
                   <Text>{customer.order_id}</Text>
                 </TextContainer>
@@ -142,15 +150,18 @@ export const InterActOrderMarker = (props) => {
         </InfoContainer>
       )}
       <WrapperMapMarker
-        onMouseOver={() => setInfoShow(true)}
-        onMouseLeave={() => setInfoShow(false)}
-        borderColor={timeStatus === 'delayed'
-          ? '#E63757'
-          : !driver?.available
-              ? '#6c757d'
-              : driver.busy
-                ? '#007bff'
-                : '#28a745'}
+        ref={markerRef}
+        type='button'
+        aria-label={detailsLabel}
+        aria-expanded={infoShow}
+        aria-describedby={infoShow ? infoId : undefined}
+        data-status={status || undefined}
+        onMouseEnter={handlers.onMouseEnter}
+        onMouseLeave={handlers.onMouseLeave}
+        onFocus={handlers.onFocus}
+        onBlur={handlers.onBlur}
+        onClick={handlers.onClick}
+        onKeyDown={handlers.onKeyDown}
       >
         {image
           ? (
@@ -158,7 +169,7 @@ export const InterActOrderMarker = (props) => {
             )
           : (
           <>
-            {customer && <FaUserAlt />}
+            {customer && <User />}
             {driver && (
               <MapMarkerImg bgimage={theme?.images?.icons?.noDriver} />
             )}

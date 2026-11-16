@@ -1,0 +1,3149 @@
+{
+  "schemaVersion": 1,
+  "id": "t1-isolated-stack-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l2-theme-runtime-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/contexts/ThemeContext/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "t1-button-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Button.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames(props.className, buttonClassName(componentProps))",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "classNames(props.className, iconButtonClassName(componentProps))",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "classNames('od-ui', 'od-link-button', componentProps.disabled && 'od-link-button-disabled', props.className)",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "classNames(buttonProps.className, 'od-button-link')",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "buttonClassName(props)",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "classNames(buttonClassName(props), 'od-button-link')",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "iconButtonClassName(props)",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        },
+        {
+          "match": "classNames('od-ui', 'od-link-button', props.disabled && 'od-link-button-disabled')",
+          "reason": "The owned action facade merges caller className with closed Ordering.co recipe hooks; final resolved visual props use the styled variable adapter.",
+          "evidence": "L2 action contracts, native form tests and measured real extension baseline; recipe initializers pinned below."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "BUTTON_COLOR_CLASSES",
+          "sha256": "f234b205acb111d99e5b6ddcdf4ff76f6cb17d4abb5e8391cc4e72f69a7cc65d",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "classNames",
+          "sha256": "f2e949cc3d07eb81330900c7f275fcfd44e32061e412ecc3113b20397ceddcbb",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "buttonColorClass",
+          "sha256": "20a11623874146abf190351a04aea820dda4a605682668a7ddc57168b5993fd0",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "buttonClassName",
+          "sha256": "3c684c766f8096bc0fdbae997547a5a7287429106b3024f31bd53ed8c01e80ec",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "iconButtonClassName",
+          "sha256": "5b7b1b9819063be22670b5fc6dd3fb26b61ef881d2184d1693fdd874383f25a7",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "decorateButtonProps",
+          "sha256": "f2e92bf65e5d39eb9e8768f3dd1b4a9d58b8f417cf95fccd61a50787d1c35712",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "decorateIconButtonProps",
+          "sha256": "f7abf55222fbdd12655c5c6969529ae51dbc1045e4e92f2296d5d7792eb05f14",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "decorateLinkButtonProps",
+          "sha256": "c46b119e033f30e25bc0480d554afea943ef645201181b2488b8038260e6fc1e",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "buttonAttrs",
+          "sha256": "a676c42eefed690875341acfe9c976888444b0595b4f23d7c92f1d4ae74fbdac",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        },
+        {
+          "name": "buttonLinkAttrs",
+          "sha256": "18cc9d9bef8c9626af4d159a7dd6ac47128ffd3839bc7cd3ccb0e74b69f4ccbf",
+          "reason": "Exact reviewed local action class recipe; changes require a reviewed new hash.",
+          "evidence": "L2 action wrapper tests and negative recipe mutation/shadowing tests."
+        }
+      ]
+    },
+    {
+      "id": "t1-mia-button-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/OrderingUi/button.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ]
+    },
+    {
+      "id": "t1-select-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Select.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/select"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "select"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "`od-ui select od-relative od-inline-block od-max-w-full${className ? ` ${className}` : ''}`",
+          "reason": "The isolated RecipientSelect consumer retains its legacy select hook and forwards caller className through the governed wrapper.",
+          "evidence": "The T1 Select contract and browser fixtures exercise the real RecipientSelect consumer with its existing className behavior."
+        }
+      ]
+    },
+    {
+      "id": "t1-confirm-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Confirm.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/dialog"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "popup-dialog"
+        ]
+      }
+    },
+    {
+      "id": "t1-theme-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/theme.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "t1-barrel-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "t1-recipient-consumer-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/RecipientSelect/index.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "t1-school-consumer-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolModuleToggle/index.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "t1-tailwind-config",
+      "kind": "pilot-guard",
+      "file": "tailwind.config.cjs",
+      "tailwindConfig": {
+        "prefix": "od-",
+        "content": [
+          "./src/@/components-dashboard/src/ui/src/components/Shared/UI/**/*.{js,jsx}"
+        ],
+        "preflight": false
+      }
+    },
+    {
+      "id": "t1-tailwind-css",
+      "kind": "pilot-guard",
+      "file": "src/brand/pilot.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-action-legacy-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Buttons/index.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-fields-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/fields.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-fields-legacy-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Inputs/index.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-fields-theme-boundary",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/fieldsTheme.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-input-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Input.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/input"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames(fieldClassName(props), 'od-field-input')",
+          "reason": "Closed Ordering.co field recipe retains caller styled class composition.",
+          "evidence": "L2c-A input wrappers, native forms and group browser contracts; recipe hashes pinned."
+        },
+        {
+          "match": "classNames(fieldClassName(props), 'od-field-textarea')",
+          "reason": "Closed Ordering.co field recipe retains caller styled class composition.",
+          "evidence": "L2c-A input wrappers, native forms and group browser contracts; recipe hashes pinned."
+        },
+        {
+          "match": "groupClassName(props, 'od-input-group')",
+          "reason": "Closed Ordering.co field recipe retains caller styled class composition.",
+          "evidence": "L2c-A input wrappers, native forms and group browser contracts; recipe hashes pinned."
+        },
+        {
+          "match": "groupClassName(props, 'od-input-group-left')",
+          "reason": "Closed Ordering.co field recipe retains caller styled class composition.",
+          "evidence": "L2c-A input wrappers, native forms and group browser contracts; recipe hashes pinned."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "f2e949cc3d07eb81330900c7f275fcfd44e32061e412ecc3113b20397ceddcbb",
+          "reason": "Exact reviewed closed field class recipe; changes require renewed review.",
+          "evidence": "L2c-A native field and styled compatibility contracts, browser fields and real Driver consumer."
+        },
+        {
+          "name": "fieldClassName",
+          "sha256": "0aca22e1da7a5b11350c58013e67c60bc4b0d5e9d1b61e3fe7f77d31872e057e",
+          "reason": "Exact reviewed closed field class recipe; changes require renewed review.",
+          "evidence": "L2c-A native field and styled compatibility contracts, browser fields and real Driver consumer."
+        },
+        {
+          "name": "groupClassName",
+          "sha256": "79d3bc41f8b2c8d6c9823bc948928867264e10227b33554542b2e2a2c069b2de",
+          "reason": "Exact reviewed closed field class recipe; changes require renewed review.",
+          "evidence": "L2c-A native field and styled compatibility contracts, browser fields and real Driver consumer."
+        }
+      ]
+    },
+    {
+      "id": "l2-checkbox-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Checkbox.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      },
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "f2e949cc3d07eb81330900c7f275fcfd44e32061e412ecc3113b20397ceddcbb",
+          "reason": "Closed reviewed selection class recipe; changes require renewed review.",
+          "evidence": "L2c-B native selection contracts and independent real ProductDesktopPreview consumer."
+        },
+        {
+          "name": "selectionAttrs",
+          "sha256": "bb8ca4d0e2eedf0011a8105e48bfabf3d15d889a4de66de93eb032d2493a72fc",
+          "reason": "Closed reviewed selection class recipe; changes require renewed review.",
+          "evidence": "L2c-B native selection contracts and independent real ProductDesktopPreview consumer."
+        }
+      ],
+      "dynamicClassNames": [
+        {
+          "match": "classNames(\n    'od-ui',\n    'od-selection-control',\n    variant === 'radio' ? 'od-radio-button' : 'od-checkbox'\n  )",
+          "reason": "Owned selection recipe uses only Ordering.co checkbox/round-checkbox classes; static function/hash pins the exact mapping.",
+          "evidence": "L2c-B checkbox wrappers and native consumer browser tests."
+        }
+      ]
+    },
+    {
+      "id": "l2-switch-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Switch.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      },
+      "dynamicClassNames": [
+        {
+          "match": "className",
+          "reason": "The Switch owner forwards the existing caller className unchanged onto its label. Owned class hooks are static attrs on the styled pieces.",
+          "evidence": "L2c-B Switch native DOM/class/event compatibility tests."
+        }
+      ]
+    },
+    {
+      "id": "l2-checkbox-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/checkbox.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-switch-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/switch.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-selection-legacy-checkbox-index",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Checkbox/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-legacy-switch-index",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Switch/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-legacy-switch-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Switch/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-legacy-select-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LegacySelect.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/collapsible"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "select-wrapper",
+          "header",
+          "options",
+          "search-bar-container",
+          "list-wrapper",
+          "option",
+          "custom-option",
+          "disabled"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames('od-ui', 'od-legacy-select-root', className || 'select-wrapper')",
+          "reason": "Exact native legacy row/root recipe retains Ordering.co classes and caller compatibility hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        },
+        {
+          "match": "classNames(\n                        'od-legacy-select-option option',\n                        option.disabled && 'disabled',\n                        option.showDisable && 'od-option-hidden',\n                        props.optionBottomBorder && 'od-option-border',\n                        option.color === 'primary' && 'od-option-primary'\n                      )",
+          "reason": "Exact native legacy row/root recipe retains Ordering.co classes and caller compatibility hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "8407e5678db6b36af7022f2f0a704ff92b12e401848b700d54604f13a59000ed",
+          "reason": "Pinned local class joining helper; static owned/legacy hooks are visible in the exact expressions.",
+          "evidence": "Existing class recipe mutation guards and L2c-C source review."
+        }
+      ]
+    },
+    {
+      "id": "l2-legacy-select-styled-pieces",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/legacy-select-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "select",
+          "list"
+        ]
+      }
+    },
+    {
+      "id": "l2-legacy-select-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/legacy-select.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-legacy-select-facade-index",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Select/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-legacy-select-facade-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Select/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-first-select-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/FirstSelect.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/collapsible"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "select",
+          "list",
+          "list-wrapper",
+          "search-bar-container",
+          "select-arrow",
+          "disabled",
+          "edit",
+          "delete"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames('od-first-select-option', props.optionBottomBorder && 'od-option-border')",
+          "reason": "Exact native FirstSelect recipe retains owned classes and legacy caller hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        },
+        {
+          "match": "classNames(\n            'od-first-select-option',\n            option.disabled && 'disabled',\n            option.showDisable && 'od-option-hidden',\n            props.optionBottomBorder && 'od-option-border',\n            option.color === 'primary' && 'od-option-primary'\n          )",
+          "reason": "Exact native FirstSelect recipe retains owned classes and legacy caller hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        },
+        {
+          "match": "classNames('od-ui', 'od-first-select-root', className || 'select')",
+          "reason": "Exact native FirstSelect recipe retains owned classes and legacy caller hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        },
+        {
+          "match": "classNames('od-first-select-chevron', !selectedOption && 'select-arrow')",
+          "reason": "Exact native FirstSelect recipe retains owned classes and legacy caller hooks.",
+          "evidence": "L2c-D public Collapsible disclosure, native keyboard round trips, scalar/form/real consumer tests; legacy placement uses original react-popper."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "8407e5678db6b36af7022f2f0a704ff92b12e401848b700d54604f13a59000ed",
+          "reason": "Pinned local class joining initializer.",
+          "evidence": "L2c-D native keyboard/scalar/edit/delete/direct styled DOM tests and Base Popover public anchor composition."
+        }
+      ]
+    },
+    {
+      "id": "l2-first-select-role-mapping",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/first-select-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-first-select-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/first-select.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-first-select-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Select/FirstSelect/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-multi-select-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/MultiSelect.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/collapsible"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "multi-select",
+          "search-bar-container",
+          "selected_option_content",
+          "remove_option"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames(\n                'od-multi-select-option',\n                props.optionBottomBorder && 'od-option-border',\n                option.color === 'primary' && 'od-option-primary'\n              )",
+          "reason": "Exact owned class recipe and existing caller root class forwarding.",
+          "evidence": "L2c-E native disclosure, exact scalar/chip/form/search/pagination contracts and real Customer/Driver consumers."
+        },
+        {
+          "match": "classNames('od-ui', 'od-multi-select-root', className || 'multi-select')",
+          "reason": "Exact owned class recipe and existing caller root class forwarding.",
+          "evidence": "L2c-E native disclosure, exact scalar/chip/form/search/pagination contracts and real Customer/Driver consumers."
+        },
+        {
+          "match": "textClassnames",
+          "reason": "Exact public textClassnames forwarding to legacy formatted text owner.",
+          "evidence": "L2c-E native disclosure, exact scalar/chip/form/search/pagination contracts and real Customer/Driver consumers."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "8407e5678db6b36af7022f2f0a704ff92b12e401848b700d54604f13a59000ed",
+          "reason": "Pinned local class joining initializer.",
+          "evidence": "L2c-E native disclosure, exact scalar/chip/form/search/pagination contracts and real Customer/Driver consumers."
+        }
+      ]
+    },
+    {
+      "id": "l2-multi-select-styled-pieces",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/multi-select-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-multi-select-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/multi-select.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-multi-select-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/MultiSelect/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-multi-select-styled-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/MultiSelect/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-standard-field-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/StandardField.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-standard-field-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/StandardField.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-standard-field-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/standard-field.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-",
+        "selectorContracts": [
+          {
+            "scope": ".od-ui:where(.od-standard-field)",
+            "selector": ".od-ui:where(.od-standard-field) :where(.select, .multi-select)",
+            "classes": [
+              "select",
+              "multi-select"
+            ],
+            "reason": "Preserve exact descendant hooks used by the three migrated selector owners; only within the owned layout scope.",
+            "evidence": "docs/brand-system-evidence/l2/standard-field/baseline.json and StandardField native layout contracts."
+          },
+          {
+            "scope": ".od-ui:where(.od-standard-field)",
+            "selector": ".od-ui:where(.od-standard-field) .select > div:first-child, .od-ui:where(.od-standard-field) .multi-select > div:first-child",
+            "classes": [
+              "select",
+              "multi-select"
+            ],
+            "reason": "Preserve exact descendant hooks used by the three migrated selector owners; only within the owned layout scope.",
+            "evidence": "docs/brand-system-evidence/l2/standard-field/baseline.json and StandardField native layout contracts."
+          },
+          {
+            "scope": ".od-ui:where(.od-standard-field)",
+            "selector": ".od-ui:where(.od-standard-field) .multi-select > div:first-child",
+            "classes": [
+              "multi-select"
+            ],
+            "reason": "Preserve exact descendant hooks used by the three migrated selector owners; only within the owned layout scope.",
+            "evidence": "docs/brand-system-evidence/l2/standard-field/baseline.json and StandardField native layout contracts."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l2-search-bar-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SearchBar.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "close"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "customClass || ''",
+          "reason": "Exact existing caller customClass forwarding.",
+          "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+        }
+      ]
+    },
+    {
+      "id": "l2-search-bar-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/search-bar.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-",
+        "selectorContracts": [
+          {
+            "scope": ".od-ui:where(.od-search-bar)",
+            "selector": ".od-ui:where(.od-search-bar) > svg, .od-ui:where(.od-search-bar) > button.close",
+            "classes": [
+              "close"
+            ],
+            "reason": "Exact legacy close descendant hook preserves styled/Bootstrap and real parent cascade only under the owned SearchBar.",
+            "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+          },
+          {
+            "scope": ".od-ui:where(.od-search-bar)",
+            "selector": ".od-ui:where(.od-search-bar) > button.close",
+            "classes": [
+              "close"
+            ],
+            "reason": "Exact legacy close descendant hook preserves styled/Bootstrap and real parent cascade only under the owned SearchBar.",
+            "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+          },
+          {
+            "scope": ".od-ui:where(.od-search-bar)",
+            "selector": ".od-ui:where(.od-search-bar) > button.close:hover, .od-ui:where(.od-search-bar) > button.close:focus",
+            "classes": [
+              "close"
+            ],
+            "reason": "Exact legacy close descendant hook preserves styled/Bootstrap and real parent cascade only under the owned SearchBar.",
+            "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+          },
+          {
+            "scope": ".od-ui:where(.od-search-bar)",
+            "selector": ".od-ui:where(.od-search-bar) > button.close:focus-visible",
+            "classes": [
+              "close"
+            ],
+            "reason": "Exact legacy close descendant hook preserves styled/Bootstrap and real parent cascade only under the owned SearchBar.",
+            "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+          },
+          {
+            "scope": ".od-ui:where(.od-search-bar)",
+            "selector": ".od-ui:where(.od-search-bar) > button.close svg",
+            "classes": [
+              "close"
+            ],
+            "reason": "Exact legacy close descendant hook preserves styled/Bootstrap and real parent cascade only under the owned SearchBar.",
+            "evidence": "L2c-G SearchBar native input/debounce/form contracts and actual OrdersHeaderFilterGroup consumer; baseline e7bed62."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l2-search-bar-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SearchBar/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-search-bar-styled-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SearchBar/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-pagination-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Pagination.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-pagination-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/pagination-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-compact-pagination-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PaginationButton.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-pagination-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/pagination.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-",
+        "selectorContracts": [
+          {
+            "scope": ".od-ui:where(.od-pagination-size)",
+            "selector": ".od-ui:where(.od-pagination-size) .select",
+            "classes": [
+              "select"
+            ],
+            "reason": "Exact existing page-size Select descendant styling under the owned pagination scope.",
+            "evidence": "L2c-H original PageSizeContainer borderStrong/padding contract and native Select/pagination tests."
+          },
+          {
+            "scope": ".od-ui:where(.od-pagination-size)",
+            "selector": ".od-ui:where(.od-pagination-size) .select > div:first-child",
+            "classes": [
+              "select"
+            ],
+            "reason": "Exact existing page-size Select descendant styling under the owned pagination scope.",
+            "evidence": "L2c-H original PageSizeContainer borderStrong/padding contract and native Select/pagination tests."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l2-compact-pagination-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/pagination-button.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-pagination-index-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Pagination/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-pagination-styles-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Pagination/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-paginationbutton-index-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/PaginationButton/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-paginationbutton-styles-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/PaginationButton/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-pagination-button-bridge",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/pagination-button-bridge.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-tabs-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Tabs.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-tab-action-bridge",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/tab-action-bridge.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-tabs-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/tabs.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-tabs-generic-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Tabs/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-tabs-shared-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Tabs/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-scroll-helper",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/scrollTo.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-tabs-product-surface-compat",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-dialog-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Dialog.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/dialog"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "popup-component"
+        ]
+      }
+    },
+    {
+      "id": "l2-dialog-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/dialog.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-popup-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/components/Popup/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-modal-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Modal.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "popup-dialog",
+          "dialog-inner",
+          "modal-close-icon"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "`popup-dialog ${className || ''}`",
+          "reason": "Preserves the exact legacy dialog hook plus caller className; caller dimensions/classes verified against immutable original.",
+          "evidence": "docs/brand-system-evidence/l2/dialogs-baseui/browser-baseline.log and browser-surface-final.log"
+        }
+      ]
+    },
+    {
+      "id": "l2-modal-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/modal-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-modal-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/modal.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-modal-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Modal/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-modal-styles-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Modal/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-dialog-layer-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/dialog-layer.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-confirm-legacy-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/confirm-legacy-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-confirm-legacy-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/confirm-legacy.css",
+      "forbidTailwindBase": true,
+      "tailwindCssPolicy": {
+        "prefix": "od-"
+      }
+    },
+    {
+      "id": "l2-confirm-legacy-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Confirm/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-confirm-legacy-styles-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Confirm/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-phone-input-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/InputPhoneNumber.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "phone_number"
+        ]
+      },
+      "dynamicClassNames": [
+        {
+          "match": "classNames('od-ui od-phone-input-control', className)",
+          "reason": "The phone input owner preserves the real widget input class while merging only the caller className and owned Ordering.co hooks.",
+          "evidence": "L2d-C1 phone input owner unit tests and real InputPhoneNumber browser contracts."
+        }
+      ],
+      "classNameBindings": [
+        {
+          "name": "classNames",
+          "sha256": "8407e5678db6b36af7022f2f0a704ff92b12e401848b700d54604f13a59000ed",
+          "reason": "Exact reviewed closed phone input class merge; changes require renewed review.",
+          "evidence": "L2d-C1 phone input owner unit tests and real InputPhoneNumber browser contracts."
+        }
+      ]
+    },
+    {
+      "id": "l2-phone-input-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/phone-input-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-phone-input-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/phone-input.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-phone-input-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/InputPhoneNumber/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-phone-input-styles-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/InputPhoneNumber/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-phone-input-country-helper",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/findExitingCode.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      },
+      "classNameBindings": [
+        {
+          "name": "findExitingCode",
+          "sha256": "1b2f276228dbb95ca6db2921c732ce4be26b885ed851bc394fb15d65b225bebb",
+          "reason": "Exact extracted country-code helper preserves the legacy lookup while keeping the phone owner off the broad utils module.",
+          "evidence": "L2d-C1 source equivalence review, helper unit coverage and real phone consumer browser contracts."
+        }
+      ]
+    },
+    {
+      "id": "l2-confirm-admin-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ConfirmAdmin.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-confirm-admin-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/confirm-admin-styles.js",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-confirm-admin-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/confirm-admin.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-confirm-admin-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ConfirmAdmin/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-confirm-admin-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ConfirmAdmin/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-confirm-admin-time-helper",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/formatSeconds.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SideBar.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-sidebar-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/sidebar-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-sidebar-layer",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/sidebar-layer.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/sidebar.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-sidebar-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SideBar/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SideBar/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-code-names",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/getCodeNames.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-site-url",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/checkSiteUrl.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-query-string",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/queryString.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-sidebar-icons-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Icon/index.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-color-picker-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColorPicker.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "ordering-color-picker"
+        ]
+      }
+    },
+    {
+      "id": "l2-color-picker-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/color-picker-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "ordering-color-picker"
+        ]
+      }
+    },
+    {
+      "id": "l2-color-picker-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/color-picker.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-color-picker-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ColorPicker/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-color-picker-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ColorPicker/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-column-allow-setting-popover-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColumnAllowSettingPopover.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-column-allow-setting-popover-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/column-allow-setting-popover-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-column-allow-setting-popover-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/column-allow-setting-popover.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-column-allow-setting-popover-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ColumnAllowSettingPopover/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-column-allow-setting-popover-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ColumnAllowSettingPopover/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-learn-drop-down-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LearnDropDown.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "place-holder",
+          "learn-drop-down"
+        ]
+      }
+    },
+    {
+      "id": "l2-learn-drop-down-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/learn-drop-down-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "place-holder",
+          "learn-drop-down"
+        ]
+      }
+    },
+    {
+      "id": "l2-learn-drop-down-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/learn-drop-down.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-learn-drop-down-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/LearnDropDown/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-learn-drop-down-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/LearnDropDown/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-range-calendar-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/RangeCalendar.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "ordering-calendar-btn"
+        ]
+      }
+    },
+    {
+      "id": "l2-range-calendar-styles",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/range-calendar-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "ordering-calendar-btn"
+        ]
+      }
+    },
+    {
+      "id": "l2-range-calendar-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/range-calendar.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-range-calendar-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/RangeCalendar/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-range-calendar-style-facade",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/RangeCalendar/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-calendar-locale-helper",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/getLocale.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Banners/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/DisabledFeatureAlert/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/DisabledFeatureAlert/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/NotNetworkConnectivity/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/PageNotFound/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/NotFoundSource/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/NotFoundSource/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-11",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ProgressRing/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SimpleSpinner/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-13",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SpinnerLoader/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-14",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SpinnerLoader/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-16",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/DisabledFeatureAlert.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-17",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/NotFoundSource.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-20",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ProgressRing.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-21",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SimpleSpinner.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-22",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SpinnerLoader.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-23",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Toast.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-27",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/disabled-feature-alert-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-28",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/disabled-feature-alert.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-29",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/feedback-theme.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-30",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/not-found-source-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-31",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/not-found-source.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-36",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/progress-ring-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-37",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/progress-ring.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-38",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/simple-spinner-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-39",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/simple-spinner.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-40",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/spinner-loader-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-41",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/spinner-loader.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-42",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/toast-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "spinner",
+          "spinner-content",
+          "toast-bar"
+        ]
+      }
+    },
+    {
+      "id": "l2-feedback-43",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/toast.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-feedback-44",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/WebsocketConnectionBanner/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-45",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/styles/Toast/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-feedback-46",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/getIconCard.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/CitySelector/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/CitySelector/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/RecipientSelect/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinesses/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinesses/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectLoyaltyLevels/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectLoyaltyLevels/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectSites/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectSites/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-11",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectUsers/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectUsers/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-entity-selector-13",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/CitySelector.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-15",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinesses.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-16",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectLoyaltyLevels.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-17",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectSites.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-18",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectUsers.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-19",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/city-selector-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-20",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/city-selector.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-entity-selector-21",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/entity-selector-theme.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-24",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-businesses-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-25",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-businesses.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-entity-selector-26",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-loyalty-levels-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-27",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-loyalty-levels.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-entity-selector-28",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-sites-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-29",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-sites.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-entity-selector-30",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-users-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "l2-entity-selector-31",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-users.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-entity-selector-skeleton-css",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/entity-selector.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-selection-tree-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinessCategories/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-tree-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinessCategories/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-tree-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinessProducts/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-tree-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SelectBusinessProducts/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-selection-tree-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessCategories.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "accordion__icon",
+          "rotate"
+        ]
+      }
+    },
+    {
+      "id": "l2-selection-tree-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessProducts.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "accordion__icon",
+          "rotate"
+        ]
+      }
+    },
+    {
+      "id": "l2-selection-tree-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-business-categories-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "accordion__icon",
+          "rotate"
+        ]
+      }
+    },
+    {
+      "id": "l2-selection-tree-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-business-products-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "accordion__icon",
+          "rotate"
+        ]
+      }
+    },
+    {
+      "id": "l2-selection-tree-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-business-categories.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-selection-tree-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/select-business-products.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-schedules-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Schedule/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-schedules-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Schedule/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-schedules-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ScheduleCopyTimes/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-schedules-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ScheduleCopyTimes/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-schedules-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "day-title",
+          "day-selector",
+          "days",
+          "date",
+          "icons"
+        ]
+      }
+    },
+    {
+      "id": "l2-schedules-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ScheduleCopyTimes.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "day-title",
+          "day-selector",
+          "days"
+        ]
+      }
+    },
+    {
+      "id": "l2-schedules-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/schedule-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "day-title",
+          "day-selector",
+          "days"
+        ]
+      }
+    },
+    {
+      "id": "l2-schedules-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/schedule-copy-times-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "day-title",
+          "day-selector",
+          "days"
+        ]
+      }
+    },
+    {
+      "id": "l2-schedules-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/schedule.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-schedules-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/schedule-copy-times.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-scroll-containers-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AutoScroll/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-scroll-containers-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AutoScroll/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-scroll-containers-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/DragScroll/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-scroll-containers-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/DragScroll/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-scroll-containers-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/AutoScroll.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "scroll-box",
+          "scroll-box__wrapper",
+          "scroll-box__container",
+          "left-autoscroll",
+          "right-autoscroll",
+          "hidden"
+        ]
+      }
+    },
+    {
+      "id": "l2-scroll-containers-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/DragScroll.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "scroll-box",
+          "scroll-box__wrapper",
+          "scroll-box__container",
+          "left-autoscroll",
+          "right-autoscroll",
+          "hidden"
+        ]
+      }
+    },
+    {
+      "id": "l2-scroll-containers-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/auto-scroll-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "scroll-box",
+          "scroll-box__wrapper",
+          "scroll-box__container",
+          "left-autoscroll",
+          "right-autoscroll",
+          "hidden"
+        ]
+      }
+    },
+    {
+      "id": "l2-scroll-containers-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/drag-scroll-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": [
+          "scroll-box",
+          "scroll-box__wrapper",
+          "scroll-box__container",
+          "left-autoscroll",
+          "right-autoscroll",
+          "hidden"
+        ]
+      }
+    },
+    {
+      "id": "l2-scroll-containers-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/auto-scroll.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-scroll-containers-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/drag-scroll.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-html-editor-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertLink/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertLink/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertImage/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertImage/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertVideo/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/HtmlEditor/InsertVideo/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertLink.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-13",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-link-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-14",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-link.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-html-editor-15",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-16",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-image-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-17",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-image.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-html-editor-18",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertVideo.jsx",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-19",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-video-styles.js",
+      "allowedBaseUiSources": [],
+      "classNamePolicy": {
+        "prefix": "od-",
+        "allow": []
+      }
+    },
+    {
+      "id": "l2-html-editor-20",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/insert-video.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-html-editor-22",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/bytesConverter.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-23",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/formatUrlVideo.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-html-editor-24",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Image/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ImageCrop/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/ImageCrop/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Image.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ImageCrop.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/image-crop-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-media-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/image-crop.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-spreadsheet-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SpreadSheetEditor/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-spreadsheet-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SpreadSheetEditor/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-spreadsheet-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SpreadSheetEditor.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-spreadsheet-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/spreadsheet-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-spreadsheet-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/spreadsheet.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-bill-rows-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/FeeBillRows/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/TaxBillRows/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/FeeBillRows.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/TaxBillRows.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/sharedBillRowAction.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/bill-row-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/bill-row.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-bill-rows-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/billFormatting.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-bill-rows-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/IntegrationLogs/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/IntegrationLogs/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/PushTokens/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/PushTokens/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/IntegrationLogs.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PushTokens.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/integration-log-styles.js",
+      "allowedBaseUiSources": [
+        "@base-ui/react/accordion"
+      ]
+    },
+    {
+      "id": "l2-technical-tables-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/integration-log.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-technical-tables-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/push-token-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-technical-tables-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/push-token.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-outbound-links-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Personalization/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Personalization/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/LinkableText/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Personalization.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LinkableText.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/outbound-link-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-outbound-links-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/outbound-link.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-shell-navigation-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/SidebarMenu/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/SidebarMenu/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Layout/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/LanguageSelector/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/LanguageSelector/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/LogoutButton/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SidebarMenu.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Layout.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LanguageSelector.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LogoutButton.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-11",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/shell-navigation-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/shell-navigation.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-shell-navigation-13",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/language-selector-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-shell-navigation-14",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/language-selector.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-shell-navigation-15",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/navigationHelpers.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/ForgotPasswordForm/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/LoginForm/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/QueryLogin/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/ResetPassword/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/QueryLogin.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-auth-17",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/getOrderingSubdomains.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-1",
+      "kind": "pilot-guard",
+      "file": "src/brand/identity.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-2",
+      "kind": "pilot-guard",
+      "file": "src/brand/assets.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-4",
+      "kind": "pilot-guard",
+      "file": "src/utils/dashboardBranding.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-5",
+      "kind": "pilot-guard",
+      "file": "src/utils/publicAssetUrl.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-6",
+      "kind": "pilot-guard",
+      "file": "src/App.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-7",
+      "kind": "pilot-guard",
+      "file": "src/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-8",
+      "kind": "pilot-guard",
+      "file": "src/components/HelmetTags/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-9",
+      "kind": "pilot-guard",
+      "file": "worker/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-identity-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/orderStatus.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-home-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Home/HomePage/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-home-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/getCurrentDiffDays.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Downloads/FreeProductsList/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Downloads/PurchasedProductsList/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Downloads/PurchasedProductsList/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PurchasedProductsList.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/purchased-products-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-download-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/purchased-products.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-messages-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/MessagesListing/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/MessagesListing/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/MessagesListing.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/messages-listing-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/messages-listing.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-messages-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/ChatContactList/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/ChatContactList/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ChatContactList.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/chat-contact-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-10",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/chat-contact.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-messages-11",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/ChatBusinessesList/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Messages/ChatBusinessesList/styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-13",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ChatBusinessesList.jsx",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-14",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/chat-businesses-styles.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-messages-15",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/chat-businesses.css",
+      "forbidTailwindBase": true
+    },
+    {
+      "id": "l2-messages-16",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/utils/learnOptionsValues.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-profile-1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Profile/ProfilePage/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "l2-profile-6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Profile/Sessions/index.js",
+      "allowedBaseUiSources": []
+    },
+    {
+      "id": "pilot-product-button-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Button.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-checkbox-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Checkbox.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/checkbox"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-tabs-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Tabs.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/tabs",
+        "@base-ui/react/direction-provider"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-menu-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Menu.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/menu"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-columnmanager-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/ColumnManager.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-filterbar-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterBar.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button",
+        "@base-ui/react/input"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-dialog-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Dialog.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/dialog",
+        "@base-ui/react/alert-dialog"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-sheet-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Sheet.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/dialog"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-splitview-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/SplitView.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/dialog"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-product-segmentedcontrol-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/SegmentedControl.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/toggle-group",
+        "@base-ui/react/toggle",
+        "@base-ui/react/direction-provider"
+      ],
+      "reason": "Governed Product wrapper of the Part 2 orders pilot: it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "docs/redesign/wrapper-brief.md; unit tests in Shared/Product/__tests__, pnpm ui:test:browser and pnpm ui:visual (wave 4)."
+    },
+    {
+      "id": "pilot-sidebar-accountmenu-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/SideBar/AccountMenu.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": "Account menu of the redesigned sidebar (batch 5.1): it owns the Base UI popover; SidebarMenu.jsx no longer renders the accordion, so its owner entry is emptied.",
+      "evidence": "redesign/pilot-orders/batch-5.1-sidebar-spec.md; Shared/SideBar/__tests__/SidebarNav.test.jsx."
+    },
+    {
+      "id": "pilot-orders-filter-popover-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": "Batch 5.2: the orders filter bar opens its quick filters (status, driver, driver group, external id) in a Base UI popover owned by this one file.",
+      "evidence": "redesign/pilot-orders/batch-5.2-list-spec.md; Orders/OrdersFilterBar/__tests__/OrdersFilterBar.test.jsx."
+    },
+    {
+      "id": "pilot-orders-date-range-popover-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/DateRangePopover.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": "QA fix E1: the orders date filter opens its presets, From / To fields and calendar in a Base UI popover owned by this one file (a Product Sheet below 768px).",
+      "evidence": "redesign/pilot-orders/fixes-qa-parity.md; Orders/DateTypeSelector/__tests__/."
+    },
+    {
+      "id": "builder-theme-color-popover-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/ThemeSchemaEditor/ThemeColorField.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": " B3b: a theme colour of a Builder component (an alias to a theme colour, an alpha, the theme-colour grid or a custom hex) opens in a non-modal Base UI popover owned by this one file, as P/FilterPopover does. P/ColorField can't serve it: it takes hex only, waits 750 ms and has no alias nor alpha. Approved by the redesign coordinator (2026-10-28).",
+      "evidence": "Builder/__tests__/ThemeColorField.test.jsx; Builder/__tests__/ColorControl.test.jsx; docs/THEMING.md (the color control)."
+    },
+    {
+      "id": "redesign-w0-7-field-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Field.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/field",
+        "@base-ui/react/number-field"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/Field.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-stores-2-c-secret-field-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/SecretField.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/field"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (Stores lot 2.C, decision 7): its input is a Base UI Field.Control inside the P/Field frame, as TextField's and PasswordField's are, so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/pages/stores-plan/plan.md › 2.C; redesign/pages/stores-2-c-secret-field/plan.md; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/SecretField.test.jsx; gallery #secret-field."
+    },
+    {
+      "id": "redesign-w0-7-switch-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Switch.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/switch"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/Switch.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-w0-7-radio-group-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/RadioGroup.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/radio-group",
+        "@base-ui/react/radio",
+        "@base-ui/react/direction-provider"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/RadioGroup.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-w0-7-pagination-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Pagination.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/input"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/Pagination.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-w0-7-section-nav-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/SectionNav.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/button"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/SectionNav.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-w0-7-date-picker-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/DatePicker.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/popover"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (wave 0, W0-7): it owns exactly these Base UI primitives so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/plan.md › W0-7; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/DatePicker.test.jsx; W0-7 gallery and pnpm ui:test:browser."
+    },
+    {
+      "id": "redesign-select-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Select.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/field",
+        "@base-ui/react/popover"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (, K-1): the form select owns the popover of its list and the field scope of its search, so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/pages/p-select-conditions/plan.md; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/Select.test.jsx; e2e/product-ui/select-behaviour.spec.js (pnpm ui:test:browser)."
+    },
+    {
+      "id": "redesign-bugs-d-tooltip-owner",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Tooltip.jsx",
+      "allowedBaseUiSources": [
+        "@base-ui/react/tooltip"
+      ],
+      "reason": "Governed Product wrapper of the dashboard redesign (bugs batch D, row 36c, W1-D-26): it owns exactly this Base UI primitive so application code imports the wrapper, never Base UI.",
+      "evidence": "redesign/dashboard/tracker.md row 36c; src/@/components-dashboard/src/ui/src/components/Shared/Product/__tests__/Tooltip.test.jsx; Orders/Messages/__tests__/Messages.accessibility.test.jsx; gallery and pnpm ui:test:browser."
+    }
+  ],
+  "preservations": []
+}

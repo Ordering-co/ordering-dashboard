@@ -1,0 +1,193 @@
+.od-ui:where(.od-phone-input) {
+  text-align: center;
+}
+
+.od-ui:where(.od-phone-input) select:focus {
+  outline: none;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInput {
+  @apply od-flex od-items-center;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputInput {
+  @apply od-flex-1 od-min-w-0;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIcon {
+  width: calc(1em * 1.5);
+  height: 1em;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIcon--square {
+  width: 1em;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIcon--border {
+  background-color: rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 0 0 1px var(--od-phone-border-strong),
+    inset 0 0 0 1px var(--od-phone-border-strong);
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIconImg {
+  @apply od-block od-h-full od-w-full;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputInternationalIconPhone {
+  opacity: 0.8;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputInternationalIconGlobe {
+  opacity: 0.65;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountry {
+  @apply od-relative od-flex od-items-center od-self-stretch;
+  margin-right: 0.35em;
+  border-radius: var(--od-phone-radius);
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountry:focus-within {
+  outline: var(--od-phone-focus-width) solid var(--od-phone-focus);
+  outline-offset: var(--od-phone-focus-offset);
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelect {
+  @apply od-absolute od-h-full od-w-full;
+  top: 0;
+  left: 0;
+  z-index: var(--od-x-layer-raised);
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelect[disabled] {
+  cursor: default;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelectArrow {
+  display: block;
+  content: '';
+  width: 0.3em;
+  height: 0.3em;
+  margin-left: 0.35em;
+  border-style: solid;
+  border-color: inherit;
+  border-top-width: 0;
+  border-bottom-width: 1px;
+  border-left-width: 0;
+  border-right-width: 1px;
+  transform: rotate(45deg);
+  opacity: 0.45;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon + .PhoneInputCountrySelectArrow {
+  color: var(--od-phone-focus);
+  opacity: 1;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon--border {
+  box-shadow:
+    0 0 0 1px var(--od-phone-focus),
+    inset 0 0 0 1px var(--od-phone-focus);
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountrySelect:focus + .PhoneInputCountryIcon .PhoneInputInternationalIconGlobe {
+  color: var(--od-phone-focus);
+  opacity: 1;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIcon {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0 black;
+  font-size: 20px;
+  outline: none;
+}
+
+.od-ui:where(.od-phone-input) .PhoneInputCountryIcon.PhoneInputCountryIcon--border img {
+  border-radius: 10px;
+  outline: none;
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput {
+  min-height: var(--od-phone-compact-height);
+  padding: 10px 15px;
+  color: var(--od-phone-text);
+  background: var(--od-phone-surface);
+  border: 1px solid var(--od-phone-border);
+  border-radius: var(--od-phone-radius);
+  font-family: var(--od-phone-font);
+  font-size: var(--od-phone-font-size);
+  outline: none;
+  transition:
+    background-color var(--od-phone-duration) var(--od-phone-easing),
+    border-color var(--od-phone-duration) var(--od-phone-easing),
+    color var(--od-phone-duration) var(--od-phone-easing);
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput:hover:not(:disabled):not(:read-only) {
+  border-color: var(--od-phone-border-strong);
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput:focus {
+  border-color: var(--od-phone-focus);
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput:focus-visible {
+  outline: var(--od-phone-focus-width) solid var(--od-phone-focus);
+  outline-offset: var(--od-phone-focus-offset);
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput::placeholder,
+.od-ui:where(.od-phone-input) input.PhoneInputInput::-webkit-input-placeholder {
+  color: var(--od-phone-placeholder);
+  opacity: 1;
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput:-ms-input-placeholder,
+.od-ui:where(.od-phone-input) input.PhoneInputInput::-ms-input-placeholder {
+  color: var(--od-phone-placeholder);
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput:disabled {
+  color: var(--od-phone-text-muted);
+  background-color: var(--od-phone-surface-subtle);
+  border-color: var(--od-phone-border);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.od-ui:where(.od-phone-input) input.PhoneInputInput[aria-invalid='true'] {
+  border-color: var(--od-phone-danger);
+}
+
+.od-ui:where(.od-phone-input-error) {
+  margin: 0;
+  padding: 0;
+  color: var(--od-phone-danger);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-phone-input) input.PhoneInputInput,
+  .od-ui:where(.od-phone-input) .PhoneInputCountry {
+    min-height: var(--od-phone-touch-target);
+  }
+
+  .od-ui:where(.od-phone-input) .PhoneInputCountry {
+    min-width: var(--od-phone-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-phone-input) input.PhoneInputInput {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

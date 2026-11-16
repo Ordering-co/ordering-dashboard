@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { glyphButtonReset } from '../../../styles/glyphButton'
+
 export const Container = styled.div`
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
   border-radius: 7.6px;
@@ -15,13 +17,16 @@ export const CustomerSatisfactionHeader = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme?.colors.headingColor};
     text-transform: uppercase;
   }
 `
 
 export const ActionBlock = styled.div`
+
+  ${glyphButtonReset}
+
   svg {
     font-size: 16px;
     color: #212121;
@@ -54,7 +59,7 @@ export const ScoreDiv = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme?.colors.headingColor};
     margin-right: 10px;
   }

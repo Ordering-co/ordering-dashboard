@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-create-custom-order-1-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "card-form-input-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CardForm/styles.js",
+      "component": "FormRow",
+      "property": "font-size",
+      "context": "input",
+      "match": "18px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "card-form-error-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CardForm/styles.js",
+      "component": "ErrorMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "card-form-zipcode-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CardForm/styles.js",
+      "component": "ZipcodeField",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "cart-bill-row-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CartBill/styles.js",
+      "component": "CartBillContainer",
+      "property": "font-size",
+      "context": "table",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "cart-bill-total-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CartBill/styles.js",
+      "component": "CartBillContainer",
+      "property": "font-size",
+      "context": "table.total > tr > td",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "cart-bill-loyalty-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CartBill/styles.js",
+      "component": "CartBillContainer",
+      "property": "font-size",
+      "context": "table.total > tr > td > &#loyalty",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "checkout-warning-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "checkout-flag-metadata",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "Flag",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "checkout-flag-metadata-wide",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "Flag",
+      "property": "font-size",
+      "context": "@media (min-width: 381px)",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "checkout-place-order-total",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "WrapperPlaceOrderButton",
+      "property": "font-size",
+      "context": "span",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "checkout-place-order-total-wide",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "WrapperPlaceOrderButton",
+      "property": "font-size",
+      "context": "span > @media (min-width: 1200px)",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "custom-order-details-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "DetailsContainer",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "custom-order-details-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "DetailsContainer",
+      "property": "font-size",
+      "context": "h3",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "custom-order-details-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "FormControl",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "custom-order-details-field-hint",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "FormControl",
+      "property": "font-size",
+      "context": "label > span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "custom-order-details-radio-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "RaidoButton",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driver-tips-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/DriverTips/styles.js",
+      "component": "DriverTipContainer",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "driver-tips-card-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/DriverTips/styles.js",
+      "component": "TipCard",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driver-tips-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/DriverTips/styles.js",
+      "component": "DriverTipLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "order-type-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/OrderTypeSelector/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> p",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "order-type-select-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/OrderTypeSelector/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "order-type-option-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/OrderTypeSelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "payment-cash-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionCash/styles.js",
+      "component": "FormCash",
+      "property": "font-size",
+      "context": "label",
+      "match": "16px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "payment-cash-amount-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionCash/styles.js",
+      "component": "WrapperInput",
+      "property": "font-size",
+      "context": "label",
+      "match": "16px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "payment-cash-error-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionCash/styles.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "checkout-warning-icon-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/Checkout/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "svg",
+      "match": "30px",
+      "reason": "Icon glyph geometry, not readable text; the size is paired with the icon box and any change reopens classification.",
+      "evidence": "The create-custom-order-1 typography inventory pins decorative icon sizing while readable text uses central roles."
+    },
+    {
+      "id": "custom-order-details-radio-icon-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/CustomOrderDetails/styles.js",
+      "component": "RaidoButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Icon glyph geometry, not readable text; the size is paired with the icon box and any change reopens classification.",
+      "evidence": "The create-custom-order-1 typography inventory pins decorative icon sizing while readable text uses central roles."
+    }
+  ]
+}

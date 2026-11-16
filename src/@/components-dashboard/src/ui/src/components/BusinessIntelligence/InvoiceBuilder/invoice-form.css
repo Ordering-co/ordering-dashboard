@@ -1,0 +1,277 @@
+/*
+ * redesign invoice FC1 (D1, D7, D12, D13): the form of /intelligence/invoice. Four sections (Who and when, Fees, Which orders
+ * count, Notes), one column on a phone and two columns of fields where the form has room for them. Tokens only (no colour,
+ * length, weight, duration or z-index literal); logical properties only (RTL). The 32 px controls keep their 44 px area on a
+ * phone with the house token, and the controls that stack are 12 px apart (--od-space-3) so their areas do not cross.
+ */
+
+.odc-iv-form,
+.odc-iv-form * {
+  box-sizing: border-box;
+}
+
+.odc-iv-form {
+  container-type: inline-size;
+  container-name: odc-iv-form;
+  display: flex;
+  flex-direction: column;
+  /* redesign invoice (integration, live 1440 and 390): space-8 left a gap of a screen-fold between short sections */
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign invoice AC (B2): Base UI draws a hidden <input> (aria-hidden, tabindex -1, 1 px, clipped) beside every number field, radio and
+   checkbox, with an INLINE style. A number field with a `name` (the four fee fields) gets it `position: absolute` with no offsets, so it
+   sat at the corner of its field as a visible 1 px box, and the touch probe counted it as a control under 44 px that crosses the real
+   field (4 failures, 4 crossings at 390; the audit blamed the radios, which are 358 x 44 and pass). It is not a control: no one can
+   touch, focus or hear it, it only serves autofill and native form validation, and this form has no <form>. A programmatic click on it
+   (Base UI's radios and checkboxes use one) still works when it is not rendered. The inline style asks for `!important`. */
+.odc-iv-form input[aria-hidden='true'][tabindex='-1'] {
+  display: none !important;
+}
+
+/* ── Sections ── */
+.odc-iv-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  /* a ⌘K jump lands with the title in view, not under the sticky bar */
+  scroll-margin-block-start: var(--od-space-6);
+}
+
+.odc-iv-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-iv-section-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Fields: one column; two where the form is wide enough (the container, not the window) ── */
+.odc-iv-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-iv-fields > * {
+  min-inline-size: 0;
+}
+
+@container odc-iv-form (min-width: 600px) {
+  .odc-iv-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .odc-iv-span {
+    grid-column: 1 / -1;
+  }
+}
+
+.odc-iv-unit {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+/* ── The trigger of the period: dressed as a field, 32 px, with its chevron (the business or driver is a filter pill) ── */
+.odc-iv-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-iv-trigger:hover {
+  border-color: var(--od-text-muted);
+}
+
+.odc-iv-trigger:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-iv-trigger[data-empty] .odc-iv-trigger-text {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-iv-trigger-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-iv-trigger-icon,
+.odc-iv-trigger-chevron {
+  flex: none;
+  color: var(--od-text-muted);
+}
+
+/* Decision 12: 32 px visible, 44 px of area on a phone or with a coarse pointer, never smaller than the box. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-iv-trigger {
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .odc-iv-trigger::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* ── Which orders count ── */
+.odc-iv-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-3);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-help p {
+  margin: 0;
+}
+
+.odc-iv-states {
+  display: block;
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-5) var(--od-space-2);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-states li {
+  padding-block: var(--od-x-space-half);
+}
+
+.odc-iv-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-iv-pill {
+  display: inline-flex;
+  min-inline-size: 0;
+}
+
+.odc-iv-checks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+}
+
+.odc-iv-check {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-iv-check-note {
+  margin: 0;
+  /* lines up with the text of the checkbox: its box plus the gap it keeps */
+  padding-inline-start: var(--od-space-6);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-notice {
+  align-self: flex-start;
+  max-inline-size: 100%;
+}
+
+/* ── The preview (InvoicePreview imports this file for these) ── */
+/* redesign invoice R2 (P2): while the figures are recalculated the list of orders and its foot are dimmed like the figures and the totals */
+.odc-iv-orders[data-stale] {
+  opacity: 0.6;
+}
+
+/* redesign invoice R2 (M2, D3): the foot of the orders table of the PDF (Subtotal, Total) under the list: the base of the commission.
+   It is of all the orders, not of the page or the search shown. */
+.odc-iv-orders-foot {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-orders-foot > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-iv-orders-foot > div:last-child {
+  border-block-end: 0;
+}
+
+.odc-iv-orders-foot dt {
+  color: var(--od-text-muted);
+}
+
+.odc-iv-orders-foot dd {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* redesign invoice R2 (M2, D3): the notes of the invoice, at the end of the preview as the PDF prints them. They are text: the line breaks
+   are CSS, never markup. */
+.odc-iv-notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-iv-notes-text {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}

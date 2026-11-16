@@ -63,7 +63,7 @@ export const AnalyticsCustomerSatisfaction = (props) => {
   return (
     <Container>
       <CustomerSatisfactionHeader>
-        <p>{t('CUSTOMER_SATISFACTION', 'Customer Safisfaction')}</p>
+        <p>{t('CUSTOMER_SATISFACTION', 'Customer satisfaction')}</p>
         <ActionBlock
           disabled={(!dataList?.data?.general &&
               !dataList?.data?.quality &&
@@ -72,7 +72,9 @@ export const AnalyticsCustomerSatisfaction = (props) => {
               !dataList?.data?.package
           )}
         >
-          <BsDownload onClick={downloadImage} />
+          <button type='button' aria-label={t('DOWNLOAD', 'Download')} onClick={downloadImage}>
+            <BsDownload />
+          </button>
         </ActionBlock>
       </CustomerSatisfactionHeader>
       {
@@ -97,7 +99,7 @@ export const AnalyticsCustomerSatisfaction = (props) => {
               !dataList?.data?.service &&
               !dataList?.data?.package
             )
-              ? (<EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+              ? (<EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                 )
               : (
                 <CustomerSatisfactionContent ref={downloadElementRef}>

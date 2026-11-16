@@ -1,0 +1,129 @@
+/*
+ * 5.2-A · Live status (prototype .live) and its detail dialog.
+ * A quiet ghost button: dot + text. Off (disconnected or degraded) swaps the dot
+ * for the WifiOff icon on --od-warning-soft, so the state is never only a color.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ */
+
+.odc-live {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-live .odc-live-btn.odc-btn {
+  gap: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+}
+
+.odc-live[data-state='off'] .odc-live-btn.odc-btn,
+.odc-live[data-state='off'] .odc-live-btn.odc-btn:hover,
+.odc-live[data-state='off'] .odc-live-btn.odc-btn[aria-expanded='true'] {
+  background: var(--od-warning-soft);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-live .odc-live-btn.odc-btn[aria-expanded='true'] {
+  background: var(--od-x-hover);
+  color: var(--od-text);
+}
+
+.odc-live-dot {
+  inline-size: var(--od-x-dot-lg);
+  block-size: var(--od-x-dot-lg);
+  flex: none;
+  border-radius: var(--od-radius-round);
+}
+
+/* Connected: success signal with a soft halo. Connecting: warning signal, no halo. */
+[data-state='live'] .odc-live-dot {
+  background: var(--od-success-signal);
+  box-shadow: 0 0 0 var(--od-x-space-half) var(--od-success-soft);
+}
+
+[data-state='connecting'] .odc-live-dot {
+  background: var(--od-warning-signal);
+}
+
+/* ── Detail dialog ── */
+.odc-live-detail {
+  display: grid;
+  gap: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-live-detail p { margin: 0; }
+
+.odc-live-current {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-live-meta {
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-live-detail ul { margin: 0; padding: 0; list-style: none; }
+
+/* The legend (B6): the three states. The current one has a soft background and a border, not only a color. */
+.odc-live-legend {
+  display: grid;
+  gap: var(--od-space-2);
+}
+
+.odc-live-legend-item {
+  display: grid;
+  gap: var(--od-space-1);
+  padding: var(--od-space-2) var(--od-space-3);
+  border: var(--od-x-hairline) solid transparent;
+  border-radius: var(--od-radius-component);
+}
+
+.odc-live-legend-item[aria-current='true'] {
+  background: var(--od-x-hover);
+  border-color: var(--od-border);
+}
+
+.odc-live-legend-state {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* The dialog carries its own data-state, which paints every dot inside it: each item resets to its own. */
+.odc-live-legend-item .odc-live-dot { background: transparent; box-shadow: none; }
+.odc-live-legend-item[data-status='live'] .odc-live-dot {
+  background: var(--od-success-signal);
+  box-shadow: 0 0 0 var(--od-x-space-half) var(--od-success-soft);
+}
+.odc-live-legend-item[data-status='connecting'] .odc-live-dot { background: var(--od-warning-signal); }
+
+.odc-live-troubleshoot {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-2);
+  padding-block-start: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-live-troubleshoot h3 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Motion (C15): the only transition is the button's own; none with reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .odc-live .odc-live-btn { transition: none; }
+}

@@ -271,8 +271,12 @@ export const AnalyticsSpendTimes = (props) => {
         <ChartHeaderContainer>
           <p>{t('TIMES', 'Times')}</p>
           <ActionBlock disabled={chartDataList?.data.length === 0}>
-            <BsArrowsAngleExpand onClick={previewChart} />
-            <BsDownload className='download-view' onClick={downloadCSV} />
+            <button type='button' aria-label={t('EXPAND', 'Expand')} onClick={previewChart}>
+              <BsArrowsAngleExpand />
+            </button>
+            <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+              <BsDownload className='download-view' />
+            </button>
           </ActionBlock>
         </ChartHeaderContainer>
         <ChartContentWrapper>
@@ -285,7 +289,7 @@ export const AnalyticsSpendTimes = (props) => {
               </div>
                 )
               : (
-                  chartDataList?.data.length > 0 ? <Line data={defaultData} options={options} ref={chartRef} /> : <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+                  chartDataList?.data.length > 0 ? <Line data={defaultData} options={options} ref={chartRef} /> : <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                 )
           }
         </ChartContentWrapper>

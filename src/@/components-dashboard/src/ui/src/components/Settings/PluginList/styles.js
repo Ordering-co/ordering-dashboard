@@ -28,7 +28,7 @@ export const Header = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }
@@ -56,7 +56,7 @@ export const PluginsTable = styled.table`
     border-bottom: 1px solid ${props => props.theme.colors.secundaryLight};
     th {
       padding: 10px 0;
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
     }
   }
 
@@ -93,7 +93,7 @@ export const PluginTbody = styled.tbody`
   cursor: ${props => props.hasLink ? 'pointer' : 'default'};
   td {
     padding: 7px 0;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
   }
 
   ${({ isAddMode }) => !isAddMode && css`
@@ -131,7 +131,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -152,10 +152,17 @@ export const ActionSelectorWrapper = styled.div`
 : css`
     margin-left: 20px;
   `}
+  position: relative;
   button {
     background: transparent !important;
     border: none;
     padding: 0px;
+    /* 44x44 touch area for the three-dots button */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     &:active,
     &:focus {
       border-color: unset !important;
@@ -186,7 +193,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {

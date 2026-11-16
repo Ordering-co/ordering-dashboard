@@ -1,0 +1,86 @@
+/*
+ * Sheet (C8): a lateral panel over the page, or a bottom sheet. It shares portal,
+ * scrim, header, body and footer with Dialog (dialog.css). Logical properties only,
+ * so `end` is the right edge in LTR and the left edge in RTL (C17).
+ * --odc-slide is where it starts from, as a `translate` value.
+ */
+
+.odc-sheet {
+  --odc-slide: 100% 0;
+  position: fixed;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: var(--od-x-dialog-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  box-shadow: var(--od-x-pop-shadow);
+  opacity: 1;
+  translate: 0 0;
+  transition-property: opacity, translate;
+  /* redesign W0-3c (T0-11, decisión 11c): a lateral panel or bottom sheet moves at the Slow role. */
+  transition-duration: var(--od-duration-slow);
+  transition-timing-function: var(--od-ease-standard);
+}
+
+.odc-sheet[data-side='end'],
+.odc-sheet[data-side='start'] {
+  inset-block: 0;
+  inline-size: var(--od-x-sheet);
+  max-inline-size: 100vw;
+}
+
+.odc-sheet[data-side='end'] {
+  inset-inline-end: 0;
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  --odc-slide: 100% 0;
+}
+
+.odc-sheet[data-side='start'] {
+  inset-inline-start: 0;
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+  --odc-slide: -100% 0;
+}
+
+.odc-sheet[dir='rtl'][data-side='end'] { --odc-slide: -100% 0; }
+.odc-sheet[dir='rtl'][data-side='start'] { --odc-slide: 100% 0; }
+
+.odc-sheet[data-side='bottom'] {
+  inset-inline: 0;
+  inset-block-end: 0;
+  max-block-size: 85dvh;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  border-start-start-radius: var(--od-radius-panel);
+  border-start-end-radius: var(--od-radius-panel);
+  --odc-slide: 0 100%;
+}
+
+.odc-sheet[data-starting-style],
+.odc-sheet[data-ending-style] {
+  opacity: 0;
+  translate: var(--odc-slide);
+}
+
+.odc-sheet:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (max-width: 767px) {
+  .odc-sheet[data-side='end'],
+  .odc-sheet[data-side='start'] {
+    inline-size: 100%;
+  }
+}
+
+/* Reduced motion: it fades, it does not travel. redesign W0-3c (T0-11): the entering and leaving state keeps no offset, on any
+   side and in either direction, whatever the order of the rules above. */
+@media (prefers-reduced-motion: reduce) {
+  .odc-sheet[data-side][dir] {
+    --odc-slide: 0 0;
+    transition-property: opacity;
+  }
+
+  .odc-sheet[data-starting-style],
+  .odc-sheet[data-ending-style] {
+    translate: 0 0;
+  }
+}

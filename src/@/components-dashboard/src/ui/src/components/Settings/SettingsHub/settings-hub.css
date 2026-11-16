@@ -1,0 +1,332 @@
+/*
+ * redesign settings A · The Settings hub shell: header, two columns (navigation + content), the overview and
+ * the phone's one-screen-at-a-time. The navigation itself is P/SectionNav (section-nav.css); the fields are the forms'.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Breakpoints as literals only in @media.
+ * Logical properties (C17).
+ */
+
+/* ── Header ── */
+.odc-hub-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-4);
+  margin-block-end: var(--od-space-4);
+  flex: none;
+}
+
+
+
+.odc-hub-title-block {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-hub-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-hub-subtitle {
+  margin-block: var(--od-space-1) 0;
+  margin-inline: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-hub-actions {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-hub-search { flex: 1 1 var(--od-x-search); max-inline-size: var(--od-x-search); }
+
+/* ── Body: navigation + content ── */
+.odc-hub-body {
+  --odc-hub-nav: calc(var(--od-x-record-nav) + var(--od-space-6));
+  display: grid;
+  grid-template-columns: var(--odc-hub-nav) minmax(0, 1fr);
+  gap: var(--od-space-4);
+  flex: 1;
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+/* The phone shows one screen: the navigation or the section, at the full width. */
+.odc-hub-body[data-phone] { grid-template-columns: minmax(0, 1fr); }
+
+.odc-hub-nav-col {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  overflow-anchor: none;
+  /* room for the inset focus ring of the rows next to the scrollbar */
+  padding-inline-end: var(--od-x-space-half);
+}
+
+/* Search results above the groups (the groups stay below). */
+.odc-hub-results {
+  display: grid;
+  gap: var(--od-space-1);
+  padding-block-end: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-hub-results-count,
+.odc-hub-results-empty {
+  margin: 0;
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-results-empty { font-size: var(--od-x-type-ui-size); color: var(--od-text-muted); }
+
+/* ── Content: the open section ── */
+.odc-hub-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-hub-detail {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  overflow-anchor: none;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+}
+
+.odc-hub-detail-head {
+  padding-block: var(--od-space-5) var(--od-space-3);
+  padding-inline: var(--od-space-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-hub-crumb {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-detail-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-hub-detail-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* Focus lands here when a section opens on the phone (tabIndex -1): the ring tells where. */
+.odc-hub-detail-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-hub-detail-desc {
+  margin-block: var(--od-space-2) 0;
+  margin-inline: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-hub-detail-body {
+  padding-block: var(--od-space-2) var(--od-space-5);
+  padding-inline: var(--od-space-5);
+}
+
+/*  (AC): «Checkout form fields» stacks three legacy lists; one token gap between them and no height of their own,
+   so the section ends where its last list ends (no blank band under it). */
+.odc-hub-fields-stack {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-hub-status {
+  padding-block: var(--od-space-6);
+  padding-inline: var(--od-space-5);
+  text-align: center;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* Phone back row: «‹ Payments» or «‹ Search results». */
+.odc-hub-back { align-self: flex-start; }
+
+[dir='rtl'] .odc-hub-back .odc-icon,
+.odc-rtl .odc-hub-back .odc-icon { scale: -1 1; }
+
+/* ── Overview: the tasks and a card per group ── */
+.odc-hub-overview {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  overflow-anchor: none;
+}
+
+.odc-hub-overview-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-hub-tasks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-1) var(--od-space-5);
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A task is a long sentence: it wraps at its spaces instead of cutting. */
+.odc-hub-tasks .odc-btn,
+.odc-hub-card .odc-btn {
+  justify-content: flex-start;
+  white-space: normal;
+  text-align: start;
+}
+
+/*  (T10): «+4» was 17×24 px; with a mouse a target is 24 px on each axis (G4) */
+.odc-hub-card .odc-hub-more {
+  min-inline-size: var(--od-x-target-fine);
+  justify-content: center;
+}
+
+/*  (T10): with touch every link keeps its 44 px area (the pseudo-element of P/ Button) without crossing the next one: the
+   rows are 32 px apart from box to box plus the gap, so the gap is what the area adds (44 − 32), and «+n» is as wide as its area. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-hub-tasks,
+  .odc-hub-card-links {
+    row-gap: calc(var(--od-x-target-coarse) - var(--od-x-control-height));
+  }
+
+  .odc-hub-card .odc-hub-more { min-inline-size: var(--od-x-target-coarse); }
+}
+
+.odc-hub-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--od-x-record-nav) + var(--od-space-6)), 1fr));
+  gap: var(--od-space-3);
+}
+
+.odc-hub-card {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+}
+
+.odc-hub-card-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-hub-card-desc {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1) var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Loading: the same two-column grid, drawn as skeletons ── */
+.odc-hub-skeleton-nav,
+.odc-hub-skeleton-content {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-hub-skeleton-content {
+  padding: var(--od-space-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  gap: var(--od-space-3);
+}
+
+/* ── Phone ── */
+@media (max-width: 767px) {
+  .odc-hub-header { gap: var(--od-space-3); }
+  .odc-hub-actions { flex-basis: 100%; justify-content: stretch; }
+  .odc-hub-search { max-inline-size: none; }
+  /* The label of Suggestions leaves, its name stays (aria-label). */
+  .odc-hub-suggestions-label { display: none; }
+  .odc-hub-tasks { grid-template-columns: minmax(0, 1fr); }
+
+  .odc-hub-detail {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .odc-hub-detail-head {
+    padding-block: var(--od-space-3);
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-hub-detail-body { padding-inline: var(--od-x-page-gutter-mobile); }
+}

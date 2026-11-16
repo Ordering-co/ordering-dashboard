@@ -17,7 +17,7 @@ export const LogisticsContainer = styled.div`
   label {
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
   }
 `
@@ -30,7 +30,7 @@ export const OrderStatusWrapper = styled.div`
   cursor: pointer;
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 15px;

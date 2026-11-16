@@ -1,13 +1,14 @@
 import styled from 'styled-components'
 
 export const TaxInformationContainer = styled.div`
-  h2{
-    font-size: 22px;
+  > h2 {
+    font-size: var(--od-type-title-size);
     margin: 10px;
     text-align: center;
   }
-  h3{
-    font-size: 18px;
+
+  > h3 {
+    font-size: var(--od-type-section-title-size);
   }
 `
 

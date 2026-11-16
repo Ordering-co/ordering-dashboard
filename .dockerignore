@@ -4,3 +4,12 @@ cypress/integration/examples
 .DS_Store
 debug.log
 npm-debug.log
+.git
+.env
+.env.*
+!.env.example
+.local/
+coverage/
+playwright-report/
+test-results/
+blob-report/

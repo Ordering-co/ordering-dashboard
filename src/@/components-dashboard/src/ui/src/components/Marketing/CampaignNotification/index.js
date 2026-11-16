@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useId } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useLanguage } from '../../../../../index'
@@ -27,24 +27,34 @@ export const CampaignNotification = (props) => {
     handleUpdateContact,
     handleAddCampaign,
     formState,
-    categoryList
+    categoryList,
+    // redesign CA-B2 (decision 3|4): opt-in props, all default off
+    hideActions = false,
+    previewOnly = false,
+    onConfigStateChange
   } = props
 
   const [, t] = useLanguage()
+  const fieldId = useId() // redesign CA-R2 (P7): ties each visible label to its field
   const theme = useTheme()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [category, setCategory] = useState()
 
-  const generalList = [
+  const oneSignalList = [
     'onesignal_user_auth',
     'onesignal_orderingapp_id',
     'onesignal_businessapp_id',
     'onesignal_deliveryapp_id',
     'notification_toast'
   ]
+  const firebaseKey = 'firebase_service_account'
+  const generalList = [...oneSignalList, firebaseKey]
 
   const isEnableConfig = useMemo(() => {
-    return category?.configs?.filter(config => generalList.includes(config.key)).every(config => !!config?.value)
+    const configs = category?.configs
+    if (!configs) return undefined
+    if (configs.some(config => config.key === firebaseKey && !!config?.value)) return true
+    return configs.filter(config => oneSignalList.includes(config.key)).every(config => !!config?.value)
   }, [category])
 
   const closeAlert = () => {
@@ -103,6 +113,27 @@ export const CampaignNotification = (props) => {
     }
   }, [categoryList])
 
+  // redesign CA-B2 (decision 4): tell the host whether the push gate is satisfied (boolean, false while loading)
+  useEffect(() => {
+    if (typeof onConfigStateChange === 'function') onConfigStateChange(!!isEnableConfig)
+  }, [isEnableConfig])
+
+  const notificationPreview = (
+    <SmsPreviewWrapper>
+      <SmsContentLayout bgimage={theme.images.general.mobileHalfMask}>
+        <SmsPreviewContentWrapper>
+          <SmsPreviewContent>
+            <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
+            <p>{contactState?.changes?.contact_data?.body || ''}</p>
+          </SmsPreviewContent>
+        </SmsPreviewContentWrapper>
+      </SmsContentLayout>
+    </SmsPreviewWrapper>
+  )
+
+  // redesign CA-B2 (decision 3): facsimile only, read-only, no gate
+  if (previewOnly) return notificationPreview
+
   return (
     <>
       {isEnableConfig
@@ -110,54 +141,49 @@ export const CampaignNotification = (props) => {
         <>
           <Container>
             <InputWrapper>
-              <label>{t('TITLE', 'Title')}</label>
+              <label htmlFor={`${fieldId}-title`}>{t('TITLE', 'Title')}</label>
               <Input
                 name='title'
+                id={`${fieldId}-title`}
                 placeholder={t('TITLE', 'Title')}
                 defaultValue={contactState?.changes?.contact_data?.title || ''}
                 onChange={handleChangeData}
               />
             </InputWrapper>
             <InputWrapper>
-              <label>{t('MESSAGES', 'Messages')}</label>
+              <label htmlFor={`${fieldId}-body`}>{t('MESSAGES', 'Messages')}</label>
               <TextArea
                 name='body'
+                id={`${fieldId}-body`}
                 placeholder={t('WRITE_MESSAGE', 'Write a message')}
                 defaultValue={contactState?.changes?.contact_data?.body || ''}
                 onChange={handleChangeData}
               />
             </InputWrapper>
-            <SmsPreviewWrapper>
-              <SmsContentLayout bgimage={theme.images.general.mobileHalfMask}>
-                <SmsPreviewContentWrapper>
-                  <SmsPreviewContent>
-                    <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
-                    <p>{contactState?.changes?.contact_data?.body || ''}</p>
-                  </SmsPreviewContent>
-                </SmsPreviewContentWrapper>
-              </SmsContentLayout>
-            </SmsPreviewWrapper>
+            {notificationPreview}
           </Container>
-          <ButtonWrapper>
-            <Button
-              color='primary'
-              onClick={() => handleSaveNotification()}
-              disabled={contactState.loading}
-            >
-              {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
-            </Button>
-          </ButtonWrapper>
+          {!hideActions && (
+            <ButtonWrapper>
+              <Button
+                color='primary'
+                onClick={() => handleSaveNotification()}
+                disabled={contactState.loading}
+              >
+                {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
+              </Button>
+            </ButtonWrapper>
+          )}
         </>
           )
         : (
         <>
           <ContactWrapper>
             <p>{t('IF_YOU_NEED_HELP_WITH_SETUP_CONTACT_SUPPORT_TEAM', 'If you need help with your setup, contact our support team.')}</p>
-            <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
+            <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank', 'noopener,noreferrer')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
           </ContactWrapper>
           <Description>
-            <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/push-notifications/')}>
-              {t('NOTIFICATION_SETTINGS_LINK_DESC', 'You need to complete One signal configuration first')}
+            <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/push-notifications/', '_blank', 'noopener,noreferrer')}>
+              {t('CAMPAIGNS_PUSH_SETUP_HELP', 'To send push notifications, complete the OneSignal settings or add a Firebase service account')}
             </span>
           </Description>
           {categoryList?.loading && (
@@ -179,15 +205,17 @@ export const CampaignNotification = (props) => {
           <BottomSpace />
         </>
           )}
-      <Alert
-        title={t('CAMPAIGN', 'Campaign')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
+      {!hideActions && (
+        <Alert
+          title={t('CAMPAIGN', 'Campaign')}
+          content={alertState.content}
+          acceptText={t('ACCEPT', 'Accept')}
+          open={alertState.open}
+          onClose={() => closeAlert()}
+          onAccept={() => closeAlert()}
+          closeOnBackdrop={false}
+        />
+      )}
     </>
   )
 }

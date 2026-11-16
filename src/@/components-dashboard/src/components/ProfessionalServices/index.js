@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -21,7 +21,7 @@ export const ProfessionalServices = (props) => {
 
   const [ordering] = useApi()
   const [, t] = useLanguage()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
   const [{ token }] = useSession()
 
   const [subCategoriesList, setSubCategoriesList] = useState([])
@@ -67,6 +67,29 @@ export const ProfessionalServices = (props) => {
       setSubCategoriesList(_subCategoriesList)
       iterateCategories(businessState?.business?.categories)
     }
+  }
+
+  /**
+   * the selection as `services` stores it. Called when a save fails, so a check box the UI already
+   * flipped goes back (`services` did not change, so the effect below does not run again by itself).
+   */
+  const restoreSelection = () => {
+    const stored = Array.isArray(services) ? services : []
+    const ids = stored.map(service => service.product_id)
+    setSelectedProductsIds(ids)
+    setSelectedProducts(stored.map(service => service.product))
+    handleSetSubCategoryList(ids)
+  }
+  // always the latest render's closure: the request may end after `services` or the business changed
+  const restoreSelectionRef = useRef(restoreSelection)
+  restoreSelectionRef.current = restoreSelection
+
+  // A failed save: `actionState.result` already carries the error, which the UI shows in its Alert (as in main; a toast
+  // would say it twice), and the selection goes back to what is stored
+  // The «Loading» toast raised on submit goes down too; it would otherwise stay until its own timeout
+  const handleSaveFailure = () => {
+    hideToast?.()
+    restoreSelectionRef.current()
   }
 
   /**
@@ -151,16 +174,19 @@ export const ProfessionalServices = (props) => {
           result: content,
           loading: false
         })
+        handleSaveFailure()
       }
     } catch (err) {
       setActionState({
         ...actionState,
         result: {
           error: true,
-          result: err.message
+          // not the raw network message («Failed to fetch»); same array shape as the API error branch
+          result: [t('STORES_CHANGE_FAILED', "We couldn't save the change.")]
         },
         loading: false
       })
+      handleSaveFailure()
     }
   }
 
@@ -195,16 +221,19 @@ export const ProfessionalServices = (props) => {
           result: content,
           loading: false
         })
+        handleSaveFailure()
       }
     } catch (err) {
       setActionState({
         ...actionState,
         result: {
           error: true,
-          result: err.message
+          // not the raw network message («Failed to fetch»); same array shape as the API error branch
+          result: [t('STORES_CHANGE_FAILED', "We couldn't save the change.")]
         },
         loading: false
       })
+      handleSaveFailure()
     }
   }
 

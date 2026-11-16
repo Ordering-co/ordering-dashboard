@@ -1,0 +1,125 @@
+/*
+ * Pivot table of the report tables (redesign reports FB1, D6, D9; auditor 5).
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-rp-*. Density as P/DataTable: a 36px row at the least, the header row of the data table.
+ *
+ * The pinned columns and the pinned header rows are positioned by the component: it measures the columns and the rows
+ * and writes --odc-rp-start (where a pinned column starts) and --odc-rp-top (where a header row starts) on each cell.
+ */
+
+/* the sideways scroll region: a tab stop with a name; its edges melt (odc-fade-x, useOverflowEdges) while there is more past them.
+   The height is a share of the viewport so the header can stay on top inside the region; a page can set --odc-rp-max-block. */
+.odc-rp-scroll {
+  position: relative; /* containing block of the hidden caption and the hidden «No data» texts */
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-block-size: var(--odc-rp-max-block, 75dvh);
+  overflow: auto;
+  background: var(--od-surface);
+}
+
+.odc-rp-scroll:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-rp-table {
+  inline-size: max-content;
+  min-inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-rp-table th,
+.odc-rp-table td {
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  background: var(--od-surface); /* opaque: a pinned cell hides what scrolls under it */
+  text-align: start;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* header: pinned on top, one row below the other (the offset of each row is measured) */
+.odc-rp-table thead th {
+  position: sticky;
+  inset-block-start: var(--odc-rp-top, 0);
+  z-index: calc(var(--od-x-layer-raised) + 1);
+  block-size: var(--od-x-header-row);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* body and footer */
+.odc-rp-table tbody th,
+.odc-rp-table tbody td,
+.odc-rp-table tfoot th,
+.odc-rp-table tfoot td {
+  block-size: var(--od-x-row-compact);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* the cell that names the row follows the rules of the other cells */
+.odc-rp-table tbody th[scope='row'],
+.odc-rp-table tfoot th[scope='row'] {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.odc-rp-table tfoot th,
+.odc-rp-table tfoot td {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* figures at the end of the cell, in tabular figures (the figure itself is the .odc-figure inside) */
+.odc-rp-table [data-align='end'] {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the columns that say what the row is stay in place at every width (D9) */
+.odc-rp-table [data-fixed] {
+  position: sticky;
+  inset-inline-start: var(--odc-rp-start, 0);
+  z-index: var(--od-x-layer-raised);
+}
+
+/* where the header and the pinned columns cross, the header is above */
+.odc-rp-table thead th[data-fixed] {
+  z-index: calc(var(--od-x-layer-raised) + 2);
+}
+
+.odc-rp-table [data-fixed-end] {
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* each group of periods starts with a line; the first one is already marked by the edge of the pinned columns */
+.odc-rp-table [data-group-start] {
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-rp-table [data-fixed-end] + [data-group-start] {
+  border-inline-start: 0;
+}
+
+/* a dash for an empty value: quiet, the hidden text says «No data» */
+.odc-rp-dash {
+  color: var(--od-text-muted);
+}
+
+/* no rows: one cell that spans every column, text that wraps */
+.odc-rp-table tbody td.odc-rp-empty {
+  block-size: auto;
+  padding-block: var(--od-space-5);
+  border-block-end: 0;
+  color: var(--od-text-muted);
+  white-space: normal;
+}

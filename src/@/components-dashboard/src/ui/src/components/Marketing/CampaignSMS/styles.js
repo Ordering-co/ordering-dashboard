@@ -6,7 +6,7 @@ export const Container = styled.div``
 export const InputWrapper = styled.div`
   label {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
   input, textarea {
@@ -95,7 +95,7 @@ export const SmsPreviewContent = styled.div`
 `
 
 export const Description = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin: 10px 0px;
   span {
     color: ${props => props.theme.colors.primary};
@@ -116,7 +116,7 @@ export const ContactWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     text-align: center;
     margin-bottom: 14px;
   }

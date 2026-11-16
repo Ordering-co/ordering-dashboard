@@ -189,8 +189,12 @@ export const AnalyticsAvailableTimes = (props) => {
         <ChartHeaderContainer>
           <p>{t('AVAILABLE_TIMES', 'Available Times')}</p>
           <ActionBlock disabled={!(availableTimesList?.data?.available?.length > 0 || availableTimesList?.data?.not_available?.length > 0)}>
-            <BsArrowsAngleExpand onClick={previewChart} />
-            <BsDownload className='download-view' onClick={downloadCSV} />
+            <button type='button' aria-label={t('EXPAND', 'Expand')} onClick={previewChart}>
+              <BsArrowsAngleExpand />
+            </button>
+            <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+              <BsDownload className='download-view' />
+            </button>
           </ActionBlock>
         </ChartHeaderContainer>
         {
@@ -209,7 +213,7 @@ export const AnalyticsAvailableTimes = (props) => {
               </BarChartWrapper>
                     )
                   : (
-              <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+              <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                     )
               )
         }

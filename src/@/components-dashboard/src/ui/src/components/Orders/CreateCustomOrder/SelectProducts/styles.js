@@ -14,7 +14,7 @@ export const SelectOption = styled.div`
     background-color: ${props => props.theme.colors.secundary};
   }
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     &.name {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -77,6 +77,11 @@ export const ProductQuantityActionsContainer = styled.div`
   display: flex;
   align-items: center;
 
+  button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -104,6 +109,9 @@ export const ProductEditDeleteActions = styled.div`
   align-items: center;
 
   button {
+    min-width: 44px;
+    min-height: 44px;
+
     > svg {
       width: 16px;
       height: 16px;
@@ -118,7 +126,7 @@ export const SelectWrapper = styled.div`
     width: 100%;
     background: ${props => props.theme.colors.secundary};
     border: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
 
     > div:first-child {
       padding-top: 4px;
@@ -153,7 +161,7 @@ export const Option = styled.div`
   }
   > span {
     max-width: 200px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;

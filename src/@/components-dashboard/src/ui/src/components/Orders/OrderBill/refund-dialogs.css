@@ -1,0 +1,105 @@
+/*
+ * 5.4-B · Refund dialogs on Product Dialog (C8): the wallet refund form and, in OrderBill, the
+ * partial refund of a payment provider. The controls inside are the ones the form always had; this
+ * only lays them out. Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only.
+ * Logical properties only (C17). The dark mode is the tokens' own.
+ */
+
+.odc-refund {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-refund p {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* redesign F6d (Q3-08): the notice of a previous refund in the confirmation of «Refund» and in the partial refund dialog:
+   its own line, in the text colour and medium weight, so the operator reads it before confirming. */
+.odc-refund-previous {
+  margin: var(--od-space-2) 0 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-refund .odc-refund-previous { margin: 0; }
+
+/* What was charged and what is already refunded, above the form; the figures keep their column. */
+.odc-refund p.odc-refund-summary {
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.odc-refund-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-refund-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-refund textarea {
+  inline-size: 100%;
+}
+
+/* redesign F6a (D-15): the amount of a refund is a brand field, as the fields of Edit customer (details-tab.css
+   `.odt-edit .od-field`). The shared `Input` paints its border, focus and radius from `--od-field-*` properties derived
+   from the dashboard theme (the decorative hairline, an 8px radius); the app-wide component is left as it is and this
+   scope, on the amount's wrapper only, gives it the field roles of the brand: the 3:1 field border of C2/C3, the focus
+   ring, the component radius and the control height. */
+.odc-refund-amount .od-field {
+  --od-field-surface: var(--od-bg);
+  --od-field-surface-subtle: var(--od-surface-subtle);
+  --od-field-text: var(--od-text);
+  --od-field-text-muted: var(--od-text-muted);
+  --od-field-text-subtle: var(--od-x-text-subtle);
+  --od-field-border: var(--od-x-field-border);
+  --od-field-border-strong: var(--od-x-text-subtle);
+  --od-field-focus: var(--od-focus-ring-color);
+  --od-field-focus-width: var(--od-focus-ring-width);
+  --od-field-focus-offset: var(--od-focus-ring-offset);
+  --od-field-danger: var(--od-danger-functional);
+  --od-field-radius: var(--od-radius-component);
+  --od-field-font: var(--od-font-sans);
+  --od-field-font-size: var(--od-x-type-body-size);
+  --od-field-duration: var(--od-duration-fast);
+  --od-field-easing: var(--od-ease-standard);
+  --od-field-compact-height: var(--od-x-control-height);
+  --od-field-touch-target: var(--od-x-target-coarse);
+  box-sizing: border-box;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-refund-amount .od-field-input {
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+}
+
+/* C3: below 768px of screen every control reaches 44px, not only on a coarse pointer. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-refund-amount .od-field-input {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+}
+
+/* redesign F6c (Q2-28): the reason next to a disabled refund button, on its own line under it */
+.odc-refund-hint {
+  flex: 1 0 100%;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}

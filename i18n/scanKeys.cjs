@@ -37,7 +37,29 @@ const TYPO_CORRECTIONS_SUBMODULE = {
   SPECIFIC_LOGISTIC_ORDER_ORDERED: 'Logistic order _NUMBER_ has been ordered',
   SPECIFIC_LOGISTIC_ORDER_UPDATED: 'Your logistic order number _NUMBER_ has updated',
   SPECIFIC_ORDER_ACCEPTED: 'You accepted the order number _NUMBER_',
-  SPECIFIC_ORDER_REJECTED: 'You rejected the order number _NUMBER_'
+  SPECIFIC_ORDER_REJECTED: 'You rejected the order number _NUMBER_',
+  // (P-UF5): the old ProfessionalAddForm was the second use of the catalog's text; without it the scan ties 1–1 with
+  // Login/LoginForm's «Password is required» and picks that one. The catalog already says this; Login is not touched.
+  VALIDATION_ERROR_PASSWORD_REQUIRED: 'The field Password is required',
+  // redesign bugs F row 9: Settings/Deliverect says «Delivery Manger» and BusinessSyncBasic «Manager»; the scan ties 1–1
+  // and takes the first file. The text is BusinessSyncBasic's; the Deliverect screen is not touched.
+  SYNC_DEC_SECOND: 'Deliverect integrates all your <span>online orders</span> to your <span>existing POS</span> or our <span>Delivery Manager app.</span> Restaurants large and small rely on Deliverect to reduce failures and order mistakes while speeding up order preparation.',
+  // (dead code L3b): the old BI report screens that carried the catalog's text are gone. REGISTER_USERS is left only in
+  // the ⌘K alias of report 15 (advancedReports.js, main's «Register users»; fixed the catalog to «Registered users»), and
+  // APP_ID ties toward «App ID» in Orders/Messages, and CITY_MANAGER ties 2–2 between «City Manager» and «City manager». The catalog
+  // keeps its texts; no screen is touched.
+  APP_ID: 'App id',
+  CITY_MANAGER: 'City manager',
+  REGISTER_USERS: 'Registered users',
+  // (dead code L3b, group G5): the origin theme's Messages said «via», which tied 2–2 with the two «Via» of
+  // Orders/Messages and OrderDetails/ChatTab; without it the scan takes «Via». The catalog keeps «via»; no screen is touched.
+  VIA: 'via',
+  // the old Stores/BusinessSummary (dead code, deleted) was the third use of «Reservations»; without it the scan ties
+  // 2–2 with the Orders filters' «Reservation» and picks that one. The catalog already says «Reservations»; Orders is not touched.
+  RESERVATIONS: 'Reservations',
+  // 89 callers insert their field with .replace('_attribute_', …), but the most common fallback («Value is required», 23)
+  // has no placeholder, so every one of them read «Value is required». The catalog carries the placeholder in the 12 locales.
+  VALIDATION_ERROR_REQUIRED: '_attribute_ is required.'
 }
 
 const DYNAMIC_ADDED = {
@@ -47,7 +69,11 @@ const DYNAMIC_ADDED = {
   DAY4: 'Thursday',
   DAY5: 'Friday',
   DAY6: 'Saturday',
-  DAY7: 'Sunday'
+  DAY7: 'Sunday',
+  // Store details and /stores/add build t(`BUSINESS_VERTICAL_${value}`) from constants/school BUSINESS_VERTICALS.
+  BUSINESS_VERTICAL_STORE: 'Store',
+  BUSINESS_VERTICAL_SCHOOL: 'School',
+  IMPORTER_VALIDATION_ORDERING_SEGMENT_INVALID: 'Spaces are not allowed. Use the store slug or numeric id (letters, numbers, _ or -).'
 }
 
 function walk (dir, out) {
@@ -108,7 +134,8 @@ function bestValue (key, e) {
  */
 function scanKeys () {
   const files = walk(ROOT, [])
-  const re = /\bt\(/g
+  // also `tRef.current(...)`, the t() a component keeps in a ref for callbacks (AD_BANNERS_NAME_SAVE_FAILED went unseen)
+  const re = /\b(?:t|tRef\.current)\(/g
   const keys = new Map()
   let dynamicSkipped = 0
   let totalCalls = 0
@@ -118,7 +145,7 @@ function scanKeys () {
     const source = file.includes(COMPONENTS_LIB) ? 'submodule' : 'app'
     let m
     while ((m = re.exec(src))) {
-      const i = skipWs(src, m.index + 2)
+      const i = skipWs(src, m.index + m[0].length)
       const keyStr = readString(src, i)
       if (!keyStr) continue
       const key = keyStr.value

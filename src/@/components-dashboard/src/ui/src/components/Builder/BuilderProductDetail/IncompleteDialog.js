@@ -1,11 +1,12 @@
-import React, { useId } from 'react'
+import React from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Modal } from '../../Shared'
+import { Button, Dialog } from '../../Shared/Product'
 import { ProblemItem } from '../BuilderAppBuilds/BuildDialogs'
 import { getCheckProblems, getPlatformLabel } from '../utils'
-import { DialogBody, DialogFooter, DialogTitle, IncompleteGroup, MutedText, ProblemList } from '../styles'
+import './builder-detail.css'
+
+// redesign B2: on P/Dialog, still an `alertdialog` named by its title and described by its help line
 
 /**
  * Activating was refused (`product.incomplete`): what each app misses, by
@@ -14,7 +15,6 @@ import { DialogBody, DialogFooter, DialogTitle, IncompleteGroup, MutedText, Prob
 export const IncompleteDialog = (props) => {
   const { product, checks, onClose, onGoToTab } = props
   const [, t] = useLanguage()
-  const titleId = useId()
 
   const groups = (checks || []).flatMap(appChecks => {
     const app = (product?.apps || []).find(item => String(item.id) === String(appChecks.app_id))
@@ -34,27 +34,24 @@ export const IncompleteDialog = (props) => {
   }
 
   return (
-    <Modal
+    <Dialog
       open
-      width='min(560px, calc(100vw - 32px))'
-      padding='24px'
-      onClose={onClose}
+      onOpenChange={(next) => { if (!next) onClose() }}
+      role='alertdialog'
+      size='md'
+      title={t('BUILDER_INCOMPLETE_TITLE', '_name_ can’t be activated yet').replace('_name_', product?.name || '')}
+      closeLabel={t('CLOSE', 'Close')}
+      description={t('BUILDER_INCOMPLETE_HELP', 'Complete these and try again. Issues marked Ordering don’t stop it.')}
+      footer={<Button variant='primary' onClick={onClose}>{t('CLOSE', 'Close')}</Button>}
     >
-      <DialogBody role='alertdialog' aria-labelledby={titleId}>
-        <DialogTitle id={titleId}>{t('BUILDER_INCOMPLETE_TITLE', '_name_ can’t be activated yet').replace('_name_', product?.name || '')}</DialogTitle>
-        <MutedText>{t('BUILDER_INCOMPLETE_HELP', 'Complete these and try again. Issues marked Ordering don’t stop it.')}</MutedText>
-        {groups.map(group => (
-          <IncompleteGroup key={group.key}>
-            <strong>{group.title}</strong>
-            <ProblemList>
-              {group.problems.map(problem => <ProblemItem key={problem.key} problem={problem} onFix={fix} />)}
-            </ProblemList>
-          </IncompleteGroup>
-        ))}
-        <DialogFooter>
-          <Button type='button' color='primary' borderRadius='8px' onClick={onClose}>{t('CLOSE', 'Close')}</Button>
-        </DialogFooter>
-      </DialogBody>
-    </Modal>
+      {groups.map(group => (
+        <div key={group.key} className='odc-bd-group'>
+          <strong>{group.title}</strong>
+          <ul className='odc-bd-problems'>
+            {group.problems.map(problem => <ProblemItem key={problem.key} problem={problem} onFix={fix} />)}
+          </ul>
+        </div>
+      ))}
+    </Dialog>
   )
 }

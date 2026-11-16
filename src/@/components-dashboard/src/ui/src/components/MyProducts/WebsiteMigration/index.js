@@ -1,16 +1,23 @@
 import React, { useState } from 'react'
 import { Redirect, useHistory } from 'react-router-dom'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { BoxArrowUpRight, CheckCircleFill, InfoCircleFill, Stars } from 'react-bootstrap-icons'
 
 import { useLanguage, WebsiteMigration as WebsiteMigrationController } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Confirm } from '../../Shared'
-import { CnameRecord } from '../../Builder/BuilderProductDetail/BuilderWebDomains'
+import { Button, ConfirmDialog, Skeleton } from '../../Shared/Product'
+import { CircleCheck, ExternalLink, Globe, TriangleAlert } from '../../Shared/Icon'
+import { CnameRecord } from '../../Builder/BuilderProductDetail/CnameRecord'
 import { getRecordName } from '../../Builder/utils'
 import { parseMigrationDate, shouldRedirectMigrated } from '../../../../../utils/websiteMigration'
-import { MigrationActions, MigrationBody, MigrationCard, MigrationError } from './styles'
+import './website-migration.css'
+
+// redesign C: the migration cards on Product pieces (P/Button, P/ConfirmDialog, P/Skeleton) and --od-* tokens.
+
+/** The card every state shares: an icon, then its heading, text and actions. */
+const MigrationCard = ({ tone, icon: Icon, children, ...props }) => (
+  <section className='odc-root odc-migration' data-tone={tone} {...props}>
+    {Icon && <Icon className='odc-icon odc-migration-icon' />}
+    <div className='odc-migration-body'>{children}</div>
+  </section>
+)
 
 const DEFAULT_CNAME_TARGET = 'cname.my-sites.app'
 
@@ -54,45 +61,41 @@ const WebsiteMigrationUI = (props) => {
   if (loading) {
     return (
       <MigrationCard aria-busy='true'>
-        <MigrationBody>
-          <Skeleton height={18} width={260} />
-          <Skeleton height={14} count={2} />
-        </MigrationBody>
+        <Skeleton size='40%' />
+        <Skeleton />
+        <Skeleton size='80%' />
       </MigrationCard>
     )
   }
 
   const status = migration?.status
-  const error = errorCodes.length > 0 && <MigrationError role='alert'>{getMigrationErrorText(errorCodes, t, migration?.cname_target || DEFAULT_CNAME_TARGET)}</MigrationError>
+  const error = errorCodes.length > 0 && <p className='odc-migration-error' role='alert'>{getMigrationErrorText(errorCodes, t, migration?.cname_target || DEFAULT_CNAME_TARGET)}</p>
 
   if (status === 'migrated') {
     if (migration.product_id && shouldRedirectMigrated(migration.migrated_at)) return <Redirect to={`/builder/${migration.product_id}`} />
     const date = formatMigrationDate(migration.migrated_at, language?.code)
     return (
-      <MigrationCard tone='done' aria-labelledby='website-migration-title'>
-        <CheckCircleFill aria-hidden='true' />
-        <MigrationBody>
-          <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_DONE_TITLE', 'This website was migrated to the new editor')}</h2>
-          <p>
-            {date
-              ? t('WEBSITE_MIGRATION_DONE_TEXT', 'Migrated on _date_. It’s now edited in Builder.').replace('_date_', date)
-              : t('WEBSITE_MIGRATION_DONE_TEXT_NO_DATE', 'It’s now edited in Builder.')}
-          </p>
-          <MigrationActions>
-            {migration.product_id && (
-              <Button type='button' color='primary' borderRadius='8px' onClick={() => history.push(`/builder/${migration.product_id}`)}>
-                {t('WEBSITE_MIGRATION_OPEN_BUILDER', 'Open in Builder')}
-              </Button>
-            )}
-            {migration.url && (
-              <a href={migration.url} target='_blank' rel='noopener noreferrer'>
-                {t('WEBSITE_MIGRATION_VIEW_SITE', 'View website')}
-                <BoxArrowUpRight aria-hidden='true' />
-                <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
-              </a>
-            )}
-          </MigrationActions>
-        </MigrationBody>
+      <MigrationCard tone='done' icon={CircleCheck} aria-labelledby='website-migration-title'>
+        <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_DONE_TITLE', 'This website was migrated to the new editor')}</h2>
+        <p>
+          {date
+            ? t('WEBSITE_MIGRATION_DONE_TEXT', 'Migrated on _date_. It’s now edited in Builder.').replace('_date_', date)
+            : t('WEBSITE_MIGRATION_DONE_TEXT_NO_DATE', 'It’s now edited in Builder.')}
+        </p>
+        <div className='odc-migration-actions'>
+          {migration.product_id && (
+            <Button variant='primary' onClick={() => history.push(`/builder/${migration.product_id}`)}>
+              {t('WEBSITE_MIGRATION_OPEN_BUILDER', 'Open in Builder')}
+            </Button>
+          )}
+          {migration.url && (
+            <a className='odc-migration-link' href={migration.url} target='_blank' rel='noopener noreferrer'>
+              {t('WEBSITE_MIGRATION_VIEW_SITE', 'View website')}
+              <ExternalLink className='odc-icon' />
+              <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+            </a>
+          )}
+        </div>
       </MigrationCard>
     )
   }
@@ -101,21 +104,18 @@ const WebsiteMigrationUI = (props) => {
     const target = migration.cname_target || DEFAULT_CNAME_TARGET
     const recordName = migration.domain ? getRecordName(migration.domain) : ''
     return (
-      <MigrationCard tone='warning' aria-labelledby='website-migration-title'>
-        <InfoCircleFill aria-hidden='true' />
-        <MigrationBody>
-          <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_DNS_TITLE', 'To migrate, first change your domain’s DNS')}</h2>
-          <p>
-            {migration.domain
-              ? t('WEBSITE_MIGRATION_DNS_TEXT', 'Your domain _domain_ isn’t on our network yet. Create this record in the DNS settings of the provider where you bought it. Once it’s active, you can migrate from here.').replace('_domain_', migration.domain)
-              : t('WEBSITE_MIGRATION_DNS_TEXT_NO_DOMAIN', 'Your domain isn’t on our network yet. Create this record in the DNS settings of the provider where you bought it. Once it’s active, you can migrate from here.')}
-          </p>
-          <CnameRecord
-            name={recordName || (migration.domain ? '@' : null)}
-            nameHint={migration.domain && !recordName ? t('WEBSITE_MIGRATION_DNS_ROOT', 'For a root domain, your provider must allow a CNAME, ALIAS or ANAME record at @') : null}
-            target={target}
-          />
-        </MigrationBody>
+      <MigrationCard tone='warning' icon={TriangleAlert} aria-labelledby='website-migration-title'>
+        <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_DNS_TITLE', 'To migrate, first change your domain’s DNS')}</h2>
+        <p>
+          {migration.domain
+            ? t('WEBSITE_MIGRATION_DNS_TEXT', 'Your domain _domain_ isn’t on our network yet. Create this record in the DNS settings of the provider where you bought it. Once it’s active, you can migrate from here.').replace('_domain_', migration.domain)
+            : t('WEBSITE_MIGRATION_DNS_TEXT_NO_DOMAIN', 'Your domain isn’t on our network yet. Create this record in the DNS settings of the provider where you bought it. Once it’s active, you can migrate from here.')}
+        </p>
+        <CnameRecord
+          name={recordName || (migration.domain ? '@' : null)}
+          nameHint={migration.domain && !recordName ? t('WEBSITE_MIGRATION_DNS_ROOT', 'For a root domain, your provider must allow a CNAME, ALIAS or ANAME record at @') : null}
+          target={target}
+        />
       </MigrationCard>
     )
   }
@@ -123,29 +123,28 @@ const WebsiteMigrationUI = (props) => {
   if (status !== 'eligible') return null
 
   return (
-    <MigrationCard aria-labelledby='website-migration-title'>
-      <Stars aria-hidden='true' />
-      <MigrationBody>
-        <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_TITLE', 'Move to the new website editor')}</h2>
-        <p>{t('WEBSITE_MIGRATION_TEXT', 'Your website can use the new theme editor: more design options, and drafts you publish when you’re ready.')}</p>
-        {error}
-        <MigrationActions>
-          <Button type='button' color='primary' borderRadius='8px' disabled={migrating} onClick={() => { clearErrors(); setConfirming(true) }}>
-            {migrating ? t('WEBSITE_MIGRATION_MIGRATING', 'Migrating…') : t('WEBSITE_MIGRATION_ACTION', 'Migrate website')}
-          </Button>
-        </MigrationActions>
-      </MigrationBody>
-      <Confirm
+    <MigrationCard icon={Globe} aria-labelledby='website-migration-title'>
+      <h2 id='website-migration-title'>{t('WEBSITE_MIGRATION_TITLE', 'Move to the new website editor')}</h2>
+      <p>{t('WEBSITE_MIGRATION_TEXT', 'Your website can use the new theme editor: more design options, and drafts you publish when you’re ready.')}</p>
+      {error}
+      <div className='odc-migration-actions'>
+        <Button variant='primary' disabled={migrating} onClick={() => { clearErrors(); setConfirming(true) }}>
+          {migrating ? t('WEBSITE_MIGRATION_MIGRATING', 'Migrating…') : t('WEBSITE_MIGRATION_ACTION', 'Migrate website')}
+        </Button>
+      </div>
+      <ConfirmDialog
         open={confirming}
+        tone='primary'
+        className='odc-migration-confirm'
         title={t('WEBSITE_MIGRATION_CONFIRM_TITLE', 'Migrate your website to the new editor?')}
-        acceptText={t('WEBSITE_MIGRATION_CONFIRM_ACCEPT', 'Migrate now')}
-        cancelText={t('CANCEL', 'Cancel')}
-        onClose={() => setConfirming(false)}
+        confirmLabel={t('WEBSITE_MIGRATION_CONFIRM_UNDERSTAND', 'I understand, migrate')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
         onCancel={() => setConfirming(false)}
-        onAccept={() => { setConfirming(false); handleMigrate() }}
+        onConfirm={() => { setConfirming(false); handleMigrate() }}
       >
-        <p style={{ margin: 0 }}>{t('WEBSITE_MIGRATION_CONFIRM_TEXT', 'The change goes live right away: your customers will see the new website as soon as it finishes. It’s important that you review your website after the migration in case it needs any adjustments.')}</p>
-      </Confirm>
+        <p>{t('WEBSITE_MIGRATION_CONFIRM_WARNING', 'The migration is irreversible: your website can’t go back to the previous editor. The change goes live right away: your customers will see the new website as soon as it finishes. You migrate under your own responsibility, so review your website after the migration in case it needs any adjustments.')}</p>
+      </ConfirmDialog>
     </MigrationCard>
   )
 }
@@ -163,17 +162,14 @@ export const WebsiteInBuilder = () => {
   const [, t] = useLanguage()
   const history = useHistory()
   return (
-    <MigrationCard aria-labelledby='website-in-builder-title'>
-      <Stars aria-hidden='true' />
-      <MigrationBody>
-        <h2 id='website-in-builder-title'>{t('WEBSITE_IN_BUILDER_TITLE', 'Websites are now made in Builder')}</h2>
-        <p>{t('WEBSITE_IN_BUILDER_TEXT', 'You don’t have a website here. Create it in Builder: more design options, and drafts you publish when you’re ready.')}</p>
-        <MigrationActions>
-          <Button type='button' color='primary' borderRadius='8px' onClick={() => history.push('/builder')}>
-            {t('WEBSITE_IN_BUILDER_ACTION', 'Go to Builder')}
-          </Button>
-        </MigrationActions>
-      </MigrationBody>
+    <MigrationCard icon={Globe} aria-labelledby='website-in-builder-title'>
+      <h2 id='website-in-builder-title'>{t('WEBSITE_IN_BUILDER_TITLE', 'Websites are now made in Builder')}</h2>
+      <p>{t('WEBSITE_IN_BUILDER_TEXT', 'You don’t have a website here. Create it in Builder: more design options, and drafts you publish when you’re ready.')}</p>
+      <div className='odc-migration-actions'>
+        <Button variant='primary' onClick={() => history.push('/builder')}>
+          {t('WEBSITE_IN_BUILDER_ACTION', 'Go to Builder')}
+        </Button>
+      </div>
     </MigrationCard>
   )
 }

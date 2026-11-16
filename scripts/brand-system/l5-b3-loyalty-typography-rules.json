@@ -1,0 +1,371 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b3-loyalty-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b3-loyalty-loyaltyleveldetail-levelname-root-20px-3fe25b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "LevelName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-loyalty-loyaltyleveldetail-actionselectorwrapper-div-div-dropdown-ite-e555ae",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-loyaltyleveldetail-formcontroller-label-14px-27e0bb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "FormController",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-loyaltyleveldetail-expirationwrapper-h2-16px-4c0816",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "ExPirationWrapper",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-loyalty-loyaltyleveldetail-checkboxwrapper-p-14px-b35016",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-headercontainer-h1-20px-1e4e52",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-pointsredemptionwrapper-h2-16px-02bfa5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PointsRedemptionWrapper",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-pointsredemptionwrapper-p-14px-02b128",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PointsRedemptionWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-checkboxwrapper-p-14px-a168b9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-pointsaccumulationcontainer-h2-16p-0d6aa6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PointsAccumulationContainer",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-pointsaccumulationcontainer-p-14px-e3d339",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PointsAccumulationContainer",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-pointsaccumulationcontainer-span-1-fbbc4a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PointsAccumulationContainer",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-togglewrapper-p-14px-903d1d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "ToggleWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinessdetail-expirationwrapper-h2-16px-5105df",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "ExPirationWrapper",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinesslist-businessinfowrapper-span-14px-d341e4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessList/styles.js",
+      "component": "BusinessInfoWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletbusinesslist-modifiedwrapper-span-12px-b47d41",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessList/styles.js",
+      "component": "ModifiedWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletlevels-title-root-20px-36ae50",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletlevels-levelname-root-14px-674dcd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/styles.js",
+      "component": "LevelName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-loyalty-pointswalletlevels-addnewlevelbutton-root-14px-fac967",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/styles.js",
+      "component": "AddNewLevelButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-loyalty-rewardsprograms-headertitlecontainer-h1-20px-484df5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-loyalty-rewardsprograms-loyaltyitemcontent-h5-14px-b20d9b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "component": "LoyaltyItemContent",
+      "property": "font-size",
+      "context": "h5",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-loyalty-rewardsprograms-loyaltyitemcontent-p-12px-ebdd6c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "component": "LoyaltyItemContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-loyalty-rewardsprograms-infocontent-root-12px-0754ad",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-loyalty-wallet-title-root-20px-e544ed",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/Wallet/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-loyalty-wallet-tab-root-14px-6368db",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/Wallet/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b3-loyalty-pres-loyaltyleveldetail-actionselectorwrapper-button-svg-20px-afc0d4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "ActionSelectorWrapper button > svg: the three-dots action glyph."
+    },
+    {
+      "id": "b3-loyalty-pres-loyaltyleveldetail-checkboxwrapper-svg-16px-b2d2b1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "CheckBoxWrapper svg: the RecordCircleFill/Circle radio glyph."
+    },
+    {
+      "id": "b3-loyalty-pres-loyaltyleveldetail-uploadimageicon-span-14px-f2beec",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "component": "UploadImageIcon",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "Same pattern as GiftCardDetail: UploadImageIcon renders only the icon component, with no span child."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletbusinessdetail-paymentruleswrapper-h2-14px-2cf0ed",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PaymentRulesWrapper",
+      "property": "font-size",
+      "context": "h2",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "PaymentRulesWrapper is imported as a comment in index.js and its whole JSX block is commented out, so neither the h2 nor the p below it renders."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletbusinessdetail-paymentruleswrapper-p-14px-274961",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "PaymentRulesWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "The p of that same commented-out PaymentRulesWrapper block."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletbusinessdetail-checkboxwrapper-svg-16px-ce4033",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "CheckBoxWrapper svg: the radio glyph."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletbusinessdetail-accumulationinputwrapper-price-14p-d1578e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "component": "AccumulationInputWrapper",
+      "property": "font-size",
+      "context": ".price",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "The selector targets .price and no node in PointsWalletBusinessDetail/index.js carries that class."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletbusinesslist-modifiedwrapper-svg-17px-da24b8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessList/styles.js",
+      "component": "ModifiedWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "17px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "ModifiedWrapper svg: the chevron glyph of the row."
+    },
+    {
+      "id": "b3-loyalty-pres-pointswalletlevels-levelitemcontainer-svg-18px-64ff04",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/styles.js",
+      "component": "LevelItemContainer",
+      "property": "font-size",
+      "context": "> svg",
+      "match": "18px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "LevelItemContainer > svg: the chevron glyph of the level row."
+    },
+    {
+      "id": "b3-loyalty-pres-rewardsprograms-iconwrapper-svg-24px-11c985",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "IconWrapper svg: the programme icon (Cash, BarChartSteps)."
+    }
+  ]
+}

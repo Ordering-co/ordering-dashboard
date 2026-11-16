@@ -12,7 +12,7 @@ export const TableHeader = styled.thead`
   border-bottom: 1px solid ${props => props.theme.colors.secundaryLight};
   th {
     padding: 10px 0;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: bold;
     width: 50%;
     &:first-child {
@@ -39,7 +39,7 @@ export const TableBody = styled.tbody`
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
   td {
     padding: 7px 0;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
     width: 50%;
 
     &:first-child {

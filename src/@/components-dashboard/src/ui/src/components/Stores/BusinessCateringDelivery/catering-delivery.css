@@ -1,0 +1,48 @@
+/*
+ * redesign stores 5.4 · Preorders: the fieldset of one catering order type. Values: --od-* and --od-x-* only,
+ * logical properties only. The five fields sit in a grid that is one column on a phone (the columns need --od-x-search-min each).
+ * Prefix: odc-store-preorder-* (shared with BusinessPreorderDetails/preorder.css).
+ */
+
+.odc-store-preorder-set {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  padding-block-start: var(--od-space-5);
+  border: 0;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-store-preorder-legend {
+  float: none;
+  inline-size: auto;
+  margin: 0;
+  padding: 0;
+  padding-inline-end: var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-store-preorder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  gap: var(--od-space-5) var(--od-space-4);
+  min-inline-size: 0;
+  margin-block-start: var(--od-space-4);
+}
+
+/* A field and, only when its value is not the default, the ghost button under it. 12px between the stacked controls keeps
+   their 44px touch areas from crossing. */
+.odc-store-preorder-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-store-preorder-item > .odc-field {
+  align-self: stretch;
+}

@@ -52,6 +52,17 @@ describe('OrderingWebsite', () => {
     expect(posts()).toEqual([])
   })
 
+  // review: ordering-website-2 and ordering-website are the same page instance (one Switch, no key); a «no site» of one
+  // must not stay on the other, which has its site
+  it('forgets «no site» when the same page moves to an app that has its site', async () => {
+    mockApi([{ id: 41, code: 'website', type: null }])
+    const UIComponent = vi.fn(() => null)
+    const { rerender } = render(<OrderingWebsite UIComponent={UIComponent} appId='web_marketplace_26' type='web_marketplace_26' disableSiteCreation />)
+    await waitFor(() => expect(UIComponent).toHaveBeenLastCalledWith(expect.objectContaining({ siteMissing: true }), expect.anything()))
+    rerender(<OrderingWebsite UIComponent={UIComponent} appId='website' disableSiteCreation />)
+    await waitFor(() => expect(UIComponent).toHaveBeenLastCalledWith(expect.objectContaining({ site: expect.objectContaining({ id: 41 }), siteMissing: false }), expect.anything()))
+  })
+
   it('still creates its site where creating one is allowed', async () => {
     mockApi([])
     renderPage({ appId: 'website' })

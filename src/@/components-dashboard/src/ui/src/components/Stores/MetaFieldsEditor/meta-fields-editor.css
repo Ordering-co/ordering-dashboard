@@ -1,0 +1,159 @@
+/*
+ * redesign stores 5.14 (, K-1) · Moved here from BusinessMenuCustomFields (5.6: , G3-06, G3-07), renamed
+ * odc-bmcf-* to odc-mfe-*. The custom-fields editor shared by the menu (inside its P/Dialog) and the promotions (inline): one
+ * readable row per field (plain text, a real delete button) and a labelled add form. Values: --od-* and --od-x-* only, logical
+ * properties only; the breakpoint is the playbook's, literal inside @media.
+ */
+
+.odc-mfe {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-type-content-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── List ── */
+.odc-mfe-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-mfe-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 3fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-mfe-type {
+  color: var(--od-text-muted);
+  font-size: var(--od-type-secondary-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The key and the value are text, not boxes: a long one wraps, it never widens the row. */
+.odc-mfe-key,
+.odc-mfe-value {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-mfe-key { font-weight: var(--od-font-weight-semibold); }
+
+.odc-mfe-value { white-space: pre-wrap; }
+
+.odc-mfe-delete { justify-self: end; }
+
+.odc-mfe-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+/* ── Loading ── */
+.odc-mfe-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.odc-mfe-skeleton-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+}
+
+/* ── Add form: Type and Key on a row, the Value across ── */
+.odc-mfe-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-mfe-value-field,
+.odc-mfe-actions,
+.odc-mfe-form > .odc-notice {
+  grid-column: 1 / -1;
+}
+
+.odc-mfe-form > .odc-notice {
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+.odc-mfe-select { cursor: pointer; }
+
+.odc-mfe-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* The JSON editor keeps the one that was there (jsoneditor-react), framed like a field. */
+.odc-mfe-json {
+  inline-size: 100%;
+  block-size: calc(var(--od-x-control-height) * 8);
+}
+
+.odc-mfe-json > div { block-size: 100%; }
+
+.odc-mfe-json .jsoneditor {
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-mfe-json .jsoneditor > div.jsoneditor-menu {
+  background-color: var(--od-action);
+  border-block-end: var(--od-x-hairline) solid var(--od-action);
+}
+
+.odc-mfe-json .jsoneditor-search { display: none; }
+
+/* ── Delete: the consequence, then the error of a refused delete (the confirmation stays open) ── */
+.odc-mfe-delete-body { margin: 0; }
+
+.odc-mfe-delete-body + .odc-notice.odc-mfe-delete-error {
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+}
+
+/* ── Phone: rows and form stack, nothing scrolls sideways ── */
+@media (max-width: 767px) {
+  .odc-mfe-row { grid-template-columns: minmax(0, 1fr) auto; }
+
+  /* the type on its line, then the key with its delete button, then the value across */
+  .odc-mfe-type { grid-column: 1 / -1; }
+
+  .odc-mfe-key {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .odc-mfe-delete {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .odc-mfe-value {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .odc-mfe-skeleton-row { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+
+  .odc-mfe-form { grid-template-columns: minmax(0, 1fr); }
+
+  .odc-mfe-actions .odc-btn { inline-size: 100%; }
+}

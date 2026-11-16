@@ -1,0 +1,62 @@
+/*
+ * redesign stores 2.F · Snooze: the body of a dialog the consumer owns. Values: --od-* and --od-x-* only,
+ * logical properties only, figures in .odc-figure. The radio rows are 44px under 768px by themselves (P/RadioGroup).
+ */
+
+.odc-snooze {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A notice here fills the body: the page gutter and the gap under it belong to the filter bar. */
+.odc-snooze .odc-notice {
+  margin: 0;
+}
+
+/* The current snooze opens the body. The legacy modals of six consumers (category, extras, zone, menu) put their close
+   button over that first line, so it leaves a touch target clear at its end. */
+.odc-snooze > .odc-notice:first-child {
+  margin-inline-end: var(--od-x-target-coarse);
+}
+
+/* «Until…»: the day and the time under the options; they wrap when the dialog is narrow. */
+.odc-snooze-until {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-snooze-until > * {
+  min-inline-size: 0;
+}
+
+/* redesign bugs C: which clock the times are on, when the consumer gives a zone (the store editor). */
+.odc-snooze-zone {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* Cancel and the primary. 12px between stacked 32px buttons keeps their 44px areas from crossing. */
+.odc-snooze-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+@media (max-width: 767px) {
+  .odc-snooze-foot .odc-btn {
+    flex: 1 1 auto;
+  }
+}

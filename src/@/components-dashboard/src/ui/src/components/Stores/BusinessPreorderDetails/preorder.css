@@ -1,0 +1,35 @@
+/*
+ * redesign stores 5.4 · Preorders section of the store editor: one form (title, pre order time, two catering
+ * fieldsets, save bar). Values: --od-* and --od-x-* only, logical properties only. The fieldsets are in
+ * BusinessCateringDelivery/catering-delivery.css (same prefix, odc-store-preorder-*).
+ */
+
+.odc-store-preorder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding-inline: var(--od-space-5);
+  padding-block-start: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-store-preorder:focus {
+  outline: none;
+}
+
+.odc-store-preorder-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+@media (max-width: 767px) {
+  .odc-store-preorder {
+    padding-inline: var(--od-space-4);
+  }
+}

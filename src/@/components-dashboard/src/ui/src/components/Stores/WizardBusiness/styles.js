@@ -1,16 +1,10 @@
 import styled from 'styled-components'
 
-export const BusinessScheduleContainer = styled.div`
-  width: 100%;
-`
-export const BusinessPaymentMethodsContainer = styled.div`
-  width: 100%;
-`
 export const TurtorialEndContainier = styled.div`
   padding: 20px;
   width: 100%;
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
   }
 `
@@ -26,13 +20,13 @@ export const FirstStoreContainer = styled.div`
     margin-bottom: 59px;
   }
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0;
   }
 
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 5px 0 39px 0;
   }
 

@@ -1,369 +1,154 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useTheme } from 'styled-components'
-import { Dropdown, DropdownButton } from 'react-bootstrap'
-import { ThreeDots, XLg } from 'react-bootstrap-icons'
-import RiCheckboxBlankLine from '@meronex/icons/ri/RiCheckboxBlankLine'
-import RiCheckboxFill from '@meronex/icons/ri/RiCheckboxFill'
+import React, { useEffect, useId, useState } from 'react'
 
 import { useLanguage, PaymentOptionStripeLink as PaymentOptionStripeLinkController } from '../../../../../index'
-import { Button, Input, IconButton, Checkbox, DefaultSelect as Select } from '../../../styles'
+import { DefaultSelect as Select } from '../../../styles'
+import { SecretField } from '../../Shared/Product'
+import { ProviderPanel } from '../BusinessPaymentMethods/ProviderPanel'
+import { commitOnBlur, commitOnKeyDown, useConfigSaveError } from '../BusinessPaymentMethods/configField'
+import { Option } from './styles'
 
-import { useWindowSize } from '../../../hooks/useWindowSize'
-import { Confirm } from '../../Shared'
-import { addQueryToUrl } from '../../../utils'
+// redesign stores 5.10a: Stripe Link on ProviderPanel — a publishable and a secret key per mode (Live and Sandbox), channels and order types; the Twilio configs close the General tab and save by themselves, not through the save bar.
+const TABS = [
+  { id: 'general', index: 0 },
+  { id: 'channels', index: 1 },
+  { id: 'order_types', index: 2 }
+]
 
-import {
-  Container,
-  SandboxWrapper,
-  FieldName,
-  Header,
-  CloseButton,
-  TabOption,
-  TabOptionName,
-  ActionSelectorWrapper,
-  Option
-} from './styles'
-import { Tab, TabsContainer } from '../BusinessMenu/styles'
+// the only business configs this form edits (as `main`)
+const CONFIGS_TO_SHOW = ['allow_text_messages_sms', 'allow_text_messages_whatsapp']
 
-const PaymentOptionStripeLinkUI = (props) => {
-  const {
-    open,
-    onClose,
-    orderTypes,
-    sitesState,
-    configsState,
-    changesState,
-    handleChangeBusinessPaymentState,
-    cleanChangesState,
-    actionState,
-    handleChangeSandbox,
-    handleChangeInput,
-    handleSaveClick,
-    businessPaymethod,
-    handleDeletePaymethod,
-    handleUpdateConfigs,
-    paymethodTitle
-  } = props
-
-  const query = new URLSearchParams(useLocation().search)
-  const theme = useTheme()
+// A select config, saved when the choice changes. The legacy select is not a labelable control: the visible label is a span, and the
+// trigger is named by it followed by its own content (the current choice).
+const ConfigSelect = ({ config, onChange }) => {
   const [, t] = useLanguage()
-  const { width } = useWindowSize()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [paymentTabs, setPaymentTabs] = useState(0)
-  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
-  const [localState, setLocalState] = useState({ allowed_order_types: businessPaymethod?.allowed_order_types, sites: businessPaymethod?.sites })
-  const filteredOptions = localState?.sites ?? businessPaymethod?.sites?.filter(a => sitesState?.sites?.find(b => a.id === b.id))
-  const [all, setAll] = useState(!filteredOptions?.length)
+  const base = useId()
+  const labelId = `${base}-label`
+  const triggerId = `${base}-trigger`
+  const options = config.options.map(item => ({
+    value: item.value,
+    content: <Option>{t(item.text.toUpperCase(), item.text)}</Option>
+  }))
+  return (
+    <div className='odc-pp-config'>
+      <span id={labelId} className='odc-pp-config-label'>{config.name}</span>
+      <Select
+        notAsync
+        id={triggerId}
+        ariaLabelledBy={`${labelId} ${triggerId}`}
+        defaultValue={config.value}
+        options={options}
+        onChange={onChange}
+        placeholder={t('SELECT_A_OPTION', 'Select a option')}
+      />
+    </div>
+  )
+}
 
-  const configsToShow = {
-    allow_text_messages_sms: true,
-    allow_text_messages_whatsapp: true
+const PaymentOptionStripeLinkUI = ({
+  paymethod,
+  businessPaymethod,
+  gatewayName,
+  storeName,
+  sites,
+  devices,
+  orderTypes,
+  initialTab,
+  onTabChange,
+  onSave,
+  configsState,
+  actionState,
+  handleUpdateConfigs
+}) => {
+  const [, t] = useLanguage()
+  const publishable = t('PUBLISHABLE_KEY', 'Publishable key')
+  const secret = t('SECRET_KEY', 'Secret key')
+  const fields = [
+    { key: 'publishable', label: publishable, mode: 'live' },
+    { key: 'secret', label: secret, mode: 'live', secret: true },
+    { key: 'publishable', label: publishable, mode: 'sandbox' },
+    { key: 'secret', label: secret, mode: 'sandbox', secret: true }
+  ]
+
+  // a config the API refuses (a Twilio secret) shows as a toast
+  useConfigSaveError(actionState?.error)
+
+  // redesign bugs F row 33: the select keeps its own state and only follows `defaultValue`, which a refused save does not change.
+  // Each failure remounts the selects (it is in their key), so they show the stored value again.
+  const [failedSaves, setFailedSaves] = useState(0)
+  useEffect(() => {
+    if (actionState?.error) setFailedSaves(count => count + 1)
+  }, [actionState?.error])
+
+  const saveConfig = (config, value) => handleUpdateConfigs(config.id, { value })
+
+  const secretEnding = (ending) => {
+    const [before, after] = t('SECRET_ENDS_IN', 'Ends in _ending_').split('_ending_')
+    return <>{before}{ending}{after}</>
   }
 
-  const setPaymethodInfo = (values) => {
-    const data = {}
-    if (values?.value === 'All') {
-      data[values.key] = []
-      setAll(!all)
-    } else {
-      let array = changesState?.[values.key] ?? (values.key === 'allowed_order_types'
-        ? businessPaymethod?.[values.key]
-        : businessPaymethod?.[values.key]?.map(i => i.id)) ?? []
-
-      array = [...new Set(
-        array.includes(values.value)
-          ? array.filter(item => item !== values.value)
-          : [...array, values.value]
-      )]
-
-      data[values.key] = array.length > 0 ? array : []
-      if (values.key === 'sites') {
-        setAll(!data?.sites?.length)
+  const renderConfig = (config) => {
+    const key = config.id ?? config.key
+    if (config.type === 2 && config.options) {
+      return <ConfigSelect key={`${key}-${failedSaves}`} config={config} onChange={(value) => saveConfig(config, value)} />
+    }
+    if (config.type === 7) {
+      const commit = commitOnBlur(config.value, (value) => saveConfig(config, value))
+      // review 5.10a #1: Show / Hide take the focus from the input, which is not leaving the field: it saves only when the focus
+      // leaves the input AND its button (a half-typed secret is never sent by a click on Show)
+      const commitOnLeave = (e) => {
+        if (e.currentTarget.contains(e.relatedTarget)) return
+        const field = e.currentTarget.querySelector('input')
+        if (field) commit({ target: field })
       }
+      return (
+        <div key={key} className='odc-pp-config' onBlur={commitOnLeave}>
+          <SecretField
+            label={config.name ?? config.key}
+            defaultValue={config.value ?? ''}
+            showLabel={t('SHOW', 'Show')}
+            hideLabel={t('HIDE', 'Hide')}
+            endingLabel={secretEnding}
+            onKeyDown={commitOnKeyDown(config.value, (value) => saveConfig(config, value))}
+          />
+        </div>
+      )
     }
-
-    handleChangeBusinessPaymentState(data)
+    return null
   }
 
-  const actionSidebar = (value) => {
-    if (!value) {
-      props.onClose()
-    }
-    setIsMenuOpen(value)
-  }
-  const onClickDeletePaymethod = () => {
-    setConfirm({
-      open: true,
-      content: t('QUESTION_DELETE_ITEM', 'Are you sure to delete this _item_?').replace('_item_', t('PAYMETHOD_ID', 'Paymethod')),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleDeletePaymethod(businessPaymethod?.paymethod?.id)
-      }
-    })
-  }
-  useEffect(() => {
-    if (isMenuOpen) {
-      if (width < 1000) {
-        document.getElementById(paymethodTitle).style.width = '100%'
-      } else {
-        document.getElementById(paymethodTitle).style.width = '500px'
-      }
-    }
-  }, [width])
+  const generalBefore = (
+    <p className='odc-pp-hint'>
+      {t('STRIPE_AND_TWILIO_CONFIGS_REQUIERED', 'Stripe and Twilio keys are required to use this Payment Method')}
+    </p>
+  )
 
-  useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open])
-
-  useEffect(() => {
-    const initState = {
-      sandbox: businessPaymethod?.sandbox,
-      allowed_order_types: businessPaymethod?.allowed_order_types || [1, 2, 3, 4, 5]
-    }
-    if (businessPaymethod?.data) {
-      initState.data = businessPaymethod.data
-    }
-    if (businessPaymethod?.data_sandbox) {
-      initState.data_sandbox = businessPaymethod.data_sandbox
-    }
-    cleanChangesState(initState)
-  }, [])
-
-  useEffect(() => {
-    const changes = {}
-    if (changesState?.allowed_order_types) changes.allowed_order_types = changesState?.allowed_order_types
-    if (changesState?.sites) changes.sites = changesState?.sites
-    if (Object.keys(changes).length > 0) setLocalState(JSON.parse(JSON.stringify(changes)))
-  }, [changesState?.sites, changesState?.allowed_order_types])
-
-  const handleTabClick = (tab, isInitialRender) => {
-    setPaymentTabs(tab)
-    if (!isInitialRender) {
-      addQueryToUrl({ paymethod_tab: tab })
-    }
-  }
-
-  useEffect(() => {
-    const payemthodTab = query.get('paymethod_tab')
-    if (payemthodTab) {
-      const _payemthodTab = Number(payemthodTab)
-      handleTabClick(_payemthodTab, true)
-    } else {
-      handleTabClick(0)
-    }
-  }, [])
+  // Not part of the save bar: each config saves by itself, as in `main` (a select when it changes, a secret when the field is left)
+  const generalAfter = (
+    <div className='odc-pp-configs'>
+      <p className='odc-pp-hint'>{t('TWILIO_CONFIGURATION_MESSAGE', '*Enable these options after twilio configuration')}</p>
+      {!configsState?.loading && configsState?.configs?.filter(config => CONFIGS_TO_SHOW.includes(config?.key)).map(renderConfig)}
+    </div>
+  )
 
   return (
-    <>
-      <Container id={paymethodTitle}>
-        <Header>
-          <h1>{t(paymethodTitle?.toUpperCase?.(), 'Stripe link (Only for callcenter)')}</h1>
-          <ActionSelectorWrapper>
-            <DropdownButton
-              menuAlign={theme?.rtl ? 'left' : 'right'}
-              title={<ThreeDots />}
-              id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
-            >
-              <Dropdown.Item
-                onClick={() => onClickDeletePaymethod()}
-              >
-                {t('DELETE', 'Delete')}
-              </Dropdown.Item>
-            </DropdownButton>
-          </ActionSelectorWrapper>
-          <CloseButton>
-            <IconButton
-              color='black'
-              onClick={() => onClose()}
-            >
-              <XLg />
-            </IconButton>
-          </CloseButton>
-        </Header>
-        <p className='message'>{t('STRIPE_AND_TWILIO_CONFIGS_REQUIERED', 'Stripe and Twilio keys are requiered to use this Payment Method')}</p>
-        <TabsContainer>
-          <Tab
-            active={paymentTabs === 0}
-            onClick={() => handleTabClick(0)}
-          >
-            {t('GENERAL', 'General')}
-          </Tab>
-          {sitesState?.sites?.length > 0 && (
-            <Tab
-              active={paymentTabs === 1}
-              onClick={() => handleTabClick(1)}
-            >
-              {t('CHANNELS', 'Channels')}
-            </Tab>
-          )}
-          <Tab
-            active={paymentTabs === 2}
-            onClick={() => handleTabClick(2)}
-          >
-            {t('ORDER_TYPE', 'Order type')}
-          </Tab>
-        </TabsContainer>
-
-        {paymentTabs === 0 && (
-          <>
-            <SandboxWrapper>
-              <Checkbox
-                checked={changesState?.sandbox ?? businessPaymethod?.sandbox ?? false}
-                onChange={e => handleChangeSandbox(e.target.checked)}
-              />
-              <span>{t('SANDBOX', 'Sandbox')}</span>
-            </SandboxWrapper>
-            <FieldName>{t('PUBLISHABLE_KEY', 'Publishable key')}</FieldName>
-            <Input
-              name='publishable'
-              defaultValue={
-                changesState?.data?.publishable
-                  ? changesState?.data?.publishable
-                  : businessPaymethod?.data?.publishable
-              }
-              placeholder={t('PUBLISHABLE_KEY', 'Publishable key')}
-              onChange={e => handleChangeInput(e, false)}
-            />
-            <FieldName>{t('SECRET_KEY', 'Secret key')}</FieldName>
-            <Input
-              name='secret'
-              defaultValue={
-                changesState?.data?.secret
-                  ? changesState?.data?.secret
-                  : businessPaymethod?.data?.secret
-              }
-              placeholder={t('SECRET_KEY', 'Secret key')}
-              onChange={e => handleChangeInput(e, false)}
-            />
-            <FieldName>{t('PUBLISHABLE_KEY', 'Publishable key')} ({t('SANDBOX', 'Sandbox')})</FieldName>
-            <Input
-              name='publishable'
-              defaultValue={
-                changesState?.data_sandbox?.publishable
-                  ? changesState?.data_sandbox?.publishable
-                  : businessPaymethod?.data_sandbox?.publishable
-              }
-              placeholder={`${t('PUBLISHABLE_KEY', 'Publishable key')} (${t('SANDBOX', 'Sandbox')})`}
-              onChange={e => handleChangeInput(e, true)}
-            />
-            <FieldName>{t('SECRECT_KEY', 'Secret key')} ({t('SANDBOX', 'Sandbox')})</FieldName>
-            <Input
-              name='secret'
-              defaultValue={
-                changesState?.data_sandbox?.secret
-                  ? changesState?.data_sandbox?.secret
-                  : businessPaymethod?.data_sandbox?.secret
-              }
-              placeholder={`${t('SECRECT_KEY', 'Secret key')} (${t('SANDBOX', 'Sandbox')})`}
-              onChange={e => handleChangeInput(e, true)}
-            />
-            <p className='alert-message'>{t('TWILIO_CONFIGURATION_MESSAGE', '*Enable these options after twilio configuration')}</p>
-            {!configsState?.loading && configsState?.configs?.filter(config => configsToShow[config?.key]).map(config => {
-              const options = config?.options?.map(item => {
-                return { value: item.value, content: <Option>{t(item.text.toUpperCase())}</Option> }
-              })
-              return (
-                <>
-                  <FieldName>{config?.name}</FieldName>
-                  {config?.type === 2 && options && (
-                    <Select
-                      notAsync
-                      defaultValue={config?.value}
-                      options={options}
-                      onChange={(typeValue) => handleUpdateConfigs(config?.id, { value: typeValue })}
-                      placeholder={t('SELECT_A_OPTION', 'Select a option')}
-                    />
-                  )}
-                  {config?.type === 7 && (
-                    <input
-                      type='password'
-                      defaultValue={config?.value}
-                      onChange={(e) => handleUpdateConfigs(config?.id, { value: e.target.value })}
-                      className='form-control'
-                      placeholder={config?.name}
-                    />
-                  )}
-                </>
-              )
-            })}
-          </>
-        )}
-
-        {paymentTabs === 1 && sitesState?.sites?.length > 0 && (
-          <>
-            <TabOption
-              key='all'
-              onClick={() => setPaymethodInfo({ key: 'sites', value: 'All' })}
-            >
-              {all
-                ? (
-                <RiCheckboxFill className='fill' />
-                  )
-                : (
-                <RiCheckboxBlankLine />
-                  )}
-              <TabOptionName>{t('ALL', 'All')}</TabOptionName>
-            </TabOption>
-            {!all && sitesState?.sites.map(site => (
-              <TabOption
-                key={site.id}
-                onClick={() => setPaymethodInfo({ key: 'sites', value: site.id })}
-              >
-                {(localState?.sites ?? businessPaymethod?.sites?.map(s => s.id))?.includes(site.id)
-                  ? (
-                  <RiCheckboxFill className='fill' />
-                    )
-                  : (
-                  <RiCheckboxBlankLine />
-                    )}
-                <TabOptionName>{site.name}</TabOptionName>
-              </TabOption>
-            ))}
-          </>
-        )}
-
-        {paymentTabs === 2 && (
-          orderTypes.map(type => (
-            <TabOption
-              key={type.value}
-              onClick={() => setPaymethodInfo({ key: 'allowed_order_types', value: type.value })}
-            >
-              {(localState?.allowed_order_types ?? businessPaymethod?.allowed_order_types)?.includes(type.value)
-                ? (
-                <RiCheckboxFill className='fill' />
-                  )
-                : (
-                <RiCheckboxBlankLine />
-                  )}
-              <TabOptionName>{type.text}</TabOptionName>
-            </TabOption>
-          ))
-        )}
-
-        <Button
-          borderRadius='5px'
-          color='primary'
-          disabled={actionState.loading || Object.keys(changesState).length === 0}
-          onClick={() => handleSaveClick(businessPaymethod.id)}
-        >
-          {actionState.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
-        </Button>
-      </Container>
-      <Confirm
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={confirm.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={confirm.open}
-        onClose={() => setConfirm({ ...confirm, open: false })}
-        onCancel={() => setConfirm({ ...confirm, open: false })}
-        onAccept={confirm.handleOnAccept}
-        closeOnBackdrop={false}
-      />
-    </>
+    <ProviderPanel
+      paymethod={paymethod}
+      businessPaymethod={businessPaymethod}
+      gatewayName={gatewayName}
+      storeName={storeName}
+      tabs={TABS}
+      initialTab={initialTab}
+      onTabChange={onTabChange}
+      sites={sites}
+      devices={devices}
+      orderTypes={orderTypes}
+      showMode
+      fieldsDisplay='both'
+      fields={fields}
+      generalBefore={generalBefore}
+      generalAfter={generalAfter}
+      onSave={onSave}
+    />
   )
 }
 

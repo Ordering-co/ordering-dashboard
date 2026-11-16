@@ -1,0 +1,152 @@
+/*
+ * redesign UF-B4 (, decision 4) · The add form of Delivery (drivers, driver managers, delivery users) in Product: title
+ * (opt-in), photo, fields with labels, the driver groups, the API error and the «Add» button. It repeats the base rules of
+ * Users/UserAddForm/user-add-form.css on purpose (same `odc-uf-` classes, same values): each form loads on its own page. Tokens only (playbook §5); breakpoints as literals inside @media.
+ */
+
+.odc-uf-add {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-uf-add *,
+.odc-uf-add *::before,
+.odc-uf-add *::after {
+  box-sizing: border-box;
+}
+
+.odc-uf-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+}
+
+.odc-uf-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-uf-title:focus { outline: none; }
+
+/* ── Photo: the avatar and «Add photo» (DragAndDrop adds `dragover` while a file is over it) ── */
+.odc-uf-photo {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-2);
+  border: var(--od-x-hairline) dashed transparent;
+  border-radius: var(--od-radius-component);
+}
+
+.odc-uf-photo.dragover { border-color: var(--od-border-strong); }
+
+/* 48px: the avatar of the kit has two sizes (24, 32); the form asks for the next step of the space scale. */
+.odc-uf-photo .odc-avatar[data-size],
+.odc-uf-photo-wait {
+  inline-size: var(--od-space-7);
+  block-size: var(--od-space-7);
+}
+
+.odc-uf-photo .odc-avatar[data-size] { font-size: var(--od-x-type-ui-size); }
+
+.odc-uf-photo .odc-avatar .odc-icon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+}
+
+.odc-uf-photo-wait {
+  display: grid;
+  flex: none;
+}
+
+.odc-uf-photo-body {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-uf-hint,
+.odc-uf-photo-error {
+  margin: 0;
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-hint { color: var(--od-x-text-subtle); }
+.odc-uf-photo-error { color: var(--od-danger-functional); }
+
+/* ── Fields ── */
+.odc-uf-fields {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The select fills its field: the C18 trigger is as wide as the field. */
+.odc-uf-select { display: block; min-inline-size: 0; }
+
+/* ── The block of fields (the tour marks it on a narrow window) ── */
+.odc-uf-main {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── Driver groups: a named checklist, one row per group ── */
+.odc-uf-groups {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-uf-legend {
+  padding: 0;
+  margin-block-end: var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-group-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* ── The answer of the API, above the button ── */
+.odc-uf-add .odc-notice.odc-uf-notice { margin-inline: 0; margin-block-end: 0; align-items: flex-start; }
+.odc-uf-notice-line { display: block; overflow-wrap: anywhere; }
+
+/* ── Add ── */
+.odc-uf-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 767px) {
+  .odc-uf-actions .odc-btn { flex: 1; }
+}
+
+/* ── Loading the fields: rows that keep the place of the controls ── */
+.odc-uf-skeleton {
+  display: grid;
+  gap: var(--od-space-4);
+}
+
+.odc-uf-skeleton-row {
+  display: flex;
+  align-items: center;
+  block-size: var(--od-x-control-height);
+}

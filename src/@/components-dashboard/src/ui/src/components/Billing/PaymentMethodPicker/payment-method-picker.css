@@ -1,0 +1,199 @@
+/* redesign BM-B (D3, D4, M-BM6, M-BM10, M-BM12): the saved cards and the Stripe field of the Billing modal. Only var(--od-*) /
+   var(--od-x-*), logical properties, prefix odc-pmp-. The buttons, the menu, the notices, the confirmation and the skeleton are
+   Product wrappers; this file only lays out their content and frames the Stripe field. */
+.odc-pmp-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-pmp-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pmp-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Notices live inside the dialog body: they take its width, not the page gutter that FilterBar gives them. */
+.odc-pmp-picker .odc-notice {
+  margin-block: 0;
+  margin-inline: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-pmp-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Saved cards: a framed row that is one button, with the ⋮ menu as its sibling ── */
+.odc-pmp-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-pmp-card {
+  display: flex;
+  align-items: stretch;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+/* Chosen: the action border plus a second hairline (shape and colour), and the «Default» word is still there. */
+.odc-pmp-card[data-selected] {
+  border-color: var(--od-action);
+  box-shadow: 0 0 0 var(--od-x-hairline) var(--od-action);
+}
+
+.odc-pmp-card-btn {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height-lg);
+  margin: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-space-3);
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+/* redesign  (row 51 R1-4): the highlight is the whole row's (button and ⋮), not the button's, so it does not stop at the ⋮. */
+.odc-pmp-card:hover { background: var(--od-x-hover); }
+
+.odc-pmp-card-btn:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* While the default is being written (or the dialog is charging) the cards do not answer: no pointer, no hover on the row. */
+.odc-pmp-card-btn[aria-disabled='true'] { cursor: default; }
+.odc-pmp-card:has(.odc-pmp-card-btn[aria-disabled='true']):hover { background: var(--od-bg); }
+
+.odc-pmp-card-icon.odc-icon { color: var(--od-text-muted); }
+
+.odc-pmp-card-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pmp-card-brand { font-weight: var(--od-font-weight-medium); }
+
+.odc-pmp-card-end {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+  flex: none;
+}
+
+.odc-pmp-default {
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-pmp-spin.odc-icon { animation: odc-spin var(--od-duration-slow) linear infinite; }
+
+.odc-pmp-card-menu {
+  align-self: center;
+  margin-inline-end: var(--od-x-space-1-5);
+}
+
+/* ── The Stripe field: the iframe only takes values, so the frame is ours (field border, control radius, ring on focus) ── */
+.odc-pmp-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pmp-stripe {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height-lg);
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  transition: border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-pmp-stripe > * {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* The focus lands on Stripe's iframe: the frame shows the house ring while the iframe has it. */
+.odc-pmp-stripe:focus-within {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-pmp-stripe[data-invalid] { border-color: var(--od-danger-functional); }
+
+.odc-pmp-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-pmp-attribution {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-pmp-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Touch (C3, decision 12): the rows and the field are 44px VISIBLE (the neighbours are 8px apart, so a pseudo-element area would overlap). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-pmp-card-btn,
+  .odc-pmp-stripe {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-pmp-spin.odc-icon { animation: none; }
+}

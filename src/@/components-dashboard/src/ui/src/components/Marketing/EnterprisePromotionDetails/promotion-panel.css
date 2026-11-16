@@ -1,0 +1,151 @@
+/*
+ * redesign PE-B3 (decisions 5, 7 and 9; PE-07, PE-13, PE-16, PE-18) · The advanced promotion editor: the panel (M/EnterprisePromotionDetails)
+ * and its General form (M/EnterprisePromotionGeneralDetails, which imports this file too so it never lacks its own rules).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-promo-.
+ * The panel is a RecordPanel inside the page's SplitView: it brings the header, the section list, the scroll and the discard guard.
+ * The other sections (Sites, Businesses, Users, Loyalty levels, Rules) are legacy pieces that keep their own styles and Save buttons.
+ */
+
+/* ── The panel: the body of a section, and its states ── */
+.odc-promo-section {
+  min-inline-size: 0;
+}
+
+.odc-promo-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-promo-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+/* The error of a delete that failed, inside the confirmation: it keeps the text of the API, in the danger colour */
+.odc-promo-delete-error {
+  margin: var(--od-space-3) 0 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* ── The General form ── */
+.odc-promo-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-promo-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-promo-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The two day pickers side by side while they fit, one under the other when they do not */
+.odc-promo-panel-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-control-height) * 7)), 1fr));
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-promo-priority {
+  min-inline-size: 0;
+}
+
+.odc-promo-panel-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-block-start: var(--od-space-2);
+}
+
+/* ── The image: a button with a decorative preview; the drop zone around it keeps the drag and drop of main ── */
+.odc-promo-drop {
+  display: block;
+  min-inline-size: 0;
+}
+
+.odc-promo-drop.dragover .odc-promo-upload {
+  border-color: var(--od-action);
+}
+
+.odc-promo-upload {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: calc(var(--od-x-control-height) * 4);
+  block-size: calc(var(--od-x-control-height) * 4);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.odc-promo-upload:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-promo-upload:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-promo-upload:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.odc-promo-upload-img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-promo-upload-hint {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-x-space-half);
+  padding: var(--od-x-space-1-5);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: center;
+}
+
+/* With a picture the hint becomes a strip at its foot, so the picture is not hidden */
+.odc-promo-upload[data-has-image] .odc-promo-upload-hint {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  flex-direction: row;
+  justify-content: center;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+  color: var(--od-text);
+}

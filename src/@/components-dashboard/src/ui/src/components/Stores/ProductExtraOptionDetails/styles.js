@@ -10,7 +10,7 @@ export const Header = styled.div`
   margin-bottom: 20px;
 
   h1 {
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     font-weight: 600;
     margin-bottom: 0px;
     color: ${props => props.theme.colors.headingColor};
@@ -67,7 +67,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {
@@ -120,7 +120,7 @@ export const InputWrapper = styled.div`
   }
   label {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   .default {
@@ -223,7 +223,7 @@ export const ModifierOptionsContainer = styled.div`
   width: 100%;
   margin-bottom: 20px;
   h2 {
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 30px;

@@ -1,0 +1,442 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b4-schools-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l5-b4-schools-schoolclassrooms-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolClassrooms/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolgrades-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolGrades/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolmealsreports-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolMealsReports/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolmoduledisabledpanel-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolModuleDisabledPanel/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolmoduletoggle-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolModuleToggle/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolprintlabels-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolPrintLabels/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolstudents-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolStudents/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schooluserstudents-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolUserStudents/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 3,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b4-schools-schoolsmanagement-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/SchoolsManagement/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch.  (SC-B5): the page props reach the active tab through SchoolsWorkspace, a second spread of the same props; no colour."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b4-schools-schools-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b4-schools-schools-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Chip",
+            "property": "background",
+            "match": "({ theme }) => theme?.colors?.primary || '#1907C7'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Chip",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.primaryContrast || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.secundaryText || '#748194'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormGrid",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.headingColor || '#263238'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReportCard",
+            "property": "border",
+            "match": "({ theme }) => theme?.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReportCard",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.secundaryText || '#748194'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SchoolModulePanelText",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.headingColor || '#151b26'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SchoolModulePanelText",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.secundaryText || '#748194'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SchoolModulePanelTitle",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.headingColor || '#151b26'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SchoolsTitle",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.headingColor || '#151b26'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "border-bottom",
+            "match": "({ active, theme }) => (active ? (theme?.colors?.primary || '#1907C7') : 'transparent')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "({ active, theme }) => (active ? (theme?.colors?.primary || '#1907C7') : (theme?.colors?.secundaryText || '#748194'))",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "border-bottom",
+            "match": "({ theme }) => theme?.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.secundaryText || '#748194'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabsWrapper",
+            "property": "border-bottom",
+            "match": "({ theme }) => theme?.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TextButton",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.danger || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TextButton",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.disabled || '#B1BCCC'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Toolbar",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.headingColor || '#263238'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-schools semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

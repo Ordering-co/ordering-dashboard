@@ -160,6 +160,21 @@ Do **not** add these to the map (already handled or ambiguous):
 
 Use `buildSettingsPath({ group, category, q })` for any new in-app link to Settings. If you touch loyalty or similar URL helpers, merge query params. Do not wipe `group` / `category`.
 
+### Names, layout and saving
+
+`SETTINGS_CONFIG_NAMES` can override a field's label and help in the hub. Keep its
+config key and stored values. For an exact Yes/No field whose positive label
+reverses a negative API name, use the positive-label mapping so the switch
+preserves the API value. Seed label and help translation keys in
+`settingsI18nSeed.js` and complete all locales.
+
+The hub keeps navigation and section content separate. On narrow screens it
+shows one view at a time. Results preserve the search query; clearing it
+preserves the open editor parameters. Product fields and the sticky save bar
+are enabled through `SettingsHubFormContext`. Other consumers keep their own
+behavior. Keep pending edits after validation or API errors and confirm before
+leaving a section with unsaved changes.
+
 ## How to add or change a setting
 
 1. Prefer an existing hub section. Map the API category in `SETTINGS_CATEGORY_GROUPS` if it is new.

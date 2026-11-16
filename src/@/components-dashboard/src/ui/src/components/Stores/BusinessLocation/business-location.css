@@ -1,0 +1,92 @@
+/*
+ * redesign stores 5.3 · Store details › Location on Product: the map (P/MapFrame), the address with the address at
+ * the pin, city and time zone side by side from 768px, the notes, and the save bar at the foot. Values: --od-* and --od-x-* only.
+ * Logical properties.
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as Information, 5.1a).
+ */
+
+.odc-loc-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-loc-form:focus { outline: none; }
+
+/* The map takes the frame's slot (GoogleMaps with fillContainer). */
+.odc-loc-map .odc-map-frame-map > div {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-loc-map-hint {
+  margin: calc(var(--od-space-5) * -1 + var(--od-space-2)) 0 0;
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+}
+
+.odc-loc-address {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Google's suggestion list is appended to <body>; the input is a plain Product input. */
+.odc-loc-address-input { inline-size: 100%; }
+
+.odc-loc-pin-address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  padding: var(--od-space-2) var(--od-space-3);
+  background: var(--od-surface-subtle);
+  border-radius: var(--od-radius-control);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-loc-pin-address p {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-loc-pin-text {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-loc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5);
+}
+
+@media (min-width: 768px) {
+  .odc-loc-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* The native selects are Product inputs (`.odc-field-input`), as in Information. */
+.odc-loc-select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  cursor: pointer;
+}
+
+/* A <select> matches `:read-only`, which paints Field inputs as read-only: an enabled one keeps the input's background. */
+.odc-loc-form .odc-loc-select:not(:disabled) { background: var(--od-bg); }
+.odc-loc-select:disabled { cursor: not-allowed; }
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as Information and SEO). */
+.odc-loc-form :is(input, textarea, select, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

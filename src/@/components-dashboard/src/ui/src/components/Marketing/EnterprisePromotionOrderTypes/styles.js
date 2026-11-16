@@ -4,7 +4,7 @@ export const OrderTypesContainer = styled.div`
   padding: 15px 5px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     border-bottom: 1px solid ${props => props.theme.colors.borderColor};
     padding-bottom: 32px;
@@ -23,7 +23,7 @@ export const OrderTypeItem = styled.div`
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 20px;

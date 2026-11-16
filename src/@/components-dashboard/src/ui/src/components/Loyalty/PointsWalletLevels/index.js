@@ -2,25 +2,46 @@ import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLanguage, useUtils, PointsWalletLevels as PointsWalletLevelsController } from '../../../../../index'
 import { Alert, SideBar, Modal } from '../../Shared'
-import { ChevronRight } from 'react-bootstrap-icons'
-import { useTheme } from 'styled-components'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import { ChevronRight, Plus, Star } from '../../Shared/Icon'
+import { Button, EmptyState, Skeleton } from '../../Shared/Product'
 import { useWindowSize } from '../../../hooks/useWindowSize'
-
-import {
-  Container,
-  Title,
-  LevelContainer,
-  LevelItemContainer,
-  InfoWrapper,
-  WrapperImage,
-  LevelName,
-  Image,
-  LevelBottomContainer
-} from './styles'
 import { LoyaltyLevelDetail } from '../LoyaltyLevelDetail'
-import { Button } from '../../../styles'
+import { levelPoints, sortLevels } from './levelOrder'
+import './points-wallet-levels.css'
+
+// «From _count_ point(s)» with the number in a figure (decision 11); a translation without the token keeps its text and the figure goes after it.
+const pointsText = (level, t) => {
+  const count = levelPoints(level)
+  if (count === null) return null
+  const text = count === 1
+    ? t('LEVELS_FROM_POINTS_ONE', 'From _count_ point')
+    : t('LEVELS_FROM_POINTS_OTHER', 'From _count_ points')
+  const [before, ...rest] = String(text).split('_count_')
+  const figure = <span className='odc-figure'>{count}</span>
+  if (rest.length === 0) return <>{before} {figure}</>
+  return <>{before}{figure}{rest.join('_count_')}</>
+}
+
+// One level: a native button for the whole row. The thumbnail is the image of the level, or a neutral marker when there is none or it
+// does not load (never the business logo of the theme). The chevron mirrors in right-to-left (points-wallet-levels.css).
+const LevelRow = ({ level, current, image, pointsText, onOpen }) => {
+  const [failedImage, setFailedImage] = useState(null)
+  const showImage = Boolean(image) && failedImage !== image
+  return (
+    <button type='button' className='pwl-row' aria-current={current ? 'true' : undefined} onClick={onOpen}>
+      <span className='pwl-thumb'>
+        {showImage
+          ? <img src={image} alt='' onError={() => setFailedImage(image)} />
+          : <Star className='odc-icon' />}
+      </span>
+      <span className='pwl-text'>
+        <span className='pwl-name'>{level?.name}</span>
+        {pointsText && <> <span className='pwl-points'>{pointsText}</span></>}
+      </span>
+      <ChevronRight className='odc-icon pwl-chevron' />
+    </button>
+  )
+}
 
 const PointsWalletLevelsUI = (props) => {
   const {
@@ -28,7 +49,8 @@ const PointsWalletLevelsUI = (props) => {
     handleDeleteLevelList,
     handleUpdateLevelList,
     handleAddLevelList,
-    handleParentSidebarMove
+    handleParentSidebarMove,
+    onDirtyChange
   } = props
 
   const history = useHistory()
@@ -41,7 +63,6 @@ const PointsWalletLevelsUI = (props) => {
     history.replace(qs ? `${location.pathname}?${qs}` : location.pathname)
   }
   const [, t] = useLanguage()
-  const theme = useTheme()
   const [{ optimizeImage }] = useUtils()
   const { width } = useWindowSize()
 
@@ -97,59 +118,53 @@ const PointsWalletLevelsUI = (props) => {
     }
   }, [levelList.loading])
 
+  const levels = sortLevels(levelList?.levels)
+  const showError = Boolean(levelList?.error) && levels.length === 0
+
   return (
-    <Container>
-      <Title>{t('LEVELS', 'Levels')}</Title>
-      <LevelContainer>
-        {levelList?.loading
+    <div className='pwl'>
+      <h1 className='pwl-title'>{t('LEVELS', 'Levels')}</h1>
+      {levelList?.loading
+        ? (
+        <div className='pwl-list' role='status' aria-busy='true' aria-label={t('LOADING', 'Loading')}>
+          {[...Array(5).keys()].map(i => (
+            <div className='pwl-skeleton-row' key={i}>
+              <Skeleton shape='box' size='var(--od-x-control-height-lg)' block='var(--od-x-control-height-lg)' />
+              <div className='pwl-skeleton-text'>
+                <Skeleton size='40%' />
+                <Skeleton size='25%' />
+              </div>
+            </div>
+          ))}
+        </div>
+          )
+        : showError
           ? (
-          <>
-            {
-              [...Array(5).keys()].map(i => (
-                <LevelItemContainer key={i}>
-                  <InfoWrapper>
-                    <WrapperImage>
-                      <Skeleton className='d-flex h-100' />
-                    </WrapperImage>
-                    <LevelName>
-                      <Skeleton width={100} />
-                    </LevelName>
-                  </InfoWrapper>
-                  <Skeleton width={16} height={16} />
-                </LevelItemContainer>
-              ))
-            }
-          </>
+          <EmptyState tone='error' title={t('LEVELS_LOAD_ERROR', "We couldn't load the levels.")} />
             )
-          : (
-          <>
-            {levelList?.levels?.length > 0 && levelList?.levels.map((level, i) => (
-              <LevelItemContainer
-                key={i}
-                onClick={() => handleOpenDetail(level)}
-                active={level?.id === selectedLevel?.id}
-              >
-                <InfoWrapper>
-                  <WrapperImage>
-                    <Image bgimage={optimizeImage(level?.image || theme.images?.dummies?.businessLogo)} />
-                  </WrapperImage>
-                  <LevelName>{level?.name}</LevelName>
-                </InfoWrapper>
-                <ChevronRight />
-              </LevelItemContainer>
-            ))}
-          </>
-            )}
-      </LevelContainer>
-      <LevelBottomContainer>
-        <Button
-          color='primary'
-          borderRadius='8px'
-          onClick={() => handleOpenDetail({})}
-        >
+          : levels.length === 0
+            ? (
+            <EmptyState title={t('LEVELS_EMPTY', 'No levels yet')} />
+              )
+            : (
+            <div className='pwl-list'>
+              {levels.map((level, i) => (
+                <LevelRow
+                  key={level?.id ?? i}
+                  level={level}
+                  current={selectedLevel?.id !== undefined && level?.id === selectedLevel?.id}
+                  image={level?.image ? optimizeImage(level.image) : null}
+                  pointsText={pointsText(level, t)}
+                  onOpen={() => handleOpenDetail(level)}
+                />
+              ))}
+            </div>
+              )}
+      <div className='pwl-foot'>
+        <Button icon={Plus} onClick={() => handleOpenDetail({})}>
           {t('ADD_NEW_LEVEL', 'Add new level')}
         </Button>
-      </LevelBottomContainer>
+      </div>
       {extraOpen && (
         <>
           {width >= 1100
@@ -168,6 +183,7 @@ const PointsWalletLevelsUI = (props) => {
                 handleAddLevelList={handleAddLevelList}
                 setSelectedLevel={setSelectedLevel}
                 onClose={handleCloseLevelDetail}
+                onDirtyChange={onDirtyChange}
               />
             </SideBar>
               )
@@ -186,6 +202,7 @@ const PointsWalletLevelsUI = (props) => {
                 handleAddLevelList={handleAddLevelList}
                 setSelectedLevel={setSelectedLevel}
                 onClose={handleCloseLevelDetail}
+                onDirtyChange={onDirtyChange}
               />
             </Modal>
               )}
@@ -200,7 +217,7 @@ const PointsWalletLevelsUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-    </Container>
+    </div>
   )
 }
 

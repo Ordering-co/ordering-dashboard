@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -26,6 +26,8 @@ export const RecoveryActionDetail = (props) => {
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
   const [cartRuleId, setCartRuleId] = useState(null)
+  // redesign RA-B1 (decision 6): the rule handleCreateRule made in this panel, so a retry only creates the channel
+  const createdRuleRef = useRef(null)
   /**
    * Clean formState
    */
@@ -219,8 +221,12 @@ export const RecoveryActionDetail = (props) => {
     }
   }
 
+  // redesign RA-B1: the rule this panel shows (the list row, else the one fetched by `?id=`)
+  const currentRuleId = action?.id ?? recoveryActionState.action?.id ?? actionId
+
   /**
    * Method to delete the recovery action
+   * redesign RA-B1 (M-RA6): resolves { ok, error }; an API error leaves loading false with the messages
    */
   const handleDeleteRecoveryAction = async () => {
     try {
@@ -233,15 +239,120 @@ export const RecoveryActionDetail = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/event_rules/${action.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/event_rules/${currentRuleId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        handleSuccessDeleteRecoveryAction && handleSuccessDeleteRecoveryAction(action.id)
+        handleSuccessDeleteRecoveryAction && handleSuccessDeleteRecoveryAction(currentRuleId)
         showToast(ToastType.Success, t('RECOVERY_ACTION_DELETED', 'Recovery action deleted'))
         props.onClose && props.onClose()
+        return { ok: true, error: null }
       }
+      setActionState({ loading: false, error: content.result })
+      return { ok: false, error: content.result }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] }
+    }
+  }
+
+  /**
+   * Saves only what changed in the rule: PUT /event_rules/:id, arrays and objects encoded like handleUpdateClick
+   * redesign RA-B1 (decision 3): resolves { ok, error, rule }; the failure is for the caller to paint
+   * @param {Object} changes e.g. { name, description, times: [260] }
+   */
+  const handleSaveRule = async (changes) => {
+    try {
+      setActionState({ loading: true, error: null })
+      const body = { ...changes }
+      for (const key in body) {
+        if ((typeof body[key] === 'object' && body[key] !== null) || Array.isArray(body[key])) {
+          body[key] = JSON.stringify(body[key])
+        }
+      }
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      }
+      const response = await fetch(`${ordering.root}/event_rules/${currentRuleId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        const rule = { ...(recoveryActionState.action ?? action), ...content.result }
+        setRecoveryActionState(prev => ({ ...prev, action: { ...(prev.action ?? action), ...content.result } }))
+        setActionState({ loading: false, error: null })
+        if (handleSuccessUpdateRecoveryAction && Array.isArray(recoveryActionList?.actions)) {
+          handleSuccessUpdateRecoveryAction(recoveryActionList.actions.map(_action => _action.id === currentRuleId ? { ..._action, ...content.result } : _action))
+        }
+        showToast(ToastType.Success, t('RECOVERY_ACTION_SAVED', 'Recovery action saved'))
+        return { ok: true, error: null, rule }
+      }
+      setActionState({ loading: false, error: null })
+      return { ok: false, error: content.result, rule: null }
+    } catch (err) {
+      setActionState({ loading: false, error: null })
+      return { ok: false, error: [err.message], rule: null }
+    }
+  }
+
+  /**
+   * Creates a rule on, with its first message (POST /event_rules, then POST /event_rules/:id/channels)
+   * redesign RA-B1 (decision 6; M-RA12): once the rule exists in this panel it is remembered, and a second call
+   * only retries the channel, never another POST /event_rules.
+   * Resolves { ok: true, error: null, rule, channel }, { ok: false, stage: 'rule', error } or { ok: false, stage: 'channel', rule, error }
+   * @param {Object} data { rule: { name, description, times: [n] }, channel: { channel, title, body } }
+   */
+  const handleCreateRule = async ({ rule, channel }) => {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+    setActionState({ loading: true, error: null })
+    let created = createdRuleRef.current
+    if (!created) {
+      try {
+        const times = rule?.times === undefined ? undefined : (Array.isArray(rule.times) ? rule.times : [rule.times])
+        const response = await fetch(`${ordering.root}/event_rules`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            enabled: true,
+            launch_type: 'times',
+            type: 'abandoned_cart',
+            name: rule?.name,
+            description: rule?.description,
+            times
+          })
+        })
+        const content = await response.json()
+        if (content.error) {
+          setActionState({ loading: false, error: null })
+          return { ok: false, stage: 'rule', error: content.result }
+        }
+        created = content.result
+        createdRuleRef.current = created
+        handleSuccessAddRecoveryAction && handleSuccessAddRecoveryAction(created)
+      } catch (err) {
+        setActionState({ loading: false, error: null })
+        return { ok: false, stage: 'rule', error: [err.message] }
+      }
+    }
+    try {
+      const response = await fetch(`${ordering.root}/event_rules/${created.id}/channels`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ enabled: true, channel: channel?.channel, title: channel?.title, body: channel?.body })
+      })
+      const content = await response.json()
+      setActionState({ loading: false, error: null })
+      if (content.error) return { ok: false, stage: 'channel', rule: created, error: content.result }
+      showToast(ToastType.Success, t('RECOVERY_ACTION_ADDED', 'Recovery action added'))
+      return { ok: true, error: null, rule: created, channel: content.result }
+    } catch (err) {
+      setActionState({ loading: false, error: null })
+      return { ok: false, stage: 'channel', rule: created, error: [err.message] }
     }
   }
 
@@ -277,9 +388,10 @@ export const RecoveryActionDetail = (props) => {
         })
       }
     } catch (error) {
+      // redesign RA-B1 (M-RA15): a failed load stops loading and says why
       setRecoveryActionState({
         ...recoveryActionState,
-        loading: true,
+        loading: false,
         error: [error.message]
       })
     }
@@ -324,6 +436,8 @@ export const RecoveryActionDetail = (props) => {
             handleChangeInput={handleChangeInput}
             handleAddRecoveryAction={handleAddRecoveryAction}
             handleDeleteRecoveryAction={handleDeleteRecoveryAction}
+            handleSaveRule={handleSaveRule}
+            handleCreateRule={handleCreateRule}
             handleUpdateClick={handleUpdateClick}
             handleRemoveKey={handleRemoveKey}
           />

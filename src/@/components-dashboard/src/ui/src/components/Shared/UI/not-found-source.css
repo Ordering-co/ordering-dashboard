@@ -1,0 +1,38 @@
+.od-ui:where(.od-not-found-source) {
+  @apply od-box-border od-flex od-flex-col od-items-center od-justify-center;
+  width: 50%;
+  height: calc(100vh - 65px);
+  margin: 0 auto;
+  color: var(--od-not-found-text);
+  font-family: var(--od-not-found-font);
+}
+
+.od-ui:where(.od-not-found-source) h1 {
+  margin: 10px 0;
+  color: var(--od-not-found-muted);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-not-found-source-image) {
+  width: min(300px, 100%);
+  max-width: 300px;
+}
+
+.od-ui:where(.od-not-found-source-image) img {
+  display: block;
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 576px) {
+  .od-ui:where(.od-not-found-source) { width: 80%; }
+}
+
+@media (max-width: 360px) {
+  .od-ui:where(.od-not-found-source) h1 { font-size: 20px; }
+}

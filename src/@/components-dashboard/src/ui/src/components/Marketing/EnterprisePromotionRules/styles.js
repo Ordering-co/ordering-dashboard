@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusRing } from '../../../styles/touchTarget'
 
 export const RulesContainer = styled.div`
   height: calc(100% - 103px);
@@ -16,7 +17,7 @@ export const FormInnerContainer = styled.div`
   overflow: auto;
 `
 export const SectionTitle = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   margin: 30px 0 18px 0;
 `
@@ -28,6 +29,15 @@ export const CouponHeader = styled.div`
   align-items: center;
   padding: 15px 0;
   cursor: pointer;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  ${brandFocusRing}
 
   ${({ active }) => active && css`
     svg {
@@ -36,7 +46,7 @@ export const CouponHeader = styled.div`
   `}
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 13px;
@@ -61,10 +71,10 @@ export const ShowInCartContainer = styled.div`
     p {
       margin: 0;
       &:first-child {
-        font-size: 14px;
+        font-size: var(--od-type-control-size);
       }
       &:last-child {
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
         color: ${props => props.theme.colors.lightGray};
       }
     }
@@ -94,7 +104,7 @@ export const CouponCodeContainer = styled.div`
   `}
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 8px;
   }
 `
@@ -112,7 +122,7 @@ export const CondtionItem = styled.div`
 
   > div {
     > span {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       ${props => props.theme?.rtl
 ? css`
         margin-right: 13px;
@@ -144,7 +154,7 @@ export const CondtionItem = styled.div`
 `
 export const Option = styled.div`
   color: ${props => props.theme.colors.secundaryContrast};
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   white-space: nowrap;
 `
 export const SelectWrapper = styled.div`
@@ -169,7 +179,7 @@ export const DiscountContainer = styled.div`
     flex-direction: column;
 
     label {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       margin-bottom: 12px;
     }
 
@@ -207,7 +217,7 @@ export const AutomaticEnableWrapper = styled.div`
   margin-top: 15px;
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 10px;

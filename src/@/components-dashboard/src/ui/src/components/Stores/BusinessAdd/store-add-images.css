@@ -1,0 +1,131 @@
+/*
+ * redesign stores  (lote 2.3-C) · Store add › Images on Product: the logo and the homepage background (P/ImageField) side by
+ * side from 768px and stacked below it, and the photo gallery: a drop zone with «Add photos», the notice of the last pick, and a grid of
+ * thumbnails that wraps (no horizontal scroll at any width). The group's own frame (`.odc-sadd-group`, its title and the «Optional» word)
+ * belongs to the page. Focus ring and the 44px touch target are P/Button's and P/IconButton's. Values: --od-* and --od-x-* only.
+ * Logical properties.
+ */
+
+.odc-sadd-img {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-sadd-img-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+@media (min-width: 768px) {
+  .odc-sadd-img-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.odc-sadd-img-photos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sadd-img-subtitle {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sadd-img-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-2);
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: var(--od-space-6) var(--od-space-4);
+  text-align: center;
+  background: var(--od-surface-subtle);
+  border: var(--od-x-hairline) dashed var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-sadd-img-drop[data-dragging] {
+  border-style: solid;
+  border-color: var(--od-focus-ring-color);
+  background: var(--od-surface);
+}
+
+.odc-sadd-img-drop[data-busy] { opacity: 0.55; }
+
+.odc-sadd-img-drop-icon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  color: var(--od-text-muted);
+}
+
+.odc-sadd-img-drop-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-sadd-img-drop-hint {
+  margin: 0;
+  max-inline-size: var(--od-x-measure);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+}
+
+.odc-sadd-img-failures {
+  margin: var(--od-space-1) 0 0;
+  padding-inline-start: var(--od-space-5);
+}
+
+/* A long file name breaks instead of pushing the notice out of the page. */
+.odc-sadd-img-file {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-sadd-img-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 4)), 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sadd-img-item {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--od-surface-subtle);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-sadd-img-item img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-sadd-img-remove {
+  position: absolute;
+  inset-block-start: var(--od-space-2);
+  inset-inline-end: var(--od-space-2);
+  background: var(--od-surface);
+}

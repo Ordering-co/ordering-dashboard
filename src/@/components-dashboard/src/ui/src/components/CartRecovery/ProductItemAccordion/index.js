@@ -13,6 +13,7 @@ import {
   ProductInfo,
   ProductPriceSection,
   ProductPrice,
+  ProductUnavailableNote,
   ProductOptionsList,
   ProductQuantity,
   ScheduleInfoWrapper,
@@ -49,6 +50,9 @@ const ProductItemAccordionUI = (props) => {
   const productSelect = useRef(null)
   const productActionsEdit = useRef(null)
   const productActionsDelete = useRef(null)
+
+  // redesign (row 77): the Orders accordion words both menu and quantity failures with PRODUCT_QUANTITY_ERROR
+  const isUnavailable = product?.valid === false || product?.valid_menu === false || product?.valid_quantity === false
 
   const showArrowIcon = props.showArrowIcon && (productInfo?.ingredients?.length > 0 || productInfo?.options?.length > 0 || product?.comment)
 
@@ -94,7 +98,7 @@ const ProductItemAccordionUI = (props) => {
             {product?.calendar_event
               ? (
               <ScheduleInfoWrapper>
-                <h3>{product.name}</h3>
+                <h3><bdi>{product.name}</bdi></h3>
                 <ScheduleInfo>
                   <span>
                     {parseDate(product?.calendar_event?.start, { outputFormat: (configs?.format_time?.value === '12') ? 'hh:mm a' : 'HH:mm' })}
@@ -112,7 +116,14 @@ const ProductItemAccordionUI = (props) => {
 
                 <ContentInfo>
                   <div>
-                    <h3>{product.name}</h3>
+                    <h3><bdi>{product.name}</bdi></h3>
+                    {/* redesign (row 15): at <= 410px the price column is gone, so the price sits under the name, with the
+                        same ProductPrice styles as the column (the figure isolated left-to-right) */}
+                    {windowSize.width <= 410 && (
+                      <ProductPrice className='mobile-product-price'>
+                        <span dir='ltr'>{parsePrice(product.total || product.price)}</span>
+                      </ProductPrice>
+                    )}
                     {
                       product?.comment && (
                         <p>{product?.comment}</p>
@@ -126,25 +137,29 @@ const ProductItemAccordionUI = (props) => {
 
           {showArrowIcon && <IosArrowDown className={`${setRotate}`} />}
 
-          {product.valid && (
-            <>
-              {(product?.valid || !isCartProduct) && windowSize.width > 410 && (
-                <ProductPriceSection>
-                  <ProductPrice className='prod-price'>
-                    <span>
-                      {parsePrice(product.total || product.price)}
-                    </span>
-                    {(productInfo.ingredients.length > 0 || productInfo.options.length > 0 || product.comment) && (
-                      <p>
-                        <IosArrowDown className={`${setRotate}`} />
-                      </p>
-                    )}
-                  </ProductPrice>
-                </ProductPriceSection>
-              )}
-            </>
+          {/* redesign (row 77, M-15): the price no longer waits on `product.valid`; an unavailable line keeps it
+              (muted by the row's own dimming) and says why below. Valid products keep the >410px rule (<= 410px: price under the name, row 15). */}
+          {windowSize.width > 410 && (
+            <ProductPriceSection>
+              <ProductPrice className='prod-price'>
+                <span>
+                  {parsePrice(product.total || product.price)}
+                </span>
+                {(productInfo.ingredients.length > 0 || productInfo.options.length > 0 || product.comment) && (
+                  <p>
+                    <IosArrowDown className={`${setRotate}`} />
+                  </p>
+                )}
+              </ProductPrice>
+            </ProductPriceSection>
           )}
         </Accordion>
+        {isUnavailable && (
+          // outside <Accordion>: that row is dimmed to 50% and the reason has to stay legible
+          <ProductUnavailableNote className='product-unavailable'>
+            {t('PRODUCT_QUANTITY_ERROR', 'Not available')}
+          </ProductUnavailableNote>
+        )}
 
         <AccordionContent
           ref={content}
@@ -200,7 +215,7 @@ const ProductItemAccordionUI = (props) => {
           {product.comment && (
             <ProductComment>
               <p>{t('SPECIAL_COMMENT', 'Special Comment')}</p>
-              <h3>{product.comment}</h3>
+              <h3><bdi>{product.comment}</bdi></h3>
             </ProductComment>
           )}
         </AccordionContent>

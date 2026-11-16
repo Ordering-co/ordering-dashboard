@@ -40,7 +40,7 @@ export const DriversGroupsLogisticsService = (props) => {
     <LogisticsContainer
       disabled={actionDisabled}
     >
-      <label>{t('WHEN_WOULD_LIKE_AUTOMATIC_ASSIGNMENT', 'When would you like this automatic assignment proccess to begin')}</label>
+      <label>{t('WHEN_WOULD_LIKE_AUTOMATIC_ASSIGNMENT', 'When should this automatic assignment process begin?')}</label>
       <OrderStatusWrapper
         onClick={() => handleChangesState({ orders_group_start_in_status: 7 })}
       >
@@ -62,7 +62,7 @@ export const DriversGroupsLogisticsService = (props) => {
                 )
           }
         </RadioButton>
-        <span>{t('ACCEPT_BY_BUSINESS', 'Accepted by Business.')}</span>
+        <span>{t('ACCEPT_BY_BUSINESS', 'Accepted by the business')}</span>
       </OrderStatusWrapper>
       <OrderStatusWrapper
         onClick={() => handleChangesState({ orders_group_start_in_status: 4 })}

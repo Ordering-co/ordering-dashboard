@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import { ArrowUp, Lock, StopFill } from 'react-bootstrap-icons'
-import { useLanguage, useAssistant } from '../../../../index'
-import { Callout, Composer, InputBox, Refs, SendButton, UsageStrip } from './styles'
+import { useLanguage, useAssistant, useUtils } from '../../../../index'
+import { Button, IconButton, InlineNotice } from '../Shared/Product'
+import { ArrowUp, LockKeyhole, Square } from '../Shared/Icon'
 import { formatRetryAt } from './format'
+import './assistant.css'
 
 const MAX_LENGTH = 4000
 
@@ -12,7 +13,8 @@ const MAX_LENGTH = 4000
  */
 export const AssistantComposer = (props) => {
   const { page, value, onChange, onSend, refs = [], inputRef } = props
-  const [languageState, t] = useLanguage()
+  const [, t] = useLanguage()
+  const [{ parseDate }] = useUtils()
   const { streaming, stopMessage, status } = useAssistant()
   const localRef = useRef(null)
   const textareaRef = inputRef || localRef
@@ -49,38 +51,40 @@ export const AssistantComposer = (props) => {
     user: t('ASSISTANT_REF_USER', 'User #_id_')
   }
 
+  // redesign AS-B (D3, M-AS7): the box, the send / stop buttons and the notices are Product's
+  const dataPage = page ? '' : undefined
+
   if (limited) {
     return (
-      <Composer page={page}>
-        <Callout tone='neutral' role='status'>
-          <div className='title'>
-            <Lock size={15} aria-hidden />
-            {t('ASSISTANT_LIMIT_TITLE', 'The assistant reached its usage limit')}
-          </div>
-          <div>
-            {formatRetryAt(status.usage?.retry_at, t, languageState?.language?.code)}
-            {' '}
-            {t('ASSISTANT_LIMIT_PENDING', 'Changes waiting for you can still be confirmed.')}
-          </div>
-        </Callout>
-      </Composer>
+      <div className='odc-root odc-as-composer' data-page={dataPage}>
+        <InlineNotice tone='warning' icon={LockKeyhole}>
+          <span className='odc-as-limit'>
+            <strong>{t('ASSISTANT_LIMIT_TITLE', 'The assistant reached its usage limit')}</strong>
+            <span>
+              {formatRetryAt(status.usage?.retry_at, t, parseDate)}
+              {' '}
+              {t('ASSISTANT_LIMIT_PENDING', 'Changes waiting for you can still be confirmed.')}
+            </span>
+          </span>
+        </InlineNotice>
+      </div>
     )
   }
 
   return (
-    <Composer page={page}>
+    <div className='odc-root odc-as-composer' data-page={dataPage}>
       {status.usage?.near_limit && (
-        <UsageStrip role='status'>{t('ASSISTANT_NEAR_LIMIT', 'There is little assistant use left.')}</UsageStrip>
+        <InlineNotice tone='info'>{t('ASSISTANT_NEAR_LIMIT', 'There is little assistant use left.')}</InlineNotice>
       )}
       {refs.length > 0 && (
-        <Refs>
+        <div className='odc-as-refs'>
           <span>{t('ASSISTANT_CONTEXT', 'Context:')}</span>
           {refs.map(ref => (
-            <span key={`${ref.type}-${ref.id}`} className='ref'>{ref.name || refLabels[ref.type].replace('_id_', ref.id)}</span>
+            <span key={`${ref.type}-${ref.id}`} className='odc-as-ref'>{ref.name || refLabels[ref.type].replace('_id_', ref.id)}</span>
           ))}
-        </Refs>
+        </div>
       )}
-      <InputBox onSubmit={handleSubmit} disabled={streaming}>
+      <form className='odc-as-input' onSubmit={handleSubmit} data-streaming={streaming ? '' : undefined}>
         <textarea
           ref={textareaRef}
           rows={1}
@@ -92,18 +96,9 @@ export const AssistantComposer = (props) => {
           onKeyDown={handleKeyDown}
         />
         {streaming
-          ? (
-            <SendButton type='button' stop onClick={stopMessage}>
-              <StopFill size={12} aria-hidden />
-              {t('ASSISTANT_STOP', 'Stop')}
-            </SendButton>
-            )
-          : (
-            <SendButton type='submit' disabled={!canSend} aria-label={t('ASSISTANT_SEND', 'Send')}>
-              <ArrowUp size={16} aria-hidden />
-            </SendButton>
-            )}
-      </InputBox>
-    </Composer>
+          ? <Button size='sm' icon={Square} onClick={stopMessage}>{t('ASSISTANT_STOP', 'Stop')}</Button>
+          : <IconButton type='submit' variant='primary' icon={ArrowUp} label={t('ASSISTANT_SEND', 'Send')} disabled={!canSend} />}
+      </form>
+    </div>
   )
 }

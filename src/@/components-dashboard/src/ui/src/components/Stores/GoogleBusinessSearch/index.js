@@ -49,7 +49,6 @@ const GoogleBusinessSearchUI = (props) => {
     photoState,
     photoRoles = [],
     disabled,
-    hideTitle,
     handleSelectPlace,
     handleSelectNearby,
     handleConfirm,
@@ -96,7 +95,7 @@ const GoogleBusinessSearchUI = (props) => {
 
   return (
     <Container>
-      {!hideTitle && <h2>{t('FIND_YOUR_BUSINESS_ON_GOOGLE', 'Find your business on Google')}</h2>}
+      <h2>{t('FIND_YOUR_BUSINESS_ON_GOOGLE', 'Find your business on Google')}</h2>
       <p>{t('FIND_YOUR_BUSINESS_ON_GOOGLE_HINT', 'Search by business name or address. You can review and edit everything before saving.')}</p>
       {SEARCH_STATUSES.includes(status) && (
         <SearchControl>

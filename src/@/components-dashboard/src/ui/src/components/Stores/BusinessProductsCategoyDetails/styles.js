@@ -24,7 +24,7 @@ export const BusinessEnableWrapper = styled.div`
   width: fit-content;
   span {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     ${props => props.theme?.rtl
 ? css`
       padding-left: 20px;
@@ -92,12 +92,12 @@ export const CategoryNameWrapper = styled.div`
   margin-top: 50px;
   label {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 12px;
   }
   input {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     width: 100%;
   }
 `
@@ -106,7 +106,7 @@ export const ParentCategorySelectWrapper = styled.div`
   flex-direction: column;
   margin-top: 30px;
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 12px;
   }
   .select {
@@ -121,7 +121,7 @@ export const Option = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   color: ${props => props.theme.colors.secundaryContrast};
 `
 export const RightHeader = styled.div`
@@ -176,7 +176,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         &:active {
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;

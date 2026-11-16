@@ -1,0 +1,146 @@
+/*
+ * redesign SC-B4 · /schools «Print labels»: the head of the section, the summary of the label count and the viewer of the label sheet.
+ * (The report cards and the meals of «Meals & reports» are in ../SchoolMealsReports/meals.css.)
+ * Values: --od-* and --od-x-* only (guard: labels.css.test.js, the literal guard of the Product files). Logical properties.
+ * Class prefix odc-school-. The chips and the filter bar are the ones of schools.css (B1).
+ */
+
+/* ── Print labels: the head of the section ── */
+.odc-school-labels-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-school-labels-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-school-labels-desc {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── The summary of the count, one row: figures with their word, then the bands and the template as chips ── */
+.odc-school-labels-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-4);
+  min-inline-size: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-school-labels-summary > :first-child {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* the warning of a day over the limit: the notice of Product, without the page gutter it has in a filter bar */
+.odc-school-labels-notice .odc-notice {
+  margin-inline: 0;
+}
+
+.odc-school-labels-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-2);
+}
+
+/* ── The viewer of the sheet: a bar (note, zoom, action) over a scrolling stage of pages ── */
+.odc-school-labels-preview {
+  min-inline-size: 0;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-school-labels-bar {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+  padding: var(--od-space-2) var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  border-start-start-radius: var(--od-radius-component);
+  border-start-end-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  transition: box-shadow var(--od-duration-fast) var(--od-ease-standard);
+}
+
+/* the stage has scrolled under the bar */
+.odc-school-labels-bar[data-elevated] {
+  box-shadow: var(--od-shadow-1);
+}
+
+.odc-school-labels-note {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-school-labels-zoom {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin-inline-start: auto;
+}
+
+.odc-school-labels-zoom-value {
+  min-inline-size: var(--od-touch-target-minimum);
+  text-align: center;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-school-labels-actions {
+  display: flex;
+  align-items: center;
+}
+
+.odc-school-labels-scroll {
+  block-size: 60vh;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: var(--od-space-4);
+  scrollbar-gutter: stable;
+}
+
+.odc-school-labels-state {
+  padding-block-end: var(--od-space-3);
+}
+
+.odc-school-labels-pages {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-4);
+  user-select: none;
+}
+
+/* a page of the sheet is paper: it stays white in both color modes, as the sheet will print */
+.odc-school-labels-pages canvas {
+  display: block;
+  flex-shrink: 0;
+  margin-inline: auto;
+  block-size: auto;
+  background: var(--od-white);
+  box-shadow: var(--od-shadow-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-school-labels-bar {
+    transition: none;
+  }
+}

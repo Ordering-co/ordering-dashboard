@@ -5,6 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { Pagination } from '../../Shared'
 import { getAttributeName } from '../../../utils'
 import { parseLogData } from '../../../../../utils/safeJsonParse'
+import { humanizeEvent } from '../DriversGroupLogs/humanizeEvent'
 import {
   DriversAdvacedLogsContainer,
   TableWrapper,
@@ -56,19 +57,19 @@ export const DriversAdvancedLogsUI = (props) => {
         <TableWrapper>
           {(logsList.loading || logsList.logs.length > 0)
             ? (
-            <Table>
+            <Table aria-label={t('ADVANCED_LOGS', 'Advanced logs')}>
               <thead>
                 <tr>
-                  <th>{t('EVENTS_TYPE', 'Events type')}</th>
-                  <th>{t('DETAILS', 'Details')}</th>
-                  <th>{t('EXPORT_DATE', 'Date')}</th>
+                  <th scope='col'>{t('EVENTS_TYPE', 'Events type')}</th>
+                  <th scope='col'>{t('DETAILS', 'Details')}</th>
+                  <th scope='col'>{t('EXPORT_DATE', 'Date')}</th>
                 </tr>
               </thead>
+              <tbody>
               {logsList.loading
                 ? (
                     [...Array(10).keys()].map(i => (
-                  <tbody key={i}>
-                    <tr>
+                    <tr key={i}>
                       <td>
                         <UserInfoContainer>
                           <p><Skeleton width={100} /></p>
@@ -76,45 +77,28 @@ export const DriversAdvancedLogsUI = (props) => {
                         </UserInfoContainer>
                       </td>
                       <td>
-                        <DataListTable>
-                          <tbody>
-                            <tr>
-                              <td><Skeleton width={100} /></td>
-                              <td><Skeleton width={20} /></td>
-                              <td><Skeleton width={20} /></td>
-                            </tr>
-                          </tbody>
-                        </DataListTable>
+                        <DataListTable as='div'><Skeleton width={100} /></DataListTable>
                       </td>
                       <td>
                         <DateTimeWrapper>
                           <Skeleton />
                         </DateTimeWrapper>
                       </td>
-                      <td>
-                        <Skeleton />
-                      </td>
                     </tr>
-                  </tbody>
                     ))
                   )
                 : (
                     !logsList.error && logsList.logs?.map(log => (
-                  <tbody key={log.id}>
-                    <tr>
-                      <td>
+                    <tr key={log.id}>
+                      <th scope='row'>
                         <EventTypeContainer>
-                          <p>{t((log?.event || '').toUpperCase())}</p>
+                          <p>{t((log?.event || '').toUpperCase(), humanizeEvent(log?.event))}</p>
                         </EventTypeContainer>
-                      </td>
+                      </th>
                       <td>
-                        <DataListTable>
+                        <DataListTable as='ul'>
                           {log?.data && getValidLogData(log?.data).map((item, i) => (
-                            <tbody key={i}>
-                              <tr>
-                                <td>{getAttributeName(item, { parseDate })}</td>
-                              </tr>
-                            </tbody>
+                            <li key={i}>{getAttributeName(item, { parseDate, t })}</li>
                           ))}
                         </DataListTable>
                       </td>
@@ -124,13 +108,13 @@ export const DriversAdvancedLogsUI = (props) => {
                         </DateTimeWrapper>
                       </td>
                     </tr>
-                  </tbody>
                     ))
                   )}
+              </tbody>
             </Table>
               )
             : (
-            <NoData>{t('NO_DATA', 'No Data')}</NoData>
+            <NoData>{t('NO_DATA', 'No data')}</NoData>
               )}
         </TableWrapper>
         {logsList?.logs.length > 0 && (

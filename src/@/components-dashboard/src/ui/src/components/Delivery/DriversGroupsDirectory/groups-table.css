@@ -1,0 +1,87 @@
+/*
+ * The delivery groups list (redesign DG-B3): the cells of the table and the cards of a phone. Product's DataTable and RecordCard
+ * own the structure; this adds what a group cell is made of (the name and «#id · manager») and the card's rows. Tokens only
+ * (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ */
+
+/* The anchor of the tour (tour_delivery_completed) wraps the list: it adds no box of its own */
+.odc-dg-list { min-inline-size: 0; }
+
+/* ── The Group cell ── */
+.odc-dg-who {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-dg-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dg-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name and the second line wrap and stop at two lines */
+td .odc-dg-name,
+th .odc-dg-name,
+td .odc-dg-sub,
+th .odc-dg-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.odc-dg-assigns { white-space: nowrap; }
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-dg-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-dg-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-dg-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dg-card-meta {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.odc-dg-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  /* 16px between controls so the checkbox's 44px reach never lands on the switch (as the drivers cards) */
+  gap: var(--od-space-2) var(--od-space-4);
+  padding-block-start: var(--od-space-1);
+}

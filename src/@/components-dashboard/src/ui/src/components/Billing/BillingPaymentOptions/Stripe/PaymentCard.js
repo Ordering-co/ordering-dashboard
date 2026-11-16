@@ -27,6 +27,7 @@ export const PaymentCard = (props) => {
   const [, t] = useLanguage()
   const cardActionsRef = useRef(null)
   const actionWrapperRef = useRef(null)
+  const deleteRef = useRef(null)
 
   const [isShowActions, setIsShowActions] = useState(false)
 
@@ -43,6 +44,30 @@ export const PaymentCard = (props) => {
     if (actionWrapperRef.current?.contains(e.target) || cardsLength <= 1) return
     handleCardClick(card)
   }
+
+  // redesign (row 82): Esc closes the menu and the focus goes back to the ⋮ that opened it
+  const handleMenuKeyDown = (e) => {
+    if (e.key !== 'Escape' || !isShowActions) return
+    e.stopPropagation()
+    setIsShowActions(false)
+    cardActionsRef.current?.focus()
+  }
+
+  // Leaving the menu with Tab closes it (the focus is then already elsewhere, so it is not sent back)
+  const handleMenuBlur = (e) => {
+    if (!isShowActions || actionWrapperRef.current?.contains(e.relatedTarget)) return
+    setIsShowActions(false)
+  }
+
+  const handleDeleteClick = (e) => {
+    setIsShowActions(false)
+    handleDeleteCard(e)
+  }
+
+  // Opened from the keyboard or the pointer, the focus goes to the first (only) item of the menu
+  useEffect(() => {
+    if (isShowActions) deleteRef.current?.focus()
+  }, [isShowActions])
 
   useEffect(() => {
     window.addEventListener('click', handleClickOutside)
@@ -79,14 +104,25 @@ export const PaymentCard = (props) => {
               )
         )}
         {!card?.default && !isLoading && (
-          <CardItemActionsWrapper ref={actionWrapperRef}>
-            <span ref={cardActionsRef}>
-              <ThreeDotsVertical onClick={() => setIsShowActions(true)} />
-            </span>
+          <CardItemActionsWrapper
+            ref={actionWrapperRef}
+            onKeyDown={handleMenuKeyDown}
+            onBlur={handleMenuBlur}
+          >
+            <button
+              type='button'
+              ref={cardActionsRef}
+              aria-label={t('CARD_ACTIONS', 'Card actions: _card_').split('_card_').join(`${card?.data?.brand ?? ''} ${card?.data?.last4 ?? ''}`.trim())}
+              aria-haspopup='menu'
+              aria-expanded={isShowActions}
+              onClick={() => setIsShowActions(prev => !prev)}
+            >
+              <ThreeDotsVertical aria-hidden='true' />
+            </button>
             {
               isShowActions && (
-                <ActionsContent>
-                  <div className='delete' onClick={handleDeleteCard}>{t('DELETE', 'Delete')}</div>
+                <ActionsContent role='menu'>
+                  <button type='button' role='menuitem' className='delete' ref={deleteRef} onClick={handleDeleteClick}>{t('DELETE', 'Delete')}</button>
                 </ActionsContent>
               )
             }

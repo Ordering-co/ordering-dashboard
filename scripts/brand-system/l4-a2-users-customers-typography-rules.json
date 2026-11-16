@@ -1,0 +1,326 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-a2-users-customers-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "a2-customercashwallet-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWallet/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customercashwallet-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWallet/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customercashwalletdetails-walletbalacecontainer-span-first-child-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "component": "WalletBalaceContainer",
+   "property": "font-size",
+   "context": "> span > &:first-child",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customercashwalletdetails-walletbalacecontainer-span-last-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "component": "WalletBalaceContainer",
+   "property": "font-size",
+   "context": "> span > &:last-child",
+   "match": "14px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a2-customercashwalletdetails-sectioncontainer-p-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "component": "SectionContainer",
+   "property": "font-size",
+   "context": "> p",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a2-customercashwalletdetails-formcontroller-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "component": "FormController",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customercashwalletdetails-formcontroller-input-textarea-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "component": "FormController",
+   "property": "font-size",
+   "context": "input,\n  textarea",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a2-customerdetails-leftheader-span-customer-name-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "LeftHeader",
+   "property": "font-size",
+   "context": "span.customer-name",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customerdetails-verifieditem-root-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "10px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a2-customerdetails-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customerdetails-optionmenu-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "OptionMenu",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-pointswrapper-h2-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "PointsWrapper",
+   "property": "font-size",
+   "context": "h2",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-pointswrapper-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "PointsWrapper",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-equalwrapper-root-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "EqualWrapper",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-levelwrapper-h1-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "LevelWrapper",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-loyaltylevel-h2-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "LoyaltyLevel",
+   "property": "font-size",
+   "context": "h2",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-loyaltylevelcontent-h3-28px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "LoyaltyLevelContent",
+   "property": "font-size",
+   "context": "h3",
+   "match": "28px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-sectioncontainer-p-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "SectionContainer",
+   "property": "font-size",
+   "context": "> p",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-formcontroller-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "FormController",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a2-customerpointswallet-formcontroller-input-textarea-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "component": "FormController",
+   "property": "font-size",
+   "context": "input,\n  textarea",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a2-customerwalletevents-transactionheader-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/styles.js",
+   "component": "TransactionHeader",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a2-customerwalletevents-transactiondescription-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/styles.js",
+   "component": "TransactionDescription",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a2-customerwalletevents-transactioncode-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/styles.js",
+   "component": "TransactionCode",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-identifier-size)"
+  },
+  {
+   "id": "a2-customerslisting-verifiedstatusfiltercontainer-button-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomersListing/styles.js",
+   "component": "VerifiedStatusFilterContainer",
+   "property": "font-size",
+   "context": "button",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "a2-pres-customerdetails-verifieditem-svg-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "svg",
+   "match": "12px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "VerifiedItem scopes the declaration to its svg; the badge label text is governed separately by the reviewed root declaration."
+  },
+  {
+   "id": "a2-pres-customerdetails-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "ActionSelectorWrapper scopes the 20px declaration to the button svg; the dropdown item text has its own reviewed declaration."
+  },
+  {
+   "id": "a2-pres-customerdetails-optionmenu-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "component": "OptionMenu",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "OptionMenu scopes the declaration to its chevron svg; the adjacent span carries the readable menu label."
+  },
+  {
+   "id": "a2-pres-customerwalletevents-transactionheader-svg-6px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/styles.js",
+   "component": "TransactionHeader",
+   "property": "font-size",
+   "context": "svg",
+   "match": "6px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "TransactionHeader scopes 6px to the separator dot svg. Six pixels is not a readable text size in any role; it is glyph geometry."
+  },
+  {
+   "id": "a2-pres-customerslisting-verifiedstatusfiltercontainer-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomersListing/styles.js",
+   "component": "VerifiedStatusFilterContainer",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "VerifiedStatusFilterContainer scopes the 20px declaration to the chip close icon while the button declaration governs its text size."
+  }
+ ]
+}

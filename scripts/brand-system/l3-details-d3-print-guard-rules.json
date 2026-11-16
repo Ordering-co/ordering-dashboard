@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-details-d3-print-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-details-d3-print-orders-orderbill-refundtowallet-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/RefundToWallet.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-orderbill-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact JSX color is a reviewed public Ordering wrapper variant, not a direct CSS value; any change reopens review.",
+            "evidence": "The D3 source inventory pins wrapper variant names while literal JSX colors remain fail-closed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-orderbill-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "RadioItemContainer",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D3 typography inventory pins expression, context and cardinality while readable screen sizes use central roles."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    cursor: not-allowed;\n    color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.disabled};\n    background: transparent;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D3 typography inventory pins expression, context and cardinality while readable screen sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "OrderBillContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderBillContainer",
+            "property": "border-top",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderBillContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor ?? '#000'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    cursor: not-allowed;\n    color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.disabled};\n    background: transparent;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RadioItemContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundAllDisabledNote",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.state?.warning?.soft ?? props.theme.colors.warning100",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundAllDisabledNote",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? props.theme.colors.warning",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundAllDisabledNote",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundAllDisabledNote",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.warning?.functional ?? props.theme.colors.warning",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ErrorText",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundItemsPicker",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#E0E0E0'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundItemsPicker",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundSuboptions",
+            "property": "border-inline-start",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#EEE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RefundSuboptionLabel",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? '#555'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-ordertoprint-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrint/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-ordertoprint-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrint/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PrintContainer",
+            "property": "font-size",
+            "match": "20px",
+            "context": "> h1",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "PrintContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor ?? '#000'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact black-ink or white-paper value belongs to the physical print contract.",
+            "evidence": "The generated PDF and rendered PNG verify monochrome legibility without inheriting screen mode or tenant chrome."
+          },
+          {
+            "component": "PrintContainer",
+            "property": "color",
+            "match": "#000",
+            "context": "@media print",
+            "count": 1,
+            "reason": "This exact black-ink or white-paper value belongs to the physical print contract.",
+            "evidence": "The generated PDF and rendered PNG verify monochrome legibility without inheriting screen mode or tenant chrome."
+          },
+          {
+            "component": "PrintContainer",
+            "property": "background",
+            "match": "#FFF",
+            "context": "@media print",
+            "count": 1,
+            "reason": "This exact black-ink or white-paper value belongs to the physical print contract.",
+            "evidence": "The generated PDF and rendered PNG verify monochrome legibility without inheriting screen mode or tenant chrome."
+          },
+          {
+            "component": "PrintContainer",
+            "property": "color",
+            "match": "#000",
+            "context": "@media print > &&&&&&,\n    &&&&&& *",
+            "count": 1,
+            "reason": ": the normal print is solid black, above the status label colour that is !important on screen; black ink belongs to the physical print contract.",
+            "evidence": "Main's  change, merged into the dashboard; same black-ink contract as the @media print colour above."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-ordertoprintticket-getticketexcludedingredientlines-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/getTicketExcludedIngredientLines.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-ordertoprintticket-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-ordertoprintticket-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PrintContainer",
+            "property": "font-size",
+            "match": "20px",
+            "context": "> h1",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          },
+          {
+            "component": "PrintTextContainer",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          },
+          {
+            "component": "ProdcutCommentsContainer",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          },
+          {
+            "component": "InsideInfo",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          },
+          {
+            "component": "InsideInfo2",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact size is part of the reviewed physical print contract and must not follow screen typography propagation.",
+            "evidence": "Normal and thermal PDFs are generated from synthetic long data, reopened, rendered and inspected at the preserved paper geometry."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "PrintContainer",
+            "property": "color",
+            "match": "#000",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact black-ink or white-paper value belongs to the physical print contract.",
+            "evidence": "The generated PDF and rendered PNG verify monochrome legibility without inheriting screen mode or tenant chrome."
+          },
+          {
+            "component": "PrintContainer",
+            "property": "background",
+            "match": "#FFF",
+            "context": "@media print",
+            "count": 1,
+            "reason": "This exact black-ink or white-paper value belongs to the physical print contract.",
+            "evidence": "The generated PDF and rendered PNG verify monochrome legibility without inheriting screen mode or tenant chrome."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-productitemaccordion-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-details-d3-print-orders-productitemaccordion-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AccordionStyled",
+            "property": "font",
+            "match": "props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D3 typography inventory pins expression, context and cardinality while readable screen sizes use central roles."
+          },
+          {
+            "component": "AccordionContent",
+            "property": "font",
+            "match": "props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D3 typography inventory pins expression, context and cardinality while readable screen sizes use central roles."
+          },
+          {
+            "component": "ProductActionsEdit",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls icon or arrow-wrapper geometry and not readable text.",
+            "evidence": "The adjacent readable value uses a central role while its named Ordering.co button owns semantics and touch size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "style /* binding-sha256:8eb550b87e6486fd198bfee915ea72911adcd636c7125411e04ea6150a9a8fe9 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This immutable inline bundle controls only the existing disabled opacity and contains no typography value.",
+            "evidence": "The guard binds the exact conditional initializer digest and rejects mutations, aliases or visual additions."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AccordionSection",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor ?? '#191919'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "AccordionStyled",
+            "property": "color-block",
+            "match": "props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "AccordionContent",
+            "property": "color-block",
+            "match": "props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActionsEdit",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.warning?.functional ?? '#F2BB40'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActionsDelete",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors?.danger ?? '#D81212'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductPrice",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductAccordionToggle",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductAccordionToggle",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic focus expression is pinned; any token, fallback or cardinality change reopens review.",
+            "evidence": "Keyboard focus is verified in Light and Dark on the named accordion disclosure button."
+          },
+          {
+            "component": "ProductSelect",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductSelect",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductNotAvailable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors?.danger ?? '#D81212'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ScheduleInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D3 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact parameter-forwarding spread preserves the existing component contract; any change reopens review.",
+            "evidence": "The D3 source forwards received styled-component props without introducing local visual values."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "style /* binding-sha256:8eb550b87e6486fd198bfee915ea72911adcd636c7125411e04ea6150a9a8fe9 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This immutable inline bundle controls only the existing disabled opacity and contains no color value.",
+            "evidence": "The guard binds the exact conditional initializer digest and rejects mutations, aliases or visual additions."
+          }
+        ]
+      }
+    }
+  ]
+}

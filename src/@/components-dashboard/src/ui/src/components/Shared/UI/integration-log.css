@@ -1,0 +1,357 @@
+/* Scoped technical log table and detail disclosure. Tailwind Preflight stays off. */
+.od-ui:where(.od-integration-logs) {
+  box-sizing: border-box;
+  height: calc(100% - 180px);
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-integration-logs)[data-disabled] {
+  opacity: 0.7;
+}
+
+.od-ui:where(.od-integration-logs) > .od-integration-log-group-action {
+  display: flex;
+  align-items: center;
+  min-height: var(--od-entity-selector-touch-target);
+  margin: 10px 0;
+  padding-inline: 10px;
+}
+
+.od-ui:where(.od-integration-logs) > .od-integration-log-group-action > p {
+  display: -webkit-box;
+  height: 30px;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.od-ui:where(.od-integration-logs) > .od-integration-log-group-action svg {
+  width: 20px;
+  height: 20px;
+}
+
+.od-ui:where(.od-integration-log-scrollport) {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior-x: contain;
+}
+
+.od-ui:where(.od-integration-log-scrollport)[data-related-group] {
+  height: calc(100% - 54px);
+}
+
+.od-ui:where(.od-integration-log-table) {
+  width: 100%;
+  min-width: 720px;
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  border-collapse: collapse;
+}
+
+.od-ui:where(.od-integration-log-table) thead tr,
+.od-ui:where(.od-integration-log-table) tbody {
+  border-bottom: 1px solid var(--od-entity-selector-border);
+}
+
+.od-ui:where(.od-integration-log-table) th,
+.od-ui:where(.od-integration-log-table) td {
+  box-sizing: border-box;
+  padding-block: 13px;
+  font-size: 12px;
+  text-align: start;
+  vertical-align: middle;
+}
+
+.od-ui:where(.od-integration-log-table) th:first-child,
+.od-ui:where(.od-integration-log-table) td:first-child {
+  width: 4px;
+  padding: 0;
+}
+
+.od-ui:where(.od-integration-log-table) th:nth-child(2),
+.od-ui:where(.od-integration-log-table) td:nth-child(2) {
+  width: 10%;
+  padding-inline: 5px 15px;
+}
+
+.od-ui:where(.od-integration-log-table) th:nth-child(3),
+.od-ui:where(.od-integration-log-table) td:nth-child(3) {
+  width: 20%;
+  padding-inline-start: 15px;
+}
+
+.od-ui:where(.od-integration-log-table) th:nth-child(4) {
+  width: 10%;
+  padding-inline: 15px;
+}
+
+.od-ui:where(.od-integration-log-table) td:nth-child(4) {
+  padding-inline-start: 15px;
+}
+
+.od-ui:where(.od-integration-log-table) th:nth-child(5) {
+  padding-inline-start: 15px;
+}
+
+.od-ui:where(.od-integration-log-table) tbody {
+  cursor: pointer;
+}
+
+.od-integration-log-user,
+.od-integration-log-date,
+.od-integration-log-event,
+.od-integration-log-option {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  font-size: 12px;
+}
+
+.od-integration-log-user {
+  padding-inline-end: 5px;
+}
+
+.od-integration-log-user p,
+.od-integration-log-option p,
+.od-integration-log-event p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.od-integration-log-date {
+  padding-inline-start: 15px;
+  margin-inline-end: 15px;
+  white-space: nowrap;
+}
+
+.od-integration-log-event {
+  padding-inline: 15px;
+  border-inline: 1px solid var(--od-entity-selector-border);
+  white-space: nowrap;
+}
+
+.od-integration-log-event[data-first-column] {
+  border-inline-start: 0;
+}
+
+.od-integration-log-option {
+  min-height: 36px;
+  padding-inline: 15px;
+  column-gap: 5px;
+}
+
+.od-integration-log-option[data-no-padding] {
+  padding: 0;
+}
+
+.od-integration-log-option p {
+  color: var(--od-entity-selector-text);
+  line-height: 26px;
+  white-space: nowrap;
+}
+
+.od-integration-log-severity {
+  width: 4px;
+  height: 22px;
+  border-radius: 20px;
+}
+
+.od-integration-log-severity[data-severity='info'],
+.od-integration-log-legend-color[data-severity='info'] {
+  background-color: #2c7be5;
+}
+
+.od-integration-log-severity[data-severity='warning'],
+.od-integration-log-legend-color[data-severity='warning'] {
+  background-color: #ffc700;
+}
+
+.od-integration-log-severity[data-severity='critical'],
+.od-integration-log-severity[data-severity='danger'],
+.od-integration-log-legend-color[data-severity='critical'] {
+  background-color: #e63757;
+}
+
+.od-ui:where(.od-integration-log-row-action) {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  color: inherit;
+  font-size: 12px;
+  text-align: start;
+}
+
+.od-integration-log-empty {
+  font-size: 16px;
+}
+
+.od-integration-log-pagination {
+  display: flex;
+  align-items: center;
+  padding-block: 20px;
+}
+
+.od-integration-log-loading-table {
+  width: 100%;
+  border-inline-end: 1px solid var(--od-entity-selector-border);
+}
+
+.od-integration-log-loading-table tbody {
+  border-bottom: none;
+}
+
+.od-integration-log-loading-table td {
+  box-sizing: border-box;
+  padding-block: 10px;
+  padding-inline-end: 15px;
+  white-space: nowrap;
+}
+
+.od-integration-log-loading-table td:first-child {
+  width: 50% !important;
+  padding-inline: 15px;
+}
+
+.od-integration-log-loading-table td:not(:first-child) {
+  width: initial !important;
+}
+
+.od-integration-log-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.od-integration-log-legend[data-align-end] {
+  justify-content: flex-end;
+}
+
+.od-integration-log-legend .box-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.od-integration-log-legend p {
+  margin: 0;
+}
+
+.od-integration-log-legend p.bold {
+  font-weight: 700;
+}
+
+.od-integration-log-legend .box-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-block: 10px;
+  border-radius: var(--od-entity-selector-radius-component);
+}
+
+.od-integration-log-legend .text-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.od-integration-log-legend-color {
+  width: 15px;
+  height: 15px;
+  margin-inline-end: 10px;
+  border-radius: 4px;
+}
+
+.od-ui:where(.od-integration-log-accordion-item) {
+  margin-top: 10px;
+  border-bottom: 2px solid var(--od-entity-selector-border);
+}
+
+.od-integration-log-heading {
+  margin: 0;
+}
+
+.od-ui:where(.od-integration-log-disclosure) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  color: var(--od-entity-selector-text);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-integration-log-disclosure):focus-visible,
+.od-ui:where(.od-integration-log-text-action):focus-visible,
+.od-ui:where(.od-integration-log-row-action):focus-visible {
+  outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus);
+  outline-offset: var(--od-entity-selector-focus-offset);
+}
+
+.od-integration-log-disclosure-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.od-integration-log-disclosure-content h5 {
+  margin: 0;
+}
+
+.od-integration-log-disclosure-icon {
+  display: flex;
+  align-items: center;
+}
+
+.od-integration-log-disclosure-icon > .down-arrow {
+  width: 20px;
+  height: 20px;
+  margin-inline: 10px;
+  transition: transform 300ms var(--od-entity-selector-easing);
+}
+
+.od-ui:where(.od-integration-log-disclosure)[data-panel-open] .down-arrow {
+  transform: rotate(180deg);
+}
+
+.od-integration-log-panel {
+  overflow-wrap: anywhere;
+}
+
+.od-integration-log-related .related-events {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.od-ui:where(.od-integration-log-text-action) {
+  min-height: var(--od-entity-selector-touch-target);
+  padding-inline: 10px;
+  color: var(--od-entity-selector-text);
+  background: transparent;
+  border-color: var(--od-entity-selector-border);
+  text-decoration: underline;
+}
+
+.od-integration-log-related .related-events .od-integration-log-text-action {
+  border-color: transparent;
+}
+
+.od-integration-log-detail pre {
+  max-width: 100%;
+  overflow: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-integration-log-disclosure) .down-arrow,
+  .od-ui:where(.od-integration-log-text-action),
+  .od-ui:where(.od-integration-log-row-action) {
+    transition-duration: 0s;
+  }
+}

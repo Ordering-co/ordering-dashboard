@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { ArrowsAngleContract, ArrowsAngleExpand, ThreeDots } from 'react-bootstrap-icons'
@@ -26,6 +26,7 @@ import {
   Header,
   MenusContainer,
   Tab,
+  TabPanel,
   ActionSelectorWrapper,
   RightHeader
 } from './styles'
@@ -59,6 +60,7 @@ const DriversGroupDetailsUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isOpenDetails, setIsOpenDetails] = useState(false)
   const [isExpand, setIsExpand] = useState(false)
+  const tabRefs = useRef([])
 
   useEffect(() => {
     const _driversGroupMenusBase = [
@@ -75,7 +77,7 @@ const DriversGroupDetailsUI = (props) => {
       if (user?.level !== 5) {
         _additionalMenus.push(
           { key: 'paymethods', value: t('PAYMENT_METHODS', 'Payment methods'), sort: 3 },
-          { key: 'delivery_zones', value: t('DELIVERY_ZONES', 'Delivery Zones'), sort: 4 },
+          { key: 'delivery_zones', value: t('DELIVERY_ZONES_TITLE', 'Delivery zones'), sort: 4 },
           { key: 'logs', value: t('LOGS', 'Logs'), sort: 6 }
         )
       }
@@ -142,6 +144,19 @@ const DriversGroupDetailsUI = (props) => {
     }
   }
 
+  const handleTabKeyDown = (event, index) => {
+    let nextIndex = index
+    if (event.key === 'ArrowRight') nextIndex = (index + 1) % driversGroupMenus.length
+    else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + driversGroupMenus.length) % driversGroupMenus.length
+    else if (event.key === 'Home') nextIndex = 0
+    else if (event.key === 'End') nextIndex = driversGroupMenus.length - 1
+    else return
+    event.preventDefault()
+    const nextTab = driversGroupMenus[nextIndex]
+    handleTabClick(nextTab.key)
+    tabRefs.current[nextIndex]?.focus()
+  }
+
   useEffect(() => {
     if (driversGroupState.loading) return
     const tab = query.get('tab')
@@ -177,7 +192,10 @@ const DriversGroupDetailsUI = (props) => {
                 <RightHeader>
                   {width > 576 && (
                     <IconButton
+                      type='button'
                       color='black'
+                      aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
+                      aria-expanded={isExpand}
                       onClick={expandSidebar}
                     >
                       {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -186,7 +204,12 @@ const DriversGroupDetailsUI = (props) => {
                   <ActionSelectorWrapper>
                     <DropdownButton
                       menuAlign={theme?.rtl ? 'left' : 'right'}
-                      title={<ThreeDots />}
+                      title={
+                        <>
+                          <ThreeDots aria-hidden='true' />
+                          <span className='visually-hidden'>{t('ACTIONS', 'Actions')}</span>
+                        </>
+                      }
                       id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
                     >
                       <Dropdown.Item
@@ -207,7 +230,10 @@ const DriversGroupDetailsUI = (props) => {
                 </div>
                 {width > 576 && (
                   <IconButton
+                    type='button'
                     color='black'
+                    aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
+                    aria-expanded={isExpand}
                     onClick={expandSidebar}
                   >
                     {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -216,13 +242,21 @@ const DriversGroupDetailsUI = (props) => {
               </>
               )}
         </Header>
-        <MenusContainer>
+        <MenusContainer role='tablist' aria-label={t('DRIVER_GROUP_SETTINGS', 'Driver group settings')}>
           <DragScroll>
-            {driversGroupMenus.map(menu => (
+            {driversGroupMenus.map((menu, index) => (
               <Tab
+                type='button'
                 key={menu.key}
+                id={`drivers-group-${menu.key}-tab`}
+                role='tab'
+                aria-selected={menu.key === showMenu}
+                aria-controls={`drivers-group-${menu.key}-panel`}
+                tabIndex={menu.key === showMenu ? 0 : -1}
                 active={menu.key === showMenu}
                 onClick={() => handleTabClick(menu.key)}
+                onKeyDown={event => handleTabKeyDown(event, index)}
+                ref={element => { tabRefs.current[index] = element }}
               >
                 {menu.value}
               </Tab>
@@ -230,29 +264,37 @@ const DriversGroupDetailsUI = (props) => {
           </DragScroll>
         </MenusContainer>
         {(showMenu === 'general') && (
-          <DriversGroupGeneralForm
-            {...props}
-            curDriversGroup={driversGroupState.driversGroup}
-            handleNextClick={handleNextClick}
-          />
+          <TabPanel id='drivers-group-general-panel' role='tabpanel' aria-labelledby='drivers-group-general-tab'>
+            <DriversGroupGeneralForm
+              {...props}
+              curDriversGroup={driversGroupState.driversGroup}
+              handleNextClick={handleNextClick}
+            />
+          </TabPanel>
         )}
         {showMenu === 'businesses' && (
-          <DriversGroupBusinesses
-            {...props}
-            curDriversGroup={driversGroupState.driversGroup}
-          />
+          <TabPanel id='drivers-group-businesses-panel' role='tabpanel' aria-labelledby='drivers-group-businesses-tab'>
+            <DriversGroupBusinesses
+              {...props}
+              curDriversGroup={driversGroupState.driversGroup}
+            />
+          </TabPanel>
         )}
         {showMenu === 'paymethods' && (
-          <DriversGroupPaymethods
-            {...props}
-            curDriversGroup={driversGroupState.driversGroup}
-          />
+          <TabPanel id='drivers-group-paymethods-panel' role='tabpanel' aria-labelledby='drivers-group-paymethods-tab'>
+            <DriversGroupPaymethods
+              {...props}
+              curDriversGroup={driversGroupState.driversGroup}
+            />
+          </TabPanel>
         )}
         {showMenu === 'advanced_logistics' && (
-          <DriversGroupLogistics
-            {...props}
-            curDriversGroup={driversGroupState.driversGroup}
-          />
+          <TabPanel id='drivers-group-advanced_logistics-panel' role='tabpanel' aria-labelledby='drivers-group-advanced_logistics-tab'>
+            <DriversGroupLogistics
+              {...props}
+              curDriversGroup={driversGroupState.driversGroup}
+            />
+          </TabPanel>
         )}
         {showMenu === 'schedule' && (
           <DriversGroupSchedule
@@ -260,18 +302,22 @@ const DriversGroupDetailsUI = (props) => {
           />
         )}
         {showMenu === 'logs' && (
-          <DriversGroupLogs driversGroupId={driversGroupState.driversGroup?.id} />
+          <TabPanel id='drivers-group-logs-panel' role='tabpanel' aria-labelledby='drivers-group-logs-tab'>
+            <DriversGroupLogs driversGroupId={driversGroupState.driversGroup?.id} formatDates />
+          </TabPanel>
         )}
         {showMenu === 'delivery_zones' && (
-          <DriverGroupDeliveryDetails
-            {...props}
-            curDriversGroup={driversGroupState.driversGroup}
-            handleParentSidebarMove={handleParentSidebarMove}
-            drivergroup={driversGroupState.driversGroup}
-            setIsExtendExtraOpen={setIsExtendExtraOpen}
-            setIsOpenDetails={setIsOpenDetails}
-            isOpenDetails={isOpenDetails}
-          />
+          <TabPanel id='drivers-group-delivery_zones-panel' role='tabpanel' aria-labelledby='drivers-group-delivery_zones-tab'>
+            <DriverGroupDeliveryDetails
+              {...props}
+              curDriversGroup={driversGroupState.driversGroup}
+              handleParentSidebarMove={handleParentSidebarMove}
+              drivergroup={driversGroupState.driversGroup}
+              setIsExtendExtraOpen={setIsExtendExtraOpen}
+              setIsOpenDetails={setIsOpenDetails}
+              isOpenDetails={isOpenDetails}
+            />
+          </TabPanel>
         )}
       </DetailsContainer>
       <Alert
@@ -296,6 +342,8 @@ const DriversGroupDetailsUI = (props) => {
     </>
   )
 }
+
+export { DriversGroupDetailsUI }
 
 export const DriversGroupDetails = (props) => {
   const driversGroupDetailsProps = {

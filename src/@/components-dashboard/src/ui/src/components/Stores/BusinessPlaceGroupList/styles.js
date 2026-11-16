@@ -34,7 +34,7 @@ export const Header = styled.div`
   flex-wrap: wrap;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0px;
     margin-bottom: 18px;
@@ -93,7 +93,7 @@ export const CheckWrapper = styled.div`
     margin-bottom: 0;
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-left: 20px;
     ${props => props.theme.rtl && css`
       margin-right: 20px;

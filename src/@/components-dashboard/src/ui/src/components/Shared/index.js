@@ -10,7 +10,6 @@ import { InputPhoneNumber } from './InputPhoneNumber'
 import { LinkableText } from './LinkableText'
 import { LearnDropDown } from './LearnDropDown'
 import { Modal } from './Modal'
-import { MoreSidebarLayout } from './MoreSidebarLayout'
 import { NotFoundSource } from './NotFoundSource'
 import { Pagination } from './Pagination'
 import { PaginationButton } from './PaginationButton'
@@ -24,6 +23,8 @@ import { Tabs, Tab } from './Tabs'
 
 import { SelectBusinessCategories } from './SelectBusinessCategories'
 import { SelectBusinessProducts } from './SelectBusinessProducts'
+// redesign tramo B r2 (W0-PB1-01)
+import { ChunkErrorBoundary, ChunkErrorState } from './ChunkErrorBoundary'
 import { SelectBusinesses } from './SelectBusinesses'
 import { SelectSites } from './SelectSites'
 import { SelectUsers } from './SelectUsers'
@@ -35,7 +36,6 @@ import { SimpleSpinner } from './SimpleSpinner'
 import SpreadSheetEditor from './SpreadSheetEditor'
 import { ProgressRing } from './ProgressRing'
 import { ColorPicker } from './ColorPicker'
-import { HtmlEditor } from './HtmlEditor'
 import { IntegrationLogs } from './IntegrationLogs'
 import { RecipientSelect } from './RecipientSelect'
 import { TaxBillRows } from './TaxBillRows'
@@ -55,7 +55,6 @@ export {
   LinkableText,
   LearnDropDown,
   Modal,
-  MoreSidebarLayout,
   NotFoundSource,
   Pagination,
   PaginationButton,
@@ -83,9 +82,10 @@ export {
   SpreadSheetEditor,
   ProgressRing,
   ColorPicker,
-  HtmlEditor,
   IntegrationLogs,
   RecipientSelect,
   TaxBillRows,
-  FeeBillRows
+  FeeBillRows,
+  ChunkErrorBoundary,
+  ChunkErrorState
 }

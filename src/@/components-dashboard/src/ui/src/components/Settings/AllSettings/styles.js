@@ -102,7 +102,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -148,7 +148,7 @@ export const CategoryName = styled.div`
 
   > p {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     margin-bottom: 0px;
     width: 100%;
   }
@@ -183,14 +183,14 @@ export const InfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;
@@ -217,7 +217,7 @@ export const MenuContainer = styled.div`
   margin: 5px 0;
   > span {
     font-weight: 500;
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     line-height: 15px;
     padding: 0px 13px;
     color: ${props => props.theme.colors.lightGray};
@@ -229,7 +229,7 @@ export const MenuContainer = styled.div`
 
   > span {
     font-weight: 500;
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     line-height: 15px;
     padding: 20px;
     color: ${props => props.theme.colors.lightGray};
@@ -251,7 +251,7 @@ export const MenuContent = styled.div`
 export const SubMenu = styled.div`
   cursor: pointer;
   padding: 5px 0;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.lightGray};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -292,7 +292,7 @@ export const SidebarContent = styled.div`
 
   button {
     display: flex;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     box-sizing: border-box;
     border-radius: 8px;
     font-weight: 500;

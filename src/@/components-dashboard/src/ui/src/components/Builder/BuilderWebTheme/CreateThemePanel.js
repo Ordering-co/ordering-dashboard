@@ -1,35 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import { ExclamationCircle } from 'react-bootstrap-icons'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { Button, Input } from '../../../styles'
-import { SideBar } from '../../Shared/SideBar'
-import { ErrorBanner, Field, FieldHelp, MutedText, PanelContainer, PanelFooter, TypeFieldset, TypeText } from '../styles'
-import { PresetGrid, PresetOption, SourceOption } from './styles'
+import { CircleAlert } from '../../Shared/Icon'
+import { Button, ConfirmDialog, InlineNotice, RadioGroup, Sheet, Skeleton, TextField } from '../../Shared/Product'
+import { byKind } from '../utils'
+import './builder-themes.css'
+
+// redesign B3a: the create panel on P/Sheet, P/TextField and two P/RadioGroup (the sources, and the presets as cards
+// with their preview as `media`): one choice across both, as main's radios that shared a name. Same fields, checks, codes and
+// texts as main. main's SideBar never closed on an outside click (Escape only from 1000px), so a typed name was never lost by
+// accident: Escape, the scrim, the X and Cancel ask before dropping one, and nothing closes while it creates (BuilderCreatePanel).
 
 /** Longest name of a theme, on create and rename. */
 export const THEME_NAME_MAX_LENGTH = 100
 
+const FORM_ID = 'builder-theme-create-form'
+
 /**
  * A new theme: its name (required) and where it starts: the active theme,
  * from scratch (the schema's defaults) or a preset, which it is copied from.
+ * `hasActive`: the active theme can be copied. `kind` (`web` or `app`): what
+ * the texts say of the product.
  */
 export const CreateThemePanel = (props) => {
-  const { onClose, hasActive, initialSource, presetsState, getPresets, createState, onCreate } = props
+  const { onClose, kind = 'web', hasActive, initialSource, presetsState, getPresets, createState, onCreate } = props
   const [, t] = useLanguage()
   const [name, setName] = useState('')
   const [source, setSource] = useState(initialSource || (hasActive ? 'current' : 'blank'))
   const [nameError, setNameError] = useState(null)
   const [formError, setFormError] = useState(null)
+  const [discard, setDiscard] = useState(false)
 
   useEffect(() => { getPresets() }, [])
 
   const presets = presetsState?.presets || []
   const nameTooLong = name.length > THEME_NAME_MAX_LENGTH
 
+  // P/Button `busy` ignores clicks, unlike main's disabled button it can't stop every submit (Enter): one create at a time
+  const creating = useRef(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (creating.current || createState?.loading) return
     const trimmed = name.trim()
     if (!trimmed) {
       setNameError('required')
@@ -41,116 +53,150 @@ export const CreateThemePanel = (props) => {
     }
     setFormError(null)
     const presetId = source.startsWith('preset:') ? Number(source.slice(7)) : null
-    const { ok, errorCodes } = await onCreate({ name: trimmed, source: presetId ? 'preset' : source, presetId })
+    creating.current = true
+    let answer
+    try {
+      answer = await onCreate({ name: trimmed, source: presetId ? 'preset' : source, presetId })
+    } finally {
+      creating.current = false
+    }
+    const { ok, errorCodes } = answer
     if (ok) return
     if (errorCodes.includes('name.required')) setNameError('required')
     else if (errorCodes.includes('name.max')) setNameError('max')
     else if (errorCodes.includes('theme.limit')) setFormError('limit')
     else if (errorCodes.includes('preset.not_found')) setFormError('preset')
+    // The active theme couldn't be copied (one of the previous version, with no way to convert it)
+    else if (errorCodes.includes('theme.no_schema') && source === 'current') setFormError('current')
     else setFormError('error')
+  }
+
+  const requestClose = () => {
+    if (createState?.loading || creating.current) return
+    if (name.trim() !== '') setDiscard(true)
+    else onClose()
   }
 
   const formErrors = {
     limit: t('BUILDER_THEME_LIMIT', 'You already have 5 themes. Delete one to create another.'),
     preset: t('BUILDER_THEME_PRESET_GONE', 'That preset is no longer available. Choose another option.'),
+    current: t('BUILDER_THEME_CURRENT_UNAVAILABLE', 'Your current theme can’t be copied. Start from scratch or from a preset.'),
     error: t('BUILDER_THEME_CREATE_ERROR', 'We couldn’t create the theme. Try again.')
   }
 
+  const nameHelp = nameError === 'required'
+    ? t('BUILDER_ERROR_NAME_REQUIRED', 'Enter a name.')
+    : nameError === 'max' ? t('BUILDER_ERROR_NAME_MAX', 'Use _max_ characters or fewer.').replace('_max_', THEME_NAME_MAX_LENGTH) : null
+
+  const startOptions = [
+    hasActive && {
+      value: 'current',
+      label: t('BUILDER_THEME_SOURCE_CURRENT', 'Your current theme'),
+      description: byKind(kind, t('BUILDER_THEME_SOURCE_CURRENT_HELP', 'Copies the colors, fonts and rounding your website uses now.'), t('BUILDER_APP_THEME_SOURCE_CURRENT_HELP', 'Copies the colors, fonts and rounding your app uses now.'))
+    },
+    {
+      value: 'blank',
+      label: t('BUILDER_THEME_SOURCE_BLANK', 'From scratch'),
+      description: byKind(kind, t('BUILDER_THEME_SOURCE_BLANK_HELP', 'The standard look of this kind of website.'), t('BUILDER_APP_THEME_SOURCE_BLANK_HELP', 'The standard look of this kind of app.'))
+    }
+  ].filter(Boolean)
+
+  const presetOptions = presets.map(preset => ({
+    value: `preset:${preset.id}`,
+    media: preset.preview ? <img className='odc-bt-preview' src={preset.preview} alt='' /> : <span className='odc-bt-preview' />,
+    label: preset.name,
+    description: t('BUILDER_THEME_VERSION', 'Version _version_').replace('_version_', preset.version)
+  }))
+
+  const footer = (
+    <>
+      <Button disabled={!!createState?.loading} onClick={requestClose}>{t('CANCEL', 'Cancel')}</Button>
+      <Button type='submit' form={FORM_ID} variant='primary' busy={!!createState?.loading}>
+        {createState?.loading ? t('BUILDER_CREATING', 'Creating…') : t('BUILDER_THEME_CREATE_AND_EDIT', 'Create and edit')}
+      </Button>
+    </>
+  )
+
   return (
-    <SideBar open sidebarId='builder-theme-create-panel' defaultSideBarWidth={520} moveDistance={0} onClose={onClose}>
-      <form onSubmit={handleSubmit} noValidate style={{ height: '100%' }}>
-        <PanelContainer>
-          <h2>{t('BUILDER_THEME_NEW', 'New theme')}</h2>
+    <>
+      <Sheet
+        open
+        onOpenChange={(open) => { if (!open) requestClose() }}
+        title={t('BUILDER_THEME_NEW', 'New theme')}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={footer}
+      >
+        <form id={FORM_ID} className='odc-bt-create' onSubmit={handleSubmit} noValidate>
           {formError && (
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>{formErrors[formError]}</span>
-            </ErrorBanner>
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert'>{formErrors[formError]}</InlineNotice>
           )}
 
-          <Field invalid={!!nameError}>
-            <label htmlFor='builder-theme-new-name'>{t('BUILDER_NAME', 'Name')}</label>
-            <Input
-              id='builder-theme-new-name'
-              type='text'
-              value={name}
-              maxLength={THEME_NAME_MAX_LENGTH}
-              autoComplete='off'
-              required
-              placeholder={t('BUILDER_THEME_NAME_PLACEHOLDER', 'e.g. Summer 2026')}
-              aria-invalid={nameError ? 'true' : 'false'}
-              aria-describedby='builder-theme-new-name-help'
-              onChange={(e) => { setName(e.target.value); setNameError(null) }}
-            />
-            <FieldHelp id='builder-theme-new-name-help'>
-              {nameError === 'required' && <span role='alert'>{t('BUILDER_ERROR_NAME_REQUIRED', 'Enter a name.')}</span>}
-              {nameError === 'max' && <span role='alert'>{t('BUILDER_ERROR_NAME_MAX', 'Use _max_ characters or fewer.').replace('_max_', THEME_NAME_MAX_LENGTH)}</span>}
-              {!nameError && <span>{t('BUILDER_APP_NAME_HELP', 'You can change it later.')}</span>}
-              <span data-over={nameTooLong ? 'true' : undefined}>{name.length}/{THEME_NAME_MAX_LENGTH}</span>
-            </FieldHelp>
-          </Field>
+          <TextField
+            id='builder-theme-new-name'
+            label={t('BUILDER_NAME', 'Name')}
+            value={name}
+            maxLength={THEME_NAME_MAX_LENGTH}
+            autoComplete='off'
+            required
+            requiredLabel={t('REQUIRED', 'Required')}
+            placeholder={t('BUILDER_THEME_NAME_PLACEHOLDER', 'e.g. Summer 2026')}
+            error={nameHelp || undefined}
+            hint={nameHelp ? undefined : t('BUILDER_APP_NAME_HELP', 'You can change it later.')}
+            // the counter is read with the field, as main's help block
+            aria-describedby='builder-theme-new-name-count'
+            onChange={(value) => { setName(value); setNameError(null) }}
+          />
+          <span id='builder-theme-new-name-count' className='odc-bt-name-count odc-figure' data-over={nameTooLong ? 'true' : undefined}>
+            {name.length}/{THEME_NAME_MAX_LENGTH}
+          </span>
 
-          <TypeFieldset>
-            <legend>{t('BUILDER_THEME_START_FROM', 'Start from')}</legend>
-            {hasActive && (
-              <SourceOption selected={source === 'current'}>
-                <input type='radio' name='builder-theme-source' value='current' checked={source === 'current'} onChange={() => setSource('current')} />
-                <TypeText>
-                  <strong>{t('BUILDER_THEME_SOURCE_CURRENT', 'Your current theme')}</strong>
-                  <span>{t('BUILDER_THEME_SOURCE_CURRENT_HELP', 'Copies the colors, fonts and rounding your website uses now.')}</span>
-                </TypeText>
-              </SourceOption>
-            )}
-            <SourceOption selected={source === 'blank'}>
-              <input type='radio' name='builder-theme-source' value='blank' checked={source === 'blank'} onChange={() => setSource('blank')} />
-              <TypeText>
-                <strong>{t('BUILDER_THEME_SOURCE_BLANK', 'From scratch')}</strong>
-                <span>{t('BUILDER_THEME_SOURCE_BLANK_HELP', 'The standard look of this kind of website.')}</span>
-              </TypeText>
-            </SourceOption>
-          </TypeFieldset>
+          <RadioGroup
+            label={t('BUILDER_THEME_START_FROM', 'Start from')}
+            variant='cards'
+            value={source}
+            onValueChange={setSource}
+            options={startOptions}
+          />
 
-          <TypeFieldset>
-            <legend>{t('BUILDER_THEME_OR_PRESET', 'Or a preset')}</legend>
-            <MutedText small>{t('BUILDER_THEME_PRESET_HELP', 'A ready-made style. It’s copied into your theme, so you can change anything.')}</MutedText>
-            {presetsState?.loading && <Skeleton height={140} />}
+          {/* As main's fieldset: the title and its help above the states and the presets */}
+          <div className='odc-bt-presets'>
+            <p className='odc-bt-legend'>{t('BUILDER_THEME_OR_PRESET', 'Or a preset')}</p>
+            <p id='builder-theme-preset-help' className='odc-bt-help'>{t('BUILDER_THEME_PRESET_HELP', 'A ready-made style. It’s copied into your theme, so you can change anything.')}</p>
+            {presetsState?.loading && <Skeleton shape='box' block='calc(var(--od-space-10) + var(--od-space-3))' />}
             {!presetsState?.loading && presetsState?.error && (
-              <MutedText small role='alert'>{t('BUILDER_THEME_PRESETS_ERROR', 'We couldn’t load the presets.')}</MutedText>
+              <p className='odc-bt-help' role='alert'>{t('BUILDER_THEME_PRESETS_ERROR', 'We couldn’t load the presets.')}</p>
             )}
             {!presetsState?.loading && !presetsState?.error && !presets.length && (
-              <MutedText small>{t('BUILDER_THEME_NO_PRESETS', 'There are no presets for this kind of website yet.')}</MutedText>
+              <p className='odc-bt-help'>{byKind(kind, t('BUILDER_THEME_NO_PRESETS', 'There are no presets for this kind of website yet.'), t('BUILDER_APP_THEME_NO_PRESETS', 'There are no presets for this kind of app yet.'))}</p>
             )}
             {presets.length > 0 && (
-              <PresetGrid>
-                {presets.map(preset => {
-                  const value = `preset:${preset.id}`
-                  return (
-                    <PresetOption key={preset.id} selected={source === value}>
-                      {preset.preview ? <img src={preset.preview} alt='' /> : <span aria-hidden='true' />}
-                      <span>
-                        <input type='radio' name='builder-theme-source' value={value} checked={source === value} onChange={() => setSource(value)} />
-                        <TypeText>
-                          <strong>{preset.name}</strong>
-                          <span>{t('BUILDER_THEME_VERSION', 'Version _version_').replace('_version_', preset.version)}</span>
-                        </TypeText>
-                      </span>
-                    </PresetOption>
-                  )
-                })}
-              </PresetGrid>
+              <RadioGroup
+                label={t('BUILDER_THEME_OR_PRESET', 'Or a preset')}
+                hideLabel
+                variant='cards'
+                value={source}
+                onValueChange={setSource}
+                options={presetOptions}
+                aria-describedby='builder-theme-preset-help'
+              />
             )}
-          </TypeFieldset>
-
-          <PanelFooter>
-            <div>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
-              <Button type='submit' color='primary' borderRadius='8px' disabled={!!createState?.loading}>
-                {createState?.loading ? t('BUILDER_CREATING', 'Creating…') : t('BUILDER_THEME_CREATE_AND_EDIT', 'Create and edit')}
-              </Button>
-            </div>
-          </PanelFooter>
-        </PanelContainer>
-      </form>
-    </SideBar>
+          </div>
+        </form>
+      </Sheet>
+      <ConfirmDialog
+        open={discard}
+        title={t('ORDER_PANEL_DISCARD_TITLE', 'Discard your changes?')}
+        confirmLabel={t('DISCARD', 'Discard')}
+        cancelLabel={t('KEEP_EDITING', 'Keep editing')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => {
+          setDiscard(false)
+          onClose()
+        }}
+        onCancel={() => setDiscard(false)}
+      >
+        {t('DRIVERS_DISCARD_BODY', 'What you changed here is not saved yet.')}
+      </ConfirmDialog>
+    </>
   )
 }

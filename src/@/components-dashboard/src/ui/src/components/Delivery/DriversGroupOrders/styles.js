@@ -1,11 +1,11 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const GroupOrdersContainer = styled.div`
   width: 100%;
   padding: 20px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 15px;
   }
@@ -15,10 +15,17 @@ export const FieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 35px;
+  border: none;
+  padding: 0;
+  min-width: 0;
 
-  > label {
-    font-size: 14px;
+  > label,
+  > legend {
+    font-size: var(--od-type-control-size);
     margin-bottom: 12px;
+    padding: 0;
+    float: none;
+    width: auto;
   }
 `
 
@@ -31,27 +38,23 @@ export const UseMapsApiCheckboxContainer = styled.div`
 `
 
 export const MapsApiDescriptionContainer = styled.div`
-  ${props => props.theme?.rtl
-? css`
-    margin-right: 10px;
-  `
-: css`
-    margin-left: 10px;
-  `}
+  margin-inline-start: 10px;
+
+  label {
+    margin: 0px;
+    font-size: var(--od-type-control-size);
+    display: block;
+  }
+
   p {
     margin: 0px;
-    &:first-child {
-      font-size: 14px;
-    }
-    &:not(:first-child) {
-      font-size: 12px;
-      color: ${props => props.theme.colors.lightGray};
+    font-size: var(--od-type-secondary-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
 
-      a {
-        color: ${props => props.theme.colors.primary};
-        margin: 0 7px;
-        white-space: nowrap;
-      }
+    a {
+      color: ${props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
+      margin: 0 7px;
+      white-space: nowrap;
     }
   }
 `
@@ -73,7 +76,7 @@ export const IconImage = styled.div`
   mask: url(${({ url }) => url}) no-repeat center;
   width: 92px;
   height: 24px;
-  background-color: ${props => props.theme.colors.secundaryLight};
+  background-color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.secundaryLight};
 `
 
 export const MaxTimeBusinessInputContainer = styled.div`
@@ -82,27 +85,17 @@ export const MaxTimeBusinessInputContainer = styled.div`
 
   > input {
     flex: 1;
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 25px;
-    `
-: css`
-      margin-left: 25px;
-    `}
+    min-width: 0;
+    margin-inline-start: 25px;
   }
 `
 
 export const FieldRowContainer = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   > div:first-child {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 25px;
-    `
-: css`
-      margin-right: 25px;
-    `}
+    margin-inline-end: 25px;
   }
 `

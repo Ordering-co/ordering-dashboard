@@ -1,0 +1,1885 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-c1-product-core-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-c1-stores-productdesktoppreview-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdesktoppreview-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 8px;\n    border: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "DesktopBackground",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.gray};\n    border-radius: 0 0 8px 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 325px;\n    height: 650px;\n    background-image: url(${({ src }) => src});\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position: center;\n    padding: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    -webkit-mask-image: url(${({ src }) => src});\n    mask-image: url(${({ src }) => src});\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-position: center;\n    mask-position: center;\n    height: 630px;\n    overflow: auto;\n    ::-webkit-scrollbar {\n      width: 0px;\n    }\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ModalHeader",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "font-size",
+      "match": "20px",
+      "context": "h1",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "font-size",
+      "match": "14px",
+      "context": ".price-wrapper > span",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin-right: 0px;\n        margin-left: 5px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".price-wrapper > .price-discount",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "font-size",
+      "match": "13px",
+      "context": "p",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SkuContent",
+      "property": "font-size",
+      "match": "16px",
+      "context": "h2",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SkuContent",
+      "property": "font-size",
+      "match": "14px",
+      "context": "p",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SectionTitle",
+      "property": "font-size",
+      "match": "14px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    padding: 5px 0 5px 10px;\n  `\n: css`\n    padding: 5px 10px 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font-size",
+      "match": "12px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active\n? css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    border-bottom: 1px solid ${props => props.theme.colors.headingColor};\n  `\n: css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperIngredients",
+      "property": "font",
+      "match": "({ isProductSoldout }) => isProductSoldout && css`\n    border-radius: 10px;\n    pointer-events: none;\n    background: hsl(0, 0%, 72%);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "IngredientContainer",
+      "property": "font-size",
+      "match": "12px",
+      "context": "> span",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "IngredientContainer",
+      "property": "font",
+      "match": "props => props.theme.rtl\n? css`\n      margin-right: 8px;\n    `\n: css`\n      margin-left: 8px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "OptionTitle",
+      "property": "font-size",
+      "match": "14px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "OptionTitle",
+      "property": "font-size",
+      "match": "12px",
+      "context": "span > &:not(:first-child)",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "OptionFlag",
+      "property": "font-size",
+      "match": "12px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "IconControl",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    margin-left: 5px;\n    margin-right: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "IconControl",
+      "property": "font-size",
+      "match": "25px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SuoptionText",
+      "property": "font-size",
+      "match": "12px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SuoptionText",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "font-size",
+      "match": "12px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: 3px;\n      margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PositionControl",
+      "property": "font-size",
+      "match": "18px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PositionControl",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PositionControl",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PositionControl",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 0;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SuboptionPrice",
+      "property": "font-size",
+      "match": "14px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SuboptionPrice",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductActions",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView\n? css`\n    padding: 15px;\n    button.add {\n      padding: 0px 5px;\n    }\n  `\n: css`\n    padding: 10px 15px;\n    button.add {\n      padding: 5px 10px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductActions",
+      "property": "font-size",
+      "match": "14px",
+      "context": "div.price",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductActions",
+      "property": "font-size",
+      "match": "12px",
+      "context": "button.add",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductActions",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView\n? css`\n      bottom: 0;\n    `\n: css`\n      bottom: -21px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 8px;\n    border: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Container",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DesktopHeader",
+      "property": "background",
+      "match": "props => props.theme.colors.gray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DesktopBackground",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.gray};\n    border-radius: 0 0 8px 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DesktopBackground",
+      "property": "background",
+      "match": "props => props.theme.colors.gray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 325px;\n    height: 650px;\n    background-image: url(${({ src }) => src});\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position: center;\n    padding: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    -webkit-mask-image: url(${({ src }) => src});\n    mask-image: url(${({ src }) => src});\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-position: center;\n    mask-position: center;\n    height: 630px;\n    overflow: auto;\n    ::-webkit-scrollbar {\n      width: 0px;\n    }\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ModalHeader",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryContrast",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SwiperWrapper",
+      "property": "background-color",
+      "match": "rgba(0,0,0,0.2)",
+      "context": ".swiper-button-next",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SwiperWrapper",
+      "property": "background-color",
+      "match": "rgba(0,0,0,0.2)",
+      "context": ".swiper-button-prev",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin-right: 0px;\n        margin-left: 5px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductInfo",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Divider",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductTabContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductTabContainer",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    padding: 5px 0 5px 10px;\n  `\n: css`\n    padding: 5px 10px 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active\n? css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    border-bottom: 1px solid ${props => props.theme.colors.headingColor};\n  `\n: css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperIngredients",
+      "property": "color-block",
+      "match": "({ isProductSoldout }) => isProductSoldout && css`\n    border-radius: 10px;\n    pointer-events: none;\n    background: hsl(0, 0%, 72%);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperIngredients",
+      "property": "background",
+      "match": "hsl(0, 0%, 72%)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IngredientContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IngredientContainer",
+      "property": "color-block",
+      "match": "props => props.theme.rtl\n? css`\n      margin-right: 8px;\n    `\n: css`\n      margin-left: 8px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionContainer",
+      "property": "background-color",
+      "match": "orange",
+      "context": "&.error",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionWrapHeader",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionTitle",
+      "property": "color",
+      "match": "props => props.theme.colors.grayTextColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionFlag",
+      "property": "color",
+      "match": "#A52121",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperSubOption",
+      "property": "background-color",
+      "match": "lighten(0.58, '#A52121')",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperSubOption",
+      "property": "background-color",
+      "match": "hsl(0, 0%, 72%)",
+      "context": "&.soldout",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IconControl",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IconControl",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    margin-left: 5px;\n    margin-right: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IconControl",
+      "property": "color",
+      "match": "#CBCBCB",
+      "context": "svg[disabled]",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SuoptionText",
+      "property": "color",
+      "match": "#555",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SuoptionText",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SuoptionText",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "color",
+      "match": "#555",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "color",
+      "match": "#CBCBCB",
+      "context": "svg[disabled]",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "QuantityControl",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: 3px;\n      margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "PositionControl",
+      "property": "color",
+      "match": "#CBCBCB",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "PositionControl",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "PositionControl",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "PositionControl",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 0;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SuboptionPrice",
+      "property": "color",
+      "match": "#555",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SuboptionPrice",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductActions",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView\n? css`\n    padding: 15px;\n    button.add {\n      padding: 0px 5px;\n    }\n  `\n: css`\n    padding: 10px 15px;\n    button.add {\n      padding: 5px 10px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductActions",
+      "property": "border-top",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductActions",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductActions",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView\n? css`\n      bottom: 0;\n    `\n: css`\n      bottom: -21px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetails-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetails/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "productDetailsProps /* binding-sha256:f913a00ea1a63386f5237a29fb319fddbab7fddaa739c32e10e7cd4009243c29 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetails-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetails/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetailsadvanced-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "TAX_MULTI_SELECT_PROPS /* binding-sha256:5d8af0257a592d67c38158e7c2c82e468e2746472eadc1f231e58451a5fc2304 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "productAdvancedProps /* binding-sha256:eb6aaadb7168fd5ef13ccfd85ab9ff0431f06de6c5b94a5d8e9dadd8f18f0faf */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetailsadvanced-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Option",
+      "property": "font",
+      "match": "({ padding }) => padding && css`\n    padding: 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Option",
+      "property": "font",
+      "match": "({ isWeight }) => isWeight && css`\n    font-weight: 600;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "OptionCenter",
+      "property": "font",
+      "match": "({ padding }) => padding && css`\n    padding: 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "OptionCenter",
+      "property": "font",
+      "match": "({ isWeight }) => isWeight && css`\n    font-weight: 600;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ButtonGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 20px;\n      `\n: css`\n        margin-left: 20px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "FieldRow",
+      "property": "font",
+      "match": "({ fullWidth }) => fullWidth && css`\n      > div {\n        width: 100%;\n      }\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PricePerUnit",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 0;\n    margin-left: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Option",
+      "property": "color-block",
+      "match": "({ padding }) => padding && css`\n    padding: 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Option",
+      "property": "color-block",
+      "match": "({ isWeight }) => isWeight && css`\n    font-weight: 600;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionCenter",
+      "property": "color-block",
+      "match": "({ padding }) => padding && css`\n    padding: 5px 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionCenter",
+      "property": "color-block",
+      "match": "({ isWeight }) => isWeight && css`\n    font-weight: 600;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ButtonGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 20px;\n      `\n: css`\n        margin-left: 20px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "FieldRow",
+      "property": "color-block",
+      "match": "({ fullWidth }) => fullWidth && css`\n      > div {\n        width: 100%;\n      }\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "PricePerUnit",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 0;\n    margin-left: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetailscategories-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsCategories/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetailscategories-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsCategories/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HeaderTitleContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InfoWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetatilsinformation-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productdetatilsinformation-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "ProductImage",
+      "property": "font",
+      "match": "({ isEdit }) => !isEdit && css`\n    pointer-event: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "UploadImageIconContainer",
+      "property": "font",
+      "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "font",
+      "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 45px;\n      height: 45px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionsForm",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "InventoryWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Wrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "RegularWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ shapeRect }) => shapeRect && css`\n     > div {\n       border-radius: 7.6px;\n     }\n    margin: 0px 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ round }) => round && css`\n     > div {\n       border-radius: 50px;\n     }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    > div {\n      border: 1px solid ${props => props.theme.colors.primary};\n    }\n\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "ProductImage",
+      "property": "color-block",
+      "match": "({ isEdit }) => !isEdit && css`\n    pointer-event: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIconContainer",
+      "property": "background",
+      "match": "rgba(0,0,0,0.2)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIconContainer",
+      "property": "color-block",
+      "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color",
+      "match": "#FFF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "border",
+      "match": "1px dashed #fff",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color-block",
+      "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 45px;\n      height: 45px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InputWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsForm",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InventoryWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Wrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "RegularWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ shapeRect }) => shapeRect && css`\n     > div {\n       border-radius: 7.6px;\n     }\n    margin: 0px 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ round }) => round && css`\n     > div {\n       border-radius: 50px;\n     }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    > div {\n      border: 1px solid ${props => props.theme.colors.primary};\n    }\n\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsForm",
+      "property": "border-block-start",
+      "match": "var(--od-x-hairline) solid var(--od-border)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "Redesign SP: the catalog page moved to Product pieces; re-pinned to the current source: the sticky Save of Information (SP-F2, D2) separates from the form with a hairline on --od-x-hairline and --od-border tokens only. Checked with verifyMigration."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productmaindetails-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMainDetails/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-c1-stores-productmaindetails-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMainDetails/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "({ maxLimit }) => maxLimit && css`\n    max-width: 500px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "({ maxLimit }) => maxLimit && css`\n    max-width: 500px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TabsConatiner",
+      "property": "border-bottom",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "#909BA9",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productmetafields-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "MetaFieldsProps /* binding-sha256:016d8f33aeda74507babd9cf0d54dfb36ae7eeeecad363e9628db46bc8ed10af */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-c1-stores-productmetafields-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "MetaContainer",
+      "property": "font-size",
+      "match": "20px",
+      "context": ".meta_value > svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "MetaTitle",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaContainer",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddContainer",
+      "property": "border",
+      "match": "1px solid #c2c2c2",
+      "context": "input",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "RoundBorder",
+      "property": "border",
+      "match": "1px solid #c2c2c2",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "RoundBorder",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddForm",
+      "property": "color",
+      "match": "#000",
+      "context": ".select-input > svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddForm",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddForm",
+      "property": "background-color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MetaAddForm",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The c1-product-core semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  }
+ ]
+}

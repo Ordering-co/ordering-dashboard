@@ -35,10 +35,11 @@ describe('ProjectStatusBadge', () => {
     renderBadge(
       <ProjectStatusBadge currentStatus='active' trialSubscription={productionTrial} statusLabel='Project Active' now={NOW} />
     )
-    const pill = screen.getByText('Free trial — 3 days left')
+    // redesign home C2 (HM-09): the badge is the Product StatusBadge; the text sits in an inner span and the state on the badge.
+    const pill = screen.getByText('Free trial — 3 days left').closest('[data-status]')
     expect(pill).toHaveAttribute('data-status', 'trialing')
-    // Warning pill, not the green "active" one.
-    expect(pill).toHaveStyle('color: #FFC700')
+    // A trial asks to look (review family), not the "done" family of an active project.
+    expect(pill).toHaveAttribute('data-family', 'review')
     expect(screen.queryByText('Project Active')).not.toBeInTheDocument()
   })
 
@@ -64,7 +65,8 @@ describe('ProjectStatusBadge', () => {
     const { rerender } = renderBadge(
       <ProjectStatusBadge currentStatus='active' trialSubscription={null} statusLabel='Project Active' now={NOW} />
     )
-    expect(screen.getByText('Project Active')).toHaveStyle('color: #00D27A')
+    // redesign home C2 (HM-09): an active project is the done family of the Product StatusBadge
+    expect(screen.getByText('Project Active').closest('[data-family]')).toHaveAttribute('data-family', 'done')
 
     rerender(
       <ProjectStatusBadge currentStatus='active' trialSubscription={productionTrial} statusLabel='Project Active' now={Date.UTC(2026, 9, 4, 13)} />
@@ -82,6 +84,8 @@ describe('ProjectStatusBadge', () => {
       <ProjectStatusBadge currentStatus='past_due' trialSubscription={productionTrial} statusLabel='Project Past Due Payment' now={NOW} />
     )
     expect(screen.getByText('Project Past Due Payment')).toBeInTheDocument()
+    // redesign home C2 (HM-13): past due reads as cancel
+    expect(screen.getByText('Project Past Due Payment').closest('[data-family]')).toHaveAttribute('data-family', 'cancel')
     expect(screen.queryByText(/Free trial/)).not.toBeInTheDocument()
   })
 })

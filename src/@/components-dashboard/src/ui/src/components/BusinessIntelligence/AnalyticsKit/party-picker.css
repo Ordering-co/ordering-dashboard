@@ -1,0 +1,73 @@
+/*
+ * redesign business-payments (, D-picker): the rules of `PartyPicker`, promoted from `InvoiceBuilder/invoice-form.css`
+ * with the same class names and values (/intelligence/invoice looks and behaves the same). Tokens only; logical properties only (RTL).
+ * The `pill` variant and the `secondary` line need no rule of their own: the first renders the bare `FilterPopover`, and the second
+ * is the `odc-radio-description` of `Shared/Product/radio-group.css`.
+ */
+
+/* ── The list of the picker (inside the popover, which is in the layer host): one radio per option ── */
+.odc-iv-choices {
+  position: relative;
+}
+
+.odc-iv-choice {
+  inline-size: 100%;
+}
+
+.odc-iv-choices[aria-busy='true'] {
+  opacity: 0.6;
+}
+
+.odc-iv-picker-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  padding: var(--od-space-2);
+}
+
+.odc-iv-picker-error p {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* J2 (D-18): the opt-in action under «No results found» */
+.odc-iv-picker-empty-action {
+  padding: 0 var(--od-space-2) var(--od-space-2);
+}
+
+.odc-iv-picker-pager {
+  flex: none;
+  padding-block-start: var(--od-space-1);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* redesign invoice R2 (P6): in the `field` variant the business or driver is the main datum of the page, so it is a field like the
+   period: a visible label over a pill that takes the whole width of its column. (.odc-iv-pill of the invoice form stays the inline
+   pill of the filters.) */
+.odc-iv-party {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-iv-party-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-party-anchor {
+  display: flex;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.odc-iv-party .odc-pill {
+  inline-size: 100%;
+  min-inline-size: 0;
+}

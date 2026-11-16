@@ -1,0 +1,1396 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c3-importers-myproducts-core-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-c3-importers-myproducts-core-driversgroupslogisticsservice-index-js-d91362",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-driversgroupslogisticsservice-styles-js-aea0ff",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "LogisticsConfigItem",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LogisticsContainer",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "OrderStatusWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RadioButton",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+          },
+          {
+            "component": "RadioButton",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "LogisticsConfigItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigItem",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsConfigsContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsContainer",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LogisticsContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderStatusWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderStatusWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-importers-index-js-d836f7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/Importers/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX spread forwards the component function parameters without adding a local color; any additional or changed spread reopens review.",
+            "evidence": ": Importers is now <PosMenu {...props} kind='importer' />; the page parameters are forwarded as-is and PosMenu/index.js pins its own businessListingProps bundle (l6-c1)."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-importers-styles-js-751d7e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/Importers/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BusinessListingContainer",
+            "property": "font",
+            "match": "({ isAdd }) => isAdd && css`\n    max-height: 100vh;\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BusinessListingContainer",
+            "property": "color-block",
+            "match": "({ isAdd }) => isAdd && css`\n    max-height: 100vh;\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-advancedsettings-index-js-7c01e8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-advancedsettings-styles-js-41bfe9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "DropShadow",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DropShadowWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 35px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: es lo que impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+            "evidence": "Z3 esta abierta contra todas las conversiones de L5 justo por no haberlo puesto. Dos sitios en c3: HideCheckWrapper y FontWeightItem, los dos convertidos a button y ninguno de los dos declaraba tamano propio en su raiz. La tercera conversion del lote, AppUI Tab, SI lo declaraba, asi que no lo necesita y no aparece aqui."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FormControlWithCheck",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: es lo que impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+            "evidence": "Z3 esta abierta contra todas las conversiones de L5 justo por no haberlo puesto. Dos sitios en c3: HideCheckWrapper y FontWeightItem, los dos convertidos a button y ninguno de los dos declaraba tamano propio en su raiz. La tercera conversion del lote, AppUI Tab, SI lo declaraba, asi que no lo necesita y no aparece aqui."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font",
+            "match": "({ isBottom }) => isBottom && css`\n    margin-bottom: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "font",
+            "match": "({ isBig }) => isBig && css`\n    width: 100%;\n    height: 190px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font-size",
+            "match": "12px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 7px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font-size",
+            "match": "12px",
+            "context": "input",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font-size",
+            "match": "12px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 5px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ bgimage }) => bgimage && css`\n    background: #33333366;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BoxLayout",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadow",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadow",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadowWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 35px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FaviconPreviewImage",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FaviconPreviewImage",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightListWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color-block",
+            "match": "({ isBottom }) => isBottom && css`\n    margin-bottom: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "color-block",
+            "match": "({ isBig }) => isBig && css`\n    width: 100%;\n    height: 190px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "background",
+            "match": "props => props.theme.colors.gray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "#f2f5f7",
+            "context": "> div > .list > .list-wrapper > > div > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 7px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.gray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 5px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "#33333366",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ bgimage }) => bgimage && css`\n    background: #33333366;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.white",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-appresources-index-js-70ceb9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AppResources/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-appresources-styles-js-f56539",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AppResources/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ImageGroup",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 20px;\n        margin-right: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ImageGroup",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 20px;\n        margin-right: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-appui-index-js-35ef7b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AppUI/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "appProps /* binding-sha256:dc94aa515d0f319868e312bc728e5b6f33590f6e993e5c19f74f14832043477a */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-basicappsettings-styles-js-f63ab5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/BasicAppSettings/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "InputFileContainer",
+            "property": "background-color",
+            "match": "props => props.isError ? `${props.theme.colors.danger}1A` : `${props.theme.colors.gray}1A`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileContainer",
+            "property": "border",
+            "match": "props => props.isError ? props.theme.colors.danger : props.theme.colors.gray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileContainer",
+            "property": "color",
+            "match": "#222",
+            "context": "&.drop-container:hover .drop-title,\n  &.drop-container.drag-active .drop-title",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileContainer",
+            "property": "color",
+            "match": "#444",
+            "context": "&.drop-container",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileStyle",
+            "property": "background",
+            "match": "#fff",
+            "context": "&[type=file]",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileStyle",
+            "property": "background",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileStyle",
+            "property": "border",
+            "match": "1px solid #DEE2E6",
+            "context": "&[type=file]",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFileStyle",
+            "property": "color",
+            "match": "#fff",
+            "context": "&[type=file]::file-selector-button",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-contentform-index-js-34f68b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ContentForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "contentFormProps /* binding-sha256:0815c0403c96a11f7e41e69bd59f5a6c413787305850ea1464b4d0783c1751e9 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundaryDark'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-contentform-styles-js-28dc98",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ContentForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ButtonGroupWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 14px;\n      `\n: css`\n        margin-left: 14px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c3-importers-myproducts-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperEditor",
+            "property": "font-size",
+            "match": "36px",
+            "context": ".note-editor > .note-dropdown-menu > h1",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo.",
+            "evidence": "Tres sitios. `ContentForm WrapperEditor .note-editor > .note-dropdown-menu > h1` a 36px es la vista previa de \"Heading 1\" del desplegable de Summernote: tipografia del CONTENIDO que el admin redacta, no del panel, y 36px no tiene un solo precedente en L3, L4 ni L5. `ImportersPanel LogsEmptySteps li > &::before` a 10px es un numeral generado con `content: attr(data-step)` dentro de un circulo de 18x18 fijo; llevarlo al rol mas pequeno (12px) lo agranda dentro de un contenedor que no crece. `ProductsBuilderList Container` a 16px solo se renderiza envolviendo `SkeletonCard`, cuyos hijos son todos placeholders: no gobierna ningun texto."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ButtonGroupWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 14px;\n      `\n: css`\n        margin-left: 14px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperEditor",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperEditor",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperEditor",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperEditor",
+            "property": "color",
+            "match": "#000",
+            "context": ".note-editor > .note-dropdown-menu > a",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-productsbuilderlist-index-js-8f3120",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ProductsBuilderList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c3-importers-myproducts-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-productsbuilderlist-styles-js-81c605",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ProductsBuilderList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo.",
+            "evidence": "Tres sitios. `ContentForm WrapperEditor .note-editor > .note-dropdown-menu > h1` a 36px es la vista previa de \"Heading 1\" del desplegable de Summernote: tipografia del CONTENIDO que el admin redacta, no del panel, y 36px no tiene un solo precedente en L3, L4 ni L5. `ImportersPanel LogsEmptySteps li > &::before` a 10px es un numeral generado con `content: attr(data-step)` dentro de un circulo de 18x18 fijo; llevarlo al rol mas pequeno (12px) lo agranda dentro de un contenedor que no crece. `ProductsBuilderList Container` a 16px solo se renderiza envolviendo `SkeletonCard`, cuyos hijos son todos placeholders: no gobierna ningun texto."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c3-importers-myproducts-core-myproducts-index-js-91f38a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

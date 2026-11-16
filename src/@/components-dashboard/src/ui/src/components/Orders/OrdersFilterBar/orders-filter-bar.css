@@ -1,0 +1,244 @@
+/*
+ * Filter bar of /orders (C7): the SLA menu dressed as a pill, the slot for the list tools, the filters sheet
+ * (C7, C8) and the external id search inside its popover. The popovers of the pills are Product's
+ * (Shared/Product/filter-popover.css, redesign W0-2a, T0-4).
+ * Values are --od-* / --od-x-* tokens only (src/__tests__/tools/productLiteralGuard.test.js).
+ * Logical properties only (C17).
+ */
+
+/* redesign F1b (D-06): no pill is hidden by the width of the bar any more (the secondary ones used to leave
+   below 1100px, with no way to reach them). The ones that do not fit go to the bar's «+N» menu (FilterBar). */
+
+/* Sub status row on /deliveries and /all-in-one, where the pill stands alone. */
+.odc-orders-substatus {
+  display: flex;
+  align-items: center;
+  padding-block: var(--od-space-2);
+}
+
+/* ── SLA menu trigger dressed as a pill (the same look as FilterPill) ── */
+.odc-btn.odc-orders-menu-pill {
+  border: var(--od-x-hairline) dashed var(--od-x-field-border);
+  background: transparent;
+  color: var(--od-text-muted);
+  padding-inline: var(--od-x-space-2-5);
+}
+
+.odc-btn.odc-orders-menu-pill:hover {
+  border-style: solid;
+  background: transparent;
+  color: var(--od-text);
+}
+
+.odc-btn.odc-orders-menu-pill-on {
+  border: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-btn.odc-orders-menu-pill {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* «Filters» button: the number of active filters, in the bar's own type. */
+.odc-orders-filter-count {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* ── Slot for the list tools (sort, density, columns), filled by the list ── */
+.odc-orders-tools-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+/* ── Filters sheet ── */
+.odc-ofs-sheet {
+  color: var(--od-text);
+}
+
+.odc-ofs-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  container-type: inline-size;
+  color: var(--od-text);
+}
+
+.odc-ofs-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-ofs-group-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  align-items: start;
+}
+
+@container (max-width: 359px) {
+  .odc-ofs-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+.odc-ofs-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-ofs-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-input {
+  inline-size: 100%;
+  block-size: var(--od-x-control-height-lg);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-input::placeholder { color: var(--od-x-text-subtle); opacity: 1; }
+
+.odc-ofs-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-ofs-meta-value {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--od-space-1);
+}
+
+.odc-ofs-meta-value .odc-ofs-field { flex: 1 1 0; }
+
+/* ── Legacy pickers inside the sheet (FirstSelect / MultiSelect roots) ──
+ * They keep their component and behaviour; inside the sheet their closed trigger is dressed as
+ * the sheet's own field (.odc-ofs-input): same height (control-lg), border, radius, type and
+ * focus ring, so inputs and pickers read as one family. Scoped to `.odc-ofs-field`, so the same
+ * selectors on other screens do not change. Three classes deep to outrank the legacy
+ * `.od-ui:where(...)` surface and the styled-components padding. */
+.odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) {
+  display: flex;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height-lg);
+  padding: 0;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) > :is(.od-first-select-trigger, .od-multi-select-trigger) {
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-block-size: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The placeholder / value blocks bring their own padding and line height (10px, 30px). */
+.odc-ofs-field :is(.od-first-select-trigger, .od-multi-select-trigger) > :not(.od-first-select-chevron, .od-multi-select-chevron),
+.odc-ofs-field :is(.od-first-select-header, .od-multi-select-header) > * {
+  min-block-size: 0;
+  margin-block: 0;
+  padding-block: 0;
+  padding-inline: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-field :is(.od-first-select-header, .od-multi-select-header) { line-height: var(--od-x-leading-ui); }
+
+.odc-ofs-field :is(.od-first-select-trigger, .od-multi-select-trigger) :is(.od-first-select-header, .od-multi-select-header) p,
+.odc-ofs-field :is(.od-first-select-trigger, .od-multi-select-trigger) > * p {
+  margin: 0;
+  padding: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ofs-field .od-first-select-root[data-disabled],
+.odc-ofs-field .od-multi-select-root[data-disabled] { background: var(--od-surface-subtle); }
+
+/* Focus: the ring goes around the whole field, like the inputs, not around the inner trigger. */
+.odc-ofs-field :is(.od-first-select-root, .od-multi-select-root):has(> :is(.od-first-select-trigger, .od-multi-select-trigger):focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) > :is(.od-first-select-trigger, .od-multi-select-trigger):focus-visible {
+  outline: 0;
+}
+
+/* Touch (C3): fields reach 44px, with a coarse pointer and below 768px with a mouse (E10). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-ofs-input,
+  .odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  /* The picker's border is drawn by its root, so the trigger inside is two hairlines shorter than the
+     field. It reaches over them (negative margin, the border stays visible under the transparent trigger):
+     the target is the 44px and the field is as tall as the text inputs beside it. */
+  .odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) > :is(.od-first-select-trigger, .od-multi-select-trigger) {
+    min-block-size: var(--od-x-target-coarse);
+    margin-block: calc(var(--od-x-hairline) * -1);
+  }
+}
+
+/* …and 16px type with a coarse pointer, so the browser does not zoom on focus. */
+@media (pointer: coarse) {
+  .odc-ofs-input,
+  .odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) {
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .odc-ofs-field :is(.od-first-select-trigger, .od-multi-select-trigger) > :not(.od-first-select-chevron, .od-multi-select-chevron),
+  .odc-ofs-field :is(.od-first-select-header, .od-multi-select-header) > * {
+    font-size: var(--od-x-type-lead-size);
+  }
+}
+
+/* External id search inside its popover: the shared SearchBar draws its clear button
+   over the end of the input, so the text stops before it (the old WrapperRow did this). */
+.odc-orders-popover .external_id input {
+  padding-inline-end: calc(var(--od-x-target-coarse) + var(--od-space-4));
+}
+
+/* …and the clear button stays at the inline end in both directions. */
+.odc-orders-popover .external_id > button.close {
+  inset-inline-start: auto;
+  inset-inline-end: var(--od-space-2);
+}

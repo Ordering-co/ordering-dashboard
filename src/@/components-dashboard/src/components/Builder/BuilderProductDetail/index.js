@@ -4,7 +4,6 @@ import { useApi } from '../../../contexts/ApiContext'
 import { useSession } from '../../../contexts/SessionContext'
 import {
   BUILDER_ERROR_CODES,
-  getBuilderAdHocInstallUrl,
   getBuilderAppChecks,
   getBuilderErrorKind,
   getBuilderPageFailure,
@@ -210,13 +209,15 @@ export const BuilderProductDetail = (props) => {
           onAppChanged={handleAppChanged}
           latestBuildsState={builds.latestState}
           reloadLatestBuilds={builds.reloadLatest}
+          buildAttemptsState={builds.attemptsState}
+          reloadBuildAttempts={builds.reloadAttempts}
           buildsHistoryVersion={builds.historyVersion}
           requestBuild={builds.requestBuild}
           retryBuild={builds.retryBuild}
           cancelBuild={builds.cancelBuild}
           getBuildLog={builds.getBuildLog}
           getBuildDownload={builds.getBuildDownload}
-          adHocInstallUrl={app ? getBuilderAdHocInstallUrl(ordering, app.id) : null}
+          createInstallLink={builds.createInstallLink}
           renameProduct={renameProduct}
           mergeProduct={mergeProduct}
           updateApp={updateApp}

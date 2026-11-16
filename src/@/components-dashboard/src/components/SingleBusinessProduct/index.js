@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -29,13 +29,19 @@ export const SingleBusinessProduct = (props) => {
 
   const [isProductsBottom, setIsProductsBottom] = useState(false)
 
+  // redesign SP-F3 (C): the categoryState the page holds NOW. A save ends after an await, and the closure that started it holds the
+  // categoryState of that render: another row may have saved meanwhile, and building the next state from the old one would undo it.
+  const categoryRef = useRef(category)
+  categoryRef.current = category
+
   /**
    * Set enabled property of a product
    * @param {Boolean} isChecked
+   * @returns {Promise<{ok: boolean, error?: *, result?: *}>} redesign SP-F3 (C): the outcome, so the row can say why it failed
    */
   const handleChangeProductActive = (isChecked) => {
     const params = { enabled: isChecked }
-    editProduct(params)
+    return editProduct(params)
   }
 
   /**
@@ -70,6 +76,22 @@ export const SingleBusinessProduct = (props) => {
   }
 
   /**
+   * J2 row 12 (stores-products P-10, D-56 d): the thumbnail of the row is saved when the file is chosen, as the store editor does, and
+   * not with the next click outside the row. Only `images` is sent; a refusal puts the stored image back (editProduct).
+   * @param {File} file
+   * @returns {Promise<{ok: boolean, error?: *, result?: *}>}
+   */
+  const handleSaveImage = (file) => new Promise(resolve => {
+    const reader = new window.FileReader()
+    reader.onload = async () => {
+      setFormState(prev => ({ ...prev, changes: { ...prev.changes, images: reader.result } }))
+      resolve(await editProduct({ images: reader.result }))
+    }
+    reader.onerror = () => resolve({ ok: false })
+    reader.readAsDataURL(file)
+  })
+
+  /**
    * Set name property of a product
    * @param {String} value
    */
@@ -87,14 +109,17 @@ export const SingleBusinessProduct = (props) => {
         delete params[key]
       }
     }
-    editProduct(params)
+    return editProduct(params)
   }
 
   /**
    * Method to edit a product
+   * redesign SP-F3 (C): it returns `{ ok, error, result }` (the callers that ignore the value keep working), and a successful save
+   * also updates `categoryState`, which is what the row, the editor header and the card draw. A refused save puts the thumbnail
+   * back to the stored one (otherwise every later click outside asked to save it again).
    */
   const editProduct = async (params) => {
-    if (loading) return
+    if (loading) return { ok: false }
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
@@ -130,27 +155,47 @@ export const SingleBusinessProduct = (props) => {
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
+        const currentCategory = categoryRef.current
+        if (handleUpdateCategoryState && Array.isArray(currentCategory?.products)) {
+          // what was sent (without the fields that were not) and then what the API answered, which wins (the stored URL of an image)
+          const sent = Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined))
+          handleUpdateCategoryState({
+            ...currentCategory,
+            products: currentCategory.products.map(_product => (
+              _product.id === product?.id
+                ? { ..._product, ...sent, ...(result && typeof result === 'object' && !Array.isArray(result) ? result : {}) }
+                : _product
+            ))
+          })
+        }
         showToast(ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'))
         setIsEditMode(false)
+        return { ok: true, result }
       } else {
         setFormState({
           ...formState,
           loading: false,
+          changes: { ...product },
           result: {
             error: true,
             result
           }
         })
+        setIsEditMode(false)
+        return { ok: false, error: result }
       }
     } catch (err) {
       setFormState({
         ...formState,
         loading: false,
+        changes: { ...product },
         result: {
           error: true,
           result: err
         }
       })
+      setIsEditMode(false)
+      return { ok: false, error: err }
     }
   }
 
@@ -216,7 +261,7 @@ export const SingleBusinessProduct = (props) => {
     event.dataTransfer.setData('transferProduct', JSON.stringify(product))
     const ghostEle = document.createElement('div')
     ghostEle.classList.add('ghostDragging')
-    ghostEle.innerHTML = product?.name
+    ghostEle.textContent = product?.name
     document.body.appendChild(ghostEle)
     event.dataTransfer.setDragImage(ghostEle, 0, 0)
     setIsProductsBottom(false)
@@ -250,7 +295,12 @@ export const SingleBusinessProduct = (props) => {
    */
   const handleDrop = (event) => {
     event.preventDefault()
-    const transferProduct = JSON.parse(event.dataTransfer.getData('transferProduct'))
+    let transferProduct
+    try {
+      transferProduct = JSON.parse(event.dataTransfer.getData('transferProduct'))
+    } catch (err) {
+      return // redesign SP-F3 (C): what was dragged is not a product (a file, some text): nothing to move
+    }
     let dropProductRank
     if (isProductsBottom) {
       const rankedProducts = category.products.sort((a, b) => a.rank - b.rank)
@@ -266,14 +316,14 @@ export const SingleBusinessProduct = (props) => {
       dropProductRank = product?.rank
     }
     setIsProductsBottom(false)
-    handleChangeProductRank(transferProduct, { rank: dropProductRank })
+    return handleChangeProductRank(transferProduct, { rank: dropProductRank })
   }
 
   /**
    * Method to change the rank of transfer category
    */
-  const handleChangeProductRank = async (transferProduct, params) => {
-    if (loading) return
+  const handleChangeProductRank = async (transferProduct, params, swap) => {
+    if (loading) return { ok: false }
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(transferProduct?.category_id)).products(transferProduct?.id).save(params)
@@ -289,6 +339,8 @@ export const SingleBusinessProduct = (props) => {
                     rank: result?.rank
                   }
                 }
+                // J2 row 9: a move is a swap; the neighbour takes the old rank of the moved product (the API renumbers it so)
+                if (swap && _product.id === swap.id) return { ..._product, rank: swap.rank }
                 return _product
               })
               category.products = [..._products]
@@ -305,11 +357,13 @@ export const SingleBusinessProduct = (props) => {
                 ...result
               }
             }
+            if (swap && item.id === swap.id) return { ...item, rank: swap.rank }
             return item
           })
           handleUpdateCategoryState({ ...category, products: updateProducts })
         }
         showToast(ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'))
+        return { ok: true, result }
       } else {
         setFormState({
           ...formState,
@@ -319,6 +373,7 @@ export const SingleBusinessProduct = (props) => {
             result
           }
         })
+        return { ok: false, error: result }
       }
     } catch (err) {
       setFormState({
@@ -329,7 +384,21 @@ export const SingleBusinessProduct = (props) => {
           result: [err.message]
         }
       })
+      return { ok: false, error: [err.message] }
     }
+  }
+
+  /**
+   * Move this product one place without the mouse (redesign J2, , row 9, D-43 (a)): «Move up» / «Move down» of the ⋯ menu.
+   * It is the request, the toasts and the state updates of the drag: `rank` is the rank of the previous (up) or the next (down)
+   * sibling, which the row works out with the reorder piece of Shared/Product.
+   * @param {number} rank
+   * @returns {Promise<{ok: boolean, error?: *, result?: *}>} the outcome, so the row can say why a move failed
+   */
+  const handleMoveProduct = (rank) => {
+    // the neighbour whose place it takes gets its old rank in the same update: with the two ranks equal the list would not move
+    const neighbour = (category?.products || []).find(item => item.id !== product?.id && Number(item.rank) === Number(rank))
+    return handleChangeProductRank(product, { rank }, neighbour ? { id: neighbour.id, rank: product?.rank } : undefined)
   }
 
   /**
@@ -368,6 +437,8 @@ export const SingleBusinessProduct = (props) => {
           handleDragOver={handleDragOver}
           handleDrop={handleDrop}
           handleDragEnd={handleDragEnd}
+          handleMoveProduct={handleMoveProduct}
+          handleSaveImage={handleSaveImage}
           isProductsBottom={isProductsBottom}
         />
       )}

@@ -1,0 +1,8 @@
+/*
+ * redesign stores 5.2 · The two tabs of a product category (P/Tabs). Review r1-3: the room above and below them that the old
+ * strip had (20px), so the form does not sit on the tab line. Values: --od-* only. Logical properties only.
+ */
+
+.odc-category-tabs {
+  margin-block: var(--od-space-5);
+}

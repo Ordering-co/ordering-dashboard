@@ -1,0 +1,109 @@
+/*
+ * redesign  · The /stores/markups page: the list (header, search and columns, notices, selection bar, table and foot) beside
+ * the markup's detail in a P/SplitView. The table and the detail form bring their own file (S/BusinessMarkups/business-markups.css).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only. Prefix: odc-mkp-*.
+ */
+
+/* The page height, shared by the list and the panel (as /delivery/drivers-groups). */
+.odc-split.odc-mkp-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: one track that may shrink below its content (an auto track grows with the table). */
+.odc-mkp-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (max-width: 767px) {
+  .odc-mkp-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── Tools: the search and the column manager at the end ── */
+.odc-mkp-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-mkp-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-mkp-tools > :last-child {
+  margin-inline-start: auto;
+}
+
+/* ── Empty project: the sentence and «Add markup» ── */
+.odc-mkp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-mkp-empty-text {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Foot: the pagination ── */
+.odc-mkp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-mkp-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* A long markup name wraps to two lines in a card, as the store editor's list (business-markups.css, odc-bm). */
+.odc-mkp-frame .odc-order-card-link .odc-bm-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* The line of a card («ID 199 · Pizza Planet · Marketplace Website · Pickup») wraps instead of cutting where it applies (phase 3:
+   10 of 11 locales cut it at 390). */
+.odc-mkp-frame .odc-order-card-people > .odc-bm-sub {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── The detail inside the record panel: the form and its save bar ── */
+.odc-mkp-detail {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media print {
+  .odc-mkp-frame {
+    display: none;
+  }
+}

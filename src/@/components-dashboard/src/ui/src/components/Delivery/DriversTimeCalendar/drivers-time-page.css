@@ -1,0 +1,89 @@
+/*
+ * redesign DT-B5 (decisions 1–4 | DT-16, DT-17) · Drivers time display page: the frame of the header, the bar, the grid (or the agenda)
+ * and the pagination, one under the other. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The grid, the agenda, the bar and the dialogs have their own files.
+ */
+
+.odc-dtd-page {
+  display: grid;
+  /* one track that may shrink below its content (the grid scrolls inside its own frame) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  /* The page is a flex child of the shell (beside the menu). With the default auto basis its width followed its content: a 24-hour
+     table pushed it to the window edge and a week table let it shrink, so the header moved between Day and Week (R-08). A basis of 0
+     gives it the width the shell leaves, whatever the table inside. */
+  flex: 1 1 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* : the page is the last place the focus is sent to when a shift dialog closes and the control that opened it is gone (it is
+   not a control: tabindex -1, never in the tab order), as the other Product containers that take focus by script */
+.odc-dtd-page:focus { outline: none; }
+
+@media (max-width: 767px) {
+  .odc-dtd-page {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* : the open-menu button (sidebar collapsed) is PageHeader's `leading`; the header needs no wrapper */
+
+/* The load error, in the place of the grid, with its retry */
+.odc-dtd-error {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-2);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  color: var(--od-text);
+}
+
+.odc-dtd-error p {
+  margin: 0;
+}
+
+.odc-dtd-foot {
+  display: flex;
+  justify-content: flex-end;
+  min-inline-size: 0;
+}
+
+/* «+N more»: the blocks of one day, one button each */
+.odc-dtd-daylist {
+  display: grid;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-dtd-daylist .odc-btn {
+  inline-size: 100%;
+  justify-content: flex-start;
+}
+
+.odc-dtd-daylist-name {
+  color: var(--od-text-muted);
+}
+
+/* redesign bugs-d row 65 (R-10): the header stays on one line when it is narrow (a phone), as the drivers groups page: under 768px of
+   the header's own width Learn keeps only its icon. The words are clipped, not removed: the accessible name stays. */
+@container (max-width: 767px) {
+  .odc-dtd-head .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-dtd-head .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+}

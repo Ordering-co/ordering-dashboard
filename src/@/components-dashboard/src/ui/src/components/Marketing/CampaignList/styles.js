@@ -35,7 +35,7 @@ export const Table = styled.table`
   td {
     padding: 15px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
 
     &:first-child {
       padding-left: 0px;
@@ -70,7 +70,7 @@ export const Table = styled.table`
   th {
     padding-top: 0px;
     font-weight: 700;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     padding: 5px 15px;
     &.allow-colums {
       width: 50px;
@@ -84,7 +84,7 @@ export const Table = styled.table`
       th {
         color: ${props => props.theme.colors?.headingColor};
         white-space: nowrap;
-        z-index: 100;
+        z-index: var(--od-x-layer-sticky);
         background: ${props => props.theme.colors.backgroundPage};
       }
     }
@@ -162,7 +162,7 @@ export const SwitchWrapper = styled.div`
 
   > .campaign-enabled {
     margin-bottom: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-right: 7px;
     ${props => props.theme.rtl && css`
@@ -180,7 +180,7 @@ export const StatusWrapper = styled.div`
     text-transform: capitalize;
     margin-right: 12px;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     ${props => props.theme.rtl && css`
       margin-left: 12px;

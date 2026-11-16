@@ -1,0 +1,568 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a2-settings-fields-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a2-settings-fields-addressfieldssetting-header-h1-20px-bbc302",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-addressfieldssetting-siteitem-span-14px-10b30b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-addressfieldssetting-addressfieldsdetailscontainer-h1-954ebc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "AddressFieldsDetailsContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-addressfieldssetting-fieldcontainer-div-14px-3976bc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "> div",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-addressfieldssetting-fieldcontainer-name-14px-ded7c4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".name",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-cardfieldssetting-header-h1-20px-91daf1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-cardfieldssetting-siteitem-span-14px-638b4c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-cardfieldssetting-cardfieldsdetailscontainer-h1-20px-fdc038",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "CardFieldsDetailsContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-cardfieldssetting-fieldcontainer-div-14px-68fc23",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "> div",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-cardfieldssetting-fieldcontainer-name-14px-302dc5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".name",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-checkoutfieldssetting-header-h1-20px-b7a219",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-checkoutfieldssetting-siteitem-span-14px-9bc37e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-checkoutfieldssetting-checkoutfieldsdetailscontainer--ddefd7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "CheckoutFieldsDetailsContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-checkoutfieldssetting-fieldcontainer-div-14px-6c4337",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "> div",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-checkoutfieldssetting-fieldcontainer-name-14px-18d8cd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".name",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-title-root-20px-df7c41",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-label-root-14px-99c87e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "Label",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-helptext-root-12px-4fbf8d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "HelpText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-errortext-root-13px-ef2813",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-globalbadge-root-11px-cff2c8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "GlobalBadge",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-settings-fields-index-js-emptyhelp-root-13px-1ee5a1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CustomOrder/index.js",
+      "component": "EmptyHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-dropdownoptionname-root-12px-74aed4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "DropdownOptionName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-cityname-root-12px-55bb80",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "CityName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-countryname-root-12px-111665",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "CountryName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-actionscontainer-root-12px-473fe9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "ActionsContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-enablewrapper-span-12px-80a33c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-dropdownoptionlist-actionselectorwrapper-div-div-drop-311607",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-emailsetting-accordiontitle-root-17px-201346",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/EmailSetting/styles.js",
+      "component": "AccordionTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "17px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-emailsetting-selectwrapper-label-14px-0f52a5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/EmailSetting/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-emailsetting-selectwrapper-div-div-first-child-14px-9c1562",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/EmailSetting/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> div > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-settings-fields-emailsetting-option-root-14px-33e51b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/EmailSetting/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-selectwrapper-label-14px-53e2c7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-selectwrapper-div-div-firs-28df95",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> div > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-option-root-14px-21aab9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-fieldcontainer-div-14px-84c08b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "> div",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-fieldcontainer-name-14px-b63019",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".name",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-titlewrapper-h1-20px-f47081",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-guestcheckoutfieldssetting-infocontent-root-12px-f3be38",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/GuestCheckoutFieldsSetting/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-settings-fields-insertimage-insertimagecontainer-h1-20px-e6d420",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertImage/styles.js",
+      "component": "InsertImageContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-insertimage-wrapperinput-label-14px-a56da2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertImage/styles.js",
+      "component": "WrapperInput",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-insertlink-insertlinkcontainer-h1-20px-4b9e80",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertLink/styles.js",
+      "component": "InsertLinkContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-insertlink-wrapperinput-label-14px-dedeae",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertLink/styles.js",
+      "component": "WrapperInput",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-insertlink-checkboxwrapper-span-14px-c716db",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertLink/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-notificationsetting-accordiontitle-root-17px-6d0caa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/NotificationSetting/styles.js",
+      "component": "AccordionTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "17px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-notificationsetting-titlewrapper-label-14px-b28d86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/NotificationSetting/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-pageform-header-h1-20px-64118a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PageForm/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-settings-fields-pageform-inputwrapper-label-14px-601d7a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PageForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-settings-fields-pageform-wrappershortdescription-label-14px-72605f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PageForm/styles.js",
+      "component": "WrapperShortDescription",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a2-settings-fields-pres-addressfieldssetting-siteitem-root-inherit-68af1f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AddressFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset, and the value `inherit` is precisely what does the work. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent has just received from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made. Replacing `inherit` with a role would detach it again, this time by pinning it to an absolute.",
+      "evidence": "SiteItem de AddressFieldsSetting pasa de `styled.div` a `styled.button.attrs({ type: 'button' })`. Sus dos hijos —el `span` y el `svg`— declaran su propio tamano, asi que hoy nada de su texto depende de este `inherit`; se anade igualmente para que el nodo convertido siga colgando del tamano de su contenedor y no del agente de usuario, que es lo que separa esta conversion de las de L5."
+    },
+    {
+      "id": "a2-settings-fields-pres-cardfieldssetting-siteitem-root-inherit-2d44b8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CardFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset, and the value `inherit` is precisely what does the work. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent has just received from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made. Replacing `inherit` with a role would detach it again, this time by pinning it to an absolute.",
+      "evidence": "SiteItem de CardFieldsSetting pasa de `styled.div` a `styled.button.attrs({ type: 'button' })`. Sus dos hijos —el `span` y el `svg`— declaran su propio tamano, asi que hoy nada de su texto depende de este `inherit`; se anade igualmente para que el nodo convertido siga colgando del tamano de su contenedor y no del agente de usuario, que es lo que separa esta conversion de las de L5."
+    },
+    {
+      "id": "a2-settings-fields-pres-checkoutfieldssetting-siteitem-root-inherit-2afa60",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CheckoutFieldsSetting/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset, and the value `inherit` is precisely what does the work. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent has just received from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made. Replacing `inherit` with a role would detach it again, this time by pinning it to an absolute.",
+      "evidence": "SiteItem de CheckoutFieldsSetting pasa de `styled.div` a `styled.button.attrs({ type: 'button' })`. Sus dos hijos —el `span` y el `svg`— declaran su propio tamano, asi que hoy nada de su texto depende de este `inherit`; se anade igualmente para que el nodo convertido siga colgando del tamano de su contenedor y no del agente de usuario, que es lo que separa esta conversion de las de L5."
+    },
+    {
+      "id": "a2-settings-fields-pres-dropdownoptionlist-checkboxwrapper-svg-24px-a5bbf1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DropdownOptionList/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'.",
+      "evidence": "CheckboxWrapper svg: el glifo RiCheckboxFill/RiCheckboxBlankLine de la casilla de zona."
+    },
+    {
+      "id": "a2-settings-fields-pres-insertimage-closebutton-svg-14px-76adfc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertImage/styles.js",
+      "component": "CloseButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "14px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'.",
+      "evidence": "CloseButton svg: el glifo de cierre del modal de insertar imagen."
+    },
+    {
+      "id": "a2-settings-fields-pres-pageform-wrappereditor-note-editor-note-dropdown-menu-c6dd37",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PageForm/styles.js",
+      "component": "WrapperEditor",
+      "property": "font-size",
+      "context": ".note-editor > .note-dropdown-menu > h1",
+      "match": "36px",
+      "reason": "Este font-size pertenece a la tipografia interna de un widget de TERCEROS —el editor Summernote—, no a la pantalla. Migrarlo ataria el estilo propio del widget a la escala del producto, que es lo contrario de lo que la escala gobierna.",
+      "evidence": "WrapperEditor .note-editor > .note-dropdown-menu > h1: el menu del editor Summernote."
+    },
+    {
+      "id": "a2-settings-fields-pres-pageform-camerawrapper-svg-18px-521abd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PageForm/styles.js",
+      "component": "CameraWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "18px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'.",
+      "evidence": "CameraWrapper svg: el glifo de camara del selector de imagen."
+    }
+  ]
+}

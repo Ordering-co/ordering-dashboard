@@ -187,9 +187,11 @@ export const OrderDetails = (props) => {
       }
     }
     try {
+      // a new request forgets the error of the last one (Try again shows the loading state, then the order).
       setOrderState({
         ...orderState,
-        loading: true
+        loading: true,
+        error: null
       })
       let functionFetch
       if (propsToFetch) {
@@ -208,6 +210,7 @@ export const OrderDetails = (props) => {
       setOrderState({
         ...orderState,
         loading: false,
+        error: null,
         order
       })
       callbacks?.handleOpenOrderDetail && callbacks?.handleOpenOrderDetail(order)
@@ -287,10 +290,22 @@ export const OrderDetails = (props) => {
     } catch {}
   }
 
+  // redesign F6i-3 (A3-03): a failed refund says where it comes from (`errorSource: 'refund'`, so the bill tells it and nothing else
+  // does) and how far the request got (`errorKind`): 'network' the request got no answer (nothing was done), 'api' the API answered with
+  // an error, 'unreadable' it answered but the answer cannot be used (the refund may have been done). `refundTarget: 'wallet'` marks the
+  // refund to a wallet. The refund flow shows no «Loading» toast: the button is disabled while it runs.
+  const refundFailure = (err, answered, refundTarget) => ({
+    loading: false,
+    error: [err?.message],
+    errorSource: 'refund',
+    errorKind: answered ? 'unreadable' : 'network',
+    ...(refundTarget && { refundTarget })
+  })
+
   const handleRefundPaymentsStripe = async () => {
+    let answered = false
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionStatus({ ...actionStatus, loading: true })
+      setActionStatus({ loading: true, error: null, errorSource: null })
       const requestOption = {
         method: 'POST',
         headers: {
@@ -304,10 +319,13 @@ export const OrderDetails = (props) => {
         })
       }
       const response = await fetch(`${ordering.root}/payments/stripe/refund`, requestOption)
+      answered = true
       const content = await response.json()
       setActionStatus({
         loading: false,
-        error: content.error ? content.result : null
+        error: content.error ? content.result : null,
+        errorSource: content.error ? 'refund' : null,
+        errorKind: content.error ? 'api' : null
       })
       if (!content.error) {
         setOrderState({
@@ -317,7 +335,7 @@ export const OrderDetails = (props) => {
         showToast(ToastType.Success, t('ORDER_REFUNDED', 'Order refunded'))
       }
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      setActionStatus(refundFailure(err, answered))
     }
   }
 
@@ -333,15 +351,15 @@ export const OrderDetails = (props) => {
     pluginRefundProviders.find(p => p.paymethods.includes(gateway)) || null
 
   const handleRefundPaymentsPlugin = async (amount) => {
+    let answered = false
     try {
       const provider = getPluginRefundProvider(orderState.order?.paymethod?.gateway)
       if (!provider) {
-        setActionStatus({ ...actionStatus, loading: false, error: ['Unsupported gateway'], errorSource: 'refund' })
+        setActionStatus({ loading: false, error: ['Unsupported gateway'], errorSource: 'refund', errorKind: 'api' })
         return
       }
 
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionStatus({ ...actionStatus, loading: true })
+      setActionStatus({ loading: true, error: null, errorSource: null })
 
       const body = {
         cart_uuid: orderState.order?.uuid,
@@ -360,6 +378,7 @@ export const OrderDetails = (props) => {
           body: JSON.stringify(body)
         }
       )
+      answered = true
       const content = await response.json()
 
       if (!response.ok) {
@@ -370,7 +389,8 @@ export const OrderDetails = (props) => {
         setActionStatus({
           loading: false,
           error: [content.result?.message || 'Refund failed'],
-          errorSource: 'refund'
+          errorSource: 'refund',
+          errorKind: 'api'
         })
         return
       }
@@ -394,14 +414,14 @@ export const OrderDetails = (props) => {
         : t('ORDER_REFUNDED', 'Order refunded')
       showToast(ToastType.Success, actionMsg)
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message], errorSource: 'refund' })
+      setActionStatus(refundFailure(err, answered))
     }
   }
 
   const handleOrderRefund = async (data) => {
+    let answered = false
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionStatus({ ...actionStatus, loading: true })
+      setActionStatus({ loading: true, error: null, errorSource: null })
       const requestOption = {
         method: 'POST',
         headers: {
@@ -412,11 +432,13 @@ export const OrderDetails = (props) => {
         body: JSON.stringify(data)
       }
       const response = await fetch(`${ordering.root}/orders/${orderState.order?.id}/refund`, requestOption)
+      answered = true
       const content = await response.json()
       setActionStatus({
         loading: false,
         error: content.error ? content.result : null,
-        errorSource: content.error ? 'refund' : null
+        errorSource: content.error ? 'refund' : null,
+        ...(content.error && { errorKind: 'api', refundTarget: 'wallet' })
       })
       if (!content.error) {
         const isV2Shape = content.result && !Array.isArray(content.result) && Array.isArray(content.result?.order_payment_events)
@@ -443,7 +465,7 @@ export const OrderDetails = (props) => {
         showToast(ToastType.Success, t('ORDER_REFUNDED', 'Order refunded'))
       }
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      setActionStatus(refundFailure(err, answered, 'wallet'))
     }
   }
 
@@ -580,6 +602,7 @@ export const OrderDetails = (props) => {
         <UIComponent
           {...props}
           order={orderState}
+          handleRetryOrder={() => getOrder()}
           customerInfoState={customerInfoState}
           handleChangeCustomerInfoState={handleChangeCustomerInfoState}
           messageErrors={messageErrors}

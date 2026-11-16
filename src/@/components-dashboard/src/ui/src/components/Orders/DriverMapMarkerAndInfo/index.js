@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect, memo } from 'react'
+import React, { memo } from 'react'
 import { useLanguage, useUtils } from '../../../../../index'
 import { useTheme } from 'styled-components'
+import { getMarkerStatus, useMarkerDisclosure } from '../mapMarkerShared'
 
 import {
   WrapperMapMarker,
@@ -23,24 +24,33 @@ export const DriverMapMarkerAndInfo = memo((props) => {
   const [, t] = useLanguage()
   const theme = useTheme()
   const [{ parseDate, optimizeImage }] = useUtils()
-  const [infoShow, setInfoShow] = useState(false)
-  const infoRef = useRef(null)
-  const [infoTop, setInfoTop] = useState('0px')
-
-  useEffect(() => {
-    if (!infoShow) return
-    setInfoTop(`-${infoRef.current.scrollHeight + 55}px`)
-  }, [infoShow])
+  const { infoShow, infoId, infoRef, infoTop, markerRef, handlers } = useMarkerDisclosure()
+  // redesign drivers-dashboard B2 (DD-11): trimmed parts joined by one space, inner spaces collapsed («Marco » + « Test» -> «Marco Test»)
+  const driverName = [driver.name, driver.lastname]
+    .map(part => (typeof part === 'string' ? part.trim() : part))
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s+/g, ' ')
+  // redesign drivers-dashboard B2 (DD-07): the page asks for `driver_groups`; the old lists send `drivergroups`. Only the named ones.
+  const driverGroups = (driver.drivergroups?.length ? driver.drivergroups : (driver.driver_groups || [])).filter(group => group?.name)
+  const status = getMarkerStatus({ timeStatus, driver })
+  const driverStatus = {
+    delayed: t('DELAYED', 'Delayed'),
+    offline: t('OFFLINE', 'Offline'),
+    busy: t('BUSY', 'Busy'),
+    available: t('AVAILABLE', 'Available')
+  }[status]
+  const detailsLabel = `${t('SHOW_DETAILS_FOR', 'Show details for')} ${driverName || t('DRIVER', 'Driver')}, ${driverStatus}`
 
   return (
     <>
       {infoShow && (
-        <DriverInfo ref={infoRef} style={{ transform: `translate(-50%, ${infoTop})` }}>
+        <DriverInfo id={infoId} role='tooltip' ref={infoRef} style={{ transform: `translate(-50%, ${infoTop})` }}>
           <TextContainer>
             <Text fontWeight='bold'>
               {t('NAME', 'Name')}:
             </Text>
-            <Text>{driver.name} {driver.lastname}</Text>
+            <Text>{driverName}</Text>
           </TextContainer>
           {driver?.last_order_assigned_at && (
             <TextContainer>
@@ -50,14 +60,13 @@ export const DriverMapMarkerAndInfo = memo((props) => {
               <Text>{parseDate(driver.last_order_assigned_at)}</Text>
             </TextContainer>
           )}
-          {driver?.drivergroups?.length > 0 && (
+          {driverGroups.length > 0 && (
             <TextContainer>
               <Text fontWeight='bold'>
                 {t('DRIVER_GROUP', 'Driver group')}:
               </Text>
-              {driver.drivergroups.map(group => (
-                <Text key={group.id}>{group.name},</Text>
-              ))}
+              {/* redesign drivers-dashboard B2 (DD-07): names joined by «, », no trailing comma */}
+              <Text>{driverGroups.map(group => group.name).join(', ')}</Text>
             </TextContainer>
           )}
           {driver?.last_location_at && (
@@ -71,16 +80,19 @@ export const DriverMapMarkerAndInfo = memo((props) => {
         </DriverInfo>
       )}
       <WrapperMapMarker
+        ref={markerRef}
+        type='button'
+        aria-label={detailsLabel}
+        aria-expanded={infoShow}
+        aria-describedby={infoShow ? infoId : undefined}
+        data-status={status || undefined}
+        onMouseEnter={handlers.onMouseEnter}
+        onMouseLeave={handlers.onMouseLeave}
+        onFocus={handlers.onFocus}
+        onBlur={handlers.onBlur}
+        onClick={handlers.onClick}
+        onKeyDown={handlers.onKeyDown}
         offline={!(driver.enabled && driver.available && !driver.busy)}
-        onMouseOver={() => setInfoShow(true)}
-        onMouseLeave={() => setInfoShow(false)}
-        borderColor={timeStatus === 'delayed'
-          ? '#E63757'
-          : !driver?.available
-              ? '#6c757d'
-              : driver.busy
-                ? '#007bff'
-                : '#28a745'}
       >
         {driver.photo
           ? (

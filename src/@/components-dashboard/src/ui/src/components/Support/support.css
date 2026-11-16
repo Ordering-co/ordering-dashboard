@@ -1,0 +1,49 @@
+/*
+ * redesign SU-A (, decisions D1-D5): /support. The frame (header with the menu button), the note with the project code
+ * and a grid of two cards (sales, technical support); the card is P/CatalogCard ( F1) and the note P/ProjectCode (F2), so this file keeps only the
+ * frame and the grid. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical
+ * properties, so right-to-left needs no second set of rules.
+ */
+
+/* The frame scrolls like the old container did: header, note and cards one under the other, inside the page height. It is also a
+   size container: the grid reads the width of the CONTENT (which the sidebar shrinks), never the viewport. */
+.odc-su-frame {
+  container: odc-su / inline-size;
+  /* the shell is a flex row: a size container takes no width from its content, so it takes the free space (as main's container) */
+  flex: 1;
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with it), and stops at about 880px: header, note and cards
+     share one measure, read in the frame's own font (review r1 F1: Copy stays near the code it copies) */
+  grid-template-columns: minmax(0, calc(var(--od-x-measure) * 2));
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-block-size: calc(var(--vh, 1vh) * 100);
+  overflow: auto;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-su-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── Grid: one column; two when the CONTENT is wide enough (the viewport lies when the sidebar is open) ── */
+.odc-su-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@container odc-su (min-width: 560px) {
+  .odc-su-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -1,0 +1,532 @@
+/* Scoped MultiSelect compatibility surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-multi-select-root) {
+  @apply od-inline-block od-relative;
+  box-sizing: border-box;
+  max-width: 100%;
+  color: var(--od-multi-select-text);
+  background: var(--od-multi-select-surface);
+  font-family: var(--od-multi-select-font);
+  font-size: var(--od-multi-select-font-size);
+}
+
+.od-ui:where(.od-multi-select-root:not([data-text-style])) {
+  min-height: var(--od-multi-select-compact-height);
+  line-height: calc(var(--od-multi-select-compact-height) - 2px);
+  border: 1px solid var(--od-multi-select-border);
+  border-radius: var(--od-multi-select-radius);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger {
+  @apply od-flex od-items-center od-justify-between;
+  box-sizing: border-box;
+  position: relative;
+  z-index: calc(var(--od-x-layer-raised) + 10);
+  min-width: 0;
+  max-width: 100%;
+  min-height: calc(var(--od-multi-select-compact-height) - 2px);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--od-multi-select-duration) var(--od-multi-select-easing),
+    border-color var(--od-multi-select-duration) var(--od-multi-select-easing),
+    color var(--od-multi-select-duration) var(--od-multi-select-easing);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger:where(:not([data-trigger-text-style])) {
+  padding-inline: 15px;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger p { margin: 0; }
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger:focus-visible,
+.od-ui:where(.od-multi-select-root) .od-multi-select-option:focus-visible,
+.od-ui:where(.od-multi-select-root) .od-multi-select-remove:focus-visible {
+  outline: var(--od-multi-select-focus-width) solid var(--od-multi-select-focus);
+  outline-offset: var(--od-multi-select-focus-offset);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-header {
+  @apply od-flex od-items-center;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1;
+  overflow: auto;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-header[data-text-style] {
+  white-space: pre-wrap;
+  flex-wrap: nowrap;
+  gap: 25px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-chevron {
+  @apply od-flex od-items-center;
+  color: var(--od-multi-select-muted);
+  margin-inline-start: 5px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-chevron svg {
+  width: var(--od-multi-select-icon-size);
+  height: var(--od-multi-select-icon-size);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-chip {
+  @apply od-inline-flex od-items-center;
+  flex: 0 1 auto;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-chip > .od-multi-select-chip-content {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-chip > button {
+  @apply od-flex od-items-center od-justify-center;
+  position: static;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--od-multi-select-surface);
+  transform: none;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: calc(var(--od-x-layer-notice) - 10);
+  min-width: var(--od-multi-select-dropdown-min-width);
+  margin-top: 7px;
+  color: var(--od-multi-select-text);
+  background: var(--od-multi-select-surface);
+  border: 1px solid var(--od-multi-select-border);
+  border-radius: var(--od-multi-select-radius-component);
+  box-shadow: var(--od-multi-select-shadow);
+  overflow: hidden;
+  font: inherit;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-position='right'] {
+  inset-inline-end: 0;
+  margin-inline-end: -1px;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-position='left'] {
+  inset-inline-start: 0;
+  margin-inline-start: -1px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-options-inner {
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  min-width: 100px;
+  min-height: var(--od-multi-select-compact-height);
+  padding: 5px 10px;
+  color: var(--od-multi-select-text);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--od-multi-select-duration) var(--od-multi-select-easing),
+    border-color var(--od-multi-select-duration) var(--od-multi-select-easing),
+    color var(--od-multi-select-duration) var(--od-multi-select-easing);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option:hover,
+.od-ui:where(.od-multi-select-root) .od-multi-select-option:focus-visible {
+  background: var(--od-multi-select-subtle);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option.od-option-border {
+  border-bottom: 1px solid var(--od-multi-select-border);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option.od-option-primary {
+  color: var(--od-multi-select-text-subtle);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option svg { vertical-align: text-top; }
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-check {
+  @apply od-flex od-items-center od-shrink-0;
+  color: var(--od-multi-select-action-content);
+  margin-right: 10px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-check svg {
+  width: var(--od-multi-select-icon-size);
+  height: var(--od-multi-select-icon-size);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-search {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 10px;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-search > div input {
+  height: var(--od-multi-select-compact-height);
+}
+
+/* Opt-in (fitTrigger / placement, selectPlacement.js): the list starts where the trigger starts and is as
+   wide as it, opens upward when there is no room below, and its options scroll inside the room left.
+   Rows are brand rows (32px, 44px with a coarse pointer) with the Product checkbox; there is no pager. */
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] {
+  --odc-fit-row: var(--od-x-control-height);
+  display: flex;
+  flex-direction: column;
+  /* The sheet makes the root a flex box, whose static position for the list is its top: anchor it under the trigger. */
+  inset-block-start: 100%;
+  inset-inline: calc(var(--od-x-hairline) * -1);
+  min-width: 0;
+  margin-inline: 0;
+  margin-block-start: var(--od-space-2);
+  background: var(--od-bg);
+  border-color: var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-placement='top'] {
+  inset-block-start: auto;
+  inset-block-end: 100%;
+  margin-block-start: 0;
+  margin-block-end: var(--od-space-2);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-options-inner {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  max-block-size: min(60dvh, calc(var(--odc-fit-row) * 8));
+  overflow-y: auto;
+  padding: var(--od-space-1);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option {
+  gap: var(--od-space-2);
+  min-width: 0;
+  min-height: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Brand rows have no divider lines: the hover fill and the 32px height separate them. */
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option.od-option-border {
+  border-bottom: 0;
+}
+
+/* The consumers' own option blocks bring a padding and a wide gap of their own (10px, 20px). */
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option > :not(button, .od-multi-select-picture) {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  column-gap: var(--od-space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option:hover,
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option:focus-visible {
+  background: var(--od-x-hover);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option:focus-visible {
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-group {
+  padding-block: var(--od-space-2) var(--od-space-1);
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-option > :is(button, .od-multi-select-picture) {
+  /* The row is the control; the checkbox picture is not one (it ignores the pointer). */
+  pointer-events: none;
+}
+
+/* redesign F6h-2 (A2-02): the picture of the Product checkbox (checkbox.css) as a plain span, so the option has no
+   interactive child. It is the 16px box of `.odc-checkbox` (its 24px / 44px target is no longer a control; the margin
+   that pulled the target into the row left exactly this box in the layout). */
+.od-ui:where(.od-multi-select-root) .od-multi-select-picture {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+  color: var(--od-action-foreground);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-picture[data-checked] {
+  border-color: var(--od-action);
+  background: var(--od-action);
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-picture-mark {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+  stroke-width: var(--od-x-indicator);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-search {
+  flex: none;
+  padding: var(--od-space-2) var(--od-space-2) var(--od-space-1);
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-search > * {
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* «Clear» sits in the foot of the list, apart from the rows. */
+.od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-footer {
+  display: flex;
+  flex: none;
+  justify-content: flex-end;
+  padding: var(--od-space-1) var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The closed field of a C18 list is a brand field: 32px (44px on a phone), field border, chevron, and the
+   chosen values as chips with an X each (redesign F6c, P3-01), the ones that do not fit as «+N». */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] {
+  min-block-size: var(--od-x-control-height);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] > .od-multi-select-trigger {
+  min-block-size: calc(var(--od-x-control-height) - var(--od-x-hairline) * 2);
+  padding-inline: var(--od-x-space-2-5);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-header {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-header > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* Chips: 24px tall in the 30px of the field, hairline and subtle fill as the filter chips. The row is not
+   clipped (a coarse pointer grows the X's hit area past the chip); which chips show is the measure's job
+   (MultiSelect.jsx), so nothing here needs to hide an overflow. */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-header[data-chips] {
+  gap: var(--od-x-space-1-5);
+  overflow: visible;
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-chip {
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  block-size: var(--od-x-target-fine);
+  padding-inline: var(--od-space-2) var(--od-x-space-half);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-chip[data-overflowed] {
+  display: none;
+}
+
+/* While measuring, every chip keeps its natural width. */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-header[data-measuring] .od-multi-select-chip {
+  flex-shrink: 0;
+  max-inline-size: none;
+}
+
+/* The X: a 24px square (WCAG 2.5.8), its icon at 12px. It overrides the legacy chip button rule above. */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-chip > .od-multi-select-remove {
+  position: relative;
+  flex: none;
+  inline-size: var(--od-x-target-fine);
+  min-inline-size: var(--od-x-target-fine);
+  block-size: var(--od-x-target-fine);
+  min-block-size: var(--od-x-target-fine);
+  background: transparent;
+  color: var(--od-text-muted);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-chip > .od-multi-select-remove:hover {
+  background: var(--od-x-hover);
+  color: var(--od-text);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-remove svg {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-remove:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* «+N»: what did not fit, not clickable (the list is the way to see and change them). */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-more {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  block-size: var(--od-x-target-fine);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-more[data-empty] {
+  display: none;
+}
+
+/* The ring goes around the whole field, as the inputs do, not around the inner trigger. */
+.od-ui:where(.od-multi-select-root)[data-fit='trigger']:has(> .od-multi-select-trigger:focus-visible),
+.od-ui:where(.od-multi-select-root)[data-fit='trigger']:has(> .od-multi-select-trigger > .od-multi-select-opener:focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.od-ui:where(.od-multi-select-root)[data-fit='trigger'] > .od-multi-select-trigger:focus-visible {
+  outline: 0;
+}
+
+/* redesign F6h-4 (A2): with chips the field (`.od-multi-select-trigger`) is a plain container, and its opener is a button that
+   covers it from behind (the container is its stacking context): the chips, their X and the chevron stay on top and the
+   layout is the one the field always had. The names of the chosen values are for screen readers only. */
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger > .od-multi-select-opener {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--od-x-layer-raised) * -1);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-multi-select-root) > .od-multi-select-trigger > .od-multi-select-opener:focus-visible {
+  outline: 0;
+}
+
+.od-ui:where(.od-multi-select-root) .od-multi-select-opener-summary {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 380px) {
+  .od-ui:where(.od-multi-select-root) > .od-multi-select-trigger {
+    padding-inline: 9px;
+    font-size: var(--od-multi-select-font-ui);
+  }
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .od-ui:where(.od-multi-select-root) > .od-multi-select-trigger,
+  .od-ui:where(.od-multi-select-root) .od-multi-select-option {
+    min-height: var(--od-multi-select-touch-target);
+  }
+
+  .od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] {
+    --odc-fit-row: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-multi-select-root) > .od-multi-select-options[data-fit='trigger'] .od-multi-select-option {
+    min-height: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-multi-select-root)[data-fit='trigger'] {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-multi-select-root)[data-fit='trigger'] > .od-multi-select-trigger {
+    min-block-size: calc(var(--od-x-target-coarse) - var(--od-x-hairline) * 2);
+  }
+
+  .od-ui:where(.od-multi-select-root) .od-multi-select-chip > button {
+    width: var(--od-multi-select-touch-target);
+    height: var(--od-multi-select-touch-target);
+  }
+
+  /* C3: the X of a C18 chip reaches 44x44 below 768px and with a coarse pointer. Its box stays 24px so the chip
+     and the 44px field keep their size; the hit area grows around it (the pseudo-element belongs to the button). */
+  .od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-chip > .od-multi-select-remove {
+    inline-size: var(--od-x-target-fine);
+    min-inline-size: var(--od-x-target-fine);
+    block-size: var(--od-x-target-fine);
+    min-block-size: var(--od-x-target-fine);
+  }
+
+  .od-ui:where(.od-multi-select-root)[data-fit='trigger'] .od-multi-select-remove::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--od-x-target-fine) - var(--od-x-target-coarse)) / 2);
+  }
+
+  .od-ui:where(.od-multi-select-root) .od-multi-select-search > div input {
+    height: var(--od-multi-select-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-multi-select-root) > .od-multi-select-trigger,
+  .od-ui:where(.od-multi-select-root) .od-multi-select-option {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

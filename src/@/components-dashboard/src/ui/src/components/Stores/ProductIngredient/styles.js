@@ -21,7 +21,7 @@ export const Header = styled.div`
   width: 100%;
   h1 {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }
@@ -39,12 +39,17 @@ export const Header = styled.div`
   }
 `
 export const IngredientOption = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   cursor: pointer;
   display: flex;
   align-items: center;
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
   padding: 12px 0;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 
   &:hover {
     background-color: ${props => props.theme.colors.lightPrimary};
@@ -65,6 +70,17 @@ export const IngredientOption = styled.div`
     border-top: 1px solid ${props => props.theme.colors.primary};
     border-bottom: 1px solid ${props => props.theme.colors.primary};
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
 `
 export const AddIngredientButtonWrapper = styled.div`
   padding: 12px 0;

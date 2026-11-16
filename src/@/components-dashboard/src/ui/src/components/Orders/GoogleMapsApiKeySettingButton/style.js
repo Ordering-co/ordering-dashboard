@@ -20,48 +20,36 @@ export const WarningBanner = styled.div`
   max-width: 360px;
   padding: 8px 12px;
   border-radius: 8px;
-  background: ${props => props.theme.colors.warning100 || '#fff8e6'};
-  border: 1px solid ${props => props.theme.colors.warning || '#f9b959'};
-  font-size: 13px;
+  background: var(--od-warning-soft); /* redesign W1-2 (T1-2-4) */
+  border: 1px solid var(--od-warning-signal);
+  font-size: var(--od-type-content-size);
   line-height: 18px;
 
   span {
-    color: ${props => props.theme.colors.headingColor};
+    color: var(--od-text);
   }
 
   a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--od-x-target-fine);
     font-weight: 600;
-    color: ${props => props.theme.colors.primary};
+    color: var(--od-action-content);
     text-decoration: none;
+
+    @media (pointer: coarse) {
+      min-block-size: var(--od-x-control-height);
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: var(--od-x-target-inset);
+      }
+    }
 
     &:hover {
       text-decoration: underline;
     }
-  }
-`
-export const ModalBody = styled.form`
-  display: flex;
-  flex-direction: column;
-
-  h2 {
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 12px;
-  }
-  p {
-    font-size: 14px;
-    line-height: 24px;
-    margin-bottom: 38px;
-
-    &.error {
-      color: ${props => props.theme.colors.danger};
-      margin-top: 10px;
-    }
-  }
-  button {
-    height: 44px;
-    width: fit-content;
-    margin-top: 60px;
   }
 `

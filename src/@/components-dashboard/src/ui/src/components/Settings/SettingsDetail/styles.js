@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { glyphButtonReset, overlayGlyphButton } from '../../../styles/glyphButton'
+
 export const Container = styled.div`
   display: flex;
   width: 0;
@@ -21,7 +23,7 @@ export const Container = styled.div`
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
   height: calc(var(--vh, 1vh) * 100);
   top: 0px;
-  z-index: 1001;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
   overflow-x: hidden;
   transition: 0.3s;
 
@@ -79,7 +81,7 @@ export const Content = styled.div`
     margin-top: 36px;
     span {
       font-weight: 600;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
     }
     svg {
       margin-left: 5px;
@@ -109,7 +111,7 @@ export const CategoryName = styled.div`
 
   p {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     margin-bottom: 6px;
     width: 90%;
   }
@@ -131,7 +133,7 @@ export const CategoryExtraContent = styled.div`
   `}
 
   > button {
-    z-index: 100;
+    z-index: var(--od-x-layer-sticky);
     position: absolute;
     top: 25px;
     ${props => props.theme?.rtl
@@ -146,7 +148,7 @@ export const CategoryExtraContent = styled.div`
 
 export const Description = styled.p`
   margin-top: 40px;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin-bottom: 0px;
   text-align: justify;
 
@@ -170,10 +172,10 @@ export const VideoContainer = styled.div`
     background: #E9ECEF;
   }
 
+  ${glyphButtonReset}
+  ${overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })}
+
   svg {
-    top: 45%;
-    left: 45%;
-    position: absolute;
     color: #748194;
     font-size: 34px;
   }
@@ -185,7 +187,7 @@ export const MoreInfo = styled.span`
   color: ${props => props.theme.colors?.primary};
   text-decoration: underline;
   margin-top: 40px;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `
 
 export const IframeWrapper = styled.div`

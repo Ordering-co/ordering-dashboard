@@ -1,0 +1,139 @@
+/*
+ * redesign  F1 (N-FD2, N-SU1) · CatalogCard: the static catalog card (media, title, one line, foot with links). Written once
+ * from the anatomy that /free-downloads, /support and /connect/overview each carried (the same measures). Tokens only (--od-* and
+ * --od-x-*; guard: productLiteralGuard.test.js); logical properties, so right-to-left needs no second set of rules.
+ */
+
+/* ── Card: media and text, then the foot at the bottom. A stack gap of 12px; an inline card, whose media sits beside the text, 16px. ── */
+.odc-catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+}
+
+.odc-catalog-card[data-layout='inline'] {
+  gap: var(--od-space-4);
+}
+
+/* The body holds the media and the text: one under the other (stack) or side by side (inline). */
+.odc-catalog-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-catalog-card[data-layout='inline'] .odc-catalog-card-body {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.odc-catalog-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-catalog-card[data-layout='inline'] .odc-catalog-card-text {
+  gap: var(--od-space-1);
+}
+
+/* ── Media: a small tile for an icon, a tall frame for a picture ── */
+.odc-catalog-card-media {
+  display: grid;
+  flex: none;
+  place-items: center;
+  background: var(--od-surface-subtle);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text-muted);
+}
+
+.odc-catalog-card-media[data-kind='icon'] {
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+}
+
+/* 20px inside the 40px tile: a glyph that fills its box reads heavier than the title next to it */
+.odc-catalog-card-media[data-kind='icon'] .odc-icon {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+.odc-catalog-card-media[data-kind='picture'] {
+  block-size: calc(var(--od-x-control-height-lg) * 3);
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .odc-catalog-card-media[data-kind='picture'] {
+    block-size: calc(var(--od-x-control-height-lg) * 2);
+  }
+}
+
+.odc-catalog-card-media[data-kind='picture'] img {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+}
+
+/* The fallback glyph when there is no picture */
+.odc-catalog-card-media[data-kind='picture'] .odc-icon {
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+}
+
+/* ── Text: title, a quiet line, one line of description ── */
+.odc-catalog-card-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  /* decision 35: words are never split; a word longer than the card wraps only if it would overflow */
+  overflow-wrap: break-word;
+}
+
+.odc-catalog-card-meta {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A line of the description stays near 65 characters (the measure token is 44ch) */
+.odc-catalog-card-description {
+  max-inline-size: calc(var(--od-x-measure) * 1.5);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Foot: links or buttons, pinned to the bottom of the card ── */
+.odc-catalog-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* 12px, so when the foot takes two rows the 44px touch areas of the neighbours never cross (decision 12) */
+  gap: var(--od-space-3);
+  margin-block-start: auto;
+}
+
+/* A long label wraps inside the card instead of running out of it; one line keeps the 32px control, two lines grow it */
+.odc-catalog-card-foot > .odc-btn {
+  max-inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  block-size: auto;
+  padding-block: var(--od-space-1);
+  white-space: normal;
+  text-align: start;
+}

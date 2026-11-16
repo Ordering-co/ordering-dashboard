@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useId } from 'react'
 import { useLanguage, useEvent } from '../../../../../index'
 import { Input, TextArea, Button } from '../../../styles'
 import { Alert } from '../../Shared'
@@ -17,10 +17,15 @@ export const CampaignWebHook = (props) => {
     handleChangeData,
     handleUpdateContact,
     handleAddCampaign,
-    formState
+    formState,
+    // redesign CA-B2 (decision 3|4): opt-in props, all default off
+    hideActions = false,
+    previewOnly = false,
+    onConfigStateChange
   } = props
 
   const [, t] = useLanguage()
+  const fieldId = useId() // redesign CA-R2 (P7): ties each visible label to its field
   const [events] = useEvent()
 
   const [alertState, setAlertState] = useState({ open: false, content: [] })
@@ -85,6 +90,25 @@ export const CampaignWebHook = (props) => {
     events.emit('go_to_page', { page: 'integrations' })
   }
 
+  // redesign CA-B2 (decision 4): no config gate in this channel, always configured
+  useEffect(() => {
+    if (typeof onConfigStateChange === 'function') onConfigStateChange(true)
+  }, [])
+
+  // redesign CA-B2 (decision 3): the webhook has no facsimile, so previewOnly shows its three values as read-only text
+  if (previewOnly) {
+    return (
+      <dl className='odc-campaign-webhook-preview'>
+        <dt>{t('TITLE', 'Title')}</dt>
+        <dd>{contactState?.changes?.contact_data?.title || ''}</dd>
+        <dt>{t('MESSAGES', 'Messages')}</dt>
+        <dd>{contactState?.changes?.contact_data?.body || ''}</dd>
+        <dt>{t('HOOKS', 'Hooks')}</dt>
+        <dd>{contactState?.changes?.contact_data?.webhook || ''}</dd>
+      </dl>
+    )
+  }
+
   return (
     <>
       <Container>
@@ -92,51 +116,58 @@ export const CampaignWebHook = (props) => {
           {t('INTEGRATION_SETTINGS_LINK_DESC', 'You need to have an Integration first, you can do it here:')} <a onClick={(e) => handleGoToPage(e)}>{t('INTEGRATIONS', 'Integrations')}</a>
         </Description>
         <InputWrapper>
-          <label>{t('TITLE', 'Title')}</label>
+          <label htmlFor={`${fieldId}-title`}>{t('TITLE', 'Title')}</label>
           <Input
             name='title'
+            id={`${fieldId}-title`}
             placeholder={t('TITLE', 'Title')}
             defaultValue={contactState?.changes?.contact_data?.title || ''}
             onChange={handleChangeData}
           />
         </InputWrapper>
         <InputWrapper>
-          <label>{t('MESSAGES', 'Messages')}</label>
+          <label htmlFor={`${fieldId}-body`}>{t('MESSAGES', 'Messages')}</label>
           <TextArea
             name='body'
+            id={`${fieldId}-body`}
             placeholder={t('WRITE_MESSAGE', 'Write a message')}
             defaultValue={contactState?.changes?.contact_data?.body || ''}
             onChange={handleChangeData}
           />
         </InputWrapper>
         <InputWrapper>
-          <label>{t('HOOKS', 'Hooks')}</label>
+          <label htmlFor={`${fieldId}-webhook`}>{t('HOOKS', 'Hooks')}</label>
           <Input
             name='webhook'
+            id={`${fieldId}-webhook`}
             placeholder={t('URL', 'URL')}
             defaultValue={contactState?.changes?.contact_data?.webhook || ''}
             onChange={handleChangeData}
           />
         </InputWrapper>
       </Container>
-      <ButtonWrapper>
-        <Button
-          color='primary'
-          onClick={() => handleSaveSms()}
-          disabled={contactState.loading}
-        >
-          {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
-        </Button>
-      </ButtonWrapper>
-      <Alert
-        title={t('CAMPAIGN', 'Campaign')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
+      {!hideActions && (
+        <>
+          <ButtonWrapper>
+            <Button
+              color='primary'
+              onClick={() => handleSaveSms()}
+              disabled={contactState.loading}
+            >
+              {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
+            </Button>
+          </ButtonWrapper>
+          <Alert
+            title={t('CAMPAIGN', 'Campaign')}
+            content={alertState.content}
+            acceptText={t('ACCEPT', 'Accept')}
+            open={alertState.open}
+            onClose={() => closeAlert()}
+            onAccept={() => closeAlert()}
+            closeOnBackdrop={false}
+          />
+        </>
+      )}
     </>
   )
 }

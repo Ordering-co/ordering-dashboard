@@ -1,0 +1,86 @@
+/*
+ * 5.4-A · Status regression reason on Product Dialog (C8): the transition with its two status
+ * badges and the labelled reason field. Values come from --od-* (release) and --od-x-*
+ * (src/brand/candidates.css) only. Logical properties only (C17). The dark mode is the tokens' own.
+ */
+
+.odc-regression-transition {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-regression-arrow {
+  color: var(--od-text-muted);
+}
+
+.odc-regression-explain {
+  margin-block: var(--od-space-3) 0;
+  color: var(--od-text-muted);
+}
+
+.odc-regression-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  margin-block-start: var(--od-space-4);
+}
+
+.odc-regression-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-regression-reason {
+  inline-size: 100%;
+  min-block-size: calc(var(--od-x-control-height) * 3);
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  resize: vertical;
+}
+
+.odc-regression-reason::placeholder {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-regression-reason:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-regression-reason[aria-invalid='true'] {
+  border-color: var(--od-danger-functional);
+}
+
+.odc-regression-reason:disabled {
+  background: var(--od-surface-subtle);
+  cursor: not-allowed;
+}
+
+/* The error is text, in the danger text color, tied to the field by aria-describedby. */
+.odc-regression-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+@media (pointer: coarse) {
+  .odc-regression-reason {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+}

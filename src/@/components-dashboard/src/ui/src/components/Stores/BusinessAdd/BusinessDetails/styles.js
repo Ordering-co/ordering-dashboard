@@ -4,7 +4,7 @@ import { darken } from 'polished'
 export const BusinessDetailsContainer = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin: 0;
   }
@@ -18,12 +18,12 @@ export const FormControl = styled.div`
   margin-bottom: 23px;
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 12px;
     sup {
       color: ${props => props.theme.colors.danger};
-      font-size: 13px;
+      font-size: var(--od-type-control-size);
     }
   }
   input {
@@ -37,7 +37,7 @@ export const FormControl = styled.div`
     padding: 0;
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     border: 1px solid #DEE2E6;
     border-radius: 8px;
   }
@@ -46,7 +46,7 @@ export const FormControl = styled.div`
     background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
     border: 1px solid ${props => props.theme.colors.borderColor};
     border-radius: 8px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     padding: 10px 15px;
     outline: none;
     ::placeholder {
@@ -74,14 +74,16 @@ export const GoogleMapContainer = styled.div`
   margin-bottom: 23px;
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 12px;
     margin-bottom: 9px;
   }
   p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
     line-height: 24px;
     margin: 0;
     color: ${props => props.theme.colors.lightGray};

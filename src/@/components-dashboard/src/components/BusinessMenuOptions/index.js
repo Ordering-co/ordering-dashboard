@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -25,6 +25,9 @@ export const BusinessMenuOptions = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [orderTypeState, setOrderTypeSate] = useState({})
   const [selectedProductsIds, setSelectedProductsIds] = useState([])
+  // redesign stores 5.18 (review F4): whether the products of the open menu were ever read. A menu that came without them
+  // (or whose shared product list failed) opens with none chosen, and a save of something else must not send that empty list.
+  const productsKnownRef = useRef(true)
   const [selectedProducts, setSelectedProducts] = useState([])
   const [subCategoriesList, setSubCategoriesList] = useState([])
 
@@ -60,13 +63,28 @@ export const BusinessMenuOptions = (props) => {
 
   /**
    * Method to update the busienss menu option from API
+   * redesign stores 2.F: `handleUpdateBusinessMenuOption({ snooze_until }, { keepPendingChanges: true })`
+   * saves only the given keys and leaves the other pending edits of the form (and `result`) alone. Without the option it
+   * sends every pending change, as before.
+   * @param {Object} partialChanges changes to send, only read with `options.keepPendingChanges`
+   * @param {Object} options { keepPendingChanges }
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
    */
-  const handleUpdateBusinessMenuOption = async () => {
+  const handleUpdateBusinessMenuOption = async (partialChanges, options) => {
+    const keepPending = !!options?.keepPendingChanges &&
+      !!partialChanges && Object.getPrototypeOf(partialChanges) === Object.prototype
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true, result: { error: false } })
-      const changes = { ...formState.changes }
-      if (changes.all_products ?? businessMenuState.menu?.all_products) {
+      if (keepPending) {
+        setFormState(prev => ({ ...prev, loading: true }))
+      } else {
+        setFormState({ ...formState, loading: true, result: { error: false } })
+      }
+      const changes = { ...(keepPending ? partialChanges : formState.changes) }
+      // (main): an «All products» menu never sends its product list. (redesign): an empty list the form
+      // never loaded is not sent either.
+      if ((changes.all_products ?? businessMenuState.menu?.all_products) ||
+        (!keepPending && !productsKnownRef.current && Array.isArray(changes.products) && changes.products.length === 0)) {
         delete changes.products
       }
       for (const key in changes) {
@@ -89,15 +107,29 @@ export const BusinessMenuOptions = (props) => {
       const response = await fetch(endPoint, requestOptions)
       const content = await response.json()
 
-      setFormState({
-        ...formState,
-        changes: content.error ? formState.changes : {},
-        result: {
-          error: content.error,
-          result: content.result
-        },
-        loading: false
-      })
+      if (keepPending) {
+        const sentKeys = Object.keys(partialChanges)
+        setFormState(prev => {
+          const sentPending = !content.error && sentKeys.some(key => key in prev.changes)
+          return {
+            ...prev,
+            loading: false,
+            changes: sentPending
+              ? Object.fromEntries(Object.entries(prev.changes).filter(([key]) => !sentKeys.includes(key)))
+              : prev.changes
+          }
+        })
+      } else {
+        setFormState({
+          ...formState,
+          changes: content.error ? formState.changes : {},
+          result: {
+            error: content.error,
+            result: content.result
+          },
+          loading: false
+        })
+      }
 
       if (!content.error) {
         const menus = menuList?.menus?.filter(menu => {
@@ -107,7 +139,9 @@ export const BusinessMenuOptions = (props) => {
             if (isUpdatedProducts) {
               menu.products = [...selectedProducts]
             }
-            setCurrentMenu({ menu })
+            // redesign stores 2.F (review R-2): a new open menu resets the form (`useEffect([menu])` below), which
+            // would drop the edits keepPendingChanges keeps; the row and businessMenuState take the answer instead.
+            if (!keepPending) setCurrentMenu({ menu })
           }
           return true
         })
@@ -123,9 +157,16 @@ export const BusinessMenuOptions = (props) => {
           }
         })
         showToast(ToastType.Success, t('MENU_SAVED', 'Products catalog saved'))
+        return { ok: true }
       }
+      return { ok: false, error: content.result }
     } catch (err) {
-      setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
+      if (keepPending) {
+        setFormState(prev => ({ ...prev, loading: false }))
+      } else {
+        setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
+      }
+      return { ok: false, error: err.message }
     }
   }
 
@@ -156,7 +197,8 @@ export const BusinessMenuOptions = (props) => {
                 },
                 close: {
                   hour: 23,
-                  minute: 45
+                  // redesign bugs F row 10: the Schedule UI shows 23:59, so that is what a new menu sends
+                  minute: 59
                 }
               }
             ]
@@ -189,8 +231,10 @@ export const BusinessMenuOptions = (props) => {
       if (!content.error) {
         let _menu = { ...content.result, enabled: true }
 
+        // redesign stores 5.5b (G3-08): a store without categories, or an answer without products, still adds the row
         let allProducts = []
-        business.categories.forEach(function iterate (category) {
+        const categories = business?.categories || []
+        categories.forEach(function iterate (category) {
           allProducts = [...allProducts, ...category.products]
           Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
         })
@@ -199,7 +243,7 @@ export const BusinessMenuOptions = (props) => {
         if (changes?.all_products) {
           products = [...allProducts]
         } else {
-          products = allProducts.filter(product => _menu.products.includes(product.id))
+          products = allProducts.filter(product => (_menu.products || []).includes(product.id))
         }
         _menu = { ..._menu, products }
         const menusArray = menuList?.menus
@@ -209,13 +253,20 @@ export const BusinessMenuOptions = (props) => {
           menus: menusArray
         })
         showToast(ToastType.Success, t('MENU_ADDED', 'Products catalog added'))
-        props.onClose() && props.onClose()
+        props.onClose && props.onClose()
+        return { ok: true }
       }
+      return { ok: false, error: content.result }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
+      return { ok: false, error: err.message }
     }
   }
 
+  /**
+   * Method to delete the business menu from API
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
+   */
   const handleDeleteMenu = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -254,19 +305,21 @@ export const BusinessMenuOptions = (props) => {
         }
         showToast(ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'))
         props.onClose && props.onClose()
-      } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        return { ok: true }
       }
+      setFormState({
+        ...formState,
+        loading: false,
+        error: content.result
+      })
+      return { ok: false, error: content.result }
     } catch (err) {
       setFormState({
         ...formState,
         loading: false,
         error: err
       })
+      return { ok: false, error: err.message }
     }
   }
 
@@ -282,7 +335,7 @@ export const BusinessMenuOptions = (props) => {
 
   const handleChangeMenuSite = (site) => {
     const sites = [
-      ...menu?.sites?.map(s => s.id).filter(s => formState.changes.sites ? formState.changes.sites?.includes(s) : true),
+      ...(menu?.sites || []).map(s => s?.id ?? s).filter(s => formState.changes.sites ? formState.changes.sites?.includes(s) : true),
       ...formState.changes.sites || []
     ]
     const isRemove = sites.includes(site)
@@ -321,7 +374,9 @@ export const BusinessMenuOptions = (props) => {
   const getSharedMenuProducts = async () => {
     try {
       setCurrentMenu({ loading: true })
-      const paramsToFetch = ['id', 'name', 'enabled', 'featured', 'upselling', 'price', 'extras', 'inventoried', 'category_id']
+      // redesign stores 5.18 (from 5.6): `quantity` too, which the product detail draws and saves (main left it out, so the
+      // field opened empty). The API intersects `params` with the model's fields: a field it does not have is dropped, never an error.
+      const paramsToFetch = ['id', 'name', 'enabled', 'featured', 'upselling', 'price', 'extras', 'inventoried', 'category_id', 'quantity']
       const response = await fetch(`${ordering.root}/business/${business?.id}/menus_shared/${menu?.id}/products?params=${paramsToFetch}`, {
         method: 'GET',
         headers: {
@@ -331,9 +386,12 @@ export const BusinessMenuOptions = (props) => {
       })
       const { result, error } = await response.json()
       if (!error) {
-        const _selectedProductsIds = result?.reduce((ids, product) => [...ids, product.id], [])
+        // redesign stores 5.18: no list is no product chosen, not a crash
+        const products = Array.isArray(result) ? result : []
+        productsKnownRef.current = Array.isArray(result)
+        const _selectedProductsIds = products.reduce((ids, product) => [...ids, product.id], [])
         setSelectedProductsIds(_selectedProductsIds)
-        setSelectedProducts(result)
+        setSelectedProducts(products)
         setCurrentMenu({
           menu: {
             ...menu,
@@ -367,7 +425,10 @@ export const BusinessMenuOptions = (props) => {
     })
   }, [selectedProductsIds])
 
-  useEffect(() => {
+  /**
+   * Leaves the form as freshly opened on the current `menu` (what the `[menu]` effect does on every new menu)
+   */
+  const resetForm = () => {
     setFormState({ ...formState, changes: {} })
     setBusinessMenuState({ ...businessMenuState, menu: menu || {} })
     setOrderTypeSate({
@@ -378,11 +439,16 @@ export const BusinessMenuOptions = (props) => {
       driver_thru: menu?.driver_thru
     })
     let _selectedProductsIds = []
-    if (Object.keys(menu).length) {
-      _selectedProductsIds = menu.products?.reduce((ids, product) => [...ids, product.id], [])
+    if (Object.keys(menu || {}).length) {
+      // redesign stores 5.18 (from 5.6): a menu that comes without `products` opens with none chosen (it took the editor
+      // down: the ids were undefined), as 5.5b guarded the create
+      const menuProducts = Array.isArray(menu.products) ? menu.products : []
+      productsKnownRef.current = Array.isArray(menu.products)
+      _selectedProductsIds = menuProducts.reduce((ids, product) => [...ids, product.id], [])
       setSelectedProductsIds(_selectedProductsIds)
-      setSelectedProducts(menu.products)
+      setSelectedProducts(menuProducts)
     } else {
+      productsKnownRef.current = true // a new menu: its empty list is the user's
       setSelectedProductsIds([])
       setSelectedProducts([])
       setOrderTypeSate({
@@ -401,13 +467,49 @@ export const BusinessMenuOptions = (props) => {
       })
     }
     handleSetSubCategoryList(_selectedProductsIds)
+  }
+
+  /**
+   * Drops every pending edit and reopens the form on the saved menu
+   */
+  const discardChanges = () => {
+    resetForm()
+  }
+
+  useEffect(() => {
+    resetForm()
   }, [menu])
 
   useEffect(() => {
-    if (menu?.id) {
+    if (isSelectedSharedMenus && menu?.id) {
       getSharedMenuProducts()
     }
-  }, [menu?.id])
+  }, [isSelectedSharedMenus, menu?.id])
+
+  // Keys of `formState.changes` that differ from what is saved. `changes.products` is seeded on open (the
+  // `selectedProductsIds` effect), so it only counts when the set of ids differs from `menu.products`.
+  const isEmptyValue = (value) => value === undefined || value === null || value === ''
+  const idOf = (item) => (item !== null && typeof item === 'object') ? item.id : item
+  const sameIdSet = (a, b) => {
+    const left = new Set((Array.isArray(a) ? a : []).map(item => String(idOf(item))))
+    const right = new Set((Array.isArray(b) ? b : []).map(item => String(idOf(item))))
+    return left.size === right.size && [...left].every(id => right.has(id))
+  }
+  const isPendingChange = (key, value) => {
+    if (!menu?.id) {
+      if ((key === 'delivery' || key === 'pickup') && value === true) return false
+      if (key === 'products' && Array.isArray(value) && value.length === 0) return false
+      return true
+    }
+    const saved = menu[key]
+    if (key === 'products' || key === 'sites') return !sameIdSet(value, saved)
+    if (key === 'schedule') return JSON.stringify(value) !== JSON.stringify(saved)
+    if (typeof value === 'boolean' || typeof saved === 'boolean') return Boolean(value) !== Boolean(saved)
+    if (isEmptyValue(value) && isEmptyValue(saved)) return false
+    return value !== saved
+  }
+  const pendingChangeKeys = Object.keys(formState.changes || {}).filter(key => isPendingChange(key, formState.changes[key]))
+  const isDirty = pendingChangeKeys.length > 0
 
   const handleSetSubCategoryList = (_selectedProductsIds) => {
     if (business?.categories?.length) {
@@ -416,11 +518,11 @@ export const BusinessMenuOptions = (props) => {
         return (
           categories?.length > 0 && categories?.forEach(category => {
             let productIds = []
-            const _productIds = category.products?.reduce((ids, product) => [...ids, product.id], [])
+            const _productIds = (category.products || []).reduce((ids, product) => [...ids, product.id], [])
             productIds = [...productIds, ..._productIds]
             if (category?.subcategories?.length) {
               category.subcategories.forEach(function iterate (category) {
-                const _productIds = category.products?.reduce((ids, product) => [...ids, product.id], [])
+                const _productIds = (category.products || []).reduce((ids, product) => [...ids, product.id], [])
                 productIds = [...productIds, ..._productIds]
                 Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
               })
@@ -466,6 +568,9 @@ export const BusinessMenuOptions = (props) => {
             handleSelectAllChannels={handleSelectAllChannels}
             handleSelectNoneChannels={handleSelectNoneChannels}
             subCategoriesList={subCategoriesList}
+            pendingChangeKeys={pendingChangeKeys}
+            isDirty={isDirty}
+            discardChanges={discardChanges}
           />
         )
       }

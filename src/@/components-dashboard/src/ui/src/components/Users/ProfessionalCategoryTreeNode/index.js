@@ -59,6 +59,9 @@ export const ProfessionalCategoryTreeNode = (props) => {
       {subCategoriesList.find(_category => _category.id === category.id)?.productIds?.length > 0 && (
         <AccordionSection isParent={!category?.parent_category_id}>
           <Accordion
+            as='button'
+            type='button'
+            aria-expanded={!!setActive}
             onClick={(e) => toggleAccordion(e, category.id)}
           >
             <AccordionItem
@@ -72,6 +75,8 @@ export const ProfessionalCategoryTreeNode = (props) => {
           </Accordion>
           <AccordionContent
             ref={content}
+            // folded is only `maxHeight: 0`; inert keeps its checkboxes out of Tab, so Space cannot tick a service no one sees
+            inert={setActive ? undefined : ''}
             style={{
               maxHeight: !setActive && '0px'
             }}
@@ -85,6 +90,11 @@ export const ProfessionalCategoryTreeNode = (props) => {
                 <div>
                   <CheckboxWrapper
                     ref={checkboxRef}
+                    as='button'
+                    type='button'
+                    role='checkbox'
+                    aria-checked={selectedProductsIds.includes(product.id)}
+                    aria-label={product.name}
                     active={selectedProductsIds.includes(product.id)}
                     onClick={() => handleClickProduct(product)}
                   >

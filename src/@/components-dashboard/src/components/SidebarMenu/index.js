@@ -4,6 +4,8 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { fetchAllPages } from '../../utils/fetchAllPages'
 
+export const AI_AGENTS_CODE_TIMEOUT_MS = 10000
+
 export const SidebarMenu = (props) => {
   const {
     UIComponent
@@ -51,6 +53,34 @@ export const SidebarMenu = (props) => {
         error: err.message
       })
       err?.message && showToast(ToastType.Error, err?.message)
+    }
+  }
+
+  /**
+   * Method to get the one-time code ai.ordering.co signs in with
+   */
+  const getAiAgentsCode = async () => {
+    // The tab waits blank for this answer: a request that hangs must not leave it open
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), AI_AGENTS_CODE_TIMEOUT_MS)
+    try {
+      const response = await fetch(`${ordering.root}/session_codes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ target: 'ai_dashboard' }),
+        signal: controller.signal
+      })
+      const content = await response.json()
+      content.error && showToast(ToastType.Error, content.result?.[0])
+      return content.error ? null : content.result?.code
+    } catch (err) {
+      err?.message && showToast(ToastType.Error, err?.message)
+      return null
+    } finally {
+      clearTimeout(timeout)
     }
   }
 
@@ -131,6 +161,7 @@ export const SidebarMenu = (props) => {
         state={state}
         productsState={productsState}
         getBillingToken={getBillingToken}
+        getAiAgentsCode={getAiAgentsCode}
         aiModuleEnabled={aiModuleEnabled}
       />
     )

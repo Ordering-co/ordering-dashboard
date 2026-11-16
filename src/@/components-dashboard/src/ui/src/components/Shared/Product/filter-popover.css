@@ -1,0 +1,206 @@
+/*
+ * Pill popovers (FilterPopover, ChecklistPopover, PopoverFoot): the span a popover anchors to, the popover itself,
+ * the checklist, the foot with «Clear», and the pick-many list with search. redesign W0-2a (T0-4): promoted from
+ * Orders/OrdersFilterBar/orders-filter-bar.css with the same class names, because the e2e specs, OrderStatusSubFilter
+ * and DateBusinessPills still address them (renaming them is another change). The pill itself is filter-bar.css.
+ * The rules keep their order and their specificity inside this file, but the file itself loads earlier than
+ * orders-filter-bar.css did: P/index.js re-exports FilterPopover, so this sheet lands in the barrel's block (global
+ * position 18 in the measured build, ahead of ~75 sheets: Shared/UI/*, brand/pilot.css, bootstrap and the Orders
+ * CSS), where the popover rules used to sit at 93. No equal-specificity collision with the sheets that changed
+ * order has been measured (parity-W0-2-r1.md L1: the 16 candidates hit other containers). A future rule of the
+ * same specificity in those sheets would now win over these. redesign W0-2 r2 (W0-P1-01)
+ * Values are --od-* / --od-x-* tokens only (src/__tests__/tools/productLiteralGuard.test.js).
+ * Logical properties only (C17).
+ */
+
+/* ── Pill anchor: the span the popover positions against ── */
+.odc-orders-pill-anchor {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Popover of a pill ── */
+/* redesign : the positioner mounts in the overlay host's isolated portal (`.odc-overlay-portal`, which takes the layer order
+   from the registry), so this value only orders it inside that portal: the visible stacking is the portal's. It names its role. */
+.odc-orders-popover-positioner {
+  z-index: calc(var(--od-x-layer-overlay) + 9); /* the same step as P/menu.css (+9) and column-manager.css (+19),  */
+}
+
+.odc-orders-popover {
+  min-inline-size: var(--od-x-popover);
+  max-inline-size: calc(100vw - var(--od-x-viewport-gap) * 2);
+  padding: var(--od-space-2);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  outline: 0;
+  /* redesign tramo A r3 (W0-QA1-04): never taller than the room the positioner measured (Base UI sets --available-height
+     on it, after the flip and the viewport gap). On a low phone (360x640, 320x568) the Driver popover ran to y=688 on a 640
+     window and its «Clear» was out of reach. What does not fit scrolls (generic popups) or is the list (the two below). */
+  max-block-size: var(--available-height);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* The popups with a list and a foot (Status, Driver, Driver group, Business): a column where only the list gives way, so the
+   search field above and «Clear» below are always on screen. */
+.odc-orders-picker-popup,
+.odc-orders-checklist-popup {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.odc-orders-picker-popup > *,
+.odc-orders-checklist-popup > * {
+  min-block-size: 0;
+}
+
+.odc-orders-picker-popup > .odc-orders-picker {
+  flex: 1 1 auto;
+}
+
+.odc-orders-picker-popup .odc-orders-picker-list,
+.odc-orders-checklist-popup > .odc-orders-checklist {
+  flex: 0 1 auto;
+  min-block-size: 0;
+}
+
+.odc-orders-picker-popup .odc-orders-picker-search,
+.odc-orders-picker-popup .odc-orders-popover-foot,
+.odc-orders-checklist-popup > .odc-orders-popover-foot {
+  flex: none;
+}
+
+.odc-orders-popover:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* A checklist that can hold the 15 sub statuses of «in progress»: it scrolls, never the page. */
+.odc-orders-checklist {
+  display: flex;
+  flex-direction: column;
+  max-block-size: 60dvh;
+  overflow: auto;
+}
+
+.odc-orders-popover-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-start: var(--od-space-1);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  margin-block-start: var(--od-space-1);
+}
+
+/* The foot's hit area is at least 24×24 (WCAG 2.5.8): «Clear» is short, so the button keeps a minimum width
+   (redesign F6c-1, Q2-15). Below 768px or with a coarse pointer the 44×44 is the centered area of `.odc-btn` (product.css),
+   not a bigger box (redesign W0-3d, T0-12, decision 12): the foot has 9px above it (margin 4 + hairline + padding 4) and the
+   area takes 6px of them. */
+.odc-orders-popover-foot .odc-btn {
+  min-inline-size: var(--od-x-target-fine);
+}
+
+/* Rows of every pill list (Status, Driver, Driver group, Business) are 32px with a mouse on desktop (the checkbox row's
+   own height) and 44px below 768px or with a coarse pointer, like the SLA and More menus (C3, redesign F6c-1, Q2-07).
+   The checkbox stylesheet only knows the coarse pointer; a narrow window with a mouse is a phone layout too (E10). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-orders-popover .odc-checkbox-labelled {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* ── Pick-many pills with search (Driver, Driver group): search, a scrolling checklist, «Clear» ── */
+.odc-orders-picker-popup {
+  --odc-picker-row: var(--od-x-control-height);
+  inline-size: calc(var(--od-x-popover) * 1.25);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-orders-picker-popup { --odc-picker-row: var(--od-x-target-coarse); }
+}
+
+.odc-orders-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* The bar's search grows by flex-basis (a width); in this column it keeps its own height. */
+.odc-orders-picker > .odc-orders-picker-search {
+  flex: none;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* Eight rows and a half at a time, never more than the viewport leaves: the rest scrolls inside the list, and the cut row says so
+   (redesign bugs F row 23, , R-7 of stores 2.D; every picker list). */
+.odc-orders-picker-list {
+  max-block-size: min(60dvh, calc(var(--odc-picker-row) * 8.5));
+  overscroll-behavior: contain;
+}
+
+.odc-orders-picker-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* A business is a logo of 20px in a rounded square (C12, C18), 24px where the row is a touch target. */
+.odc-orders-picker-row .odc-avatar[data-kind='business'] {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+.odc-orders-picker-row .odc-avatar[data-kind='business'] .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-orders-picker-row .odc-avatar[data-kind='business'] {
+    inline-size: var(--od-x-avatar);
+    block-size: var(--od-x-avatar);
+  }
+}
+
+.odc-orders-picker-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A second text after the name (the id of a driver group): muted, at the end of the row, never shrunk. */
+.odc-orders-picker-meta {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign stores 3.A: the «Apply» row of a draft list, under the list and above «Clear». */
+.odc-orders-picker-popup .odc-orders-picker-apply {
+  flex: none;
+}
+
+.odc-orders-picker-apply {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.odc-orders-picker-empty {
+  margin: 0;
+  padding: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

@@ -1,0 +1,113 @@
+/*
+ * redesign BO-B6 · Staff page (business owners): the frame of the list beside the record panel (split view), the header with the
+ * menu button, and the foot. Modeled on Users/CustomersDirectory/customers-page.css (same measures, so the two pages feel alike).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The table and the panel have their own files (staff-table.css, staff-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.sdl-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, tabs, filters, selection bar, table and foot, one under the other. */
+.sdl-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .sdl-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .sdl-frame {
+    display: none;
+  }
+}
+
+/* ── Head: `.sdl-head` is the page header's own class (: the open-menu button is PageHeader's `leading`) ── */
+
+/* The header stays on ONE line when the list is narrow (beside the panel: ~620px at 1440, ~540px at 1280; on a phone), as the
+   customers page (UC-R1, I-01). Under 768px of the header's own width (the page header is its container) Learn and Export CSV keep
+   only their icon; «Add business owner» does under 600px by the page header's own rule (its label is marked
+   `data-collapse-label`). The words are clipped, not removed (the accessible name stays) and each button has its `title`. */
+@container (max-width: 767px) {
+  /* Learn: the span LearnDropDown draws is clipped like a `data-collapse-label`; the margins of its trigger go, the icon and the arrow stay */
+  .sdl-head .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .sdl-head .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+
+  /* Export CSV: the button takes the control's square; its words are the node marked data-collapse-label (UsersExport), which the clip below
+     takes away (redesign , row 92: they were hidden with `font-size: 0`). The icon (16px by its own attribute) stays centred. */
+  .sdl-export > .odc-btn {
+    gap: 0;
+    inline-size: var(--od-x-control-height);
+    padding-inline: 0;
+  }
+
+  /* redesign BO-R2 (mechanical F1): «Add business owner» also keeps only its icon here (the page header does it under 600px; with the
+     record open at 1440 the header is ~620px and the title was cut in es, fr, pt, el and bg). Same clip as the Learn label above:
+     the accessible name and the button's `title` stay. Only this page's header (`.sdl-head`). */
+  .sdl-head [data-collapse-label] {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Beside the panel at 1280 the header is under 600px and the page header drops its title to the section size: the h1 would sit lower
+   than without the panel. On a screen that has a panel (768px and up) the title keeps its size, so opening or closing the record
+   moves nothing; on a phone the page header's own narrow size stays. */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .sdl-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* The holder of the page's Export node takes no box of its own: the button is a child of the group of actions */
+.sdl-export {
+  display: contents;
+}
+
+/* ── Foot: «Add business owner» at the start, the pagination at the end ── */
+.sdl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.sdl-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

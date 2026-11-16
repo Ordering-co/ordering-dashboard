@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { InfoCircle } from 'react-bootstrap-icons'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLanguage } from '../../../../../index'
 import { NotFoundSource } from '../../Shared'
+import { IconButton } from '../../Shared/Product'
+import { Info } from '../../Shared/Icon'
 import { EmailSetting } from '../EmailSetting'
 import { NotificationSetting } from '../NotificationSetting'
 import { SettingsList } from '../SettingsList'
@@ -22,18 +23,9 @@ import { SitesAuthSettings } from '../SitesAuthSettings'
 import { MultiCountrySettings } from '../MultiCountrySettings'
 import { InfoHelpBox } from '../InfoHelpBox'
 import { ApiUsageLimits } from '../ApiUsageLimits'
+import { SettingsHubFormContext } from '../SettingsHubForm/SettingsHubFormContext'
 
-import {
-  BackButton,
-  BackRow,
-  DetailBody,
-  DetailDescription,
-  DetailHeader,
-  DetailTitle,
-  DetailTitleRow,
-  IconButton,
-  StatusPanel
-} from './styles'
+import './settings-hub.css'
 
 const SPECIAL_SCREENS = {
   languages: () => <LanguageSetting />,
@@ -43,29 +35,30 @@ const SPECIAL_SCREENS = {
   custom_order: () => <CustomOrder hideHeader />,
   pages: () => <Cms avoidExpand />,
   checkout_fields: () => <GuestCheckoutFieldsSetting disableGuestColumns />,
+  // (AC): the three lists are one stack that spaces them with a token; each list carries no padding of its own
   user_information: () => (
-    <>
+    <div className='odc-hub-fields-stack'>
       <CheckoutFieldsSetting avoidExpand />
       <AddressFieldsSetting avoidExpand />
       <CardFieldsSetting />
-    </>
+    </div>
   ),
   language_manager: () => <LanguageManager avoidExpand isShowProductType />,
   sites: () => <SitesAuthSettings avoidExpand />,
   multi_country: () => <MultiCountrySettings />
 }
 
-export const SettingsHubDetail = ({ section, onBack, focus }) => {
+// redesign settings A: the section on screen. The hub renders it with `key={section.key}`, so a form's state
+// (its changes, its open dialogs, the video box) never passes to another section.
+const SectionContent = ({ section, groupLabel, focus, focusHeading }) => {
   const [, t] = useLanguage()
   const [openMoreInfo, setOpenMoreInfo] = useState({ open: false, category: null })
+  const headingRef = useRef(null)
 
-  if (!section) {
-    return (
-      <StatusPanel>
-        {t('SETTINGS_HUB_CHOOSE_SECTION', 'Choose a setting from the list.')}
-      </StatusPanel>
-    )
-  }
+  // On the phone the section is its own screen: the focus goes to its title when it opens.
+  useEffect(() => {
+    if (focusHeading) headingRef.current?.focus({ preventScroll: true })
+  }, [focusHeading])
 
   const title = t(section.copy?.labelKey, section.copy?.label)
   const description = section.copy?.descriptionKey
@@ -84,10 +77,12 @@ export const SettingsHubDetail = ({ section, onBack, focus }) => {
       )
     }
     if (category.key === 'email_configs') {
-      return <EmailSetting category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle />
+      // `?focus=` reaches the legacy editors too (email levels, wallet cards)
+      return <EmailSetting category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle focus={focus} />
     }
     if (category.key === 'notification') {
-      return <NotificationSetting category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle />
+      // redesign (n.º 9, review L2 #1): `?focus=` opens the accordion that holds the key
+      return <NotificationSetting category={category} onCloseSettingsList={() => null} isRemoveGeneralTitle focus={focus} />
     }
     if ((category.configs || []).length > 0) {
       const loyaltyType = category.key === 'addon_points_and_levels'
@@ -96,7 +91,7 @@ export const SettingsHubDetail = ({ section, onBack, focus }) => {
           ? 'cashback'
           : null
       if (loyaltyType) {
-        return <SettingsLoyaltyStores type={loyaltyType} category={category} />
+        return <SettingsLoyaltyStores type={loyaltyType} category={category} focus={focus} />
       }
       if (category.key === 'addon_stripe_connect') {
         return <SettingsStripeConnect category={category} focus={focus} />
@@ -114,31 +109,23 @@ export const SettingsHubDetail = ({ section, onBack, focus }) => {
 
   return (
     <>
-      <DetailHeader>
-        {onBack && (
-          <BackRow>
-            <BackButton type='button' onClick={onBack}>
-              {t('SETTINGS_HUB_BACK', 'Back to settings')}
-            </BackButton>
-          </BackRow>
-        )}
-        <DetailTitleRow>
-          <DetailTitle>{title}</DetailTitle>
+      <div className='odc-root odc-hub-detail-head'>
+        {groupLabel && <p className='odc-hub-crumb'>{groupLabel}</p>}
+        <div className='odc-hub-detail-title-row'>
+          <h2 ref={headingRef} tabIndex={-1} className='odc-hub-detail-title'>{title}</h2>
           {hasVideo && (
             <IconButton
-              type='button'
-              aria-label={t('MORE_INFO', 'More info')}
+              icon={Info}
+              label={t('MORE_INFO', 'More info')}
               onClick={() => setOpenMoreInfo({ open: true, category })}
-            >
-              <InfoCircle />
-            </IconButton>
+            />
           )}
-        </DetailTitleRow>
-        {!!description && <DetailDescription>{description}</DetailDescription>}
-      </DetailHeader>
-      <DetailBody>
+        </div>
+        {!!description && <p className='odc-hub-detail-desc'>{description}</p>}
+      </div>
+      <div className='odc-hub-detail-body'>
         {SpecialScreen ? <SpecialScreen /> : renderCategory()}
-      </DetailBody>
+      </div>
       {openMoreInfo.open && (
         <InfoHelpBox
           open={openMoreInfo.open}
@@ -147,5 +134,41 @@ export const SettingsHubDetail = ({ section, onBack, focus }) => {
         />
       )}
     </>
+  )
+}
+
+/**
+ * The open section of the hub. Gives its forms the hub's context (`{ product: true, report }`): inside it SettingsList,
+ * EmailSetting, NotificationSetting and SettingsCustomBlocks draw the Product fields and the save bar, and tell the hub
+ * their state through `report(sectionKey, { dirty, saving } | null)`.
+ *
+ * @param {object}   props.section       the hub section (`buildSettingsHub`)
+ * @param {string}   [props.groupLabel]  the group's name, shown as the route above the title (not on the phone)
+ * @param {string}   [props.focus]       `?focus=` config key
+ * @param {boolean}  [props.focusHeading] move the focus to the title on mount (the phone's section screen)
+ * @param {Function} [props.report]      the hub guard's `report`
+ */
+export const SettingsHubDetail = ({ section, groupLabel, focus, focusHeading, report }) => {
+  const [, t] = useLanguage()
+  const formContext = useMemo(() => ({ product: true, report: report || (() => {}) }), [report])
+
+  if (!section) {
+    return (
+      <div className='odc-root odc-hub-status'>
+        {t('SETTINGS_HUB_CHOOSE_SECTION', 'Choose a setting from the list.')}
+      </div>
+    )
+  }
+
+  return (
+    <SettingsHubFormContext.Provider value={formContext}>
+      <SectionContent
+        key={section.key}
+        section={section}
+        groupLabel={groupLabel}
+        focus={focus}
+        focusHeading={focusHeading}
+      />
+    </SettingsHubFormContext.Provider>
   )
 }

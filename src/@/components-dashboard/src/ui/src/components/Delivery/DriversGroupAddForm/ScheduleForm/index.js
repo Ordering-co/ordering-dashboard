@@ -3,6 +3,7 @@ import { useLanguage } from '../../../../../../index'
 import { Checkbox, DefaultSelect } from '../../../../styles'
 import { Schedule } from '../../../Shared'
 import { timezones } from '../../../../config/constants'
+import { FieldError } from '../FieldError'
 
 import {
   HeaderWrapper,
@@ -24,7 +25,9 @@ export const ScheduleForm = (props) => {
     hideTitle,
     handleChangesState,
     handleChangeScheduleEnabled,
-    handleChangeScheduleState
+    handleChangeScheduleState,
+    // (P-2 of batch R): opt-in; the add form's «Select a timezone» check. The edit form does not pass it
+    fieldErrors
   } = props
 
   const [, t] = useLanguage()
@@ -32,6 +35,7 @@ export const ScheduleForm = (props) => {
   const [timezonesOptions, setTimezonesOptions] = useState([])
 
   const driversGroup = driversGroupState?.driversGroup
+  const timezoneError = fieldErrors?.timezone
 
   useEffect(() => {
     const _timezonesOptions = timezones
@@ -53,10 +57,11 @@ export const ScheduleForm = (props) => {
         )}
         <CheckboxContainer>
           <Checkbox
+            aria-labelledby='drivers-group-schedule-always-available'
             checked={!isScheduleEnabled}
             onChange={e => handleChangeScheduleEnabled(!e.target.checked, getBrowserTimezone())}
           />
-          <p>{t('ALWAYS_AVAILABLE', 'Always available')}</p>
+          <p id='drivers-group-schedule-always-available'>{t('ALWAYS_AVAILABLE', 'Always available')}</p>
         </CheckboxContainer>
       </HeaderWrapper>
       <Description>
@@ -67,8 +72,11 @@ export const ScheduleForm = (props) => {
       {isScheduleEnabled && (
         <>
           <InputWrapper isTimezone>
-            <label>{t('TIMEZONE', 'Timezone')}</label>
+            <label id='drivers-group-timezone-label'>{t('TIMEZONE', 'Timezone')}</label>
             <DefaultSelect
+              id='drivers-group-timezone'
+              ariaLabelledBy='drivers-group-timezone-label drivers-group-timezone'
+              ariaDescribedBy={timezoneError?.id}
               placeholder={t('SELECT_TIMEZONE', 'Select a timezone')}
               defaultValue={changesState?.timezone ?? driversGroup?.timezone}
               options={timezonesOptions}
@@ -80,6 +88,7 @@ export const ScheduleForm = (props) => {
               searchValue={timezoneSearchValue}
               handleChangeSearch={setTimezoneSearchValue}
             />
+            {timezoneError && <FieldError id={timezoneError.id}>{timezoneError.message}</FieldError>}
           </InputWrapper>
           <Schedule
             scheduleList={changesState?.schedule ?? driversGroup?.schedule}

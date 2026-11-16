@@ -1,0 +1,53 @@
+/*
+ * redesign stores 5.5a · The detail of a menu, inside P/SectionSplit: a row of tools (the tabs and the actions) above
+ * the body. The title, the X / «‹ Back», Esc and the focus are the piece's. Values: --od-* and --od-x-* only, logical properties.
+ */
+
+.odc-bmo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The tabs take what the actions leave and scroll sideways when they do not fit (P/Tabs); the actions never shrink or cut. */
+.odc-bmo-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bmo-tabs {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-bmo-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+}
+
+/* Under a coarse pointer or 768px the controls are 32px seen and 44px reached: 12px apart, so the area of one does not cross the next. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-bmo-actions { gap: var(--od-space-3); }
+}
+
+/* On a phone the actions take their own line above the tabs, so all four tabs fit without scrolling. */
+@media (max-width: 575px) {
+  .odc-bmo-tools { flex-wrap: wrap; }
+  .odc-bmo-tabs { flex-basis: 100%; order: 2; }
+}
+
+.odc-bmo-body { min-inline-size: 0; }
+
+/* Delete: the consequence, then the error of a failed delete (the dialog stays open) */
+.odc-bmo-delete-body { margin: 0; }
+
+.odc-bmo-delete-body + .odc-notice.odc-bmo-delete-error {
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+}

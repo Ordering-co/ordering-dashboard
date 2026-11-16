@@ -1,51 +1,26 @@
 import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { useTheme } from 'styled-components'
-import { Input } from '../../../styles'
-import {
-  FacebookProfileContainer,
-  Step,
-  CopyInputWrapper
-} from './styles'
+import { GuideIntro, GuideStep, GuideSteps, StoreLink } from '../BusinessSalesChannel/GuideParts'
 
-export const FacebookProfile = ({ storeUrl }) => {
+// redesign stores 5.15b (; G5-04, G5-10): the five steps and screenshots are main's; the link is the store's real one
+// with «Copy link», and the intro (placeholder text in main) says what the button does.
+export const FacebookProfile = ({ link }) => {
   const [, t] = useLanguage()
-  const theme = useTheme()
 
   return (
-    <FacebookProfileContainer>
-      <p>{t('BUSINESS_FACEBOOK_PROFILE_DESC', 'Lorem ipsum dolor sit amet consectetur. Vitae odio aliquam adipiscing vitae. Nulla sed integer congue gravida lobortis tristique condimentum fusce tincidunt.')}</p>
-      <Step>
-        <h3>{t('STEP', 'Step')} 1</h3>
-        <p>{t('BUSINESS_FACEBOOK_PROFILE_STEP1_DESC', 'Copy this link below. It’s your unique Ordering link for facebook.')}</p>
-        <CopyInputWrapper>
-          <Input
-            defaultValue={storeUrl || 'https://yourbusinessname.com/store/storename'}
-            disabled
-          />
-        </CopyInputWrapper>
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 2</h3>
-        <p>{t('BUSINESS_FACEBOOK_PROFILE_STEP2_DESC', 'In your business profile, click on the 3 points button on the right side of the screen and look for the option: Edit Action Button.')}</p>
-        <img src={theme.images.salesChannels.facebookProfileStep2} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 3</h3>
-        <p>{t('BUSINESS_FACEBOOK_PROFILE_STEP3_DESC', 'Please choose the option that best suits you from the following list; this time, we will select: Start Order.')}</p>
-        <img src={theme.images.salesChannels.facebookProfileStep31} alt='' />
-        <img src={theme.images.salesChannels.facebookProfileStep32} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 4</h3>
-        <p>{t('BUSINESS_FACEBOOK_PROFILE_STEP4_DESC', 'It will open a popup where you will put the link to your business where your client can place the order and click Save.')}</p>
-        <img src={theme.images.salesChannels.facebookProfileStep4} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 5</h3>
-        <p>{t('BUSINESS_FACEBOOK_PROFILE_STEP5_DESC', 'And voila, you will see the button you just added to your Facebook page.')}</p>
-        <img src={theme.images.salesChannels.facebookProfileStep5} alt='' />
-      </Step>
-    </FacebookProfileContainer>
+    <>
+      <GuideIntro>
+        {t('SALES_FACEBOOK_INTRO', 'A Facebook page can show an action button next to “Message”. Point it to this store so people can start an order in one tap.')}
+      </GuideIntro>
+      <GuideSteps>
+        <GuideStep number={1} text={t('SALES_FACEBOOK_STEP_1', 'Copy your store\'s ordering link.')}>
+          <StoreLink link={link} />
+        </GuideStep>
+        <GuideStep number={2} text={t('SALES_FACEBOOK_STEP_2', 'On your Facebook page, open the “…” menu on the right and choose “Edit action button”.')} />
+        <GuideStep number={3} text={t('SALES_FACEBOOK_STEP_3', 'Choose “Start order” from the list of buttons.')} />
+        <GuideStep number={4} text={t('SALES_FACEBOOK_STEP_4', 'In the window that opens, paste the link and select “Save”.')} />
+        <GuideStep number={5} text={t('SALES_FACEBOOK_STEP_5', 'The button now shows on your Facebook page.')} />
+      </GuideSteps>
+    </>
   )
 }

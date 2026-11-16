@@ -1,0 +1,159 @@
+/*
+ * redesign stores 5.13 (, E3a) · The markup form on Product pieces. One form for the /stores/markups route (a SideBar), the
+ * business markups modal and the Business markups section (a P/SectionSplit).
+ * Values: --od-* and --od-x-* only. Logical properties only, so right-to-left needs no second set. Prefix: odc-mf-*.
+ * Layout: one column on a phone; a pair (type and value, site and delivery type) goes side by side as soon as both fit (a grid with
+ * auto-fit, not a container query: `container-type` on a wrapper would break the sticky save bar of the SectionSplit, instructions 3
+ * and 3b of stores-2-b-section-split/decisions.md).
+ * Alone (the SideBar and the modal) the form is the scroller with its padding, as before. With `hideHeader` the host owns the frame:
+ * no padding and no `overflow` here.
+ */
+
+.odc-mf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-mf:not(.odc-mf-embedded) {
+  block-size: 100%;
+  padding: var(--od-space-5);
+  overflow: auto;
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar of the host. */
+.odc-mf-embedded :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* ── Header: the title and «Enabled» side by side on the start side, as in main (the switch follows the title; a long title takes the
+   line and the switch goes under it). Inside the legacy SideBar its close button is absolute, 20px from the end, as wide as the touch
+   target (--od-sidebar-touch-target, set by the SideBar and inherited here), and this form has its own --od-space-5 padding: the end
+   margin of the header is that touch target plus a gap, so neither the title nor the switch can reach the button. ── */
+.odc-mf-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-inline-end: calc(var(--od-sidebar-touch-target, var(--od-space-7)) + var(--od-space-3));
+}
+
+.odc-mf-title {
+  display: -webkit-box;
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* ── Sections ── */
+.odc-mf-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-mf-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* Two fields side by side while there is room for both, one under the other when there is not */
+.odc-mf-pair,
+.odc-mf-rule {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  /* an error under one field does not push its neighbour down */
+  align-items: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-mf-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-mf-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Type of a rule: the label above the segmented control, the same line a Product field has ── */
+.odc-mf-seg-field {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-mf-seg,
+.odc-mf-rounding {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-mf-seg:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Rounding values: a legend, a row of boxes that wraps, a line ── */
+.odc-mf-rounding > legend {
+  float: inline-start;
+  inline-size: 100%;
+  padding: 0;
+  margin-block-end: var(--od-x-space-1-5);
+}
+
+.odc-mf-rounding-list {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--od-x-target-coarse) * 2), 1fr));
+  gap: var(--od-space-1) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-mf-rounding > .odc-mf-hint {
+  margin-block-start: var(--od-x-space-1-5);
+}
+
+/* ── «Apply to suboptions» and «Apply same value» ── */
+.odc-mf-checks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* ── Actions ── */
+.odc-mf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}

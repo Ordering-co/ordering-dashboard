@@ -28,7 +28,7 @@ export const HeaderContainer = styled.div`
     position: relative;
 
     h1 {
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
       font-weight: 700;
       margin: 0;
       flex: 1;
@@ -53,7 +53,7 @@ export const RightHeader = styled.div`
 export const BannersHeader = styled.div`
   border-bottom: 1px solid ${props => props.theme.colors.disabled};
   padding-bottom: 9px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 700;
   margin-top: 33px;
 `
@@ -75,7 +75,7 @@ export const BannerItemWrapper = styled.div`
   `}
 `
 export const BannerTitleConatiner = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
 `
 export const BannerActionsWrapper = styled.div`
   display: flex;
@@ -94,7 +94,7 @@ export const EnableWrapper = styled.div`
   display: flex;
   align-items: center;
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-left: 8px;
@@ -115,7 +115,7 @@ export const AddNewBanner = styled.div`
   width: fit-content;
   cursor: pointer;
   color: ${props => props.theme.colors.primary};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   margin-top: 15px;
 `
 export const InfoWrapper = styled.div`
@@ -145,14 +145,14 @@ export const InfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;

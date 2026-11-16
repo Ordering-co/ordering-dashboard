@@ -131,10 +131,14 @@ const CampaignSignUpOptionUI = (props) => {
         {optionList.map(option => (
           <React.Fragment key={option.key}>
             <RadioCheckWrapper>
-              <div onClick={() => handleChangeOption(option.key)}>
+              <button
+                type='button'
+                aria-pressed={ruleFormState.changes?.date_condition === option.key}
+                onClick={() => handleChangeOption(option.key)}
+              >
                 {ruleFormState.changes?.date_condition === option.key ? <CheckIcon className='fill' /> : <UnCheckIcon />}
                 <span>{option.title}</span>
-              </div>
+              </button>
             </RadioCheckWrapper>
             {ruleFormState.changes?.date_condition === option.key && (
               <CalendarWrapper>
@@ -150,10 +154,14 @@ const CampaignSignUpOptionUI = (props) => {
           </React.Fragment>
         ))}
         <RadioCheckWrapper>
-          <div onClick={() => handleChangeOption('><')}>
+          <button
+            type='button'
+            aria-pressed={ruleFormState.changes?.date_condition === '><'}
+            onClick={() => handleChangeOption('><')}
+          >
             {ruleFormState.changes?.date_condition === '><' ? <CheckIcon className='fill' /> : <UnCheckIcon />}
             <span>{t('DATE_RANGE', 'Date range')}</span>
-          </div>
+          </button>
         </RadioCheckWrapper>
         {ruleFormState.changes?.date_condition === '><' && (
           <DateRangeWrapper>

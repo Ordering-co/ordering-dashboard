@@ -23,7 +23,7 @@ export const StripeConnectTab = styled.button`
   font-size: 14px;
   line-height: 20px;
   white-space: nowrap;
-  color: ${props => props.theme.colors.lightGray};
+  color: var(--od-x-text-subtle);
   cursor: pointer;
 
   ${({ active }) => active && css`
@@ -44,7 +44,7 @@ export const RuleFootnote = styled.p`
   margin: 0;
   font-size: 13px;
   line-height: 18px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
 `
 
 export const RedirectUriCard = styled.section`
@@ -70,6 +70,20 @@ export const RedirectUriText = styled.p`
   font-size: 13px;
   line-height: 18px;
   color: ${props => props.theme.colors.secundaryContrast};
+`
+
+export const RedirectUriItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+`
+
+export const RedirectUriLabel = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: ${props => props.theme.colors.headingColor};
 `
 
 export const RedirectUriRow = styled.div`

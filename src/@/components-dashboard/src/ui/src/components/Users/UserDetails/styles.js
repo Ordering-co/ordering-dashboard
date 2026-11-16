@@ -27,7 +27,7 @@ export const UserName = styled.div`
   display: flex;
   align-items: center;
   > span {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors.headingColor};
     margin: 0;
@@ -42,7 +42,7 @@ export const UserName = styled.div`
 `
 
 export const VerifiedItem = styled.span`
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   background-color: ${props => props.theme.colors.lightGreen};
   padding: 2px 7px;
   border-radius: 50px;
@@ -175,7 +175,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         &:active {
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;

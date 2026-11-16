@@ -8,12 +8,6 @@ import SCHEMA from './themeNodesFixture.json'
 vi.mock('../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback]
 }))
-vi.mock('../../../styles', async () => {
-  const ReactActual = await vi.importActual('react')
-  return {
-    Button: ReactActual.forwardRef(({ color, borderRadius, outline, ...props }, ref) => <button ref={ref} {...props} />)
-  }
-})
 
 import { ColorControl } from '../ThemeSchemaEditor/controls'
 

@@ -1,0 +1,229 @@
+/*
+ * redesign AB-B2 (decision 1) · Ad banners: the page header, the search, the positions grouped as Web and App, and the rows and
+ * cards of the banners. Product's PageHeader, SearchField, DataTable, RecordCard, AsyncSwitch and Button own the structure; this
+ * adds what a position section and a banner row are made of. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ * Logical properties only, so right-to-left needs no second set of rules. Class prefix odc-banners-.
+ *
+ * Touch (decision 12): nothing on this page is a custom clickable. «Add banner», the switch and the search clear are Product
+ * controls that already carry their 44px reach under 768px (P/product.css `.odc-btn::after`, switch.css); the thumbnail is
+ * decorative and the rows open through the table's own row.
+ */
+
+/* ── Head: .odc-banners-head is the PageHeader's own class (: the open-menu button is PageHeader's `leading`) ── */
+
+/* On screens that can show the panel (768px and up) the title keeps its size when the header narrows beside it, so opening or
+   closing the panel moves nothing; on a phone the page header's narrow size stays (as the campaigns page, CA-B3). */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-banners-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* «3 on» in the status slot of the header */
+.odc-banners-on { color: var(--od-text-muted); }
+
+/* ── The page: the search, then Web and App, then Other ── */
+.odc-banners-sections {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* What sits beside the text of a table cell takes the page gutter the table gives its first cell */
+.odc-banners-bar,
+.odc-banners-group-title,
+.odc-banners-section-head,
+.odc-banners-section-empty {
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-banners-bar {
+  min-inline-size: 0;
+}
+
+.odc-banners-group {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-banners-group-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* On a phone the cards bleed to the page edge and bring their own gutter: the text around them sits at the page's content edge */
+@media (max-width: 767px) {
+  .odc-banners-bar,
+  .odc-banners-group-title,
+  .odc-banners-section-head,
+  .odc-banners-section-empty {
+    padding-inline: 0;
+  }
+}
+
+/* ── A position: heading, size, description and its «Add banner», then its rows ── */
+.odc-banners-section {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-banners-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-banners-section-text {
+  display: grid;
+  flex: 1 1 auto;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-banners-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* ⌘K sends the focus here (focusPosition): the ring is the system's */
+.odc-banners-section-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-banners-section-info {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-section-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── The cells ── */
+/* The thumbnail column is as narrow as its content */
+.odc-banners-col-image { inline-size: 1%; }
+
+/* The first image of the banner, as small as the row: 48x10 for the web (the 1440 x 300 ratio), 24x24 for the app. With no image,
+   or one that fails to load, the box stays, neutral. The outline is drawn inside and over the image, so the box has an edge on any
+   background without taking size from a 10px-high picture. */
+.odc-banners-thumb {
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
+  border-radius: var(--od-x-space-half);
+  background: var(--od-surface-subtle);
+  outline: var(--od-x-hairline) solid var(--od-border);
+  outline-offset: calc(var(--od-x-hairline) * -1);
+  vertical-align: middle;
+}
+
+.odc-banners-thumb[data-shape='wide'] {
+  inline-size: calc(var(--od-x-avatar) * 2);
+  aspect-ratio: 1440 / 300;
+}
+
+.odc-banners-thumb[data-shape='square'] {
+  inline-size: var(--od-x-avatar);
+  aspect-ratio: 1;
+}
+
+.odc-banners-thumb > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-banners-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name wraps (a long one breaks anywhere) and stops at two lines */
+td .odc-banners-name,
+th .odc-banners-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The raw position of a banner in «Other» (a key the API stores that none of the six is), under its name */
+.odc-banners-raw-key {
+  display: block;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  overflow-wrap: anywhere;
+}
+
+.odc-banners-count { color: var(--od-text-muted); }
+
+/* The switch of a row: the click is its own, and the row keeps its padding around it */
+.odc-banners-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-banners-sections .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-banners-sections .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-banners-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-banners-card-counts {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-banners-card-counts .odc-banners-raw-key { display: inline; }
+
+/* The switch above the card's link overlay: it is reachable, and a press on it never opens the card */
+.odc-banners-card-actions {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  margin-block-start: var(--od-space-1);
+}

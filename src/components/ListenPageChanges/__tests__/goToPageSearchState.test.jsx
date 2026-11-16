@@ -10,7 +10,7 @@ vi.mock('~components', () => ({
   useLanguage: () => [{ language: { rtl: false } }, (_key, fallback) => fallback],
   useEvent: () => [{ emit: state.emit, on: (name, handler) => { state.handlers[name] = handler }, off: (name) => { delete state.handlers[name] } }]
 }))
-vi.mock('~ui', () => ({ useTheme: () => [{ rtl: false }, { merge: state.merge }] }))
+vi.mock('~ui/src/contexts/ThemeContext', () => ({ useTheme: () => [{ rtl: false }, { merge: state.merge }] }))
 vi.mock('~/@/components-dashboard/src/ui/src/components/PageNotFound', () => ({ PageNotFound: () => <div>Page not found</div> }))
 import { ListenPageChanges } from '../index'
 import { ProtectedRoute } from '~/@/components-dashboard/src/ui/src/components/Shared/ProtectedRoute'

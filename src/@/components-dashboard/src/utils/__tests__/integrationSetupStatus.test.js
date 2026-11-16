@@ -51,15 +51,17 @@ describe('integrationSetupStatus', () => {
     })
   })
 
-  // A row is created when the connection starts and the plugin reports on it
-  // later: until then it is a setup in progress, not "Not connected".
-  it('shows a row without a reported status as pending', () => {
+  // D1 (option C): the rows made before api-core#3587 have no
+  // reported status and kept syncing, so such a row is connected; only a
+  // reported pending is a setup in progress.
+  it('shows a row without a reported status as connected', () => {
     expect(getIntegrationSetupStatus({ setup_status: null }, t)).toMatchObject({
-      state: INTEGRATION_SETUP_STATES.PENDING,
-      label: 'INTEGRATION_STATUS_PENDING|Setup pending',
-      tone: 'warning'
+      state: INTEGRATION_SETUP_STATES.CONNECTED,
+      label: 'INTEGRATION_STATUS_CONNECTED|Connected',
+      tone: 'success'
     })
-    expect(getIntegrationSetupStatus({ setup_status: '  ' }, t).state).toBe(INTEGRATION_SETUP_STATES.PENDING)
+    expect(getIntegrationSetupStatus({ setup_status: '  ' }, t).state).toBe(INTEGRATION_SETUP_STATES.CONNECTED)
+    expect(getIntegrationSetupStatus({ setup_status: 'pending' }, t).state).toBe(INTEGRATION_SETUP_STATES.PENDING)
   })
 
   it('ignores a blank message', () => {
@@ -84,7 +86,8 @@ describe('integrationSetupStatus', () => {
     const integration = { id: 9, plugin: { root: 'https://clover.test', setup_url: '/setup', links: {} } }
 
     expect(getIntegrationSetupAction({ setup_status: 'failed' }, integration, t)).toEqual({ kind: 'fix', path: '/setup', label: 'RECONNECT|Reconnect' })
-    expect(getIntegrationSetupAction({ setup_status: null }, integration, t)).toEqual({ kind: 'fix', path: '/setup', label: 'CONTINUE_SETUP|Continue setup' })
+    expect(getIntegrationSetupAction({ setup_status: 'pending' }, integration, t)).toEqual({ kind: 'fix', path: '/setup', label: 'CONTINUE_SETUP|Continue setup' })
+    expect(getIntegrationSetupAction({ setup_status: null }, integration, t)).toEqual({ kind: 'setup', path: '/setup', label: 'SETUP|Setup' }) // D1 (C)
     expect(getIntegrationSetupAction({ setup_status: 'success' }, integration, t)).toEqual({ kind: 'setup', path: '/setup', label: 'SETUP|Setup' })
     expect(getIntegrationSetupAction({ setup_status: 'success' }, { id: 9, plugin: { links: { setup: '/views/setup' } } }, t).path).toBe('/views/setup')
 

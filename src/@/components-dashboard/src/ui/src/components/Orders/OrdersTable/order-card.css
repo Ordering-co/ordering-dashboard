@@ -1,0 +1,78 @@
+/*
+ * What Orders adds to the cards of RecordCard (Shared/Product/record-card.css): the person cells (.odc-orders-who*) it draws
+ * inside them, and the pager under them (the table's own footer) on a phone. Logical properties only; tokens only.
+ * redesign W1-1 (T1-1): the card structure moved to Product.
+ */
+
+.odc-order-card-people > .odc-orders-who {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-order-card-people .odc-orders-who-text {
+  display: block;
+  min-inline-size: 0;
+}
+
+.odc-order-card-people .odc-orders-who-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-order-card-driver > .odc-orders-who { flex: 0 1 auto; min-inline-size: 0; }
+
+.odc-order-card-driver .odc-orders-who-text { display: block; }
+
+.odc-order-card-driver .odc-orders-who-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── The pager under the cards (the table's own footer): count on top, buttons at 44px. ── */
+.odc-orders-foot[data-cards] {
+  flex-direction: column;
+  align-items: stretch;
+  padding-inline: 0;
+}
+
+.odc-orders-foot[data-cards] .odc-orders-pager {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+/* redesign cierre W0 (W0-QA4-01): the two steps stay together; 44px visible, so the usual gap is enough */
+.odc-orders-foot[data-cards] .odc-orders-pager-steps { gap: var(--od-space-2); }
+
+.odc-orders-foot[data-cards] .odc-btn {
+  min-inline-size: var(--od-x-target-coarse);
+  block-size: var(--od-x-target-coarse);
+}
+
+.odc-orders-foot[data-cards] .odc-orders-page-input {
+  block-size: var(--od-x-target-coarse);
+}
+
+/* ── Select mode (, W1): the «Select» / «Cancel» button above the cards, and the checkbox row of a card. ── */
+.odc-order-cards-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-end: var(--od-space-2);
+  font-family: var(--od-font-sans);
+}
+
+/* The checkbox sits above the card's link overlay (as the Reject / Accept row does); its 44px area comes from Product's checkbox. */
+.odc-order-card-select {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  justify-self: start;
+  margin-block-start: var(--od-space-1);
+}

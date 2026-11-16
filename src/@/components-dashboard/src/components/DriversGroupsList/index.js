@@ -106,7 +106,8 @@ export const DriversGroupsList = (props) => {
         setDriversGroupsState({
           ...driversGroupsState,
           groups: result,
-          loading: false
+          loading: false,
+          error: null // redesign DG-B1 (M-DG10): a good answer clears an earlier load error (Retry)
         })
       } else {
         driversGroupsState.groups = result
@@ -155,7 +156,7 @@ export const DriversGroupsList = (props) => {
       const response = await fetch(`${ordering.root}/drivergroups?page=${page}&page_size=${pageSize}`, requestOptions)
       const { result, error, pagination } = await response.json()
       if (!error) {
-        setDriversGroupsState({ ...driversGroupsState, groups: result, loading: false })
+        setDriversGroupsState({ ...driversGroupsState, groups: result, loading: false, error: null }) // redesign DG-B1 (M-DG10)
         if (user?.level === 5) {
           const found = result.find(group => group?.administrator_id === user?.id)
           if (found) setActionDisabled(false)
@@ -189,14 +190,17 @@ export const DriversGroupsList = (props) => {
    */
   const getDriverManagers = async () => {
     try {
-      setDriversManagersList({ ...driversManagersList, loading: false })
+      // redesign (AD-6): loading while the request runs, and never left loading when the API refuses
+      setDriversManagersList({ ...driversManagersList, loading: true, error: null })
       const { content: { error, result } } = await ordering
         .setAccessToken(token)
         .users()
         .where([{ attribute: 'level', value: 5 }])
         .select(['name', 'email', 'photo']).get()
       if (!error) {
-        setDriversManagersList({ ...driversManagersList, loading: false, managers: result })
+        setDriversManagersList({ ...driversManagersList, loading: false, error: null, managers: result })
+      } else {
+        setDriversManagersList({ ...driversManagersList, loading: false, error: result })
       }
     } catch (err) {
       setDriversManagersList({ ...driversManagersList, loading: false, error: [err.message] })
@@ -317,14 +321,17 @@ export const DriversGroupsList = (props) => {
    */
   const getDrivers = async () => {
     try {
-      setDriversList({ ...driversList, loading: false })
+      // redesign (AD-6): loading while the request runs, and never left loading when the API refuses
+      setDriversList({ ...driversList, loading: true, error: null })
       const { content: { error, result } } = await ordering
         .setAccessToken(token)
         .users()
         .where([{ attribute: 'level', value: 4 }])
         .select(['name', 'lastname', 'email', 'photo']).get()
       if (!error) {
-        setDriversList({ ...driversList, loading: false, drivers: result })
+        setDriversList({ ...driversList, loading: false, error: null, drivers: result })
+      } else {
+        setDriversList({ ...driversList, loading: false, error: result })
       }
     } catch (err) {
       setDriversList({ ...driversList, loading: false, error: [err.message] })
@@ -348,6 +355,8 @@ export const DriversGroupsList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setPaymethodsList({ ...paymethodsList, paymethods: content.result, loading: false })
+      } else {
+        setPaymethodsList({ ...paymethodsList, loading: false, error: content.result }) // redesign (AD-6)
       }
     } catch (err) {
       setPaymethodsList({ ...paymethodsList, loading: false, error: [err.message] })
@@ -370,7 +379,9 @@ export const DriversGroupsList = (props) => {
       const response = await fetch(`${ordering.root}/driver_companies?params=name`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setDriversCompanyList({ ...driversCompanyList, companies: content.result, loading: false })
+        setDriversCompanyList({ ...driversCompanyList, companies: content.result, loading: false, error: null })
+      } else {
+        setDriversCompanyList({ ...driversCompanyList, loading: false, error: content.result }) // redesign (AD-6)
       }
     } catch (err) {
       setDriversCompanyList({ ...driversCompanyList, loading: false, error: [err.message] })
@@ -381,6 +392,7 @@ export const DriversGroupsList = (props) => {
    * Method to update selected drivers group from API
    * @param {Number} driverGroupId
    * @param {Object} changes
+   * @returns {Promise<{ ok: boolean, error?: Array }>} redesign DG-B1 (M-DG10)
    */
   const handleUpdateDriversGroup = async (driverGroupId, changes) => {
     try {
@@ -406,17 +418,21 @@ export const DriversGroupsList = (props) => {
         })
         setDriversGroupsState({ ...driversGroupsState, groups })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+        return { ok: true } // redesign DG-B1 (M-DG10)
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
+        return { ok: false, error: content.result } // redesign DG-B1 (M-DG10)
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] } // redesign DG-B1 (M-DG10)
     }
   }
 
   /**
    * Method to delete the drivers group from API
    * @param {Number} driversGroupId
+   * @returns {Promise<{ ok: boolean, error?: Array }>} redesign DG-B1 (M-DG10)
    */
   const handleDeleteDriversGroup = async (driversGroupId) => {
     try {
@@ -441,16 +457,30 @@ export const DriversGroupsList = (props) => {
           groupList.shift()
           if (groupList.length === 0) {
             setStartSeveralDeleteStart(false)
+            reloadDriversGroups() // the local filter leaves the total and the pages stale
           }
           setSelectedGroupList(groupList)
         }
+        return { ok: true } // redesign DG-B1 (M-DG10)
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
         setStartSeveralDeleteStart(false)
+        return { ok: false, error: content.result } // redesign DG-B1 (M-DG10)
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] } // redesign DG-B1 (M-DG10)
     }
+  }
+
+  /**
+   * redesign DG-B1 (M-DG10): ask again for the current page, with the same request the page change makes
+   * (the search request when there is a search value), for the "Retry" of the empty/error state.
+   */
+  const reloadDriversGroups = () => {
+    return searchValue
+      ? getHeaderDriversGroups(paginationProps?.currentPage, paginationProps?.pageSize)
+      : getDriversGroups(paginationProps?.currentPage, paginationProps?.pageSize)
   }
 
   const handleSelectGroup = (groupId) => {
@@ -520,6 +550,7 @@ export const DriversGroupsList = (props) => {
             actionState={actionState}
             handleUpdateDriversGroup={handleUpdateDriversGroup}
             handleDeleteDriversGroup={handleDeleteDriversGroup}
+            reloadDriversGroups={reloadDriversGroups}
             handleDeleteSelectedGroups={() => setStartSeveralDeleteStart(true)}
             selectedGroupList={selectedGroupList}
             handleSelectGroup={handleSelectGroup}

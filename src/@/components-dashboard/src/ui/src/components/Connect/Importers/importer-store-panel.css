@@ -1,0 +1,381 @@
+/*
+ * redesign IM-B (, decisions D2 and D4): the store panel of /connect/importers (RecordPanel with the Importers and Logs tabs).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the one literal colour of the panel is the brand
+ * colour of each importer, set inline from importerCards (`card.logoColor`, as in main). Logical properties only. Classes use the
+ * `isp-` prefix; the wrappers keep `odc-`. Shape taken from pos-store-panel.css.
+ */
+
+.isp-section,
+.isp-logs {
+  display: grid;
+  gap: var(--od-space-3);
+  align-content: start;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The importers of a store in a Sheet (Connect/BusinessImporters, from the start guide): the store name keeps the tab bar's air */
+.isp-section--sheet {
+  padding-block-start: var(--od-space-4);
+}
+
+.isp-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* The logo of an importer: decorative, a 32px square in the brand colour of the importer (inline) */
+.isp-logo {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  border-radius: var(--od-radius-component);
+  background: var(--od-text-muted);
+  color: var(--od-text-inverse);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  user-select: none;
+}
+
+/* ── Importers: a list, a hairline between rows ── */
+.isp-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.isp-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.isp-row:last-child {
+  border-block-end: 0;
+}
+
+.isp-row-text {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.isp-row-name {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.isp-note {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* The note of GloriaFood (images are not migrated): a notice, with an icon and words, not colour alone */
+.isp-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-1);
+  padding: var(--od-x-space-1-5) var(--od-x-space-2-5);
+  border-radius: var(--od-radius-component);
+  background: var(--od-warning-soft);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.isp-warning > .odc-icon {
+  flex: none;
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-warning-signal);
+}
+
+.isp-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+}
+
+/* ── The run status of an importer (main sync, ): the line of the last import under the description. The line is the Product
+   Status (a dot and the words); the actions are Product buttons (link / ghost: 44px area on a coarse pointer and the house ring come
+   from them), indented under the words. Nothing here sets a colour or a size of its own. ── */
+.isp-run {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  margin-block-start: var(--od-space-1);
+}
+
+.isp-run-live {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.isp-run-live > .odc-status {
+  font-weight: var(--od-font-weight-regular);
+}
+
+.isp-run-detail {
+  margin: 0;
+  padding-inline-start: calc(var(--od-x-dot) + var(--od-space-2));
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.isp-run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-3); /* 12px between actions so their 44px areas on a phone do not cross */
+  padding-inline-start: calc(var(--od-x-dot) + var(--od-space-2));
+}
+
+/* ── Logs ── */
+.isp-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The filter: a native select in a Product field (IM-05). 32px, the field border, the house ring; on a phone 16px text and a 44px area */
+.isp-filter {
+  justify-self: start;
+  max-inline-size: 100%;
+}
+
+.isp-select-part {
+  display: inline-block;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.isp-select {
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.isp-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .isp-select {
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .isp-select-part {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .isp-select-part::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset); /* a 32px control -> 44px area, never smaller than the control */
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+}
+
+/* Loading: the shape of the rows */
+.isp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.isp-skeleton-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.isp-skeleton-text {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The steps of the empty state */
+.isp-steps {
+  margin: 0 0 var(--od-space-4);
+  padding-inline: var(--od-space-5) 0;
+  padding-block: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  text-align: start;
+}
+
+/* Selection bar: Select all, the count, Delete. 12px between controls so their 44px areas on a phone do not cross */
+.isp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* redesign IM-R1-3 (, review r1 #3): the labelled Checkbox of Product takes the whole line (inline-size: 100%) and pads its
+   box; here it takes its own width, so Delete stays in the bar, and its box lines up with the boxes of the rows */
+.isp-bar > .odc-checkbox-labelled {
+  flex: none;
+  inline-size: auto;
+  margin-inline-start: calc(var(--od-x-space-1-5) * -1);
+}
+
+.isp-count {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.isp-log-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.isp-log {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.isp-log:last-child {
+  border-block-end: 0;
+}
+
+.isp-log[data-selected] {
+  background: var(--od-x-selected);
+}
+
+.isp-log-select {
+  display: inline-flex;
+}
+
+.isp-log-main {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.isp-log-name {
+  margin: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.isp-log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-x-space-half) var(--od-space-2);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.isp-log-status {
+  display: inline-flex;
+  min-inline-size: 0;
+}
+
+/* ── A phone: the importer's button drops under the text and takes the width; a log is two lines, with nothing to scroll sideways ── */
+@media (max-width: 767px) {
+  .isp-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .isp-row-action {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .isp-row-action > .odc-btn {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    white-space: normal;
+  }
+
+  .isp-log {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    row-gap: var(--od-space-3);
+  }
+
+  .isp-log-main {
+    grid-column: 3 / -1;
+  }
+
+  .isp-log-status {
+    grid-column: 1 / 4;
+    grid-row: 2;
+  }
+
+  .isp-log-download {
+    grid-column: 4;
+    grid-row: 2;
+    min-inline-size: 0;
+    white-space: normal;
+  }
+
+  .isp-bar > .odc-btn {
+    margin-inline-start: auto;
+  }
+}

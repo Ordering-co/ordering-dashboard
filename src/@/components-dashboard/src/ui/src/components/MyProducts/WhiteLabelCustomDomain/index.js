@@ -18,7 +18,8 @@ const WhiteLabelCustomDomainUI = (props) => {
     handleChangeFormState,
     formState,
     onClose,
-    handleChangeCustomDomain
+    handleChangeCustomDomain,
+    hideTitle
   } = props
 
   const [, t] = useLanguage()
@@ -49,7 +50,8 @@ const WhiteLabelCustomDomainUI = (props) => {
   return (
     <>
       <Container>
-        <h1>{t('CUSTOM_DOMAIN', 'Custom domain')}</h1>
+        {/* redesign J5 row 52: the sections editor shows it in a Dialog that already carries the title */}
+        {!hideTitle && <h1>{t('CUSTOM_DOMAIN', 'Custom domain')}</h1>}
         <FormControl>
           <TitleWrapper>
             <label>{t('DOMAIN', 'Domain')}</label>
@@ -67,7 +69,7 @@ const WhiteLabelCustomDomainUI = (props) => {
             outline
             onClick={onClose}
           >
-            {t('Cancel', 'Cancel')}
+            {t('CANCEL', 'Cancel')}
           </Button>
           <Button
             color='primary'
@@ -79,7 +81,7 @@ const WhiteLabelCustomDomainUI = (props) => {
         </ButtonGroup>
       </Container>
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

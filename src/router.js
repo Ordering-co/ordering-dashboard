@@ -5,12 +5,17 @@ import {
 
 import { App } from './App'
 import { DashboardAnalytics } from './components/DashboardAnalytics'
+import { ColorModeProvider } from '~ui/src/contexts/ColorModeContext'
+import settings from './config'
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <DashboardAnalytics />
-      <App />
+      {/* off (the default), the provider only renders the app. */}
+      <ColorModeProvider enabled={settings.dashboard_dark_mode === true}>
+        <App />
+      </ColorModeProvider>
     </BrowserRouter>
   )
 }

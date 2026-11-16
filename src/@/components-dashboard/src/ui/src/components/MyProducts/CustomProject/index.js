@@ -23,6 +23,7 @@ export const CustomProject = () => {
         {isCollapse && (
           <IconButton
             color='black'
+            aria-label={t('OPEN_MENU', 'Open menu')}
             onClick={() => handleMenuCollapse(false)}
           >
             <MenuIcon />
@@ -38,7 +39,7 @@ export const CustomProject = () => {
           <Button
             color='primary'
             borderRadius='8px'
-            onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}
+            onClick={() => window.open('https://www.ordering.co/contact/', '_blank', 'noopener,noreferrer')}
           >
             {t('CONTACT_US', 'Contact us')}
           </Button>

@@ -10,7 +10,7 @@ import { getMyProductsSite, shouldHideMigrated } from './websiteMigration'
  * never offered in one place and hidden in the other. Pure, no React.
  */
 
-const CONNECT_BUSINESS_OWNER_PAGES = ['pos_menu']
+const CONNECT_BUSINESS_OWNER_PAGES = ['pos_menu', 'order_with_google']
 const getConnectLevels = (pageName) => CONNECT_BUSINESS_OWNER_PAGES.includes(pageName) ? [0, 2] : [0]
 
 /**
@@ -36,6 +36,7 @@ export const DASHBOARD_ROUTE_LEVELS = {
   '/connect/pos-menu': getConnectLevels('pos_menu'),
   '/connect/sales-channels': getConnectLevels('sales_channels'),
   '/connect/whatsapp-bots': getConnectLevels('whatsapp_bots'),
+  '/connect/order-with-google': getConnectLevels('order_with_google'),
   '/users/customers': [0],
   '/users/business-owners': [0],
   '/users/callcenter-agents': [0],
@@ -112,13 +113,28 @@ export const getDashboardRoleFlags = (user = {}) => {
   }
 }
 
+/**
+ * Where `/` and `/home` send a signed-in user. Level 8 goes to `/profile`; level 5 and the read-only users of the levels
+ * that open `/orders` (0, 2, 5) go to `/orders`; everybody else sees Home. A read-only user of any other level used to be
+ * sent to `/orders` too, which its guard rejects, and the 404 button led back to `/`: a loop (#76b).
+ */
+export const getDashboardStartPath = (user) => {
+  const { level, isReadOnly } = getDashboardRoleFlags(user)
+  if (level === 8) return '/profile'
+  if (level === 5) return '/orders'
+  if (isReadOnly && canOpenDashboardRoute('/orders', level)) return '/orders'
+  return '/home'
+}
+
 const BUSINESS_OWNER_INTELLIGENCE_IDS = [1, 6]
 
 /**
  * Sidebar sections. Each section has `visible` (the accordion is shown) and
  * `items` (sub menus with `enabled`). Item titles are translated with `t`.
  */
-export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [] } = {}) => {
+// `googleActionsVisible`: the project shows Order with Google (useGoogleActionsVisibility, ); its Connect entry is listed
+// only then. A caller that does not pass it lists the menu without it.
+export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [], googleActionsVisible = false } = {}) => {
   const { level, readOnlyAdmin, readOnlyDeliveryManager, readOnlyBusinessOwner, isReadOnly } = getDashboardRoleFlags(user)
   const {
     showConnectTab,
@@ -176,14 +192,14 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     },
     {
       id: 6,
-      title: t('DELIVERY_GROUPS', 'Delivery Groups'),
+      title: t('DELIVERY_GROUPS', 'Delivery groups'),
       pageName: 'drivers_groups',
       url: '/delivery/drivers-groups',
       enabled: (level === 5 || level === 0) && !(readOnlyAdmin || readOnlyDeliveryManager)
     },
     {
       id: 7,
-      title: t('DRIVER_STORE_STATUS', 'Driver Store Status'),
+      title: t('DRIVER_STORE_STATUS', 'Driver store status'),
       pageName: 'driver_store_status',
       url: '/driver-store-status',
       enabled: !(readOnlyAdmin || readOnlyDeliveryManager)
@@ -214,16 +230,17 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
 
   const connect = [
     { id: 2, title: t('CONNECT_DELIVERY_SERVICES', 'Delivery services'), pageName: 'delivery_services', url: '/connect/delivery-services', enabled: connectDeliveryServices },
-    { id: 3, title: t('CONNECT_POS_MENU', 'POS & Menu Sync'), pageName: 'pos_menu', url: '/connect/pos-menu', enabled: connectPosMenuSync },
+    { id: 3, title: t('CONNECT_POS_MENU', 'POS & menu sync'), pageName: 'pos_menu', url: '/connect/pos-menu', enabled: connectPosMenuSync },
     { id: 4, title: t('CONNECT_IMPORTERS', 'Importers'), pageName: 'importers', url: '/connect/importers', enabled: connectImporters },
-    { id: 5, title: t('CONNECT_SALES_CHANNELS', 'Sales Channels'), pageName: 'sales_channels', url: '/connect/sales-channels', enabled: connectSalesChannels },
-    { id: 6, title: t('CONNECT_WHATSAPP_BOTS', 'WhatsApp bots'), pageName: 'whatsapp_bots', url: '/connect/whatsapp-bots', enabled: true }
+    { id: 5, title: t('CONNECT_SALES_CHANNELS', 'Sales channels'), pageName: 'sales_channels', url: '/connect/sales-channels', enabled: connectSalesChannels },
+    { id: 6, title: t('CONNECT_WHATSAPP_BOTS', 'WhatsApp bots'), pageName: 'whatsapp_bots', url: '/connect/whatsapp-bots', enabled: true },
+    ...(googleActionsVisible ? [{ id: 7, title: t('ORDER_WITH_GOOGLE', 'Order with Google'), pageName: 'order_with_google', url: '/connect/order-with-google', enabled: true }] : [])
   ].filter(menu => getConnectLevels(menu.pageName).includes(level))
 
   const users = [
     { id: 1, title: t('CUSTOMERS', 'Customers'), pageName: 'customers', url: '/users/customers', enabled: true },
     { id: 2, title: t('BUSINESS_OWNERS', 'Business Owners'), pageName: 'business_owners', url: '/users/business-owners', enabled: true },
-    { id: 3, title: t('CALL_CENTER_AGENTS', 'Call Center Agents'), pageName: 'callcenter_agents', url: '/users/callcenter-agents', enabled: true },
+    { id: 3, title: t('CALL_CENTER_AGENTS', 'Call center agents'), pageName: 'callcenter_agents', url: '/users/callcenter-agents', enabled: true },
     { id: 4, title: t('ADMINS', 'Admins'), pageName: 'admins', url: '/users/admins', enabled: true },
     { id: 5, title: t('PROFESSIONALS', 'Professionals'), pageName: 'professionals', url: '/users/professionals', enabled: true }
   ]
@@ -247,14 +264,14 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
   ]
 
   const marketing = [
-    { id: 1, title: t('ADVANCED_OFFERS', 'Advanced offers'), pageName: 'enterprise_promotions', url: '/marketing/promotions-enterprise', enabled: true },
+    { id: 1, title: t('PROMOTIONS', 'Promotions'), pageName: 'enterprise_promotions', url: '/marketing/promotions-enterprise', enabled: true },
     { id: 2, title: t('AD_BANNERS', 'Ad banners'), pageName: 'ad_banners', url: '/marketing/ad-banners', enabled: true },
     { id: 3, title: t('CART_RECOVERY_RULES', 'Cart recovery rules'), pageName: 'recovery_actions', url: '/cart-recovery/recovery-actions', enabled: true },
     { id: 5, title: t('CAMPAIGN', 'Campaign'), pageName: 'campaign', url: '/marketing/campaign', enabled: marketingCampaigns }
   ]
 
   const logs = [
-    { id: 1, title: t('SETTINGS_LOGS', 'Settings logs'), pageName: 'logs', url: '/settings/logs', enabled: true }
+    { id: 1, title: t('SETTINGS_LOGS_TITLE', 'Settings logs'), pageName: 'logs', url: '/settings/logs', enabled: true }
   ]
 
   const notDriverOrPro = level !== 5 && level !== 8
@@ -292,7 +309,7 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     },
     connect: {
       key: 'connect',
-      title: t('DASHBOARD_CONNECT', 'Connect'),
+      title: t('CONNECT_MODULE', 'Connect'),
       visible: showConnectTab && notDriverOrPro && !isReadOnly && connect.some(menu => menu.enabled),
       items: orderSidebarItems(connect, SIDEBAR_NAV_ORDER.connect)
     },
@@ -328,11 +345,50 @@ export const getDashboardNavSections = ({ t = (_key, fallback) => fallback, user
     },
     logs: {
       key: 'logs',
-      title: t('LOGS_AUDIT', 'Logs Audit'),
+      title: t('LOGS_AUDIT', 'Logs audit'),
       visible: level === 0 && !isReadOnly,
       items: logs
     }
   }
+}
+
+// Routes that are not a menu entry but live under one section of it (they open from inside that section).
+const READ_ONLY_SECTION_ROUTES = {
+  '/stores/add': 'stores',
+  '/intelligence/ecommerce_reports': 'intelligence',
+  '/my-products': 'myProducts'
+}
+
+const routeMatches = (pathname, url) => pathname === url || pathname.startsWith(`${url}/`)
+
+/** Whether the menu built with these flags lets the user open `pathname`: `null` when the menu does not know the route. */
+const menuOpens = ({ pathname, user, configs, project }) => {
+  const sections = getDashboardNavSections({ user, configs, project })
+  const sectionKey = Object.keys(READ_ONLY_SECTION_ROUTES).find(route => routeMatches(pathname, route))
+  if (sectionKey) return !!sections[READ_ONLY_SECTION_ROUTES[sectionKey]]?.visible
+  const entries = Object.values(sections).flatMap(section => section.items.map(item => ({ section, item })))
+    .concat(getDashboardFooterLinks({ user }).map(item => ({ section: { visible: true }, item })))
+    .filter(({ item }) => item.url && routeMatches(pathname, item.url))
+    .sort((a, b) => b.item.url.length - a.item.url.length)
+  if (!entries.length) return null
+  // the longest entry decides (`/settings/logs` is its own entry, not the footer's `/settings`)
+  return entries.filter(({ item }) => item.url === entries[0].item.url).some(({ section, item }) => !!section.visible && !!item.enabled)
+}
+
+/**
+ * (owner decision D-68, the criterion of Stores 11): `readOnlyAdmin` and `readOnlyDeliveryManager` hide pages
+ * in the menu, and the route has to hide them too, or a read-only user reaches the edit screens by URL or ⌘K.
+ * `true` when the menu shows `path` to this user without those two flags and hides it with them; the levels of each
+ * page (decision 26) are not touched. `/` and `/home` keep their own redirect.
+ */
+export const isHiddenByReadOnly = ({ path, user, configs = {}, project } = {}) => {
+  const { readOnlyAdmin, readOnlyDeliveryManager } = getDashboardRoleFlags(user)
+  if (!readOnlyAdmin && !readOnlyDeliveryManager) return false
+  const pathname = String(path || '').split('?')[0]
+  if (pathname === '/' || pathname === '/home') return false
+  const withFlags = menuOpens({ pathname, user, configs, project })
+  if (withFlags !== false) return false
+  return !!menuOpens({ pathname, user: { ...user, readOnlyAdmin: false, readOnlyDeliveryManager: false }, configs, project })
 }
 
 /**
@@ -357,7 +413,7 @@ export const getDashboardFooterLinks = ({ t = (_key, fallback) => fallback, user
     },
     {
       id: 'open_source_code',
-      title: t('SOURCE_CODE_TITLE', 'Open Source Code'),
+      title: t('SOURCE_CODE_PAGE_TITLE', 'Open source code'),
       pageName: 'open_source_code',
       url: '/open-source-code',
       enabled: level === 0

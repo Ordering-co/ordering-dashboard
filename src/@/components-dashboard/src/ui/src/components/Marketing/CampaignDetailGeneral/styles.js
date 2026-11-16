@@ -14,7 +14,7 @@ export const SelectWrapper = styled.div`
 
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 10px;
   }
@@ -29,7 +29,7 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
       color: ${props => props.theme.colors.secundaryContrast};
     }
@@ -59,7 +59,7 @@ export const SelectWrapper = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
   color: ${props => props.theme.colors.secundaryContrast};
 `
@@ -69,7 +69,7 @@ export const InputWrapper = styled.div`
 
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 10px;
   }
@@ -82,7 +82,7 @@ export const InputWrapper = styled.div`
 export const AudienceWrapper = styled.div`
   > h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 15px;
@@ -99,6 +99,21 @@ export const RadioCheckWrapper = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0px;
+  color: inherit;
+  font-family: inherit;
+  text-align: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
 
   ${({ isBottom }) => isBottom && css`
     margin-bottom: 10px;
@@ -119,7 +134,7 @@ export const RadioCheckWrapper = styled.div`
   span {
     user-select: none;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
 `
@@ -131,7 +146,7 @@ export const SwitchWrapper = styled.div`
 
   > .campaign-enabled {
     margin-bottom: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-right: 7px;
     ${props => props.theme.rtl && css`
@@ -151,7 +166,7 @@ export const DynamicContentWrapper = styled.div`
 
   > p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin-top: 5px;
     margin-bottom: 0px;
@@ -177,7 +192,7 @@ export const FixedContent = styled.div`
   `}
   > p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin-top: 5px;
     margin-bottom: 0px;
@@ -185,7 +200,7 @@ export const FixedContent = styled.div`
   }
   h3 {
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     line-height: 21px;
     margin-top: 20px;
     margin-bottom: 17px;
@@ -199,7 +214,7 @@ export const FixedStatusWrapper = styled.div`
 
   > span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     text-transform: capitalize;
   }
@@ -240,7 +255,7 @@ export const RulesWrapper = styled.div`
 
   > h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin: 0px;
     margin-bottom: 5px;
@@ -248,7 +263,7 @@ export const RulesWrapper = styled.div`
   > p {
     font-weight: 400;
     margin: 0px;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     margin-bottom: 5px;
     span {
@@ -275,6 +290,23 @@ export const CheckBoxWrapper = styled.div`
     display: flex;
     align-items: center;
     .rule-control {
+      background: none;
+      border: none;
+      padding: 0px;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid var(--od-action);
+        outline-offset: 2px;
+      }
+
+      @media (pointer: coarse) {
+        min-width: 44px;
+        min-height: 44px;
+      }
+
       svg {
         color: ${props => props.theme.colors.secundaryLight};
         &.fill {
@@ -284,7 +316,7 @@ export const CheckBoxWrapper = styled.div`
     }
     p {
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       line-height: 24px;
       margin: 0px 0px 0px 20px;
 
@@ -299,7 +331,7 @@ export const EndDateWrapper = styled.div`
   margin-top: 10px;
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
 

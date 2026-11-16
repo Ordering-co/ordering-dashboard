@@ -1,30 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Dropdown, DropdownButton } from 'react-bootstrap'
-import { useTheme } from 'styled-components'
 import { useForm } from 'react-hook-form'
-import { RecordCircleFill, Circle, ThreeDots, Image as ImageIcon } from 'react-bootstrap-icons'
-import { useLanguage, DragAndDrop, ExamineClick, useUtils, LoyaltyLevelDetail as LoyaltyLevelDetailController } from '../../../../../index'
-import { Confirm, Alert, ImageCrop, Modal } from '../../Shared'
-import { Input, Button } from '../../../styles'
+import { useLanguage, useUtils, LoyaltyLevelDetail as LoyaltyLevelDetailController } from '../../../../../index'
+import { Alert } from '../../Shared'
+import { Ellipsis, Trash2 } from '../../Shared/Icon'
+import { Button, ConfirmDialog, Menu, RadioGroup, TextField } from '../../Shared/Product'
+import { ImageField } from '../../Shared/Product/ImageField'
 import { bytesConverter } from '../../../utils'
+import './loyalty-level-detail.css'
 
-import {
-  Container,
-  DetailsHeader,
-  LeftHeader,
-  RightHeader,
-  LevelName,
-  ActionSelectorWrapper,
-  Content,
-  FormController,
-  ExPirationWrapper,
-  CheckBoxWrapper,
-  OptionInputWrapper,
-  ButtonWrapper,
-  LoyaltyImage,
-  UploadImageIconContainer,
-  UploadImageIcon
-} from './styles'
+// the editor of one level in Product pieces. Same controller props, handlers, payloads, validations and alerts as main;
+// the «⋯» menu is P/Menu, the delete question P/ConfirmDialog, the image P/ImageField (its own crop dialog), Save a primary P/Button.
+
+const digitsOnly = (e) => {
+  if (!/^[0-9]$/.test(e.key)) e.preventDefault()
+}
 
 const LoyaltyLevelDetailUI = (props) => {
   const {
@@ -35,21 +24,31 @@ const LoyaltyLevelDetailUI = (props) => {
     handleChangeItem,
     addLevel,
     updateLevel,
-    handlechangeImage
+    handlechangeImage,
+    onDirtyChange
   } = props
 
-  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
   const { handleSubmit } = useForm()
 
-  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [expiration, setExpiration] = useState(null)
   const [maxValue, setMaxValue] = useState('')
-  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
 
-  const imageRef = useRef()
+  // a parent that guards leaving (the Settings hub) hears whether the open level holds values that differ from
+  // the saved level; typing a value back to the saved one is clean. Without `onDirtyChange` nothing is reported.
+  const changes = formState?.changes || {}
+  const isDirty = Object.keys(changes).some(key => String(changes[key] ?? '') !== String(level?.[key] ?? ''))
+  const onDirtyChangeRef = useRef(onDirtyChange)
+  onDirtyChangeRef.current = onDirtyChange
+  useEffect(() => {
+    onDirtyChangeRef.current && onDirtyChangeRef.current(isDirty)
+  }, [isDirty])
+  useEffect(() => () => {
+    onDirtyChangeRef.current && onDirtyChangeRef.current(false)
+  }, [])
 
   const closeAlert = () => {
     setAlertState({
@@ -58,19 +57,15 @@ const LoyaltyLevelDetailUI = (props) => {
     })
   }
 
-  const onClickDeleteLevel = () => {
-    setConfirm({
-      open: true,
-      content: t('QUESTION_DELETE_ITEM', 'Are you sure to delete this _item_?').replace('_item_', t('LEVEL', 'Level')),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleDeleteLevel()
-      }
-    })
+  // The controller reads `evt.target.name` and `evt.target.value`, as it did from the legacy inputs.
+  const changeInput = name => value => handleChangeInput({ target: { name, value } })
+
+  const handleConfirmDelete = () => {
+    setConfirmOpen(false)
+    handleDeleteLevel()
   }
 
-  const handleChangeMaxValue = (e) => {
-    const value = e.target.value
+  const handleChangeMaxValue = (value) => {
     setMaxValue(value)
     if (value) handleChangeItem({ expire_after_minutes: (value * 24 * 60) })
     else handleChangeItem({ expire_after_minutes: null })
@@ -84,11 +79,6 @@ const LoyaltyLevelDetailUI = (props) => {
     setExpiration(null)
     handleChangeItem({ expire_after_minutes: null })
     setMaxValue('')
-  }
-
-  const handleChangePhoto = (croppedImg) => {
-    handleChangeItem(cropState?.name, croppedImg)
-    setCropState({ name: null, data: null, open: false })
   }
 
   const onSubmit = () => {
@@ -126,37 +116,18 @@ const LoyaltyLevelDetailUI = (props) => {
     else addLevel()
   }
 
-  const handleClickImage = () => {
-    imageRef.current.click()
-  }
-
-  const handleFiles = (files) => {
-    if (files.length === 1) {
-      const type = files[0].type.split('/')[0]
-      if (type !== 'image') {
-        setAlertState({
-          open: true,
-          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
-        })
-        return
-      }
-
-      if (bytesConverter(files[0]?.size) > 2048) {
-        setAlertState({
-          open: true,
-          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
-        })
-        return
-      }
-
-      const reader = new window.FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = () => {
-        setCropState({ name: 'image', data: reader.result, open: true })
-      }
-
-      handlechangeImage(files[0])
+  // main's checks before the crop (type, then 2 MB), as alerts; a valid file is held at once, as main did, and the crop replaces it.
+  const validateImage = (file) => {
+    if (file?.type?.split('/')[0] !== 'image') {
+      setAlertState({ open: true, content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')] })
+      return false
     }
+    if (bytesConverter(file?.size) > 2048) {
+      setAlertState({ open: true, content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')] })
+      return false
+    }
+    handlechangeImage(file)
+    return true
   }
 
   useEffect(() => {
@@ -177,164 +148,123 @@ const LoyaltyLevelDetailUI = (props) => {
     }
   }, [level?.expire_after_minutes])
 
+  const imageValue = (!formState.changes?.image || formState.error)
+    ? (level?.image ? optimizeImage(level?.image, 'h_200,c_limit') : '')
+    : formState?.changes?.image
+
   return (
     <>
-      <Container>
-        <DetailsHeader>
-          <LeftHeader>
-            <LevelName>{level?.id ? (formState?.changes?.name ?? level?.name) : t('NEW_LEVEL', 'New level')}</LevelName>
-          </LeftHeader>
+      <div className='lld'>
+        <div className='lld-head'>
+          <h2 className='lld-title'>{level?.id ? (formState?.changes?.name ?? level?.name) : t('NEW_LEVEL', 'New level')}</h2>
           {level?.id && (
-            <RightHeader>
-              <ActionSelectorWrapper>
-                <DropdownButton
-                  menuAlign={theme?.rtl ? 'left' : 'right'}
-                  title={<ThreeDots />}
-                  id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
-                >
-                  <Dropdown.Item onClick={onClickDeleteLevel}>
-                    {t('DELETE', 'Delete')}
-                  </Dropdown.Item>
-                </DropdownButton>
-              </ActionSelectorWrapper>
-            </RightHeader>
+            <Menu
+              icon={Ellipsis}
+              label={t('ACTIONS', 'Actions')}
+              items={[{ key: 'delete', label: t('DELETE', 'Delete'), icon: Trash2, tone: 'danger', onSelect: () => setConfirmOpen(true) }]}
+            />
           )}
-        </DetailsHeader>
-        <Content onSubmit={handleSubmit(onSubmit)}>
-          <LoyaltyImage
-            onClick={() => handleClickImage()}
-          >
-            <ExamineClick
-              onFiles={files => handleFiles(files)}
-              childRef={(e) => { imageRef.current = e }}
-              accept='image/png, image/jpeg, image/jpg'
-              disabled={formState.loading}
-            >
-              <DragAndDrop
-                onDrop={dataTransfer => handleFiles(dataTransfer.files)}
-                accept='image/png, image/jpeg, image/jpg'
-                disabled={formState.loading}
-              >
-                {
-                  (!formState.changes?.image || formState.error)
-                    ? level?.image && (<img src={optimizeImage(level?.image, 'h_200,c_limit')} alt='tag image' loading='lazy' />)
-                    : formState?.changes?.image && (<img src={formState?.changes?.image} alt='tag image' loading='lazy' />)
-                }
-                <UploadImageIconContainer>
-                  <UploadImageIcon>
-                    <ImageIcon />
-                  </UploadImageIcon>
-                </UploadImageIconContainer>
-              </DragAndDrop>
-            </ExamineClick>
-          </LoyaltyImage>
-          <FormController>
-            <label>{t('NAME', 'Name')}</label>
-            <Input
-              name='name'
-              placeholder={t('Name', 'name')}
-              value={formState?.changes?.name ?? level?.name ?? ''}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
+        </div>
+        <form className='lld-form' noValidate onSubmit={handleSubmit(onSubmit)}>
+          <ImageField
+            className='lld-image'
+            label={t('IMAGE', 'Image')}
+            changeLabel={t('CHANGE', 'Change')}
+            cropTitle={t('IMAGE_CROP', 'Image crop')}
+            closeLabel={t('CLOSE', 'Close')}
+            droppable
+            tooManyFilesText={t('IMAGE_ONE_AT_A_TIME', 'Drop one image at a time.')}
+            disabled={formState.loading}
+            value={imageValue}
+            validateFile={validateImage}
+            // main sent the crop as handleChangeItem('image', crop), which spread the letters of «image» into the changes and dropped the crop
+            onChange={(image) => handleChangeItem({ image })}
+          />
+          <TextField
+            label={t('NAME', 'Name')}
+            name='name'
+            placeholder={t('Name', 'name')}
+            value={formState?.changes?.name ?? level?.name ?? ''}
+            onChange={changeInput('name')}
+            disabled={formState.loading}
+            autoComplete='off'
+          />
+          <TextField
+            label={t('ACCUMULATION_RATE', 'Accumulation rate')}
+            name='accumulation_rate'
+            className='odc-figure'
+            inputMode='numeric'
+            value={String(formState?.changes?.accumulation_rate ?? level?.accumulation_rate ?? '')}
+            onChange={changeInput('accumulation_rate')}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={digitsOnly}
+          />
+          <TextField
+            label={t('POINTS_REQUIRED', 'Points required')}
+            name='minimum_points'
+            className='odc-figure'
+            inputMode='numeric'
+            value={String(formState?.changes?.minimum_points ?? level?.minimum_points ?? '')}
+            onChange={changeInput('minimum_points')}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={digitsOnly}
+          />
+          <TextField
+            label={t('MAXIMUM_OF_POINTS', 'Maximum of points')}
+            name='maximum_accumulation_fixed'
+            className='odc-figure'
+            inputMode='numeric'
+            value={String(formState?.changes?.maximum_accumulation_fixed ?? level?.maximum_accumulation_fixed ?? '')}
+            onChange={changeInput('maximum_accumulation_fixed')}
+            disabled={formState.loading}
+            autoComplete='off'
+            onKeyPress={digitsOnly}
+          />
+          <div className='lld-expiration'>
+            <RadioGroup
+              label={t('EXPIRATION', 'Expiration')}
+              options={[
+                { value: 'no', label: t('NO', 'No') },
+                { value: 'days', label: t('EXPIRATION_IN_DAYS', 'Expiration in days') }
+              ]}
+              value={expiration ? 'days' : 'no'}
+              onValueChange={value => handleChangeExpirtation(value === 'days' ? 'days' : null)}
             />
-          </FormController>
-          <FormController>
-            <label>{t('ACCUMULATION_RATE', 'Accumulation rate')}</label>
-            <Input
-              name='accumulation_rate'
-              placeholder={t('ACCUMULATION_RATE', 'Accumulation rate')}
-              value={formState?.changes?.accumulation_rate ?? level?.accumulation_rate ?? ''}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-              onKeyPress={(e) => {
-                if (!/^[0-9]$/.test(e.key)) {
-                  e.preventDefault()
-                }
-              }}
-            />
-          </FormController>
-          <FormController>
-            <label>{t('POINTS_REQUIRED', 'Points required')}</label>
-            <Input
-              name='minimum_points'
-              placeholder={t('POINTS_REQUIRED', 'Points required')}
-              value={formState?.changes?.minimum_points ?? level?.minimum_points ?? ''}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-              onKeyPress={(e) => {
-                if (!/^[0-9]$/.test(e.key)) {
-                  e.preventDefault()
-                }
-              }}
-            />
-          </FormController>
-          <FormController>
-            <label>{t('MAXIMUM_OF_POINTS', 'Maximum of points')}</label>
-            <Input
-              name='maximum_accumulation_fixed'
-              placeholder={t('MAXIMUM_OF_POINTS', 'Maximum of points')}
-              value={formState?.changes?.maximum_accumulation_fixed ?? level?.maximum_accumulation_fixed ?? ''}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              onKeyPress={(e) => {
-                if (!/^[0-9]$/.test(e.key)) {
-                  e.preventDefault()
-                }
-              }}
-              autoComplete='off'
-            />
-          </FormController>
-          <ExPirationWrapper>
-            <h2>{t('EXPIRATION', 'Expiration')}</h2>
-            <CheckBoxWrapper onClick={() => handleChangeExpirtation(null)}>
-              {!expiration ? <RecordCircleFill className='active' /> : <Circle />}
-              <p>{t('NO', 'No')}</p>
-            </CheckBoxWrapper>
-            <CheckBoxWrapper onClick={() => handleChangeExpirtation('days')}>
-              {expiration ? <RecordCircleFill className='active' /> : <Circle />}
-              <p>{t('EXPIRATION_IN_DAYS', 'Expiration in days')}</p>
-            </CheckBoxWrapper>
             {expiration && (
-              <OptionInputWrapper>
-                <Input
-                  type='text'
-                  placeholder={`0 ${t('DAYS', 'days')}`}
-                  name='expire_after_minutes'
-                  value={maxValue}
-                  onChange={handleChangeMaxValue}
-                  onKeyPress={(e) => {
-                    if (!/^[0-9]$/.test(e.key)) {
-                      e.preventDefault()
-                    }
-                  }}
-                />
-              </OptionInputWrapper>
+              <TextField
+                className='odc-figure'
+                fieldClassName='lld-days'
+                label={t('DAYS', 'Days')}
+                name='expire_after_minutes'
+                inputMode='numeric'
+                value={String(maxValue)}
+                onChange={handleChangeMaxValue}
+                onKeyPress={digitsOnly}
+              />
             )}
-          </ExPirationWrapper>
-          <ButtonWrapper>
+          </div>
+          <div className='lld-foot'>
             <Button
-              color='primary'
+              variant='primary'
               type='submit'
+              busy={Boolean(formState?.loading)}
               disabled={Object.keys(formState?.changes).length === 0}
             >
-              {level?.id ? ('SAVE', 'Save') : ('ADD', 'Add')}
+              {level?.id ? t('SAVE', 'Save') : t('ADD', 'Add')}
             </Button>
-          </ButtonWrapper>
-        </Content>
-      </Container>
-      <Confirm
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={confirm.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={confirm.open}
-        onClose={() => setConfirm({ ...confirm, open: false })}
-        onCancel={() => setConfirm({ ...confirm, open: false })}
-        onAccept={confirm.handleOnAccept}
-        closeOnBackdrop={false}
+          </div>
+        </form>
+      </div>
+      <ConfirmDialog
+        open={confirmOpen}
+        title={t('QUESTION_DELETE_ITEM', 'Are you sure to delete this _item_?').replace('_item_', t('LEVEL', 'Level'))}
+        confirmLabel={t('DELETE', 'Delete')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmOpen(false)}
       />
       <Alert
         title={t('LEVEL', 'Level')}
@@ -345,21 +275,6 @@ const LoyaltyLevelDetailUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-      {cropState?.open && (
-        <Modal
-          width='700px'
-          height='80vh'
-          padding='30px'
-          title={t('IMAGE_CROP', 'Image crop')}
-          open={cropState?.open}
-          onRemove={() => setCropState({ ...cropState, open: false })}
-        >
-          <ImageCrop
-            photo={cropState?.data}
-            handleChangePhoto={handleChangePhoto}
-          />
-        </Modal>
-      )}
     </>
   )
 }

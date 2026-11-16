@@ -1,41 +1,116 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { PlusCircle, Trash3, Funnel } from 'react-bootstrap-icons'
-import MdcFilterOff from '@meronex/icons/mdc/MdcFilterOff'
-import TiWarningOutline from '@meronex/icons/ti/TiWarningOutline'
+import React, { useState, useEffect, useRef, useId } from 'react'
 import { useLanguage, useApi, useSession, OrdersFilter as OrdersFilterController } from '../../../../../index'
 import { BusinessesSelector } from '../BusinessesSelector'
 import { DriversGroupTypeSelector } from '../DriversGroupTypeSelector'
 import { DateTypeSelector } from '../DateTypeSelector'
-import { CitySelector, Modal } from '../../Shared'
+import { CitySelector } from '../../Shared'
 import { DeliveryTypeSelector } from '../DeliveryTypeSelector'
 import { PaymethodTypeSelector } from '../PaymethodTypeSelector'
 import { CountryFilter } from '../CountryFilter'
-import { Button, IconButton, Input, LinkButton } from '../../../styles'
 import { CurrencyFilter } from '../CurrencyFilter'
 import { AdminsSelector } from '../AdminsSelector'
+import { Button, IconButton } from '../../Shared/Product/Button'
+import { Sheet } from '../../Shared/Product/Sheet'
+import { CirclePlus, Trash2 } from '../../Shared/Icon'
 import { getUniqueId } from '../../../utils'
 import { Select } from '../../../styles/Select/FirstSelect'
+import { SelectSurfaceContext } from '../../Shared/UI/selectPlacement'
+import { SelectFieldLabelContext } from '../../Shared/UI/FirstSelect'
 import { useFilterValues } from '../../../contexts/FilterValuesContext'
+import '../OrdersFilterBar/orders-filter-bar.css'
+import './orders-filter-group.css'
 
-import {
-  FilterGroupListContainer,
-  WrapperRow,
-  ButtonGroup,
-  AddInputWrapper,
-  AddMetaFiled,
-  SelectWrapper,
-  Option,
-  WarningMessage
-} from './styles'
+import { Option } from './styles'
 import { LogisticStatusDot } from '../OrdersTable/styles'
+import { useIsPhone } from '../../Shared/Product/useIsPhone' // redesign W1-1 (T1-1): was useOrderCardsViewport (OrdersTable/OrderCard)
+
+// redesign fix-qa: every picker of the sheet opts in to lists that start at the trigger, are as wide as it,
+// flip up without room and stay inside the sheet body (Shared/UI/selectPlacement.js); other screens do not.
+const SHEET_SELECT_SURFACE = { fitTrigger: true }
+
+const SheetBody = ({ children }) => (
+  <SelectSurfaceContext.Provider value={SHEET_SELECT_SURFACE}>
+    <div className='odc-ofs-body'>{children}</div>
+  </SelectSurfaceContext.Provider>
+)
+
+const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+
+/** A group of fields under a visible heading (C7). */
+const FieldGroup = ({ title, children }) => {
+  const titleId = useId()
+  return (
+    <section className='odc-ofs-group' aria-labelledby={titleId}>
+      <h3 id={titleId} className='odc-ofs-group-title'>{title}</h3>
+      {children}
+    </section>
+  )
+}
+
+/** A native text field with its own visible label, never only a placeholder. */
+const TextField = ({ label, value, onChange, onKeyDown, inputMode, name, type = 'text', className }) => {
+  const id = useId()
+  return (
+    <div className={className ? `odc-ofs-field ${className}` : 'odc-ofs-field'}>
+      <label htmlFor={id} className='odc-ofs-label'>{label}</label>
+      <input
+        id={id}
+        type={type}
+        name={name}
+        className='odc-ofs-input'
+        autoComplete='off'
+        value={value || ''}
+        inputMode={inputMode}
+        onKeyDown={onKeyDown}
+        onChange={onChange}
+      />
+    </div>
+  )
+}
+
+/**
+ * A field whose control is one of the existing selectors (a dropdown, not a native
+ * input): a named group, labelled by the visible text. `field` lets the pills of the
+ * filter bar send the focus here.
+ */
+const PickerField = ({ label, field, children }) => {
+  const labelId = useId()
+  return (
+    <div className='odc-ofs-field' role='group' aria-labelledby={labelId} data-orders-filter-field={field}>
+      <span id={labelId} className='odc-ofs-label'>{label}</span>
+      {/* redesign F6i-2 (A3-02): the select inside names its trigger with this visible label followed by its value. */}
+      <SelectFieldLabelContext.Provider value={labelId}>
+        {children}
+      </SelectFieldLabelContext.Provider>
+    </div>
+  )
+}
+
+/**
+ * Text of a picker that never wraps: it truncates and carries its full text as `title`.
+ * Without `title` it is the empty-state placeholder (a short «Any», muted).
+ */
+const PickerText = ({ children, title }) => (
+  <span
+    className={title ? 'odc-ofs-text' : 'odc-ofs-text odc-ofs-placeholder'}
+    title={title}
+  >
+    {children}
+  </span>
+)
+
+// redesign F6c-2 (Q2-16): the API catalog may write a word in lower case («assigned»); the options of the sheet all
+// start with a capital.
+const sentenceCase = (text) => {
+  const value = String(text ?? '')
+  return value ? value.charAt(0).toLocaleUpperCase() + value.slice(1) : value
+}
 
 const OrdersFilterGroupUI = (props) => {
   const {
-    isLateralBar,
     filterModalOpen,
     setFilterModalOpen,
-    searchValue,
-    handleChangeSearch,
+    initialFocusField,
     filterValues,
     driverGroupList,
     paymethodsList,
@@ -52,6 +127,7 @@ const OrdersFilterGroupUI = (props) => {
     handleResetFilterValues,
     handleChangeFilterValues,
     handleChangeOrderId,
+    handleOrderIdKeyDown,
     handleChangeCountryCode,
     handleChangeCurrency,
     handleChangeMetaFieldValue,
@@ -69,31 +145,68 @@ const OrdersFilterGroupUI = (props) => {
   const [{ token }] = useSession()
   const [metafield, setMetaField] = useState({ key: '', value: '' })
   const [isShow, setIsShow] = useState(false)
-  const [filterApplied, setFilterApplied] = useState(false)
   const [forterPluginInstalled, setForterPluginInstalled] = useState(false)
   const metafieldRef = useRef()
-  const [_filterValues] = useFilterValues()
+  // redesign 5.6-B: under 768px of viewport the sheet rises from the bottom (C8); the same sheet, side `end`, above.
+  const isPhone = useIsPhone()
+
+  const logisticStatusOption = (value, text) => {
+    const label = sentenceCase(text)
+    return {
+      value,
+      content: (
+        <Option>
+          <PickerText title={label}>{label}</PickerText>
+          <LogisticStatusDot className='odc-ofs-dot' status={value} />
+        </Option>
+      )
+    }
+  }
+
+  const textOption = (value, text) => {
+    const label = sentenceCase(text)
+    return {
+      value,
+      content: <Option><PickerText title={label}>{label}</PickerText></Option>
+    }
+  }
+
+  // An empty picker says «Any» (the label above already names the field).
+  const anyPlaceholder = <PickerText>{t('ANY', 'Any')}</PickerText>
+  // redesign F6c-2 (Q2-16): a single choice can go back to no filter. «Any» is the first row; chosen, it reads like
+  // the empty picker (muted) and sends `null`, what the chip's X and Clear leave.
+  const anyOption = {
+    value: '',
+    content: <Option><PickerText title={t('ANY', 'Any')}>{t('ANY', 'Any')}</PickerText></Option>,
+    showOnSelected: <Option>{anyPlaceholder}</Option>
+  }
+  const orAny = (onChange) => (value) => onChange(value === '' ? null : value)
 
   const logisticStatusList = [
-    { value: 0, content: <Option>{t('PENDING', 'Pending')}<LogisticStatusDot status={0} /></Option> },
-    { value: 1, content: <Option>{t('IN_PROGRESS', 'In progress')}<LogisticStatusDot status={1} /></Option> },
-    { value: 2, content: <Option>{t('IN_QUEUE', 'In queue')}<LogisticStatusDot status={2} /></Option> },
-    { value: 3, content: <Option>{t('EXPIRED', 'Expired')}<LogisticStatusDot status={3} /></Option> },
-    { value: 4, content: <Option>{t('RESOLVED', 'Resolved')}<LogisticStatusDot status={4} /></Option> }
+    anyOption,
+    logisticStatusOption(0, t('PENDING', 'Pending')),
+    logisticStatusOption(1, t('IN_PROGRESS', 'In progress')),
+    logisticStatusOption(2, t('IN_QUEUE', 'In queue')),
+    logisticStatusOption(3, t('EXPIRED', 'Expired')),
+    logisticStatusOption(4, t('RESOLVED', 'Resolved'))
   ]
 
   const assignedFilterOptions = [
-    { value: 0, content: <Option>{t('ASSIGNED', 'Assigned')}</Option> },
-    { value: 1, content: <Option>{t('UNASSIGNED', 'Unassigned')}</Option> }
+    anyOption,
+    textOption(0, t('ASSIGNED', 'Assigned')),
+    textOption(1, t('UNASSIGNED', 'Unassigned'))
   ]
 
   const fraudStatusOptions = [
-    { value: 'invalid', content: <Option>{t('FRAUD_DECLINED', 'Fraud Declined')}</Option> },
-    { value: 'error', content: <Option>{t('FRAUD_FAIL_OPEN', 'Fraud Error (Fail-open)')}</Option> }
+    anyOption,
+    textOption('invalid', t('FRAUD_DECLINED', 'Declined')),
+    textOption('error', t('FRAUD_FAIL_OPEN', 'Fail-open'))
   ]
 
   useEffect(() => {
     if (!token || !ordering?.root) return
+    // redesign W0 close: no state update after unmount (the request still goes out once, as before)
+    let active = true
     const checkForterPlugin = async () => {
       try {
         const response = await fetch(`${ordering.root}/plugins/key/braintree`, {
@@ -104,12 +217,13 @@ const OrdersFilterGroupUI = (props) => {
           }
         })
         const { error, result } = await response.json()
-        setForterPluginInstalled(!error && !!result)
+        if (active) setForterPluginInstalled(!error && !!result)
       } catch {
-        setForterPluginInstalled(false)
+        if (active) setForterPluginInstalled(false)
       }
     }
     checkForterPlugin()
+    return () => { active = false }
   }, [token, ordering])
 
   const handleAcceptFilter = () => {
@@ -137,11 +251,6 @@ const OrdersFilterGroupUI = (props) => {
     handleDeleteMetafield(id)
   }
 
-  const handleClearFilters = () => {
-    if (searchValue) handleChangeSearch('')
-    if (filterApplied) handleClearFilter()
-  }
-
   const handleClickOutside = (e) => {
     if (!isShow) return
     const outsideCalendar = !metafieldRef.current?.contains(e.target)
@@ -155,294 +264,261 @@ const OrdersFilterGroupUI = (props) => {
     return () => window.removeEventListener('mouseup', handleClickOutside)
   }, [isShow])
 
-  useEffect(() => {
-    let _filterApplied = false
-    if (Object.keys(_filterValues).length === 0) {
-      _filterApplied = false
-    } else {
-      Object.values(_filterValues).forEach(value => {
-        if (Array.isArray(value)) {
-          if (value.length > 0) _filterApplied = true
-        } else {
-          if (value) _filterApplied = true
-        }
-      })
-    }
-    setFilterApplied(_filterApplied)
-  }, [_filterValues])
+  // The Date and Business pills open the sheet on their own field.
+  const focusRequestedField = () => {
+    if (!initialFocusField) return undefined
+    const field = document.querySelector(`[data-orders-filter-field="${initialFocusField}"]`)
+    return field?.querySelector(FOCUSABLE) || undefined
+  }
+
+  const fields = {
+    metaName: t('METAFIELD_NAME', 'Metafield name'),
+    metaValue: t('METAFIELD_VALUE', 'Metafield value')
+  }
 
   return (
-    <>
-      <IconButton
-        color='black'
-        onClick={() => setFilterModalOpen && setFilterModalOpen(true)}
-        name='filter-btn'
-      >
-        {filterApplied ? <Funnel /> : <MdcFilterOff />}
-      </IconButton>
-      {(filterApplied || !!searchValue) && (
-        <WarningMessage isLateralBar={isLateralBar}>
-          <TiWarningOutline />
-          <span>{t('WARNING_FILTER_APPLIED', 'Filters applied. You may miss new orders.')}</span>
-          <LinkButton onClick={() => handleClearFilters()}>{t('CLEAR_FILTERS', 'Clear filters')}</LinkButton>
-        </WarningMessage>
+    <Sheet
+      open={!!filterModalOpen}
+      onOpenChange={(open) => setFilterModalOpen && setFilterModalOpen(open)}
+      title={t('FILTERS', 'Filters')}
+      closeLabel={t('CLOSE', 'Close')}
+      side={isPhone ? 'bottom' : 'end'}
+      initialFocus={initialFocusField ? focusRequestedField : undefined}
+      className='odc-ofs-sheet'
+      footer={(
+        <>
+          <Button onClick={() => handleClearFilter()}>{t('CLEAR', 'Clear')}</Button>
+          <Button variant='primary' onClick={() => handleAcceptFilter()}>{t('APPLY', 'Apply')}</Button>
+        </>
       )}
-      {filterModalOpen && (
-        <Modal
-          width='80%'
-          padding='0px'
-          open={filterModalOpen}
-          onClose={() => setFilterModalOpen(false)}
-        >
-          <FilterGroupListContainer className='filter-modal'>
-            <h1>{t('FILTER', 'Filter')}</h1>
-            <WrapperRow>
-              <Input
-                type='text'
-                placeholder='ID'
-                autoComplete='off'
-                value={filterValues?.orderId || ''}
-                onChange={(e) => handleChangeOrderId(e)}
-              />
+    >
+      <SheetBody>
+        <FieldGroup title={t('ORDER', 'Order')}>
+          <div className='odc-ofs-row'>
+            {/* (main #493): the order ID takes digits only (letters and symbols are not typed) */}
+            <TextField
+              label={t('ORDER_ID', 'Order ID')}
+              value={filterValues?.orderId}
+              inputMode='numeric'
+              onKeyDown={handleOrderIdKeyDown}
+              onChange={(e) => handleChangeOrderId(e)}
+            />
+            <PickerField label={t('DATE', 'Date')} field='date'>
               <DateTypeSelector
                 filterValues={filterValues}
                 handleChangeDateType={handleChangeDateType}
                 handleChangeFromDate={handleChangeFromDate}
                 handleChangeEndDate={handleChangeEndDate}
               />
-            </WrapperRow>
-            <WrapperRow>
-              <Input
-                type='text'
-                placeholder={t('CUSTOMER_NAME', 'Customer Name')}
-                autoComplete='off'
-                value={filterValues?.customerName || ''}
-                onChange={(e) => handleChangeChildFilterValue({ customerName: e?.target?.value })}
-              />
-              <Input
-                type='text'
-                placeholder={t('CUSTOMER_LASTNAME', 'Customer Lastname')}
-                autoComplete='off'
-                value={filterValues?.customerLastname || ''}
-                onChange={(e) => handleChangeChildFilterValue({ customerLastname: e?.target?.value })}
-              />
-            </WrapperRow>
-            <WrapperRow>
-              <Input
-                type='text'
-                placeholder={t('CUSTOMER_EMAIL', 'Customer Email')}
-                autoComplete='off'
-                value={filterValues?.customerEmail || ''}
-                onChange={(e) => handleChangeChildFilterValue({ customerEmail: e?.target?.value })}
-              />
-              <Input
-                type='text'
-                placeholder={t('CUSTOMER_CELLPHONE', 'Customer Cellphone')}
-                autoComplete='off'
-                value={filterValues?.customerCellphone || ''}
-                onChange={(e) => handleChangeChildFilterValue({ customerCellphone: e?.target?.value })}
-              />
-            </WrapperRow>
-            <WrapperRow>
-              <DriversGroupTypeSelector
-                driverGroupList={driverGroupList}
-                handleChangeGroup={handleChangeGroupUnassigned}
-                filterValues={filterValues.groupTypesUnassigned}
-                title={t('DRIVER_GROUP_ASSIGNED', 'Driver group (assigned)')}
-              />
-              <BusinessesSelector
-                filterValues={filterValues}
-                businessesList={businessesList}
-                handleChangeBusinesses={handleChangeBusinesses}
-              />
-            </WrapperRow>
-            {/* <WrapperRow>
-              <BusinessesSelector
-                filterValues={filterValues}
-                businessesList={businessesList}
-                handleChangeBusinesses={handleChangeBusinesses}
-              />
-              <DriverMultiSelector
-                drivers={driversList.drivers}
-                filterValues={filterValues}
-                handleChangeDriver={handleChangeDriver}
-              />
-            </WrapperRow> */}
-            <WrapperRow>
+            </PickerField>
+          </div>
+          <PickerField label={t('DELIVERY_TYPE', 'Delivery type')} field='deliveryType'>
+            <DeliveryTypeSelector
+              filterValues={filterValues}
+              handleChangeDeliveryType={handleChangeDeliveryType}
+            />
+          </PickerField>
+        </FieldGroup>
+
+        <FieldGroup title={t('CUSTOMER', 'Customer')}>
+          <div className='odc-ofs-row'>
+            <TextField
+              label={t('CUSTOMER_NAME', 'Customer name')}
+              value={filterValues?.customerName}
+              onChange={(e) => handleChangeChildFilterValue({ customerName: e?.target?.value })}
+            />
+            <TextField
+              label={t('CUSTOMER_LASTNAME', 'Customer last name')}
+              value={filterValues?.customerLastname}
+              onChange={(e) => handleChangeChildFilterValue({ customerLastname: e?.target?.value })}
+            />
+          </div>
+          <div className='odc-ofs-row'>
+            <TextField
+              label={t('CUSTOMER_EMAIL', 'Customer email')}
+              value={filterValues?.customerEmail}
+              onChange={(e) => handleChangeChildFilterValue({ customerEmail: e?.target?.value })}
+            />
+            <TextField
+              label={t('CUSTOMER_CELLPHONE', 'Customer cellphone')}
+              value={filterValues?.customerCellphone}
+              onChange={(e) => handleChangeChildFilterValue({ customerCellphone: e?.target?.value })}
+            />
+          </div>
+        </FieldGroup>
+
+        <FieldGroup title={t('LOCATION', 'Location')}>
+          <PickerField label={t('BUSINESS', 'Business')} field='business'>
+            <BusinessesSelector
+              filterValues={filterValues}
+              businessesList={businessesList}
+              handleChangeBusinesses={handleChangeBusinesses}
+            />
+          </PickerField>
+          <div className='odc-ofs-row'>
+            <PickerField label={t('COUNTRY', 'Country')} field='country'>
               <CountryFilter
                 filterValues={filterValues}
                 handleChangeCountryCode={handleChangeCountryCode}
               />
+            </PickerField>
+            <PickerField label={t('CITY', 'City')} field='city'>
               <CitySelector
                 cities={citiesList}
                 filterValues={filterValues}
                 handleChangeCity={handleChangeCity}
               />
-              {/* <MultiSelectContainer>
-                <OrderStatusTypeSelector
-                  isFilterView
-                  filterValues={filterValues}
-                  handleChangeOrderStatus={handleChangeOrderStatus}
-                />
-              </MultiSelectContainer> */}
-            </WrapperRow>
-            <WrapperRow>
-              <DeliveryTypeSelector
-                filterValues={filterValues}
-                handleChangeDeliveryType={handleChangeDeliveryType}
+            </PickerField>
+          </div>
+          <PickerField label={t('CURRENCY', 'Currency')} field='currency'>
+            <CurrencyFilter
+              filterValues={filterValues}
+              handleChangeCurrency={handleChangeCurrency}
+            />
+          </PickerField>
+        </FieldGroup>
+
+        <FieldGroup title={t('LOGISTICS', 'Logistics')}>
+          <PickerField label={t('DRIVER_GROUP_ASSIGNED', 'Driver group (assigned)')} field='driverGroup'>
+            <DriversGroupTypeSelector
+              driverGroupList={driverGroupList}
+              handleChangeGroup={handleChangeGroupUnassigned}
+              filterValues={filterValues.groupTypesUnassigned}
+              title={t('ANY', 'Any')}
+            />
+          </PickerField>
+          <div className='odc-ofs-row'>
+            <PickerField label={t('ORDERS_FILTER_DRIVER_STATUS', 'Driver status')} field='assigned'>
+              <Select
+                options={assignedFilterOptions}
+                className='select odc-ofs-select-single'
+                defaultValue={filterValues?.assigned ?? ''}
+                placeholder={anyPlaceholder}
+                ariaLabel={t('ORDERS_FILTER_DRIVER_STATUS', 'Driver status')}
+                onChange={orAny((value) => handleChangeChildFilterValue({ assigned: value }))}
               />
-              <PaymethodTypeSelector
-                paymethodsList={paymethodsList}
-                filterValues={filterValues}
-                handleChangePaymethodType={handleChangePaymethodType}
+            </PickerField>
+            <PickerField label={t('ORDERS_FILTER_LOGISTIC_STATUS', 'Logistic status')} field='logisticStatus'>
+              <Select
+                options={logisticStatusList}
+                className='select odc-ofs-select-single'
+                defaultValue={filterValues?.logisticStatus ?? ''}
+                placeholder={anyPlaceholder}
+                ariaLabel={t('ORDERS_FILTER_LOGISTIC_STATUS', 'Logistic status')}
+                onChange={orAny((value) => handleChangeChildFilterValue({ logisticStatus: value }))}
               />
-            </WrapperRow>
-            <WrapperRow>
-              <CurrencyFilter
-                filterValues={filterValues}
-                handleChangeCurrency={handleChangeCurrency}
+            </PickerField>
+          </div>
+        </FieldGroup>
+
+        <FieldGroup title={t('FILTER_GROUP_PAYMENT_MARKETING', 'Payment and marketing')}>
+          <PickerField label={t('PAYMENT_METHOD', 'Payment method')} field='paymethod'>
+            <PaymethodTypeSelector
+              paymethodsList={paymethodsList}
+              filterValues={filterValues}
+              handleChangePaymethodType={handleChangePaymethodType}
+            />
+          </PickerField>
+          <div className='odc-ofs-row'>
+            <TextField
+              label={t('COUPON', 'Coupon')}
+              value={filterValues?.coupon}
+              onChange={(e) => handleChangeChildFilterValue({ coupon: e?.target?.value })}
+            />
+            <TextField
+              label={t('OFFER_ID', 'Offer ID')}
+              value={filterValues?.offerId}
+              onChange={(e) => handleChangeOfferId(e)}
+            />
+          </div>
+          <PickerField label={t('ADMINISTRATOR', 'Administrator')} field='administrator'>
+            <AdminsSelector
+              filterValues={filterValues}
+              adminsList={adminsList}
+              handleChangeAdmin={handleChangeAdmin}
+            />
+          </PickerField>
+          {forterPluginInstalled && (
+            <PickerField label={t('FRAUD_STATUS', 'Fraud status')} field='fraudStatus'>
+              <Select
+                options={fraudStatusOptions}
+                className='select odc-ofs-select-single'
+                defaultValue={filterValues?.fraudStatus ?? ''}
+                placeholder={anyPlaceholder}
+                ariaLabel={t('FRAUD_STATUS', 'Fraud status')}
+                onChange={orAny((value) => handleChangeChildFilterValue({ fraudStatus: value }))}
               />
-              <AdminsSelector
-                filterValues={filterValues}
-                adminsList={adminsList}
-                handleChangeAdmin={handleChangeAdmin}
+            </PickerField>
+          )}
+        </FieldGroup>
+
+        <FieldGroup title={t('METAFIELDS', 'Metafields')}>
+          {filterValues?.metafield.map(item => (
+            <div className='odc-ofs-row odc-ofs-meta' key={item.id}>
+              <TextField
+                label={fields.metaName}
+                name='key'
+                value={item.key}
+                onChange={(e) => handleChangeMetaFieldValue(e, item.id)}
               />
-            </WrapperRow>
-            <WrapperRow>
-              <Input
-                type='text'
-                placeholder={t('OFFER_ID', 'Offer id')}
-                autoComplete='off'
-                value={filterValues?.offerId || ''}
-                onChange={(e) => handleChangeOfferId(e)}
-              />
-              <Input
-                type='text'
-                placeholder={t('COUPON', 'Coupon')}
-                autoComplete='off'
-                value={filterValues?.coupon || ''}
-                onChange={(e) => handleChangeChildFilterValue({ coupon: e?.target?.value })}
-              />
-            </WrapperRow>
-            <WrapperRow>
-              <SelectWrapper>
-                <Select
-                  options={assignedFilterOptions}
-                  className='select'
-                  defaultValue={filterValues?.assigned ?? ''}
-                  placeholder={t('SELECT_DRIVER_STATUS', 'Select a driver status')}
-                  onChange={(value) => handleChangeChildFilterValue({ assigned: value })}
-                />
-              </SelectWrapper>
-              <SelectWrapper>
-                <Select
-                  options={logisticStatusList}
-                  className='select'
-                  defaultValue={filterValues?.logisticStatus ?? ''}
-                  placeholder={t('SELECT_LOGISTIC_STATUS', 'Select a logistic status')}
-                  onChange={(value) => handleChangeChildFilterValue({ logisticStatus: value })}
-                />
-              </SelectWrapper>
-            </WrapperRow>
-            {forterPluginInstalled && (
-              <WrapperRow>
-                <SelectWrapper>
-                  <Select
-                    options={fraudStatusOptions}
-                    className='select'
-                    defaultValue={filterValues?.fraudStatus ?? ''}
-                    placeholder={t('SELECT_FRAUD_STATUS', 'Select fraud status')}
-                    onChange={(value) => handleChangeChildFilterValue({ fraudStatus: value })}
+              {item?.key && (
+                <div className='odc-ofs-meta-value'>
+                  <TextField
+                    label={fields.metaValue}
+                    name='value'
+                    value={item?.value}
+                    onChange={(e) => handleChangeMetaFieldValue(e, item.id)}
                   />
-                </SelectWrapper>
-              </WrapperRow>
-            )}
-            {filterValues?.metafield.map(item => (
-              <WrapperRow key={item.id}>
-                <Input
-                  type='text'
-                  name='key'
-                  placeholder={t('METAFIELD_NAME', 'Metafield name')}
-                  autoComplete='off'
-                  value={item.key || ''}
-                  onChange={(e) => handleChangeMetaFieldValue(e, item.id)}
-                />
-                {item?.key && (
-                  <AddInputWrapper>
-                    <Input
-                      type='text'
-                      name='value'
-                      placeholder={t('METAFIELD_VALUE', 'Metafield value')}
-                      autoComplete='off'
-                      value={item?.value || ''}
-                      onChange={(e) => handleChangeMetaFieldValue(e, item.id)}
-                    />
-                    <IconButton
-                      color='black'
-                      onClick={() => handleDeleteMetafieldValue(item.id)}
-                    >
-                      <Trash3 />
-                    </IconButton>
-                  </AddInputWrapper>
-                )}
-              </WrapperRow>
-            ))}
-            {!isShow && (
-              <AddMetaFiled onClick={() => setIsShow(true)}>{t('ADD_METAFIELD', 'Add a metafield')}</AddMetaFiled>
-            )}
-            {isShow && (
-              <WrapperRow ref={metafieldRef}>
-                <Input
-                  type='text'
-                  name='key'
-                  placeholder={t('METAFIELD_NAME', 'Metafield name')}
-                  autoComplete='off'
-                  value={metafield.key || ''}
-                  onChange={(e) => setMetaField({ ...metafield, key: e.target.value })}
-                />
-                {metafield?.key && (
-                  <AddInputWrapper>
-                    <Input
-                      type='text'
-                      name='value'
-                      placeholder={t('METAFIELD_VALUE', 'Metafield value')}
-                      autoComplete='off'
-                      value={metafield.value || ''}
-                      onChange={(e) => setMetaField({ ...metafield, value: e.target.value })}
-                    />
-                    <IconButton
-                      color='primary'
-                      onClick={handleAddMetafieldValue}
-                    >
-                      <PlusCircle />
-                    </IconButton>
-                  </AddInputWrapper>
-                )}
-              </WrapperRow>
-            )}
-            <ButtonGroup>
-              <Button
-                color='primary'
-                borderRadius='8px'
-                onClick={() => handleAcceptFilter()}
-              >
-                {t('ACCEPT', 'Accept')}
-              </Button>
-              <Button
-                color='secundaryDark'
-                borderRadius='8px'
-                onClick={() => handleClearFilter()}
-              >
-                {t('CLEAR', 'Clear')}
-              </Button>
-            </ButtonGroup>
-          </FilterGroupListContainer>
-        </Modal>
-      )}
-    </>
+                  <IconButton
+                    icon={Trash2}
+                    label={t('DELETE', 'Delete')}
+                    onClick={() => handleDeleteMetafieldValue(item.id)}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+          {!isShow && (
+            <div>
+              <Button variant='link' onClick={() => setIsShow(true)}>{t('ADD_METAFIELD', 'Add a metafield')}</Button>
+            </div>
+          )}
+          {isShow && (
+            <div className='odc-ofs-row odc-ofs-meta' ref={metafieldRef}>
+              <TextField
+                label={fields.metaName}
+                name='key'
+                value={metafield.key}
+                onChange={(e) => setMetaField({ ...metafield, key: e.target.value })}
+              />
+              {metafield?.key && (
+                <div className='odc-ofs-meta-value'>
+                  <TextField
+                    label={fields.metaValue}
+                    name='value'
+                    value={metafield.value}
+                    onChange={(e) => setMetaField({ ...metafield, value: e.target.value })}
+                  />
+                  <IconButton
+                    icon={CirclePlus}
+                    label={t('ADD', 'Add')}
+                    onClick={handleAddMetafieldValue}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </FieldGroup>
+      </SheetBody>
+    </Sheet>
   )
 }
 
+/**
+ * The filters sheet (C7, C8). The trigger, the «Filters applied» notice and the clear
+ * link live in OrdersFilterBar; this draws only the sheet, opened by `filterModalOpen`.
+ * `initialFocusField` ('date', 'business', ...) is the field that gets the focus.
+ */
 export const OrdersFilterGroup = (props) => {
   const [filterValues, { handleFilterValues }] = useFilterValues()
   const [savedFilterValues, setSavedFilterValues] = useState(filterValues)

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
  * Component to manage ProfessionalBusinessService behavior without UI component
@@ -16,6 +18,8 @@ export const ProfessionalBusinessService = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
   const [searchValue, setSearchValue] = useState(null)
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
   const [userServiceList, setUserServiceList] = useState({ loading: false, services: [], result: { error: null } })
@@ -54,6 +58,56 @@ export const ProfessionalBusinessService = (props) => {
       ...userServiceList,
       services
     })
+  }
+
+  /**
+   * Take the professional out of one store: one DELETE per service of that store, in order, with the same call the services
+   * controller sends when one service is unticked (`DELETE users/:id/products/:serviceId`). The ones that fail stay in the list.
+   * @param {number} businessId business id
+   * @returns {Promise<{removed: number, failed: number}>} how many services were removed and how many could not be
+   */
+  const handleRemoveBusinessServices = async (businessId) => {
+    const current = Array.isArray(userServiceList?.services) ? userServiceList.services : []
+    const targets = current.filter(service => service.business_id === businessId)
+    if (!targets.length) return { removed: 0, failed: 0 }
+    const removedIds = []
+    let failed = 0
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    for (const service of targets) {
+      try {
+        const response = await fetch(`${ordering.root}/users/${user?.id}/products/${service.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const content = await response.json()
+        if (content?.error) failed += 1
+        else removedIds.push(service.id)
+      } catch (error) {
+        failed += 1
+      }
+    }
+    if (removedIds.length) {
+      handleUpdateServices(current.filter(service => !removedIds.includes(service.id)))
+    }
+    if (failed) {
+      showToast(
+        ToastType.Error,
+        failed === 1
+          ? t('PROFESSIONALS_STORE_REMOVE_FAILED_ONE', "1 service couldn't be removed")
+          : t('PROFESSIONALS_STORE_REMOVE_FAILED_OTHER', "_count_ services couldn't be removed").replace('_count_', () => String(failed))
+      )
+    } else {
+      showToast(
+        ToastType.Success,
+        removedIds.length === 1
+          ? t('PROFESSIONALS_STORE_REMOVED_ONE', '1 service removed')
+          : t('PROFESSIONALS_STORE_REMOVED_OTHER', '_count_ services removed').replace('_count_', () => String(removedIds.length))
+      )
+    }
+    return { removed: removedIds.length, failed }
   }
 
   /**
@@ -210,6 +264,7 @@ export const ProfessionalBusinessService = (props) => {
           handleChangeCheckBox={handleChangeCheckBox}
           handleUpdateBusinessIds={handleUpdateBusinessIds}
           handleUpdateServices={handleUpdateServices}
+          handleRemoveBusinessServices={handleRemoveBusinessServices}
         />
       )}
     </>

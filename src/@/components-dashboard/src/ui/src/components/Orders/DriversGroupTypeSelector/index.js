@@ -3,17 +3,18 @@ import { useLanguage } from '../../../../../index'
 import { ConfigFileContext } from '../../../contexts/ConfigFileContext'
 import { MultiSelect } from '../../../styles/MultiSelect'
 
-import { PlaceholderTitle, Option } from './styles'
+import { PlaceholderTitle, Option, GroupId } from './styles'
 
 export const DriversGroupTypeSelector = (props) => {
   const {
     driverGroupList,
     filterValues,
     handleChangeGroup,
-    title
+    title,
+    ariaLabel
   } = props
 
-  const [{ dictionary }] = useLanguage()
+  const [{ dictionary }, t] = useLanguage()
   const [searchValue, setSearchValue] = useState('')
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -52,12 +53,20 @@ export const DriversGroupTypeSelector = (props) => {
     const _groupList = []
     if (!driverGroupList.loading) {
       const _groupsOption = driverGroupList.groups
-        .filter(option => option?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+        // redesign F6d-1 (P4-04): a group is found by its name or by its id number (the label «ID» is not searched).
+        .filter(option => option?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+          String(option?.id).includes(searchValue.trim()))
         .map((group) => {
           return {
             value: group.id,
+            name: group.name,
+            // redesign F6d-1 (P4-04): `main` wrote «34. Name»; Q2-04 dropped the id because a bare «34» read like a
+            // count. It comes back as a labelled, muted «ID 34» after the name.
             content: (
-              <Option>{group.id}. {group.name}</Option>
+              <Option>
+                <span>{group.name}</span>
+                <GroupId data-group-id=''>{t('ID', 'ID')} {group.id}</GroupId>
+              </Option>
             )
           }
         })
@@ -79,6 +88,7 @@ export const DriversGroupTypeSelector = (props) => {
       {!driverGroupList.loading
         ? (
         <MultiSelect
+          ariaLabel={ariaLabel ?? t('DRIVER_GROUP', 'Driver group')}
           placeholder={placeholder}
           defaultValue={filterValues}
           options={groupTypes}
@@ -96,6 +106,7 @@ export const DriversGroupTypeSelector = (props) => {
           )
         : (
         <MultiSelect
+          ariaLabel={ariaLabel ?? t('DRIVER_GROUP', 'Driver group')}
           defaultValue='default'
           options={groupTypesLoading}
           optionBottomBorder

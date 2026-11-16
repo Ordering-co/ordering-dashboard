@@ -19,6 +19,24 @@ describe('buildCreateActionEntries', () => {
     expect(rankCommandEntries(entries, 'envio gratis')[0].id).toBe('create:quick-offer-free_delivery')
   })
 
+  // redesign CA-B1: the entry says what the page's button says, and the old words still find it
+  it('create:callcenter_agent says «Add call center agent» and opens the agents\' add sheet', () => {
+    const entries = buildOpenActionEntries({ user: { level: 0 }, configs: {} })
+    const agent = entries.find(entry => entry.id === 'create:callcenter_agent')
+    expect(agent).toMatchObject({ title: 'Add call center agent', path: '/users/callcenter-agents?add=1' })
+    expect(rankCommandEntries(entries, 'crear agente')[0].id).toBe('create:callcenter_agent')
+    expect(rankCommandEntries(entries, 'add call center agent')[0].id).toBe('create:callcenter_agent')
+  })
+
+  // redesign AD-B1: the same for admins; «add user», the old label, still finds it
+  it('create:admin says «Add admin» and opens the admins\' add sheet', () => {
+    const entries = buildOpenActionEntries({ user: { level: 0 }, configs: {} })
+    const admin = entries.find(entry => entry.id === 'create:admin')
+    expect(admin).toMatchObject({ title: 'Add admin', path: '/users/admins?add=1' })
+    expect(rankCommandEntries(entries, 'crear administrador')[0].id).toBe('create:admin')
+    expect(rankCommandEntries(entries, 'add admin')[0].id).toBe('create:admin')
+  })
+
   it('follows the rules of each Add button', () => {
     const admin = ids(buildOpenActionEntries({ user: { level: 0 }, configs: {} }))
     expect(admin).toEqual(expect.arrayContaining([

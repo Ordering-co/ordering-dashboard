@@ -1,6 +1,7 @@
 import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
 const state = vi.hoisted(() => ({ props: {}, emit: vi.fn() }))
@@ -13,25 +14,6 @@ vi.mock('../../../../../index', () => ({
 }))
 vi.mock('../../../contexts/InfoShareContext', () => ({
   useInfoShare: () => [{ isCollapse: false }, { handleMenuCollapse: vi.fn() }]
-}))
-vi.mock('../../../styles', () => ({
-  Button: ({ color, borderRadius, ...props }) => <button {...props} />,
-  IconButton: ({ color, ...props }) => <button {...props} />,
-  Input: (props) => <input {...props} />
-}))
-vi.mock('../../Shared', () => ({
-  Pagination: () => <div data-testid='pagination' />,
-  SearchBar: ({ placeholder, onSearch }) => (
-    <input aria-label={placeholder} onChange={(e) => onSearch(e.target.value)} />
-  )
-}))
-vi.mock('../../Shared/SideBar', () => ({
-  SideBar: ({ children, onClose }) => (
-    <div data-testid='side-panel'>
-      <button type='button' onClick={onClose}>close panel</button>
-      {children}
-    </div>
-  )
 }))
 
 import { BuilderProducts } from '../BuilderProductsList'
@@ -76,6 +58,9 @@ const baseProps = () => ({
   resetCreateState: vi.fn()
 })
 
+// The visible name of a P/RadioGroup option (its accessible name may add the description)
+const nameOf = (radio) => document.getElementById(radio.getAttribute('aria-labelledby')).textContent
+
 const renderList = (overrides = {}, options = {}) => {
   state.props = { ...baseProps(), ...overrides }
   return renderWithProviders(<BuilderProducts />, options)
@@ -101,12 +86,16 @@ describe('BuilderProducts list', () => {
 
   it('shows the build status in a tooltip on hover and focus', async () => {
     renderList()
+    // redesign B1: P/Tooltip (Base UI) opens on real pointer and keyboard events
+    const user = userEvent.setup()
     const android = screen.getByRole('img', { name: 'Android: Failed' })
     expect(android.getAttribute('tabindex')).toBe('0')
-    await act(async () => { fireEvent.mouseOver(android) })
+    await user.hover(android)
     expect((await screen.findByRole('tooltip')).textContent).toBe('Android: Failed')
-    await act(async () => { fireEvent.mouseOut(android) })
-    await act(async () => { fireEvent.focus(screen.getByRole('img', { name: 'iOS: Not built yet' })) })
+    await user.unhover(android)
+    await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull())
+    const ios = screen.getByRole('img', { name: 'iOS: Not built yet' })
+    for (let i = 0; i < 20 && document.activeElement !== ios; i++) await user.tab()
     expect((await screen.findByRole('tooltip')).textContent).toBe('iOS: Not built yet')
   })
 
@@ -119,7 +108,13 @@ describe('BuilderProducts list', () => {
   it('sends search and status changes to the controller, with no type filter while only Marketplace websites are listed', () => {
     const props = baseProps()
     renderList(props)
-    fireEvent.change(screen.getByRole('textbox', { name: 'Search by name' }), { target: { value: 'rep' } })
+    // redesign B1: P/SearchField (a searchbox); the search still waits 750 ms after the last key, as main's SearchBar
+    vi.useFakeTimers()
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search by name' }), { target: { value: 'rep' } })
+    act(() => { vi.advanceTimersByTime(700) })
+    expect(props.handleChangeSearch).not.toHaveBeenCalled()
+    act(() => { vi.advanceTimersByTime(100) })
+    vi.useRealTimers()
     expect(props.handleChangeSearch).toHaveBeenCalledWith('rep')
     expect(screen.queryByRole('button', { name: /^Type:/ })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'Archived' }))
@@ -153,7 +148,7 @@ describe('BuilderProducts list', () => {
   it('invites to create the first app in an empty project', () => {
     renderList({ productsState: { loading: false, products: [], errorKind: null } })
     expect(screen.getByText('Nothing here yet')).toBeTruthy()
-    expect(screen.queryByTestId('pagination')).toBeNull()
+    expect(screen.queryByRole('navigation', { name: 'Pagination' })).toBeNull()
     expect(screen.getAllByRole('button', { name: 'Create' })).toHaveLength(2)
   })
 
@@ -175,7 +170,7 @@ describe('BuilderProducts list', () => {
   it('blocks the page when the module is off', () => {
     renderList({ productsState: { loading: false, products: [], errorKind: 'disabled' } })
     expect(screen.getByText('Builder isn’t available here')).toBeTruthy()
-    expect(screen.queryByRole('textbox', { name: 'Search by name' })).toBeNull()
+    expect(screen.queryByRole('searchbox', { name: 'Search by name' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Create' })).toBeNull()
   })
 
@@ -183,7 +178,7 @@ describe('BuilderProducts list', () => {
     const props = baseProps()
     renderList(props)
     fireEvent.click(screen.getByRole('button', { name: 'Create' }))
-    const panel = screen.getByTestId('side-panel')
+    const panel = screen.getByRole('dialog', { name: 'New app or website' })
 
     await act(async () => { fireEvent.click(within(panel).getByRole('button', { name: 'Create app' })) })
     expect(within(panel).getByText('Enter a name.')).toBeTruthy()
@@ -191,9 +186,10 @@ describe('BuilderProducts list', () => {
     expect(props.createProduct).not.toHaveBeenCalled()
 
     // Bases follow the product order: Marketplace before Driver. Only apps: no switch
-    expect(within(panel).queryByRole('group', { name: 'What do you want to create?' })).toBeNull()
+    // redesign B1: P/RadioGroup (cards): radios are buttons named by their label, checked by aria-checked
+    expect(within(panel).queryByRole('radiogroup', { name: 'What do you want to create?' })).toBeNull()
     const radios = within(panel).getAllByRole('radio')
-    expect(radios.map(radio => radio.value)).toEqual(['app-11', 'app-14'])
+    expect(radios.map(nameOf)).toEqual(['Marketplace app', 'Driver app'])
     expect(within(panel).getByText('0/30')).toBeTruthy()
 
     fireEvent.change(within(panel).getByLabelText('Name'), { target: { value: '  Repartidores  ' } })
@@ -202,7 +198,7 @@ describe('BuilderProducts list', () => {
 
     expect(props.createProduct).toHaveBeenCalledWith({ builderBaseId: 14, name: 'Repartidores' })
     expect(state.emit).toHaveBeenCalledWith('go_to_page', { page: 'builder_app', params: { productId: 99 } })
-    expect(screen.queryByTestId('side-panel')).toBeNull()
+    expect(screen.queryByRole('dialog', { name: 'New app or website' })).toBeNull()
   })
 
   it('asks for another option when the base was withdrawn', async () => {
@@ -210,24 +206,132 @@ describe('BuilderProducts list', () => {
     props.createProduct = vi.fn(async () => ({ product: null, errorCodes: ['builder_base.not_offered'] }))
     renderList(props)
     fireEvent.click(screen.getByRole('button', { name: 'Create' }))
-    const panel = screen.getByTestId('side-panel')
+    const panel = screen.getByRole('dialog', { name: 'New app or website' })
     fireEvent.change(within(panel).getByLabelText('Name'), { target: { value: 'Repartidores' } })
     fireEvent.click(within(panel).getAllByRole('radio')[1])
     await act(async () => { fireEvent.click(within(panel).getByRole('button', { name: 'Create app' })) })
 
     expect(within(panel).getByText('Driver 26 is no longer available. Choose another option.')).toBeTruthy()
-    expect(within(panel).getAllByRole('radio').every(radio => !radio.checked)).toBe(true)
+    expect(within(panel).getAllByRole('radio').every(radio => radio.getAttribute('aria-checked') !== 'true')).toBe(true)
     expect(state.emit).not.toHaveBeenCalled()
   })
 
   it('opens the panel from ⌘K only when Create is offered', () => {
     renderList({}, { initialEntries: ['/builder?add=1'] })
-    expect(screen.getByTestId('side-panel')).toBeTruthy()
+    expect(screen.getByRole('dialog', { name: 'New app or website' })).toBeTruthy()
   })
 
   it('ignores ⌘K Create when the catalog is unavailable', () => {
     renderList({ catalogState: { loading: false, bases: [], canCreate: false, unavailableReason: 'not_enabled' } }, { initialEntries: ['/builder?add=1'] })
-    expect(screen.queryByTestId('side-panel')).toBeNull()
+    expect(screen.queryByRole('dialog', { name: 'New app or website' })).toBeNull()
+  })
+
+  // redesign B1: the list is drawn with the Product pieces
+  it('is drawn with the Product pieces', () => {
+    const props = baseProps()
+    renderList({ ...props, pagination: { currentPage: 1, pageSize: 10, totalPages: 3, total: 25 } })
+    expect(screen.getByRole('heading', { level: 1, name: 'Builder' }).closest('.odc-pagehead')).not.toBeNull()
+    expect(screen.getByRole('button', { name: 'Create' })).toHaveClass('odc-btn')
+    expect(screen.getByRole('table').closest('.odc-table-wrap, .odc-table')).not.toBeNull()
+    expect(screen.getByRole('group', { name: 'Status' }).closest('.odc-seg')).not.toBeNull()
+    const pages = screen.getByRole('navigation', { name: 'Pagination' })
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next page' }))
+    expect(props.handleChangePage).toHaveBeenCalledWith(2)
+  })
+
+  it('shows loading rows while the list loads', () => {
+    const { container } = renderList({ productsState: { loading: true, products: [], errorKind: null } })
+    expect(container.querySelector('.react-loading-skeleton')).toBeNull()
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull()
+  })
+
+  it('keeps the search the controller clears', async () => {
+    const props = baseProps()
+    const view = renderList({ ...props, filters: { search: 'zzz', productTypes: [], productStatus: 'all' } })
+    expect(screen.getByRole('searchbox', { name: 'Search by name' }).value).toBe('zzz')
+    state.props = { ...props, filters: { search: '', productTypes: [], productStatus: 'all' } }
+    view.rerender(<BuilderProducts />)
+    await waitFor(() => expect(screen.getByRole('searchbox', { name: 'Search by name' }).value).toBe(''))
+  })
+
+  // redesign B1, parity review: what main did that the first Product version lost or never checked
+  it('creates once when Create is pressed twice while it is creating', async () => {
+    const props = baseProps()
+    let finish
+    props.createProduct = vi.fn(() => new Promise(resolve => { finish = resolve }))
+    renderList(props)
+    fireEvent.click(screen.getByRole('button', { name: 'Create' }))
+    const panel = screen.getByRole('dialog', { name: 'New app or website' })
+    fireEvent.change(within(panel).getByLabelText('Name'), { target: { value: 'Repartidores' } })
+    fireEvent.click(within(panel).getAllByRole('radio')[1])
+    const submit = within(panel).getByRole('button', { name: 'Create app' })
+    await act(async () => { fireEvent.click(submit) })
+    await act(async () => { fireEvent.click(submit) })
+    expect(props.createProduct).toHaveBeenCalledTimes(1)
+    await act(async () => { finish({ product: { id: 99 }, errorCodes: [] }) })
+  })
+
+  it('reads the name counter as part of the field', () => {
+    renderList()
+    fireEvent.click(screen.getByRole('button', { name: 'Create' }))
+    const name = screen.getByLabelText('Name')
+    const described = (name.getAttribute('aria-describedby') || '').split(' ').map(id => document.getElementById(id)?.textContent)
+    expect(described).toContain('0/30')
+  })
+
+  it('searches at once when the search is cleared', () => {
+    const props = baseProps()
+    renderList({ ...props, filters: { search: 'rep', productTypes: [], productStatus: 'all' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Clear search' }))
+    expect(props.handleChangeSearch).toHaveBeenCalledWith('')
+  })
+
+  it('pages by the pages the API counts when its total does not match them', () => {
+    const props = baseProps()
+    renderList({ ...props, pagination: { currentPage: 1, pageSize: 10, totalPages: 3, total: 1 } })
+    const pages = screen.getByRole('navigation', { name: 'Pagination' })
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next page' }))
+    expect(props.handleChangePage).toHaveBeenCalledWith(2)
+  })
+
+  // redesign B1, coordinator review: main's SideBar never closed on an outside click (and Escape only from 1000px), so a
+  // typed name was never lost by accident. The sheet asks before it drops one.
+  describe('closing the create panel with a name typed', () => {
+    const openWithName = () => {
+      renderList()
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }))
+      const panel = screen.getByRole('dialog', { name: 'New app or website' })
+      fireEvent.change(within(panel).getByLabelText('Name'), { target: { value: 'Repartidores' } })
+      return panel
+    }
+
+    it('asks on Escape, and «Keep editing» keeps the name', async () => {
+      const panel = openWithName()
+      fireEvent.keyDown(within(panel).getByLabelText('Name'), { key: 'Escape' })
+      const ask = await screen.findByRole('alertdialog', { name: 'Discard your changes?' })
+      fireEvent.click(within(ask).getByRole('button', { name: 'Keep editing' }))
+      await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+      expect(within(screen.getByRole('dialog', { name: 'New app or website' })).getByLabelText('Name').value).toBe('Repartidores')
+    })
+
+    it('asks on a click on the scrim and on Cancel, and «Discard» closes', async () => {
+      const panel = openWithName()
+      fireEvent.click(document.querySelector('.odc-overlay-backdrop'))
+      expect(await screen.findByRole('alertdialog', { name: 'Discard your changes?' })).toBeTruthy()
+      fireEvent.click(screen.getByRole('button', { name: 'Keep editing' }))
+      await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+      fireEvent.click(within(panel).getByRole('button', { name: 'Cancel' }))
+      fireEvent.click(within(await screen.findByRole('alertdialog', { name: 'Discard your changes?' })).getByRole('button', { name: 'Discard' }))
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: 'New app or website' })).toBeNull())
+    })
+
+    it('closes at once when nothing is typed', async () => {
+      renderList()
+      fireEvent.click(screen.getByRole('button', { name: 'Create' }))
+      fireEvent.click(within(screen.getByRole('dialog', { name: 'New app or website' })).getByRole('button', { name: 'Cancel' }))
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: 'New app or website' })).toBeNull())
+      expect(screen.queryByRole('alertdialog')).toBeNull()
+    })
   })
 
   describe('websites', () => {
@@ -261,22 +365,33 @@ describe('BuilderProducts list', () => {
       expect(state.emit).not.toHaveBeenCalled()
     })
 
-    it('filters by type from a menu grouped in apps and websites', () => {
+    // redesign B4: the type filter is a Product filter pill (P/FilterPopover) with Product checkboxes: the pill is
+    // named «Type» plus what it holds, the popup is named by it, and Escape closes it with the focus back on the pill
+    it('filters by type from a pill grouped in apps and websites', async () => {
+      const user = userEvent.setup()
       const onChange = vi.fn()
       const { rerender } = renderWithProviders(<TypeFilterMenu value={[]} onChange={onChange} />)
-      fireEvent.click(screen.getByRole('button', { name: 'Type: All' }))
-      fireEvent.click(screen.getByRole('checkbox', { name: 'Driver app' }))
+      const pill = screen.getByRole('button', { name: 'Type' })
+      expect(pill).toHaveClass('odc-pill')
+      expect(pill).toHaveAttribute('aria-haspopup', 'dialog')
+      await user.click(pill)
+      const popup = await screen.findByRole('dialog', { name: 'Type' })
+      fireEvent.click(within(popup).getByRole('checkbox', { name: 'Driver app' }))
       expect(onChange).toHaveBeenCalledWith(['driver_app'])
-      const websites = screen.getByRole('group', { name: /Websites/ })
+      const websites = within(popup).getByRole('group', { name: /Websites/ })
       fireEvent.click(within(websites).getByRole('button', { name: 'Select all' }))
       expect(onChange).toHaveBeenCalledWith(['marketplace_website', 'franchise_website', 'dashboard'])
 
       rerender(<TypeFilterMenu value={['marketplace_website', 'franchise_website', 'dashboard']} onChange={onChange} />)
-      expect(screen.getByRole('button', { name: 'Type: Websites' })).toBeTruthy()
+      expect(screen.getByRole('button', { name: /^Type\s*Websites$/ })).toHaveAttribute('data-active')
+      expect(within(screen.getByRole('group', { name: /Websites/ })).getByRole('checkbox', { name: 'Dashboard' })).toHaveAttribute('aria-checked', 'true')
       fireEvent.click(within(screen.getByRole('group', { name: /Websites/ })).getByRole('button', { name: 'Clear' }))
       expect(onChange).toHaveBeenLastCalledWith([])
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Type: Websites' }), { key: 'Escape' })
-      expect(screen.queryByRole('group', { name: /Websites/ })).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: 'All types' }))
+      expect(onChange).toHaveBeenLastCalledWith([])
+      await user.keyboard('{Escape}')
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Type' })).toBeNull())
+      expect(screen.getByRole('button', { name: /^Type\s*Websites$/ })).toHaveFocus()
     })
 
     it('creates a website from its type, without a base', async () => {
@@ -285,20 +400,20 @@ describe('BuilderProducts list', () => {
       props.createProduct = vi.fn(async () => ({ product: { id: 43 }, errorCodes: [] }))
       renderList(props)
       fireEvent.click(screen.getByRole('button', { name: 'Create' }))
-      const panel = screen.getByTestId('side-panel')
+      const panel = screen.getByRole('dialog', { name: 'New app or website' })
       expect(within(panel).getByRole('heading', { name: 'New app or website' })).toBeTruthy()
       // Apps first: only their types
-      const kinds = within(panel).getByRole('group', { name: 'What do you want to create?' })
-      expect(within(kinds).getByRole('radio', { name: 'Apps' }).checked).toBe(true)
-      expect(within(within(panel).getByRole('group', { name: 'Type of app' })).getAllByRole('radio').map(radio => radio.value))
-        .toEqual(['app-11', 'app-14'])
+      const kinds = within(panel).getByRole('radiogroup', { name: 'What do you want to create?' })
+      expect(within(kinds).getByRole('radio', { name: 'Apps' })).toHaveAttribute('aria-checked', 'true')
+      expect(within(within(panel).getByRole('radiogroup', { name: 'Type of app' })).getAllByRole('radio').map(nameOf))
+        .toEqual(['Marketplace app', 'Driver app'])
       expect(within(panel).queryByText(/Websites go online right away/)).toBeNull()
 
       fireEvent.click(within(kinds).getByRole('radio', { name: 'Websites' }))
-      expect(within(panel).queryByRole('group', { name: 'Type of app' })).toBeNull()
-      const websites = within(panel).getByRole('group', { name: /Type of website/ })
-      expect(within(websites).getAllByRole('radio').map(radio => radio.value))
-        .toEqual(['web-marketplace_website', 'web-franchise_website', 'web-dashboard'])
+      expect(within(panel).queryByRole('radiogroup', { name: 'Type of app' })).toBeNull()
+      const websites = within(panel).getByRole('radiogroup', { name: /Type of website/ })
+      expect(within(websites).getAllByRole('radio').map(nameOf))
+        .toEqual(['Marketplace website', 'Franchise website', 'Dashboard'])
       expect(within(panel).getByText(/Websites go online right away at a temporary address/)).toBeTruthy()
       expect(within(panel).getByText('0/100')).toBeTruthy()
 
@@ -314,8 +429,8 @@ describe('BuilderProducts list', () => {
       props.catalogState = { loading: false, bases: catalog, canCreate: true, unavailableReason: null }
       renderList(props)
       fireEvent.click(screen.getByRole('button', { name: 'Create' }))
-      const panel = screen.getByTestId('side-panel')
-      const kinds = within(panel).getByRole('group', { name: 'What do you want to create?' })
+      const panel = screen.getByRole('dialog', { name: 'New app or website' })
+      const kinds = within(panel).getByRole('radiogroup', { name: 'What do you want to create?' })
       fireEvent.click(within(kinds).getByRole('radio', { name: 'Websites' }))
       const longName = 'Burger Town online ordering for Downtown'
       fireEvent.change(within(panel).getByLabelText('Name'), { target: { value: longName } })
@@ -326,7 +441,7 @@ describe('BuilderProducts list', () => {
       expect(within(panel).getByText('App names use 30 characters or fewer. Shorten it, or switch back to Websites.')).toBeTruthy()
       expect(within(panel).getByText('40/30')).toBeTruthy()
       // The website type picked doesn't belong to apps
-      expect(within(within(panel).getByRole('group', { name: 'Type of app' })).getAllByRole('radio').every(radio => !radio.checked)).toBe(true)
+      expect(within(within(panel).getByRole('radiogroup', { name: 'Type of app' })).getAllByRole('radio').every(radio => radio.getAttribute('aria-checked') !== 'true')).toBe(true)
 
       fireEvent.click(within(panel).getByRole('radio', { name: /Driver app/ }))
       await act(async () => { fireEvent.click(within(panel).getByRole('button', { name: 'Create app' })) })

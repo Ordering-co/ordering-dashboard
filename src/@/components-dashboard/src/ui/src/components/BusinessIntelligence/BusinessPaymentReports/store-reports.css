@@ -1,0 +1,206 @@
+/*
+ * redesign business-payments FC1: the store side of /intelligence/business-payments (picker bar, payment history,
+ * invoice cards, legacy reports). Product's DataTable, Tabs, FilterPill and Pagination own their structure; this adds the bar, the
+ * invoice card of a phone and a few cells. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second
+ * set of rules. The table brings its own page gutter, so the pieces around it take the same one and the page container has none.
+ */
+
+.odc-bp-store {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+/* redesign : the frame of the invoices (table, cards or error) takes the focus by script after «Try again», never by Tab */
+.odc-bp-invoices {
+  min-inline-size: 0;
+}
+
+/* ── The bar: the picker at the start, the payment history at the end; it wraps ── */
+.odc-bp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+  min-inline-size: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-bp-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-bp-history-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* the anchor of the range popover around the pill */
+.odc-bp-history-anchor {
+  display: inline-flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-bp-tabs .odc-tabs-list { margin-inline: var(--od-x-page-gutter); }
+
+/* ── Cells ── */
+.odc-bp-dash { color: var(--od-x-text-subtle); }
+
+/* the amount to transfer is the one in bold */
+.odc-bp-transfer { font-weight: var(--od-font-weight-semibold); }
+
+.odc-bp-sync {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bp-foot {
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* ── Invoice cards (D7): a list of buttons, one per invoice ── */
+.odc-bp-cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  font-family: var(--od-font-sans);
+}
+
+/* each item is the container its figures answer to: the width of the card, not of the window */
+.odc-bp-card-item {
+  container-type: inline-size;
+  container-name: odc-bp-card;
+  margin: 0;
+  padding: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bp-card {
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--od-space-3);
+  /* the open invoice draws its indicator in this border: the content does not move */
+  padding-inline: calc(var(--od-x-page-gutter-mobile) - var(--od-x-indicator)) var(--od-x-page-gutter-mobile);
+  border: 0;
+  border-inline-start: var(--od-x-indicator) solid transparent;
+  background: transparent;
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bp-card[data-skeleton] { cursor: default; }
+
+@media (hover: hover) {
+  .odc-bp-card:not([data-skeleton]):hover { background: var(--od-x-hover); }
+}
+
+.odc-bp-card[data-active] {
+  background: var(--od-x-selected);
+  border-inline-start-color: var(--od-action);
+}
+
+.odc-bp-card:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-bp-card-body {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The skeleton card has the rows of the real one; each placeholder line sits in the height of the text it stands for */
+.odc-bp-card[data-skeleton] { display: grid; gap: var(--od-space-2); }
+.odc-bp-card[data-skeleton] .odc-skeleton {
+  margin-block: calc((var(--od-x-type-ui-size) * var(--od-x-leading-ui) - var(--od-x-skeleton-line)) / 2);
+}
+
+/* Row 1: #id and the status. The status may wrap, never be cut. */
+.odc-bp-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bp-card-id {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bp-card-top .odc-status { white-space: normal; }
+
+/* Row 2: period · method */
+.odc-bp-card-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Row 3: the three figures, side by side */
+.odc-bp-card-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bp-card-figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-bp-card-figure-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+/* Narrow card (a 320 px phone): one figure per row, the name at the start and the amount at the end, so nothing overflows */
+@container odc-bp-card (max-width: 21rem) {
+  .odc-bp-card-figures { grid-template-columns: minmax(0, 1fr); }
+  .odc-bp-card-figure {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--od-space-3);
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-bp-bar { padding-inline: var(--od-x-page-gutter-mobile); }
+  .odc-bp-tabs .odc-tabs-list { margin-inline: var(--od-x-page-gutter-mobile); }
+  .odc-bp-foot { padding-inline: var(--od-x-page-gutter-mobile); }
+}

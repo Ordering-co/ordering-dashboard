@@ -1,0 +1,9 @@
+.od-ui:where(.od-chat-contacts) { color: var(--od-entity-selector-text); font-family: var(--od-entity-selector-font); }
+.od-ui:where(.od-chat-contacts) .od-chat-orders-action,
+.od-ui:where(.od-chat-contacts) .od-chat-page-action { min-width: 44px; min-height: 44px; color: var(--od-entity-selector-action-content); }
+/* redesign W1-6 (T1-6-4, D-24): pressed page arrow, inverse glyph on the action fill. The press has no transition, so the colors
+   are final the moment the pointer or Space goes down (a half-way fill read as 2.2:1 in messages-shell.spec.js). */
+.od-ui:where(.od-chat-contacts) .od-chat-page-action:active,
+.od-ui:where(.od-chat-contacts) .od-chat-page-action:active > svg { color: var(--od-text-inverse); transition: none; }
+.od-chat-dot { margin-inline: 5px; color: var(--od-entity-selector-muted); }
+@media (prefers-reduced-motion: reduce) { .od-ui:where(.od-chat-contacts) * { transition-duration: 0s !important; } }

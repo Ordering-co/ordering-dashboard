@@ -1,0 +1,105 @@
+/*
+ * redesign  C · The website migration cards of /my-products/ordering-website: offer, DNS first, migrated, and «Websites
+ * are now made in Builder». An icon, then the heading, the text and the actions; the tone (done, warning) colours the card and its
+ * icon, and the text says it too. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+.odc-root.odc-migration {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* Main's card kept 30px from what comes before it: the legacy layout stacks it with no gap. The sections editor's grid has its own
+   gap, so the card adds nothing there. */
+.odc-root.odc-migration:not(:first-child) {
+  margin-block-start: var(--od-space-5);
+}
+
+.odc-root.odc-ows > .odc-root.odc-migration {
+  margin-block-start: 0;
+}
+
+.odc-migration[data-tone='done'] { background: var(--od-success-soft); }
+.odc-migration[data-tone='warning'] { background: var(--od-warning-soft); }
+
+.odc-migration-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  color: var(--od-text-muted);
+}
+
+.odc-migration[data-tone='done'] .odc-migration-icon { color: var(--od-success-signal); }
+.odc-migration[data-tone='warning'] .odc-migration-icon { color: var(--od-warning-signal); }
+
+.odc-migration-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-migration h2 {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-migration p {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-migration .odc-migration-error { color: var(--od-danger-functional); }
+
+.odc-migration-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.odc-migration-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-ui-size);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-migration-link .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* The confirmation's text is the dialog's description: it keeps the dialog's own spacing. */
+.odc-migration-confirm .odc-overlay-desc > p { margin: 0; }
+
+/* «View website» is an action of its own: on a phone or a coarse pointer it is seen at the control height and is pressed in 44px
+   (decision 12), like P/Button's link variant. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-migration-link {
+    position: relative;
+    min-block-size: var(--od-x-control-height);
+  }
+
+  .odc-migration-link::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}

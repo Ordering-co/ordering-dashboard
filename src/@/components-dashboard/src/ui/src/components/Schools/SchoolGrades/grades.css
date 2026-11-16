@@ -1,0 +1,85 @@
+/*
+ * redesign SC-B2 · /schools, the Grades and Classrooms tabs: what a row, a card and the foot are made of. Product's DataTable,
+ * RecordCard, Pagination, Dialog and ConfirmDialog own the structure; this adds the actions of a row, the code behind a grade name
+ * and the foot. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ * Class prefix odc-school-. Both tabs import this file.
+ */
+
+/* the buttons of the toolbar of a tab, together */
+.odc-school-toolbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* the name that heads a row: it wraps (a long one breaks anywhere) and keeps its direction inside an RTL page */
+.odc-school-name {
+  display: block;
+  min-inline-size: 0;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* «Grade 1 · g1»: the name of the code, then the stored code quieter and in mono */
+.odc-school-code-raw {
+  color: var(--od-text-muted);
+}
+
+/* the two actions of a row, always visible, at the end of the row */
+.odc-school-row-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* the fields of the add / edit dialogs, one under the other */
+.odc-school-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── Phone: the cards ── */
+/* the card has no «from → to» here: the arrow of the shared card has nothing to point at */
+.odc-school-cards .odc-order-card-arrow {
+  display: none;
+}
+
+/* the link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-school-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-school-card-code {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-school-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+/* ── The foot: the pages ── */
+.odc-school-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+}
+
+.odc-school-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

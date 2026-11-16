@@ -1,131 +1,62 @@
 import React from 'react'
 import { useLanguage, useUtils, UserReviewDetails as UserReviewDetailsController } from '../../../../../index'
-import { PersonFill } from 'react-bootstrap-icons'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import { ReviewItem } from '../ReviewsDirectory/ReviewItem'
+import { ReviewPanel } from '../ReviewsDirectory/ReviewPanel'
+import { ratingOf } from '../ReviewsDirectory/reviewsData'
 
-import {
-  ReviewDetailsContainer,
-  Header,
-  DriverPhotoContainer,
-  WrapperImage,
-  Image,
-  ReviewItemContatiner,
-  ReviewMeta,
-  ReviewQualityContainer,
-  ReviewBarContainer,
-  ReviewBar,
-  ReviewQualityTextContainer,
-  Comment,
-  NotReviewed
-} from './styles'
-
-const UserReviewDetailsUI = (props) => {
+/**
+ * The panel of the reviews of one user: a driver, a customer or a professional (redesign reviews FC, D4, D5; RV-02, RV-08, RV-09).
+ * The page mounts it inside the SplitView and gives it `userId`, `user` (the row of the list), `onClose`, `expanded` and
+ * `onExpandedChange`; the controller (`UserReviewDetails`) brings `userState`, `userReviewState` and `reloadReviews`.
+ * The note of a review is its `qualification`, on the same scale as the businesses (RV-02). The author (name, lastname, photo)
+ * comes as `review.reviewer` (`params=reviewer`, ); `null` or no key paints no author.
+ */
+export const UserReviewDetailsUI = (props) => {
   const {
+    user,
     userState,
-    userReviewState
+    userReviewState,
+    reloadReviews,
+    onClose,
+    expanded,
+    onExpandedChange
   } = props
 
   const [, t] = useLanguage()
-  const [{ optimizeImage, parseDate }] = useUtils()
+  const [{ optimizeImage }] = useUtils()
 
-  const getReviewPercent = (quality) => {
-    switch (quality) {
-      case 1:
-        return 0
-      case 2:
-        return 25
-      case 3:
-        return 50
-      case 4:
-        return 75
-      case 5:
-        return 100
-      default:
-        return quality / 5 * 100
-    }
-  }
+  const person = userState?.user ?? user ?? null
+  const name = [person?.name, person?.lastname].filter(Boolean).join(' ')
+  const isHeaderLoading = !name && userState?.loading
+  const reviews = Array.isArray(userReviewState?.reviews) ? userReviewState.reviews : []
+  // no average when the row of the list does not bring one (a user opened by `?id=`): the count alone
+  const average = ratingOf(person?.qualification)
 
   return (
-    <>
-      <ReviewDetailsContainer>
-        <Header>
-          <h1>{userState.user?.name} {userState.user?.lastname}</h1>
-        </Header>
-        <DriverPhotoContainer>
-          <WrapperImage>
-            {userState.user?.photo
-              ? (
-              <Image bgimage={optimizeImage(userState.user?.photo, 'w_120,c_limit')} />
-                )
-              : (
-              <PersonFill />
-                )}
-          </WrapperImage>
-        </DriverPhotoContainer>
-        {userReviewState.loading
-          ? (
-              [...Array(5).keys()].map(i => (
-            <ReviewItemContatiner key={i}>
-              <ReviewQualityContainer>
-                <ReviewBarContainer>
-                  <Skeleton height={10} />
-                </ReviewBarContainer>
-              </ReviewQualityContainer>
-              <ReviewQualityTextContainer>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-              </ReviewQualityTextContainer>
-              <Comment>
-                <div><Skeleton width={300} /></div>
-                <div><Skeleton width={200} /></div>
-              </Comment>
-            </ReviewItemContatiner>
-              ))
-            )
-          : (
-              userReviewState?.reviews.map(review => (
-            <ReviewItemContatiner key={review?.id}>
-              <ReviewMeta>
-                {review?.created_at && (
-                  <p>{parseDate(review?.created_at, { utc: false })}</p>
-                )}
-                {review?.order_id && (
-                  <p>
-                    <span>{t('INVOICE_ORDER_NO', 'Order No.')}{' '}</span>
-                    <span>{review?.order_id}</span>
-                  </p>
-                )}
-              </ReviewMeta>
-              <ReviewQualityContainer>
-                <ReviewBarContainer>
-                  <ReviewBar
-                    percentage={getReviewPercent(review?.qualification)}
-                  />
-                </ReviewBarContainer>
-                <ReviewQualityTextContainer>
-                  <p>{t('TERRIBLE', 'Terrible')}</p>
-                  <p>{t('BAD', 'Bad')}</p>
-                  <p>{t('OKAY', 'Okay')}</p>
-                  <p>{t('GOOD', 'Good')}</p>
-                  <p>{t('GREAT', 'Great')}</p>
-                </ReviewQualityTextContainer>
-              </ReviewQualityContainer>
-              <Comment>{review?.comment}</Comment>
-            </ReviewItemContatiner>
-              ))
-            )}
-
-        {!userReviewState.loading && userReviewState.reviews.length === 0 && (
-          <NotReviewed>
-            {t('ERROR_REVIEW_FIND', 'The review does not exist.')}
-          </NotReviewed>
-        )}
-      </ReviewDetailsContainer>
-    </>
+    <ReviewPanel
+      title={name || t('USER', 'User')}
+      titleLoading={Boolean(isHeaderLoading)}
+      avatar={{
+        kind: 'person',
+        name,
+        src: person?.photo ? optimizeImage(person.photo, 'w_120,c_limit') : undefined
+      }}
+      rating={average ?? undefined}
+      // redesign reviews R1 (Q1-8): two decimals in the head, as the average of the list (5.00, not 5.0)
+      ratingDecimals={2}
+      count={reviews.length}
+      expanded={expanded}
+      onExpandedChange={onExpandedChange}
+      onClose={onClose}
+      loading={Boolean(userReviewState?.loading)}
+      error={Boolean(userReviewState?.error)}
+      empty={reviews.length === 0}
+      onRetry={reloadReviews}
+    >
+      {reviews.map(review => (
+        <ReviewItem key={review?.id} review={review} rating={ratingOf(review?.qualification)} author={review?.reviewer || undefined} />
+      ))}
+    </ReviewPanel>
   )
 }
 

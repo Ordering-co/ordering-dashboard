@@ -5,16 +5,15 @@ import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
 import SCHEMA from './themeNodesFixture.json'
 
+// CodeMirror needs a real layout engine; here each language tab is a textarea that reports what is typed.
+vi.mock('../../Shared/RichHtmlEditor/CodeEditor', () => ({
+  default: ({ label, value, onChange }) => <textarea aria-label={label} defaultValue={value} onChange={(event) => onChange(event.target.value)} />
+}))
+
 vi.mock('../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback],
   HtmlEditor: ({ UIComponent, ...props }) => <UIComponent {...props} />
 }))
-vi.mock('../../../styles', async () => {
-  const ReactActual = await vi.importActual('react')
-  return {
-    Button: ReactActual.forwardRef(({ color, borderRadius, outline, ...props }, ref) => <button ref={ref} {...props} />)
-  }
-})
 
 import { CONTROLS, SiteSettingsEditor, ThemeSchemaEditor, locatePath, showsPath } from '../ThemeSchemaEditor'
 import { getResetSections } from '../BuilderWebTheme/ThemeEditor'
@@ -41,6 +40,10 @@ describe('ThemeSchemaEditor', () => {
       expect(within(nav).getByRole('button', { name })).toBeInTheDocument()
     })
     expect(screen.getByRole('heading', { level: 2, name: 'Colors' })).toBeInTheDocument()
+    // redesign B3b: the entries are the editor's own (tokens), the one open marked by aria-current
+    const colors = within(nav).getByRole('button', { name: 'Colors' })
+    expect(colors).toHaveAttribute('aria-current', 'true')
+    expect(colors).toHaveClass('odc-te-entry')
   })
 
   it('shows a color with the text on it in one row, with their contrast', () => {
@@ -49,6 +52,8 @@ describe('ThemeSchemaEditor', () => {
     expect(within(row).getByLabelText('Primary')).toBeInTheDocument()
     expect(within(row).getByLabelText('Text on Primary')).toBeInTheDocument()
     expect(within(row).getByText(/:1 · /)).toBeInTheDocument()
+    // redesign B3b: the contrast badge says its level in words, on tokens
+    expect(within(row).getByText(/:1 · /)).toHaveClass('odc-te-contrast')
     expect(rowOf('tokens.color.on_primary')).toBeNull()
   })
 
@@ -69,6 +74,7 @@ describe('ThemeSchemaEditor', () => {
     const header = screen.getByRole('button', { name: 'Header' })
     expect(header).toHaveAttribute('aria-expanded', 'false')
     expect(header.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    expect(header).toHaveClass('odc-te-fold') // redesign B3b
     fireEvent.click(header)
     expect(header).toHaveAttribute('aria-expanded', 'true')
     fireEvent.click(within(rowOf('visibility.header.cart')).getByRole('switch', { name: 'Cart button' }))
@@ -99,6 +105,7 @@ describe('ThemeSchemaEditor', () => {
     fireEvent.click(screen.getByRole('button', { name: 'What this page shows' }))
     // Hidden on all screens, shown on phones by default
     expect(within(rowOf('visibility.home.hero.logo')).getByRole('switch')).not.toBeChecked()
+    expect(screen.getByRole('tab', { name: 'On phones' })).toHaveClass('odc-tab') // redesign B3b: P/Tabs
     fireEvent.click(screen.getByRole('tab', { name: 'On phones' }))
     const logo = within(rowOf('visibility.home.hero.logo')).getByRole('switch')
     expect(logo).toBeChecked()
@@ -154,6 +161,7 @@ describe('ThemeSchemaEditor', () => {
     renderEditor()
     openSection('Components')
     const tabs = screen.getByRole('tablist', { name: 'Button parts' })
+    expect(tabs).toHaveClass('odc-tabs-list') // redesign B3b: P/Tabs
     expect(within(tabs).getByRole('tab', { name: 'Base' })).toHaveAttribute('aria-selected', 'true')
     fireEvent.click(within(tabs).getByRole('tab', { name: 'Colors and styles' }))
     expect(screen.getByRole('heading', { name: 'Button colors' })).toBeInTheDocument()
@@ -170,12 +178,15 @@ describe('ThemeSchemaEditor', () => {
     expect(rowOf('components.button.base.radius').compareDocumentPosition(motion) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
-  it('picks a level with its amount, or a custom number in the node’s range', () => {
+  it('picks a level with its amount, or a custom number in the node’s range', async () => {
     const { setValue, rerender } = renderEditor()
     openSection('Components')
     const select = within(rowOf('components.button.base.icon_gap')).getByRole('combobox')
-    expect(within(select).getByRole('option', { name: /Small · \d+/ })).toBeInTheDocument()
-    fireEvent.change(select, { target: { value: 'custom' } })
+    // redesign B3b (controls): P/Select: its options are in the listbox it opens
+    expect(select).toHaveClass('odc-select-trigger')
+    fireEvent.click(select)
+    expect(await screen.findByRole('option', { name: /Small · \d+/ })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('option', { name: 'Custom' }))
     expect(setValue).toHaveBeenCalledWith(['components', 'button', 'base', 'icon_gap'], expect.any(Number))
     rerender({ edits: { components: { button: { base: { icon_gap: 200 } } } } })
     expect(within(rowOf('components.button.base.icon_gap')).getByRole('spinbutton')).toHaveAttribute('max', '96')
@@ -208,24 +219,27 @@ describe('ThemeSchemaEditor', () => {
     openSection('Components')
     fireEvent.click(screen.getByRole('button', { name: 'Store card' }))
     const select = within(rowOf('components.business_card.base.radius')).getByRole('combobox')
-    expect(select.options[select.selectedIndex].text).toBe('High · 20')
+    // redesign B3b (controls): the chosen option is the text of the P/Select trigger
+    expect(chosenOf(select)).toBe('High · 20')
     // The alias resolve names wins over guessing it from the amount
     rerender({ resolved: { ...resolved, tokens: { radius: { md: 10, lg: 20, xl: 20 } } }, aliases: { 'components.business_card.base.radius': '{radius.xl}' } })
     const named = within(rowOf('components.business_card.base.radius')).getByRole('combobox')
-    expect(named.value).toBe(JSON.stringify('{radius.xl}'))
+    expect(chosenOf(named)).toBe('High · 20')
     rerender({ resolved, edits: { components: { business_card: { base: { radius: '{radius.sm}' } } } } })
     const own = within(rowOf('components.business_card.base.radius')).getByRole('combobox')
-    expect(own.options[own.selectedIndex].text).toMatch(/^Slight/)
+    expect(chosenOf(own)).toMatch(/^Slight/)
   })
 
-  it('says where a value comes from, as resolve serves it, and names fonts by family', () => {
+  it('says where a value comes from, as resolve serves it, and names fonts by family', async () => {
     renderEditor({ sources: { 'components.business_card.base.radius': 'inherited' }, format: { fonts: { montserrat: 'Montserrat', archivo: 'Archivo Narrow' } } })
     openSection('Components')
     fireEvent.click(screen.getByRole('button', { name: 'Store card' }))
     const row = rowOf('components.business_card.base.radius')
     expect(within(row).getByText('From Content container')).toBeInTheDocument()
     openSection('Typography')
-    expect(within(rowOf('tokens.font.body')).getByRole('option', { name: 'Archivo Narrow' })).toBeInTheDocument()
+    // redesign B3b (controls): the fonts are the options of the P/Select listbox
+    fireEvent.click(within(rowOf('tokens.font.body')).getByRole('combobox'))
+    expect(await screen.findByRole('option', { name: 'Archivo Narrow' })).toBeInTheDocument()
   })
 
   it('shows a node only while its condition holds', () => {
@@ -237,18 +251,28 @@ describe('ThemeSchemaEditor', () => {
     expect(rowOf('components.tabs.variants.pill.joined')).toBeNull()
     rerender({ edits: { components: { tabs: { variants: { pill: { gap: '{space.none}' } } } } } })
     expect(rowOf('components.tabs.variants.pill.joined')).not.toBeNull()
+    // redesign B3b: a part's choices are a P/RadioGroup; choosing one shows its values
+    const styles = screen.getByRole('radiogroup', { name: 'Styles' })
+    expect(styles).toHaveClass('odc-radiogroup')
+    expect(within(styles).getByRole('radio', { name: 'Pill' })).toHaveAttribute('aria-checked', 'true')
+    fireEvent.click(within(styles).getByRole('radio', { name: 'Underline' }))
+    expect(rowOf('components.tabs.variants.pill.gap')).toBeNull()
+    expect(rowOf('components.tabs.variants.underline.indicator')).not.toBeNull()
   })
 
-  it('edits a component inside a group from the component, saved in the group', () => {
+  it('edits a component inside a group from the component, saved in the group', async () => {
     const { setValue } = renderEditor()
     openSection('Components')
     fireEvent.click(screen.getByRole('button', { name: 'Category tabs' }))
     fireEvent.click(screen.getByRole('tab', { name: 'Inside' }))
+    expect(screen.getByRole('radiogroup', { name: 'Component' })).toHaveClass('odc-radiogroup') // redesign B3b
     const tabs = screen.getByRole('tablist', { name: 'Tabs parts' })
     fireEvent.click(within(tabs).getByRole('tab', { name: 'Base' }))
     const row = rowOf('components.tabs.base.text')
     expect(within(row).getByText('From Tabs')).toBeInTheDocument()
-    fireEvent.change(within(row).getByRole('combobox'), { target: { value: JSON.stringify('{typography.h3}') } })
+    // redesign B3b (controls): picked from the P/Select listbox
+    fireEvent.click(within(row).getByRole('combobox'))
+    fireEvent.click(await screen.findByRole('option', { name: 'Heading 3' }))
     expect(setValue).toHaveBeenCalledWith(['components', 'category_tabs', 'scope', 'tabs', 'base', 'text'], '{typography.h3}')
   })
 
@@ -268,6 +292,7 @@ describe('ThemeSchemaEditor', () => {
     fireEvent.click(screen.getByRole('tab', { name: 'On phones' }))
     expect(screen.getByText('Phones show them as on all screens.')).toBeInTheDocument()
     expect(screen.queryAllByRole('button', { name: /^Move .* down$/ })).toHaveLength(0)
+    expect(screen.getByRole('switch', { name: 'Order and hide them differently on phones' })).toHaveClass('odc-switch') // redesign B3b: P/Switch
     fireEvent.click(screen.getByRole('switch', { name: 'Order and hide them differently on phones' }))
     expect(setValue).toHaveBeenCalledWith(['platforms', 'mobile_web', 'pages', 'home', 'sections'], expect.arrayContaining([{ key: 'hero', visible: true }]))
     rerender({ edits: { platforms: { mobile_web: { pages: { home: { sections: [{ key: 'hero', visible: true }] } } } } } })
@@ -281,6 +306,32 @@ describe('ThemeSchemaEditor', () => {
     openSection('Pages')
     fireEvent.click(screen.getAllByRole('button', { name: /^Move .* down$/ })[0])
     expect(setValue).toHaveBeenCalledWith(['pages', 'home', 'sections'], expect.arrayContaining([expect.objectContaining({ key: expect.any(String), visible: true })]))
+    // redesign B3b: the arrows are P/IconButton, the move is announced, and a section's switch is a P/Switch
+    expect(screen.getAllByRole('button', { name: /^Move .* down$/ })[0]).toHaveClass('odc-btn')
+    expect(screen.getByText('Custom order banner is now number 2 in its block.')).toBeInTheDocument()
+    const show = screen.getByRole('switch', { name: 'Show Log-in block on phones' })
+    expect(show).toHaveClass('odc-switch')
+    fireEvent.click(show)
+    expect(setValue).toHaveBeenLastCalledWith(['pages', 'home', 'sections'], expect.arrayContaining([{ key: 'login_account', visible: false }]))
+    expect(screen.getAllByText('Always visible').length).toBeGreaterThan(0)
+  })
+
+  // redesign B3b: the list's search is a P/SearchField; it ignores accents, says when nothing matches, and Esc clears it
+  it('searches a list section by name, without accents, and Esc clears the search', () => {
+    renderEditor()
+    openSection('Components')
+    const list = screen.getByRole('navigation', { name: 'Components' })
+    const search = within(list).getByRole('searchbox', { name: 'Search: Components' })
+    expect(search.closest('.odc-search')).not.toBeNull()
+    fireEvent.change(search, { target: { value: 'stóre' } })
+    expect(within(list).getByRole('button', { name: 'Store card' })).toBeInTheDocument()
+    expect(within(list).queryByRole('button', { name: 'Button' })).toBeNull()
+    fireEvent.change(search, { target: { value: 'zzz' } })
+    expect(within(list).getByRole('status')).toHaveTextContent('Nothing matches “zzz”.')
+    fireEvent.keyDown(search, { key: 'Escape' })
+    expect(search).toHaveValue('')
+    expect(within(list).getByRole('button', { name: 'Button' })).toHaveAttribute('aria-current', 'true')
+    expect(within(list).getByRole('button', { name: 'Button' })).toHaveClass('odc-te-entry')
   })
 
   it('leaves the website’s settings out of the theme', () => {
@@ -327,6 +378,10 @@ describe('ThemeSchemaEditor', () => {
     view.rerender(<SiteSettingsEditor schema={schema} site={{ ...site, hasEdits: true, scope: { mode: 'single_store', businessId: 7, franchiseId: null }, scopeSelection: { item: { id: 7, name: 'Burger Town Centro' } }, errorCodes: ['business_id.exists'] }} />)
     expect(screen.getByRole('radio', { name: 'One store' })).toBeChecked()
     expect(screen.getByText('That store doesn’t exist anymore. Choose another one.')).toBeInTheDocument()
+    // redesign B3a: the refusal is announced, and Discard and Save are Product buttons
+    expect(screen.getByRole('alert')).toHaveTextContent('That store doesn’t exist anymore. Choose another one.')
+    expect(screen.getByRole('button', { name: 'Discard' })).toHaveClass('odc-btn')
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('odc-btn')
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
     expect(site.save).toHaveBeenCalled()
     fireEvent.click(screen.getByRole('radio', { name: 'Franchise' }))
@@ -433,6 +488,8 @@ describe('ThemeSchemaEditor', () => {
     renderWithProviders(<SiteSettingsEditor schema={SCHEMA} site={site} />)
     const notice = screen.getByText('Converting the settings to this version of the website dropped these, which take their default:').parentElement
     expect(notice.textContent).toContain('site.description')
+    // redesign B3a: a Product notice, announced as before
+    expect(notice.closest('.odc-notice')).toHaveAttribute('role', 'status')
   })
 
   it('leaves out a group the schema hides, in any section', () => {
@@ -506,28 +563,32 @@ describe('ThemeSchemaEditor', () => {
     renderEditor({ schema })
     openSection('Typography')
     expect(screen.getByRole('alert')).toHaveTextContent('This part of the editor couldn’t be shown')
+    // redesign B3b: a P/InlineNotice with a P/Button to try again
+    expect(screen.getByRole('alert')).toHaveClass('odc-notice')
+    expect(within(screen.getByRole('alert')).getByRole('button', { name: 'Try again' })).toHaveClass('odc-btn')
     openSection('Colors')
     expect(rowOf('tokens.color.primary')).not.toBeNull()
     spy.mockRestore()
   })
 
-  it('picks a role in a select, with an option for none that sends null', () => {
+  it('picks a role in a select, with an option for none that sends null', async () => {
     const roles = ['main', 'on', 'ink', 'subtle', 'pressed'].map(role => ({ value: `{${role}}`, label: { key: `BUILDER_THEME_ROLE_${role.toUpperCase()}`, default: role[0].toUpperCase() + role.slice(1) } }))
     const schema = { hover: { $type: 'role', $value: null, $extensions: { 'co.ordering.editor': { control: 'select', options: roles, labels: { unset: { key: 'BUILDER_THEME_SAME_AS_PRESSED', default: 'Same as pressed' } } } } } }
     const ctx = { schema, t: (_key, fallback) => fallback }
     const onChange = vi.fn()
     const view = renderWithProviders(<CONTROLS.select ctx={ctx} path='hover' label='Hover background' value={null} onChange={onChange} />)
-    const select = screen.getByRole('combobox', { name: 'Hover background' })
-    expect(select).toHaveDisplayValue('Same as pressed')
-    fireEvent.change(select, { target: { value: JSON.stringify('{pressed}') } })
+    // redesign B3b (controls): a P/Select named by the row's label and its chosen option; picked from its listbox
+    const select = screen.getByRole('combobox', { name: 'Hover background Same as pressed' })
+    expect(chosenOf(select)).toBe('Same as pressed')
+    await pick(select, 'Pressed')
     expect(onChange).toHaveBeenLastCalledWith('{pressed}')
     view.rerender(<CONTROLS.select ctx={ctx} path='hover' label='Hover background' value='{pressed}' onChange={onChange} />)
-    expect(select).toHaveDisplayValue('Pressed')
-    fireEvent.change(select, { target: { value: 'unset' } })
+    expect(chosenOf(select)).toBe('Pressed')
+    await pick(select, 'Same as pressed')
     expect(onChange).toHaveBeenLastCalledWith(null)
   })
 
-  it('names a state’s shadow without a value of its own, not as the level none, and takes it back to none', () => {
+  it('names a state’s shadow without a value of its own, not as the level none, and takes it back to none', async () => {
     const level = (name, label) => ({ $type: 'shadow', $value: { x: 0, y: 0, blur: 0, spread: 0, color: '#000000' }, $extensions: { 'co.ordering.editor': { label: { key: name, default: label } } } })
     const schema = {
       tokens: { shadow: { none: level('NONE', 'None'), sm: level('SM', 'Small') } },
@@ -536,14 +597,14 @@ describe('ThemeSchemaEditor', () => {
     const ctx = { schema, t: (_key, fallback) => fallback }
     const onChange = vi.fn()
     const view = renderWithProviders(<CONTROLS.shadow ctx={ctx} path='hover' label='Hover shadow' value={null} onChange={onChange} />)
-    const select = screen.getByRole('combobox', { name: 'Hover shadow' })
-    expect(select).toHaveDisplayValue('Same as resting')
-    expect(within(select).getByRole('option', { name: 'None' })).toBeInTheDocument()
-    fireEvent.change(select, { target: { value: '{shadow.none}' } })
+    // redesign B3b (controls): a P/Select named by the row's label and its chosen option; picked from its listbox
+    const select = screen.getByRole('combobox', { name: 'Hover shadow Same as resting' })
+    expect(chosenOf(select)).toBe('Same as resting')
+    await pick(select, 'None')
     expect(onChange).toHaveBeenLastCalledWith('{shadow.none}')
     view.rerender(<CONTROLS.shadow ctx={ctx} path='hover' label='Hover shadow' value='{shadow.none}' onChange={onChange} />)
-    expect(select).toHaveDisplayValue('None')
-    fireEvent.change(select, { target: { value: 'unset' } })
+    expect(chosenOf(select)).toBe('None')
+    await pick(select, 'Same as resting')
     expect(onChange).toHaveBeenLastCalledWith(null)
   })
 
@@ -591,6 +652,7 @@ describe('ThemeSchemaEditor', () => {
     fireEvent.click(within(screen.getByRole('tablist', { name: 'Button parts' })).getByRole('tab', { name: 'Colors and styles' }))
     const row = () => rowOf('components.button.colors.primary')
     expect(within(row()).getByRole('img', { name: /: Automatic \(#DB4900\)$/i })).toBeInTheDocument()
+    expect(within(row()).getByRole('img', { name: /: Automatic \(#DB4900\)$/i })).toHaveClass('odc-te-readonly') // redesign B3b
     expect(within(row()).queryByRole('button', { name: /Pressed/ })).toBeNull()
     // Its own value shows, still not to change or reset
     rerender({ schema, resolved, current: { components: { button: { colors: { primary: { pressed: '#111111' } } } } } })
@@ -709,18 +771,19 @@ describe('ThemeSchemaEditor', () => {
     expect(visibility.filter(path => /visibility\.(menu|business_card)\./.test(path))).toEqual([])
   })
 
-  it('offers a component’s text style a custom one, starting as its level, without a family', () => {
+  it('offers a component’s text style a custom one, starting as its level, without a family', async () => {
     const { setValue, rerender } = renderEditor()
     openSection('Components')
     fireEvent.click(screen.getByRole('button', { name: 'Sidebar menu' }))
     const select = within(rowOf('components.sidebar_menu.base.title')).getByRole('combobox')
-    expect(within(select).getByRole('option', { name: 'Custom' })).toBeInTheDocument()
-    fireEvent.change(select, { target: { value: 'custom' } })
+    // redesign B3b (controls): Custom is an option of the P/Select listbox
+    await pick(select, 'Custom')
     const h3 = SCHEMA.tokens.typography.h3.$value
     expect(setValue).toHaveBeenLastCalledWith(['components', 'sidebar_menu', 'base', 'title'], h3)
     rerender({ edits: { components: { sidebar_menu: { base: { title: h3 } } } } })
     const row = rowOf('components.sidebar_menu.base.title')
-    expect(within(row).getByRole('combobox', { name: 'Text style' })).toHaveValue('custom')
+    // redesign B3b (controls): named by the label and its chosen option
+    expect(chosenOf(within(row).getByRole('combobox', { name: 'Text style Custom' }))).toBe('Custom')
     // The type scale's fields, with their widest limits
     const size = within(row).getByRole('spinbutton', { name: 'Text style: Size' })
     expect(size).toHaveAttribute('max', '72')
@@ -728,14 +791,16 @@ describe('ThemeSchemaEditor', () => {
     expect(setValue).toHaveBeenLastCalledWith(['components', 'sidebar_menu', 'base', 'title'], { ...h3, size: 22 })
   })
 
-  it('offers each text style only the weights its font has', () => {
+  it('offers each text style only the weights its font has', async () => {
     renderEditor({ edits: { tokens: { font: { heading: 'lato' } } } })
     openSection('Typography')
+    // redesign B3b (controls): the weights are the options of the P/Select listbox
     const heading = within(rowOf('tokens.typography.h1')).getByRole('combobox', { name: /Weight/ })
-    expect(within(heading).queryByRole('option', { name: /200/ })).toBeNull()
-    expect(within(heading).getByRole('option', { name: /300/ })).toBeInTheDocument()
+    const headingWeights = await optionNames(heading)
+    expect(headingWeights.some(name => /200/.test(name))).toBe(false)
+    expect(headingWeights.some(name => /300/.test(name))).toBe(true)
     const body = within(rowOf('tokens.typography.body')).getByRole('combobox', { name: /Weight/ })
-    expect(within(body).getByRole('option', { name: /200/ })).toBeInTheDocument()
+    expect((await optionNames(body)).some(name => /200/.test(name))).toBe(true)
   })
 
   it('shows chosen a value the schema no longer offers: an option, a font, a text style of its own', () => {
@@ -749,7 +814,8 @@ describe('ThemeSchemaEditor', () => {
       }
     })
     openSection('Typography')
-    expect(within(rowOf('tokens.font.heading')).getByRole('combobox')).toHaveValue('comic_sans')
+    // redesign B3b (controls): the chosen option is the text of the P/Select trigger
+    expect(chosenOf(within(rowOf('tokens.font.heading')).getByRole('combobox'))).toBe('Comic Sans')
     openSection('Shadows')
     expect(within(rowOf('tokens.shadow_style.direction')).getByRole('radio', { name: 'Gone way' })).toBeChecked()
     openSection('Layout')
@@ -757,7 +823,7 @@ describe('ThemeSchemaEditor', () => {
     openSection('Components')
     fireEvent.click(screen.getByRole('button', { name: /^Sidebar menu/ }))
     const select = within(rowOf('components.sidebar_menu.base.title')).getByRole('combobox')
-    expect(select.selectedOptions[0]).toHaveTextContent(/^Custom$/)
+    expect(chosenOf(select)).toBe('Custom')
   })
 
   it('only shows a value whose control the editor doesn’t have, or that a text field would save as text', () => {
@@ -832,7 +898,7 @@ describe('ThemeSchemaEditor', () => {
     expect(screen.queryByRole('switch', { name: /download the app/ })).toBeNull()
   })
 
-  it('edits the website’s home and footer HTML in the rich editor, as HTML what it can’t keep', async () => {
+  it('edits the website’s home and footer HTML in the rich editor, where what it can’t keep stays whole under «Edit as HTML»', async () => {
     const schema = {
       ...SCHEMA,
       editor: {
@@ -845,10 +911,15 @@ describe('ThemeSchemaEditor', () => {
     const setValue = vi.fn()
     const site = { current: { site: { home_html: '<p><b>Open</b> every day</p>', footer_html: '<div class="links">Contact</div>' } }, edits: {}, fieldErrors: {}, errorCodes: [], scope: { mode: 'marketplace', businessId: null, franchiseId: null }, scopeOptions: {}, hasEdits: false, setValue, setScope: vi.fn(), setScopeMode: vi.fn(), loadScopeOptions: vi.fn(), save: vi.fn(), discard: vi.fn() }
     renderWithProviders(<SiteSettingsEditor schema={schema} site={site} />)
-    const home = await within(rowOf('site.home_html')).findByRole('textbox', { name: 'Home content' })
+    const home = await within(rowOf('site.home_html')).findByRole('textbox', { name: 'Home content' }, { timeout: 5000 })
     expect(home).toHaveAttribute('contenteditable', 'true')
     expect(home.querySelector('strong')).toHaveTextContent('Open')
-    const footer = within(rowOf('site.footer_html')).getByRole('textbox', { name: 'Footer content' })
+    const footerRow = within(rowOf('site.footer_html'))
+    expect(footerRow.getByRole('textbox', { name: 'Footer content' })).toHaveAttribute('contenteditable', 'true')
+    expect(footerRow.getByRole('status')).toHaveTextContent('the visual editor can’t show')
+    expect(setValue).not.toHaveBeenCalled()
+    fireEvent.click(footerRow.getByRole('button', { name: 'Edit as HTML' }))
+    const footer = await footerRow.findByRole('textbox', { name: 'Footer content (HTML)' })
     expect(footer).toHaveValue('<div class="links">Contact</div>')
     fireEvent.change(footer, { target: { value: '<div class="links">Call us</div>' } })
     expect(setValue).toHaveBeenLastCalledWith(['site', 'footer_html'], '<div class="links">Call us</div>')
@@ -890,3 +961,19 @@ describe('ThemeSchemaEditor', () => {
     expect(setValue).not.toHaveBeenCalledWith(['tokens', 'typography', 'h1'], expect.objectContaining({ line: 1.8 }))
   })
 })
+
+// redesign B3b (controls): helpers of the P/Select cases. A P/Select is a combobox
+// that shows the chosen option and opens a listbox in the overlay host.
+const chosenOf = (combobox) => combobox.querySelector('.odc-select-text').textContent
+const pick = async (combobox, name) => {
+  fireEvent.click(combobox)
+  fireEvent.click(await screen.findByRole('option', { name }))
+  await vi.waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
+}
+const optionNames = async (combobox) => {
+  fireEvent.click(combobox)
+  const names = within(await screen.findByRole('listbox')).getAllByRole('option').map(option => option.textContent)
+  fireEvent.click(combobox)
+  await vi.waitFor(() => expect(screen.queryByRole('listbox')).toBeNull())
+  return names
+}

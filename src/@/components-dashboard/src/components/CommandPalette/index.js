@@ -10,7 +10,7 @@ import { useBusinessSearch } from './useBusinessSearch'
 import { useOrderSearch, useUserSearch } from './useRecordSearch'
 import { useIntegrationsCatalog } from './useIntegrationsCatalog'
 import { DELIVERY_SERVICES_URL, INTEGRATION_TYPES } from '../../utils/commandPaletteIntegrations'
-import { rankCommandEntries } from '../../utils/commandPaletteSearch'
+import { orderLocalCommandSections, orderSectionsByTitleMatch, rankCommandEntries } from '../../utils/commandPaletteSearch'
 import { canOpenSettings } from '../../utils/commandPaletteCatalog'
 import { canOpenNavDestination } from '../../utils/commandPaletteActions'
 import { buildRecordHandoffEntries } from '../../utils/commandPaletteHandoff'
@@ -27,6 +27,7 @@ import { markCommandPaletteSlowSearch, readCommandPaletteSlowSearch } from '../.
 import { buildPaletteStorePath } from '../../utils/businessDetailSections'
 import { canOpenDashboardRoute, getDashboardNavSections, getDashboardRoleFlags } from '../../utils/dashboardNavigation'
 import { buildDashboardDestinationCatalog } from '../../utils/dashboardDestinations'
+import { useGoogleActionsVisibility } from '../../ui/src/hooks/useGoogleActionsVisibility'
 import {
   getCommandPaletteRecentKey,
   pushCommandPaletteRecent,
@@ -78,6 +79,8 @@ export const CommandPalette = (props) => {
   const [query, setQuery] = useState('')
   const [businessContext, setBusinessContext] = useState(null)
   const appliedRequestRef = useRef(null)
+  // what was typed before the "choose a store" step; going back puts it in the field again (docs/COMMAND_PALETTE.md)
+  const queryBeforeContextRef = useRef('')
 
   const recentKey = getCommandPaletteRecentKey({ project: ordering?.project, userId: user?.id })
   const [recent, setRecent] = useState(() => readCommandPaletteRecent(recentKey))
@@ -87,6 +90,7 @@ export const CommandPalette = (props) => {
       setRecent(readCommandPaletteRecent(recentKey))
       return
     }
+    queryBeforeContextRef.current = ''
     setQuery('')
     setBusinessContext(null)
   }, [isOpen, recentKey])
@@ -97,7 +101,8 @@ export const CommandPalette = (props) => {
 
   const trimmed = query.trim()
   const { level } = getDashboardRoleFlags(user)
-  const navSections = useMemo(() => getDashboardNavSections({ t, user, configs, sites }), [t, user, configs, sites])
+  const { visible: googleActionsVisible } = useGoogleActionsVisibility()
+  const navSections = useMemo(() => getDashboardNavSections({ t, user, configs, sites, googleActionsVisible }), [t, user, configs, sites, googleActionsVisible])
   const businessesAllowed = canOpenNavDestination({ sections: navSections, url: '/stores/list', level })
   const settingsAllowed = canOpenSettings(user)
 
@@ -118,12 +123,13 @@ export const CommandPalette = (props) => {
     user,
     configs,
     sites,
+    googleActionsVisible,
     project: ordering?.project,
     settingsHub: settingsCatalog.hub,
     integrations: integrationsCatalog.integrations,
     deliveryCompanies: integrationsCatalog.deliveryCompanies,
     builderApps: integrationsCatalog.builderApps
-  }), [t, user, configs, sites, ordering?.project, settingsCatalog.hub, integrationsCatalog.integrations, integrationsCatalog.deliveryCompanies, integrationsCatalog.builderApps])
+  }), [t, user, configs, sites, googleActionsVisible, ordering?.project, settingsCatalog.hub, integrationsCatalog.integrations, integrationsCatalog.deliveryCompanies, integrationsCatalog.builderApps])
   const { navigationEntries, settingsEntries, actionEntries } = destinationCatalog
 
   useEffect(() => {
@@ -135,6 +141,7 @@ export const CommandPalette = (props) => {
     const entry = destinationCatalog.byId.get(initialRequest.destinationId)
     if (initialRequest.destinationId && !entry) return
     appliedRequestRef.current = initialRequest
+    queryBeforeContextRef.current = ''
     setQuery(initialRequest.query || '')
     setBusinessContext(entry?.requires === 'business' ? entry : null)
   }, [isOpen, initialRequest, destinationCatalog])
@@ -214,11 +221,11 @@ export const CommandPalette = (props) => {
       ].filter(section => section.items.length)
     }
 
-    const local = [
+    const local = orderLocalCommandSections([
       { key: 'navigation', items: rankCommandEntries(navigationEntries, trimmed, { limit: COMMAND_PALETTE_LIMITS.navigation }) },
       { key: 'settings', items: rankCommandEntries(settingsEntries, trimmed, { limit: COMMAND_PALETTE_LIMITS.settings }) },
       { key: 'actions', items: rankCommandEntries(actionEntries, trimmed, { limit: COMMAND_PALETTE_LIMITS.actions }) }
-    ]
+    ], trimmed)
     const remote = (key, search, items, active) => {
       if (!active || search.status === 'idle') return null
       if (QUIET_REMOTE_SECTIONS.includes(key) && search.status === 'success' && !items.length) return null
@@ -238,13 +245,14 @@ export const CommandPalette = (props) => {
     let ordered
     if (kind === 'number') ordered = [orders, stores, people, handoffs, ...local]
     else if (kind === 'phone' || kind === 'email') ordered = [people, orders, stores, handoffs, ...local]
-    else ordered = [...local, stores, orders, people, handoffs]
+    else ordered = orderSectionsByTitleMatch([...local, stores, orders, people, handoffs], trimmed)
     return ordered.filter(section => section && (section.remote || section.notice || section.items.length))
   }, [businessContext, trimmed, navigationEntries, settingsEntries, actionEntries, recent, businessesAllowed, searchBusinesses, businessSearch, businessItems, recordQuery, ordersAllowed, ordersSafeNotice, orderSearch, orderItems, usersAllowed, userSearch, userItems, foundUserLevels, t, user, configs])
 
   const handleSelect = useCallback((item) => {
     if (!item) return
     if (item.requires === 'business') {
+      queryBeforeContextRef.current = query
       setBusinessContext(item)
       setQuery('')
       return
@@ -260,11 +268,13 @@ export const CommandPalette = (props) => {
       icon: entry.icon
     }))
     onNavigate && onNavigate(entry.path, { remount: !!entry.remount })
-  }, [recentKey, onNavigate])
+  }, [recentKey, onNavigate, query])
 
   const handleExitContext = useCallback(() => {
+    const restored = queryBeforeContextRef.current
+    queryBeforeContextRef.current = ''
     setBusinessContext(null)
-    setQuery('')
+    setQuery(restored)
   }, [])
 
   return (

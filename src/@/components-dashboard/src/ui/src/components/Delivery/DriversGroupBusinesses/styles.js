@@ -10,7 +10,7 @@ export const Container = styled.form`
   > button {
     position: sticky;
     top: 100%;
-    height: 42px;
+    min-height: 44px;
     margin-top: 20px;
   }
 `
@@ -22,15 +22,12 @@ export const SearchBarWrapper = styled.div`
 export const ButtonGroup = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
   margin-bottom: 20px;
-  button:first-child {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 7px;
-    `
-: css`
-      margin-right: 7px;
-    `}
+
+  button {
+    min-height: 44px;
   }
 `
 
@@ -43,11 +40,14 @@ export const BusinessWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 
-  p {
+  label {
     margin: 0px;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   ${({ isDisabed }) => isDisabed && css`
@@ -61,7 +61,7 @@ export const WrapperImage = styled.div`
   height: 40px;
   width: 40px;
   ${({ isSkeleton }) => !isSkeleton && css`
-    border: 1px solid #E3E3E3;
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};
   `}
   border-radius: 8px;
 
@@ -93,7 +93,7 @@ export const Image = (props) => {
   return (
     <ImageStyled
       {...props}
-      style={{ backgroundImage: `url(${props.bgimage})` }}
+      style={props.bgimage ? { backgroundImage: `url(${props.bgimage})` } : undefined}
     >
       {props.children}
     </ImageStyled>
@@ -104,7 +104,7 @@ export const SkeletonWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 `
 
 export const SkeletonContainer = styled.div`

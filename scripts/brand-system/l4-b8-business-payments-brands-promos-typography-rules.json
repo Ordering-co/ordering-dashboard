@@ -1,0 +1,296 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b8-business-payments-brands-promos-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b8-businessbrandbusidetail-businessname-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandBUSIDetail/styles.js",
+   "component": "BusinessName",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b8-businessbrandbusidetail-noselectedbrand-root-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandBUSIDetail/styles.js",
+   "component": "NoSelectedBrand",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "18px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-formcontrol-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-label-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "Label",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-switchwrapper-span-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "SwitchWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "16px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-colorwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "ColorWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-shapewrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "ShapeWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-headertitlecontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "HeaderTitleContainer",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-brandlisttable-thead---th-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "BrandListTable",
+   "property": "font-size",
+   "context": "thead > th",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-brandbody-td-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "BrandBody",
+   "property": "font-size",
+   "context": "td",
+   "match": "12px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-enablewrapper-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "EnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-infoblock-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "InfoBlock",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-detailheder-div-first-child-----span-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "DetailHeder",
+   "property": "font-size",
+   "context": "> div:first-child > > span",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-tab-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandlisting-actionselectorwrapper-select----list----list-wrapper-----div-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": ".select > .list > .list-wrapper > > div",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionaldetail-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionalDetail/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionaldetail-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionalDetail/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionals-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionals-userinfo-h3-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "UserInfo",
+   "property": "font-size",
+   "context": "h3",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionals-userinfo-p-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "UserInfo",
+   "property": "font-size",
+   "context": "p",
+   "match": "10px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b8-businessserviceprofessionals-addbtn-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "AddBtn",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b8-businessbrandgendetail-uploadimageicon-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "context": "span",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "b8-pres-businessbrandgendetail-shapeboxwrapper-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "component": "ShapeBoxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b8-business-payments-brands-promos typography inventory pins this declaration to an icon-only node. Verified: RecordCircleFill/Circle inside each shape box; icon-only node, matching the precedent already fixed for this component in earlier batches."
+  },
+  {
+   "id": "b8-pres-businessbrandlisting-actionselectorwrapper-select-----div-first-child---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": ".select > > div:first-child > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b8-business-payments-brands-promos typography inventory pins this declaration to an icon-only node. Verified: the ThreeDots trigger icon of the action menu, no text node."
+  },
+  {
+   "id": "b8-pres-businessserviceprofessionaldetail-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionalDetail/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b8-business-payments-brands-promos typography inventory pins this declaration to an icon-only node. The ThreeDots trigger icon inside DropdownButton, no text node."
+  },
+  {
+   "id": "b8-pres-businessserviceprofessionals-professionalitemcontainer-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "ProfessionalItemContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "18px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b8-business-payments-brands-promos typography inventory pins this declaration to an icon-only node. Verified in BusinessServiceProfessionals/index.js:170: ChevronRight is a real direct child of ProfessionalItemContainer, sibling of CheckWrapper."
+  },
+  {
+   "id": "b8-pres-businessserviceprofessionals-checkwrapper-span---svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "span > svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b8-business-payments-brands-promos typography inventory pins this declaration to an icon-only node. ORPHAN. Verified in BusinessServiceProfessionals/index.js:155-159: the span.check-box that this selector targets is COMMENTED OUT in the live render, so the declaration reaches no node at all. Preserved because the selector can only ever size an icon glyph, and recorded as pointing at commented JSX."
+  }
+ ]
+}

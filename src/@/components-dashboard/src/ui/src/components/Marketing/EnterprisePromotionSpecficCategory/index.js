@@ -117,7 +117,7 @@ export const EnterprisePromotionSpecficCategory = (props) => {
           )
         : (
         <NoSelectedBusiness>
-          {t('SELECT_BUSINESS_BEFORE_CATEGORY', 'Please select a business before selecting your cateogries.')}
+          {t('SELECT_BUSINESS_BEFORE_CATEGORY', 'Please select a business before selecting your categories.')}
         </NoSelectedBusiness>
           )}
 

@@ -8,7 +8,7 @@ export const CartBillContainer = styled.div`
 
   table {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
 
     td {
       padding: 5px 0;
@@ -28,7 +28,7 @@ export const CartBillContainer = styled.div`
     .icon {
       display: flex;
       align-items: center;
-      max-height: 25px;
+      min-height: 25px;
     }
   }
   table.total {
@@ -37,11 +37,11 @@ export const CartBillContainer = styled.div`
     tr {
       td {
         font-weight: bold;
-        font-size: 16px;
+        font-size: var(--od-type-section-title-size);
 
         &#loyalty {
           font-weight: normal;
-          font-size: 14px;
+          font-size: var(--od-type-content-size);
         }
       }
     }
@@ -53,15 +53,33 @@ export const CouponContainer = styled.div`
 export const IconContainer = styled.div`
   position: relative;
   display: inline-flex;
+  align-items: center;
   cursor: pointer;
-  margin-left: 5px;
-  height: 20px;
+  margin-inline-start: 5px;
+  min-height: 20px;
+
+  > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--od-touch-target-minimum);
+    min-height: var(--od-touch-target-minimum);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  > button:focus-visible {
+    outline: 2px solid var(--od-focus-ring-color);
+    outline-offset: 2px;
+  }
   svg:nth-child(1){
     position: relative;
     top: -1px;
   }
-  svg:nth-child(2){
-    position: relative;
+  > button:nth-child(2) svg {
     top: -3px;
   }
 `

@@ -1,0 +1,39 @@
+/*
+ * redesign  (P-UF5) · The add form of professionals in the composition of `UserAddForm` (its CSS gives the root, the form,
+ * the title, the photo, the fields, the API notice, the button and the skeleton). Only what that file does not have lives here: the
+ * header row (title and the close of a service), and the «Specialist» group, whose selector keeps its own legacy select and so
+ * needs a label of its own. Tokens only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * The group and its label are the same recipe as `.odc-uf-occupation` / `.odc-uf-label` of the profile form, under their own
+ * names: `user-form-details.css` also defines `.odc-uf-form` (a flex column), and loading it here would fight the grid of
+ * `user-add-form.css` for the same class.
+ */
+
+/* ── Header: the title and, for a service (Stores), its close at the inline end ── */
+.odc-pf-header {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-pf-header .odc-uf-title {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-pf-close {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+/* ── Specialist: a label for a control that is not a Field ── */
+.odc-pf-occupation { min-inline-size: 0; }
+
+.odc-pf-label {
+  margin: 0 0 var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}

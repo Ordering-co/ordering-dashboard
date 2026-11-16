@@ -1,0 +1,27 @@
+.od-ui:where(.od-sidebar) {
+  @apply od-fixed od-flex;
+  width: 0;
+  height: calc(var(--vh, 1vh) * 100);
+  top: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 5);
+  overflow-x: hidden;
+  background: var(--od-sidebar-surface);
+}
+
+.od-ui:where(.od-sidebar-actions) {
+  @apply od-absolute od-flex od-items-center;
+  top: 20px;
+  z-index: calc(var(--od-x-layer-raised) + 9);
+}
+
+.od-ui:where(.od-sidebar-actions) > button {
+  min-width: var(--od-sidebar-touch-target);
+  min-height: var(--od-sidebar-touch-target);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-sidebar) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

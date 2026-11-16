@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b1-analytics-filters-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b1-analytics-filters-analyticsavailabletimes-chartheadercontainer-p-14px-f4907f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/styles.js",
+      "component": "ChartHeaderContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b1-analytics-filters-analyticsbusytimes-chartheadercontainer-p-14px-d05d76",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/styles.js",
+      "component": "ChartHeaderContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b1-analytics-filters-analyticsdriversfilter-treeviewparentlabel-root-15p-5796e7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "TreeViewParentLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "15px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b1-analytics-filters-analyticsdriversfilter-treeviewchildrenlabel-root-1-2a9f36",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "TreeViewChildrenLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "15px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b1-analytics-filters-analyticsdriversfilter-selectbtnwrapper-button-14px-61eb43",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "SelectBtnWrapper",
+      "property": "font-size",
+      "context": "button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b1-analytics-filters-driveranalytics-headertitlecontainer-h1-20px-759908",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/DriverAnalytics/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b1-analytics-filters-driveranalytics-businessfilterwrapper-button-14px-63f04b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/DriverAnalytics/styles.js",
+      "component": "BusinessFilterWrapper",
+      "property": "font-size",
+      "context": "> button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b1-analytics-filters-graphloadingmessage-loadingmessage-root-14px-46b310",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/GraphLoadingMessage/styles.js",
+      "component": "LoadingMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b1-analytics-filters-pres-analyticsavailabletimes-actionblock-svg-16px-568f44",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta de grafico."
+    },
+    {
+      "id": "b1-analytics-filters-pres-analyticsbusytimes-actionblock-svg-16px-5f297b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta de grafico."
+    },
+    {
+      "id": "b1-analytics-filters-pres-analyticsdriversfilter-treeviewparentitem-svg-24px-137600",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "TreeViewParentItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "TreeViewParentItem svg: el glifo de la casilla del grupo."
+    },
+    {
+      "id": "b1-analytics-filters-pres-analyticsdriversfilter-treeviewchildrenitem-svg-24p-ee0edc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "TreeViewChildrenItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "TreeViewChildrenItem svg: el glifo de la casilla del conductor."
+    },
+    {
+      "id": "b1-analytics-filters-pres-analyticsdriversfilter-selectbtnwrapper-button-svg--07d937",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "component": "SelectBtnWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "SelectBtnWrapper button > svg: el glifo dentro de los botones Select All / Select None."
+    },
+    {
+      "id": "b1-analytics-filters-pres-driveranalytics-businesscalendarwrapper-button-svg--ee2ede",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/DriverAnalytics/styles.js",
+      "component": "BusinessCalendarWrapper",
+      "property": "font-size",
+      "context": "> button > svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "BusinessCalendarWrapper button > svg: el glifo del calendario."
+    },
+    {
+      "id": "l6-b1-analytics-filters-typography-pres-closing-tab-font-size-inherit",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsStatusFilterBar/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is an `inherit` value set as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "Cierre 2026-10 (Parte 1, ola 1.5). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+    }
+  ]
+}

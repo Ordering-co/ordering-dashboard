@@ -1,0 +1,568 @@
+/*
+ * redesign  B2 · /builder/:productId, the app's tabs: General (form, platforms, platform sheet), the checks panel,
+ * Appearance and Files (value rows, group chips, file cards), Constants and Credentials. Same layout as main's Builder styles.js,
+ * on --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-be-*.
+ */
+
+/* ── Cards (General, Credentials) ── */
+.odc-be-card {
+  display: flex;
+  flex-direction: column;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-be-card + .odc-be-card {
+  margin-block-start: var(--od-space-4);
+}
+
+.odc-be-card > header {
+  padding-block: var(--od-space-5) var(--od-space-2);
+  padding-inline: var(--od-space-6);
+}
+
+.odc-be-card h2 {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-be-card > header p {
+  margin: var(--od-space-1) 0 0;
+  color: var(--od-text-muted);
+}
+
+.odc-be-card > .odc-notice {
+  margin-block: var(--od-space-2) 0;
+  margin-inline: var(--od-space-6);
+}
+
+.odc-be-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--od-x-addon-card-min)), 1fr));
+  gap: var(--od-space-4) var(--od-space-6);
+  padding-block: var(--od-space-2) var(--od-space-6);
+  padding-inline: var(--od-space-6);
+}
+
+.odc-be-grid > [data-full] {
+  grid-column: 1 / -1;
+}
+
+.odc-be-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  padding-block-end: var(--od-space-6);
+  padding-inline: var(--od-space-6);
+}
+
+/* A field with an action at the end of its label line (Use app value, Optional): both in one cell, the action on top */
+.odc-be-field {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.odc-be-field > * {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
+}
+
+/* A field without a hint stretched to its row (its neighbour has one) and spread the extra height, so its input sat lower */
+.odc-be-field > .odc-field {
+  align-self: start;
+}
+
+.odc-be-field > .odc-be-field-action {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  justify-self: end;
+  align-self: start;
+}
+
+.odc-be-muted {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── Platforms table and sheet ── */
+.odc-be-table {
+  padding-block-end: var(--od-space-2);
+}
+
+.odc-be-platform {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+}
+
+.odc-be-platform-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-be-platform-name svg,
+.odc-be-checks-card > strong svg {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-be-value-cell {
+  overflow-wrap: anywhere;
+}
+
+.odc-be-value-cell[data-inherited] {
+  color: var(--od-text-muted);
+}
+
+.odc-be-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+}
+
+.odc-be-panel > p {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-be-panel > .odc-notice {
+  margin: 0;
+}
+
+/* ── Checks panel ── */
+.odc-be-checks {
+  border: var(--od-x-hairline) solid var(--od-warning-signal);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-warning-soft);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-be-checks[data-tone='clean'] {
+  border-color: var(--od-success-signal);
+  background: var(--od-success-soft);
+}
+
+.odc-be-checks-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-block: var(--od-x-space-3-5);
+  padding-inline: var(--od-space-5);
+  border: 0;
+  border-radius: var(--od-radius-panel);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+button.odc-be-checks-head {
+  cursor: pointer;
+}
+
+button.odc-be-checks-head:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.odc-be-checks-head > .odc-icon {
+  flex: none;
+  color: var(--od-warning-functional);
+}
+
+.odc-be-checks[data-tone='clean'] .odc-be-checks-head > .odc-icon {
+  color: var(--od-success-functional);
+}
+
+.odc-be-checks-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-be-checks-text strong {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-be-checks-text small {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-be-checks-toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-be-checks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--od-x-addon-card-min)), 1fr));
+  gap: var(--od-space-3);
+  padding-block-end: var(--od-space-5);
+  padding-inline: var(--od-space-5);
+}
+
+.odc-be-checks-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-2-5);
+  padding-block: var(--od-x-space-3-5);
+  padding-inline: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+}
+
+.odc-be-checks-card > strong {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-be-checks-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-2-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-be-checks-card li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-2-5);
+}
+
+.odc-be-checks-card li > .odc-badge {
+  flex: none;
+}
+
+.odc-be-checks-card li > span:nth-child(2) {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* ── Value rows (Appearance, Files, Constants) ── */
+.odc-be-list {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-be-list + .odc-be-files,
+.odc-be-chips + .odc-be-list,
+.odc-be-chips + .odc-be-files {
+  margin-block-start: var(--od-space-4);
+}
+
+.odc-be-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3) var(--od-space-4);
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-6);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-be-row:last-child {
+  border-block-end: 0;
+}
+
+.odc-be-row-name {
+  display: flex;
+  flex: 1 1 var(--od-x-menu-min);
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-be-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-be-name label {
+  margin: 0;
+  font-weight: inherit;
+}
+
+.odc-be-tag {
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-be-value {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-2-5);
+  max-inline-size: 100%;
+}
+
+.odc-be-value > .odc-field {
+  inline-size: var(--od-x-search);
+  max-inline-size: 100%;
+}
+
+.odc-be-value > .odc-field.odc-be-color {
+  inline-size: calc(var(--od-space-8) * 2);
+}
+
+.odc-be-mono {
+  font-family: var(--od-font-mono);
+}
+
+.odc-be-swatch {
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  padding: var(--od-x-space-half);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface);
+  cursor: pointer;
+}
+
+.odc-be-swatch:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-be-switch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-be-switch > div {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+}
+
+.odc-be-error {
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* Fixed width, so Cancel, Save and Restore never move the value field */
+.odc-be-aside {
+  display: flex;
+  flex: 0 0 calc(var(--od-space-10) + var(--od-space-8));
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+}
+
+.odc-be-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* ── Group chips and file cards ── */
+.odc-be-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-be-chip {
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-3-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font: inherit;
+  font-size: var(--od-x-type-ui-size);
+  cursor: pointer;
+}
+
+.odc-be-chip:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-be-chip[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-action);
+  color: var(--od-action-foreground);
+}
+
+.odc-be-chip:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-be-files {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--od-x-popover)), 1fr));
+  gap: var(--od-space-4);
+}
+
+.odc-be-file {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odc-be-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: calc(var(--od-space-10) - var(--od-space-2));
+  overflow: hidden;
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-align: center;
+}
+
+.odc-be-preview[data-missing] {
+  border: var(--od-x-hairline) dashed var(--od-danger-signal);
+  background: var(--od-danger-soft);
+  color: var(--od-danger-functional);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-be-preview img {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+}
+
+.odc-be-preview .odc-icon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+}
+
+.odc-be-file-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-be-file-meta .odc-be-name {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-be-file-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  margin-block-start: auto;
+}
+
+/* ── Credentials ── */
+.odc-be-credentials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-space-10) * 2.5)), 1fr));
+  gap: var(--od-space-4);
+}
+
+.odc-be-credentials > .odc-be-card {
+  gap: var(--od-space-4);
+  margin: 0;
+  padding: var(--od-space-6);
+}
+
+.odc-be-credentials > .odc-be-card > header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  padding: 0;
+}
+
+.odc-be-credentials > .odc-be-card > header > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.odc-be-credentials > .odc-be-card > header p {
+  margin: 0;
+}
+
+.odc-be-credentials > .odc-be-card > .odc-notice {
+  margin: 0;
+}
+
+.odc-be-credentials > .odc-be-card > footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.odc-be-secret {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-be-secret-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-be-secret-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height-lg);
+  padding-inline: var(--od-space-3) var(--od-space-1);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+}
+
+.odc-be-secret-box > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  color: var(--od-text-muted);
+}
+
+.odc-be-secret-box[data-set] > span {
+  color: var(--od-success-functional);
+  font-weight: var(--od-font-weight-medium);
+}

@@ -75,7 +75,7 @@ export const BusinessInfoWrapper = styled.div`
   align-items: center;
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-left: 12px;
     ${props => props.theme?.rtl && css`
       margin-right: 12px;
@@ -160,7 +160,7 @@ export const ModifiedWrapper = styled.div`
 
   ${({ isSkeleton }) => !isSkeleton && css`
     > span {
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       padding: 2px 8px;
       background: #F5F9FF;
       border-radius: 50px;
@@ -170,6 +170,26 @@ export const ModifiedWrapper = styled.div`
 `
 
 export const CheckBoxInnerWrapper = styled.span`
+  /*
+    Rendered as a native button with a checkbox role. It holds nothing but the
+    check glyph, which is phrasing content, so it is one of the few clickable
+    wrappers in this batch a button may legally contain.
+  */
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+
   ${({ noClick }) => noClick && css`
     pointer-events: none;
   `}

@@ -1,0 +1,1582 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-delivery-3-guard",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-delivery-3-delivery-driversgrouppaymethods-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupPaymethods/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgrouppaymethods-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupPaymethods/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 7px;\n    `\n: css`\n      margin-right: 7px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "GroupWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "GroupWrapper",
+            "property": "font",
+            "match": "({ isDisabed }) => isDisabed && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 7px;\n    `\n: css`\n      margin-right: 7px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupWrapper",
+            "property": "color-block",
+            "match": "({ isDisabed }) => isDisabed && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupsdeliveryzonedetails-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driverGroupDeliveryZoneProps /* binding-sha256:0dc9f86caa72b7219d36634a8099f97ee8e43c468f09c7af1db2ef5c401aab8a */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupsdeliveryzonedetails-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    font-weight: 500;\n\n    &::after {\n      content: \"\";\n      background: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'};\n      height: 1px;\n      position: absolute;\n      width: 100%;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0;\n      `\n: css`\n        left: 0;\n      `}\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        right: 0;\n      `\n: css`\n        left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This exact font-size controls reviewed glyph or control geometry rather than readable text.",
+            "evidence": "The Delivery-3 typography inventory centralizes every readable size on a role while the reviewed icon dimensions stay literal."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    font-weight: 500;\n\n    &::after {\n      content: \"\";\n      background: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'};\n      height: 1px;\n      position: absolute;\n      width: 100%;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0;\n      `\n: css`\n        left: 0;\n      `}\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        right: 0;\n      `\n: css`\n        left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Tab",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.04, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.1, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupslist-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupslist-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "GroupsTable",
+            "property": "font",
+            "match": "({ disabled }) => !disabled && css`\n      cursor: pointer;\n      &:hover {\n        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};\n      }\n      &.active {\n        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};\n        td {\n          border-top: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n          border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n        }\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "font",
+            "match": "({ isHeader }) => isHeader\n? css`\n    font-weight: 700;\n  `\n: css`\n    height: 40px;\n    display: flex;\n    align-items: center;\n    ${props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n      padding-left: 10px;\n      border-left: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `\n: css`\n      margin-right: 20px;\n      padding-right: 10px;\n      border-right: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `}  \n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n      padding-left: 10px;\n      border-left: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `\n: css`\n      margin-right: 20px;\n      padding-right: 10px;\n      border-right: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls reviewed glyph or control geometry rather than readable text.",
+            "evidence": "The Delivery-3 typography inventory centralizes every readable size on a role while the reviewed icon dimensions stay literal."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "({ isChecked }) => isChecked && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "DriverManagerContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "DriverGroupTypeContainer",
+            "property": "font",
+            "match": "({ isHeader }) => isHeader && css`\n    font-weight: 700;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "GroupsTable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "color-block",
+            "match": "({ disabled }) => !disabled && css`\n      cursor: pointer;\n      &:hover {\n        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};\n      }\n      &.active {\n        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};\n        td {\n          border-top: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n          border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n        }\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "border-top",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GroupsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "color-block",
+            "match": "({ isHeader }) => isHeader\n? css`\n    font-weight: 700;\n  `\n: css`\n    height: 40px;\n    display: flex;\n    align-items: center;\n    ${props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n      padding-left: 10px;\n      border-left: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `\n: css`\n      margin-right: 20px;\n      padding-right: 10px;\n      border-right: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `}  \n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n      padding-left: 10px;\n      border-left: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `\n: css`\n      margin-right: 20px;\n      padding-right: 10px;\n      border-right: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "border-left",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BorderWrapper",
+            "property": "border-right",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? '#B1BCCC'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color-block",
+            "match": "({ isChecked }) => isChecked && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverManagerContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupTypeContainer",
+            "property": "color-block",
+            "match": "({ isHeader }) => isHeader && css`\n    font-weight: 700;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupslisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversGroupsListProps /* binding-sha256:ad445c0c75752086eda53902ceee1d101c6464175c08a869de9bd68452abc428 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversgroupslisting-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsListing/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "HeaderLeftContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "HeaderLeftContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: -8px;\n        margin-right: 8px;\n      `\n: css`\n        margin-right: -8px;\n        margin-left: 8px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "HeaderRightContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "HeaderLeftContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "HeaderLeftContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: -8px;\n        margin-right: 8px;\n      `\n: css`\n        margin-right: -8px;\n        margin-left: 8px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "HeaderRightContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "HeaderRightContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driverslogs-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversLogs/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversmarkasbusy-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-driversmarkasbusy-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "DotLine",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    right: 18px;\n  `\n: css`\n    left: 18px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "StepItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 50px;\n    `\n: css`\n      margin-left: 50px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DotLine",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DotLine",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    right: 18px;\n  `\n: css`\n    left: 18px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StepItem",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StepItem",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.background ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StepItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 50px;\n    `\n: css`\n      margin-left: 50px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-googlegpsbutton-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/GoogleGpsButton/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "gpsButtonProps /* binding-sha256:f3194612c872037c1ef966877e971ba2545583e79675a7bad2a2939d960806e1 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-googlegpsbutton-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/GoogleGpsButton/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "GpsButtonStyle",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    left: 0;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "GpsButtonStyle",
+            "property": "font-size",
+            "match": "25px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls reviewed glyph or control geometry rather than readable text.",
+            "evidence": "The Delivery-3 typography inventory centralizes every readable size on a role while the reviewed icon dimensions stay literal."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "GpsButtonStyle",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.background ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GpsButtonStyle",
+            "property": "border-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GpsButtonStyle",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GpsButtonStyle",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    left: 0;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "GpsButtonStyle",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-useraddform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "UserAddProps /* binding-sha256:d9310bd95ae59396bba218eb2eeb998fd8e7f89330c424249f01f6a7e29b528b */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-useraddform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "InputWrapper",
+            "property": "font",
+            "match": "({ isTimezone }) => isTimezone && css`\n      > div:first-child {\n        > div {\n          overflow: hidden;\n        }\n      }\n      .list-wrapper {\n        font-size: var(--od-type-secondary-size);\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "ActionsForm",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    button {\n      &:nth-child(1) {\n        margin-right: 0px;\n      }\n      &:last-child {\n        margin-right: 5px;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls reviewed glyph or control geometry rather than readable text.",
+            "evidence": "The Delivery-3 typography inventory centralizes every readable size on a role while the reviewed icon dimensions stay literal."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "FormContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InputWrapper",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InputWrapper",
+            "property": "color-block",
+            "match": "({ isTimezone }) => isTimezone && css`\n      > div:first-child {\n        > div {\n          overflow: hidden;\n        }\n      }\n      .list-wrapper {\n        font-size: var(--od-type-secondary-size);\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Image",
+            "property": "background",
+            "match": "({ isImage, theme }) => isImage ? (theme?.ordering?.semantic?.surface?.default ?? '#FFF') : (theme?.ordering?.semantic?.background ?? theme.colors.backgroundPage)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "rgba(0,0,0,0.2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact scrim keeps the upload affordance legible over arbitrary user photography in both color modes.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color",
+            "match": "#FFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact value keeps fixed-light content legible over the always-dark upload scrim, where an inverting role would fail.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "border",
+            "match": "1px dashed #fff",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact value keeps fixed-light content legible over the always-dark upload scrim, where an inverting role would fail.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormInput",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormInput",
+            "property": "background-color",
+            "match": "rgba(239, 239, 239, 0.3)",
+            "context": "input.form > &:disabled",
+            "count": 1,
+            "reason": "This exact disabled tint is an operational state wash over the field surface rather than a semantic color.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsForm",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    button {\n      &:nth-child(1) {\n        margin-right: 0px;\n      }\n      &:last-child {\n        margin-right: 5px;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-userformdetails-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserFormDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-userformdetails-usedriverplate-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserFormDetails/useDriverPlate.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-userprofileform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserProfileForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "UserProfileProps /* binding-sha256:17c6033c968bff57ba030c3d77a56fbd122566a64c4104390f4aeec150ab8e1f */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact stamped prop forwarding is pinned by content hash; any change to the forwarded recipe reopens review.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-3-delivery-userprofileform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserProfileForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Camera",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 7px;\n  `\n: css`\n    right: 7px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout, direction or state composition and no ungoverned readable-text size.",
+            "evidence": "The Delivery-3 typography inventory pins expression, context and cardinality; a nested readable size would reopen classification."
+          },
+          {
+            "component": "Camera",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls reviewed glyph or control geometry rather than readable text.",
+            "evidence": "The Delivery-3 typography inventory centralizes every readable size on a role while the reviewed icon dimensions stay literal."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Image",
+            "property": "background",
+            "match": "({ isImage, theme }) => isImage ? (theme?.ordering?.semantic?.surface?.default ?? '#FFF') : (theme?.ordering?.semantic?.background ?? theme.colors.backgroundPage)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Image",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Camera",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.background ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Camera",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 7px;\n  `\n: css`\n    right: 7px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation carries reviewed layout, direction or state composition rather than a color decision.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Camera",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression resolves through the Ordering.co semantic, shadow or motion role and keeps the prior value only as an offline fallback.",
+            "evidence": "The Delivery-3 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    }
+  ]
+}

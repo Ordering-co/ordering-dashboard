@@ -22,28 +22,7 @@ const state = vi.hoisted(() => ({ read: null, rendered: null, cropper: null, det
 vi.mock('../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback]
 }))
-vi.mock('../../../styles', async () => {
-  const ReactActual = await vi.importActual('react')
-  return {
-    Button: ReactActual.forwardRef(({ color, borderRadius, outline, ...props }, ref) => <button ref={ref} {...props} />)
-  }
-})
-vi.mock('../../Shared/Modal', () => ({
-  Modal: ({ open, children, onClose }) => open
-    ? <div onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>{children}</div>
-    : null
-}))
-vi.mock('../../Shared', () => ({
-  Confirm: ({ open, title, acceptText, cancelText, onAccept, onCancel, children }) => open
-    ? (
-      <div role='alertdialog' aria-label={title}>
-        {children}
-        <button onClick={onCancel}>{cancelText}</button>
-        <button onClick={onAccept}>{acceptText}</button>
-      </div>
-      )
-    : null
-}))
+// redesign B3b: the crop dialog is on P/Dialog and P/ConfirmDialog
 vi.mock('cropperjs', () => ({
   default: class {
     constructor (image, options) {
@@ -178,6 +157,10 @@ describe('ImageControl crop dialog', () => {
     pick(photo)
     const dialog = await screen.findByRole('dialog', { name: 'Crop Home banner' })
     expect(dialog).toHaveAccessibleDescription('This image has a different proportion. Move the frame to choose the part to keep.')
+    // redesign B3b: the Product dialog, its Close first and the crop frame focused on open
+    expect(dialog).toHaveClass('odc-dialog')
+    expect(within(dialog).getAllByRole('button')[0]).toHaveAccessibleName('Close')
+    await waitFor(() => expect(screen.getByRole('group', { name: 'Crop frame' })).toHaveFocus())
     expect(state.cropper.options.aspectRatio).toBeCloseTo(16 / 9)
     expect(screen.getByText('4000 × 3000 px')).toBeInTheDocument()
     expect(screen.getByText('2560 × 1440 px (16:9)')).toBeInTheDocument()
@@ -207,7 +190,9 @@ describe('ImageControl crop dialog', () => {
     expect(badge).toHaveAttribute('tabindex', '0')
     expect(badge).toHaveTextContent('The result is smaller than the recommended 2560 × 1440 px, so it may look blurry on large screens.')
     fireEvent.focus(badge)
-    expect(await screen.findByRole('tooltip')).toHaveTextContent('smaller than the recommended 2560 × 1440 px')
+    const tip = await screen.findByRole('tooltip')
+    expect(tip).toHaveTextContent('smaller than the recommended 2560 × 1440 px')
+    expect(tip).toHaveClass('odc-tooltip') // redesign B3b: P/Tooltip
   })
 
   it('says nothing about the size when the crop reaches the recommended one', async () => {
@@ -233,8 +218,9 @@ describe('ImageControl crop dialog', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Upload as is' })).toHaveFocus())
     // Esc closes only the Confirm, not the crop
     fireEvent.click(screen.getByRole('button', { name: 'Upload as is' }))
-    fireEvent.keyDown(screen.getByRole('group', { name: 'Crop frame' }), { key: 'Escape', code: 'Escape' })
-    expect(screen.queryByRole('alertdialog')).toBeNull()
+    // redesign B3b: the crop dialog is aria-hidden under the confirmation, so Esc goes to the confirmation
+    fireEvent.keyDown(screen.getByRole('alertdialog'), { key: 'Escape', code: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(screen.getByRole('dialog', { name: 'Crop Home banner' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Upload as is' }))
     fireEvent.click(screen.getByRole('button', { name: 'Upload anyway' }))
@@ -325,6 +311,23 @@ describe('ImageControl crop dialog', () => {
     await screen.findByRole('dialog')
     expect(screen.queryByRole('button', { name: 'Upload as is' })).toBeNull()
     expect(screen.getByText('It can’t be uploaded as is: it is over the upload limit.')).toBeInTheDocument()
+  })
+
+  // redesign B3b: nothing closes the dialog nor repeats the crop while it is being prepared
+  it('locks the dialog while the crop is prepared', async () => {
+    const { uploadImage, pick } = renderControl()
+    let finish
+    imageResize.renderCrop.mockImplementationOnce(() => new Promise(resolve => { finish = resolve }))
+    pick(photo)
+    const useCrop = await screen.findByRole('button', { name: 'Use this crop' })
+    await waitFor(() => expect(useCrop).toBeEnabled())
+    fireEvent.click(useCrop)
+    expect(await screen.findByRole('button', { name: 'Preparing…' })).toBeDisabled()
+    for (const name of ['Close', 'Cancel', 'Upload as is']) expect(screen.getByRole('button', { name })).toBeDisabled()
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Crop frame' }), { key: 'Escape', code: 'Escape' })
+    expect(screen.getByRole('dialog', { name: 'Crop Home banner' })).toBeInTheDocument()
+    finish(state.rendered)
+    await waitFor(() => expect(uploadImage).toHaveBeenCalledWith('hero', state.rendered))
   })
 
   it('says when the crop couldn’t be made', async () => {

@@ -10,8 +10,8 @@ export const PaymentMethodsContainer = styled.div`
 export const PaymentMethodsList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: calc(100% + 15px);
-  margin-left: -15px;
+  width: 100%;
+  box-sizing: border-box;
 `
 
 export const Container = styled.div`
@@ -27,12 +27,22 @@ export const PayCard = styled.div`
   justify-content: center;
   margin: 15px;
   text-align: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
 
   ${props => props.isDisabled && css`
     pointer-events: none;
   `}
 
-  > div {
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  > span.brand {
     max-width: 88px;
     width: 100%;
     border: 1px solid #DEE2E6;
@@ -52,9 +62,9 @@ export const PayCard = styled.div`
     }
   }
 
-  p {
+  span.name {
     margin: 0px;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     text-align: center;
     color: #DEE2E6;
     white-space: nowrap;
@@ -77,13 +87,13 @@ export const PayCard = styled.div`
   }
 
   &.active {
-    > div {
+    > span.brand {
       border: 1px solid ${props => props.theme.colors.primary};
       svg path {
         fill: ${props => props.theme.colors.primary};
       }
     }
-    p {
+    span.name {
       color: ${props => props.theme.colors.headingColor};
     }
   }

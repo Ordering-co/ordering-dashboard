@@ -1,0 +1,101 @@
+/*
+ * redesign stores 5.14 (, E3) · The General tab of a promotion on Product: «Enabled», the image, name, description, dates,
+ * how it is applied, the discount and the save bar, inside the P/SectionSplit of the list.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the save bar is sticky to that scroller. Prefix: odc-bp-*.
+ */
+
+/* A flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as markups, 5.13, and SEO, 5.1b). */
+.odc-bp-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-bp-form:focus { outline: none; }
+
+.odc-bp-form > * { min-inline-size: 0; }
+
+.odc-bp-enabled {
+  display: flex;
+  min-inline-size: 0;
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as SEO and markups). */
+.odc-bp-form :is(input, button, select, textarea) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* The date trigger fills the line and writes its range from the start; a long range in a narrow panel breaks instead of overflowing. */
+.odc-bp-form .odc-bp-date {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  justify-content: flex-start;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  white-space: normal;
+}
+
+/* «How it's applied»: the radios and, under the chosen one, what depends on it */
+.odc-bp-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bp-sub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-inline-start: var(--od-space-4);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bp-check {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-bp-help {
+  margin: 0;
+  padding-inline-start: calc(var(--od-x-checkbox-box) + var(--od-space-2));
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Two controls side by side only while both fit: each column is at least five control heights wide, and the second goes under the
+   first when the panel is narrow (390 included). */
+.odc-bp-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-control-height) * 5)), 1fr));
+  gap: var(--od-space-4);
+  align-items: start;
+  min-inline-size: 0;
+}
+
+.odc-bp-pair > * { min-inline-size: 0; }
+
+.odc-bp-segment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-bp-sponsor {
+  min-inline-size: 0;
+}

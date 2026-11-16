@@ -1,0 +1,636 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-create-custom-order-2-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "stripe-warning-message",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "stripe-card-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "CardItemContent",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "stripe-card-expiry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "CardItemActions",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "stripe-add-card-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "AddNewCard",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "stripe-card-action-item",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "ActionsContent",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "payment-method-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "component": "PayCard",
+      "property": "font-size",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "product-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "SectionTitle",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "product-actions-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductActions",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "product-actions-price-note",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductActions",
+      "property": "font-size",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "product-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductName",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "product-name-calories",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductName",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "PriceContent",
+      "property": "font-size",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "product-offer-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "PriceContent",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-meta",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductMeta",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-tag-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "ProductTagWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-weight-unit",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "WeightUnitItem",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "ingredient-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductIngredient/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "option-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOption/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "option-title-note",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOption/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "option-flag",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOption/styles.js",
+      "component": "Flag",
+      "property": "font-size",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "suboption-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "Text",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "suboption-quantity-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "QuantityControl",
+      "property": "font-size",
+      "match": "18px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "suboption-position-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "PositionControl",
+      "property": "font-size",
+      "match": "18px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "suboption-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "SuboptionPrice",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "business-select-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectBusinesses/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "business-select-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectBusinesses/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "business-option-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectBusinesses/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "customer-section-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "SectionContainer",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "customer-results-note",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "OptionsToSelectContainer",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "customer-option-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "SelectOption",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "customer-address-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "CustomerAddressWrapper",
+      "property": "font-size",
+      "context": "> div > span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "customer-address-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "CustomerAddressWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "customer-saved-places-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "SavedPlaces",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "customer-saved-places-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "SavedPlaces",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "products-option-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectProducts/styles.js",
+      "component": "SelectOption",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "products-select-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectProducts/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "products-option-business",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectProducts/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "card-sold-out",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "SoldOut",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "card-description",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "card-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "card-off-price",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "PriceWrapper",
+      "property": "font-size",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "card-ribbon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "RibbonBox",
+      "property": "font-size",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "card-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "stripe-elements-error",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeElementsForm/styles.js",
+      "component": "ErrorMessage",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "stripe-redirect-select",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeRedirectForm/styles.js",
+      "component": "FormGroup",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "tax-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/TaxInformation/styles.js",
+      "component": "TaxInformationContainer",
+      "property": "font-size",
+      "match": "22px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "tax-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/TaxInformation/styles.js",
+      "component": "TaxInformationContainer",
+      "property": "font-size",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "stripe-card-check-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "CardItemContent",
+      "property": "font-size",
+      "match": "22px",
+      "reason": "This value sizes the selected-card check glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "stripe-card-actions-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "CardItemActionsWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This value sizes the card row overflow glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "payment-method-brand-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "component": "PayCard",
+      "property": "font-size",
+      "match": "25px",
+      "reason": "This value sizes the payment-method brand glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "payment-selected-check-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "component": "CardItemContent",
+      "property": "font-size",
+      "match": "22px",
+      "reason": "This value sizes the selected-method check glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "payment-selected-brand-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "component": "CardItemContent",
+      "property": "font-size",
+      "match": "26px",
+      "reason": "This value sizes the selected-method brand glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "product-favorite-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This value sizes the favorite toggle glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "product-video-play-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "component": "VideoGalleryWrapper",
+      "property": "font-size",
+      "match": "28px",
+      "reason": "This value sizes the video play glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "ingredient-check-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductIngredient/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "match": "24px",
+      "reason": "This value sizes the ingredient check glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "suboption-control-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "IconControl",
+      "property": "font-size",
+      "match": "24px",
+      "reason": "This value sizes the sub-option selection glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "suboption-quantity-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "QuantityControl",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This value sizes the quantity stepper glyphs, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "suboption-position-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "PositionControl",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This value sizes the position stepper glyphs, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "customer-address-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "CustomerAddressWrapper",
+      "property": "font-size",
+      "context": "> div > svg",
+      "match": "14px",
+      "reason": "This value sizes the customer address marker glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "card-remove-icon",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "reason": "This value sizes the card remove glyph, not readable text; the central roles govern copy and controls while icon geometry stays pinned.",
+      "evidence": "The create-custom-order-2 typography inventory classifies every site and keeps non-textual glyph geometry outside the role scale."
+    },
+    {
+      "id": "stripe-card-select-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "CardItemContent",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "stripe-add-card-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "component": "AddNewCard",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "payment-method-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "component": "PayCard",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "ingredient-toggle-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductIngredient/styles.js",
+      "component": "Container",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "suboption-select-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "component": "LeftOptionContainer",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "customer-results-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "OptionsToSelectContainer",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    },
+    {
+      "id": "customer-option-inherits",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "component": "SelectOption",
+      "property": "font",
+      "match": "inherit",
+      "reason": "This native action inherits the surrounding typography instead of declaring a local size; the readable text inside it still uses the central roles.",
+      "evidence": "The create-custom-order-2 inventory converts these surfaces to native controls and records that each one only resets the user-agent font, adding no ungoverned size."
+    }
+  ]
+}

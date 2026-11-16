@@ -9,6 +9,9 @@ import {
   getConfigToggleValues,
   getCustomBlockId,
   getSettingsFocusId,
+  getSettingsChangeName,
+  getReservationSettingIssues,
+  getSettingsPipeYesNoModel,
   SETTINGS_CONFIG_EFFECT,
   getDateTimeCompanionValues,
   getDateTimeFormats,
@@ -453,6 +456,38 @@ describe('settings save dirty check', () => {
 
     expect(mergeSettingsChanges(stillDirty, item, 'ghost-app-id', 'ghost-app-id')).toEqual([])
   })
+
+  // ST-16: the field emits «10,15» while the saved value arrives as «[10,15]»
+  it('drops driver_tip_options when it goes back to the saved array, with or without brackets and spaces', () => {
+    const tips = { id: 7, key: 'driver_tip_options' }
+    const pending = [{ ...tips, value: '10,20' }]
+
+    expect(mergeSettingsChanges(pending, tips, '10,15', '[10,15]')).toEqual([])
+    expect(mergeSettingsChanges(pending, tips, '10, 15', '[10,15]')).toEqual([])
+    expect(mergeSettingsChanges(pending, tips, '[10,15]', '10,15')).toEqual([])
+    expect(mergeSettingsChanges([], tips, '10,15', '[10,15]')).toEqual([])
+  })
+
+  it('still marks driver_tip_options dirty when the numbers differ, and leaves other keys exact', () => {
+    const tips = { id: 7, key: 'driver_tip_options' }
+    expect(mergeSettingsChanges([], tips, '10,20', '[10,15]')).toEqual([{ ...tips, value: '10,20' }])
+    expect(mergeSettingsChanges([], item, '[a]', 'a')).toEqual([{ ...item, value: '[a]' }])
+    expect(mergeSettingsChanges([], item, 'a b', 'ab')).toEqual([{ ...item, value: 'a b' }])
+  })
+})
+
+describe('getSettingsChangeName', () => {
+  const t = (key, fallback) => fallback
+
+  it('names a OneSignal cell as «<app> — App ID|REST API key» instead of the API name', () => {
+    expect(getSettingsChangeName({ key: 'onesignal_dashboardweb_id', name: 'Enter Dashboard OneSignal ID' }, t)).toBe('Dashboard — App ID')
+    expect(getSettingsChangeName({ key: 'onesignal_deliveryapp_rest_api_key', name: 'Driver key' }, t)).toBe('Driver app — REST API key')
+  })
+
+  it('falls back to the copy name, then to the API name', () => {
+    expect(getSettingsChangeName({ key: 'security_recaptcha_site_key', name: 'API name' }, t)).toBe('Site key')
+    expect(getSettingsChangeName({ key: 'facebook_id', name: 'Facebook Application ID' }, t)).toBe('Facebook Application ID')
+  })
 })
 
 describe('getSettingsBlockFocusId', () => {
@@ -460,5 +495,113 @@ describe('getSettingsBlockFocusId', () => {
     const { getSettingsBlockFocusId } = await import('../settingsCustomSections')
     expect(getSettingsBlockFocusId('notification_toast')).toMatch(/^settings-block-/)
     expect(getSettingsBlockFocusId('not_a_block_key')).toBe('')
+  })
+})
+
+describe('· «Add your …» defaults are not values', () => {
+  const recaptcha = (overrides = {}) => [
+    { id: 1, key: 'security_recaptcha_type', value: 'v2' },
+    { id: 2, key: 'security_recaptcha_site_key', name: 'Recaptcha Site Key', value: 'Add your Recaptcha Site Key', ...overrides.site },
+    { id: 3, key: 'security_recaptcha_secret_key', name: 'Recaptcha Secret Key', value: 'real-secret', ...overrides.secret }
+  ]
+
+  it('asks for the site key when the API ships the instructional text as its value', () => {
+    const validation = getRecaptchaValidation({ type: 'v2', configs: recaptcha() })
+    expect(validation.isValid).toBe(false)
+    expect(validation.errors.security_recaptcha_site_key).toBe('SETTINGS_RECAPTCHA_REQUIRED')
+    expect(getRecaptchaSubmitErrorCodes({ type: 'v2', configs: [...recaptcha(), { id: 4, key: 'security_recaptcha_auth', value: '1', options: [{ value: '1' }, { value: '0' }] }] }))
+      .toEqual(['SETTINGS_RECAPTCHA_ENABLE_INVALID'])
+  })
+
+  it('accepts a real key', () => {
+    expect(getRecaptchaValidation({ type: 'v2', configs: recaptcha({ site: { value: '6Lc-real-site-key' } }) }).isValid).toBe(true)
+  })
+
+  it('does not take the text as a filled v3 score either', () => {
+    const validation = getRecaptchaValidation({
+      type: 'v3',
+      configs: [
+        { id: 1, key: 'security_recaptcha_site_key_v3', value: 'site' },
+        { id: 2, key: 'security_recaptcha_secret_key_v3', value: 'secret' },
+        { id: 3, key: 'security_recaptcha_score_v3', name: 'Score', value: 'Add your score' }
+      ]
+    })
+    expect(validation.errors.security_recaptcha_score_v3).toBe('SETTINGS_RECAPTCHA_REQUIRED')
+  })
+
+  it('presents the text as a hint for any config, with or without a master', () => {
+    const analytics = { id: 9, key: 'google_analytics_id', name: 'Google Analytics ID', value: 'Add your Google Analytics ID' }
+    expect(getSettingsFieldDependency(analytics.key)).toBeNull()
+    expect(getSettingsInputPresentation(analytics)).toEqual({ value: '', placeholder: 'Add your Google Analytics ID' })
+  })
+})
+
+describe('· the save bar uses the name on screen', () => {
+  const t = (key, fallback) => fallback
+
+  it('names the location checks cells «<status> — <column>»', () => {
+    expect(getSettingsChangeName({ key: 'location_validation_enabled_status_3', name: 'Location Validation Status 3' }, t)).toBe('Arrived at the store — Enable')
+    expect(getSettingsChangeName({ key: 'location_validation_distance_status_9', name: 'Min Distance Status 9 (meters)' }, t)).toBe('Picked up — Min distance (m)')
+    expect(getSettingsChangeName({ key: 'location_validation_validity_status_26', name: 'x' }, t)).toBe('Waiting for the customer — Max age (min)')
+  })
+
+  it('names the multi checkout cells «<cart> — Discount %» and the reservation table by its title', () => {
+    expect(getSettingsChangeName({ key: MULTI_CHECKOUT_DISCOUNT_KEYS[5], name: 'API' }, t)).toBe('After 5 — Discount %')
+    expect(getSettingsChangeName({ key: 'reservation_setting', name: 'Reservation Setting' }, t)).toBe('Reservation setting')
+  })
+
+  it('reaches the bar through applySettingsConfigCopy (what SettingsList asks) and translates', () => {
+    const translate = (key, fallback) => (key === 'SETTINGS_LOCATION_STATUS_3' ? 'Llegó' : fallback)
+    expect(applySettingsConfigCopy({ key: 'location_validation_enabled_status_3', name: 'API' }, translate).name).toBe('Llegó — Enable')
+  })
+
+  it('keeps the API name for configs the blocks do not rename', () => {
+    expect(applySettingsConfigCopy({ key: 'facebook_id', name: 'Facebook Application ID' }, t).name).toBe('Facebook Application ID')
+  })
+})
+
+describe('· a type 3 list that only holds Yes and No is one choice', () => {
+  const yesNo = [{ text: 'Yes', value: '1' }, { text: 'No', value: '0' }]
+
+  it('reads the exclusive choice', () => {
+    expect(getSettingsPipeYesNoModel({ type: 3, options: yesNo, value: '1' })).toEqual({ onValue: '1', offValue: '0', checked: true })
+    expect(getSettingsPipeYesNoModel({ type: 3, options: yesNo, value: '0' })).toEqual({ onValue: '1', offValue: '0', checked: false })
+  })
+
+  it('reads the broken «1|0» state as off, and an empty value as off', () => {
+    expect(getSettingsPipeYesNoModel({ type: 3, options: yesNo, value: '1|0' }).checked).toBe(false)
+    expect(getSettingsPipeYesNoModel({ type: 3, options: yesNo, value: '' }).checked).toBe(false)
+  })
+
+  it('leaves real lists alone', () => {
+    expect(getSettingsPipeYesNoModel({ type: 3, options: [{ text: 'cash', value: 'cash' }, { text: 'card', value: 'card' }], value: 'cash' })).toBeNull()
+    expect(getSettingsPipeYesNoModel({ type: 3, options: [...yesNo, { text: 'Maybe', value: '2' }], value: '1' })).toBeNull()
+    expect(getSettingsPipeYesNoModel({ type: 3, options: [{ text: 'Yes', value: '1' }], value: '1' })).toBeNull()
+    expect(getSettingsPipeYesNoModel({ type: 3, value: '1' })).toBeNull()
+  })
+})
+
+describe('· reservation table rules', () => {
+  const t = (key, fallback) => fallback
+  const value = (fields) => JSON.stringify(fields)
+
+  it('rejects a negative number and names the row', () => {
+    const issues = getReservationSettingIssues(value({ min_guests_reservation: -5, max_guests_reservation: 10 }), t)
+    expect(issues).toHaveLength(1)
+    expect(issues[0]).toContain('Minimum guests')
+  })
+
+  it('rejects a minimum above the maximum, for guests and for the booking window', () => {
+    expect(getReservationSettingIssues(value({ min_guests_reservation: 9, max_guests_reservation: 2 }), t)).toHaveLength(1)
+    expect(getReservationSettingIssues(value({ min_time_reserve_minutes: 3000, max_time_reserve_days: 2 }), t)).toHaveLength(1)
+    expect(getReservationSettingIssues(value({ min_time_reserve_minutes: 60, max_time_reserve_days: 2 }), t)).toEqual([])
+    expect(getReservationSettingIssues(value({ min_time_reserve_minutes: 60, max_time_reserve_days: 0 }), t)).toEqual([])
+  })
+
+  it('accepts equal limits, a 0 maximum (no limit) and a value with no rules broken', () => {
+    expect(getReservationSettingIssues(value({ min_guests_reservation: 2, max_guests_reservation: 2 }), t)).toEqual([])
+    expect(getReservationSettingIssues(value({ min_guests_reservation: 2, max_guests_reservation: 0 }), t)).toEqual([])
+    expect(getReservationSettingIssues(value({ min_guests_reservation: 1, max_guests_reservation: 8, allow_preorder_reservation: true }), t)).toEqual([])
+    expect(getReservationSettingIssues('', t)).toEqual([])
   })
 })

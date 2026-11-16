@@ -1,0 +1,161 @@
+/*
+ * redesign  (D2 A, D3 A, D7) · The sessions card of /profile: summary, the paginated list, the foot with the two group
+ * actions and the loading, empty and error states. The card itself (border, radius, title) is profile-page.css.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Breakpoint as a literal only in @media (phone < 768).
+ * Logical properties (C17).
+ */
+
+.odc-profile-summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* decision 11: the total is a figure, in mono */
+.odc-profile-total {
+  color: var(--od-text);
+  font-size: var(--od-x-type-display-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-profile-session-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-profile-session {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* Started and Expires: label and date side by side on a wide card, one under the other on a phone */
+.odc-profile-session-dates {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-4);
+  row-gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-profile-session-date {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-profile-session-label { color: var(--od-text-muted); }
+
+/* the skeleton rows sit where the list will: the same top rule, the same row; the sign-out button is the tallest thing in a row */
+.odc-profile-sessions-loading { border-block-start: var(--od-x-hairline) solid var(--od-border); }
+
+.odc-profile-sessions-loading .odc-profile-session-dates {
+  display: grid;
+  flex: 1 1 auto;
+  gap: var(--od-space-2);
+}
+
+.odc-profile-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-profile-pagination {
+  flex: 1 1 auto;
+  padding-block: 0;
+}
+
+.odc-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-profile-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* session_strategy other than jwt_session: the notice and its one button */
+.odc-profile-tracking {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-3);
+}
+
+.odc-profile-tracking > .odc-notice { justify-self: stretch; }
+
+/*  (regression of ): the Mia launcher (assistant.css) is fixed at the bottom right at every width, not only on a
+   phone: from 768px it is a pill target-coarse + space-2 tall (the phone circle is target-coarse + space-1). The room below this last
+   card therefore holds on every width: the launcher's offset, its height and a gap. The phone block below narrows the height. */
+.odc-profile-sessions {
+  margin-block-end: calc(var(--od-space-4) + var(--od-space-1) + var(--od-x-target-coarse) + var(--od-space-2) + var(--od-space-3) + env(safe-area-inset-bottom));
+}
+
+/* ── Phone: the dates one under the other, the group actions one over the other at the full width ── */
+@media (max-width: 767px) {
+  /*  (batch O, row 19 c): the Mia launcher is fixed at the bottom right (assistant.css): space-4 + space-1 + safe area
+     from the edge, target-coarse + space-1 tall. This card is the last block of the page, so it keeps that footprint plus a gap
+     below it, and the end of the scroll lands above the launcher instead of under it. Margin, not padding: the card does not grow. */
+  .odc-profile-sessions {
+    margin-block-end: calc(var(--od-space-4) + var(--od-space-1) + var(--od-x-target-coarse) + var(--od-space-1) + var(--od-space-3) + env(safe-area-inset-bottom));
+  }
+
+  .odc-profile-session {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .odc-profile-session-dates {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .odc-profile-session > .odc-status {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .odc-profile-session > .odc-btn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .odc-profile-foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* 12px between the two, so their 44px touch areas do not overlap (decision 12) */
+  .odc-profile-actions {
+    flex-direction: column;
+    gap: var(--od-space-3);
+  }
+
+  .odc-profile-actions > .odc-btn {
+    inline-size: 100%;
+    justify-content: center;
+  }
+}

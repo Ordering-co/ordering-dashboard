@@ -63,3 +63,13 @@ export const getConnectVisualAccess = ({ configs } = {}) => {
     marketingCampaigns: enabled('campaign')
   }
 }
+
+export const BUSINESS_OWNER_MANUAL_DRIVER_ASSIGNMENT_CONFIG_KEY = 'store_app_manual_driver_assignment_enabled'
+
+export const DELIVERY_MANAGER_MANUAL_DRIVER_ASSIGNMENT_CONFIG_KEY = 'delivery_manager_manual_driver_assignment_enabled'
+
+export const canAssignDriverManually = ({ level, configs } = {}) => {
+  if (level === 2) return configs?.[BUSINESS_OWNER_MANUAL_DRIVER_ASSIGNMENT_CONFIG_KEY]?.value !== '0'
+  if (level === 5) return configs?.[DELIVERY_MANAGER_MANUAL_DRIVER_ASSIGNMENT_CONFIG_KEY]?.value !== '0'
+  return true
+}

@@ -1,0 +1,81 @@
+/*
+ * redesign stores 5.8 · Information of a delivery zone: the form inside the detail of P/SectionSplit. Values: --od-* and
+ * --od-x-* only, logical properties only. The width is the split's (nothing here measures or sets one).
+ */
+
+.odc-bdzi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* Two fields a row; one under 620px. `min-inline-size: 0` lets a field shrink instead of pushing the row. */
+.odc-bdzi-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+  align-items: start;
+}
+
+.odc-bdzi-row > * {
+  min-inline-size: 0;
+}
+
+@media (max-width: 619px) {
+  .odc-bdzi-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The recipient select is a legacy piece: it only gets the column. */
+.odc-bdzi-recipient {
+  min-inline-size: 0;
+}
+
+/* The slot of P/MapFrame (size='fill'): the frame takes the height of this container, which is the height of an embedded map. */
+.odc-bdzi-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: var(--od-x-map-height);
+}
+
+/* The ready map and its Clear shape button, inside the frame. BusinessZoneGoogleMaps paints one absolutely positioned div; it fills the stage. */
+.odc-bdzi-stage {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-bdzi-stage > div {
+  position: relative !important;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}
+
+.odc-bdzi-stage > button {
+  position: absolute;
+  inset-block-start: var(--od-space-2);
+  inset-inline-start: var(--od-space-2);
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-bdzi-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+/* Upload KML keeps its file input next to the button, not inside it; the input is hidden and the button clicks it. */
+.odc-bdzi-kml-input {
+  display: none;
+}
+
+/* review R5.8-06: .odc-notice brings the page gutter on both sides; in the form it lines up with the fields. */
+.odc-bdzi-notice.odc-notice {
+  margin-inline: 0;
+}

@@ -1,0 +1,109 @@
+/*
+ * 5.2-A · Sound notice: an inline InlineNotice (C10/C15), not a modal.
+ * It sits in the flow of whatever screen mounts OrderNotification, so it fits its
+ * container instead of the page gutter.
+ * F6d (Q3-03): from 768px it is ONE line like the connection notice (text with an ellipsis and a title, actions in
+ * a row at the end), so it never makes the notices cell taller than the other one. Under 768px it wraps its actions
+ * under the text: on a phone it is what there is to read.
+ */
+
+.odc-notice.odc-sound-notice {
+  margin-inline: 0;
+}
+
+.odc-sound-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+@media (max-width: 767px) {
+  .odc-notice.odc-sound-notice {
+    flex-wrap: wrap;
+  }
+
+  .odc-sound-notice .odc-notice-text {
+    flex: 1 1 var(--od-x-measure);
+  }
+
+  .odc-sound-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 768px) {
+  .odc-notice.odc-sound-notice {
+    flex-wrap: nowrap;
+  }
+
+  .odc-sound-notice .odc-notice-text {
+    flex: 1 1 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .odc-sound-actions {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+}
+
+/*
+ * W0-12 (W0-A0-01) · The slot a page mounts the notice in (OrderNotificationSlot): one grid cell inside the page's own
+ * container, under its head. It is a block in the page, never a column of the shell, so the notice takes the width of the
+ * container and one line (only a phone wraps it, with its actions under the text: see above). A notice that is not
+ * shown leaves the slot with no height: the gap under it exists only while the notice does.
+ */
+
+.odc-notice-slot {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.odc-notice-slot > * {
+  grid-area: 1 / 1;
+  align-self: start;
+  min-inline-size: 0;
+}
+
+.odc-notice-slot:has(.odc-sound-notice) {
+  margin-block-end: var(--od-space-2);
+}
+
+.odc-notice-slot .odc-notice.odc-sound-notice {
+  margin-block-end: 0;
+}
+
+/* redesign cierre W0 (W0-QA4-04): on a phone the notice of /drivers-dashboard sat 0px under the search field (the other pages have the
+   padding of their filter bar there): a space token above it, only while the notice exists. */
+@media (max-width: 767px) {
+  .odc-notice-slot[data-spaced]:has(.odc-sound-notice) {
+    margin-block-start: var(--od-space-2);
+  }
+}
+
+/*
+ * 5.4-A · New orders dialog: one line per order that arrived, in a list, with the number in mono.
+ * No artwork: the title and the list say what happened.
+ */
+
+.odc-new-orders {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-new-orders > li {
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-new-orders > li:last-child {
+  border-block-end: 0;
+}

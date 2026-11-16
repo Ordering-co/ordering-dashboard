@@ -1,0 +1,83 @@
+/*
+ * redesign DL-B3 (decision 1 | M-DL1, M-DL13): the panel of a driver (RecordPanel with sections). Values come from --od-* (release)
+ * and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `dlp-` prefix; the wrappers keep `odc-`.
+ */
+
+.dlp-body {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A section that is kept mounted for its draft is hidden, not removed */
+.dlp-section[hidden] { display: none; }
+
+.dlp-section { min-inline-size: 0; }
+
+/* ── Status strip under the title: Online, Busy (only when busy) and Active. Each switch keeps its own 44px area. ── */
+.dlp-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-4);
+  row-gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* redesign DL-R0: the strip sits on its own line under the email */
+.odc-record-subtitle .dlp-status {
+  margin-block-start: var(--od-space-2);
+}
+
+/* On a phone the strip drops under the title row, where «Back» (32px, 44px area) ends; the switch's own 44px area would reach into it */
+@container odc-record (max-width: 480px) {
+  .dlp-status {
+    margin-block-start: var(--od-space-3);
+  }
+}
+
+/* ── Orders (URL-only tab of main): its table fitted to a column (it was 100% of a side bar) ── */
+.dlp-orders,
+.dlp-addresses {
+  min-inline-size: 0;
+}
+
+.dlp-orders #orderTable table {
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+/* ── Schedule: the editor, then the save action under it ── */
+.dlp-schedule {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.dlp-schedule-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Stripe Connect (main , ): main's account card, then the payout rule, stacked with a gap ── */
+.dlp-stripe-connect {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* ── Loading ── */
+.dlp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.dlp-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}

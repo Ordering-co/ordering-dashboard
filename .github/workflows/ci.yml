@@ -24,6 +24,14 @@ jobs:
       - run: node i18n/check-generated.cjs
       - run: node i18n/verify.cjs
       - run: pnpm lint:check
+      - run: pnpm brand:check
+      - run: pnpm brand:test
+      - run: pnpm ui:check
+      - run: pnpm palette:coverage
+      - run: pnpm redesign:ratchet
+      - run: pnpm redesign:orders-imports
+      - run: pnpm redesign:dates
+      - run: node --test scripts/onboarding/core.test.mjs scripts/onboarding/product.test.mjs
       - run: pnpm build
       - run: pnpm exec vitest --coverage --run --pool=forks --maxWorkers=2
       - run: node scripts/coverage-summary.js --no-run --strict

@@ -1,0 +1,90 @@
+/*
+ * redesign DT-B2 (decision 12 | DT-12, DT-14, auditor 8): the block dialog and its time select. Tokens only (--od-*, --od-x-*).
+ * The select itself wears the classes of P/TimeField (time-field.css: 32px control, field border, house ring, 44px phone area); this
+ * file only lays the form out and widens the select to its column.
+ */
+
+/* ── The form: one column of fields, two for the hours ── */
+.odc-bd-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bd-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+}
+
+/* ── The select fills its column (TimeField's is as wide as its content) ── */
+.odc-bd-part {
+  display: block;
+  min-inline-size: 0;
+}
+
+.odc-bd-select {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* ── By week day: a label over a row that goes to the next line instead of overflowing (DT-14) ── */
+.odc-bd-group {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-group-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bd-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── The sentence of the repetition and the reason Add / Save is off ── */
+.odc-bd-rule,
+.odc-bd-reason {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bd-rule {
+  color: var(--od-text-muted);
+}
+
+.odc-bd-rule:empty {
+  display: none;
+}
+
+.odc-bd-reason {
+  color: var(--od-danger-functional);
+}
+
+/* ── Footer: «Delete block» alone at the start, Cancel and Save at the end ── */
+.odc-overlay-foot > .odc-bd-delete {
+  margin-inline-end: auto;
+}
+
+/* ── Phone: the sentences are 16px like the controls (P/TimeField); the footer buttons already share the row (dialog.css) ── */
+@media (max-width: 767px) {
+  .odc-bd-rule,
+  .odc-bd-reason {
+    font-size: var(--od-x-type-lead-size);
+  }
+}
+
+/* redesign DT-B5 (live check, DT-14): a labelled Product checkbox is a full-width row (the column manager's); here the seven days
+   sit side by side and wrap to a second line when they do not fit. */
+.odc-bd-days .odc-checkbox-labelled {
+  inline-size: auto;
+}

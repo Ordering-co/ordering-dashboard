@@ -1,9 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
-import moment from 'moment'
 import { useApi } from '../../contexts/ApiContext'
-import { useLanguage } from '../../contexts/LanguageContext'
 import { useSession } from '../../contexts/SessionContext'
+import { localBlocks, todayDay, toRequestRange } from '../../ui/src/components/Delivery/DriversTimeCalendar/blockData'
+import { resolveTimeZone } from '../../utils/timeZone'
+
+// redesign DT-B1 (DT-10, DT-15, DT-20, DT-23, decisión 1): the controller of the drivers' time calendar.
+// - The range is `{ from, to }` of local days (DT-20); it turns UTC only in the request (`toRequestRange`).
+// - «local» is the zone of the chosen group (`driver_groups.timezone`), the browser's with no group or no zone (`timeZone`).
+// - It arrives with every driver, no mode to choose first (decision 1).
+// - `getDrivers` keeps the answer of the last request only and never mutates the state it gave (DT-23).
+// - The page size the user chose is respected by every page change (DT-10).
+// - `addBlock`, `editBlock` and `deleteBlock` return `{ ok: true }` or `{ ok: false, error }`; no failure is swallowed (DT-15).
+// The form, the hours and the bodies of the requests live in `ui/.../Delivery/DriversTimeCalendar/blockData.js`.
+
+const DEFAULT_PAGE_SIZE = 10
+
+const asMessages = (result) => (Array.isArray(result) ? result : result == null ? [] : [result])
 
 export const CalendarDriversList = (props) => {
   props = { ...defaultProps, ...props }
@@ -14,534 +27,147 @@ export const CalendarDriversList = (props) => {
   } = props
 
   const [ordering] = useApi()
-  const [, t] = useLanguage()
-  const [isTimeChangeError, setIsTimeChangeError] = useState({ state: false, error: null })
-  const [selectedGroup, setSelectedGroup] = useState(null)
-  const [showBreakBlock, setShowBreakBlock] = useState(false)
-  const [propagation, setPropagation] = useState('none')
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [stackEventsState, setStackEventsState] = useState({ open: false, events: [], user: null })
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [openEditModal, setOpenEditModal] = useState(false)
-  const [filterValues, setFilterValues] = useState({
-    driverIds: []
-  })
-  const [filtOption, setFiltOption] = useState(null)
-  const [openModal, setOpenModal] = useState(false)
-  const [date, setDate] = useState([moment().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'), moment().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss')])
-  const [selectedBlock, setSelectedBlock] = useState({
-    user: null,
-    block: null
-  })
-  const [selectedDate, setSelectedDate] = useState(selectedBlock?.block ? selectedBlock?.block?.start : new Date())
-  const actualDate = moment(selectedDate).format('YYYY-MM-DD')
-  const [selectedUntilDate, setSelectedUntilDate] = useState(selectedBlock?.block ? selectedBlock?.block?.until : new Date())
-  const [scheduleState, setScheduleState] = useState({
-    state: {
-      start: `${actualDate} 00:00:00`,
-      end: `${actualDate} 23:59:00`
-    },
-    error: null,
-    loading: false
-  })
-  const [ruleState, setRuleState] = useState({ freq: null, byweekday: [] })
-
-  const [paginationProps, setPaginationProps] = useState({
-    initialPage: 1,
-    currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
-    pageSize: paginationSettings.pageSize ?? 10,
-    totalItems: null,
-    totalPages: null
-  })
-
-  const timeErrorList = [
-    t('END_TIME_LATER', 'Choose an end time later than the start time.'),
-    t('START_TIME_EARLY', 'Choose a start time earlier than the end time.'),
-    t('BREAK_END_TIME_EARLY', 'Choose a break end time later than the start/break start time and earlier than end time.'),
-    t('BREAK_START_TIME_LATER', 'Choose a break start time later than the start times and earlier than end/break end times.'),
-    t('DATE_RANGE_ERROR', 'The difference between dates should not be greater than 31'),
-    t('UNTIL_TIME_LATER', 'Choose an until time later than the start time with a difference of 2 months or less.')
-  ]
-
-  /**
-   * Get session
-   */
   const [session] = useSession()
 
-  /**
-   * Array to save drivers
-   */
+  const [range, setRange] = useState(() => ({ from: todayDay(), to: todayDay() }))
+  const [selectedGroup, setGroup] = useState(null)
+  const [driverIds, setDriverIds] = useState([])
   const [driversList, setDriversList] = useState({ users: [], loading: false, error: null })
+  const [paginationProps, setPaginationProps] = useState({
+    currentPage: 1,
+    pageSize: paginationSettings?.pageSize ?? DEFAULT_PAGE_SIZE,
+    totalPages: null,
+    totalItems: null,
+    from: null,
+    to: null
+  })
 
-  const handleSetInitialStates = () => {
-    setSelectedBlock({
-      user: null,
-      block: null
-    })
-    const initialState = {
-      start: `${actualDate} 00:00:00`,
-      end: `${actualDate} 23:59:00`
-    }
-    setScheduleState({
-      state: initialState,
-      loading: false,
-      error: null
-    })
-    setShowBreakBlock(false)
-    setRuleState({ freq: null, byweekday: [] })
-    setPropagation('none')
-    setSelectedDate(new Date(date[0]))
-    setSelectedUntilDate(new Date(date[0]))
-    setStackEventsState({ open: false, events: [], user: null })
-    setOpenModal(false)
+  // What a request reads is the state of the render that started it; `latest` also lets the one that follows an `await`
+  // (the reload after a save) see the current page and size, not the ones of a render that is already gone.
+  const latest = useRef({})
+  latest.current = { range, selectedGroup, driverIds, paginationProps }
+  // One number per request: only the last one may write (DT-23)
+  const lastRequest = useRef(0)
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${session.token}`
   }
+
+  const clearDrivers = () => {
+    setDriverIds(ids => (ids.length ? [] : ids))
+  }
+
+  const setSelectedGroup = (group) => {
+    setGroup(group)
+    // a new group starts without the driver filter (main, `DriversTimeDisplay/index.js:142-146`)
+    clearDrivers()
+  }
+
+  const toggleDriver = (driverId) => {
+    setDriverIds(ids => (ids.includes(driverId) ? ids.filter(id => id !== driverId) : [...ids, driverId]))
+  }
+
   /**
-   * Method to get drivers from API
-   * @param {Number} page change time
-   * @param {Number} pageSize open or close time
-   * @param {Number} selectedGroup
+   * Gets a page of drivers with their blocks in the range.
+   * @param {Number} page
+   * @param {Number} pageSize
    */
-  const getDrivers = async (page, pageSize, selectedGroupId) => {
+  const getDrivers = async (page, pageSize) => {
+    const request = ++lastRequest.current
+    const { range: currentRange, selectedGroup: group, driverIds: ids } = latest.current
     try {
-      setDriversList({ ...driversList, loading: true })
+      setDriversList(list => ({ ...list, loading: true, error: null }))
       const conditions = [{ attribute: 'level', value: '4' }]
-      if (filterValues?.driverIds?.length > 0) {
-        conditions.push({ attribute: 'id', value: filterValues?.driverIds })
-      }
-      const where = `&where=${JSON.stringify({
-        conditions,
-        conector: 'AND'
-      })}`
-
-      const requestOptions = {
+      if (ids.length > 0) conditions.push({ attribute: 'id', value: ids })
+      const where = `&where=${JSON.stringify({ conditions, conector: 'AND' })}`
+      const { zone } = resolveTimeZone(group?.timezone)
+      const [blocksFrom, blocksTo] = toRequestRange(currentRange, zone)
+      const endpoint = group?.id ? `${ordering.root}/drivergroups/${group.id}/drivers` : `${ordering.root}/users`
+      const response = await fetch(`${endpoint}?delivery_block_from=${blocksFrom}&delivery_block_to=${blocksTo}&page=${page}&page_size=${pageSize}&params=${propsToFetch}${where}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        }
-      }
-      const endpoint = selectedGroupId ? `${ordering.root}/drivergroups/${selectedGroupId}/drivers` : `${ordering.root}/users`
-      const response = await fetch(`${endpoint}?delivery_block_from=${date[0]}&delivery_block_to=${date[1]}&page=${page}&page_size=${pageSize}&params=${propsToFetch}${where}`, requestOptions)
-      const content = await response.json()
-
-      const { result, pagination, error } = content
-
+        headers
+      })
+      const { result, pagination, error } = await response.json()
+      if (request !== lastRequest.current) return
       if (error) {
-        setDriversList({
-          ...driversList,
-          loading: false,
-          error: result
-        })
-      } else {
-        const formattedUtcToLocalUsers = result.map(user => ({
-          ...user,
-          delivery_blocks: user.delivery_blocks.map(block => ({
-            ...block,
-            start: moment(moment.utc(block.start).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
-            end: moment(moment.utc(block.end).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
-            break_start: block.break_start ? moment(moment.utc(block.break_start).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null,
-            break_end: block.break_end ? moment(moment.utc(block.break_end).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null
-          }))
-        }))
-        driversList.users = formattedUtcToLocalUsers
-        setDriversList({
-          ...driversList,
-          loading: false
-        })
-        let nextPageItems = 0
-        if (pagination.current_page !== pagination.total_pages) {
-          const remainingItems = pagination.total - driversList.users.length
-          nextPageItems = remainingItems < pagination.page_size ? remainingItems : pagination.page_size
-        }
-        setPaginationProps({
-          ...paginationProps,
-          currentPage: pagination.current_page,
-          pageSize: pagination.page_size === 0 ? paginationProps.pageSize : pagination.page_size,
-          totalPages: pagination.total_pages,
-          totalItems: pagination.total,
-          from: pagination.from,
-          to: pagination.to,
-          nextPageItems
-        })
+        setDriversList(list => ({ ...list, loading: false, error: result }))
+        return
       }
+      const users = result.map(user => ({ ...user, delivery_blocks: localBlocks(user.delivery_blocks, zone) }))
+      setDriversList({ users, loading: false, error: null })
+      setPaginationProps({
+        currentPage: pagination?.current_page ?? page,
+        pageSize: pagination?.page_size ? pagination.page_size : pageSize,
+        totalPages: pagination?.total_pages ?? null,
+        totalItems: pagination?.total ?? null,
+        from: pagination?.from ?? null,
+        to: pagination?.to ?? null
+      })
     } catch (err) {
+      if (request !== lastRequest.current) return
       if (err.constructor.name !== 'Cancel') {
-        setDriversList({
-          ...driversList,
-          loading: false,
-          error: [err.message]
-        })
-      }
-    }
-  }
-  /**
-   * Method to validate time
-   * @param {String} changeTime change time
-   * @param {Boolean} isOpen open or close time
-   * @param {Boolean} isBreak open break or close break time
-   */
-  const handleChangeScheduleTime = (changeTime, isOpen, isBreak) => {
-    const _date = moment(`${actualDate} ${changeTime}:00`)
-
-    let _isTimeChangeError = false
-    if (isOpen) {
-      _isTimeChangeError = !isBreak ? _date.isSameOrAfter(scheduleState?.state?.end ? moment(scheduleState?.state?.end) : '23:59') : (_date.isSameOrAfter(scheduleState?.state?.break_end ? moment(scheduleState?.state?.break_end) : '23:59') || _date.isSameOrAfter(scheduleState?.state?.end ? moment(scheduleState?.state?.end) : '23:59') || _date.isSameOrBefore(scheduleState?.state?.start ? moment(scheduleState?.state?.start) : '00:00'))
-      if (_isTimeChangeError) {
-        setIsTimeChangeError({
-          state: true,
-          error: isBreak ? 3 : 1
-        })
-      } else {
-        isBreak
-          ? setScheduleState({
-            ...scheduleState,
-            state: {
-              ...scheduleState.state,
-              break_start: `${actualDate} ${changeTime}:00`,
-              break_end: scheduleState?.break_end ?? selectedBlock?.block?.break_end ?? `${actualDate} 23:59:00`
-            }
-          })
-          : setScheduleState({
-            ...scheduleState,
-            state: {
-              ...scheduleState.state,
-              start: `${actualDate} ${changeTime}:00`,
-              end: scheduleState?.end ?? selectedBlock?.block?.end ?? `${actualDate} 23:59:00`
-            }
-          })
-      }
-    } else {
-      _isTimeChangeError = !isBreak ? _date.isSameOrBefore(scheduleState?.state?.start ? moment(scheduleState?.state?.start) : '00:00') : (_date.isSameOrBefore(scheduleState?.state?.break_start ? moment(scheduleState?.state?.break_start) : '00:00') || _date.isSameOrBefore(scheduleState?.state?.start ? moment(scheduleState?.state?.start) : '00:00') || _date.isSameOrAfter(scheduleState?.state?.end ? moment(scheduleState?.state?.end) : '23:59'))
-      if (_isTimeChangeError && !selectedBlock?.block) {
-        setIsTimeChangeError({
-          state: true,
-          error: isBreak ? 2 : 0
-        })
-      } else {
-        isBreak
-          ? setScheduleState({
-            ...scheduleState,
-            state: {
-              ...scheduleState.state,
-              break_start: scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start ?? `${actualDate} 00:00:00`,
-              break_end: `${actualDate} ${changeTime}:00`
-            }
-          })
-          : setScheduleState({
-            ...scheduleState,
-            state: {
-              ...scheduleState.state,
-              start: scheduleState?.state?.start ?? selectedBlock?.block?.start ?? `${actualDate} 00:00:00`,
-              end: `${actualDate} ${changeTime}:00`
-            }
-          })
+        setDriversList(list => ({ ...list, loading: false, error: [err.message] }))
       }
     }
   }
 
-  /**
-  * Method to add block time
-  */
-  const handleAddBlockTime = async () => {
+  const changePage = (page) => getDrivers(page, latest.current.paginationProps.pageSize)
+
+  const changePageSize = (size) => getDrivers(1, size)
+
+  const reload = () => getDrivers(latest.current.paginationProps.currentPage, latest.current.paginationProps.pageSize)
+
+  // One request for the three verbs: the API refuses → its messages; the network fails → its message (DT-15); it goes
+  // well → the current page is loaded again.
+  const sendBlock = async (method, driverId, blockId, body) => {
     try {
-      const scheduleUtc = {
-        start: moment(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
-        end: moment(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.rrule) {
-        scheduleUtc.rrule = scheduleState.state.rrule
-      }
-      if (scheduleState.state.until) {
-        scheduleUtc.until = moment(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.break_start && showBreakBlock) {
-        scheduleUtc.break_start = moment(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.break_end && showBreakBlock) {
-        scheduleUtc.break_end = moment(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.name) {
-        scheduleUtc.name = scheduleState.state.name
-      }
-      if (scheduleState.state.description) {
-        scheduleUtc.description = scheduleState.state.description
-      }
-      setScheduleState({ ...scheduleState, loading: true })
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        },
-        body: JSON.stringify(scheduleUtc)
-      }
-      const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks`, requestOptions)
+      const url = `${ordering.root}/drivers/${driverId}/delivery_blocks${blockId == null ? '' : `/${blockId}`}`
+      const response = await fetch(url, { method, headers, body: JSON.stringify(body) })
       const { error, result } = await response.json()
-      if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
-        handleSetInitialStates()
-      } else {
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          error: result
-        })
-        setAlertState({
-          open: true,
-          content: result
-        })
-      }
+      if (error) return { ok: false, error: asMessages(result) }
     } catch (err) {
-      setScheduleState({
-        ...scheduleState,
-        loading: false,
-        error: [err.message]
-      })
+      return { ok: false, error: [err.message] }
     }
+    await reload()
+    return { ok: true }
   }
 
-  /**
-  * Method to delete block time
-  */
-  const deleteBlockTime = async () => {
-    try {
-      setScheduleState({ ...scheduleState, loading: true })
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        },
-        body: JSON.stringify({
-          propagation
-        })
-      }
-      const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks/${selectedBlock?.block?.id}`, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
-        handleSetInitialStates()
-        setOpenDeleteModal(false)
-      } else {
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          error: result
-        })
-      }
-    } catch (err) {
-      setScheduleState({
-        ...scheduleState,
-        loading: false,
-        error: [err.message]
-      })
-    }
-  }
+  const addBlock = (driverId, body) => sendBlock('POST', driverId, null, body)
 
-  /**
-  * Method to edit block time
-  */
-  const editBlockTime = async () => {
-    try {
-      setScheduleState({ ...scheduleState, loading: true })
-      const scheduleUtc = {
-        start: moment(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
-        end: moment(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.rrule) {
-        scheduleUtc.rrule = scheduleState.state.rrule
-      }
-      if (scheduleState.state.until) {
-        scheduleUtc.until = moment(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.break_start) {
-        scheduleUtc.break_start = moment(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.break_end) {
-        scheduleUtc.break_end = moment(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss')
-      }
-      if (scheduleState.state.name) {
-        scheduleUtc.name = scheduleState.state.name
-      }
-      if (scheduleState.state.description) {
-        scheduleUtc.description = scheduleState.state.description
-      }
-      const requestOptions = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        },
-        body: JSON.stringify({
-          ...scheduleUtc,
-          propagation
-        })
-      }
-      const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks/${selectedBlock?.block?.id}`, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
-        handleSetInitialStates()
-        setOpenEditModal(false)
-      } else {
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          error: result
-        })
-        setAlertState({
-          open: true,
-          content: result
-        })
-      }
-    } catch (err) {
-      setScheduleState({
-        ...scheduleState,
-        loading: false,
-        error: [err.message]
-      })
-    }
-  }
+  const editBlock = (driverId, blockId, body) => sendBlock('PUT', driverId, blockId, body)
 
-  const handleSelectedUntilDate = (date) => {
-    // if (moment(date).isSameOrBefore(selectedDate)) return
-    setScheduleState({
-      ...scheduleState,
-      state: {
-        ...scheduleState.state,
-        until: moment(date).endOf('day').format('YYYY-MM-DD HH:mm:ss')
-      }
-    })
-  }
-
-  const handleChangeDriver = (driverId) => {
-    let _driverIds = [...filterValues.driverIds]
-    if (!_driverIds.includes(driverId)) {
-      _driverIds.push(driverId)
-    } else {
-      _driverIds = _driverIds.filter((id) => id !== driverId)
-    }
-    setFilterValues({ ...filterValues, driverIds: _driverIds })
-  }
-
-  const handleClearFilters = () => {
-    setFilterValues({
-      driverIds: []
-    })
-  }
-
-  const handleClearDriversList = () => {
-    setDriversList({
-      ...driversList,
-      users: []
-    })
-  }
+  const deleteBlock = (driverId, blockId, propagation) => sendBlock('DELETE', driverId, blockId, { propagation })
 
   useEffect(() => {
-    if (selectedGroup?.id && filtOption === 'driver_groups') {
-      getDrivers(paginationProps.initialPage, paginationProps.pageSize, selectedGroup?.id)
-    }
-    if (filtOption === 'drivers') {
-      getDrivers(paginationProps.initialPage, paginationProps.pageSize)
-    }
-  }, [selectedGroup?.id, date, filterValues?.driverIds, filtOption])
+    getDrivers(1, latest.current.paginationProps.pageSize)
+  }, [selectedGroup?.id, range.from, range.to, driverIds])
 
-  useEffect(() => {
-    const _startHour = moment(scheduleState?.state?.start ?? selectedBlock?.block?.start).format('HH:mm')
-    const _endHour = moment(scheduleState?.state?.end ?? selectedBlock?.block?.end).format('HH:mm')
-    const _breakStartHour = moment(scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start).format('HH:mm')
-    const _breakEndHour = moment(scheduleState?.state?.break_end ?? selectedBlock?.block?.break_end).format('HH:mm')
-
-    let changes = showBreakBlock
-      ? {
-          start: `${actualDate} ${_startHour}:00`,
-          end: `${actualDate} ${_endHour}:00`,
-          break_start: `${actualDate} ${_breakStartHour}:00`,
-          break_end: `${actualDate} ${_breakEndHour}:00`
-        }
-      : {
-          start: `${actualDate} ${_startHour}:00`,
-          end: `${actualDate} ${_endHour}:00`
-        }
-    if (!moment(selectedDate).isSameOrBefore(selectedUntilDate)) {
-      changes = {
-        ...changes,
-        until: moment(selectedDate).endOf('day').format('YYYY-MM-DD HH:mm:ss')
-      }
-      setSelectedUntilDate(selectedDate)
-    }
-
-    setScheduleState({
-      ...scheduleState,
-      state: {
-        ...scheduleState.state,
-        ...changes
-      }
-    })
-  }, [selectedDate])
-
-  useEffect(() => {
-    setShowBreakBlock(!!(selectedBlock?.block?.break_start))
-  }, [selectedBlock?.block?.break_start])
-
-  useEffect(() => {
-    if (date[0]) {
-      handleSetInitialStates()
-    }
-  }, [date])
+  // an answer that arrives after the page is gone writes nothing
+  useEffect(() => () => { lastRequest.current += 1 }, [])
 
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
-          date={date}
-          setDate={setDate}
-          openModal={openModal}
-          getDrivers={getDrivers}
-          alertState={alertState}
-          driversList={driversList}
-          propagation={propagation}
-          setOpenModal={setOpenModal}
-          selectedDate={selectedDate}
-          scheduleState={scheduleState}
-          selectedBlock={selectedBlock}
-          setAlertState={setAlertState}
-          timeErrorList={timeErrorList}
-          editBlockTime={editBlockTime}
-          openEditModal={openEditModal}
-          setPropagation={setPropagation}
-          showBreakBlock={showBreakBlock}
+          range={range}
+          setRange={setRange}
           selectedGroup={selectedGroup}
-          paginationProps={paginationProps}
-          ruleState={ruleState}
-          setRuleState={setRuleState}
-          actualDate={actualDate}
-          setSelectedDate={setSelectedDate}
-          deleteBlockTime={deleteBlockTime}
-          openDeleteModal={openDeleteModal}
-          setScheduleState={setScheduleState}
-          setSelectedBlock={setSelectedBlock}
-          setOpenEditModal={setOpenEditModal}
-          stackEventsState={stackEventsState}
-          isTimeChangeError={isTimeChangeError}
-          selectedUntilDate={selectedUntilDate}
-          setShowBreakBlock={setShowBreakBlock}
-          setOpenDeleteModal={setOpenDeleteModal}
-          handleAddBlockTime={handleAddBlockTime}
           setSelectedGroup={setSelectedGroup}
-          setStackEventsState={setStackEventsState}
-          setSelectedUntilDate={setSelectedUntilDate}
-          setIsTimeChangeError={setIsTimeChangeError}
-          handleChangeScheduleTime={handleChangeScheduleTime}
-          handleSelectedUntilDate={handleSelectedUntilDate}
-          handleSetInitialStates={handleSetInitialStates}
-          filterValues={filterValues}
-          handleChangeDriver={handleChangeDriver}
-          handleClearFilters={handleClearFilters}
-          handleClearDriversList={handleClearDriversList}
-          setFiltOption={setFiltOption}
-          filtOption={filtOption}
+          timeZone={resolveTimeZone(selectedGroup?.timezone)}
+          driverIds={driverIds}
+          toggleDriver={toggleDriver}
+          clearDrivers={clearDrivers}
+          driversList={driversList}
+          paginationProps={paginationProps}
+          getDrivers={getDrivers}
+          changePage={changePage}
+          changePageSize={changePageSize}
+          addBlock={addBlock}
+          editBlock={editBlock}
+          deleteBlock={deleteBlock}
+          reload={reload}
         />
       )}
     </>
@@ -554,11 +180,19 @@ CalendarDriversList.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
+   * Initial page and page size of the list
+   */
+  paginationSettings: PropTypes.shape({
+    initialPage: PropTypes.number,
+    pageSize: PropTypes.number
+  }),
+  /**
    * Array of drivers props to fetch
    */
   propsToFetch: PropTypes.arrayOf(string)
 }
 
 const defaultProps = {
-  propsToFetch: []
+  propsToFetch: [],
+  paginationSettings: { initialPage: 1, pageSize: DEFAULT_PAGE_SIZE }
 }

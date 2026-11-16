@@ -1,0 +1,193 @@
+/* B1 */
+/* Period and channels of the report filters (redesign bi FB1: D4, D5, BI-04, BI-05, BI-06, BI-15, BI-17).
+   ReportPeriod and ReportChannels use only Shared/Product (Button, DateRangePopover, Skeleton). This part is theirs; the filter
+   pills of lot B2 go below it, under their own marker. Tokens only; the phone cut is the 768 of utils/breakpoints.js. */
+
+/* ── The chip: a secondary Button that says whether it is on. Not the primary action of the page, so it never goes primary. ── */
+.odc-btn.odc-bi-chip[aria-pressed='true'] {
+  border-color: var(--od-action-content);
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+}
+
+/* ── Period ── */
+.odc-bi-period {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* From 768 the buttons share a row and wrap onto the next line when they do not fit: no sideways scroll, no select. */
+.odc-bi-period-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The real dates of the period: the last item of the group. From 768 it takes the whole row, so it is on its own line under the
+   buttons, as it was when it sat outside the group. A phone overrides this below. */
+.odc-bi-period-dates {
+  flex: 0 0 100%;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* «Custom range» opens the range popover with no presets in it (the four are the buttons next to it): the empty list of the
+   panel would only add a gap above the fields. */
+.odc-dr-presets:empty { display: none; }
+
+/* A phone: the presets wrap by their own width, never a dropdown (D4). At 390 the four share the first row and «Custom range» is on
+   the second, with the line of dates beside it when it fits (redesign bi AC, B1: the grid of two columns made three rows and a
+   line, 145 px; now two rows, 76 px). */
+@media (max-width: 767px) {
+  /* redesign bi R1 (M1, decision 12): a chip is 32 visible with a 44 px area, so two ROWS need 12 px between them (44 - 32) for their
+     areas not to cross (touch probe at 390: the presets and «Custom range» crossed at 8 px). --od-space-3, as Home Q-07. Side by side
+     the chips are wider than 44 px and the area does not grow sideways (--od-x-target-inset is per axis): 8 px between them is enough. */
+  .odc-bi-period-group {
+    column-gap: var(--od-space-2);
+    row-gap: var(--od-space-3);
+  }
+
+  /* what the line of dates needs, not the whole row: it shares the row of «Custom range», and wraps under it when it does not fit */
+  .odc-bi-period-dates {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+}
+
+/* The custom range says its dates on the button: it must not run past the screen. */
+.odc-bi-period-custom { max-inline-size: 100%; }
+
+/* ── Channels ── */
+/* One line that scrolls sideways (useOverflowEdges fades the edges, odc-fade-x), with no scrollbar. The text of a channel is a
+   datum: it shows as it comes, with no text-transform. The padding holds the focus ring inside the scroller, and the margin gives
+   the room back. */
+.odc-bi-channels {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--od-x-space-1-5);
+  margin: calc(var(--od-x-space-1-5) * -1);
+}
+
+.odc-bi-channels::-webkit-scrollbar { display: none; }
+
+.odc-bi-channels > .odc-btn,
+.odc-bi-channels > .odc-skeleton { flex: none; }
+
+/* redesign : the scrollbar is hidden, so a wheel mouse needs arrows (ReportChannels renders one only on a side that has more
+   channels). They overlay the two ends of the row instead of sitting beside it: the row keeps its width and its height whether they
+   show or not, and `flow-root` keeps the scroller's negative margin (the room of the focus ring) from changing the height of the
+   wrapper. The scroller keeps a focused chip clear of the arrow with `scroll-padding-inline`: the arrow plus the gap, plus the padding
+   of the scroller (the scrollport starts at its padding edge, outside the wrapper). A coarse pointer scrolls with the finger: no arrows (nor under 768 px, below). */
+.odc-bi-channels-wrap {
+  position: relative;
+  display: flow-root;
+  min-inline-size: 0;
+}
+
+.odc-btn.odc-bi-channels-arrow {
+  position: absolute;
+  inset-block: 0;
+  margin-block: auto;
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-btn.odc-bi-channels-arrow[data-edge='start'] { inset-inline-start: 0; }
+.odc-btn.odc-bi-channels-arrow[data-edge='end'] { inset-inline-end: 0; }
+
+.odc-bi-channels.odc-fade-x {
+  scroll-padding-inline: calc(var(--od-x-control-height-sm) + var(--od-space-2) + var(--od-x-space-1-5));
+}
+
+/* redesign  (review, low): no arrows for a coarse pointer, and none under 768 px either (the phone query of the repo). A mouse
+   in a narrow window drew them over the chips, and their 44 px area (decision 12) covered part of the neighbouring chip. There the
+   scroller takes back its fade padding, as with touch. From 768 with a mouse nothing changes.
+   Touch: a small button is seen at 28 and answers at 44 (decision 12); the scroller would cut that area, so it makes room for it. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-btn.odc-bi-channels-arrow { display: none; }
+  .odc-bi-channels.odc-fade-x { scroll-padding-inline: var(--od-x-fade-size); }
+
+  .odc-bi-channels {
+    padding-block: calc((var(--od-x-target-coarse) - var(--od-x-control-height-sm)) / 2);
+    margin-block: calc((var(--od-x-target-coarse) - var(--od-x-control-height-sm)) / -2);
+  }
+}
+
+/* redesign bi R1 (M2): on a phone the chips are medium (ReportChannels, useIsPhone): 32 visible, so the room for the 44 px area is
+   the smaller one. A coarse pointer from 768 keeps the small chip and the room above. */
+@media (max-width: 767px) {
+  .odc-bi-channels {
+    padding-block: calc((var(--od-x-target-coarse) - var(--od-x-control-height)) / 2);
+    margin-block: calc((var(--od-x-target-coarse) - var(--od-x-control-height)) / -2);
+  }
+}
+
+/* B2 */
+/* Filter pills of the report filters (redesign bi FB2: D6, BI-10, BI-14, BI-18, BI-19). ReportFilterPills uses Shared/Product
+   (FilterBar, FilterPopover, Pagination, Skeleton) and the popover classes of filter-popover.css; this part is only what they
+   lack. Tokens only; logical properties; the phone cut is the 768 of utils/breakpoints.js. */
+
+/* ── The pills: all of them at one tap, so they wrap onto more lines instead of scrolling sideways or going to «+N» (D6). The bar
+   has no `overflowLabel`, and FilterBar's slot scrolls on one line (also on a phone); inside `.odc-bi-filters` it wraps. One class
+   more than FilterBar's own phone rule, so it wins at every width whatever the order of the sheets. The slot's scroller padding goes
+   too: nothing scrolls, so the focus ring is not cut. ── */
+.odc-filterbar.odc-bi-filters .odc-filterbar-filters {
+  flex-wrap: wrap;
+  overflow: visible;
+  padding: 0;
+  margin: 0;
+}
+
+/* redesign bi AC (B1): on a phone, inside the controls of a report page (Business, Drivers), the bar holds only the pills, so it does not
+   need the 12 px above and below them that it keeps for its search row, nor the gap of its empty «search / more» row (the grid of
+   FilterBar's phone layout has two rows and the first is empty here: 8 px of nothing). The page's own gap (8) separates the blocks.
+   The pills are 44 px boxes on a phone, so they have no area to cross. The chips of the active filters, when there are some, keep
+   the 12 px the padding gave them under the pills. Scoped to `.odc-bi-controls` (Reports has its own controls); more specific than the
+   container rule of filter-bar.css, so it wins at every width of the phone. */
+@media (max-width: 767px) {
+  .odc-bi-controls .odc-filterbar.odc-bi-filters .odc-filterbar-main {
+    padding-block: 0;
+    row-gap: 0;
+  }
+
+  .odc-bi-controls .odc-filterbar.odc-bi-filters .odc-filterbar-chips {
+    padding-block-start: var(--od-space-3);
+  }
+}
+
+/* ── Single-choice lists (Country, Time zone): the Product radio look (radio-group.css) in rows of the full width of the popover. ── */
+.odc-bi-choices { position: relative; }
+.odc-bi-choice { inline-size: 100%; }
+
+/* ── Loading: rows with the final height of an option, so the list does not jump when the answer comes ── */
+.odc-bi-skeletons {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.odc-bi-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--odc-picker-row);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+/* ── The pager of the stores list, under the rows and above «Clear» ── */
+.odc-orders-picker > .odc-bi-picker-pager {
+  flex: none;
+  padding-block: var(--od-space-1);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}

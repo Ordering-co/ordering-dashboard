@@ -18,7 +18,7 @@ vi.mock('~components', () => ({
   useConfig: () => [state.config],
   useApi: () => [{ root: 'https://api.test/v400', project: state.project.project?.code }]
 }))
-vi.mock('~ui', () => ({ useProjectState: () => [state.project] }))
+vi.mock('~ui/src/contexts/ProjectContext', () => ({ useProjectState: () => [state.project] }))
 
 const widget = () => document.querySelector('script[src*="widget.intercom.io"]')
 const renderWrapper = () => render(<IntercomWrapper><span>Dashboard</span></IntercomWrapper>)

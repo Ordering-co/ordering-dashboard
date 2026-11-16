@@ -79,6 +79,9 @@ const PluginListUI = (props) => {
   })
   const pluginModal = pluginModalSize({ fits: Boolean(pluginSelected.fits), ...pluginFrame })
 
+  // The three-dots button has no text of its own: its name carries the row it belongs to.
+  const rowActionsLabel = (name) => t('STORES_ROW_ACTIONS', 'Actions for _name_').replace('_name_', name ?? '')
+
   const handleChangePage = (page, type) => {
     setCurrentPage({ ...currentPage, [type]: page })
   }
@@ -212,8 +215,13 @@ const PluginListUI = (props) => {
                         <ActionSelectorWrapper onClick={(e) => e.stopPropagation()}>
                           <DropdownButton
                             menuAlign={theme?.rtl ? 'left' : 'right'}
-                            title={<FiMoreVertical />}
-                            id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
+                            title={(
+                              <>
+                                <FiMoreVertical aria-hidden='true' />
+                                <span className='odc-sr-only'>{rowActionsLabel(plugin?.name)}</span>
+                              </>
+                            )}
+                            id={`plugin-actions-${plugin.id}`}
                           >
                             <Dropdown.Item
                               onClick={() => handleUpdatePlugin(plugin.id, { root: plugin.root })}
@@ -245,6 +253,7 @@ const PluginListUI = (props) => {
                   </td>
                   <td>
                     <IconButton
+                      aria-label={t('ADD_NEW_PLUGIN', 'Add a new plugin')}
                       color='primary'
                       onClick={() => handleAddNewPlugin(() => window.location.reload())}
                     >

@@ -11,7 +11,7 @@ vi.mock('~components', () => ({
   useLanguage: () => [{ language: { rtl: false } }, (_key, fallback) => fallback],
   useEvent: () => [{ emit: state.emit, on: (name, handler) => { state.handlers[name] = handler }, off: (name) => { delete state.handlers[name] } }]
 }))
-vi.mock('~ui', () => ({ useTheme: () => [{ rtl: false }, { merge: state.merge }] }))
+vi.mock('~ui/src/contexts/ThemeContext', () => ({ useTheme: () => [{ rtl: false }, { merge: state.merge }] }))
 vi.mock('~/@/components-dashboard/src/ui/src/components/PageNotFound', () => ({ PageNotFound: () => <div>Denied</div> }))
 import { ListenPageChanges } from '../index'
 import { ProtectedRoute } from '~/@/components-dashboard/src/ui/src/components/Shared/ProtectedRoute'
@@ -23,7 +23,8 @@ describe('Free downloads route integration', () => {
   beforeEach(() => { state.session = { auth: true, user: { level: 0 } }; state.handlers = {}; state.emit.mockClear() })
   it('connects the shell route to the existing thin page and administrator guard', () => {
     const app = readFileSync('src/App.js', 'utf8')
-    expect(app).toMatch(/import \{ FreeProductsList \} from '.\/pages\/FreeProductsList'/)
+    // redesign W0-10b (T0-41): pages load on demand (redesign tramo B r3, W0-PB2-01: through lazyWithReload); the binding is the same named export of the same thin page
+    expect(app).toMatch(/const FreeProductsList = lazy\(\(\) => lazyWithReload\(\(\) => import\('\.\/pages\/FreeProductsList'\)\)\.then\(m => \(\{ default: m\.FreeProductsList \}\)\)\)/)
     expect(app).toMatch(/<ProtectedRoute path='\/free-downloads' allowedLevels=\{\[0\]\}>\s*<FreeProductsList \/>/)
   })
   it('resolves the sidebar event and emits a stable current view', () => {

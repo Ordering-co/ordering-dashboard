@@ -5,7 +5,7 @@ export const AutoassignContainer = styled.div`
   padding: 20px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 30px;
   }
@@ -17,27 +17,32 @@ export const AutoassignItem = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  p {
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  padding: 0;
+  margin-inline-end: 20px;
+  min-height: 44px;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  span {
     white-space: nowrap;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin-top: 10px;
-    color: ${props => props.theme.colors.lightGray};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
   }
   ${({ active }) => active && css`
-    p {
-      color: ${props => props.theme.colors.headingColor};
+    span {
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     }
     > div {
-      background-color: ${props => props.theme.colors.primary};
+      background-color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
     }
-  `}
-
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 20px;
-  `
-: css`
-    margin-right: 20px;
   `}
 `
 
@@ -46,7 +51,7 @@ export const IconImage = styled.div`
   mask: url(${({ url }) => url}) no-repeat center;
   width: 95px;
   height: 95px;
-  background-color: ${props => props.theme.colors.borderColor};
+  background-color: ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 `
 
 export const CustomItem = styled.div`
@@ -58,11 +63,11 @@ export const CustomItem = styled.div`
 
   ${({ active }) => active && css`
     svg {
-      color: ${props => props.theme.colors.primary};
+      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
     }
 
-    p {
-      color: ${props => props.theme.colors.headingColor};
+    span {
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     }
   `}
 `
@@ -72,16 +77,13 @@ export const ForcedAssignSettingWrapper = styled.div`
   align-items: center;
   margin-bottom: 30px;
 
-  p {
+  label {
     margin-bottom: 0px;
-    font-size: 14px;
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 15px;
-    `
-: css`
-      margin-left: 15px;
-    `}
+    font-size: var(--od-type-control-size);
+    margin-inline-start: 15px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 `
 
@@ -97,15 +99,15 @@ export const MaxDistanceCustomerContainer = styled.div`
     flex-wrap: wrap;
     margin-bottom: 12px;
 
+    label {
+      margin-bottom: 0px;
+      font-size: var(--od-type-control-size);
+    }
+
     p {
       margin-bottom: 0px;
-      &:first-child {
-        font-size: 14px;
-      }
-      &:not(:first-child) {
-        font-size: 12px;
-        color: ${props => props.theme.colors.lightGray};
-      }
+      font-size: var(--od-type-secondary-size);
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
     }
   }
 `
@@ -117,6 +119,14 @@ export const RowGroupContainer = styled.div`
   > div {
     width: calc(50% - 10px);
   }
+
+  @media (max-width: 620px) {
+    flex-direction: column;
+
+    > div {
+      width: 100%;
+    }
+  }
 `
 
 export const CheckboxWrapper = styled.div`
@@ -127,15 +137,13 @@ export const CheckboxWrapper = styled.div`
     padding-bottom: 20px;
   `}
 
-  span {
-    font-size: 14px;
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 15px;
-    `
-: css`
-      margin-left: 15px;
-    `}
+  label {
+    font-size: var(--od-type-control-size);
+    margin-bottom: 0px;
+    margin-inline-start: 15px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 `
 
@@ -143,10 +151,17 @@ export const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 25px;
+  border: none;
+  padding: 0;
+  min-width: 0;
 
-  label {
-    font-size: 14px;
+  label,
+  legend {
+    font-size: var(--od-type-control-size);
     margin-bottom: 12px;
+    padding: 0;
+    float: none;
+    width: auto;
   }
 
   ${({ isPink }) => isPink && css`
@@ -190,13 +205,14 @@ export const AreaWrapper = styled.div`
   justify-content: center;
   position: relative;
   height: 70%;
+  min-height: 160px;
   margin: auto 0;
 `
 
 export const LargeArea = styled.div`
   width: 100%;
   height: 100%;
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   border-radius: 50%;
   position: absolute;
 
@@ -208,7 +224,7 @@ export const LargeArea = styled.div`
 export const MediumArea = styled.div`
   width: 70%;
   height: 70%;
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   border-radius: 50%;
   position: absolute;
   ${({ active }) => active && css`
@@ -216,10 +232,13 @@ export const MediumArea = styled.div`
   `}
 `
 
+// The three concentric radius indicators are one categorical set that maps to
+// the three radius fields below them. They keep their reviewed hues instead of
+// splitting across the semantic palette; changing one reopens the whole set.
 export const SmallArea = styled.div`
   width: 40%;
   height: 40%;
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   border-radius: 50%;
   position: absolute;
   ${({ active }) => active && css`

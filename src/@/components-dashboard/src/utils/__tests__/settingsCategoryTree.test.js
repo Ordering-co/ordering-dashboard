@@ -78,6 +78,47 @@ describe('buildSettingsCategoryLists', () => {
     expect(lists.left[0].children[0].children[0].children).toEqual([])
   })
 
+  // GET /config_categories repeats delivery_fee_free_multi_checkout inside addon_multi_business_checkout.
+  it('keeps each config of a category once, by key (the first one, in the API order)', () => {
+    const lists = buildSettingsCategoryLists({
+      categories: [
+        category({ id: 1, key: 'key_basic', parent: null }),
+        category({
+          id: 10,
+          key: 'addon_multi_business_checkout',
+          parent: 1,
+          configs: [
+            { id: 7, key: 'delivery_fee_free_multi_checkout', value: '1' },
+            { id: 8, key: 'other_config', value: 'x' },
+            { id: 7, key: 'delivery_fee_free_multi_checkout', value: '1' },
+            { id: 9, key: 'delivery_fee_free_multi_checkout', value: '0' }
+          ]
+        })
+      ],
+      parentKeys: ['key_basic'],
+      standaloneKeys: ['addon_multi_business_checkout']
+    })
+    const expected = [
+      { id: 7, key: 'delivery_fee_free_multi_checkout', value: '1' },
+      { id: 8, key: 'other_config', value: 'x' }
+    ]
+    expect(lists.key_basic[0].configs).toEqual(expected)
+    expect(lists.addon_multi_business_checkout[0].configs).toEqual(expected)
+  })
+
+  it('does not drop configs without a key, nor the same key in another category', () => {
+    const lists = buildSettingsCategoryLists({
+      categories: [
+        category({ id: 1, key: 'key_basic', parent: null }),
+        category({ id: 10, key: 'a', parent: 1, configs: [{ id: 1 }, { id: 2 }, { key: 'shared', id: 3 }] }),
+        category({ id: 11, key: 'b', parent: 1, configs: [{ key: 'shared', id: 4 }] })
+      ],
+      parentKeys: ['key_basic']
+    })
+    expect(lists.key_basic.find(item => item.key === 'a').configs).toHaveLength(3)
+    expect(lists.key_basic.find(item => item.key === 'b').configs).toHaveLength(1)
+  })
+
   it('returns empty lists when the catalog is empty', () => {
     expect(buildSettingsCategoryLists({
       categories: [],

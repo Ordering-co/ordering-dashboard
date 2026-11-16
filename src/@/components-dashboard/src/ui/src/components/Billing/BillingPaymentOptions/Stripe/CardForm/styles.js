@@ -55,7 +55,7 @@ export const FormRow = styled.div`
 `
 
 export const ErrorMessage = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-content-size);
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;

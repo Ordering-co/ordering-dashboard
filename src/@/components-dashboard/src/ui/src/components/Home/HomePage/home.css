@@ -1,0 +1,241 @@
+/*
+ * Home page (redesign home C1): the grid of the page and the inside of the header, today's figures and the trend.
+ * The cards of the other blocks (needs attention, setup guide, shortcuts, More Services) are blocks.css (C2).
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Breakpoints: phone < 768 and the split at 1280 (BREAKPOINT_SPLIT of C/utils/breakpoints.js), as literals in @media.
+ */
+
+/* redesign home C1 (D1, HM-08): the page takes the width of the shell, as /orders does; no illustration */
+.odc-home {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  padding: var(--od-space-6);
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media print {
+  .odc-home {
+    display: none;
+  }
+}
+
+/* redesign home C1 (D1): trend and attention side by side from 1280; below, stacked. Without attention the trend takes the row */
+.odc-home-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* ── Header (HM-07, HM-12, auditor 1) ── */
+.odc-home-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'lead action'
+    'meta action'
+    'notice notice';
+  align-items: center;
+  column-gap: var(--od-space-4);
+  row-gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-home-header-lead {
+  grid-area: lead;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* redesign home R1 (Q-12): the menu button never shrinks beside a long name (32×32 at 390) */
+.odc-home-header-lead .odc-btn {
+  flex: none;
+}
+
+.odc-home-title {
+  min-inline-size: 0; /* redesign home R1 (Q-12): the title gives, so «Menu» keeps its size */
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-home-meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-home-date {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-home-badge-skeleton {
+  display: inline-flex;
+  align-items: center;
+  inline-size: var(--od-x-sk-status);
+}
+
+/* HM-12: the button never breaks its line (.odc-btn is nowrap) and keeps its column; the title is what gives */
+.odc-home-header-action {
+  grid-area: action;
+  align-self: start;
+  justify-self: end;
+}
+
+/* redesign home R1 (Q-02): the row of the action is reserved while the status loads. The ghost sizes the box; the skeleton covers it */
+.odc-home-header-action[data-loading] {
+  position: relative;
+}
+
+.odc-home-header-action[data-loading] > .odc-btn {
+  visibility: hidden;
+}
+
+.odc-home-header-action-ghost {
+  position: absolute;
+  inset: 0;
+}
+
+.odc-home-header-notice {
+  grid-area: notice;
+  margin-block-start: var(--od-space-2);
+}
+
+/* ── Today's figures (D2) ── */
+.odc-today {
+  position: relative; /* containing block of the visually hidden title (.odc-sr-only) */
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* redesign bi FA0 (promoción, auditor 10): the grid and the cards of Today moved to Shared/Product/metric.css (.odc-metric-*) */
+
+/* ── Sales trend (D8, HM-01, HM-15) ── */
+.odc-trend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-trend-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+}
+
+.odc-trend-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-3) var(--od-space-6);
+}
+
+.odc-trend-figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-trend-value {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-display-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-trend-caption {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* the change is text with a sign, never only color (HM-13 spirit: the words say it) */
+.odc-trend-change {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+@media (min-width: 768px) {
+  .odc-trend-head {
+    flex-wrap: nowrap;
+  }
+}
+
+/* Trend and attention side by side from 1280 (SPLIT_UP): the trend takes the room, attention a column */
+@media (min-width: 1280px) {
+  .odc-home-split {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .odc-home-split[data-solo] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* redesign home C1 (D1): attention comes first in the DOM; side by side, the trend takes the start column */
+  .odc-home-split:not([data-solo]) > [data-slot='home-attention'] {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .odc-home-split:not([data-solo]) > [data-slot='home-trend'] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+/* Phone (< 768): smaller page padding; the header is one column and its button goes under the date */
+@media (max-width: 767px) {
+  /* redesign home R1 (Q-01): on a phone the two trend figures always stack, loading and loaded, so the card keeps its height */
+  .odc-trend-figures {
+    flex-direction: column;
+  }
+
+  .odc-home {
+    padding: var(--od-space-4);
+    gap: var(--od-space-4);
+  }
+
+  .odc-home-header {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'lead'
+      'meta'
+      'action'
+      'notice';
+  }
+
+  .odc-home-header-action {
+    justify-self: start;
+    margin-block-start: var(--od-space-2);
+  }
+}

@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { isNetworkFailure } from '../../utils/networkFailure'
 
 export const PosMenuBusinessDetails = (props) => {
   props = { ...defaultProps, ...props }
@@ -28,6 +29,12 @@ export const PosMenuBusinessDetails = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [integrationActionLoading, setIntegrationActionLoading] = useState(false)
   const integrationRequestRef = useRef(false)
+
+  // a request that never reached the API says so in words, not the browser's «Failed to fetch».
+  // The text the API itself returns (result) is shown as it comes.
+  const readableError = (err) => isNetworkFailure(err?.message)
+    ? t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.')
+    : err?.message
 
   /**
    * Clean formState
@@ -67,7 +74,7 @@ export const PosMenuBusinessDetails = (props) => {
       setBusinessState({
         ...businessState,
         loading: false,
-        error: [err.message]
+        error: [readableError(err)]
       })
     }
   }
@@ -101,7 +108,7 @@ export const PosMenuBusinessDetails = (props) => {
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      setActionStatus({ ...actionStatus, loading: false, error: [readableError(err)] })
     }
   }
 
@@ -133,7 +140,7 @@ export const PosMenuBusinessDetails = (props) => {
         props.onClose && props.onClose()
       }
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      setActionStatus({ ...actionStatus, loading: false, error: [readableError(err)] })
     }
   }
 
@@ -165,7 +172,7 @@ export const PosMenuBusinessDetails = (props) => {
         showToast(ToastType.Success, t('BUSINESS_DUPLICATED', 'Business duplicated'))
       }
     } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      setActionStatus({ ...actionStatus, loading: false, error: [readableError(err)] })
     }
   }
 
@@ -201,7 +208,7 @@ export const PosMenuBusinessDetails = (props) => {
         ...formState,
         result: {
           error: true,
-          result: err.message
+          result: readableError(err)
         },
         loading: false
       })
@@ -281,7 +288,7 @@ export const PosMenuBusinessDetails = (props) => {
     } catch (err) {
       setActionStatus({
         loading: false,
-        error: [err.message]
+        error: [readableError(err)]
       })
     }
   }
@@ -310,7 +317,7 @@ export const PosMenuBusinessDetails = (props) => {
     } catch (err) {
       setBusinessState({
         ...businessState,
-        error: [err.message],
+        error: [readableError(err)],
         loading: false
       })
     }
@@ -378,7 +385,7 @@ export const PosMenuBusinessDetails = (props) => {
         showToast(ToastType.Error, content.result)
       }
     } catch (err) {
-      showToast(ToastType.Error, err.message)
+      showToast(ToastType.Error, readableError(err))
     }
   }
 

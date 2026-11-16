@@ -1,0 +1,153 @@
+/*
+ * redesign stores 5.15b · Layout section of the store editor: the title, a P/RadioGroup of cards (variant='cards')
+ * with a schematic of each website layout, and the P/SaveBar. Values: --od-* and --od-x-* only, logical properties only.
+ * Prefix: odc-front-layout-* and odc-layout-preview-*.
+ */
+
+.odc-front-layout {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-front-layout:focus { outline: none; }
+
+@media (min-width: 576px) {
+  .odc-front-layout {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-front-layout-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* ── Schematic (decorative, inside the card) ── */
+.odc-layout-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  aspect-ratio: 16 / 10;
+  padding-block-end: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+}
+
+.odc-layout-preview > * { margin-inline: var(--od-space-2); }
+
+.odc-layout-preview-bar {
+  block-size: var(--od-space-2);
+  margin-inline: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  border-start-start-radius: var(--od-radius-control);
+  border-start-end-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-layout-preview-hero {
+  position: relative;
+  flex: 0 0 18%;
+  border-radius: var(--od-radius-control);
+  background: var(--od-border);
+}
+
+.odc-layout-preview-logo {
+  position: absolute;
+  inset-block-end: var(--od-space-1);
+  inset-inline-start: var(--od-space-2);
+  inline-size: 12%;
+  aspect-ratio: 1;
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-layout-preview-hero-cart {
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-end: var(--od-space-2);
+  inline-size: 22%;
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-layout-preview-heading {
+  inline-size: 40%;
+  block-size: var(--od-space-1);
+  border-radius: var(--od-radius-round);
+  background: var(--od-text-muted);
+  opacity: 0.5;
+}
+
+.odc-layout-preview-chips {
+  display: flex;
+  gap: var(--od-space-1);
+}
+
+.odc-layout-preview-chip {
+  flex: 1 1 0;
+  block-size: var(--od-space-1);
+  border-radius: var(--od-radius-round);
+  background: var(--od-border);
+}
+
+.odc-layout-preview-body {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--od-space-2);
+  min-block-size: 0;
+}
+
+.odc-layout-preview-list {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--od-space-1);
+  align-content: start;
+}
+
+.odc-layout-preview-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--od-space-1);
+  align-content: start;
+}
+
+.odc-layout-preview-product {
+  block-size: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-layout-preview-cart {
+  flex: 0 0 26%;
+  align-self: flex-start;
+  block-size: 50%;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-layout-preview-side {
+  display: flex;
+  flex: 0 0 20%;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-layout-preview-side-item {
+  block-size: var(--od-space-1);
+  border-radius: var(--od-radius-round);
+  background: var(--od-border);
+}

@@ -1,6 +1,26 @@
 import styled, { css } from 'styled-components'
 
+// batch O, row 11: at phone width (max-width: 767px) the controls of this legacy form reach the 44px minimum. The shared
+// rules (fields.css, switch.css) open that size for `pointer: coarse` only, so a mouse or an emulated phone got 32px inputs and 25x14
+// switches. The switch keeps its 25x14 drawing, centred in a 44x44 box (the same pattern as the coarse block of switch.css); nothing
+// moves or hides, and above 767px nothing changes.
 export const FormInput = styled.form`
+  @media (max-width: 767px) {
+    .od-switch {
+      width: var(--od-x-target-coarse);
+      height: var(--od-x-target-coarse);
+    }
+
+    .od-switch > .od-switch-thumb {
+      width: 25px;
+      height: 14px;
+      top: 50%;
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      transform: translate(-50%, -50%);
+    }
+  }
 `
 
 export const ProductImage = styled.div`
@@ -60,7 +80,7 @@ export const UploadImageIcon = styled.div`
   span {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {   
@@ -85,7 +105,7 @@ export const InputWrapper = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   input,
@@ -102,14 +122,29 @@ export const InputWrapper = styled.div`
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+  @media (max-width: 767px) {
+    input,
+    textarea {
+      min-height: var(--od-x-target-coarse);
+    }
+  }
 `
 
 export const ActionsForm = styled.div`
   margin-top: 30px;
+  /* redesign SP-F2 (D2): Save stays at the foot of the panel's scroll area */
   position: sticky;
-  top: 100%;
+  bottom: 0;
+  z-index: var(--od-x-layer-raised);
+  padding-block: var(--od-space-3);
+  background-color: var(--od-bg);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
   > button {
     height: 42px;
+    @media (max-width: 767px) {
+      min-height: var(--od-x-target-coarse);
+    }
     &:first-child {
       ${props => props.theme?.rtl
 ? css`
@@ -127,7 +162,7 @@ export const InventoryWrapper = styled.div`
   margin-top: 35px;
 
   > span {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
 
     ${props => props.theme?.rtl
@@ -149,7 +184,7 @@ export const Wrapper = styled.div`
   }
   
   > span {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
 
     ${props => props.theme?.rtl
@@ -170,7 +205,7 @@ export const RegularWrapper = styled.div`
     margin-bottom: 0;
   }
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-left: 20px;
@@ -201,7 +236,7 @@ export const ColorWrapper = styled.div`
 
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 7px;
   }
 `
@@ -209,7 +244,7 @@ export const ColorWrapper = styled.div`
 export const ShapeWrapper = styled(ColorWrapper)`
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 

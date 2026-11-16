@@ -40,10 +40,6 @@ vi.mock('../../../../../contexts/LanguageContext', () => ({
   useLanguage: () => [undefined, (key, fallback) => fallback]
 }))
 
-vi.mock('../../Shared/HtmlEditor', () => ({
-  HtmlEditor: () => null
-}))
-
 vi.mock('../../Shared/SpreadSheetEditor', () => ({
   default: () => null
 }))

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   buildBackofficeBusinessSearchUrl,
   buildBusinessDetailPath,
@@ -6,6 +6,11 @@ import {
   rankBusinessResults,
   shouldUseBackofficeBusinessSearch
 } from '../commandPaletteBusinesses'
+
+const runtime = vi.hoisted(() => ({ projects: [] }))
+vi.mock('~/config', () => ({
+  default: { get dashboard_project_allowlists () { return { backoffice_businesses: runtime.projects } } }
+}))
 
 describe('buildBusinessSearchWhere', () => {
   it('searches name and slug, plus the exact id for numbers', () => {
@@ -78,10 +83,17 @@ describe('business paths', () => {
     expect(buildBusinessDetailPath(5, { section: 'schedule', tab: '' })).toBe('/stores/list?id=5&section=schedule')
   })
 
-  it('uses the backoffice endpoint only for Eatstreet admins', () => {
-    expect(shouldUseBackofficeBusinessSearch({ project: 'eatstreet', level: 0 })).toBe(true)
-    expect(shouldUseBackofficeBusinessSearch({ project: 'eatstreet', level: 2 })).toBe(false)
-    expect(shouldUseBackofficeBusinessSearch({ project: 'demo', level: 0 })).toBe(false)
+  it('uses the backoffice endpoint only for an explicitly configured level-0 tenant', () => {
+    const project = 'example-backoffice'
+    expect(shouldUseBackofficeBusinessSearch({ project, level: 0 })).toBe(false)
+    runtime.projects = [project]
+    expect(shouldUseBackofficeBusinessSearch({ project, level: 0 })).toBe(true)
+    expect(shouldUseBackofficeBusinessSearch({ project, level: 2 })).toBe(false)
+    expect(shouldUseBackofficeBusinessSearch({ project, level: '0' })).toBe(false)
+    expect(shouldUseBackofficeBusinessSearch({ project: 'example-other', level: 0 })).toBe(false)
+    runtime.projects = project
+    expect(shouldUseBackofficeBusinessSearch({ project, level: 0 })).toBe(false)
+    runtime.projects = []
     const url = buildBackofficeBusinessSearchUrl('https://api.test/v400/en/eatstreet', 'taco')
     expect(url).toContain('/backoffice/businesses?params=id,name,slug,enabled,logo&page=1&page_size=8&where=')
     expect(buildBackofficeBusinessSearchUrl('https://api.test', '')).not.toContain('where=')

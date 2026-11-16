@@ -177,7 +177,8 @@ export const UsersFilter = (props) => {
     if (endDate !== null) {
       endDatetime = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
     } else {
-      endDate = null
+      // redesign (row 92, M-C19): it reset `endDate` (the argument) and left `endDatetime` undefined
+      endDatetime = null
     }
     setFilterValues({ ...filterValues, deliveryEndDatetime: endDatetime })
   }

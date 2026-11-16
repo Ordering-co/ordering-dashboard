@@ -7,8 +7,8 @@ export const TrackingModalContent = styled.div`
 
   p {
     margin: 0 0 12px;
-    font-size: 14px;
-    color: ${props => props.theme.colors.headingColor};
+    font-size: var(--od-type-content-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   }
 
   input {
@@ -34,17 +34,17 @@ export const SelectWrapper = styled.div`
 export const TrackingOption = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
 
   small {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.lightGray};
   }
 `
 
 export const ErrorText = styled.span`
-  color: #E63757;
-  font-size: 13px;
+  color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'};
+  font-size: var(--od-type-secondary-size);
   margin-top: 8px;
 `
 

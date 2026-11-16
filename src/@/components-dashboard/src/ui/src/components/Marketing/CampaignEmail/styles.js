@@ -5,7 +5,7 @@ export const Container = styled.div``
 export const InputWrapper = styled.div`
   > label {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
   > input, textarea {
@@ -27,7 +27,7 @@ export const InputWrapper = styled.div`
 
     > label {
       margin-bottom: 10px;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       line-height: 24px;
     }
   }
@@ -97,56 +97,13 @@ export const ButtonWrapper = styled.div`
   }
 `
 
-export const WrapperEditor = styled.div`
-  .note-editor {
-    border-radius: 8px;
-    border: 1px solid ${props => props.theme.colors.borderColor};
-
-    .note-toolbar {
-      border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-    }
-
-    .note-btn {
-      &:hover,
-      &:focus {
-        background-color: ${props => props.theme.colors.secundaryDarkContrast};
-        box-shadow: none;
-      }
-    }
-
-    .note-dropdown-menu {
-      a {
-        color: #000;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-    }
-  }
-  .modal-header .close {
-    padding: 0px !important;
-    margin: 0px !important;
-  }
-  .modal-header {
-    align-items: center !important;
-  }
-  .checkbox input {
-    margin-right: 10px;
-    margin-top: 3px;
-  }
-  .modal-body {
-    > div:first-child {
-      display: none;
-    }
-  }
-`
+export const WrapperEditor = styled.div``
 export const Preview = styled.div`
   overflow: hidden;
 `
 
 export const Description = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin: 10px 0px;
   span {
     cursor: pointer;
@@ -168,7 +125,7 @@ export const ContactWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     text-align: center;
     margin-bottom: 14px;
   }

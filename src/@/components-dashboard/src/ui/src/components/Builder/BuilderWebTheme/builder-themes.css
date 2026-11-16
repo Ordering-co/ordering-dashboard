@@ -1,0 +1,311 @@
+/*
+ * redesign  B3a · the Theme tab of a Builder website: the themes list, the create panel and the editor shell (header,
+ * notices, save bar). The editor drawn from the schema (ThemeSchemaEditor) is B3b and keeps its own styles.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-bt-*.
+ */
+
+.odc-bt-busy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+/* ── Saved themes ── */
+.odc-bt-card {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+}
+
+.odc-bt-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3) var(--od-space-4);
+  padding: var(--od-space-5) var(--od-space-6);
+}
+
+.odc-bt-card-head h2 {
+  display: inline;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bt-count {
+  margin-inline-start: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bt-card-create {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--od-space-1);
+}
+
+.odc-bt-limit,
+.odc-bt-help {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bt-empty {
+  margin: 0;
+  padding: 0 var(--od-space-6) var(--od-space-5);
+  color: var(--od-text-muted);
+}
+
+.odc-bt-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3) var(--od-space-4);
+  padding: var(--od-space-4) var(--od-space-6);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bt-row-text {
+  display: flex;
+  /* main's 260px basis (--od-space-10 is 8rem) */
+  flex: 1 1 calc(var(--od-space-10) * 2);
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-bt-row-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-bt-row-name strong {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-bt-row-meta {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bt-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* «Converted from»: how the theme is stored, not a state that asks for anything, so a neutral badge with the shape of
+   P/StatusBadge and no family colour */
+.odc-bt-converted {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+/* Several lines of text: the icon stays by the first one */
+.odc-notice.odc-bt-notice,
+.odc-notice.odc-bt-band {
+  align-items: flex-start;
+  margin: 0;
+}
+
+.odc-bt-notice strong {
+  display: block;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* ── Create panel ── */
+.odc-bt-create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-bt-create .odc-notice {
+  margin: 0;
+}
+
+.odc-bt-name-count {
+  align-self: flex-end;
+  margin-block-start: calc(var(--od-space-2) * -1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bt-name-count[data-over='true'] {
+  color: var(--od-danger-functional);
+}
+
+.odc-bt-presets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-bt-legend {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A preset's preview, or its empty frame */
+.odc-bt-preview {
+  display: block;
+  inline-size: 100%;
+  /* main's 110px preview */
+  block-size: calc(var(--od-space-9) + var(--od-space-3));
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  object-fit: cover;
+}
+
+/* ── Editor ── */
+
+/* The editor reaches the bottom of the window from where it starts (its height is measured in ThemeEditor): it takes the page's
+   gutter back at the sides and below, so the save bar spans the page */
+.odc-bt-shell {
+  display: flex;
+  flex-direction: column;
+  /* main's 320px floor (--od-space-10 is 8rem: × 8 made it 1024px, taller than the window, and the save bar fell below it) */
+  min-block-size: calc(var(--od-space-10) * 2.5);
+  margin-inline: calc(var(--od-x-page-gutter) * -1);
+  margin-block-end: calc(var(--od-x-page-gutter) * -1);
+}
+
+.odc-bt-scroll {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-block-size: 0;
+  padding: 0 var(--od-x-page-gutter) var(--od-x-page-gutter);
+  overflow-y: auto;
+}
+
+/* On computers the nav and the section scroll inside, not the whole editor */
+@media (min-width: 901px) {
+  .odc-bt-scroll {
+    overflow-y: hidden;
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-bt-shell {
+    margin-inline: calc(var(--od-x-page-gutter-mobile) * -1);
+  }
+
+  .odc-bt-scroll {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+.odc-bt-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-bt-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bt-title h1 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-bt-meta {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bt-rename {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.odc-bt-rename > .odc-field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-panel-narrow);
+}
+
+.odc-bt-band p {
+  margin: 0;
+}
+
+.odc-bt-band p + p,
+.odc-bt-band ul + p {
+  margin-block-start: var(--od-space-2);
+}
+
+.odc-bt-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+.odc-bt-savebar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3) var(--od-space-4);
+  padding: var(--od-space-3) var(--od-x-page-gutter);
+  /* Its buttons stay clear of the assistant's launcher while it shows (utils/assistantDock publishes the room it takes). Physical
+     on purpose: the launcher sits at the right in both directions (Assistant/assistant.css) */
+  padding-right: max(var(--od-x-page-gutter), var(--assistant-launcher-space, var(--od-x-page-gutter)));
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+  box-shadow: var(--od-shadow-1);
+}
+
+.odc-bt-savebar-status {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bt-savebar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}

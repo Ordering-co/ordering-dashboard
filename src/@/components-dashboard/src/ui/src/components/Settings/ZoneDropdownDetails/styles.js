@@ -19,7 +19,7 @@ export const Header = styled.div`
   margin-bottom: 35px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 0;
     ${props => props.theme?.rtl
@@ -38,11 +38,11 @@ export const InputWrapper = styled.div`
   margin-bottom: 25px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   div {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   .select {

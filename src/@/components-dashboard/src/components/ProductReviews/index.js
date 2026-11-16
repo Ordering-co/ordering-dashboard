@@ -15,14 +15,15 @@ export const ProductReviews = (props) => {
   const [{ token }] = useSession()
 
   const [productState, setProductState] = useState({ product: props.product, loading: !props.product, error: null })
-  const [productReviewList, setProductReviewList] = useState({ reviews: [], loading: false, error: null })
+  const [productReviewList, setProductReviewList] = useState({ reviews: [], loading: true, error: null }) // redesign reviews FC: no «No reviews yet» flash before the first load
 
   /**
    * Method to get the product reviews from API
    */
   const getProductReviews = async () => {
     try {
-      setProductReviewList({ ...productReviewList, loading: true })
+      // redesign reviews FB (D5, RV-08): a new request (the reload too) starts without the previous error
+      setProductReviewList({ ...productReviewList, loading: true, error: null })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -36,6 +37,7 @@ export const ProductReviews = (props) => {
         setProductReviewList({
           ...productReviewList,
           loading: false,
+          error: null,
           reviews: content.result
         })
       } else {
@@ -113,6 +115,7 @@ export const ProductReviews = (props) => {
           {...props}
           productState={productState}
           productReviewList={productReviewList}
+          reloadReviews={getProductReviews}
         />
       )}
     </>

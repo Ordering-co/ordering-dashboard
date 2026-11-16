@@ -21,10 +21,12 @@ export const PlatformProductsList = (props) => {
    */
   const getPlatformProductsList = async () => {
     try {
-      setPlatformProductsListState({
-        ...platformProductsListState,
-        loading: true
-      })
+      // redesign GC-A (GC-A6): functional state, not the one captured by this closure
+      setPlatformProductsListState(prev => ({
+        ...prev,
+        loading: true,
+        error: null
+      }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -40,41 +42,46 @@ export const PlatformProductsList = (props) => {
         error: error ? result : null
       })
     } catch (error) {
-      setPlatformProductsListState({
-        ...platformProductsListState,
+      setPlatformProductsListState(prev => ({
+        ...prev,
         loading: false,
         error: [error.message]
-      })
+      }))
     }
   }
 
   /**
    * Add a product
+   * redesign GC-A (GC-A6): the three handleSuccess* use the functional form, so two in the same tick do not overwrite each other
    */
   const handleSuccessAddProduct = (result) => {
-    setPlatformProductsListState({
-      ...platformProductsListState,
-      products: [...platformProductsListState.products, result]
-    })
+    setPlatformProductsListState(prev => ({
+      ...prev,
+      products: [...prev.products, result]
+    }))
   }
 
   /**
    * Update a product
    */
   const handleSuccessUpdateProduct = (result) => {
-    const updatedProducts = platformProductsListState.products.map(product => {
-      if (product.id === result.id) return result
-      else return product
-    })
-    setPlatformProductsListState({ ...platformProductsListState, products: updatedProducts })
+    setPlatformProductsListState(prev => ({
+      ...prev,
+      products: prev.products.map(product => {
+        if (product.id === result.id) return result
+        else return product
+      })
+    }))
   }
 
   /**
    * Delete a product
    */
   const handleSuccessDeleteProduct = (productId) => {
-    const products = platformProductsListState.products?.filter(item => item.id !== productId)
-    setPlatformProductsListState({ ...platformProductsListState, products })
+    setPlatformProductsListState(prev => ({
+      ...prev,
+      products: prev.products?.filter(item => item.id !== productId)
+    }))
   }
 
   useEffect(() => {
@@ -87,6 +94,7 @@ export const PlatformProductsList = (props) => {
         <UIComponent
           {...props}
           platformProductsListState={platformProductsListState}
+          reload={getPlatformProductsList}
           handleSuccessDeleteProduct={handleSuccessDeleteProduct}
           handleSuccessUpdateProduct={handleSuccessUpdateProduct}
           handleSuccessAddProduct={handleSuccessAddProduct}

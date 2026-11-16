@@ -1,0 +1,123 @@
+/* C9 · Activity timeline: start-aligned list on a hairline axis, one node per event, technical details folded. */
+
+.odc-timeline-filter { margin-block-end: var(--od-space-4); }
+
+.odc-feed {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The axis: a hairline centered under the nodes. */
+.odc-feed::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc((var(--od-x-feed-node) - var(--od-x-hairline)) / 2);
+  inset-block: var(--od-x-space-1-5);
+  inline-size: var(--od-x-hairline);
+  background: var(--od-border);
+}
+
+.odc-feed-item {
+  position: relative;
+  padding-block-end: var(--od-space-4);
+  padding-inline-start: var(--od-space-5);
+}
+
+.odc-feed-item::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: var(--od-x-space-1-5);
+  inline-size: var(--od-x-feed-node);
+  block-size: var(--od-x-feed-node);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+}
+
+.odc-feed-item[data-key]::before {
+  border-color: var(--od-text);
+  background: var(--od-text);
+}
+
+.odc-feed-when {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-feed-what {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-feed-what b { font-weight: var(--od-font-weight-semibold); }
+
+.odc-feed-by {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-feed-details {
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-feed-summary {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--od-x-target-fine);
+  gap: var(--od-x-space-1-5);
+  inline-size: max-content;
+  max-inline-size: 100%;
+  color: var(--od-action-content);
+  cursor: pointer;
+  list-style: none;
+}
+.odc-feed-summary::-webkit-details-marker { display: none; }
+
+.odc-feed-summary:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* Chevron: points toward the reading direction when folded, down when open. */
+.odc-feed-chevron {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  rotate: -0.25turn;
+  transition: rotate var(--od-duration-fast) var(--od-ease-standard);
+}
+[dir='rtl'] .odc-feed-chevron,
+.odc-rtl .odc-feed-chevron { rotate: 0.25turn; }
+.odc-feed-details[open] > .odc-feed-summary .odc-feed-chevron { rotate: 0turn; }
+
+.odc-feed-detail-body { padding-block-start: var(--od-x-space-half); }
+
+/* Touch (C3), redesign W0-3d (T0-12, decision 12): on a phone (a coarse pointer, or below 768px with a mouse) the summary keeps its
+   box (the 24px fine target above) and its 44px touch area is a centered pseudo-element, never smaller than the summary. Its
+   neighbours are text (the line of the author above, 16px of the item's padding below). The ::after is free here: only
+   the marker (::-webkit-details-marker) is styled. */
+@media (pointer: coarse), (max-width: 767px) {
+  /*  (W0-E-13, decision 12): and the box itself is SEEN at 32 (24 with a mouse). */
+  .odc-feed-summary {
+    position: relative;
+    min-block-size: var(--od-x-control-height);
+  }
+
+  .odc-feed-summary::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-feed-chevron { transition: none; }
+}

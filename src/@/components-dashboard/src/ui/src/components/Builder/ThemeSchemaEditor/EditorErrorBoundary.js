@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Button } from '../../../styles'
-import { NoticeRow } from '../BuilderWebTheme/styles'
+import { TriangleAlert } from '../../Shared/Icon'
+import { Button, InlineNotice } from '../../Shared/Product'
 
 /**
  * Keeps a failing part of the editor (a section, a component) from blanking
@@ -31,11 +31,16 @@ export class EditorErrorBoundary extends React.Component {
   render () {
     const { t, children } = this.props
     if (!this.state.failed) return children
+    // redesign B3b: a P/InlineNotice (still an alert) with a P/Button to try again
     return (
-      <NoticeRow role='alert' style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ flex: '1 1 260px' }}>{t('BUILDER_THEME_PART_ERROR', 'This part of the editor couldn’t be shown. The rest still works.')}</span>
-        <Button type='button' color='primary' outline borderRadius='8px' onClick={() => this.setState({ failed: false })}>{t('BUILDER_RETRY', 'Try again')}</Button>
-      </NoticeRow>
+      <InlineNotice
+        tone='danger'
+        icon={TriangleAlert}
+        role='alert'
+        action={<Button onClick={() => this.setState({ failed: false })}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+      >
+        {t('BUILDER_THEME_PART_ERROR', 'This part of the editor couldn’t be shown. The rest still works.')}
+      </InlineNotice>
     )
   }
 }

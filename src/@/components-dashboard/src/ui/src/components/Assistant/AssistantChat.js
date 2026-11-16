@@ -1,15 +1,18 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Lock, WifiOff } from 'react-bootstrap-icons'
 import { useLanguage, useAssistant } from '../../../../index'
+import { Button, EmptyState, Skeleton } from '../Shared/Product'
+import { LockKeyhole, WifiOff } from '../Shared/Icon'
 import { AssistantNotice } from './AssistantNotice'
 import { AssistantMessages } from './AssistantMessages'
 import { AssistantComposer } from './AssistantComposer'
 import { getAssistantPageContext, withPageEntities } from './pageContext'
 import { URL_CHANGE_EVENT } from '../../utils'
-import { ActionButton, Body, Callout, Centered, Spinner, Suggestion, ToolLine } from './styles'
+import './assistant.css'
 
-export const ASSISTANT_ROUTE = '/assistant'
+import { ASSISTANT_ROUTE } from './route'
+
+export { ASSISTANT_ROUTE }
 
 /** Stick to the bottom while the user is there; leave them alone when they scroll up */
 const useStickToBottom = (deps) => {
@@ -29,6 +32,16 @@ const useStickToBottom = (deps) => {
 
   return { ref, onScroll }
 }
+
+/** Three lines in the shape of a message, announced once for screen readers (the lines are decorative) */
+const LoadingLines = ({ t }) => (
+  <div className='odc-as-loading' role='status'>
+    <span className='odc-sr-only'>{t('LOADING', 'Loading')}</span>
+    <Skeleton size='60%' />
+    <Skeleton />
+    <Skeleton size='80%' />
+  </div>
+)
 
 const readBrowserLocation = () => ({ pathname: window.location.pathname, search: window.location.search })
 
@@ -91,6 +104,20 @@ export const AssistantChat = ({ page }) => {
     if (result && !result.sent) setDraft(prev => prev || text)
   }
 
+  // (review): after a suggestion or «Propose again» the control goes away and the composer keeps the focus (R1-2); on a touch
+  // screen focusing a text field opens the keyboard over the answer, so there the conversation takes it (settings decision 7, the same
+  // rule as SettingsList: never a text control on a phone).
+  const keepFocusAfterSend = () => {
+    const coarse = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
+    const log = scroll.ref.current
+    if (!coarse || !log) {
+      inputRef.current?.focus()
+      return
+    }
+    if (!log.hasAttribute('tabindex')) log.setAttribute('tabindex', '-1')
+    log.focus({ preventScroll: true })
+  }
+
   const handleSend = () => {
     const text = draft.trim()
     if (!text) return
@@ -98,44 +125,52 @@ export const AssistantChat = ({ page }) => {
     send(text)
   }
 
+  // redesign R1-3: the page takes the composer as soon as the chat is ready (as in main); the panel only when the user
+  // accepts the notice in it (opening the panel moves the focus on its own), never because its status loaded
+  const lastStatus = useRef({ loaded: status.loaded, noticeAccepted: status.noticeAccepted })
   useEffect(() => {
-    if (status.noticeAccepted) inputRef.current?.focus()
-  }, [status.noticeAccepted])
+    const previous = lastStatus.current
+    lastStatus.current = { loaded: status.loaded, noticeAccepted: status.noticeAccepted }
+    if (!status.noticeAccepted) return
+    const acceptedNow = previous.loaded && !previous.noticeAccepted
+    if (page || acceptedNow) inputRef.current?.focus()
+  }, [status.noticeAccepted, status.loaded])
+
+  // redesign AS-B (D3, M-AS7): the states of the chat are Product's skeleton and empty states
+  const dataPage = page ? '' : undefined
 
   if (!status.loaded) {
     return (
-      <Body page={page}>
-        <Centered>
-          <ToolLine role='status'><Spinner aria-hidden />{t('LOADING', 'Loading')}</ToolLine>
-        </Centered>
-      </Body>
+      <div className='odc-root odc-as-body' data-page={dataPage}>
+        <div className='odc-as-center'><LoadingLines t={t} /></div>
+      </div>
     )
   }
 
   if (status.error === 'no_permission') {
     return (
-      <Body page={page}>
-        <Centered>
-          <Callout tone='danger' role='alert'>
-            <div className='title'><Lock size={15} aria-hidden />{t('ASSISTANT_NO_PERMISSION_TITLE', 'No permission')}</div>
-            <div>{t('ASSISTANT_NO_PERMISSION_TEXT', 'Your user can\'t use the assistant in this project.')}</div>
-          </Callout>
-        </Centered>
-      </Body>
+      <div className='odc-root odc-as-body' data-page={dataPage}>
+        <EmptyState
+          tone='error'
+          icon={LockKeyhole}
+          title={t('ASSISTANT_NO_PERMISSION_TITLE', 'No permission')}
+          description={t('ASSISTANT_NO_PERMISSION_TEXT', 'Your user can\'t use the assistant in this project.')}
+        />
+      </div>
     )
   }
 
   if (status.error || !status.enabled) {
     return (
-      <Body page={page}>
-        <Centered>
-          <Callout tone='danger' role='alert'>
-            <div className='title'><WifiOff size={15} aria-hidden />{t('ASSISTANT_UNAVAILABLE_TITLE', 'Ordering couldn\'t connect')}</div>
-            <div>{t('ASSISTANT_UNAVAILABLE_TEXT', 'The assistant isn\'t available right now. Try again in a few minutes.')}</div>
-            <ActionButton type='button' small onClick={() => loadStatus()}>{t('ASSISTANT_RETRY', 'Try again')}</ActionButton>
-          </Callout>
-        </Centered>
-      </Body>
+      <div className='odc-root odc-as-body' data-page={dataPage}>
+        <EmptyState
+          tone='error'
+          icon={WifiOff}
+          title={t('ASSISTANT_UNAVAILABLE_TITLE', 'Ordering couldn\'t connect')}
+          description={t('ASSISTANT_UNAVAILABLE_TEXT', 'The assistant isn\'t available right now. Try again in a few minutes.')}
+          action={<Button onClick={() => loadStatus()}>{t('ASSISTANT_RETRY', 'Try again')}</Button>}
+        />
+      </div>
     )
   }
 
@@ -148,28 +183,40 @@ export const AssistantChat = ({ page }) => {
     t('ASSISTANT_SUGGESTION_PENDING', 'Which orders are still pending right now?'),
     t('ASSISTANT_SUGGESTION_DISABLED', 'Which products are disabled?')
   ]
+  // The title of the page is the h1 and the one of the panel an h2, so the empty state goes one level under
+  const Heading = page ? 'h2' : 'h3'
 
   return (
     <>
-      <Body page={page} ref={scroll.ref} onScroll={scroll.onScroll}>
-        {loadingConversation && (
-          <ToolLine role='status'><Spinner aria-hidden />{t('LOADING', 'Loading')}</ToolLine>
-        )}
+      <div className='odc-root odc-as-body' data-page={dataPage} ref={scroll.ref} onScroll={scroll.onScroll}>
+        {loadingConversation && <LoadingLines t={t} />}
         {!loadingConversation && items.length === 0 && (
-          <Centered>
-            <h3>{t('ASSISTANT_EMPTY_TITLE', 'How can I help?')}</h3>
-            <p>{t('ASSISTANT_EMPTY_TEXT', 'Ask about your orders, sales and catalog, or ask for a change.')}</p>
-            {suggestions.map(suggestion => (
-              <Suggestion key={suggestion} type='button' disabled={isLimited} onClick={() => send(suggestion)}>{suggestion}</Suggestion>
-            ))}
-          </Centered>
+          <div className='odc-as-center'>
+            <Heading className='odc-as-heading'>{t('ASSISTANT_EMPTY_TITLE', 'How can I help?')}</Heading>
+            <p className='odc-as-lead'>{t('ASSISTANT_EMPTY_TEXT', 'Ask about your orders, sales and catalog, or ask for a change.')}</p>
+            <div className='odc-as-suggestions'>
+              {suggestions.map(suggestion => (
+                <Button key={suggestion} className='odc-as-suggestion' disabled={isLimited} onClick={() => {
+                  send(suggestion)
+                  // redesign R1-2: the suggestions go away once sent; the composer keeps the focus
+                  keepFocusAfterSend()
+                }}>{suggestion}</Button>
+              ))}
+            </div>
+          </div>
         )}
         {items.length > 0 && (
           <AssistantMessages
-            onProposeAgain={isLimited ? null : () => send(t('ASSISTANT_PROPOSE_AGAIN_MESSAGE', 'Please propose that change again.'))}
+            onProposeAgain={isLimited
+              ? null
+              : () => {
+                  send(t('ASSISTANT_PROPOSE_AGAIN_MESSAGE', 'Please propose that change again.'))
+                  // redesign R1-2: «Propose again» goes away while the answer streams; the composer keeps the focus
+                  keepFocusAfterSend()
+                }}
           />
         )}
-      </Body>
+      </div>
       <AssistantComposer
         page={page}
         value={draft}

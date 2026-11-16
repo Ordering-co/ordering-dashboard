@@ -5,7 +5,7 @@ export const Container = styled.div`
   width: 100%;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 7px;
@@ -20,13 +20,13 @@ export const PointsWalletContainer = styled.div`
 export const PointsWrapper = styled.div`
   h2 {
     font-weight: 500;
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     line-height: 36px;
     margin: 0px;
   }
   p {
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-secondary-size);
     line-height: 24px;
   }
 `
@@ -35,7 +35,7 @@ export const EqualWrapper = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--od-type-title-size);
   line-height: 36px;
   margin: 0px 30px;
 `
@@ -44,7 +44,7 @@ export const LevelWrapper = styled.div`
   margin-top: 50px;
   > h1 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-bottom: 25px;
     margin-top: 0px;
@@ -71,9 +71,14 @@ export const Tabs = styled.div`
   }
 `
 export const Tab = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   cursor: pointer;
   color: ${props => props.theme.colors.lightGray};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   padding: 13px 0;
   position: relative;
 
@@ -96,12 +101,24 @@ export const Tab = styled.div`
       `}
     }
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
+
 `
 
 export const LoyaltyLevel = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     margin-top: 50px;
     margin-bottom: 25px;
   }
@@ -118,7 +135,7 @@ export const LoyaltyLevelContent = styled.div`
 
   h3 {
     font-weight: 600;
-    font-size: 28px;
+    font-size: var(--od-type-title-size);
     line-height: 42px;
     color: ${props => props.theme.colors.primary};
     margin-top: 15px;
@@ -130,7 +147,7 @@ export const SectionContainer = styled.div`
   margin-top: 54px;
   margin-bottom: 30px;
   > p {
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 22px;
@@ -145,13 +162,13 @@ export const FormController = styled.div`
   margin-bottom: 26px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
 
   input,
   textarea {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   input::-webkit-outer-spin-button,

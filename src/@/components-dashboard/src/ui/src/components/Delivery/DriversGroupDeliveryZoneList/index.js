@@ -9,7 +9,9 @@ import {
   ZoneContainer,
   DeliveryZonesTable,
   AddDeliveryZoneButton,
-  ZoneTbody,
+  ZoneRow,
+  ZoneOpenButton,
+  ZoneOpenIconButton,
   CheckboxWrapper,
   DeliveryZonesTableWrapper,
   CheckSkeleteon,
@@ -43,9 +45,7 @@ export const DriverGroupDeliveryZoneList = (props) => {
     handleParentSidebarMove(0)
   }
 
-  const handleOpenZone = (e, zone) => {
-    const isInvalid = e.target.closest('.zone-enabled')
-    if (isInvalid) return
+  const handleOpenZone = (zone) => {
     setCurZone(zone)
     handleParentSidebarMove(500)
     setIsExtendExtraOpen(true)
@@ -69,49 +69,67 @@ export const DriverGroupDeliveryZoneList = (props) => {
               ))
             )
           : (
-          <DeliveryZonesTable>
+          <DeliveryZonesTable aria-label={t('DELIVERY_ZONES_TITLE', 'Delivery zones')}>
             <thead>
               <tr>
-                <th>
+                <th scope='col'>
                   <CheckboxWrapper>
                     <Checkbox
+                      aria-label={t('SELECT_ALL', 'Select all')}
                       checked={zoneListState?.isCheckAll}
                       onChange={e => handleChangeAllZoneState(e.target.checked)}
                     />
                   </CheckboxWrapper>
                 </th>
-                <th>{t('NAME', 'Name')}</th>
-                <th>{t('MINIMUM', 'Minimum')}</th>
-                <th>{t('PRICE', 'Price')}</th>
-                <th />
+                <th scope='col'>{t('NAME', 'Name')}</th>
+                <th scope='col'>{t('MINIMUM', 'Minimum')}</th>
+                <th scope='col'>{t('PRICE', 'Price')}</th>
+                <th scope='col'><span className='visually-hidden'>{t('ACTIONS', 'Actions')}</span></th>
               </tr>
             </thead>
-            {zoneList?.zones?.filter(zone => zone?.type !== 3)?.map(zone => (
-              <ZoneTbody
-                key={zone?.id}
-                active={zone?.id === curZone?.id}
-                onClick={(e) => handleOpenZone(e, zone)}
-              >
-                <tr>
+            <tbody>
+              {zoneList?.zones?.filter(zone => zone?.type !== 3)?.map(zone => (
+                <ZoneRow
+                  key={zone?.id}
+                  active={zone?.id === curZone?.id}
+                >
                   <td>
                     <CheckboxWrapper className='zone-enabled'>
                       <Checkbox
+                        aria-labelledby={`drivers-group-zone-name-${zone.id}`}
                         checked={!!zoneListState?.changes[zone.id]}
                         onChange={e => handleChangeZoneState(zone?.id, e?.target?.checked)}
                       />
                     </CheckboxWrapper>
                   </td>
-                  <td>{zone?.name}</td>
+                  <th scope='row'>
+                    <ZoneOpenButton
+                      type='button'
+                      id={`drivers-group-zone-name-${zone.id}`}
+                      onClick={() => handleOpenZone(zone)}
+                    >
+                      {zone?.name}
+                    </ZoneOpenButton>
+                  </th>
                   <td>{zone?.minimum}</td>
                   <td>{zone?.price}</td>
-                  <td className='arrow'><ChevronRight /></td>
-                </tr>
-              </ZoneTbody>
-            ))}
+                  <td className='arrow'>
+                    <ZoneOpenIconButton
+                      type='button'
+                      aria-labelledby={`drivers-group-zone-name-${zone.id}`}
+                      onClick={() => handleOpenZone(zone)}
+                    >
+                      <ChevronRight aria-hidden='true' />
+                    </ZoneOpenIconButton>
+                  </td>
+                </ZoneRow>
+              ))}
+            </tbody>
           </DeliveryZonesTable>
             )}
         <AddDeliveryZoneButton
-          onClick={(e) => handleOpenZone(e, null)}
+          type='button'
+          onClick={() => handleOpenZone(null)}
         >
           {t('ADD_DELIVERY_ZONE', 'Add delivery zone')}
         </AddDeliveryZoneButton>

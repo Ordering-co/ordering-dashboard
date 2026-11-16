@@ -227,7 +227,7 @@ export const ProductTabContainer = styled.div`
   position: sticky;
   top: 50px;
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-  z-index: 900;
+  z-index: calc(var(--od-x-layer-chrome) - 100);
 
   @media (min-width: 769px) {
     top: -20px;
@@ -541,7 +541,7 @@ export const ProductActions = styled.div`
     }
   `}
   width: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   border-top: 1px solid ${props => props.theme.colors.borderColor};
   border-radius: 0 0 8px 8px;
   position: fixed;

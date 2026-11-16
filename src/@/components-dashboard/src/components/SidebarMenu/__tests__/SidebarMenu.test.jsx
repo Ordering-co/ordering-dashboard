@@ -19,7 +19,7 @@ vi.mock('../../../utils/fetchAllPages', () => ({
   fetchAllPages: vi.fn().mockResolvedValue({ error: false, result: [] })
 }))
 
-import { SidebarMenu } from '../index'
+import { AI_AGENTS_CODE_TIMEOUT_MS, SidebarMenu } from '../index'
 
 const AI_PROBE_URL = 'https://api.test/v400/en/demo/ai/agents?page=1&page_size=1&params=id'
 
@@ -78,5 +78,64 @@ describe('SidebarMenu controller AI module access', () => {
 
     expect(fetchMock).not.toHaveBeenCalled()
     expect(screen.getByRole('status')).toHaveTextContent('null')
+  })
+})
+
+describe('SidebarMenu controller AI agents code', () => {
+  const fetchMock = vi.fn()
+  let getAiAgentsCode
+
+  const CodeUI = props => {
+    getAiAgentsCode = props.getAiAgentsCode
+    return null
+  }
+
+  beforeEach(() => {
+    // A business owner skips the AI module probe, so the only request is the code
+    session.current = { token: 'test-token', user: { level: 2 } }
+    fetchMock.mockReset()
+    vi.stubGlobal('fetch', fetchMock)
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('asks the API for a one-time code for ai.ordering.co with the session in the header', async () => {
+    fetchMock.mockResolvedValue({ json: async () => ({ error: false, result: { code: 'one-time-code', expires_in: 60 } }) })
+    render(<SidebarMenu UIComponent={CodeUI} />)
+
+    await expect(getAiAgentsCode()).resolves.toBe('one-time-code')
+    expect(fetchMock).toHaveBeenCalledExactlyOnceWith('https://api.test/v400/en/demo/session_codes', expect.objectContaining({ method: 'POST' }))
+    const [, options] = fetchMock.mock.calls[0]
+    expect(options.headers.Authorization).toBe('Bearer test-token')
+    expect(JSON.parse(options.body)).toEqual({ target: 'ai_dashboard' })
+  })
+
+  it.each([
+    ['an API error', () => Promise.resolve({ json: async () => ({ error: true, result: ['Unauthorized'] }) })],
+    ['a network error', () => Promise.reject(new Error('offline'))]
+  ])('answers no code on %s', async (_label, respond) => {
+    fetchMock.mockImplementation(respond)
+    render(<SidebarMenu UIComponent={CodeUI} />)
+
+    await expect(getAiAgentsCode()).resolves.toBeNull()
+  })
+
+  it('gives up on a request that hangs, so the blank tab closes', async () => {
+    vi.useFakeTimers()
+    try {
+      fetchMock.mockImplementation((_url, { signal }) => new Promise((resolve, reject) => {
+        signal?.addEventListener('abort', () => reject(new DOMException('The operation was aborted.', 'AbortError')))
+      }))
+      render(<SidebarMenu UIComponent={CodeUI} />)
+
+      const code = getAiAgentsCode()
+      await vi.advanceTimersByTimeAsync(AI_AGENTS_CODE_TIMEOUT_MS)
+
+      await expect(code).resolves.toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

@@ -106,7 +106,7 @@ export const PaymentOptionStripeUI = (props) => {
       )}
       {token && !cardsList.loading && !paymethodsWithoutSaveCards.includes(gateway) && (
         <AddNewCard>
-          <span onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</span>
+          <button type='button' onClick={() => setAddCardOpen(true)}>{t('ADD_NEW_CARD', 'Add new card')}</button>
         </AddNewCard>
       )}
       {addCartOpen && (
@@ -210,28 +210,36 @@ export const PaymentCard = (props) => {
   }, [isShowActions])
 
   return (
-    <CardItem onClick={handleChangeDefaultCard} isCursor invalid={!card?.zipcode && validateZipcodeCard}>
-      <CardItemContent>
-        <span className='checks'>
+    <CardItem isCursor invalid={!card?.zipcode && validateZipcodeCard}>
+      <CardItemContent
+        onClick={handleChangeDefaultCard}
+        aria-pressed={Boolean(active)}
+      >
+        <span className='checks' aria-hidden='true'>
           {active ? <IosRadioButtonOn /> : <IosRadioButtonOff />}
         </span>
-        <div>
+        <span className='brand'>
           <img src={getIconCard(card?.brand)} alt={card?.brand} />
-        </div>
+        </span>
         <span>
           XXXX-XXXX-XXXX-{card?.last4}
         </span>
         {!card?.zipcode && validateZipcodeCard && (
-          <p>
+          <span className='missing-zipcode'>
             ({t('MISSING_ZIPCODE', 'Missing zipcode')})
-          </p>
+          </span>
         )}
       </CardItemContent>
       <CardItemActions>
         <CardItemActionsWrapper ref={actionWrapperRef}>
-          <span ref={cardActionsRef}>
-            <Trash color={theme.colors.lightGray} onClick={() => handleDeleteCard()} />
-          </span>
+          <button
+            type='button'
+            ref={cardActionsRef}
+            aria-label={t('DELETE_CARD', 'Delete card')}
+            onClick={() => handleDeleteCard()}
+          >
+            <Trash color={theme.colors.lightGray} aria-hidden='true' />
+          </button>
         </CardItemActionsWrapper>
       </CardItemActions>
     </CardItem>

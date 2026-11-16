@@ -244,6 +244,8 @@ const PageBannersUI = (props) => {
 export const PageBanners = (props) => {
   const bannersProps = {
     ...props,
+    // redesign (row 6, P-5): PageBannersUI hands `sitesState` to BannerDetails
+    loadSites: true,
     UIComponent: PageBannersUI
   }
   return <AdBannersListController {...bannersProps} />

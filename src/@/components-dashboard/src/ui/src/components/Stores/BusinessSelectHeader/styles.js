@@ -10,7 +10,7 @@ export const PopMenuContatiner = styled.div`
   box-shadow: 0px 4px 10px rgb(0 0 0 / 12%);
   border-radius: 7.6px;
   padding: 8px;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
 `
 export const SelectHeaderContent = styled.div`
   position: relative;
@@ -41,8 +41,23 @@ export const OptionItem = styled.div`
   cursor: pointer;
   padding: 5px;
   border-radius: 7.6px;
+  /* redesign W1-7 (T1-7-4, W1-QC1-03): the business option is a real button (as='button'); same box and look as the div it was */
+  &[type='button'] {
+    box-sizing: border-box;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+    color: inherit;
+    text-align: start;
+  }
   &:hover {
     background-color: ${props => props.theme.colors.lightPrimary};
+  }
+  &:focus-visible {
+    outline-style: solid;
+    outline-width: var(--od-focus-ring-width);
+    outline-color: var(--od-focus-ring-color);
+    outline-offset: calc(var(--od-focus-ring-width) * -1);
   }
   img {
     min-height: 38px;
@@ -63,7 +78,7 @@ export const OptionItem = styled.div`
     flex-direction: column;
     max-width: 230px;
     b {
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       line-height: 20px;
       font-weight: 400;
       color: ${props => props.theme.colors.textBlack};
@@ -73,7 +88,7 @@ export const OptionItem = styled.div`
     }
     p {
       margin: 0;
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -94,7 +109,7 @@ export const WrapperPagination = styled.div`
   >div>div{
     margin: 0;
     button {
-      font-size: 12px;
+      font-size: var(--od-type-control-size);
     }
   }
 `

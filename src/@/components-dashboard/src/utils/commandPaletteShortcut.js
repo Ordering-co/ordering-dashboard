@@ -19,7 +19,7 @@ export const getCommandPaletteShortcut = (isMac = isMacPlatform()) => ({
 
 /**
  * `true` for the palette shortcut. Rich text editors that already handle the
- * key (Summernote opens its link dialog) keep it.
+ * key (any contentEditable target) keep it.
  */
 export const isCommandPaletteShortcut = (event, isMac = isMacPlatform()) => {
   if (!event || event.defaultPrevented) return false

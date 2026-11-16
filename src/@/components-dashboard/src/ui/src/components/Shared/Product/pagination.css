@@ -1,0 +1,92 @@
+/* redesign W0-7 (T0-23) · Pagination: «Showing 1–10 of 123», rows per page, page field, previous and next. */
+
+.odc-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-pagination-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+/* redesign tramo B cierre (W0-QB4-05): the two step buttons are one item of the pager: they wrap together, never one at the end of a
+ * line and the other alone on the next. */
+.odc-pagination-steps {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  flex: none;
+}
+
+.odc-pagination-size-label { margin-inline-end: var(--od-space-1); }
+
+/* Jump to a page: a numeric field you can type in. Its width comes from its `size` (the digits of the last page). */
+.odc-pagination-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin-inline: var(--od-space-1);
+  white-space: nowrap;
+}
+
+.odc-pagination-input {
+  box-sizing: border-box;
+  block-size: var(--od-x-control-height-sm);
+  min-inline-size: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: center;
+}
+
+.odc-pagination-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-pagination[data-busy='true'] .odc-btn { cursor: progress; }
+
+/*
+ * Phone (decision 12): the count goes on top and the controls fill the row. The buttons sit 4px apart, so a hit area
+ * drawn outside a 32px box would overlap its neighbour: as in the Orders pilot they are 44px visible. A text field
+ * cannot carry a pseudo-element, so the page field is 44px visible too.
+ */
+@media (max-width: 767px) {
+  .odc-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .odc-pagination-pager {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-pagination-pager {
+    gap: var(--od-space-2);
+  }
+  .odc-pagination .odc-btn {
+    min-block-size: var(--od-x-target-coarse);
+  }
+  .odc-pagination .odc-btn[data-icon-only] {
+    min-inline-size: var(--od-x-target-coarse);
+  }
+  /* redesign W0-7 (T0-29): the page field is 44px visible on both axes (width too: its neighbours are 4px away). */
+  .odc-pagination-input { block-size: var(--od-x-target-coarse); min-inline-size: var(--od-x-target-coarse); }
+}

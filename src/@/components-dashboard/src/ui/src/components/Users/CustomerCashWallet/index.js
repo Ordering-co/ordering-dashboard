@@ -34,15 +34,21 @@ const CustomerCashWalletUI = (props) => {
 
   return (
     <Container>
-      <h1>{t('CASH_WALLET', 'Cash wallet')}</h1>
+      <h1>{t('CASH_WALLET_NAME', 'Cash wallet')}</h1>
       <Tabs>
         <Tab
+          as='button'
+          type='button'
+          aria-pressed={showOption === 'cash_wallet'}
           active={showOption === 'cash_wallet'}
           onClick={() => handleTabClick('cash_wallet')}
         >
-          {t('CASH_WALLET', 'Cash wallet')}
+          {t('CASH_WALLET_NAME', 'Cash wallet')}
         </Tab>
         <Tab
+          as='button'
+          type='button'
+          aria-pressed={showOption === 'history'}
           active={showOption === 'history'}
           onClick={() => handleTabClick('history')}
         >

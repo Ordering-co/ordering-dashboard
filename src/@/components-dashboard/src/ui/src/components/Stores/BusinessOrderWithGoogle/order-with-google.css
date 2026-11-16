@@ -1,0 +1,117 @@
+/*
+ *  · The store's «Order with Google» section (Channels): the title, a lead line and one card with the state and
+ * either the activation form or what Google has. Values: --od-* and --od-x-* only, logical properties only, no wrapper
+ * that breaks the editor's sticky scroller (as sales-channels.css). Prefix: odc-gaw-*.
+ */
+
+.odc-gaw {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (min-width: 576px) {
+  .odc-gaw {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-gaw-intro {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-gaw-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-gaw-lead {
+  margin: 0;
+  max-inline-size: calc(var(--od-x-measure) * 1.5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-gaw-card {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  max-inline-size: calc(var(--od-x-measure) * 1.5);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-gaw-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+}
+
+.odc-gaw-state-plain {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-gaw-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-gaw-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-gaw-consent-text {
+  margin: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-gaw-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 6)), 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+}
+
+.odc-gaw-facts div {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-gaw-facts dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-gaw-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-gaw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}

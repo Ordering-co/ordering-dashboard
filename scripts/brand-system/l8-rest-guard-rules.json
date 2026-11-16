@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-rest-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l8-rest-support-index-js-f84822",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Support/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

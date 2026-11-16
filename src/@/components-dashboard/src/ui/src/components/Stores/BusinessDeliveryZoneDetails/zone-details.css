@@ -1,0 +1,54 @@
+/*
+ * redesign stores 5.8 · The detail of a delivery zone, inside P/SectionSplit: a row of tools (the tabs and, for a saved
+ * zone, Snooze and the ⋯ menu) above the body. The title, the X / «‹ Back», Esc and the focus are the piece's. Values: --od-* and
+ * --od-x-* only, logical properties.
+ */
+
+.odc-bdz {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The tabs take what the actions leave and scroll sideways when they do not fit (P/Tabs); the actions never shrink or cut. */
+.odc-bdz-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bdz-tabs {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-bdz-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+}
+
+/* Under a coarse pointer or 768px the controls are 32px seen and 44px reached: 12px apart, so the area of one does not cross the next. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-bdz-actions { gap: var(--od-space-3); }
+}
+
+/* On a phone the actions take their own line above the tabs. */
+@media (max-width: 575px) {
+  .odc-bdz-tools { flex-wrap: wrap; }
+  .odc-bdz-tabs { flex-basis: 100%; order: 2; }
+}
+
+.odc-bdz-body { min-inline-size: 0; }
+
+/* Delete: the consequence, then the error of a failed delete (the dialog stays open) */
+.odc-bdz-delete-body { margin: 0; }
+
+.odc-bdz-delete-body + .odc-notice.odc-bdz-delete-error {
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+}

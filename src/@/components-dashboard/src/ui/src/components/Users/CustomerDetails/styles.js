@@ -15,7 +15,7 @@ export const LeftHeader = styled.div`
   align-items: center;
 
   span.customer-name {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
   }
 `
@@ -24,7 +24,7 @@ export const RightHeader = styled.div`
   align-items: center;
 `
 export const VerifiedItem = styled.span`
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   background-color: ${props => props.theme.colors.lightGreen};
   padding: 2px 7px;
   border-radius: 50px;
@@ -93,7 +93,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         &:active {
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
@@ -147,6 +147,12 @@ export const MenusContainer = styled.div`
   }
 `
 export const OptionMenu = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+  width: 100%;
   cursor: pointer;
   padding: 10px 16px;
   display: flex;
@@ -159,7 +165,7 @@ export const OptionMenu = styled.div`
     background-color: ${props => props.theme.colors.lightPrimary};
   }
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
   svg {
     font-size: 16px;
@@ -170,6 +176,18 @@ export const OptionMenu = styled.div`
     border-bottom: 1px solid ${props => props.theme.colors.primary} !important;
     background-color: ${props => props.theme.colors.lightPrimary};
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
+
 `
 export const UserDetailsWrapper = styled.div`
   width: 100%;

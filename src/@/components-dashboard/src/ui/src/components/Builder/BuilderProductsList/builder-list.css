@@ -1,0 +1,184 @@
+/*
+ * redesign  B1 · /builder: the page frame (header, notices, filter bar, table and its foot), the cells of the table
+ * (name and code, the web domain, the platform build icons) and the create panel (BuilderCreatePanel). Values: --od-* and --od-x-*
+ * only (guard: productLiteralGuard.test.js). Logical properties, so right-to-left needs no second set. Prefix: odc-builder-*.
+ */
+
+/* ── Page ── */
+.odc-root.odc-builder-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (max-width: 767px) {
+  .odc-root.odc-builder-list {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* The notices sit in the page's column, not indented like those of a filter bar. */
+.odc-builder-list > .odc-notice {
+  margin: 0;
+}
+
+/* ── Cells ── */
+.odc-builder-name {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-builder-name a {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  text-decoration: none;
+}
+
+.odc-builder-name a:hover {
+  text-decoration: underline;
+}
+
+.odc-builder-code,
+.odc-builder-muted {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-builder-code {
+  font-family: var(--od-font-mono);
+}
+
+.odc-builder-web {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-builder-web .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-builder-domain {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-action-content);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-builder-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1);
+}
+
+/* A platform's last build: the colour groups, the tooltip and the accessible name say it. */
+.odc-builder-platform {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-subtle);
+}
+
+.odc-builder-platform[data-kind='success'] { background: var(--od-success-soft); color: var(--od-success-signal); }
+.odc-builder-platform[data-kind='failed'] { background: var(--od-danger-soft); color: var(--od-danger-signal); }
+.odc-builder-platform[data-kind='progress'] { background: var(--od-x-info-soft); color: var(--od-x-info-signal); }
+
+.odc-builder-platform svg {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* ── Create panel ── */
+.odc-builder-create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+/* A type's description: its line, then its platforms on a line of their own */
+.odc-builder-create .odc-radio-description {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-builder-option-platforms {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-builder-option-platforms svg {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-builder-count {
+  align-self: flex-end;
+  margin-block-start: calc(var(--od-space-2) * -1);
+}
+
+.odc-builder-count[data-over='true'] {
+  color: var(--od-danger-functional);
+}
+
+.odc-builder-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-builder-create .odc-notice {
+  margin: 0;
+}
+
+/* ── Type filter (TypeFilterMenu, hidden while Builder lists one type): two groups of checkboxes in the pill's popover ── */
+.odc-builder-type-popover {
+  display: grid;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3);
+}
+
+.odc-builder-type-group {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-builder-type-group > legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  padding: 0;
+  margin-block-end: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}

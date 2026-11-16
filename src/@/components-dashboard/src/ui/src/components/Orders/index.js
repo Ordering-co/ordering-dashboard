@@ -13,15 +13,12 @@ import { OrderStatusFilterBar } from './OrderStatusFilterBar'
 import { OrderStatusSubFilter } from './OrderStatusSubFilter'
 import { OrderNotification } from './OrderNotification'
 import { OrderDetails } from './OrderDetails'
-import { OrdersLateralBar } from './OrdersLateralBar'
+import { ContactOrdersSheet } from './ContactOrdersSheet'
 import { OrdersDashboardControls } from './OrdersDashboardControls'
 import { OrdersDashboard } from './OrdersDashboard'
 import { WizardOrders } from './WizardOrders'
 import { DriversDashboard } from './DriversDashboard'
 import { DriversLocation } from './DriversLocation'
-import { DriversList } from './DriversList'
-import { DriversOnlineOfflineFilter } from './DriversOnlineOfflineFilter'
-import { DriversBusyStatusFilter } from './DriversBusyStatusFilter'
 import { DeliveryDashboard } from './DeliveryDashboard'
 import { ProductItemAccordion } from './ProductItemAccordion'
 import { OrderStatusTypeSelector } from './OrderStatusTypeSelector'
@@ -51,32 +48,6 @@ import { ReviewCustomer } from './ReviewCustomer'
 import { CountryFilter } from './CountryFilter'
 import { OrderToPrint } from './OrderToPrint'
 import { CreateCustomOrder } from './CreateCustomOrder'
-import { CardForm as CustomOrderCardForm } from './CreateCustomOrder/CardForm'
-import { CardFormCustom as CustomOrderCardFormCustom } from './CreateCustomOrder/CardFormCustom'
-import { CartBill as CustomOrderCartBill } from './CreateCustomOrder/CartBill'
-import { Checkout as CustomOrderCheckout } from './CreateCustomOrder/Checkout'
-import { CouponControl as CustomOrderCouponControl } from './CreateCustomOrder/CouponControl'
-import { CustomOrderDetails as CustomOrderCustomOrderDetails } from './CreateCustomOrder/CustomOrderDetails'
-import { DriverTips as CustomOrderDriverTips } from './CreateCustomOrder/DriverTips'
-import { Map as CustomOrderMap } from './CreateCustomOrder/Map'
-import { OrderTypeSelector as CustomOrderOrderTypeSelector } from './CreateCustomOrder/OrderTypeSelector'
-import { PaymentOptionCard as CustomOrderPaymentOptionCard } from './CreateCustomOrder/PaymentOptionCard'
-import { PaymentOptionPaypal as CustomOrderPaymentOptionPaypal } from './CreateCustomOrder/PaymentOptionPaypal'
-import { PaymentOptions as CustomOrderPaymentOptions } from './CreateCustomOrder/PaymentOptions'
-import { PaymentOptionSquare as CustomOrderPaymentOptionSquare } from './CreateCustomOrder/PaymentOptionSquare'
-import { PaymentOptionWallet as CustomOrderPaymentOptionWallet } from './CreateCustomOrder/PaymentOptionWallet'
-import { ProductForm as CustomOrderProductForm } from './CreateCustomOrder/ProductForm'
-import { ProductIngredient as CustomOrderProductIngredient } from './CreateCustomOrder/ProductIngredient'
-import { ProductOption as CustomOrderProductOption } from './CreateCustomOrder/ProductOption'
-import { ProductOptionSubOption as CustomOrderProductOptionSubOption } from './CreateCustomOrder/ProductOptionSubOption'
-import { SelectBusinesses as CustomOrderSelectBusinesses } from './CreateCustomOrder/SelectBusinesses'
-import { SelectCustomer as CustomOrderSelectCustomer } from './CreateCustomOrder/SelectCustomer'
-import { SelectProducts as CustomOrderSelectProducts } from './CreateCustomOrder/SelectProducts'
-import { SingleProductCard as CustomOrderSingleProductCard } from './CreateCustomOrder/SingleProductCard'
-import { StripeElementsForm as CustomOrderStripeElementsForm } from './CreateCustomOrder/StripeElementsForm'
-import { StripeMethodForm as CustomOrderStripeMethodForm } from './CreateCustomOrder/StripeMethodForm'
-import { StripeRedirectForm as CustomOrderStripeRedirectForm } from './CreateCustomOrder/StripeRedirectForm'
-import { TaxInformation as CustomOrderTaxInformation } from './CreateCustomOrder/TaxInformation'
 
 export {
   AllInOne,
@@ -93,15 +64,12 @@ export {
   OrderStatusSubFilter,
   OrderNotification,
   OrderDetails,
-  OrdersLateralBar,
+  ContactOrdersSheet,
   OrdersDashboardControls,
   OrdersDashboard,
   WizardOrders,
   DriversDashboard,
   DriversLocation,
-  DriversList,
-  DriversOnlineOfflineFilter,
-  DriversBusyStatusFilter,
   DeliveryDashboard,
   ProductItemAccordion,
   OrderStatusTypeSelector,
@@ -130,31 +98,5 @@ export {
   ReviewCustomer,
   CountryFilter,
   OrderToPrint,
-  CreateCustomOrder,
-  CustomOrderCardForm,
-  CustomOrderCardFormCustom,
-  CustomOrderCartBill,
-  CustomOrderCheckout,
-  CustomOrderCouponControl,
-  CustomOrderCustomOrderDetails,
-  CustomOrderDriverTips,
-  CustomOrderMap,
-  CustomOrderOrderTypeSelector,
-  CustomOrderPaymentOptionCard,
-  CustomOrderPaymentOptionPaypal,
-  CustomOrderPaymentOptions,
-  CustomOrderPaymentOptionSquare,
-  CustomOrderPaymentOptionWallet,
-  CustomOrderProductForm,
-  CustomOrderProductIngredient,
-  CustomOrderProductOption,
-  CustomOrderProductOptionSubOption,
-  CustomOrderSelectBusinesses,
-  CustomOrderSelectCustomer,
-  CustomOrderSelectProducts,
-  CustomOrderSingleProductCard,
-  CustomOrderStripeElementsForm,
-  CustomOrderStripeMethodForm,
-  CustomOrderStripeRedirectForm,
-  CustomOrderTaxInformation
+  CreateCustomOrder
 }

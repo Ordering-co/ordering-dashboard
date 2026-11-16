@@ -12,7 +12,7 @@ export const ExportCSV = (props) => {
     franchiseId
   } = props
   const [ordering] = useApi()
-  const [{ token, loading }] = useSession()
+  const [{ token, loading, user }] = useSession()
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null, result: null })
 
   /**
@@ -390,6 +390,7 @@ export const ExportCSV = (props) => {
           {...props}
           actionStatus={actionStatus}
           getCSV={getCSV}
+          userLevel={user?.level}
         />
       )}
     </>

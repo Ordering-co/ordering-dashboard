@@ -16,7 +16,6 @@ import { AppsController } from './components/AppsController'
 import { BaseComponent } from './components/BaseComponent'
 import { BuildApps } from './components/BuildApps'
 import { CannyIdentification } from './components/CannyIdentification'
-import { CampaignEmail } from './components/CampaignEmail'
 import { CampaignUserList } from './components/CampaignUserList'
 import { Settings } from './components/Settings'
 import { BannerDetails } from './components/BannerDetails'
@@ -39,11 +38,12 @@ import { BusinessDeliveryDetails } from './components/BusinessDeliveryDetails'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDeliveryZoneShare } from './components/BusinessDeliveryZoneShare'
 import { BusinessDetails } from './components/BusinessDetails'
+import { BusinessGoogleActions } from './components/BusinessGoogleActions'
+import { GoogleActionsStores } from './components/GoogleActionsStores'
 import { BusinessDeviceListing } from './components/BusinessDeviceListing'
 import { BusinessDeviceDetail } from './components/BusinessDeviceDetail'
 import { BusinessEta } from './components/BusinessEta'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
-import { BusinessFilter } from './components/BusinessFilter'
 import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessGprsPrinters } from './components/BusinessGprsPrinters'
 import { BusinessInformation } from './components/BusinessInformation'
@@ -91,6 +91,8 @@ import { Markups } from './components/Markups'
 import { BusinessFees } from './components/BusinessFees'
 import { CustomerFees } from './components/CustomerFees'
 import { BusinessPaymentAccount } from './components/BusinessPaymentAccount'
+// redesign business-payments FA: the controller of /intelligence/business-payments. The page (UI) keeps the name BusinessPaymentReports in `~ui`.
+import { BusinessPaymentReports as BusinessPaymentReportsController } from './components/BusinessPaymentReports'
 import { CardFieldsSetting } from './components/CardFieldsSettings'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
@@ -134,14 +136,12 @@ import { DriversAdvancedLogs } from './components/DriversAdvancedLogs'
 import { DriversLogs } from './components/DriversLogs'
 import { DeliveryServices } from './components/DeliveryServices'
 import { DeliveryServiceDetails } from './components/DeliveryServiceDetails'
-import { DeliveryServiceZones } from './components/DeliveryServiceZones'
 import { SettingsLogs } from './components/SettingsLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
 import { DriverOrderRoute } from './components/DriverOrderRoute'
 import { DriverStoreStatus } from './components/DriverStoreStatus'
-import { EcommerceAnalitycs } from './components/EcommerceAnalitycs'
 import { EnterprisePromotionList } from './components/EnterprisePromotionList'
 import { EnterprisePromotionDetails } from './components/EnterprisePromotionDetails'
 import { ExamineClick } from './components/ExamineClick'
@@ -162,6 +162,8 @@ import { ImporterJobForm } from './components/ImporterJobForm'
 import { ImporterListing } from './components/ImporterListing'
 import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
 import { InvoiceDriverManager } from './components/InvoiceDriverManager'
+// redesign invoice (D1): the controller of the one-page invoice builder
+import { InvoiceBuilder } from './components/InvoiceBuilder'
 import { LanguageManager } from './components/LanguageManager'
 import { LanguageSelector } from './components/LanguageSelector'
 import { LanguageSetting } from './components/LanguageSetting'
@@ -183,8 +185,6 @@ import { MyOrders } from './components/MyOrders'
 import { MyOrdersList } from './components/MyOrdersList'
 import { OccupationSelector } from './components/OccupationSelector'
 import { OpenCartListing } from './components/OpenCartListing'
-import { OpenCartsDetail } from './components/OpenCartsDetail'
-import { OpenCartFilter } from './components/OpenCartFilter'
 import { OrderList } from './components/OrderList'
 import { OrderNotification } from './components/OrderNotification'
 import { OrderingWebsite } from './components/OrderingWebsite'
@@ -248,13 +248,13 @@ import { SingleBusinessCard } from './components/SingleBusinessCard'
 import { LoyaltyLevelDetail } from './components/LoyaltyLevelDetail'
 import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
-import { SingleRecoveryNotification } from './components/SingleRecoveryNotification'
 import { SitesAuthSettings } from './components/SitesAuthSettings'
 import { SiteTheme } from './components/SiteTheme'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UsersExportCSV } from './components/UsersExportCSV'
 import { UsersFilter } from './components/UsersFilter'
 import { UpsellingPage } from './components/UpsellingPage'
+import { UpgradeOffer } from './components/UpgradeOffer'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
 import { OrderDetails } from './components/OrderDetails'
 import { OrderReview } from './components/OrderReview'
@@ -301,11 +301,9 @@ import { ReportsAppIdFilter } from './components/ReportsAppIdFilter'
 import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
 import { SiteDetails } from './components/SiteDetails'
 import { SitesList } from './components/SitesList'
-import { Analytics } from './components/Analitycs'
 import { UploadAudio } from './components/UploadAudio'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
-import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
 import { UserWallet } from './components/UserWallet'
 import { WebhookList } from './components/WebhookList'
@@ -336,7 +334,6 @@ export {
   BaseComponent,
   BuildApps,
   CannyIdentification,
-  CampaignEmail,
   CampaignUserList,
   Settings,
   BusinessAdd,
@@ -359,11 +356,12 @@ export {
   BusinessDeliveryZone,
   BusinessDeliveryZoneShare,
   BusinessDetails,
+  BusinessGoogleActions,
+  GoogleActionsStores,
   BusinessDeviceListing,
   BusinessDeviceDetail,
   BusinessEta,
   BusinessFormDetails,
-  BusinessFilter,
   BusinessGallery,
   BusinessGprsPrinters,
   BusinessInformation,
@@ -416,6 +414,7 @@ export {
   BusinessFees,
   CustomerFees,
   BusinessPaymentAccount,
+  BusinessPaymentReportsController,
   CardFieldsSetting,
   Cart,
   Checkout,
@@ -464,8 +463,6 @@ export {
   DriversLogs,
   DeliveryServices,
   DeliveryServiceDetails,
-  DeliveryServiceZones,
-  EcommerceAnalitycs,
   EnterprisePromotionList,
   EnterprisePromotionDetails,
   ExamineClick,
@@ -488,6 +485,7 @@ export {
   ImporterListing,
   InvoiceBusinessManager,
   InvoiceDriverManager,
+  InvoiceBuilder,
   LanguageManager,
   LanguageSelector,
   LanguageSetting,
@@ -510,8 +508,6 @@ export {
   OrderingWebsite,
   WebsiteMigration,
   Dashboard,
-  OpenCartsDetail,
-  OpenCartFilter,
   OrderList,
   OrderNotification,
   OrdersFilter,
@@ -566,7 +562,6 @@ export {
   RecoveryActionDetail,
   RecoveryNotificationList,
   ReviewProductList,
-  SingleRecoveryNotification,
   SitesAuthSettings,
   SearchOptions,
   Schedule,
@@ -582,6 +577,7 @@ export {
   UserFormDetails,
   UsersExportCSV,
   UpsellingPage,
+  UpgradeOffer,
   WrapperGoogleMaps,
   OrderDetails,
   OrderReview,
@@ -611,10 +607,8 @@ export {
   SitesList,
   Sessions,
   SiteTheme,
-  Analytics,
   UploadAudio,
   UsersList,
-  UserTypeFilter,
   UsersFilter,
   UserDetails,
   UserMetaFields,

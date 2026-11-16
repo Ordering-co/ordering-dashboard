@@ -5,7 +5,7 @@ export const Container = styled.div`
   overflow-x: hidden;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0px;
     margin-bottom: 30px;
@@ -80,7 +80,7 @@ export const UploadImageIcon = styled.div`
   span {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {   
@@ -105,7 +105,7 @@ export const InputWrapper = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   input,
@@ -153,7 +153,7 @@ export const FieldRow = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
   color: ${props => props.theme.colors.secundaryContrast};
   span {
@@ -167,7 +167,7 @@ export const SelectWrapper = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   > div {
@@ -180,7 +180,7 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
       color: ${props => props.theme.colors.secundaryContrast};
     }
@@ -233,7 +233,7 @@ export const TimeBlock = styled.div`
     padding: 0px 10px;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     color: ${props => props.theme?.colors.secundaryLight};
     appearance: none;
   }
@@ -254,7 +254,7 @@ export const PropertyOption = styled.div`
 
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin: 0px;
   }
 `

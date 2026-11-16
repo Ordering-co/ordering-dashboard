@@ -1,0 +1,21 @@
+/*
+ * redesign stores 5.7 (G3-23, G3-26) · Delivery, pickup & more: the title and the four tabs (P/Tabs). Values: --od-* and
+ * --od-x-* only; logical properties only, so right-to-left needs no second set of rules.
+ */
+
+.odc-dpm {
+  block-size: 100%;
+  padding: var(--od-space-4);
+}
+
+.odc-dpm-title {
+  margin: var(--od-space-1) 0 var(--od-space-3);
+  font-size: var(--od-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+}
+
+/* The panel is the width of the tab's own content: the tabs bring their own padding and sections */
+.odc-dpm .odc-tab-panel {
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-5);
+}

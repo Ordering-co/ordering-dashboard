@@ -1,0 +1,348 @@
+/*
+ * redesign stores 5.16 (; G2-33, G2-34) · A log of changes on Product: a table (cards under 768px), the detail of a log
+ * in a dialog (an activity timeline) and the schedule changes in a second dialog.
+ * redesign settings-logs: promoted from Stores/BusinessLogs/business-logs.css (prefix odc-bl -> odc-cl) so the store's
+ * logs and the project's settings logs draw the same view. `data-frame` picks the gutter: `section` (a section of the store
+ * editor, as before) or `page` (a page of its own, as the other redesigned lists).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No min-width on the table: it lives in the Product scroller and long values wrap or clamp, so the page never scrolls sideways.
+ * Prefix: odc-cl-*. The dialogs live in a portal: nothing about them depends on the section's root.
+ */
+
+.odc-cl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-cl[data-frame='section'] {
+  padding: var(--od-space-5); /* the section gutter, as Business fees (odc-bf) */
+}
+
+.odc-cl[data-frame='page'] {
+  padding: var(--od-x-page-gutter); /* the page gutter, as the other redesigned lists (odc-dcp-frame) */
+}
+
+/* : the open-menu button (sidebar collapsed) is PageHeader's `leading`; the page header needs no row of its own */
+
+.odc-cl-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-cl-notice { min-inline-size: 0; }
+
+/* «Try again» breaks at its spaces instead of leaving a narrow notice */
+.odc-cl-notice .odc-btn {
+  max-inline-size: 100%;
+  white-space: normal;
+}
+
+.odc-cl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-cl-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The cells (the table and the cards draw the same ones) ── */
+.odc-cl-date {
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-cl-who {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cl-who-name {
+  max-inline-size: 100%;
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-cl-who-email {
+  max-inline-size: 100%;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-cl-event {
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-cl-muted {
+  color: var(--od-text-muted);
+}
+
+/* One line per change: «Featured: false → true». A long value wraps; in the table and the cards it ends in an ellipsis after
+   three lines (the whole text is the line's title and is in the detail). */
+.odc-cl-changes {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-measure);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cl-change {
+  min-inline-size: 0;
+}
+
+.odc-cl-change-text {
+  display: block;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-cl-changes[data-clamp] .odc-cl-change-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* A schedule change has no value to print: its name and the button that opens the days */
+.odc-cl-change[data-kind='schedule'] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-2);
+}
+
+.odc-cl-more {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── The cards (a phone) ── */
+/* the card keeps rows for the event, the person with the date, and the changes; the «from → to» row is not used */
+.odc-cl .odc-order-card-people {
+  display: none;
+}
+
+/* the event is text (the card's title link carries odc-mono, a figure) and a long one must not push the card past the panel */
+.odc-cl .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-family: var(--od-font-sans);
+}
+
+.odc-cl .odc-order-card-driver {
+  flex: 1 1 auto;
+}
+
+.odc-cl .odc-order-card-sla {
+  inline-size: 100%;
+}
+
+.odc-cl .odc-order-card-sla > .odc-cl-changes {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* a complete card (settings logs): the event beside the title, every change whole, the user agent in the row below */
+.odc-cl-card-event {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  overflow-wrap: anywhere;
+}
+
+.odc-cl-card-extra {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-cl[data-frame] {
+    padding-inline: var(--od-x-page-gutter-mobile); /* the cards bleed out of the page's padding by this much */
+  }
+}
+
+/* ── The detail dialog ── */
+.odc-cl-detail .odc-cl-changes {
+  max-inline-size: 100%;
+  margin-block-start: var(--od-space-1);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-cl-agent {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* review R1 H1: in the table a name, an email, an event or a setting never breaks inside a word. `anywhere` lets the
+   table squeeze those columns to a few letters («Orderi/ng Admin» at 1024); `break-word` keeps each word whole (the table scrolls
+   sideways in its region when the words do not fit). The cards keep `anywhere`: a card never scrolls. Only on a page of its own:
+   in the store editor's narrow section the same rule squeezes Changes instead (measured), so the store keeps its 5.16 layout. */
+.odc-cl[data-frame='page'] .odc-table .odc-cl-who-name,
+.odc-cl[data-frame='page'] .odc-table .odc-cl-who-email,
+.odc-cl[data-frame='page'] .odc-table .odc-cl-event,
+.odc-cl[data-frame='page'] .odc-table .odc-cl-subject {
+  overflow-wrap: break-word;
+}
+
+/* redesign bugs D row 85, in bugs F (; Q-01 of settings-logs): the same whole words in the store editor's section, where the
+   rule above alone squeezed «Changes» to a few letters (measured: 147px, emails split at 1024 and 1280). Here «Changes» keeps a
+   readable width and the user agent, which wraps anywhere, is the column that gives way; the table scrolls in its region if it must. */
+.odc-cl[data-frame='section'] .odc-table .odc-cl-who-name,
+.odc-cl[data-frame='section'] .odc-table .odc-cl-who-email,
+.odc-cl[data-frame='section'] .odc-table .odc-cl-event,
+.odc-cl[data-frame='section'] .odc-table .odc-cl-change-text {
+  overflow-wrap: break-word;
+}
+
+.odc-cl[data-frame='section'] .odc-table .odc-cl-changes {
+  min-inline-size: var(--od-x-search-min);
+}
+
+/* review R-6: given way to the rest, the user agent was 104px and split letter by letter in a dozen lines (rows of 240px); it keeps the
+   readable width it has on /settings/logs, and the table scrolls a little more in its region */
+.odc-cl[data-frame='section'] .odc-table .odc-cl-agent-cell {
+  min-inline-size: var(--od-x-search-min);
+}
+
+/* and the user agent keeps a readable width in the table instead of a column of a few characters (rows of twelve lines at 1024) */
+.odc-cl[data-frame='page'] .odc-table .odc-cl-agent-cell {
+  min-inline-size: var(--od-x-search-min);
+}
+
+/* the setting of a settings log: its name, as the Settings hub names it */
+.odc-cl-subject {
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+/* the subject in the detail: its own line under the event */
+.odc-cl-detail-subject {
+  display: block;
+  font-weight: var(--od-font-weight-regular);
+}
+
+/* «Find in Settings» under the timeline of the detail */
+.odc-cl-detail-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-3);
+}
+
+.odc-cl-raw {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* In the table the agent is a column of its own: it wraps anywhere and does not stretch the row */
+.odc-cl-agent-cell {
+  max-inline-size: var(--od-x-measure);
+}
+
+/* ST8: «Chrome 155 · macOS» is one short unit; it is not cut in the middle. An agent that is not a browser keeps wrapping. */
+.odc-cl-agent-cell[data-parsed] {
+  white-space: nowrap;
+}
+
+/* ST8: «Data changed» was split in two lines at 1440 when the table squeezed the Event column. Words stay whole, the line does not break. */
+.odc-cl .odc-table .odc-cl-event {
+  white-space: nowrap;
+}
+
+/* ── The schedule changes dialog: new and old side by side while there is room for both ── */
+.odc-cl-scheds {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  align-items: start;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-cl-sched {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-cl-sched-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cl-sched-none {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-cl-days {
+  display: grid;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cl-day {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-cl-day-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-cl-lapses {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-inline-size: 0;
+}

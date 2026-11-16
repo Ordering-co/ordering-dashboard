@@ -1,0 +1,204 @@
+/*
+ * redesign  B3a · /builder/:productId?tab=site: the website's settings (loading, error and pending states, the
+ * notice with Discard and Save, the save errors and the notices of what the API dropped or clamped) and the website type
+ * picker (ScopeControl: types, picked one, search, list of stores or franchises).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-bs-*.
+ */
+
+/* ── Tab ── */
+.odc-bs-busy,
+.odc-bs-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bs-page .odc-notice {
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.odc-bs-page .odc-notice-text {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+}
+
+.odc-bs-savebar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-bs-actions {
+  display: flex;
+  gap: var(--od-space-2);
+}
+
+.odc-bs-line {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bs-line[data-tone='danger'] {
+  color: var(--od-danger-functional);
+}
+
+.odc-bs-notice-text {
+  margin: 0;
+}
+
+.odc-bs-section {
+  margin: var(--od-space-2) 0 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* ── Website type picker ── */
+.odc-bs-scope,
+.odc-bs-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bs-picker {
+  gap: var(--od-space-2);
+}
+
+.odc-bs-picked {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bs-picked-title {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bs-muted {
+  color: var(--od-text-muted);
+}
+
+.odc-bs-danger {
+  color: var(--od-danger-functional);
+}
+
+.odc-bs-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bs-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-bs-logo {
+  flex: none;
+  inline-size: var(--od-x-avatar);
+  block-size: var(--od-x-avatar);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  object-fit: cover;
+}
+
+.odc-bs-search {
+  inline-size: 100%;
+}
+
+.odc-bs-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bs-empty {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bs-list {
+  display: flex;
+  flex-direction: column;
+  max-block-size: calc(var(--od-x-control-height) * 7.5);
+  overflow-y: auto;
+  border-radius: var(--od-radius-component);
+}
+
+.odc-bs-list:not(:empty) {
+  border: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bs-option {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  min-block-size: var(--od-x-control-height);
+  padding: var(--od-space-2) var(--od-space-3);
+  border: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bs-option:last-child {
+  border-block-end: 0;
+}
+
+.odc-bs-option:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-bs-option[aria-selected='true'] {
+  background: var(--od-x-selected);
+}
+
+.odc-bs-option:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.odc-bs-option-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-bs-option-slug {
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bs-more {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}

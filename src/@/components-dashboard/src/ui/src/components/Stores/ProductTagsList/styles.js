@@ -12,7 +12,7 @@ export const SelectButtonGroup = styled.div`
   padding-bottom: 15px;
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
   button {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
 
     &:first-child {
       ${props => props.theme?.rtl
@@ -52,7 +52,7 @@ export const ProductTagWrapper = styled.div`
   }
 
   span.tag-name {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 export const TagImageWrapper = styled.div`

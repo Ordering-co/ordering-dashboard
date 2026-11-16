@@ -13,6 +13,7 @@ vi.mock('../../../../../../index.js', () => ({
 }))
 
 import { AuthLayout } from '..'
+import { ShellMain } from '~/components/ShellMain'
 
 describe('AuthLayout', () => {
   it('shows the Ordering.co panel with the order route by default', () => {
@@ -35,5 +36,25 @@ describe('AuthLayout', () => {
     expect(screen.queryByAltText('Ordering.co')).toBeNull()
     expect(screen.queryByRole('list', { name: 'From order to delivery', hidden: true })).toBeNull()
     expect(container.querySelector('aside').getAttribute('style')).toContain('https://cdn.test/bg.jpg')
+  })
+
+  // the dashboard shell wraps every route in <main id='main-content'>; a second <main> inside it fails axe
+  // (landmark-main-is-top-level, landmark-no-duplicate-main, landmark-unique).
+  it('is no second main landmark inside the shell main', () => {
+    configs = {}
+    renderWithProviders(<ShellMain><AuthLayout><h1>Form</h1></AuthLayout></ShellMain>)
+
+    const mains = screen.getAllByRole('main')
+    expect(mains).toHaveLength(1)
+    expect(mains[0]).toHaveAttribute('id', 'main-content')
+    expect(mains[0]).toContainElement(screen.getByRole('heading', { name: 'Form' }))
+  })
+
+  it('stays the one main landmark where there is no shell main (docs_connect popup)', () => {
+    configs = {}
+    const { container } = renderWithProviders(<AuthLayout><h1>Form</h1></AuthLayout>)
+
+    expect(container.querySelectorAll('main')).toHaveLength(1)
+    expect(screen.getByRole('main')).toContainElement(screen.getByRole('heading', { name: 'Form' }))
   })
 })

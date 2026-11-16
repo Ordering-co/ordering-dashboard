@@ -1,0 +1,598 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-a2-enterprise-promotions-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionconditions-header-h1-20px-e16163",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionconditions-conditionitem-div-f2d32c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/styles.js",
+      "component": "ConditionItem",
+      "property": "font-size",
+      "context": "> div > span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondeliveryzones-deliveryzonesc-016552",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDeliveryzones/styles.js",
+      "component": "DeliveryzonesContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondeliveryzones-deliveryzonest-9cfab4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDeliveryzones/styles.js",
+      "component": "DeliveryzonesTable",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondeliveryzones-deliveryzonest-0cf061",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDeliveryzones/styles.js",
+      "component": "DeliveryzonesTable",
+      "property": "font-size",
+      "context": "td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondetails-header-div-first-chi-4ecb9c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "> div:first-child > h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondetails-tab-root-14px-d3dc31",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiondetails-wrapperactionselecto-01e1b5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/styles.js",
+      "component": "WrapperActionSelector",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotioneditcondition-singleeditcond-eb9e72",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionEditCondition/styles.js",
+      "component": "SingleEditConditionContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotioneditcondition-inputwrapper-l-16042d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionEditCondition/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-uploadimageic-7e019c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "UploadImageIcon",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-inputwrapper--56d79b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-daterangewrap-27d3e2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "DateRangeWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-labelwrapper--ce292f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "LabelWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-orderpriority-8b52da",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "OrderPriorityContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-orderpriority-0d3b1a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "OrderPriorityContainer",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotiongeneraldetails-stackablecont-3ab07f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "StackableContainer",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlist-promotionlisttable-th-1-c09c86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/styles.js",
+      "component": "PromotionListTable",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlist-promotionlisttable-td-1-6ec148",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/styles.js",
+      "component": "PromotionListTable",
+      "property": "font-size",
+      "context": "td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlist-enablewrapper-span-12px-0f366d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlisting-workspaceheader-h1-2-7245f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/styles.js",
+      "component": "WorkspaceHeader",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlisting-workspacetab-root-14-35fb3f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/styles.js",
+      "component": "WorkspaceTab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionlisting-headertitlecontainer-473eb2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionmaxorders-container-h1-20px-28e98c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionmaxorders-inputwrapper-label-d09baf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionmaxorders-inputwrapper-selec-7b23d3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".select > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionmaxorders-option-root-14px-681f6b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionordertypes-ordertypescontain-e43430",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionOrderTypes/styles.js",
+      "component": "OrderTypesContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionordertypes-ordertypeitem-spa-4c9034",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionOrderTypes/styles.js",
+      "component": "OrderTypeItem",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionpaymethods-paymethodscontain-a547d6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionPaymethods/styles.js",
+      "component": "PaymethodsContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionpaymethods-paymethoditem-spa-f88f22",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionPaymethods/styles.js",
+      "component": "PaymethodItem",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-sectiontitle-root-16px-d8e764",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "SectionTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-couponheader-span-14px-9f75df",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "CouponHeader",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-showincartcontainer-di-87401b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "ShowInCartContainer",
+      "property": "font-size",
+      "context": "> div > p > &:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-showincartcontainer-di-98f5da",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "ShowInCartContainer",
+      "property": "font-size",
+      "context": "> div > p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-couponcodecontainer-la-30c326",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "CouponCodeContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-condtionitem-div-span--e7980e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "CondtionItem",
+      "property": "font-size",
+      "context": "> div > > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-option-root-14px-7e218e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-discountcontainer-div--b2af62",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "DiscountContainer",
+      "property": "font-size",
+      "context": "> div > label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionrules-automaticenablewrapper-36d241",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "AutomaticEnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionschedule-schedulecontainer-h-6c04ce",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSchedule/styles.js",
+      "component": "ScheduleContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficcategory-container-h1-0eaf48",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficcategory-label-root-1-2c0c6d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "component": "Label",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficcategory-noselectedbu-1c21c6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "component": "NoSelectedBusiness",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficcategory-option-span--37a000",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficcategory-option-span--158c32",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span > b",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficproducts-container-h1-13c3c3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficproducts-label-root-1-c2c0cd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "component": "Label",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficproducts-noselectedbu-57632c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "component": "NoSelectedBusiness",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficproducts-option-span--c48b59",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a2-enterprise-promotions-enterprisepromotionspecficproducts-option-span--9ffb4f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span > b",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotionconditions-editbutton-svg-16-2bc176",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/styles.js",
+      "component": "EditButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "EditButton svg: the pencil glyph that opens the condition editor."
+    },
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotionconditions-checkboxwrapper-s-a6af8c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "CheckboxWrapper svg: the check glyph of the include-options selector."
+    },
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotiondetails-wrapperactionselecto-eb7db9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/styles.js",
+      "component": "WrapperActionSelector",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "WrapperActionSelector button > svg: the kebab action-menu glyph."
+    },
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotiongeneraldetails-uploadimageic-8fd203",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "component": "UploadImageIcon",
+      "property": "font-size",
+      "context": "svg",
+      "match": "25px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "UploadImageIcon svg: the upload glyph of the image drop zone."
+    },
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotionlist-dummyimagewrapper-svg-1-1ac01c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/styles.js",
+      "component": "DummyImageWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "18px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "DummyImageWrapper svg: the placeholder image glyph shown when a promotion has no image."
+    },
+    {
+      "id": "a2-enterprise-promotions-pres-enterprisepromotionlisting-workspacetab-root-in-a63f70",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/styles.js",
+      "component": "WorkspaceTab",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "WorkspaceTab is a styled.button and `font: inherit` is its reset. The size that matters on this component is the declaration on the next line, which does take a role."
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-typography-pres-closing-couponheader-font-size-inherit",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "component": "CouponHeader",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is an `inherit` value set as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+    }
+  ]
+}

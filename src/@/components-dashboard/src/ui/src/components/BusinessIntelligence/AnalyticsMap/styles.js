@@ -12,7 +12,7 @@ export const HeatMapToggleWrap = styled.span`
   bottom: 30px;
   left: 20px;
   z-index: 1;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   width: 200px;
 `
 

@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b2-analytics-charts-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b2-analytics-charts-analyticscustomersatisfaction-customersatisfactionhe-268f7d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/styles.js",
+      "component": "CustomerSatisfactionHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticscustomersatisfaction-scorediv-p-14px-987326",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/styles.js",
+      "component": "ScoreDiv",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsdriverorders-chartheadercontainer-p-14px-73034e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/styles.js",
+      "component": "ChartHeaderContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsdriverorders-chartfootercontainer-h2-20px-80586f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/styles.js",
+      "component": "ChartFooterContainer",
+      "property": "font-size",
+      "context": "h2",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsdriverorders-chartfootercontainer-p-14px-01e336",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/styles.js",
+      "component": "ChartFooterContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsmap-heatmaptogglewrap-root-14px-cc0c34",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsMap/styles.js",
+      "component": "HeatMapToggleWrap",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsordersacceptspend-ordersacceptspendheader-p-e46d7d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "component": "OrdersAcceptSpendHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsordersacceptspend-reviewcontentwrapper-p-14-b0178a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "component": "ReviewContentWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsordersstatus-orderstatusheader-p-14px-7e4cf0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/styles.js",
+      "component": "OrderStatusHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsordersstatus-orderstatusfooter-h2-20px-8ca267",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/styles.js",
+      "component": "OrderStatusFooter",
+      "property": "font-size",
+      "context": "h2",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsordersstatus-orderstatusfooter-p-14px-e23595",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/styles.js",
+      "component": "OrderStatusFooter",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsspendlist-analyticsspendlistheader-p-14px-77c4f0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "component": "AnalyticsSpendListHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsspendlist-reviewcontentwrapper-p-14px-13cda1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "component": "ReviewContentWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticsspendtimes-chartheadercontainer-p-14px-14107e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/styles.js",
+      "component": "ChartHeaderContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticstoporders-analyticstopordersheader-p-14px-8ea0ba",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "component": "AnalyticsTopOrdersHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticstoporders-toporderscontent-p-14px-c1ac1c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "component": "TopOrdersContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticstoporders-percentcontainer-root-14px-ee33d3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "component": "PercentContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b2-analytics-charts-analyticstoporders-valuecontainer-root-14px-c5aec0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "component": "ValueContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b2-analytics-charts-pres-analyticscustomersatisfaction-actionblock-svg-16px-dfe754",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticscustomersatisfaction-starcontent-svg-14px-df0756",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/styles.js",
+      "component": "StarContent",
+      "property": "font-size",
+      "context": "svg",
+      "match": "14px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "StarContent svg: los glifos de estrella llena y vacia de la puntuacion."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsdriverorders-actionblock-svg-16px-2917c3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsordersacceptspend-timecontentwrapper-h1-52p-5c57e7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "component": "TimeContentWrapper",
+      "property": "font-size",
+      "context": "h1",
+      "match": "52px",
+      "reason": "Ningun rol de la escala gobernada cubre esta cifra, y migrarla seria rediseniarla en vez de gobernarla.",
+      "evidence": "TimeContentWrapper h1: la cifra protagonista de la tarjeta, a 52px."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsordersacceptspend-timecontentwrapper-p-14px-c7294b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "component": "TimeContentWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "TimeContentWrapper p: ningun <p> se renderiza dentro de TimeContentWrapper, ni en la rama de carga ni en la cargada."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsordersacceptspend-reviewblock-svg-32px-4eda60",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "component": "ReviewBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "32px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ReviewBlock svg: el glifo del reloj dentro de la insignia circular."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsordersstatus-actionblock-svg-16px-3ab1f2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsspendlist-timecontentwrapper-h1-52px-319346",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "component": "TimeContentWrapper",
+      "property": "font-size",
+      "context": "h1",
+      "match": "52px",
+      "reason": "Ningun rol de la escala gobernada cubre esta cifra, y migrarla seria rediseniarla en vez de gobernarla.",
+      "evidence": "TimeContentWrapper h1: la cifra protagonista de la tarjeta, a 52px."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsspendlist-timecontentwrapper-p-14px-46669e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "component": "TimeContentWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "TimeContentWrapper p: ningun <p> se renderiza dentro de TimeContentWrapper, ni en la rama de carga ni en la cargada."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsspendlist-reviewblock-svg-32px-1b3bf6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "component": "ReviewBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "32px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ReviewBlock svg: el glifo del reloj dentro de la insignia circular."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticsspendtimes-actionblock-svg-16px-899388",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+    },
+    {
+      "id": "b2-analytics-charts-pres-analyticstoporders-actionblock-svg-16px-802390",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "component": "ActionBlock",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+    }
+  ]
+}

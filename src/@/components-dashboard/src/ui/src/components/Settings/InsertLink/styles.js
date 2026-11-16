@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const InsertLinkContainer = styled.div`
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 25px;
   }
@@ -18,7 +18,7 @@ export const WrapperInput = styled.div`
   margin-bottom: 10px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 
@@ -29,6 +29,6 @@ export const CheckboxWrapper = styled.div`
 
   > span {
     margin: 0 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }  
 `

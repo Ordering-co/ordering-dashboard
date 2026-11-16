@@ -69,10 +69,11 @@ export const PaymethodsForm = (props) => {
               isDisabed={actionState.loading}
             >
               <Checkbox
+                id={`new-drivers-group-paymethod-${paymethod.id}`}
                 checked={selectedPaymethodIds.includes(paymethod.id)}
                 onChange={e => handleSelectPaymethod(paymethod.id, e.target.checked)}
               />
-              <p>{t(paymethod?.gateway?.toUpperCase(), paymethod?.name)}</p>
+              <label htmlFor={`new-drivers-group-paymethod-${paymethod.id}`}>{t(paymethod?.gateway?.toUpperCase(), paymethod?.name)}</label>
             </GroupWrapper>
           ))}
         </GroupsContainer>

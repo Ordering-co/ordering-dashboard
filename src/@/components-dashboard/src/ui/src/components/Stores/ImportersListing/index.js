@@ -1,43 +1,55 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   useLanguage,
+  useSession,
   ImporterListing as ImportersListingController
 } from '../../../../../index'
+import { canOpenDashboardRoute } from '../../../../../utils/dashboardNavigation'
 
-import { Button } from '../../../styles'
+import { Button, TabPanel, Tabs } from '../../Shared/Product'
+import { useRequestLeave } from '../../Shared/Product/LeaveGuard'
+import { Plus } from '../../Shared/Icon'
+import { LearnDropDown } from '../../Shared/LearnDropDown'
 import { ImportersList } from '../ImportersList'
 import { ImporterForm } from '../ImporterForm'
 import { ImporterJobForm } from '../ImporterJobForm'
-import { ImporterHelpContent } from '../ImporterHelpContent'
-import { SideBar, Modal, LearnDropDown } from '../../Shared'
+import { ImportersPane } from '../ImportersButton/ImportersPanes'
 import { learnOptionsValues } from '../../../utils'
+import { MenuImportersTab } from './MenuImportersTab'
+import '../ImportersList/importers-list.css'
 
-import {
-  ImportersListingContainer,
-  Header,
-  Title,
-  TitleContent,
-  ActionButtons
-} from './styles'
+// redesign stores 3.C: level 0 of the Importers panel. The two side bars it opened (the importer form and the import of a
+// file) are now ONE level 1 of the panel (P/ImportersPane): «Import file» (a row, Enter on it, or the row menu) opens the
+// ImporterJobForm; «Edit» and «Add importer» open the ImporterForm. Only one at a time: opening another replaces it, and doing so (like
+// closing the panel) asks first when the open form has unsaved work (the leave guard of the panel). The advanced options and the mapping
+// of a multiple importer are level 2, declared by those forms. The legacy `setExtraOpen`, `moveDistance`, `openMappingDetails` and
+// `handleOpenChildForm` are gone with the side bars. The help modal (ImporterHelpContent) was never reachable (nothing set
+// `openImporterHelp`), so it goes (decision 8: no redesign of it; the folder stays).
 
 export const ImportersListingUI = (props) => {
   const {
     importerList,
-    paginationDetail,
+    getImporters,
+    actionStatus,
     handleDeleteImporter,
-    setExtraOpen,
     handleSuccessAddImporter,
     handleSuccessUpdateImporter,
-    onImportSuccess
+    onImportSuccess,
+    business,
+    businessLoading,
+    onMenuImportClose,
+    onMenuImportGoToProducts
   } = props
   const [, t] = useLanguage()
-  const [openNewImporter, setOpenNewImporter] = useState(false)
-  const [openImporterHelp, setOpenImporterHelp] = useState(false)
-  const [openImportCsv, setOpenImportCsv] = useState(false)
-  const [selectedImporter, setSelectedImporter] = useState({})
-  const [selectedImporterJob, setSelectedImporterJob] = useState({})
-  const [importJobFormMoveDistance, setImportJobFormMoveDistance] = useState(0)
-  const [openMappingDetails, setOpenMappingDetails] = useState(false)
+  // (main #488): two tabs, the menu importers (with an explicit target store) and the CSV importers. Who cannot open
+  // /connect/importers (a business owner) keeps only the CSV importers, without tabs.
+  const [{ user }] = useSession()
+  const canUseMenuImporters = canOpenDashboardRoute('/connect/importers', user?.level)
+  const [selectedTab, setSelectedTab] = useState('menu')
+  const activeTab = canUseMenuImporters ? selectedTab : 'csv'
+  const requestLeave = useRequestLeave()
+  // The open level 1: { kind: 'import' | 'edit' | 'add', importer }
+  const [detail, setDetail] = useState(null)
 
   const learnOptions = learnOptionsValues(
     [
@@ -53,126 +65,115 @@ export const ImportersListingUI = (props) => {
     t
   )
 
-  const addNewImporter = () => {
-    setSelectedImporter({})
-    setOpenImportCsv(false)
-    setOpenNewImporter(true)
-    setExtraOpen(true)
+  const closeDetail = () => setDetail(null)
+  // A form closes itself after saving. With «Save and continue» the leave guard of the level is still waiting for that save, and
+  // it drops the way out if its level unmounts first (P/LeaveGuard: «nowhere to go on from»). So the form's own close waits one
+  // turn, and only closes the level while it still shows that record: by then the way out that asked may have opened another.
+  const closeDetailAfterSave = () => {
+    const shown = detail
+    setTimeout(() => setDetail(current => (current === shown ? null : current)), 0)
+  }
+  // changing the record of level 1 goes through the leave guard (nothing open or nothing dirty: it opens at once)
+  const openDetail = (next) => requestLeave(() => setDetail(next))
+
+  const importFile = (importer) => openDetail({ kind: 'import', importer })
+  const editImporter = (importer) => openDetail({ kind: 'edit', importer })
+  const addImporter = () => {
+    setSelectedTab('csv')
+    openDetail({ kind: 'add', importer: null })
   }
 
-  const createImporterJob = (importer) => {
-    setSelectedImporterJob(importer)
-    setExtraOpen(false)
-    setOpenImportCsv(true)
-    setOpenNewImporter(false)
-  }
-
-  const handleEditImporter = (importer) => {
-    if (Object.keys(importer).length > 0) {
-      setSelectedImporter(importer)
-      setOpenNewImporter(true)
-    }
-  }
-
+  // An importer that was deleted (its row is gone) cannot keep its detail open
+  const openId = detail?.importer?.id
+  const stillListed = openId == null || Boolean(importerList?.loading) || (importerList?.importers || []).some(item => item.id === openId)
   useEffect(() => {
-    setExtraOpen && setExtraOpen(openNewImporter)
-  }, [openNewImporter])
+    if (!stillListed) setDetail(null)
+  }, [stillListed])
+
+  const importer = detail?.importer
+  // the title follows a rename saved from the form; the forms keep the record they opened with, as the side bars did
+  const listed = (importerList?.importers || []).find(item => item.id === openId)
+  const importerName = listed?.name ?? importer?.name ?? ''
+
+  const csvImporters = (
+    <>
+      {canUseMenuImporters && (
+        <p className='odc-root odc-imp-store-hint' data-testid='csv-importers-store-hint'>
+          {t('CSV_IMPORTERS_STORE_HINT', 'Each CSV file sets the stores it imports into.')}
+        </p>
+      )}
+      <ImportersList
+        importerList={importerList}
+        getImporters={getImporters}
+        actionStatus={actionStatus}
+        handleDeleteImporter={handleDeleteImporter}
+        activeImporterId={detail && detail.kind !== 'add' ? importer?.id : undefined}
+        onImportFile={importFile}
+        onEditImporter={editImporter}
+        onAddImporter={addImporter}
+      />
+    </>
+  )
 
   return (
     <>
-      <ImportersListingContainer>
-        <Header>
-          <Title>
-            <TitleContent>{t('IMPORTERS', 'Importers')}</TitleContent>
-            <LearnDropDown
-              learnOptions={learnOptions}
-            />
-          </Title>
-          <ActionButtons>
-            <Button
-              color='lightPrimary'
-              borderRadius='5px'
-              onClick={() => addNewImporter()}
-            >
-              {t('ADD_IMPORTER', 'Add importer')}
-            </Button>
-          </ActionButtons>
-        </Header>
-        <ImportersList
-          importerList={importerList}
-          paginationDetail={paginationDetail}
-          createImporterJob={createImporterJob}
-          addNewImporter={addNewImporter}
-          handleDeleteImporter={handleDeleteImporter}
-          selectedImporter={selectedImporter}
-          setSelectedImporter={setSelectedImporter}
-          handleEditImporter={handleEditImporter}
-        />
-        {openNewImporter && (
-          <SideBar
-            isBorderShow={!openMappingDetails}
-            open={openNewImporter}
-            defaultSideBarWidth={openMappingDetails ? 1000 : 500}
-            moveDistance={openMappingDetails ? 500 : 0}
-            onClose={() => {
-              setOpenMappingDetails(false)
-              setSelectedImporter({})
-              setOpenNewImporter(false)
-            }}
+      <div className='odc-root odc-imp-list-head'>
+        <LearnDropDown learnOptions={learnOptions} />
+        <Button variant='secondary' icon={Plus} onClick={addImporter}>
+          {t('ADD_IMPORTER', 'Add importer')}
+        </Button>
+      </div>
+      {canUseMenuImporters
+        ? (
+          <Tabs
+            value={activeTab}
+            onValueChange={setSelectedTab}
+            label={t('IMPORTERS', 'Importers')}
+            size='sm'
+            items={[
+              { value: 'menu', label: t('MENU_IMPORTERS', 'Menu importers') },
+              { value: 'csv', label: t('CSV_IMPORTERS', 'CSV importers') }
+            ]}
           >
-            <ImporterForm
-              openNewImporter={openNewImporter}
-              selectedImporter={selectedImporter}
-              handleSuccessAdd={handleSuccessAddImporter}
-              handleSuccessUpdateImporter={handleSuccessUpdateImporter}
-              openMappingDetails={openMappingDetails}
-              setOpenMappingDetails={setOpenMappingDetails}
-              onClose={() => {
-                setSelectedImporter({})
-                setOpenMappingDetails(false)
-                setOpenNewImporter(false)
-              }}
-            />
-          </SideBar>
-        )}
-      </ImportersListingContainer>
-      {openImportCsv && (
-        <SideBar
-          open={openImportCsv}
-          onClose={() => {
-            setOpenImportCsv(false)
-            setImportJobFormMoveDistance(0)
-          }}
-          defaultSideBarWidth={500 + importJobFormMoveDistance}
-          moveDistance={importJobFormMoveDistance}
-        >
+            <TabPanel value='menu' keepMounted>
+              <MenuImportersTab
+                business={business}
+                businessLoading={businessLoading}
+                onImportClose={onMenuImportClose}
+                onGoToProducts={onMenuImportGoToProducts}
+              />
+            </TabPanel>
+            <TabPanel value='csv' keepMounted>
+              {csvImporters}
+            </TabPanel>
+          </Tabs>
+          )
+        : csvImporters}
+      {detail?.kind === 'import' && (
+        <ImportersPane title={importerName} onBack={closeDetail}>
           <ImporterJobForm
-            key={selectedImporterJob?.id}
-            selectedImporter={selectedImporterJob}
-            handleOpenChildForm={() => setImportJobFormMoveDistance(500)}
-            handleCloseChildForm={() => setImportJobFormMoveDistance(0)}
-            openMappingDetails={openMappingDetails}
-            setOpenMappingDetails={setOpenMappingDetails}
+            key={importer?.id}
+            selectedImporter={importer}
             handleSuccessUpdateImporter={handleSuccessUpdateImporter}
             onImportSuccess={onImportSuccess}
-            onClose={() => {
-              setOpenImportCsv(false)
-              setImportJobFormMoveDistance(0)
-            }}
+            onClose={closeDetailAfterSave}
           />
-        </SideBar>
+        </ImportersPane>
       )}
-      {openImporterHelp && (
-        <Modal
-          width='50%'
-          height='80vh'
-          padding='30px'
-          title=''
-          open={openImporterHelp}
-          onClose={() => setOpenImporterHelp(false)}
+      {(detail?.kind === 'edit' || detail?.kind === 'add') && (
+        <ImportersPane
+          title={detail.kind === 'edit' ? t('EDIT_IMPORTER', 'Edit importer') : t('ADD_IMPORTER', 'Add importer')}
+          onBack={closeDetail}
         >
-          <ImporterHelpContent />
-        </Modal>
+          <ImporterForm
+            key={importer?.id || 'new'}
+            openNewImporter
+            selectedImporter={importer || {}}
+            handleSuccessAdd={handleSuccessAddImporter}
+            handleSuccessUpdateImporter={handleSuccessUpdateImporter}
+            onClose={closeDetailAfterSave}
+          />
+        </ImportersPane>
       )}
     </>
   )

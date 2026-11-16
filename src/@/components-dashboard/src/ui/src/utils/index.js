@@ -1,10 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { useActiveFeatureFlags } from 'posthog-js/react'
-import FaCcMastercard from '@meronex/icons/fa/FaCcMastercard'
-import FaCcVisa from '@meronex/icons/fa/FaCcVisa'
-import FaCreditCard from '@meronex/icons/fa/FaCreditCard'
 import moment from 'moment'
-import { CURRENCY } from '../config/currency.js'
+import deliveryProviderPlaceholder from '~/assets/images/icons/delivery-provider-placeholder.svg'
 import {
   getDashboardFaviconUrl,
   getDashboardLogoUrl,
@@ -12,8 +9,11 @@ import {
   isOfficialOrderingDashboardHost
 } from '~/utils/dashboardBranding'
 
-import { useLanguage, useSession, CODES } from '../../../index.js'
+import { useLanguage, CODES } from '../../../index.js'
 import { getLocalStorageItem } from '../../../webStrategy'
+import { capitalize } from './capitalize'
+
+export { scrollTo } from './scrollTo'
 
 /**
  * Prefix root-relative public URLs with Vite `base` (subpath / CDN deploys).
@@ -118,22 +118,14 @@ export const parseBillingNumber = (value, options = {}) => {
     number = number.replace(',', formatNumber.separator)
   }
   const numberParts = number.split(formatNumber.separator)
-  numberParts[0] = numberParts[0].replace(/(.)(?=(\d{3})+$)/g, '$1' + formatNumber.thousand)
+  // redesign (row 66): `\d`, not `.`: the minus sign of a negative is not a digit to group («-.123» before; same fix as parsePrice, (5))
+  numberParts[0] = numberParts[0].replace(/(\d)(?=(\d{3})+$)/g, '$1' + formatNumber.thousand)
   number = numberParts.join(formatNumber.separator)
   return number
 }
 
-export const getIconCard = (brand = '') => {
-  const value = brand?.toLowerCase()
-  switch (value) {
-    case 'visa':
-      return <FaCcVisa />
-    case 'mastercard':
-      return <FaCcMastercard />
-    default:
-      return <FaCreditCard />
-  }
-}
+export { getIconCard } from './getIconCard'
+
 /**
  * Function to get unique id
  */
@@ -147,7 +139,7 @@ export const getUniqueId = () => {
  * Function to convert a string in string capitalized
  * @param {string} str string to capitalize
  */
-export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+export { capitalize }
 
 export const fallbackLogisticEventsText = (key) => {
   const eventNames = {
@@ -199,52 +191,10 @@ export const fallbackLogisticEventsText = (key) => {
 export const DriverTipsOptions = [0, 10, 15, 20, 25]
 
 /**
- * Function to calculate time to scroll element
- * @param {*} t = current time
- * @param {*} b = start value
- * @param {*} c = change in value
- * @param {*} d = duration
- */
-const easeInOutQuad = (t, b, c, d) => {
-  t /= d / 2
-  if (t < 1) return c / 2 * t * t + b
-  t--
-  return -c / 2 * (t * (t - 2) - 1) + b
-}
-
-/**
- * Function to do scroll of one element to another
- * @param {*} element = parent element
- * @param {*} to = position Top of child element
- * @param {*} duration = time to animation
- */
-export const scrollTo = (element, to, duration) => {
-  const start = element.scrollTop
-  const change = to - start
-  let currentTime = 0
-  const increment = 20
-
-  const animateScroll = () => {
-    currentTime += increment
-    const val = easeInOutQuad(currentTime, start, change, duration)
-    element.scrollTop = val
-    if (currentTime < duration && val > 0) {
-      setTimeout(animateScroll, increment)
-    }
-  }
-  animateScroll()
-}
-
-/**
  * Function to get formatted link to include in iframes
  * @param {string} url = youtube - vimeo link video
  */
-export const formatUrlVideo = (url) => {
-  const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
-  const match = url.match(regExp)
-  const id = (match && match[7].length === 11) ? match[7] : false
-  return `https://www.youtube-nocookie.com/embed/${id}`
-}
+export { formatUrlVideo } from './formatUrlVideo'
 
 /**
  * Function to convert delivery time in minutes
@@ -255,18 +205,6 @@ export const convertHoursToMinutes = (time) => {
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
   return `${result}min`
-}
-
-/**
- * Function to convert star rate in width to display
- * @param {int} qualification star rate or qualification
- */
-export const getStarWidth = (qualification) => {
-  if (qualification) {
-    return qualification / 5 * 100 + '%'
-  } else {
-    return '0%'
-  }
 }
 
 /**
@@ -291,9 +229,7 @@ export const getAgoMinutes = (time) => {
  * @param {number} bytes for transform
  *
  */
-export const bytesConverter = bytes => {
-  return Math.floor(bytes / 1024)
-}
+export { bytesConverter } from './bytesConverter'
 
 /**
  * The function `validImageSize` checks if the dimensions of an image file match the specified width
@@ -318,16 +254,7 @@ export const validImageSize = async ({ width, height, file }) => {
  * @param {string} code // language code
  * @param {any} locales // language settings
  */
-export const getLocale = (code, locales) => {
-  let locale = locales?.[code]
-  if (code === 'es-419-1' || code === 'es-419-2') locale = locales?.es
-  if (code === 'zh-CN') locale = locales?.zhCN
-  if (code === 'ar') locale = locales?.arSA
-  if (code === 'kn') locale = locales?.ta
-  if (code === 'km') locale = locales?.th
-  if (!locale) return locales?.enUS
-  return locale
-}
+export { getLocale } from './getLocale'
 
 /**
  * List of fields with correct order
@@ -363,7 +290,7 @@ export const sortInputFields = ({ fields, values }) => {
  * @param {Number} seconds
  */
 export const getHours = (seconds) => {
-  return (seconds * 1) / 3600 > 1 ? Math.floor((seconds * 1) / 3600) : 0
+  return (seconds * 1) / 3600 >= 1 ? Math.floor((seconds * 1) / 3600) : 0 // 3600 s is 1 h, not 0 h
 }
 
 /**
@@ -383,10 +310,7 @@ export const getSeconds = (seconds) => {
   return Math.floor(remain - Math.floor(remain / 60) * 60)
 }
 
-export const findExitingCode = (countryCode) => {
-  const code = CODES.find(code => code.countryCode === (countryCode || '').toUpperCase())
-  return code?.countryCode
-}
+export { findExitingCode } from './findExitingCode'
 
 export const findExitingCountryPhoneCode = (countryCode) => {
   const code = CODES.find(code => code.countryCode === (countryCode || '').toUpperCase())
@@ -415,13 +339,7 @@ export {
  * @param {*} parser function fallback when is decimal
  * @returns string
  */
-export const verifyDecimals = (value, parser) => {
-  if (value % 1 === 0) {
-    return value
-  } else {
-    return parser(value)
-  }
-}
+export { verifyDecimals } from './billFormatting'
 
 /**
  * Fuctions to control the local storage
@@ -501,31 +419,14 @@ export const ribbonValues = {
  * Format seconds to hh:mm:ss
  * @param {number} seconds
  */
-export const formatSeconds = (seconds) => {
-  // Hours, minutes and seconds
-  const hrs = Math.floor(seconds / 3600)
-  const mins = Math.floor((seconds % 3600) / 60)
-  const secs = Math.floor(seconds % 60)
-
-  // Output like '1:01' or '4:03:59' or '123:03:59'
-  let ret = ''
-  if (hrs > 0) {
-    ret += '' + hrs + ':' + (mins < 10 ? '0' : '')
-  }
-  ret += '' + mins + ':' + (secs < 10 ? '0' : '')
-  ret += '' + secs
-  return ret
-}
+export { formatSeconds } from './formatSeconds'
 
 /**
  * Function to check URL
  * @param {string} url URL of page
  * @param {string} fallback default URL
  */
-export const checkSiteUrl = (url, fallback) => {
-  if (!url) return fallback
-  return url[url?.length - 1] === '/' ? url : `${url}/`
-}
+export { checkSiteUrl } from './checkSiteUrl'
 
 /**
  * function to manage review comment list
@@ -595,47 +496,16 @@ export const reviewCommentList = (type) => {
   return reviews[type]
 }
 
-export const orderStatus = [
-  { key: 0, value: 'Pending Order', slug: 'PENDING_ORDER', percentage: 10 },
-  { key: 1, value: 'Completed by admin', slug: 'COMPLETED_BY_ADMIN', percentage: 100 },
-  { key: 2, value: 'Reject by admin', slug: 'REJECT_BY_ADMIN', percentage: 0 },
-  { key: 3, value: 'Driver arrived by business', slug: 'DRIVER_IN_BUSINESS', percentage: 60 },
-  { key: 4, value: 'Preparation Completed', slug: 'PREPARATION_COMPLETED', percentage: 20 },
-  { key: 5, value: 'Reject by business', slug: 'REJECT_BY_BUSINESS', percentage: 0 },
-  { key: 6, value: 'Reject by driver', slug: 'REJECT_BY_DRIVER', percentage: 0 },
-  { key: 7, value: 'Accepted by business', slug: 'ACCEPTED_BY_BUSINESS', percentage: 15 },
-  { key: 8, value: 'Accepted by driver', slug: 'ACCEPTED_BY_DRIVER', percentage: 40 },
-  { key: 9, value: 'Pick up completed by driver', slug: 'PICK_UP_COMPLETED_BY_DRIVER', percentage: 70 },
-  { key: 10, value: 'Pick up Failed by driver', slug: 'PICK_UP_FAILED_BY_DRIVER', percentage: 0 },
-  { key: 11, value: 'Delivery completed by driver', slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 100 },
-  { key: 12, value: 'Delivery Failed by driver', slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0 },
-  { key: 13, value: 'Preorder', slug: 'PREORDER', percentage: 0 },
-  { key: 14, value: 'Order not ready', slug: 'ORDER_NOT_READY', percentage: 15 },
-  { key: 15, value: 'Pickup completed by customer', slug: 'PICKUP_COMPLETED_BY_CUSTOMER', percentage: 100 },
-  { key: 16, value: 'Canceled by customer', slug: 'CANCELED_BY_CUSTOMER', percentage: 0 },
-  { key: 17, value: 'Not picked by customer', slug: 'NOT_PICKED_BY_CUSTOMER', percentage: 0 },
-  { key: 18, value: 'Driver almost arrived to business', slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 50 },
-  { key: 19, value: 'Driver almost arrived to customer', slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 90 },
-  { key: 20, value: 'Customer almost arrived to business', slug: 'CUSTOMER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 90 },
-  { key: 21, value: 'Customer arrived to business', slug: 'CUSTOMER_ARRIVED_TO_BUSINESS', percentage: 90 },
-  { key: 22, value: 'Looking for driver', slug: 'ORDER_LOOKING_FOR_DRIVER', percentage: 30 },
-  { key: 23, value: 'Driver on way', slug: 'ORDER_DRIVER_ON_WAY', percentage: 80 },
-  { key: 24, value: 'Driver waiting for order', slug: 'ORDER_STATUS_DRIVER_WAITING_FOR_ORDER', percentage: 25 },
-  { key: 25, value: 'Accepted by driver company', slug: 'ORDER_STATUS_ACCEPTED_BY_DRIVER_COMPANY', percentage: 15 },
-  { key: 26, value: 'Driver arrived to customer', slug: 'ORDER_DRIVER_ARRIVED_CUSTOMER', percentage: 80 }
-]
+export { orderStatus } from './orderStatus'
 
-export const getOrderStatus = (status) => {
-  const objectStatus = orderStatus.find((o) => o.key === status)
-  return objectStatus && objectStatus
-}
+export { getOrderStatus } from './orderStatus'
 
 export const getOrderStatuPickUp = (status) => {
   const orderStatus = [
     { key: 0, value: 'Pending Order', slug: 'PENDING_ORDER', percentage: 10 },
     { key: 1, value: 'Completed by admin', slug: 'COMPLETED_BY_ADMIN', percentage: 100 },
     { key: 2, value: 'Reject by admin', slug: 'REJECT_BY_ADMIN', percentage: 0 },
-    { key: 4, value: 'Preparation Completed', slug: 'PREPARATION_COMPLETED', percentage: 50 },
+    { key: 4, value: 'Preparation completed', slug: 'PREPARATION_COMPLETED', percentage: 50 },
     { key: 5, value: 'Reject by business', slug: 'REJECT_BY_BUSINESS', percentage: 0 },
     { key: 7, value: 'Accepted by business', slug: 'ACCEPTED_BY_BUSINESS', percentage: 30 },
     { key: 13, value: 'Preorder', slug: 'PREORDER', percentage: 0 },
@@ -706,43 +576,16 @@ export const orderRejectCommentList = (status) => {
   return list
 }
 
-export const widgetURL = 'https://orderingweb.orderingplus/'
+// redesign ordering-website B1 (OW-04): the widget host is orderingweb.ordering.co
+export const widgetURL = 'https://orderingweb.ordering.co/'
 
-export const getCurrentDiffDays = (time) => {
-  const current = moment().utc()
-  const compared = moment(time)
-  return compared.diff(current, 'days')
-}
+export { getCurrentDiffDays } from './getCurrentDiffDays'
 
-export const firstLetterCapital = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-}
+export { firstLetterCapital } from './navigationHelpers'
 
-export const stringToSlug = str => {
-  str = str.replace(/^\s+|\s+$/g, '') // trim
-  str = str?.toLowerCase()
+export { stringToSlug } from './stringToSlug'
 
-  // remove accents, swap ñ for n, etc
-  const from = 'åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;'
-  const to = 'aaaaaaeeeeiiiioooouuuunc------'
-
-  for (let i = 0, l = from.length; i < l; i++) {
-    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i))
-  }
-
-  str = str
-    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '_') // collapse whitespace and replace by -
-    .replace(/-+/g, '_') // collapse dashes
-    .replace(/^-+/, '') // trim - from start of text
-    .replace(/-+$/, '') // trim - from end of text
-
-  return str
-}
-
-export const getCurrenySymbol = (code) => {
-  return CURRENCY?.[code]?.symbol ?? code
-}
+export { getCurrenySymbol } from './billFormatting'
 
 export const queryStringToObject = url => {
   const params = new URLSearchParams(url.split('?')[1])
@@ -870,12 +713,14 @@ export const disableReasons = () => {
   return disableReasonDictionary
 }
 
-export const getAttributeName = (key, { parseDate } = {}) => {
-  const [, t] = useLanguage()
+// tanda P: `t` comes from the caller. It used to call useLanguage() here, and ChangeLogView calls this once per change
+// while it renders, so the number of hooks followed the data («change in the order of Hooks»). Without `t`, the English text.
+const englishText = (_key, fallback) => fallback
+export const getAttributeName = (key, { parseDate, t = englishText } = {}) => {
   const attributes = [
     { key: 'autoassign_amount_drivers', content: t('AUTO_ASSIGN_GROUP_ORDERS_TO_DRIVERS', 'Auto assign the order of group to this amount of drivers') },
     { key: 'orders_group_max_orders', content: t('MAX_NUMBER_ORDERS', 'Maximum Number of Orders') },
-    { key: 'autoassign_autoaccept_by_driver', content: t('ORDER_CONFIRMED_ACCEPTED_BY_DRIVER', 'Accepted by Driver') },
+    { key: 'autoassign_autoaccept_by_driver', content: t('ORDER_CONFIRMED_ACCEPTED_BY_DRIVER', 'Accepted by driver') },
     { key: 'orders_group_max_time_between', content: t('MAX_ORDER_TIME_BETWEEN', 'Maximum time between orders in seconds') },
     { key: 'orders_group_max_distance_between_pickup', content: t('MAX_DISTANCE_BETWEEN_BUSINESS', 'Maximum distance between businesses in meters') },
     { key: 'orders_group_max_distance_between_delivery', content: t('MAX_DISTANCE_BETWEEN_DELIVERY', 'Maximum distance between deliveries in meters') },
@@ -942,443 +787,13 @@ export const isFinalOrderStatusLocked = (project, userLevel, status) => {
   return FINAL_ORDER_STATUSES.includes(parseInt(status))
 }
 
-export const getOrderStatusPrefix = (s, dictionary, prefixForVariable = '') => {
-  if (!dictionary) return s
+export { getOrderStatusPrefix } from './orderStatus'
 
-  const orderStatus = {
-    0: dictionary?.[`${prefixForVariable}_PENDING` ?? 'PENDING'] ?? 'Pending',
-    1: dictionary?.[`${prefixForVariable}_COMPLETED_BY_ADMIN` ?? 'COMPLETED_BY_ADMIN'] ?? 'Completed by admin',
-    2: dictionary?.[`${prefixForVariable}_REJECTED` ?? 'REJECTED'] ?? 'Rejected',
-    3: dictionary?.[`${prefixForVariable}_ORDER_STATUS_IN_BUSINESS` ?? 'ORDER_STATUS_IN_BUSINESS'] ?? 'Driver arrived to business',
-    4: dictionary?.[`${prefixForVariable}_PREPARATION_COMPLETED` ?? 'PREPARATION_COMPLETED'] ?? 'Preparation Completed',
-    5: dictionary?.[`${prefixForVariable}_REJECTED_BY_BUSINESS` ?? 'REJECTED_BY_BUSINESS'] ?? 'Rejected by business',
-    6: dictionary?.[`${prefixForVariable}_REJECTED_BY_DRIVER` ?? 'REJECTED_BY_DRIVER'] ?? 'Rejected by Driver',
-    7: dictionary?.[`${prefixForVariable}_ACCEPTED_BY_BUSINESS` ?? 'ACCEPTED_BY_BUSINESS'] ?? 'Accepted by business',
-    8: dictionary?.[`${prefixForVariable}_ACCEPTED_BY_DRIVER` ?? 'ACCEPTED_BY_DRIVER'] ?? 'Accepted by driver',
-    9: dictionary?.[`${prefixForVariable}_PICK_UP_COMPLETED_BY_DRIVER` ?? 'PICK_UP_COMPLETED_BY_DRIVER'] ?? 'Pick up completed by driver',
-    10: dictionary?.[`${prefixForVariable}_PICK_UP_FAILED_BY_DRIVER` ?? 'PICK_UP_FAILED_BY_DRIVER'] ?? 'Pick up Failed by driver',
-    11: dictionary?.[`${prefixForVariable}_DELIVERY_COMPLETED_BY_DRIVER` ?? 'DELIVERY_COMPLETED_BY_DRIVER'] ?? 'Delivery completed by driver',
-    12: dictionary?.[`${prefixForVariable}_DELIVERY_FAILED_BY_DRIVER` ?? 'DELIVERY_FAILED_BY_DRIVER'] ?? 'Delivery Failed by driver',
-    13: dictionary?.[`${prefixForVariable}_PREORDER` ?? 'PREORDER'] ?? 'PreOrder',
-    14: dictionary?.[`${prefixForVariable}_ORDER_NOT_READY` ?? 'ORDER_NOT_READY'] ?? 'Order not ready',
-    15: dictionary?.[`${prefixForVariable}_ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER` ?? 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER'] ?? 'Order picked up completed by customer',
-    16: dictionary?.[`${prefixForVariable}_ORDER_STATUS_CANCELLED_BY_CUSTOMER` ?? 'ORDER_STATUS_CANCELLED_BY_CUSTOMER'] ?? 'Order cancelled by customer',
-    17: dictionary?.[`${prefixForVariable}_ORDER_NOT_PICKEDUP_BY_CUSTOMER` ?? 'ORDER_NOT_PICKEDUP_BY_CUSTOMER'] ?? 'Order not picked up by customer',
-    18: dictionary?.[`${prefixForVariable}_ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS` ?? 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS'] ?? 'Driver almost arrived to business',
-    19: dictionary?.[`${prefixForVariable}_ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER` ?? 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER'] ?? 'Driver almost arrived to customer',
-    20: dictionary?.[`${prefixForVariable}_ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS` ?? 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'] ?? 'Customer almost arrived to business',
-    21: dictionary?.[`${prefixForVariable}_ORDER_CUSTOMER_ARRIVED_BUSINESS` ?? 'ORDER_CUSTOMER_ARRIVED_BUSINESS'] ?? 'Customer arrived to business',
-    22: dictionary?.[`${prefixForVariable}_ORDER_LOOKING_FOR_DRIVER` ?? 'ORDER_LOOKING_FOR_DRIVER'] ?? 'Looking for driver',
-    23: dictionary?.[`${prefixForVariable}_ORDER_DRIVER_ON_WAY` ?? 'ORDER_DRIVER_ON_WAY'] ?? 'Driver on way',
-    24: dictionary?.[`${prefixForVariable}_ORDER_STATUS_DRIVER_WAITING_FOR_ORDER` ?? 'ORDER_STATUS_DRIVER_WAITING_FOR_ORDER'] ?? 'Driver waiting for order',
-    25: dictionary?.[`${prefixForVariable}_ORDER_STATUS_ACCEPTED_BY_DRIVER_COMPANY` ?? 'ORDER_STATUS_ACCEPTED_BY_DRIVER_COMPANY'] ?? 'Accepted by driver company',
-    26: dictionary?.[`${prefixForVariable}_ORDER_DRIVER_ARRIVED_CUSTOMER` ?? 'ORDER_DRIVER_ARRIVED_CUSTOMER'] ?? 'Driver arrived to customer',
-    50: dictionary?.[`${prefixForVariable}_DRIVER_ASSIGNED` ?? 'DRIVER_ASSIGNED'] ?? 'Driver assigned',
-    51: dictionary?.[`${prefixForVariable}_DRIVER_CLOSE` ?? 'DRIVER_CLOSE'] ?? 'Driver is close',
-    53: dictionary?.[`${prefixForVariable}_NEW_BUSINESS_OWNER_SIGNUP` ?? 'NEW_BUSINESS_OWNER_SIGNUP'] ?? 'New Business owner Signup',
-    54: dictionary?.[`${prefixForVariable}_NEW_DRIVER_SIGNUP` ?? 'NEW_DRIVER_SIGNUP'] ?? 'New Driver owner Signup'
-  }
+export { getCodeNames } from './getCodeNames'
 
-  return orderStatus?.[Number(s)] ?? s
-}
+export { learnOptionsValues } from './learnOptionsValues'
 
-export const getCodeNames = (code, t) => {
-  const codeNames = {
-    app_marketplace_x: t('APP_MARKETPLACE_X', 'Marketplace App'),
-    app_business_x: t('APP_BUSINESS_X', 'Business App'),
-    app_driver_x: t('APP_DRIVER_X', 'Driver App'),
-    app_franchises_x: t('APP_FRANCHISES_X', 'App Franchises'),
-    web_dashboard_x: t('WEB_DASHBOARD_X', 'Dashboard'),
-    web_franchises_x: t('WEB_FRANCHISES_X', 'Franchises')
-  }
-  return codeNames[code] ?? t(code.replace(/ /g, '_').toUpperCase(), capitalize(code.replace(/_/g, ' ').toLowerCase()))
-}
-
-export const learnOptionsValues = (key = [], t) => {
-  const options = [
-    {
-      value: 'order_list_general_view',
-      name: t('LEARN_ORDER_LIST_GENERAL_VIEW', 'Orders List | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders-overview/'
-    },
-    {
-      value: 'order_details',
-      name: t('LEARN_ORDER_DETAILS', 'Order Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders/view-manage-order/'
-    },
-    {
-      value: 'create_custom_order',
-      name: t('LEARN_CREATE_CUSTOM_ORDER', 'Create Custom Order'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders/create-custom-order/'
-    },
-    {
-      value: 'message_general_view',
-      name: t('LEARN_MESSAGE_GENERAL_VIEW', 'Messages | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders/messages-overview/'
-    },
-    {
-      value: 'open_cart_general_view',
-      name: t('LEARN_OPEN_CART_GENERAL_VIEW', 'Open Carts | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders/open-carts-overview/'
-    },
-    {
-      value: 'cart_details',
-      name: t('LEARN_CART_DETAILS', 'Cart Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/orders/open-carts-overview/'
-    },
-    {
-      value: 'store_general_view',
-      name: t('LEARN_STORE_GENERAL_VIEW', 'Stores | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores-overview/'
-    },
-    {
-      value: 'store_details',
-      name: t('LEARN_STORE_DETAILS', 'Store Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/'
-    },
-    {
-      value: 'store_schedule',
-      name: t('LEARN_STORE_SCHEDULE', 'Schedule'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/schedule/'
-    },
-    {
-      value: 'store_menu',
-      name: t('LEARN_STORE_MENU', 'Menu'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/products-overview/manage-menus/'
-    },
-    {
-      value: 'store_delivery_pickup',
-      name: t('LEARN_STORE_DELIVERY_PICKUP', 'Delivery, pickup & more'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/delivery-pickup/'
-    },
-    {
-      value: 'store_notifications',
-      name: t('LEARN_STORE_NOTIFICATIONS', 'Notifications'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/notifications/'
-    },
-    {
-      value: 'store_payment_methods',
-      name: t('LEARN_STORE_PAYMENT_METHODS', 'Payment methods'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/payment-methods/'
-    },
-    {
-      value: 'store_tax_fees',
-      name: t('LEARN_STORE_TAX_FEES', 'Tax & fees'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/taxes-and-customer-fees/'
-    },
-    {
-      value: 'store_promotions',
-      name: t('LEARN_STORE_PROMOTIONS', 'Promotions'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/'
-    },
-    {
-      value: 'store_channels',
-      name: t('LEARN_STORE_CHANNELS', 'Ordering Channels'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/ordering-channels/'
-    },
-    {
-      value: 'store_qr_codes',
-      name: t('LEARN_STORE_QR_CODES', 'QR Codes'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/qr-codes/'
-    },
-    {
-      value: 'store_sales_channels',
-      name: t('LEARN_STORE_SALES_CHANNELS', 'Sales Channels'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/sales-channels/'
-    },
-    {
-      value: 'store_layout',
-      name: t('LEARN_STORE_LAYOUT', 'Layout'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/view-edit-store/layout/'
-    },
-    {
-      value: 'store_webhooks',
-      name: t('LEARN_STORE_WEBHOOKS', 'Webhooks'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/settings/pro/developers/webhooks/'
-    },
-    {
-      value: 'categories_products_general_view',
-      name: t('LEARN_CATEGORIES_PRODUCTS_GENERAL_VIEW', 'Categories & Products: General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/products-overview/'
-    },
-    {
-      value: 'new_category',
-      name: t('LEARN_NEW_CATEGORY', 'New Category'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/products-overview/create-category/'
-    },
-    {
-      value: 'product_details_general_view',
-      name: t('LEARN_PRODUCT_DETAILS_GENERAL_VIEW', 'Products Details | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/create-edit-product/'
-    },
-    {
-      value: 'ingredients_properties',
-      name: t('LEARN_INGREDIENTS_PROPERTIES', 'Ingredients/Properties'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/create-edit-product/ingredients-properties/'
-    },
-    {
-      value: 'product_options',
-      name: t('LEARN_PRODUCT_OPTIONS', 'Product options'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/create-edit-product/product-options/'
-    },
-    {
-      value: 'product_images',
-      name: t('LEARN_PRODUCT_IMAGES', 'Product images'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/create-edit-product/product-images/'
-    },
-    {
-      value: 'product_video',
-      name: t('LEARN_PRODUCT_IMAGES', 'Product video'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/create-edit-product/product-video/'
-    },
-    {
-      value: 'importers',
-      name: t('LEARN_IMPORTERS', 'Importers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'business_importer',
-      name: t('LEARN_BUSINESS_IMPORTER', 'Business Importer'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'category_importers',
-      name: t('LEARN_CATEGORY_IMPORTERS', 'Category Importers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'products_importers',
-      name: t('LEARN_PRODUCTS_IMPORTERS', 'Products Importers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/stores/products-overview/bulk-import-products/'
-    },
-    {
-      value: 'users_importers',
-      name: t('LEARN_USERS_IMPORTERS', 'Users Importers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'creating_new_importer',
-      name: t('LEARN_PRODUCT_IMAGES', 'Creating a new importer'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'import_full_menu',
-      name: t('LEARN_IMPORT_FULL_MENU', 'Import Full Menu'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'import_orders',
-      name: t('LEARN_IMPORT_ORDERS', 'Import Orders'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/connect/importers/'
-    },
-    {
-      value: 'customers_general_view',
-      name: t('LEARN_CUSTOMERS_GENERAL_VIEW', 'Customers | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/customers-overview/'
-    },
-    {
-      value: 'customers_details',
-      name: t('LEARN_CUSTOMERS_DETAILS', 'Customers Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/view-edit-customer/'
-    },
-    {
-      value: 'business_owners_general_view',
-      name: t('LEARN_BUSINESS_OWNERS_GENERAL_VIEW', 'Business Owners | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/business-owners/'
-    },
-    {
-      value: 'business_owner_details',
-      name: t('LEARN_BUSINESS_OWNER_DETAILS', 'Business Owner Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/manage-business-owner/'
-    },
-    {
-      value: 'managers_general_view',
-      name: t('LEARN_MANAGERS_GENERAL_VIEW', 'Managers | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/admins/'
-    },
-    {
-      value: 'manager_details',
-      name: t('LEARN_MANAGER_DETAILS', 'Manager Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/users/admins/'
-    },
-    {
-      value: 'business_reports',
-      name: t('LEARN_BUSINESS_REPORTS', 'Business reports | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/reports/business-reports/'
-    },
-    {
-      value: 'delivery_reports',
-      name: t('LEARN_DELIVERY_REPORTS', 'Delivery Reports | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/reports/delivery-reports/'
-    },
-    {
-      value: 'reviews_manager',
-      name: t('LEARN_REVIEWS_MANAGER', 'Reviews Manager | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/reports/review-manager/'
-    },
-    {
-      value: 'reviews_details',
-      name: t('LEARN_REVIEWS_DETAILS', 'Reviews Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/reports/review-manager/'
-    },
-    {
-      value: 'invoice_manager',
-      name: t('LEARN_INVOICE_MANAGER', 'Invoice manager | Business Owner'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/reports/invoice-manager/business-invoices/'
-    },
-    {
-      value: 'ordering_website_general_view',
-      name: t('LEARN_WEBSITE_GENERAL_VIEW', 'Ordering Website | General Overview'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/ordering-website-2/'
-    },
-    {
-      value: 'website_basic_settings',
-      name: t('LEARN_WEBSITE_BASIC_SETTINGS', 'Basic Settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/ordering-website-2/settings/'
-    },
-    {
-      value: 'website_advanced_settings',
-      name: t('LEARN_WEBSITE_ADVANCED_SETTINGS', 'Advanced Settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/ordering-website-2/settings/'
-    },
-    {
-      value: 'website_widget',
-      name: t('LEARN_WEBSITE_WIDGET', 'Ordering Widget'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/ordering-website-2/widget/'
-    },
-    {
-      value: 'ordering_app_advanced_settings',
-      name: t('LEARN_ORDERING_APP_ADVANCED_SETTINGS', 'Advanced Settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/marketplace-app/'
-    },
-    {
-      value: 'ordering_app_resources',
-      name: t('LEARN_ORDERING_APP_RESOURCES', 'App Resources'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/marketplace-app/app-resources/'
-    },
-    {
-      value: 'settings_standard',
-      name: t('LEARN_SETTINGS_STANDARD', 'Standard Settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/settings-overview/'
-    },
-    {
-      value: 'settings_cms',
-      name: t('LEARN_ORDERING_CMS', 'CMS'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/settings/cms/'
-    },
-    {
-      value: 'settings_pro',
-      name: t('LEARN_ORDERING_PRO', 'Pro Settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/settings/pro/'
-    },
-    {
-      value: 'delivery_dashboard',
-      name: t('LEARN_DELIVERY_DASHBOARD', 'Delivery Dashboard'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/deliveries-dashboard/'
-    },
-    {
-      value: 'drivers_dashboard',
-      name: t('LEARN_DELIVERY_DASHBOARD', 'Drivers Dashboard'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/drivers-dashboard/'
-    },
-    {
-      value: 'drivers_manager',
-      name: t('LEARN_DELIVERY_MANAGER', 'Drivers Manager'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/driver-managers/'
-    },
-    {
-      value: 'drivers_delivery_groups',
-      name: t('LEARN_DELIVERY_GROUPS', 'Delivery Groups'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/delivery-groups/'
-    },
-    {
-      value: 'advance_logistics',
-      name: t('LEARN_ADVANCED_LOGISTICS', 'Advanced Logistics'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/manage-delivery-group/'
-    },
-    {
-      value: 'drivers_time_display',
-      name: t('LEARN_DRIVERS_TIME_DISPLAY', 'Drivers Time Display'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/drivers-time-display/'
-    },
-    {
-      value: 'all_in_one',
-      name: t('LEARN_ALL_IN_ONE', 'All In One'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/all-in-one/'
-    },
-    {
-      value: 'drivers',
-      name: t('LEARN_DRIVERS', 'Drivers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/drivers-list/'
-    },
-    {
-      value: 'driver_details',
-      name: t('LEARN_DRIVER_DETAILS', 'Driver Details'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/delivery/create-edit-driver/'
-    },
-    {
-      value: 'advanced_offers',
-      name: t('LEARN_ADVANCED_OFFERS', 'Advanced Offers'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/marketing/advanced-offers/'
-    },
-    {
-      value: 'ad_banners',
-      name: t('LEARN_AD_BANNERS', 'Ad Banners'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/marketing/ad-banners/'
-    },
-    {
-      value: 'cart_recovery',
-      name: t('LEARN_CART_RECOVERY', 'Cart Recovery'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/marketing/cart-recovery-rules/'
-    },
-    {
-      value: 'business_app_resources',
-      name: t('LEARN_BUSINESS_APP_RESOURCES', 'Business App Resources'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/business-app/'
-    },
-    {
-      value: 'driver_app_resources',
-      name: t('LEARN_DRIVER_APP_RESOURCES', 'Driver App Resources'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/my-products/driver-app/'
-    },
-    {
-      value: 'points_wallets_and_levels',
-      name: t('LEARN_POINT_WALLET_AND_LEVELS', 'Points Wallet and Levels'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/points-wallet-levels/'
-    },
-    {
-      value: 'cash_wallets_and_refunds',
-      name: t('LEARN_CASH_WALLETS_AND_REFUNDS', 'Cash wallets and refunds'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/cash-wallet-refunds/'
-    },
-    {
-      value: 'gift_card_settings',
-      name: t('LEARN_GIFT_CARD_SETTINGS', 'Gift card settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/gift-cards-settings/'
-    },
-    {
-      value: 'catering_settings',
-      name: t('LEARN_CATERING_SETTINGS', 'Catering settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/catering/'
-    },
-    {
-      value: 'stripe_connect_settings',
-      name: t('LEARN_STRIPE_CONNECT_SETTINGS', 'Stripe connect settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/stripe-connect/'
-    },
-    {
-      value: 'multi_business_settings',
-      name: t('LEARN_MULTI_BUSINESS_SETTINGS', 'Multi business settings'),
-      url: 'https://docs.ordering.co/docs/products/dashboard/addons/multi-business-checkout/'
-    }
-  ]
-  return options.filter((option) => (key.includes(option.value)))
-}
-
-export const getOrderingSubdomains = () => {
-  const orderingSubdomains = ['tryordering.com', 'ordering.co', 'orderingplus.com']
-  return orderingSubdomains.some(subdomain => window.location.hostname.includes(subdomain))
-}
+export { getOrderingSubdomains } from './getOrderingSubdomains'
 
 export const getFeatureFlags = (key, forceEnable = false) => {
   const activeFeatures = useActiveFeatureFlags()
@@ -1409,19 +824,6 @@ export {
   getSettingsSitesWhere,
   shouldHideUpsellingConfig
 } from '../../../utils/settingsAccess'
-
-export const epaycoInputFields = [
-  { label: 'RECEIVER_ID', name: 'receiver_id', isSandbox: false, type: 'number' },
-  { label: 'RECEIVER_FEE_PERCENTAGE', name: 'receiver_fee_percentage', isSandbox: false, type: 'number' },
-  { label: 'RECEIVER_FEE_FIXED', name: 'receiver_fee_fixed', isSandbox: false, type: 'number' }
-]
-
-export const epaycoSplitRecieveInputs = [
-  { label: 'ID', name: 'id' },
-  { label: 'TOTAL', name: 'total' },
-  { label: 'IVA', name: 'iva' },
-  { label: 'BASE_IVA', name: 'base_iva' },
-  { label: 'FEE', name: 'fee' }]
 
 export const usePreventDoubleClick = (callback, delay = 300) => {
   const clickTimeRef = useRef(0)
@@ -1481,7 +883,7 @@ export const connectedToArray = (fromSalesChannels, t) => {
     },
     {
       id: 2,
-      logo: 'https://res.cloudinary.com/ordering2/image/upload/v1734639566/luisv4plus/pzdfyvb37unfpugnrkpv.png',
+      logo: deliveryProviderPlaceholder,
       text: t('UBER_EATS', 'Uber Eats'),
       enabled: fromSalesChannels
     },
@@ -1496,13 +898,4 @@ export const connectedToArray = (fromSalesChannels, t) => {
   return optionsDefault.filter(option => option.enabled)
 }
 
-export const getUserType = (type = '') => {
-  const [{ user }] = useSession()
-  if (!type) return true
-  if (type === 'readOnlyBusinessOwner') return !!user?.readOnlyBusinessOwner
-  if (type === 'readOnlyAdmin') return !!user?.readOnlyAdmin
-  if (type === 'readOnlyDeliveryManager') return !!user?.readOnlyDeliveryManager
-  if (type === 'viewOnlyBusinessOwner') return !!user?.viewOnlyBusinessOwner
-
-  return false
-}
+export { getUserType } from './navigationHelpers'

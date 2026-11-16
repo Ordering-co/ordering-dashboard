@@ -1,0 +1,141 @@
+/*
+ * Product Chart (redesign home FA, D8 / decisión 36).
+ * The canvas itself is themed from JS (Chart.js cannot read CSS variables); this file sizes the box, draws the HTML
+ * legend and gives each color slot its token. Values come from --od-* and --od-x-* only. Logical properties only.
+ */
+
+/* redesign home FA (D8: the box height comes from the size tokens, so a card can take the compact one on a phone) */
+.odc-chart {
+  --odc-chart-height: var(--od-x-chart-height);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-chart[data-size='compact'] {
+  --odc-chart-height: var(--od-x-chart-height-compact);
+}
+
+/* Chart.js sizes the canvas to this box: it needs its own height and a positioned parent. */
+.odc-chart-plot {
+  position: relative;
+  inline-size: 100%;
+  block-size: var(--odc-chart-height);
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+/*
+ *  (B3): Chart.js gives the canvas a width in pixels. In the flow, that width held the box (and, in a flex or grid item,
+ * its ancestors) as wide as the last measure, so the chart did not narrow when the viewport shrank and spilled out of its card.
+ * Out of the flow the box is always the width its container gives it, and Chart.js measures that.
+ */
+.odc-chart-plot > canvas {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+/* redesign home FA (D8: a legend in text color, never the series hue; the swatch is the only color) */
+.odc-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-chart-swatch {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-chart-line-width);
+  flex: none;
+  background: var(--od-x-chart-1);
+}
+
+.odc-chart-swatch[data-slot='1'] { background: var(--od-x-chart-1); }
+.odc-chart-swatch[data-slot='2'] { background: var(--od-x-chart-2); }
+.odc-chart-swatch[data-slot='3'] { background: var(--od-x-chart-3); }
+.odc-chart-swatch[data-slot='4'] { background: var(--od-x-chart-4); }
+.odc-chart-swatch[data-slot='5'] { background: var(--od-x-chart-5); }
+.odc-chart-swatch[data-slot='6'] { background: var(--od-x-chart-6); }
+
+/* A previous period or a baseline: neutral and dashed, never a series hue. */
+.odc-chart-swatch[data-comparison] {
+  block-size: 0;
+  background: none;
+  border-block-start: var(--od-x-chart-line-width) dashed var(--od-x-chart-comparison);
+}
+
+/* Compared bars are drawn solid (a dashed outline does not read on a bar), so their swatch is solid too. */
+.odc-chart[data-type='bar'] .odc-chart-swatch[data-comparison] {
+  block-size: var(--od-x-chart-line-width);
+  background: var(--od-x-chart-comparison);
+  border: 0;
+}
+
+/*
+ * redesign : `toggleSeries`. Each legend entry is a native button: pressed = the series is drawn. It looks like the
+ * static entry (same swatch, same text color), keeps the ring of the brand on keyboard focus and takes the 24px target with a fine pointer and the 44px one on a coarse pointer
+ * or below 768px (decision 12), as checkbox.css and switch.css. A hidden series is dimmed (subtle text, neutral swatch) and struck through.
+ */
+.odc-chart-legend-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  /* : 24px with a fine pointer (WCAG 2.5.8, --od-x-target-fine); the dot and the text keep their size, centered in it */
+  min-block-size: var(--od-x-target-fine);
+}
+
+.odc-chart-legend-button:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-chart-legend-button[aria-pressed='false'] {
+  color: var(--od-x-text-subtle);
+  text-decoration: line-through;
+}
+
+.odc-chart-legend-button[aria-pressed='false'] .odc-chart-swatch {
+  background: var(--od-x-text-subtle);
+}
+
+.odc-chart-legend-button[aria-pressed='false'] .odc-chart-swatch[data-comparison] {
+  background: none;
+  border-block-start-color: var(--od-x-text-subtle);
+}
+
+.odc-chart[data-type='bar'] .odc-chart-legend-button[aria-pressed='false'] .odc-chart-swatch[data-comparison] {
+  background: var(--od-x-text-subtle);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-chart-legend-button {
+    min-block-size: var(--od-x-target-coarse);
+    padding-inline: var(--od-space-2);
+  }
+}

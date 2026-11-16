@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useLanguage } from '../../../../../index'
 import { Select } from '../../../styles/Select'
 import { Input } from '../../../styles/Inputs'
-import { capitalize } from '~ui'
-import { getSettingsOrderTypeValues } from '../../../utils'
 import { applySettingsConfigCopy } from '../../../../../utils/settingsCustomSections'
+import { getSettingsSelectOptions } from '../../../../../utils/settingsSelectOptions'
 
 import {
   SettingsSelectContainer,
@@ -27,44 +26,28 @@ export const SettingsSelectUI = (props) => {
   const displayConfig = applySettingsConfigCopy(config, t)
 
   const [options, setOptions] = useState(null)
-  const customKeyConfigs = ['filter_order_options', 'allowed_order_types_guest_checkout', 'default_order_type', 'order_types_allowed', 'unaddressed_order_types_allowed']
 
   useEffect(() => {
     if (!config) return
-    let selectedTypes = []
-    if (config.key === 'terms_and_conditions') {
-      selectedTypes = [
-        { value: 'true', content: <Option>{t('YES', 'Yes')}</Option> },
-        { value: 'false', content: <Option>{t('NO', 'No')}</Option> }
-      ]
-    } else if (customKeyConfigs.includes(config.key)) {
-      const defaultOrderType = getSettingsOrderTypeValues()
-
-      selectedTypes = config?.options?.filter(option => defaultOrderType.includes(option.value)).map(item => {
-        return { value: item.value, content: <Option>{t(item.text.toUpperCase(), capitalize(item.text.toLowerCase().replace(/_/g, ' ')))}</Option> }
-      })
-    } else {
-      selectedTypes = config?.options?.map((item, i, hash) => {
-        const value = invertValues ? (i === 0 ? hash[1]?.value : hash[0]?.value) : item.value
-        const content = <Option>{t(item.text.toUpperCase(), capitalize(item.text.toLowerCase().replace(/_/g, ' ')))}</Option>
-        return { value, content }
-      })
-    }
-    if (config.customizable) {
-      selectedTypes.push({
-        value: config?.value,
-        content: <Option>{t('CUSTOM', 'Custom')}</Option>,
-        showOnSelected: (
-          <InputWrapper className='open-disabled'>
-            <Input
-              placeholder={t('CUSTOM', 'Custom')}
-              defaultValue={config?.value}
-              onChange={e => handleSelectChange(e.target.value)}
-            />
-          </InputWrapper>
-        )
-      })
-    }
+    // redesign settings B: the list is built by the shared helper (same options as before, every order type
+    // with no addon gate as in main); this component only wraps each label in its <Option> and gives the Custom row its input.
+    const selectedTypes = getSettingsSelectOptions({ config, t, invertValues })?.map(item => (
+      item.custom
+        ? {
+            value: item.value,
+            content: <Option>{item.label}</Option>,
+            showOnSelected: (
+              <InputWrapper className='open-disabled'>
+                <Input
+                  placeholder={t('CUSTOM', 'Custom')}
+                  defaultValue={config?.value}
+                  onChange={e => handleSelectChange(e.target.value)}
+                />
+              </InputWrapper>
+            )
+          }
+        : { value: item.value, content: <Option>{item.label}</Option> }
+    ))
     setOptions(selectedTypes)
   }, [config, invertValues, handleSelectChange, t])
 

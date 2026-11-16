@@ -170,7 +170,7 @@ const BusinessServiceProfessionalsUI = (props) => {
               <ChevronRight />
             </ProfessionalItemContainer>)))}
         <BottomWrapper>
-          <AddBtn onClick={() => handleOpenDetail(null)}>{t('ADD_PROFESSIONAL', 'Add professional')}</AddBtn>
+          <AddBtn as='button' type='button' onClick={() => handleOpenDetail(null)}>{t('ADD_PROFESSIONAL', 'Add professional')}</AddBtn>
           {usersList?.users.length > 0 && (
             <WrapperPagination>
               <Pagination

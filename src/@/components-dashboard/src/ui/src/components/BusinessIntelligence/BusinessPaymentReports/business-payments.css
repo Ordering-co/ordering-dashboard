@@ -1,0 +1,162 @@
+/*
+ * /intelligence/business-payment-reports (redesign business-payments FC2, ): the shell of the page and the General report.
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard governs this file. Logical properties only (RTL).
+ * Classes are odc-bpr-*. The breakpoint is the number of C/utils/breakpoints.js as a literal in @media: phone < 768.
+ * The store side is store-reports.css (lote C1); the two panels are panels.css (lote D).
+ */
+
+/* redesign business-payments FC2 (D1): the page height, shared by the list and the panel (as /orders and /cart-recovery) */
+.odc-split.odc-bpr-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* the list: the split view gives it its own scroll, so the page only has the padding and the rhythm of the other BI pages */
+.odc-bpr-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding: var(--od-space-6);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* : the opener is PageHeader's `leading`; the page keeps no wrapper rules for the header */
+
+/* redesign business-payments FC2 (D1): under the tabs, the line of `main` that says what the view does, and then the view */
+.odc-bpr-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+}
+
+.odc-bpr-view-desc {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── General report (D5, D9) ── */
+.odc-bpr-general {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  max-inline-size: var(--od-x-dialog-lg);
+  min-inline-size: 0;
+}
+
+/* the method: a segmented control as wide as its text, or the dropdown. The hidden measuring track of P/SegmentedControl (absolute, wider
+   than the phone when the labels are long) must not add an empty horizontal scroll to the page: clip it, with room for the focus ring */
+.odc-bpr-method {
+  display: flex;
+  min-inline-size: 0;
+  overflow-x: clip;
+  overflow-clip-margin: var(--od-space-1);
+}
+
+.odc-bpr-periods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bpr-periods-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bpr-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* the cut-off time of the method, said once for all the periods */
+.odc-bpr-cutoff {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bpr-period-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bpr-period {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* a row takes the focus by script (never by Tab) when the button that was pressed has left the page */
+.odc-bpr-period:focus {
+  outline: none;
+}
+
+.odc-bpr-period-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bpr-period-row > .odc-btn {
+  flex: none;
+}
+
+.odc-bpr-period-text {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bpr-more {
+  display: flex;
+}
+
+/* first load: the box of the final content (the method, the title and four rows), so nothing jumps when it arrives */
+.odc-bpr-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-bpr-page {
+    padding: var(--od-x-page-gutter-mobile);
+  }
+
+  /* the method is as wide as the screen, so a long name wraps in its own control and not beyond the page */
+  .odc-bpr-method {
+    inline-size: 100%;
+  }
+
+  .odc-bpr-period-row {
+    flex-wrap: wrap;
+  }
+}

@@ -92,8 +92,11 @@ export const BusinessProductCreator = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       let categoryId
-      if (categorySelected?.id === null && categorySelected?.id === 'featured') {
-        categoryId = parseInt(business?.categories[0])
+      // bugs E D17b: `=== null && === 'featured'` could never be true, so the "All" and featured views sent the
+      // product to /categories/NaN. They have no category of their own, so it goes to the store's first one (the
+      // categories are objects, hence `.id`).
+      if (categorySelected?.id === null || categorySelected?.id === 'featured') {
+        categoryId = parseInt(business?.categories?.[0]?.id)
       } else {
         categoryId = parseInt(categorySelected?.id)
       }

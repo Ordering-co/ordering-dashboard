@@ -1,0 +1,264 @@
+/*
+ * redesign SP-FA · /stores/products: the page. The head (store selector in the title, the actions in view, the breadcrumb),
+ * the two columns (categories | products) and the error state in the place of the content.
+ * Product's PageHeader, Button, SearchField and EmptyState own their structure; this adds what the page is made of.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── The page frame. On a desktop the page is as tall as the window, so the category list and the product table scroll on their own
+   and the head stays in view; on a phone the page is as tall as its content and the window scrolls. ── */
+.odc-cat-page {
+  --odc-cat-gutter: var(--od-x-page-gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex: 1;
+  box-sizing: border-box;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-cat-page *,
+.odc-cat-page *::before,
+.odc-cat-page *::after { box-sizing: border-box; }
+
+@media (min-width: 768px) {
+  .odc-cat-page { block-size: 100dvh; }
+}
+
+@media print {
+  .odc-cat-page { display: none; }
+}
+
+@media (max-width: 767px) {
+  .odc-cat-page { --odc-cat-gutter: var(--od-x-page-gutter-mobile); }
+}
+
+/* ── Head: the page header (its `leading` is the open-menu button, ), the selector under it, the breadcrumb ── */
+.odc-cat-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding-block-start: var(--odc-cat-gutter);
+  padding-inline: var(--odc-cat-gutter);
+}
+
+/* The title is a button (the store selector) inside the page's h1: it carries the h1's type and truncates inside the lead block */
+.odc-cat-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  max-inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  min-inline-size: 0;
+  margin: 0;
+  /* redesign SP (live check): no inline padding. With border-box and the 100% cap, Chrome sized the h1 to the button without
+   * its padding and the name lost 8px to an ellipsis («Fast …»). The hover keeps its room with a shadow that takes no space. */
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* redesign SP-Q1 (mechanical 1, decision 12): the title button has no visible box (the h1's text is what is seen), so on a
+ * phone it is the 44px target itself; a ::after area would be clipped by the h1's overflow. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-cat-title { min-block-size: var(--od-x-target-coarse); }
+}
+
+.odc-cat-title:hover {
+  background: var(--od-x-hover);
+  box-shadow: 0 0 0 var(--od-space-1) var(--od-x-hover);
+}
+
+.odc-cat-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-cat-title-text {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+
+/* redesign tanda AB (, L-3): on the phone the name wraps by words (a long word breaks) instead of ending in «…»: «Select a
+ * business» was cut in bg, de, el, es, fr and pt at 390. The h1's own clamp (two lines, the third cut) still bounds it. Wide: unchanged. */
+@media (max-width: 767px) {
+  .odc-cat-title-text {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+}
+
+.odc-cat-chevron {
+  flex: none;
+  transition: transform var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-cat-title[aria-expanded='true'] .odc-cat-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-cat-chevron { transition: none; }
+}
+
+/* While the store loads: a line the width of a store name (the title's own box keeps its height) */
+.odc-cat-title-skeleton {
+  display: inline-block;
+  inline-size: calc(var(--od-x-type-title-size) * 10);
+  max-inline-size: 100%;
+}
+
+/* The selector is the legacy popup (position: absolute at the start of its parent): this zero-height anchor puts it under the head */
+.odc-cat-selector {
+  position: relative;
+  block-size: 0;
+  min-inline-size: 0;
+}
+
+/* Breadcrumb: «<store> › <category>». The store is a button; the category is the place you are in. */
+.odc-cat-crumbs { min-inline-size: 0; }
+
+.odc-cat-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cat-crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  unicode-bidi: isolate;
+}
+
+.odc-cat-crumbs li[aria-current='page'] { color: var(--od-text); }
+
+.odc-cat-crumb-link {
+  min-block-size: var(--od-x-control-height-sm);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-1);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-action);
+  font: inherit;
+  cursor: pointer;
+}
+
+.odc-cat-crumb-link:hover { text-decoration: underline; }
+
+.odc-cat-crumb-link:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-cat-crumb-link { min-block-size: var(--od-x-target-coarse); }
+}
+
+/* ── The two columns: categories (260–280px) | products; stacked under 768px ── */
+.odc-cat-body {
+  display: grid;
+  grid-template-columns: minmax(var(--od-x-popover), var(--od-x-search)) minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-cat-body { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The column of the tree. On a desktop it has the height of the row, and the tree inside (S/CatalogCategories) scrolls on its own. */
+.odc-cat-side {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding-block: var(--od-space-2);
+  padding-inline-start: var(--odc-cat-gutter);
+  padding-inline-end: var(--od-space-2);
+}
+
+.odc-cat-side > * {
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-cat-side { padding-inline: var(--odc-cat-gutter); }
+}
+
+/* The column of the products: the head of the category, then the table or the cards, which take the rest of the height. The table's
+   own region scrolls and keeps its header and its foot in view, so this column has a definite height (grid row) and min-height: 0. */
+.odc-cat-main {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding-block: var(--od-space-2) 0;
+}
+
+.odc-cat-subhead {
+  flex: none;
+  min-inline-size: 0;
+  padding-block-end: var(--od-space-2);
+  padding-inline: var(--odc-cat-gutter);
+}
+
+.odc-cat-list {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-cat-list > .odc-cp {
+  flex: 1 1 auto;
+  block-size: auto;
+}
+
+/* tanda AG (, rest of  C-4 and  D-37): on a desktop the region of the table ends one page gutter from
+   the edge, like the head of the page and the tools above it. The frame carries the «more past the end» edge, so the edge moves
+   in with it; the last column keeps its own room, so its text does not touch the region's end. The cards of a phone are untouched. */
+@media (min-width: 768px) {
+  .odc-cat-list .odc-cp-frame { margin-inline-end: var(--odc-cat-gutter); }
+
+  .odc-cat-list .odc-cp-table th:last-child,
+  .odc-cat-list .odc-cp-row > tr > :last-child { padding-inline-end: var(--od-space-3); }
+}
+
+@media (max-width: 767px) {
+  .odc-cat-list { flex: none; }
+  .odc-cat-main { padding-inline: 0; }
+}
+
+/* ── An error in the place of the content (store or products): the state keeps the place and says what to do ── */
+.odc-cat-error {
+  display: grid;
+  min-inline-size: 0;
+  padding-inline: var(--odc-cat-gutter);
+  padding-block: var(--od-space-6);
+}

@@ -1,0 +1,159 @@
+/* Scoped RangeCalendar surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-range-calendar) {
+  @apply od-relative;
+}
+
+.od-ui:where(.od-range-calendar) > button {
+  min-height: var(--od-range-calendar-touch-target);
+  height: var(--od-range-calendar-touch-target);
+}
+
+.od-ui:where(.od-range-calendar) > button svg {
+  width: var(--od-range-calendar-icon-size);
+  height: var(--od-range-calendar-icon-size);
+  margin-inline-end: 12px;
+}
+
+.od-ui:where(.od-range-calendar-panel) {
+  position: absolute;
+  z-index: var(--od-x-layer-sticky);
+  width: fit-content;
+  margin-top: 18px;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--od-range-calendar-text);
+  background: var(--od-range-calendar-surface);
+  border: 1px solid var(--od-range-calendar-border);
+  border-radius: var(--od-range-calendar-radius);
+  box-shadow: var(--od-range-calendar-shadow);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrCalendarWrapper,
+.od-ui:where(.od-range-calendar-panel) .rdrDateRangeWrapper,
+.od-ui:where(.od-range-calendar-panel) .rdrDateDisplayWrapper,
+.od-ui:where(.od-range-calendar-panel) .rdrMonthAndYearWrapper,
+.od-ui:where(.od-range-calendar-panel) .rdrMonths,
+.od-ui:where(.od-range-calendar-panel) .rdrMonth {
+  color: var(--od-range-calendar-text);
+  background: var(--od-range-calendar-surface);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDateDisplayWrapper {
+  background-color: transparent;
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDateDisplayItem {
+  background: var(--od-range-calendar-surface);
+  border: 1px solid var(--od-range-calendar-border);
+  box-shadow: none;
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDateDisplayItem input {
+  color: var(--od-range-calendar-muted);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrMonthAndYearPickers select {
+  color: var(--od-range-calendar-text);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrMonthAndYearPickers select:hover,
+.od-ui:where(.od-range-calendar-panel) .rdrNextPrevButton,
+.od-ui:where(.od-range-calendar-panel) .rdrDayDisabled {
+  background-color: var(--od-range-calendar-subtle);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrWeekDay,
+.od-ui:where(.od-range-calendar-panel) .rdrMonthName {
+  color: var(--od-range-calendar-muted);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDay {
+  color: var(--od-range-calendar-text);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDayNumber span {
+  color: var(--od-range-calendar-text);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDayPassive .rdrDayNumber span,
+.od-ui:where(.od-range-calendar-panel) .rdrDayDisabled .rdrDayNumber span {
+  color: var(--od-range-calendar-text-subtle);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrPprevButton i {
+  border-color: transparent var(--od-range-calendar-text) transparent transparent;
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrNextButton i {
+  border-color: transparent transparent transparent var(--od-range-calendar-text);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDayToday .rdrDayNumber span::after {
+  background: var(--od-range-calendar-action);
+}
+
+.od-ui:where(.od-range-calendar-panel) :where(button, input, select):focus-visible {
+  outline: var(--od-range-calendar-focus-width) solid var(--od-range-calendar-focus);
+  outline-offset: var(--od-range-calendar-focus-offset);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrCalendarWrapper button :where(.rdrSelected, .rdrStartEdge, .rdrEndEdge) {
+  color: var(--od-range-calendar-action) !important;
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrCalendarWrapper button .rdrInRange {
+  color: var(--od-range-calendar-action-soft) !important;
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span {
+  color: var(--od-range-calendar-text);
+}
+
+.od-ui:where(.od-range-calendar-panel) .rdrDay:not(.rdrDayPassive) .rdrStartEdge ~ .rdrDayNumber span,
+.od-ui:where(.od-range-calendar-panel) .rdrDay:not(.rdrDayPassive) .rdrEndEdge ~ .rdrDayNumber span,
+.od-ui:where(.od-range-calendar-panel) .rdrDay:not(.rdrDayPassive) .rdrSelected ~ .rdrDayNumber span {
+  color: var(--od-range-calendar-action-foreground);
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-range-calendar-panel) .rdrCalendarWrapper,
+  .od-ui:where(.od-range-calendar-panel) .rdrDateRangeWrapper {
+    width: min(27.667em, calc(100vw - 12px));
+    max-width: 100vw;
+  }
+
+  .od-ui:where(.od-range-calendar-panel) .rdrMonth {
+    box-sizing: border-box;
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .od-ui:where(.od-range-calendar-panel) .rdrDay {
+    min-width: var(--od-range-calendar-touch-target);
+    min-height: var(--od-range-calendar-touch-target);
+  }
+
+  .od-ui:where(.od-range-calendar-panel) .rdrNextPrevButton {
+    width: var(--od-range-calendar-touch-target);
+    min-width: var(--od-range-calendar-touch-target);
+    height: var(--od-range-calendar-touch-target);
+    margin: 0 4px;
+  }
+
+  .od-ui:where(.od-range-calendar-panel) .rdrMonthAndYearPickers select,
+  .od-ui:where(.od-range-calendar-panel) .rdrDateDisplayItem input {
+    box-sizing: border-box;
+    min-width: var(--od-range-calendar-touch-target);
+    min-height: var(--od-range-calendar-touch-target);
+  }
+
+  .od-ui:where(.od-range-calendar-panel) :where(.rdrMonthPicker, .rdrYearPicker) {
+    min-width: 0;
+    margin: 0 2px;
+  }
+
+  .od-ui:where(.od-range-calendar-panel) .rdrMonthAndYearPickers select {
+    padding: 8px 20px 8px 6px;
+  }
+}

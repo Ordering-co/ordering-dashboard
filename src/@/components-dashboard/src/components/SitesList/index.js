@@ -16,6 +16,7 @@ export const SitesList = (props) => {
   const [{ token }] = useSession()
 
   const firstRender = useRef(true)
+  const requestedSearch = useRef(null)
   const [sitesListState, setSitesListState] = useState({ loading: false, sites: [], error: null })
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
@@ -30,6 +31,7 @@ export const SitesList = (props) => {
    */
   const getSites = async (page, pageSize) => {
     try {
+      requestedSearch.current = searchValue // redesign (Q-01): the text this request asks for
       setSitesListState((prev) => ({ ...prev, loading: true }))
       let where = null
       const conditions = []
@@ -127,6 +129,14 @@ export const SitesList = (props) => {
     if (sitesListState.loading) return
     getSites(firstRender.current ? paginationProps.currentPage : 1, paginationProps.pageSize)
   }, [searchValue])
+
+  // redesign (Q-01): the effect above drops a search that changes while the previous one loads, so the list stayed on the older
+  // text. When a load ends and the search is no longer the one that load asked for, ask again with the current one. It runs after the
+  // effect above, which has already set `requestedSearch` when it did ask, so there is no second request when there was no race.
+  useEffect(() => {
+    if (sitesListState.loading || requestedSearch.current === searchValue) return
+    getSites(1, paginationProps.pageSize)
+  }, [sitesListState.loading])
 
   return (
     <>

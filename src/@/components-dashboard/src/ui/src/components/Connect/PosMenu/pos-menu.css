@@ -1,0 +1,83 @@
+/*
+ * redesign PM-D (, decisions D1, D6): /connect/pos-menu. The frame of the list beside the store panel (split view): the
+ * header with the menu button, the bar (status tabs and search) and the foot (pagination). The table and the panel have their own
+ * files (pos-menu-table.css, pos-store-panel.css). Modeled on Users/StaffDirectory/staff-page.css (same measures, so the pages feel
+ * alike). Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties, so right-to-left needs no
+ * second set of rules.
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-pm-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, bar, table and foot, one under the other. */
+.odc-pm-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-pm-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-pm-frame {
+    display: none;
+  }
+}
+
+/* ── Head: `.odc-pm-head` is the page header's own class (: the opener is PageHeader's `leading`) ── */
+
+/* Beside the panel at 1280 the header is under 600px and the page header drops its title to the section size: the h1 would sit
+   lower than without the panel. On a screen that has a panel (768px and up) the title keeps its size, so opening or closing the
+   store moves nothing; on a phone the page header's own narrow size stays (as the staff page). */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-pm-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* ── Bar: the Active / Inactive tabs, then the search ── */
+.odc-pm-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-pm-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── Foot: the pagination, the whole width ── */
+.odc-pm-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-pm-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

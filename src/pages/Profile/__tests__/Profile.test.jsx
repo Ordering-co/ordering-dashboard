@@ -9,15 +9,16 @@ vi.mock('../../../components/HelmetTags', () => ({
 
 vi.mock('~ui', async () => {
   const { createUiPageMocks } = await import('../../../__tests__/helpers/pageMocks')
-  return createUiPageMocks()
+  return {
+    ...(await createUiPageMocks()),
+    ProfilePage: () => <div data-testid='page-ui' />
+  }
 })
 
 vi.mock('~components', async () => {
   const { createComponentsPageMocks } = await import('../../../__tests__/helpers/pageMocks')
   return createComponentsPageMocks()
 })
-
-vi.mock('../../../config', () => ({ default: {} }))
 
 import { Profile } from '../index'
 

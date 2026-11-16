@@ -1,0 +1,86 @@
+/*
+ * redesign stores 5.11 · The store's wallets: a group at the bottom of the Payment methods list, one row per wallet with its
+ * editor in line (switch, radio group or secret field). Looks like the Payments rows (payment-methods.css: .odc-pm-rows / .odc-pm-row /
+ * .odc-pm-group-title; the values are copied, not the class names). Values: --od-* and --od-x-* only. Logical properties only, so RTL needs
+ * nothing more. No `overflow`, `contain` or `transform` on a wrapper: the group sits inside the section's scroller. Prefix: odc-wl-*.
+ */
+
+.odc-wl {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-wl-title {
+  margin: 0;
+  padding-block-start: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-wl-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-wl-row {
+  display: grid;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-wl-row:hover { background: var(--od-x-hover); }
+
+/* A switch row reads like a Payments row: the track, then the name in the body size and medium weight */
+.odc-wl-switch { min-inline-size: 0; }
+
+.odc-wl-switch .odc-switch {
+  min-block-size: var(--od-x-target-coarse);
+  gap: var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The editors that need a line of their own (choices, a secret) get room above and below it */
+.odc-wl-row:has(.odc-wl-choice, .odc-secret) { padding-block: var(--od-space-3); }
+
+.odc-wl-choice {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-wl-choice > .odc-notice {
+  max-inline-size: none;
+  font-size: var(--od-x-type-caption-size);
+  white-space: normal;
+}
+
+/* A wallet of a type with no editor: its name only */
+.odc-wl-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Loading ── */
+.odc-wl-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}

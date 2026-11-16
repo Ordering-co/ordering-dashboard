@@ -1,11 +1,18 @@
 import styled, { css } from 'styled-components'
+import { brandFocusRing } from '../../../styles/touchTarget'
 
 export const OrderStatusFilterContainer = styled.div`
   width: 100%;
   border-bottom: 1px solid #CCC;
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
   padding: 10px 0px;
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
@@ -26,4 +33,6 @@ export const Tab = styled.div`
   ${({ active }) => !active && css`
     color: #909BA9;
   `}
+
+  ${brandFocusRing}
 `

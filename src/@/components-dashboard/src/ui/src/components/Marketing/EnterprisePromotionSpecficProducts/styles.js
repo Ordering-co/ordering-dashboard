@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 export const Container = styled.div`
   min-height: 500px;
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 26px;
   }
@@ -25,12 +25,12 @@ export const BusinessSelectorContainer = styled.div`
   }
 `
 export const Label = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   line-height: 24px;
   margin: 16px 0px;
 `
 export const NoSelectedBusiness = styled.p`
-  font-size: 16px;
+  font-size: var(--od-type-content-size);
   font-weight: 500;
   text-align: center;
 `
@@ -56,14 +56,14 @@ export const Option = styled.div`
   span {
     display: flex;
     flex-direction: column;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     max-width: 170px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     color: ${props => props.theme.colors.textGray};
     b {
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 20px;
       font-weight: 400;
       color: ${props => props.theme.colors.textBlack};

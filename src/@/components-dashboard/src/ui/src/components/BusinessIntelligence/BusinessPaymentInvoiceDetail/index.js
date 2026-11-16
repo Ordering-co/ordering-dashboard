@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import ReactToPrint from 'react-to-print'
-import { Download } from 'react-bootstrap-icons'
 import { useTheme } from 'styled-components'
 import { useLanguage, useSession, useApi, useConfig, useUtils } from '../../../../../index'
-import { SpinnerLoader } from '../../Shared'
+import { formatAmount } from '../../../../../utils/businessPayments'
+import { readableApiMessage } from '../BusinessPaymentReports/readableApiMessage'
+import { CircleAlert, Download } from '../../Shared/Icon'
+import { Button, EmptyState, Skeleton } from '../../Shared/Product'
 import { useInvoicePdfLogo } from '../invoicePdfLogo'
+import '../BusinessPaymentReports/panels.css'
 
 import {
   DetailContainer,
   DownloadButtonWrapper,
-  DownloadButton,
   PrintableContent,
   DetailHeader,
   PeriodBar,
@@ -36,33 +38,44 @@ import {
   TotalsValue,
   TransferRow,
   InvoiceFooter,
-  LoadingWrapper,
-  ErrorWrapper,
   OrderDetailsTableScroll
 } from './styles'
 
+// redesign business-payments FD (D11): the wall clock of an instant in a zone, as the text `YYYY-MM-DD HH:mm:ss` that
+// parseDate reads (decision 13). Orders are grouped and timed in the zone of the invoice, not in the browser's, so the
+// date and the hour are taken from Intl in that zone instead of `toLocale*String`.
+const zonedWallClock = (iso, timeZone) => {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ''
+  let parts
+  try {
+    parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timeZone || 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hourCycle: 'h23'
+    }).formatToParts(date)
+  } catch {
+    // An unknown zone name of the API: read the invoice in UTC, as when it has none
+    return timeZone && timeZone !== 'UTC' ? zonedWallClock(iso, 'UTC') : ''
+  }
+  const get = type => parts.find(part => part.type === type)?.value ?? ''
+  return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}:${get('second')}`
+}
+
+// The day of the wall clock (`YYYY-MM-DD`) is the key of a group; the groups keep the order of their first order.
 const groupOrdersByDay = (orders, timezone) => {
   if (!orders || orders.length === 0) return []
   const groups = {}
   orders.forEach(order => {
-    const date = new Date(order.created_at)
-    const key = date.toLocaleDateString('en-US', {
-      timeZone: timezone || 'UTC',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    })
+    const wall = zonedWallClock(order.created_at, timezone)
+    const key = wall.slice(0, 10)
     if (!groups[key]) {
-      groups[key] = {
-        dateLabel: date.toLocaleDateString('en-US', {
-          timeZone: timezone || 'UTC',
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        }),
-        orders: []
-      }
+      groups[key] = { key, wall, orders: [] }
     }
     groups[key].orders.push(order)
   })
@@ -70,6 +83,29 @@ const groupOrdersByDay = (orders, timezone) => {
     new Date(a.orders[0].created_at) - new Date(b.orders[0].created_at)
   )
 }
+
+// redesign business-payments FD (D8, D9): the box of the document while it loads, so nothing jumps when it arrives
+const DocumentSkeleton = ({ label }) => (
+  <div className='bpp-skeleton' role='status' aria-busy='true'>
+    <span className='odc-sr-only'>{label}</span>
+    <div className='bpp-skeleton-head'>
+      <Skeleton size='40%' block='var(--od-x-control-height)' />
+      <Skeleton size='60%' />
+    </div>
+    <div className='bpp-skeleton-row'>
+      <Skeleton block='var(--od-x-control-height)' />
+      <Skeleton block='var(--od-x-control-height)' />
+      <Skeleton block='var(--od-x-control-height)' />
+    </div>
+    <div className='bpp-skeleton-lines'>
+      <Skeleton size='30%' />
+      <Skeleton />
+      <Skeleton />
+      <Skeleton />
+      <Skeleton size='50%' />
+    </div>
+  </div>
+)
 
 const deliveryTypeMap = {
   1: 'DELIVERY',
@@ -217,6 +253,36 @@ const getOrderFeeTotalByName = (order, feeName) => {
   return Number.isFinite(amt) ? amt : 0
 }
 
+// redesign the seven columns of the order summary do not fit a narrow panel (390 px) and overflowed the padding of the panel at
+// 1024. The table scrolls inside its own container instead of the whole document. Only when it really overflows is the container a named
+// region with a tab stop, so the keyboard can scroll to the last column; when it fits there is nothing extra to tab to.
+const ScrollableTable = ({ label, children }) => {
+  const ref = useRef(null)
+  const [scrolls, setScrolls] = useState(false)
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return undefined
+    const measure = () => setScrolls(node.scrollWidth > node.clientWidth + 1)
+    measure()
+    if (typeof ResizeObserver === 'undefined') return undefined
+    const observer = new ResizeObserver(measure)
+    observer.observe(node)
+    const table = node.querySelector('table')
+    if (table) observer.observe(table)
+    return () => observer.disconnect()
+  }, [])
+  return (
+    <OrderDetailsTableScroll
+      ref={ref}
+      role={scrolls ? 'region' : undefined}
+      aria-label={scrolls ? label : undefined}
+      tabIndex={scrolls ? 0 : undefined}
+    >
+      {children}
+    </OrderDetailsTableScroll>
+  )
+}
+
 export const BusinessPaymentInvoiceDetail = (props) => {
   const { invoiceId } = props
 
@@ -224,7 +290,7 @@ export const BusinessPaymentInvoiceDetail = (props) => {
   const [{ token }] = useSession()
   const [ordering] = useApi()
   const [{ configs }] = useConfig()
-  const [{ parsePrice }] = useUtils()
+  const [{ parsePrice, parseDate }] = useUtils()
   const theme = useTheme()
   const printRef = useRef()
 
@@ -262,27 +328,27 @@ export const BusinessPaymentInvoiceDetail = (props) => {
   }, [invoiceId])
 
   const formatCurrency = (amount) => {
-    return parsePrice(amount == null ? 0 : parseFloat(amount))
+    // redesign business-payments integration (BP-M6): the sign before the currency («-$ 37.58»), never «$ -,37.58»
+    return formatAmount(parsePrice, amount)
   }
 
+  // redesign business-payments FD (D11, decision 13): the dates of the API are text (`YYYY-MM-DD HH:mm:ss`) painted as they
+  // come in the project's format; `utc: false` keeps parseDate from moving them to the zone of the browser.
   const formatDateLocal = (dateStr) => {
     if (!dateStr) return ''
-    const date = new Date(dateStr)
-    return date.toLocaleDateString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric'
-    })
+    return parseDate(dateStr, { dateOnly: true, utc: false })
+  }
+
+  // «Tuesday, 24 Feb 2026»: the wall-clock day of the invoice zone (already computed by the group), weekday first
+  const formatDayTitle = (wall) => {
+    if (!wall) return ''
+    return `${parseDate(wall, { outputFormat: 'dddd', utc: false })}, ${parseDate(wall, { dateOnly: true, utc: false })}`
   }
 
   const formatOrderTime = (dateStr, timezone) => {
     if (!dateStr) return ''
-    const date = new Date(dateStr)
-    return date.toLocaleTimeString('en-US', {
-      timeZone: timezone || 'UTC',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    const wall = zonedWallClock(dateStr, timezone)
+    return wall ? parseDate(wall, { timeOnly: true, utc: false }) : ''
   }
 
   const { invoice, order_summary: orderSummary, fee_details: feeDetails, totals } = state.data || {}
@@ -299,31 +365,43 @@ export const BusinessPaymentInvoiceDetail = (props) => {
   )
 
   if (state.loading) {
-    return (
-      <LoadingWrapper>
-        <SpinnerLoader />
-      </LoadingWrapper>
-    )
+    return <DocumentSkeleton label={t('LOADING', 'Loading')} />
   }
 
+  // redesign business-payments FD (D9): the error keeps the place of the document, with a way to ask again. The API's messages go through
+  // readableApiMessage: a message in words, or a key the dictionary knows, is shown; a key it does not know (API_ERROR_NOT_FOUND)
+  // or the browser's «Failed to fetch» is a sentence a person can read, never the raw text.
   if (state.error) {
+    const generic = t('BUSINESS_PAYMENTS_ERROR_GENERIC', 'Something went wrong.')
+    const notFound = t('BUSINESS_PAYMENTS_INVOICE_NOT_FOUND', "This invoice doesn't exist.")
+    const messages = [...new Set(
+      (Array.isArray(state.error) ? state.error : [state.error])
+        .filter(message => typeof message === 'string' && message.trim())
+        .map(message => readableApiMessage(t, message, generic, notFound))
+        .filter(Boolean)
+    )]
     return (
-      <ErrorWrapper>
-        <p>{Array.isArray(state.error) ? state.error[0] : state.error}</p>
-      </ErrorWrapper>
+      <div className='bpp-error'>
+        <EmptyState
+          tone='error'
+          icon={CircleAlert}
+          title={t('BUSINESS_PAYMENTS_INVOICE_LOAD_ERROR', "We couldn't load this invoice.")}
+          description={messages.length > 0 ? messages.join(' ') : undefined}
+          action={<Button onClick={fetchDetail}>{t('TRY_AGAIN', 'Try again')}</Button>}
+        />
+      </div>
     )
   }
 
   return (
     <DetailContainer>
-      {/* Download PDF button */}
+      {/* Download PDF button (redesign business-payments FD, D8: the Product secondary button, in the same place) */}
       <DownloadButtonWrapper>
         <ReactToPrint
           trigger={() => (
-            <DownloadButton disabled={logo.status === 'loading'}>
-              <Download size={18} />
+            <Button variant='secondary' icon={Download} disabled={logo.status === 'loading'}>
               {t('DOWNLOAD_PDF', 'Download PDF')}
-            </DownloadButton>
+            </Button>
           )}
           content={() => printRef.current}
           removeAfterPrint
@@ -369,7 +447,7 @@ export const BusinessPaymentInvoiceDetail = (props) => {
               <SummaryValue>{formatCurrency(totals.prepaid_total ?? totals.prepaid_orders_total)}</SummaryValue>
             </SummaryCell>
             <SummaryCell variant='mid'>
-              <SummaryLabel>{t('TOTAL_CHARGES', 'Total Charges')}</SummaryLabel>
+              <SummaryLabel>{t('TOTAL_CHARGES', 'Total charges')}</SummaryLabel>
               <SummaryValue color='red'>{formatCurrency(totals.total_charges)}</SummaryValue>
             </SummaryCell>
             <SummaryCell variant='right'>
@@ -382,7 +460,8 @@ export const BusinessPaymentInvoiceDetail = (props) => {
         {/* Order Summary Table */}
         {orderSummary && (
           <>
-            <SectionTitle>{t('ORDER_SUMMARY', 'Order Summary')}</SectionTitle>
+            <SectionTitle>{t('ORDER_SUMMARY', 'Order summary')}</SectionTitle>
+            <ScrollableTable label={t('ORDER_SUMMARY', 'Order summary')}>
             <DataTable>
               <thead>
                 <tr>
@@ -425,6 +504,7 @@ export const BusinessPaymentInvoiceDetail = (props) => {
                 </TotalRow>
               </tbody>
             </DataTable>
+            </ScrollableTable>
           </>
         )}
 
@@ -434,7 +514,7 @@ export const BusinessPaymentInvoiceDetail = (props) => {
             <SectionTitle>{t('TRANSFER_STATEMENT', 'Transfer Statement')}</SectionTitle>
 
             <FeeSection>
-              <FeeGroup>{t('ORDER_FEES', 'Order Fees')}</FeeGroup>
+              <FeeGroup>{t('ORDER_FEES', 'Order fees')}</FeeGroup>
               {(feeDetails?.order_fees ?? []).length > 0
                 ? (feeDetails.order_fees).map((fee, i) => (
                   <FeeRow key={`of-${i}`}>
@@ -503,7 +583,7 @@ export const BusinessPaymentInvoiceDetail = (props) => {
 
             <TotalsBlock>
               <TotalsRow>
-                <TotalsLabel bold>{t('TOTAL_CHARGES', 'Total Charges')}</TotalsLabel>
+                <TotalsLabel bold>{t('TOTAL_CHARGES', 'Total charges')}</TotalsLabel>
                 <TotalsValue color='red' bold>-{formatCurrency(totals?.total_charges)}</TotalsValue>
               </TotalsRow>
             </TotalsBlock>
@@ -513,10 +593,10 @@ export const BusinessPaymentInvoiceDetail = (props) => {
         {/* Order Details by Day */}
         {ordersByDay.length > 0 && (
           <>
-            <SectionTitle>{t('ORDER_DETAILS', 'Order Details')}</SectionTitle>
+            <SectionTitle>{t('ORDER_DETAILS', 'Order details')}</SectionTitle>
             {ordersByDay.map((dayGroup, di) => (
               <div key={di}>
-                <DayTitle>{dayGroup.dateLabel}</DayTitle>
+                <DayTitle>{formatDayTitle(dayGroup.wall)}</DayTitle>
                 <OrderDetailsTableScroll>
                   <DataTable>
                     <thead>

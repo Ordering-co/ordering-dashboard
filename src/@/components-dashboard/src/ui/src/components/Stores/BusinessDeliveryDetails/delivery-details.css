@@ -1,0 +1,59 @@
+/*
+ * redesign stores 5.7 · Delivery tab of «Delivery, pickup & more»: one form (order time, zone list, logistic, save
+ * bar). Values: --od-* and --od-x-* only, logical properties only. The tab already sits in the editor's padded container, so the
+ * form adds none of its own.
+ */
+
+.odc-store-delivery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-store-delivery:focus {
+  outline: none;
+}
+
+.odc-store-delivery-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-store-delivery-section {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-store-delivery-logistic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+  align-items: start;
+}
+
+.odc-store-delivery-notice {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+@media (max-width: 767px) {
+  .odc-store-delivery-logistic {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar: every control keeps a margin at its foot that
+   clears the bar and a gap (the same rule as Store details and the Users profile form; review 5.7 #6). */
+.odc-store-delivery :is(input, select, textarea, button, [role='radio']) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

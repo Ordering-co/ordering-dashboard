@@ -155,18 +155,14 @@ export const ReportsDriverGroupFilter = (props) => {
   }
 
   useEffect(() => {
-    const controller = new AbortController()
-    getDriverGroups()
-    return controller.abort()
-  }, [])
-
-  useEffect(() => {
     if (driverGroupList?.driverGroups?.length === 0) return
     const _groupIds = driverGroupList?.driverGroups?.reduce((prev, cur) => [...prev, cur.id], [])
     setDriverGroupIds([...filterList?.driver_groups_ids || _groupIds])
     if (!filterList?.driver_groups_ids || filterList?.driver_groups_ids?.length === driverGroupList?.driverGroups.length) setIsAllCheck(true)
   }, [driverGroupList?.driverGroups])
 
+  // redesign the one request of the filter. It runs when the filter opens (the first render) and again when the search text changes;
+  // a second effect with `[]` ran on that same first render and asked `GET drivergroups` twice
   useEffect(() => {
     const controller = new AbortController()
     getDriverGroups()

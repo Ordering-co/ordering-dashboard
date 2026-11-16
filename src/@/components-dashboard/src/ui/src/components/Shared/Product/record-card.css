@@ -1,0 +1,275 @@
+/*
+ * RecordCard (redesign W1-1, T1-1): a record of a list as a card, under the phone breakpoint. Promoted from
+ * Orders/OrdersTable/order-card.css; the class names are the ones the order cards had, so the rest of the app, the e2e
+ * specs and the tests keep their hooks. One card per record: a hairline between cards, the 16px mobile gutter, the whole
+ * card a link. Values come from --od-* and --od-x-* only (literal guard: src/__tests__/tools/productLiteralGuard.test.js).
+ * Logical properties only, so right-to-left needs no second set of rules. The rules of the person cells that Orders draws
+ * inside the card (.odc-orders-who*) and of the pager under the cards stay in Orders/OrdersTable/order-card.css.
+ */
+.odc-order-cards {
+  min-inline-size: 0;
+  /* The page pads the list; each card brings its own 16px gutter and bleeds out of the page's
+     padding by that much, so the hairlines run to the edge and the text lines up with the
+     filters above whatever the page padding is. */
+  margin-inline: calc(var(--od-x-page-gutter-mobile) * -1);
+  font-family: var(--od-font-sans);
+}
+
+/* redesign DL-R2: the opt-in «select all» row above the cards. It has the cards' gutter and hairline; the checkbox is the
+   labelled one (the whole row is its target: control height, 44px with a coarse pointer, see checkbox.css). */
+.odc-order-cards-select {
+  padding-inline: calc(var(--od-x-page-gutter-mobile) - var(--od-x-space-1-5));
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-order-card-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-order-card {
+  position: relative;
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  /* the open order draws its indicator in this border: the content does not move */
+  padding-inline: calc(var(--od-x-page-gutter-mobile) - var(--od-x-indicator)) var(--od-x-page-gutter-mobile);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  border-inline-start: var(--od-x-indicator) solid transparent;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* `row_in_color_enabled`: the tint is the lowest in specificity, hover and the open order win. */
+.odc-order-card:where([data-status='at_risk']) { background: var(--od-warning-soft); }
+.odc-order-card:where([data-status='delayed']) { background: var(--od-danger-soft); }
+
+@media (hover: hover) {
+  /*  SC-4: a card with nothing to open (`link={false}` and no onOpen) does not answer the pointer */
+  .odc-order-card:not([data-skeleton]):not([data-static]):hover { background: var(--od-x-hover); }
+}
+
+.odc-order-card[data-active] {
+  background: var(--od-x-selected);
+  border-inline-start-color: var(--od-action);
+}
+
+.odc-order-card[data-new] { animation: odc-order-card-arrive var(--od-x-arrive) var(--od-ease-standard); }
+
+@keyframes odc-order-card-arrive {
+  from { background: var(--od-warning-soft); }
+  to { background: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-order-card[data-new] { animation: none; }
+}
+
+/* Row 1: #id and the exact status. The status may wrap, never be cut. */
+.odc-order-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The link owns the whole card: its overlay is the pointer target, and its focus ring goes
+   around the card, not around the number. */
+/* redesign stores 5.18 (, from 5.13): the link may shrink to the row (it was `flex: none`, and a long name pushed the card past
+   a 390 panel), but never below its own min-content: an order number, one word, keeps its whole width and the status wraps, as
+   before; a name with spaces (or a host's `overflow-wrap: anywhere`) breaks into lines inside the card. */
+.odc-order-card-link {
+  display: inline-flex;
+  flex: 0 1 auto;
+  max-inline-size: 100%;
+  align-items: center;
+  /* redesign W0-3d3 (T0-12, decision 12): the link is SEEN at its own line (it used to grow a 44px box and give the
+     height back in a negative margin). Its 44px area is the overlay below: the whole card, centred on the link and far
+     taller than 44px, so no second pseudo-element is needed (the link already uses its ::after). */
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  text-decoration: none;
+}
+
+/*  SC-4: `link={false}` without onOpen: the title is a <span> with the type of the link and no overlay, hover or target. */
+.odc-order-card-title {
+  display: inline-flex;
+  flex: 0 1 auto;
+  max-inline-size: 100%;
+  align-items: center;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* `link={false}` with onOpen: a <button> with the look of the link (the overlay below makes it the card's target too). */
+button.odc-order-card-link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-order-card-link:hover {
+  color: var(--od-text);
+  text-decoration: none;
+}
+
+.odc-order-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.odc-order-card-link:focus-visible { outline: 0; }
+
+.odc-order-card-link:focus-visible::after {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-order-card-status { min-inline-size: 0; }
+
+.odc-order-card-status .odc-status {
+  white-space: normal;
+  align-items: flex-start;
+}
+
+/* the dot sits on the middle of the first line, however many lines the status takes */
+.odc-order-card-status .odc-dot {
+  margin-block-start: calc((var(--od-x-type-ui-size) * var(--od-x-leading-ui) - var(--od-x-dot)) / 2);
+}
+
+/* Row 2: business → customer, each name on one line with the full text in its title. */
+.odc-order-card-people {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-order-card-arrow.odc-icon { color: var(--od-x-text-subtle); }
+
+/* Row 3 (E7): the driver at the start, the delivery time and the ETA at the end. It wraps rather than
+   cutting either, and the driver's name takes what the time leaves. */
+.odc-order-card-logistics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* redesign F6g-1: the driver asks for the width of its content and may not outgrow the row. From a zero basis it measured
+   24px at 320 and «Unassigned» overflowed it over the date; now the date wraps under it when the two do not fit, and a name
+   longer than the whole row ends in an ellipsis. */
+.odc-order-card-driver {
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* «Unassigned» is plain text in the slot, not a person */
+.odc-order-card-driver > .odc-subtle {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* the secondary text of the card (it was the .odc-orders-sub of the table, which P/ does not know) */
+.odc-order-card-when,
+.odc-order-card-age {
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  color: var(--od-text-muted);
+}
+
+.odc-order-card-when {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0 var(--od-space-2);
+  min-inline-size: 0;
+  /* alone on its line (it wrapped under the driver) it stays at the end edge */
+  margin-inline-start: auto;
+  text-align: end;
+}
+
+/* Row 4: SLA in words and age at the start, the total at the end. */
+.odc-order-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-order-card-sla {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-order-card-age {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-order-card-total {
+  flex: none;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* Pending: Reject… and Accept side by side (44px area, W0-3d3), above the card's link overlay. */
+.odc-order-card-actions {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-1);
+}
+
+/* What the API said when accept or reject failed: under both buttons, in danger text. */
+.odc-order-card-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* redesign W0-3d3 (T0-12, decision 12): Reject and Accept keep the size of their Button (lg) and take the 44px area of
+   Product's `.odc-btn::after`. They are as wide as half the row, so the area only grows in height: the 8px between them
+   is not crossed, and what is above and below is text. */
+.odc-order-card-actions .odc-btn {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* Loading (F4, C20): a card with the four rows of the real one. Each placeholder row is as tall as the text it stands
+   for (the link of the real card is its own line since W0-3d3), so the card is as tall as a real one. */
+.odc-order-card[data-skeleton] .odc-order-card-top,
+.odc-order-card[data-skeleton] .odc-order-card-meta {
+  min-block-size: calc(var(--od-x-type-body-size) * var(--od-x-leading-ui));
+}
+.odc-order-card[data-skeleton] .odc-order-card-people > .odc-skeleton[data-shape='round'] { margin-inline-start: var(--od-space-1); }

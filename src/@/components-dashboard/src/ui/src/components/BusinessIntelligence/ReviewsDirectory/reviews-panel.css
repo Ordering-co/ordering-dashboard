@@ -1,0 +1,284 @@
+/*
+ * redesign reviews FC (D1, D4, D5, D8, D9; RV-02, RV-04, RV-09, RV-13, RV-14, RV-16): the three panels of /intelligence/reviews
+ * (business, user, product) on one shell, the note and one review. Values come from --od-* (release) and --od-x-* (src/brand/candidates.css)
+ * only; the literal guard fails on anything else. Logical properties only (C17). Classes use the `odc-rv-` prefix.
+ */
+
+.odc-rv-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Head of the record: the picture, the average and the count ── */
+.odc-rv-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* : the panel got these two rules from the page header's old `.odc-rv-head` (reviews-page.css, loaded after this sheet), so the
+   page header no longer being `.odc-rv-head` must not move the panel: top-aligned, and the last child takes the rest of the row */
+.odc-rv-body > .odc-rv-head {
+  align-items: flex-start;
+}
+
+.odc-rv-body > .odc-rv-head > :last-child {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* 40px is the large control height, not a size of its own (as the photo of the customer panel) */
+.odc-rv-head .odc-avatar[data-size='lg'] {
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+}
+
+.odc-rv-head-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-rv-count {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-count .odc-figure {
+  color: var(--od-text);
+}
+
+/* the scores of a business: nothing when it has none */
+.odc-rv-summary { min-inline-size: 0; }
+
+.odc-rv-summary:empty { display: none; }
+
+.odc-rv-title-skeleton {
+  display: inline-block;
+  inline-size: var(--od-x-popover);
+  max-inline-size: 100%;
+}
+
+/* ── The note: the figure and five stars, filled or empty by tone (neither red nor green) ── */
+.odc-rv-rating {
+  position: relative; /* containing block of the .odc-sr-only text of the empty one */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+}
+
+.odc-rv-note {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-rating[data-size='lg'] .odc-rv-note {
+  font-size: var(--od-x-type-section-size);
+}
+
+.odc-rv-rating[data-empty] {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-stars {
+  display: inline-flex;
+  gap: var(--od-x-space-half);
+}
+
+.odc-rv-star {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+}
+
+.odc-rv-rating[data-size='lg'] .odc-rv-star {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+/* The same tokens as the stars of the satisfaction scores (K/SatisfactionScores) */
+.odc-rv-star[data-filled='true'] {
+  fill: var(--od-warning-functional);
+  stroke: var(--od-warning-functional);
+}
+
+.odc-rv-star[data-filled='false'] {
+  fill: var(--od-border-strong);
+  stroke: var(--od-border-strong);
+}
+
+/* ── The list and one review: a hairline on top of each, the first one has none ── */
+.odc-rv-list {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-rv-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-rv-item:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* redesign reviews R1 (Q1-6): the header is a grid of two columns, the author (the rest) and the action (what it needs). It used to
+   wrap, so the notice of a failed save (wider than the switch) made the slot wider than the line and the switch jumped to the next
+   line, to the start: a second click on the same point missed it. Now the switch is always the end of the first row and the notice,
+   when there is one, is the second row across the header, at the end, so it pushes neither the date nor the switch. */
+.odc-rv-item-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-rv-item-who {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-rv-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-rv-item-name {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-rv-item-sub {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-order .odc-figure {
+  color: var(--od-text);
+}
+
+/* The slot stays in the DOM (the switch and its notice are inside it, and siblings are not reordered) but it has no box of its own:
+   its children, and those of the switch wrapper, are items of the grid of the header. */
+.odc-rv-item-action,
+.odc-rv-item-action .odc-async-switch {
+  display: contents;
+}
+
+.odc-rv-item-action .odc-switch {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
+
+/* the notice of a failed save: the row below, across the header, at the end (right in LTR), never wider than the header; the margins
+   are those of the Product notice for a page gutter, which a review does not have */
+.odc-rv-item-action .odc-async-switch-notice {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: end;
+  margin: 0;
+  max-inline-size: min(var(--od-x-popover), 100%);
+}
+
+/* redesign reviews (FASE 3, measure: 4 of 63 switches reached 44 px only upwards): on a phone the switch is as tall as its 44 px
+   area and centres its track and text in it, so the first row of the header, and the note row under it, never cover the reach
+   (decision 12). R1 (Q1-6): it was the slot that had this height; the slot has no box now, so the switch has it (the box is
+   transparent: the 18 px track does not grow) */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-rv-item-action .odc-switch {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+.odc-rv-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-x-space-half) var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-breakdown .odc-figure {
+  color: var(--od-text);
+}
+
+/* Liked or not liked: the thumb and the words, never colour alone */
+.odc-rv-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-verdict[data-liked='false'] {
+  color: var(--od-text-muted);
+}
+
+.odc-rv-comment {
+  margin: 0;
+  color: var(--od-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* RV-16: no comment is said, and said quietly */
+.odc-rv-comment[data-empty='true'] {
+  color: var(--od-text-muted);
+}
+
+/* ── Loading: three blocks the shape of a review ── */
+.odc-rv-skeleton {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-rv-skeleton-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-rv-skeleton-item:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}

@@ -1,0 +1,134 @@
+/*
+ * redesign stores 5.3 · Store details › Images on Product: a drop zone with «Add images», the notices of the last
+ * upload or delete, and a grid of thumbnails that wraps (no horizontal scroll at any width). Values: --od-* and --od-x-* only.
+ * Logical properties.
+ */
+
+.odc-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-gallery-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-2);
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding: var(--od-space-6) var(--od-space-4);
+  text-align: center;
+  background: var(--od-surface-subtle);
+  border: var(--od-x-hairline) dashed var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-gallery-drop[data-dragging] {
+  border-style: solid;
+  border-color: var(--od-focus-ring-color);
+  background: var(--od-surface);
+}
+
+.odc-gallery-drop-icon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  color: var(--od-text-muted);
+}
+
+.odc-gallery-drop-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-gallery-drop-hint {
+  margin: 0;
+  max-inline-size: var(--od-x-measure);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+}
+
+.odc-gallery-notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-gallery-notices:empty { display: none; }
+
+.odc-gallery-status {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+}
+
+.odc-gallery-status[data-tone='success'] { color: var(--od-text); }
+
+.odc-gallery-failures {
+  margin: var(--od-space-1) 0 0;
+  padding-inline-start: var(--od-space-5);
+}
+
+/* A long file name breaks instead of pushing the notice out of the panel. */
+.odc-gallery-file {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--od-x-control-height) * 4), 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-gallery-item {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--od-surface-subtle);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-gallery-item img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-gallery-delete {
+  position: absolute;
+  inset-block-start: var(--od-space-2);
+  inset-inline-end: var(--od-space-2);
+  background: var(--od-surface);
+}
+
+.odc-gallery-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-gallery-confirm img {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: calc(var(--od-x-control-height) * 5);
+  object-fit: contain;
+  border-radius: var(--od-radius-control);
+  align-self: flex-start;
+}
+
+.odc-gallery-confirm p { margin: 0; }

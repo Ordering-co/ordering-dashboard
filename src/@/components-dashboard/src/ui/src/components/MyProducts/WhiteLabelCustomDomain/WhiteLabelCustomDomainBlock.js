@@ -108,7 +108,7 @@ export const WhiteLabelCustomDomainBlock = (props) => {
       {site?.domain && (
         <>
           {site?.ssl_status === 'issued' && site?.ssl_process_status !== 'pending' && (
-            <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ISSUED', 'Your domain is now added , please verify the custom domain link above.')}</CustomeDomainDesc>
+            <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_ISSUED', 'Your domain is now added. Please verify the custom domain link above.')}</CustomeDomainDesc>
           )}
           {site?.ssl_status === 'pre-issued' && (
             <CustomeDomainDesc>{t('CUSTOM_DOMAIN_STATUS_PRE_ISSUED', 'Process almost finish, please wait')}</CustomeDomainDesc>

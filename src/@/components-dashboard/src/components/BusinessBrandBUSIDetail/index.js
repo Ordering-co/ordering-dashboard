@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -18,42 +18,78 @@ export const BusinessBrandBUSIDetail = (props) => {
   const [ordering] = useApi()
   const [{ token, user }] = useSession()
   const [searchValue, setSearchValue] = useState(null)
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
   const [, t] = useLanguage()
-  const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
+  // redesign SB-B1 (G5-45, M-SB7): `error` is the load error (the UI tells it from an empty list), `failures` is
+  // `{ [businessId]: error }` of the stores whose save failed and `pending` the ids of the stores being saved.
+  const [businessList, setBusinessList] = useState({
+    loading: false,
+    businesses: [],
+    result: { error: null },
+    error: null,
+    failures: {},
+    pending: []
+  })
+  const lastRequest = useRef({ page: 1, pageSize: 10 })
+  const latestBusinesses = useRef([])
+  latestBusinesses.current = businessList.businesses
 
   const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
   const PAGE_SIZE = 10
 
+  const setPending = (ids, isPending) => {
+    setBusinessList(prev => {
+      const current = prev.pending || []
+      const pending = isPending
+        ? [...current, ...ids.filter(id => !current.includes(id))]
+        : current.filter(id => !ids.includes(id))
+      return { ...prev, pending }
+    })
+  }
+
+  const clearFailures = (ids) => {
+    setBusinessList(prev => {
+      const failures = { ...(prev.failures || {}) }
+      ids.forEach(id => { delete failures[id] })
+      return { ...prev, failures }
+    })
+  }
+
+  /**
+   * redesign SB-B1: same signature as before; returns the promise of the save (`{ ok, error }`).
+   */
   const handleChangeCheckBox = (e, businessId, brandId) => {
     let changes = { franchise_id: brandId }
     if (!e.target.checked) changes = { franchise_id: null }
-    updateBusinessList(businessId, changes)
+    return updateBusinessList(businessId, changes)
   }
 
-  const handleSelectAllBusinesses = (isAll, brandId) => {
-    let changes
-    const _businesses = []
-    if (isAll) {
-      changes = { franchise_id: brandId }
-      businessList.businesses.forEach(business => {
-        if (business.franchise_id !== brandId) {
-          updateBusinessList(business.id, changes)
-          business.franchise_id = brandId
-        }
-        _businesses.push(business)
-      })
-    } else {
-      changes = { franchise_id: null }
-      businessList.businesses.forEach(business => {
-        if (business.franchise_id !== null) {
-          updateBusinessList(business.id, changes)
-          business.franchise_id = null
-        }
-        _businesses.push(business)
-      })
+  /**
+   * redesign SB-B1 (G5-45, M-SB2): one request per store of the visible page that changes, IN SERIES. Selecting all
+   * moves the stores whose `franchise_id !== brandId`; selecting none frees only the stores whose `franchise_id === brandId`
+   * (the stores of other brands are not touched). Nothing is mutated before the answer of each request: a store that fails
+   * keeps its value and stays in `businessList.failures`. One «Loading» at the start and one «Business updated» if all went well.
+   * @returns {Promise<{ ok: boolean, failed: Array<{ id: number, error: any }> }>}
+   */
+  const handleSelectAllBusinesses = async (isAll, brandId) => {
+    const changes = { franchise_id: isAll ? brandId : null }
+    const targets = latestBusinesses.current.filter(business => isAll
+      ? business.franchise_id !== brandId
+      : business.franchise_id === brandId)
+    if (!targets.length) return { ok: true, failed: [] }
+    const ids = targets.map(business => business.id)
+    clearFailures(ids)
+    setPending(ids, true)
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    const failed = []
+    for (const business of targets) {
+      const { ok, error } = await updateBusinessList(business.id, changes, { silent: true })
+      if (!ok) failed.push({ id: business.id, error })
     }
-    setBusinessList({ ...businessList, businesses: _businesses })
+    if (!failed.length) showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+    // redesign bugs F row 19: each failed store says why in its row, so the «Loading» toast must not stay
+    else hideToast?.()
+    return { ok: !failed.length, failed }
   }
 
   /**
@@ -63,10 +99,11 @@ export const BusinessBrandBUSIDetail = (props) => {
    */
   const getBusinessList = async (page = 1, pageSize = PAGE_SIZE) => {
     try {
-      setBusinessList(prev => ({ ...prev, loading: true }))
-
       const safePage = Number(page) >= 1 ? Number(page) : 1
       const safePageSize = Number(pageSize) >= 1 ? Number(pageSize) : PAGE_SIZE
+      lastRequest.current = { page: safePage, pageSize: safePageSize }
+      // redesign SB-B1 (G5-45): searching or paging forgets the failures of the stores of the page that is left
+      setBusinessList(prev => ({ ...prev, loading: true, failures: {} }))
 
       let where = null
       const conditions = []
@@ -136,7 +173,7 @@ export const BusinessBrandBUSIDetail = (props) => {
       setBusinessList(prev => ({
         ...prev,
         loading: false,
-        error: [error || error?.toString() || error?.message]
+        error: [error?.message || String(error)]
       }))
     }
   }
@@ -150,30 +187,52 @@ export const BusinessBrandBUSIDetail = (props) => {
   }
 
   /**
-   * Method to update business list from API
+   * redesign SB-B1 (M-SB7): retries the last page requested (the UI shows it when the load failed).
    */
-  const updateBusinessList = async (id, changes) => {
+  const handleRetry = () => getBusinessList(lastRequest.current.page, lastRequest.current.pageSize)
+
+  /**
+   * Method to update a business of the list from API
+   * redesign SB-B1 (G5-45, M-SB2): returns `{ ok: true }`, `{ ok: false, error: result }` (API error) or
+   * `{ ok: false, error: [message] }` (exception). Nothing changes before the answer; on success only that store changes, with
+   * the `franchise_id` the API returned. A failure is kept in `businessList.failures[id]` until that store is retried or the
+   * list is searched or paged. `options.silent` skips the toasts (the block of `handleSelectAllBusinesses` has its own).
+   */
+  const updateBusinessList = async (id, changes, options = {}) => {
+    const { silent = false } = options
+    clearFailures([id])
+    setPending([id], true)
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!silent) showToast(ToastType.Info, t('LOADING', 'Loading'))
       const { content: { error, result } } = await ordering.businesses(parseInt(id)).save(changes)
-      if (!error) {
-        const _businesses = businessList?.businesses.map(business => {
-          if (business.id === id) {
-            return {
-              ...business,
-              franchise_id: result.franchise_id
-            }
-          }
-          return business
-        })
-        setBusinessList(preBusinessList => ({ ...preBusinessList, businesses: _businesses }))
-        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+      if (error) {
+        // redesign bugs F row 19: the row shows the failure; hide the «Loading» toast (a silent call has none)
+        if (!silent) hideToast?.()
+        setBusinessList(prev => ({ ...prev, failures: { ...prev.failures, [id]: result } }))
+        return { ok: false, error: result }
       }
-    } catch {}
+      const franchiseId = result && 'franchise_id' in result ? result.franchise_id : changes.franchise_id
+      setBusinessList(prev => ({
+        ...prev,
+        businesses: prev.businesses.map(business => business.id === id
+          ? { ...business, franchise_id: franchiseId }
+          : business)
+      }))
+      if (!silent) showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+      return { ok: true }
+    } catch (err) {
+      const failure = [err.message]
+      if (!silent) hideToast?.()
+      setBusinessList(prev => ({ ...prev, failures: { ...prev.failures, [id]: failure } }))
+      return { ok: false, error: failure }
+    } finally {
+      setPending([id], false)
+    }
   }
 
   useEffect(() => {
-    getBusinessList()
+    // redesign bugs F row 41 (M-02): a search goes back to page 1 but keeps the page size the user chose
+    getBusinessList(1, lastRequest.current.pageSize)
   }, [searchValue])
 
   return (
@@ -188,6 +247,7 @@ export const BusinessBrandBUSIDetail = (props) => {
           handleSelectAllBusinesses={handleSelectAllBusinesses}
           handleChangeBusinessPage={handleChangeBusinessPage}
           handleChangeBusinessPageSize={handleChangeBusinessPageSize}
+          handleRetry={handleRetry}
         />
       )}
     </>

@@ -1,0 +1,125 @@
+/*
+ * redesign OC-B · Open carts page: the header's recovery line and day figures, the Live now strip, the split view's
+ * height and the capped note. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-oc-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame (its padding is in OpenCartListing/styles.js): on a phone it takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-oc-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-oc-frame {
+    display: none;
+  }
+}
+
+/* ── Head: the page header (its `leading` is the open-menu button, ), then the views ── */
+.odc-oc-head {
+  display: grid;
+  /* redesign OC-integration: one track that may shrink below its content (an auto track grew to 463px at 390) */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── The status area under the title: two fixed rows at every width (redesign OC-F1, OC-Q1-01 and OC-Q1-05) ──
+   Row 1 the recovery state, row 2 the figures of the day. Each is one line: no wrapping that depends on the width, a text that
+   does not fit ends in an ellipsis (the full text is in the row's title). Both rows have the height of the «Manage rules»
+   link (its seen size, which is a target of the pointer), so the area is as tall loading as loaded, and the same beside
+   an open panel as without it. */
+.odc-oc-statusline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
+}
+
+.odc-oc-statusrow {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-fine);
+  white-space: nowrap; /* the row itself does not clip: the focus ring of «Manage rules» must stay whole; the texts do (below) */
+  column-gap: var(--od-space-2);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-oc-statusrow { min-block-size: var(--od-x-control-height); }
+}
+
+.odc-oc-statusrow > * { flex: none; }
+
+/* What gives way when the row is short: the text, with an ellipsis. */
+.odc-oc-statusrow > .odc-oc-clip,
+.odc-oc-figure > .odc-oc-clip {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-oc-figures { column-gap: var(--od-space-5); }
+
+.odc-oc-figure {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-oc-figure .odc-figure {
+  flex: none;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* The state of the rules is a dot with the text beside it (never the colour alone): on is success, off is warning. */
+.odc-oc-recovery .odc-dot { background: var(--od-warning-signal); }
+.odc-oc-recovery[data-state='on'] .odc-dot { background: var(--od-success-signal); }
+
+/* «Manage rules» is a link drawn as the Product link button, with its touch area. */
+.odc-oc-recovery .odc-btn[data-variant='link'] {
+  font-size: inherit;
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* ── Live now: the window, when it was updated, and Refresh ── */
+.odc-oc-live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-2);
+  row-gap: var(--od-space-1);
+  padding-block-start: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A dot before «Live now» on its tab: green says the view refreshes by itself. */
+.odc-oc-live-dot {
+  display: inline-block;
+  inline-size: var(--od-x-dot);
+  block-size: var(--od-x-dot);
+  margin-inline-end: var(--od-space-2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-success-signal);
+}
+
+/* ── The list's foot ── */
+.odc-oc-note {
+  margin: var(--od-space-3) 0 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

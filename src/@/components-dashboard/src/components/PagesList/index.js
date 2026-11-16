@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -21,6 +21,10 @@ export const PagesList = (props) => {
   const [editPageId, setEditPageId] = useState(null)
   const [changeState, setChangeState] = useState({ changes: {}, loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
+  // redesign bugs F row 14: the `changes` object last sent, so a failed save does not resend itself
+  const lastAttemptedChanges = useRef(null)
+  // redesign bugs F row 14: kept across renders so the name debounce really debounces
+  const timeout = useRef(null)
 
   /**
    * Method to get the pages from API
@@ -127,12 +131,11 @@ export const PagesList = (props) => {
    * @param {string} field name to change
    * @param {string || boolean} value
    */
-  let timeout = null
   const handleChangeState = (id, field, value) => {
     setEditPageId(id)
     if (field === 'name') {
-      clearTimeout(timeout)
-      timeout = setTimeout(function () {
+      clearTimeout(timeout.current)
+      timeout.current = setTimeout(function () {
         setChangeState({
           ...changeState,
           changes: {
@@ -156,8 +159,13 @@ export const PagesList = (props) => {
 
   useEffect(() => {
     if (changeState.loading || Object.keys(changeState?.changes).length === 0) return
+    // a refused save rebuilds changeState with the same `changes`; only a new edit (a new `changes` object) sends again
+    if (changeState.changes === lastAttemptedChanges.current) return
+    lastAttemptedChanges.current = changeState.changes
     handleUpdatePage()
   }, [changeState])
+
+  useEffect(() => () => clearTimeout(timeout.current), [])
 
   useEffect(() => {
     getPages()

@@ -1,0 +1,178 @@
+/*
+ * 5.4-B · Customer review on Product Dialog (C8): who is reviewed, the five-mark scale, the quick
+ * comments and the labelled free text. Values come from --od-* (release) and --od-x-* (src/brand/
+ * candidates.css) only. Logical properties only (C17). The dark mode is the tokens' own.
+ */
+
+.odc-review {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-review-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-review-name {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-review-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-review-label {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The scale: five equal marks in one row. The input is the whole mark, drawn by its label. */
+.odc-review-scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--od-x-space-half);
+  padding: var(--od-x-space-half);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-review-mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--od-x-control-height-lg);
+  padding-inline: var(--od-space-1);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-review-mark input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.odc-review-mark:hover {
+  color: var(--od-text);
+}
+
+.odc-review-mark:has(input:checked) {
+  background: var(--od-bg);
+  color: var(--od-text);
+  box-shadow: var(--od-shadow-1);
+}
+
+.odc-review-mark:has(input:focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-review-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-review-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-review-chip:hover {
+  background: var(--od-x-hover);
+}
+
+/* Chosen: the soft action fill, the action border and a check; never only a color. */
+.odc-review-chip[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+}
+
+.odc-review-chip:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-review-field {
+  inline-size: 100%;
+  min-block-size: calc(var(--od-x-control-height) * 3);
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  resize: vertical;
+}
+
+.odc-review-field:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* redesign W0-3d5 (T0-12, decision 12): a mark is SEEN at its own 40px and its 44px area is a centered pseudo-element. The
+   five marks sit in one row 2px apart, but each is wider than 44px (about 54px at 320px), so the area grows in the block
+   direction only and reaches the 2px padding of the scale, never a neighbour. The label is already positioned. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-review-mark::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* The chips wrap 8px apart (rows of 32 + 44 areas would cross by 4px) and the free text is a <textarea>, which cannot hold
+   a pseudo-element: both keep their 44px box. */
+@media (pointer: coarse) {
+  .odc-review-chip {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-review-field {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+}

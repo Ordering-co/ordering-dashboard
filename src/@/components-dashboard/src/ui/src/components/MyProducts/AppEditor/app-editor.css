@@ -1,0 +1,120 @@
+/*
+ * redesign my-products B2 (; D1, D4, D7) · The shell of the editor of an app: the page header with the open-menu button, the
+ * body (the navigation above the content below 1024px, navigation | content from 1024px) and the open section, whose h2 is the
+ * section's title. Also the frame of ProductsBuilderList's skeleton and error (`odc-ape-frame`), which come before the editor exists.
+ * The navigation is P/SectionNav and its rules are its own. Prefix: odc-ape-*.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Breakpoints as literals only in @media. Logical properties (C17).
+ */
+
+/* ── Frame ── */
+.odc-root.odc-ape {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  /* the page's whole width, whatever the open section holds */
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* What ProductsBuilderList paints before the editor exists (its skeleton, its error): the same gutter. */
+.odc-root.odc-ape-frame {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* : the open-menu button is PageHeader's `leading`. */
+
+/*  (#75 R1-08): the page header is the container. Under 600px of its own width (a phone) Learn keeps only its icon and
+   arrow, like PageHeader's own `data-collapse-label` and customers-page.css: the span LearnDropDown draws is clipped, not removed
+   (the accessible name stays) and the margins of its trigger go. Without it the row never fit in 358px at 390. */
+@container (max-width: 599px) {
+  .odc-ape .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-ape .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+}
+
+/* ── Body: navigation + content ── */
+.odc-ape-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-ape-nav {
+  min-inline-size: 0;
+  /* room for the inset focus ring of the rows next to the scrollbar */
+  padding-inline-end: var(--od-x-space-half);
+}
+
+.odc-ape-main {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@media (min-width: 1024px) {
+  .odc-ape-body[data-layout='split'] {
+    grid-template-columns: calc(var(--od-x-record-nav) + var(--od-space-6)) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-root.odc-ape,
+  .odc-root.odc-ape-frame { padding-inline: var(--od-x-page-gutter-mobile); }
+}
+
+/* ── The open section ── */
+.odc-ape-content {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-5);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  /* a reading column: the fields and cards never spread over the whole content */
+  max-inline-size: var(--od-x-dialog-lg);
+}
+
+/* A section visited and left stays mounted (what was typed in it survives) and is hidden: `display` above would show it again. */
+.odc-ape-content[hidden] {
+  display: none;
+}
+
+.odc-ape-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* ── Loading ── */
+.odc-ape-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  max-inline-size: var(--od-x-dialog-lg);
+  min-inline-size: 0;
+}

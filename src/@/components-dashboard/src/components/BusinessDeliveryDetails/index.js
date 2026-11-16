@@ -1,9 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useToast, ToastType } from '../../contexts/ToastContext'
-import { useLanguage } from '../../contexts/LanguageContext'
+
+// redesign stores 5.7 · Delivery of «Delivery, pickup & more». The zones' enables are kept as the SAVED map (from
+// `business.zones`, without the type 3 ones) and a PENDING map of only the zones whose value differs from it; the list shows the
+// two merged. `saveDelivery(fieldChanges)` writes every pending zone in series (a failure does not stop the rest), then the
+// changed fields of the business (even if a zone failed), tells the editor ONCE and answers what failed. No toasts: the form
+// shows the failure in its save bar.
+
+const isListed = (zone) => zone?.type !== 3
+
+// The first text of an API answer or an error (a string or a list of them), or null
+const firstMessage = (value) => {
+  const message = Array.isArray(value) ? value.find(item => typeof item === 'string' && item.trim()) : value
+  return typeof message === 'string' && message.trim() ? message : null
+}
+
+const savedMapOf = (zones) => {
+  const saved = {}
+  ;(Array.isArray(zones) ? zones : []).filter(isListed).forEach(zone => { saved[zone.id] = !!zone.enabled })
+  return saved
+}
+
+// the pending enables that still differ from the saved ones, of the zones that still exist
+const prunePending = (pending, saved) => {
+  const next = {}
+  Object.keys(pending).forEach(id => {
+    if (id in saved && pending[id] !== saved[id]) next[id] = pending[id]
+  })
+  return next
+}
+
+const sameKeys = (a, b) => {
+  const keysA = Object.keys(a)
+  return keysA.length === Object.keys(b).length && keysA.every(key => key in b && a[key] === b[key])
+}
 
 export const BusinessDeliveryDetails = (props) => {
   props = { ...defaultProps, ...props }
@@ -16,15 +48,21 @@ export const BusinessDeliveryDetails = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const [, { showToast }] = useToast()
-  const [, t] = useLanguage()
   const [actionState, setActionState] = useState({ loading: false, error: null })
-  const [formState, setFormState] = useState({ changes: {} })
-  const [zoneListState, setZoneListState] = useState({
-    changes: {},
-    isCheckAll: false,
-    isDirty: false
-  })
+  const [pending, setPending] = useState({})
+  const mounted = useRef(true)
+
+  const saved = useMemo(() => savedMapOf(business?.zones), [business?.zones])
+  const livePending = useMemo(() => prunePending(pending, saved), [pending, saved])
+
+  // the props the save reads when it ends, not the ones of the render that started it
+  const latest = useRef({})
+  latest.current = { business, ordering, session, handleUpdateBusinessState, saved, pending: livePending }
+
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
 
   /**
   * Method to get the business zones from API
@@ -50,144 +88,132 @@ export const BusinessDeliveryDetails = (props) => {
   }
 
   /**
-   * Method to update the business from the API
-   */
-  const handleDeliveryStateSave = async () => {
-    try {
-      const { content: { error, result } } = await ordering.businesses(business.id).save(formState.changes, {
-        accessToken: session.token
-      })
-      if (!error) {
-        return result
-      } else {
-        throw { message: error }
-      }
-    } catch (err) {
-      return Promise.reject(err)
-    }
-  }
-
-  /**
    * Method to update the business delivery zone enable state from API
    */
   const handleUpdateDeliveryZoneState = async (zoneId, enabled) => {
-    try {
-      const requestOptions = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        },
-        body: JSON.stringify({ enabled })
-      }
-      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zoneId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        return content.result
-      } else {
-        throw { message: content.result }
-      }
-    } catch (err) {
-      return Promise.reject(err)
+    const { ordering: api, session: current, business: currentBusiness } = latest.current
+    const response = await fetch(`${api.root}/business/${currentBusiness?.id}/deliveryzones/${zoneId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${current.token}`
+      },
+      body: JSON.stringify({ enabled })
+    })
+    const content = await response.json()
+    if (content.error) {
+      throw new Error(firstMessage(content.result) ?? '')
     }
+    return content.result
   }
 
-  const onDeliveryStateSave = async () => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ loading: true, error: null })
-      if (Object.keys(zoneListState.changes).length) {
-        for (const key in zoneListState.changes) {
-          const zoneId = parseInt(key)
-          const foundZone = business?.zones?.find(zone => zone.id === zoneId)
-          if (foundZone?.enabled !== zoneListState.changes[key]) {
-            await handleUpdateDeliveryZoneState(zoneId, zoneListState.changes[key])
-          }
-        }
-        setZoneListState({ ...zoneListState, isDirty: false })
-        const zones = business.zones.filter(zone => {
-          if (typeof zoneListState.changes[zone.id] !== 'undefined') {
-            zone.enabled = zoneListState.changes[zone.id]
-          }
-          return true
-        })
-        const _business = { ...business, zones }
-        handleUpdateBusinessState(_business)
+  /**
+   * Method to update the business from the API
+   */
+  const handleDeliveryStateSave = async (changes) => {
+    const { ordering: api, session: current, business: currentBusiness } = latest.current
+    const { content: { error, result } } = await api.businesses(currentBusiness.id).save(changes, {
+      accessToken: current.token
+    })
+    if (error) throw new Error(firstMessage(result) ?? firstMessage(error) ?? '')
+    return result
+  }
+
+  const saveDelivery = async (fieldChanges = {}) => {
+    const { business: startBusiness, pending: toSave } = latest.current
+    const zonesById = {}
+    ;(startBusiness?.zones || []).forEach(zone => { zonesById[zone.id] = zone })
+
+    // 1. every pending zone, in series; a failure is collected and the next one goes on
+    const savedZones = {}
+    const failedZones = []
+    for (const key of Object.keys(toSave)) {
+      const zoneId = Number(key)
+      try {
+        await handleUpdateDeliveryZoneState(zoneId, toSave[key])
+        savedZones[zoneId] = toSave[key]
+      } catch (err) {
+        failedZones.push({ id: zoneId, name: zonesById[zoneId]?.name ?? '', message: err?.message ?? '' })
       }
-      if (Object.keys(formState.changes).length) {
-        const result = await handleDeliveryStateSave()
-        setFormState({ changes: {} })
-        handleUpdateBusinessState(result)
+    }
+
+    // 2. the fields of the business, even if a zone failed
+    let savedFields = null
+    let error = null
+    if (fieldChanges && Object.keys(fieldChanges).length) {
+      try {
+        savedFields = await handleDeliveryStateSave(fieldChanges)
+      } catch (err) {
+        error = err?.message ?? ''
       }
-      setActionState({ loading: false, error: null })
-      showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
-    } catch (err) {
-      setActionState({
-        loading: false,
-        error: [err.message]
+    }
+
+    // 3. the editor learns once, from the latest props; `zones` goes last so a stale one in the result never wins
+    const savedIds = Object.keys(savedZones)
+    if (savedIds.length || savedFields) {
+      const zones = (latest.current.business?.zones || []).map(zone => (
+        zone.id in savedZones ? { ...zone, enabled: savedZones[zone.id] } : zone
+      ))
+      latest.current.handleUpdateBusinessState?.({ ...(savedFields && typeof savedFields === 'object' ? savedFields : {}), zones })
+    }
+    if (savedIds.length && mounted.current) {
+      // what was sent leaves pending, unless the user changed it again while it was saving
+      setPending(current => {
+        const next = { ...current }
+        savedIds.forEach(id => { if (next[id] === savedZones[id]) delete next[id] })
+        return next
       })
     }
+
+    return { ok: !failedZones.length && error === null, error, failedZones }
+  }
+
+  const discardZones = () => setPending({})
+
+  const handleChangeZoneState = (zoneId, enabled) => {
+    setPending(current => {
+      const next = { ...current }
+      if (latest.current.saved[zoneId] === enabled) delete next[zoneId]
+      else next[zoneId] = enabled
+      return next
+    })
   }
 
   const handleChangeAllZoneState = (enabled) => {
-    const zoneChanges = { ...zoneListState.changes }
-    for (const key in zoneChanges) {
-      zoneChanges[key] = enabled
-    }
-    setZoneListState({
-      ...zoneListState,
-      changes: zoneChanges,
-      isCheckAll: enabled,
-      isDirty: true
+    const next = {}
+    Object.keys(latest.current.saved).forEach(id => {
+      if (latest.current.saved[id] !== enabled) next[id] = enabled
     })
+    setPending(next)
   }
 
-  const handleChangeZoneState = (zoneId, enabled) => {
-    setZoneListState({
-      ...zoneListState,
-      changes: {
-        ...zoneListState.changes,
-        [zoneId]: enabled
-      },
-      isDirty: true
+  // a zone that was deleted or whose saved value caught up leaves the pending state for good
+  useEffect(() => {
+    setPending(current => {
+      const next = prunePending(current, saved)
+      return sameKeys(current, next) ? current : next
     })
-  }
-
-  const handleChangeForm = (updateChange) => {
-    setFormState({
-      changes: {
-        ...formState.changes,
-        ...updateChange
-      }
-    })
-  }
+  }, [saved])
 
   useEffect(() => {
-    let enabledZones = 0
-    for (const key in zoneListState.changes) {
-      if (zoneListState.changes[key]) enabledZones += 1
-    }
-    setZoneListState({
-      ...zoneListState,
-      isCheckAll: Object.keys(zoneListState.changes).length === enabledZones
-    })
-  }, [zoneListState.changes])
-
-  useEffect(() => {
-    if (business?.zones) {
-      const zoneList = business?.zones?.filter(zone => zone?.type !== 3) || []
-      const zoneChanges = {}
-      zoneList.forEach(zone => {
-        zoneChanges[zone.id] = zone.enabled
-      })
-      setZoneListState({
-        ...zoneListState,
-        changes: zoneChanges
-      })
-    } else {
-      getBusinessZones()
-    }
+    if (!business?.zones) getBusinessZones()
   }, [business?.zones])
+
+  const zoneListState = useMemo(() => {
+    const ids = Object.keys(saved)
+    const changes = {}
+    ids.forEach(id => { changes[id] = id in livePending ? livePending[id] : saved[id] })
+    return {
+      changes,
+      isCheckAll: ids.length > 0 && ids.every(id => changes[id]),
+      isDirty: Object.keys(livePending).length > 0
+    }
+  }, [saved, livePending])
+
+  const pendingZones = useMemo(() => {
+    const zones = business?.zones || []
+    return Object.keys(livePending).map(key => ({ id: Number(key), name: zones.find(zone => zone.id === Number(key))?.name ?? '' }))
+  }, [livePending, business?.zones])
 
   return (
     <>
@@ -196,10 +222,10 @@ export const BusinessDeliveryDetails = (props) => {
           <UIComponent
             {...props}
             actionState={actionState}
-            formState={formState}
             zoneListState={zoneListState}
-            handleChangeForm={handleChangeForm}
-            onDeliveryStateSave={onDeliveryStateSave}
+            pendingZones={pendingZones}
+            saveDelivery={saveDelivery}
+            discardZones={discardZones}
             handleChangeAllZoneState={handleChangeAllZoneState}
             handleChangeZoneState={handleChangeZoneState}
           />

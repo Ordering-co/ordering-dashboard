@@ -1,0 +1,27 @@
+/* FA · Edge fade of a sideways scroller. useOverflowEdges sets data-overflow-start and
+   data-overflow-end while there is more content past that edge; the edge melts into the
+   background and the fade goes when the scroller reaches the end. Logical: the start
+   edge is on the right in RTL. A mask only paints, so every item stays reachable. */
+.odc-fade-x {
+  --odc-fade-start: 0%;
+  --odc-fade-end: 0%;
+  --odc-fade-to: to right;
+  /* A focused item scrolls in clear of the fade, not under it. */
+  scroll-padding-inline: var(--od-x-fade-size);
+}
+
+.odc-fade-x:dir(rtl) { --odc-fade-to: to left; }
+
+.odc-fade-x[data-overflow-start] { --odc-fade-start: var(--od-x-fade-size); }
+.odc-fade-x[data-overflow-end] { --odc-fade-end: var(--od-x-fade-size); }
+
+.odc-fade-x[data-overflow-start],
+.odc-fade-x[data-overflow-end] {
+  mask-image: linear-gradient(
+    var(--odc-fade-to),
+    transparent 0,
+    currentColor var(--odc-fade-start),
+    currentColor calc(100% - var(--odc-fade-end)),
+    transparent 100%
+  );
+}

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { toApiDateTime } from '../../utils/relativeTime'
 
 export const DriversList = (props) => {
   props = { ...defaultProps, ...props }
@@ -45,7 +46,8 @@ export const DriversList = (props) => {
   })
   const controller = new AbortController()
   const signal = controller.signal
-  const activeOrderStatuses = [0, 13, 7, 8, 4, 9, 3, 14, 18, 19, 20, 21, 22, 23]
+  // redesign drivers-dashboard B2 (DD-12): 24–26 are active too (OrdersManage counts them in «In progress»)
+  const activeOrderStatuses = [0, 13, 7, 8, 4, 9, 3, 14, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
   const socket = useWebsocket()
 
@@ -405,24 +407,30 @@ export const DriversList = (props) => {
     const source = {}
     requestsState.orders = source
     options.cancelToken = source
-    const functionFetch = ordering.setAccessToken(session.token).orders().asDashboard().select(['business', 'customer']).where(where)
+    // redesign drivers-dashboard B4 (live): the status too, for the driver panel and for the tab the orders sheet opens on (decision 5)
+    const functionFetch = ordering.setAccessToken(session.token).orders().asDashboard().select(['business', 'customer', 'status']).where(where)
     return await functionFetch.get(options)
   }
 
   /**
    * Method to get the orders assigned to the driver
    */
-  const loadAssignedOrders = async () => {
+  const loadAssignedOrders = async (keepOrders = false) => {
     try {
-      setAssignedOrders({ ...assignedOrders, loading: true })
+      // redesign drivers-dashboard B2 (DD-12): a reload of the same driver keeps its orders on screen while it asks again; another
+      // driver starts empty (never the previous driver's orders under the new name)
+      // redesign drivers-dashboard R1-03: a reload is not a load (`loading` stays false): /all-in-one covers the page with a spinner
+      // while it is true, and this page keeps the list on screen anyway
+      setAssignedOrders((prevState) => (keepOrders ? { ...prevState, refreshing: true } : { loading: true, error: null, orders: [] }))
       const response = await getOrders()
       setAssignedOrders({
         loading: false,
+        refreshing: false,
         orders: response.content.error ? [] : response.content.result,
         error: response.content.error ? response.content.result : null
       })
     } catch (err) {
-      setAssignedOrders({ ...assignedOrders, loading: false, error: [err.message] })
+      setAssignedOrders((prevState) => ({ ...prevState, loading: false, refreshing: false, error: [err.message] }))
     }
   }
 
@@ -445,17 +453,22 @@ export const DriversList = (props) => {
     })
   }
 
+  const assignedOrdersDriverId = useRef(null)
   useEffect(() => {
     if (selectedDriver?.id) {
-      loadAssignedOrders()
+      loadAssignedOrders(assignedOrdersDriverId.current === selectedDriver.id)
+      assignedOrdersDriverId.current = selectedDriver.id
     } else {
+      assignedOrdersDriverId.current = null
       setAssignedOrders({
         loading: false,
         orders: [],
         error: null
       })
     }
-  }, [selectedDriver?.id])
+    // redesign drivers-dashboard B2 (DD-12): also when the chosen driver's assigned orders count moves (batch_driver_changes), so its
+    // orders on the map and in the page's driver panel follow new and finished orders
+  }, [selectedDriver?.id, selectedDriver?.assigned_orders_count])
 
   /**
    * listen for busy/not busy filter
@@ -499,6 +512,18 @@ export const DriversList = (props) => {
   useEffect(() => {
     if (session?.loading) return
     const handleBatchDriverChanges = (changes) => {
+      // redesign drivers-dashboard B2 (DD-01): the chosen driver follows its changes too (it went `available: false`, left the list and
+      // the map kept showing it «Available»). Functional form: it does not depend on the closure; another driver's changes keep the same object.
+      setSelectedDriver((prevState) => {
+        if (!prevState) return prevState
+        const changeData = changes.find((change) => change.driver_id === prevState.id)
+        if (!changeData) return prevState
+        const updatedDriver = { ...prevState }
+        for (const change of changeData.changes) {
+          updatedDriver[change.attribute] = change.new
+        }
+        return updatedDriver
+      })
       setDriversList((prevState) => {
         const updatedDrivers = prevState.drivers.map((driver) => {
           const changeData = changes.find((change) => change.driver_id === driver.id)
@@ -516,10 +541,14 @@ export const DriversList = (props) => {
     }
     const handleBatchDriverLocations = (locations) => {
       const locationMap = new Map(locations.map(location => [location.driver_id, location.location]))
+      // redesign drivers-dashboard B2 (DD-13): a location that arrives is a location seen now; the API shape (UTC 'YYYY-MM-DD HH:mm:ss')
+      const seenAt = toApiDateTime(new Date())
 
       if (selectedDriver?.id && locationMap.has(selectedDriver.id)) {
-        setSelectedDriver((prevState) => ({ ...prevState, location: locationMap.get(selectedDriver.id) }))
-        setOrderForMap && setOrderForMap({
+        setSelectedDriver((prevState) => ({ ...prevState, location: locationMap.get(selectedDriver.id), last_location_at: seenAt }))
+        // redesign W1-5 (T1-5-4): `orderForMap` is null while a driver is chosen without an order (/all-in-one clears it when the driver is
+        // picked; /drivers-dashboard has none): `orderForMap.driver` threw a TypeError on every location of that driver.
+        setOrderForMap && orderForMap && setOrderForMap({
           ...orderForMap,
           driver: {
             ...orderForMap.driver,
@@ -531,7 +560,7 @@ export const DriversList = (props) => {
       setDriversList((prevState) => {
         const updatedDrivers = prevState.drivers.map((driver) => {
           if (locationMap.has(driver.id)) {
-            return { ...driver, location: locationMap.get(driver.id) }
+            return { ...driver, location: locationMap.get(driver.id), last_location_at: seenAt }
           }
           return driver
         })

@@ -60,7 +60,7 @@ const CustomerDetailsUI = (props) => {
     { key: 'user_details', value: t('USER_DETAILS', 'User details'), enabled: true },
     { key: 'businesses_opened', value: t('BUSINESSES_OPENED', 'Businesses opened'), enabled: false },
     { key: 'products_opened', value: t('PRODUCTS_OPENED', 'Products opened'), enabled: false },
-    { key: 'cash_wallet', value: t('CASH_WALLET', 'Cash wallet'), enabled: true },
+    { key: 'cash_wallet', value: t('CASH_WALLET_NAME', 'Cash wallet'), enabled: true },
     { key: 'points_wallet', value: t('POINTS_WALLET', 'Points wallet'), enabled: true }
   ]
 
@@ -207,6 +207,9 @@ const CustomerDetailsUI = (props) => {
           {customerMenus.filter((option) => (option.enabled)).map(option => (
             <OptionMenu
               key={option.key}
+              as='button'
+              type='button'
+              aria-pressed={showOption === option.key}
               active={showOption === option.key}
               onClick={() => handleClickMenu(option.key)}
             >

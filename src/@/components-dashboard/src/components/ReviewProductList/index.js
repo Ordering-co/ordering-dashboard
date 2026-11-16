@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 
@@ -14,11 +14,16 @@ export const ReviewProductList = (props) => {
   const [searchValue, setSearchValue] = useState(null)
   const [productState, setProductState] = useState({ loading: false, products: [], error: null })
 
+  // redesign reviews R1 (Q1-5): one counter per request; only the answer of the last one is applied, so a slow load without a
+  // search cannot overwrite the filtered list that was asked for after it (as DashboardBusinessList.loadRequest does)
+  const loadRequest = useRef(0)
+
   const handleChangeSearch = (value) => {
     setSearchValue(value)
   }
 
   const getProducts = async () => {
+    const request = ++loadRequest.current
     try {
       setProductState({
         ...productState,
@@ -61,6 +66,7 @@ export const ReviewProductList = (props) => {
         ? ordering.businesses(businessId).products().where(where)
         : ordering.businesses(businessId).products()
       const { content: { error, result } } = await productEndpoint.get()
+      if (request !== loadRequest.current) return
       if (!error) {
         setProductState({
           ...productState,
@@ -76,6 +82,7 @@ export const ReviewProductList = (props) => {
         })
       }
     } catch (err) {
+      if (request !== loadRequest.current) return
       setProductState({
         ...productState,
         loading: false,

@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b1-open-carts-selectors-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l5-b1-open-carts-selectors-opencartbill-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartBill/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-opencartbill-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartBill/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "OpenCartBillContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        text-align: left;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "OpenCartBillContainer",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OpenCartBillContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        text-align: left;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OpenCartBillContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-opencartlisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "openCartsProps /* binding-sha256:792561ca352536a7a1b5195d4b8edac48a45b4b5fe98f1623091e8bd0633200e */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-opencartlisting-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartListing/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-productitemaccordion-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productItemAccordion /* binding-sha256:fa31c49d334c5672a4687d944d2d9b55f1b1160f2ac3db1a86dfcf9412440366 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-productitemaccordion-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AccordionStyled",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: auto;\n      margin-left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "font-size",
+            "match": "18px",
+            "context": "@media (min-width: 577px) > h3",
+            "count": 1,
+            "reason": "This declaration is a breakpoint override of an element whose role is already assigned at its base size; the role scale has one size per role and cannot express a per-breakpoint bump, so migrating it would either flatten the responsive behaviour or give one element two roles.",
+            "evidence": "The same ContentInfo h3 that takes `content` at line 111 is raised to 18px above 577px. Giving this one sectionTitle would make one heading content on a phone and a section title on a laptop."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "font-size",
+            "match": "20px",
+            "context": "span > div > span > svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "The quantity/edit glyphs. They also sit inside the same unrendered span as line 124, so this declaration is doubly unreachable; icon-glyph is the narrower and more durable of the two reasons."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span > p",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+            "evidence": "ContentInfo renders a div holding an h3 and an optional p; there is no direct span child, so `span > p` matches nothing."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n              margin-left: 3px;\n              margin-right: 0px;\n            `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "style /* binding-sha256:8eb550b87e6486fd198bfee915ea72911adcd636c7125411e04ea6150a9a8fe9 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b1-open-carts-selectors: this one declares no literal font-size."
+          },
+          {
+            "component": "ProductActionsEdit",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration is identical to its already-migrated twin in Orders, which L3 preserved; preserving it here keeps one visual element from carrying two different treatments on two screens.",
+            "evidence": "Orders/ProductItemAccordion preserved this same svg declaration at the same value in L3."
+          },
+          {
+            "component": "ProductActionsEdit",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductComment",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin: 0px 40px 0px 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductComment",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 40px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: -25px;\n      margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      padding-right: 15px;\n      padding-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductQuantity",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin: 0 20px 0 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ProductSelect",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ScheduleInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-open-carts-selectors: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AccordionSection",
+            "property": "color",
+            "match": "#191919",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "AccordionStyled",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: auto;\n      margin-left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n              margin-left: 3px;\n              margin-right: 0px;\n            `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ContentInfo",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "style /* binding-sha256:8eb550b87e6486fd198bfee915ea72911adcd636c7125411e04ea6150a9a8fe9 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductActionsEdit",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductComment",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin: 0px 40px 0px 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductComment",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 40px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductNotAvailable",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: -25px;\n      margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      padding-right: 15px;\n      padding-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductOptionsList",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductPrice",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductQuantity",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin: 0 20px 0 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ProductSelect",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ScheduleInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ScheduleInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-open-carts-selectors semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b1-open-carts-selectors-cartrecovery-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

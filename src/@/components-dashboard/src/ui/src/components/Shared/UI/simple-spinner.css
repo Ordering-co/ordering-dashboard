@@ -1,0 +1,18 @@
+.od-ui:where(.od-simple-spinner) {
+  display: inline-block;
+  box-sizing: border-box;
+  width: var(--od-simple-spinner-width);
+  height: var(--od-simple-spinner-height);
+  border: 1px solid var(--od-simple-spinner-track);
+  border-top-color: var(--od-simple-spinner-color);
+  border-radius: 50%;
+  animation: od-simple-spinner-spin 1s ease-in-out infinite;
+}
+
+@keyframes od-simple-spinner-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-simple-spinner) { animation: none; }
+}

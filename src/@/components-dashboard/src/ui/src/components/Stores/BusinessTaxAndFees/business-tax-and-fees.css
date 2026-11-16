@@ -1,0 +1,167 @@
+/*
+ * redesign stores 5.12 · Tax & fees of a store: tabs Tax | Fees, the Simple / Advanced control, the simple form, the
+ * list of the project's taxes (checkbox, name that opens the editor beside it, delete) and one P/SaveBar for the section.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller. Prefix: odc-tf-*.
+ */
+
+.odc-tf {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-tf-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-tf-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* SegmentedControl measures its container: a block with a definite width */
+.odc-tf-mode {
+  max-inline-size: calc(var(--od-space-10) * 5);
+}
+
+.odc-tf-form {
+  display: flex;
+  flex-direction: column;
+  /* >= 12px between stacked fields keeps their 44px touch areas from crossing (field.css) */
+  gap: var(--od-space-4);
+  max-inline-size: calc(var(--od-space-10) * 5);
+  min-inline-size: 0;
+}
+
+/* ── Advanced: the project's taxes ── */
+.odc-tf-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-tf-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-tf-search {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+/* «Add new tax» breaks at its spaces instead of leaving a narrow panel */
+.odc-tf-tools > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+}
+
+.odc-tf-hint,
+.odc-tf-empty {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-tf-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-tf-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-tf-row:hover { background: var(--od-x-hover); }
+
+/* The row open in the editor. aria-current says it; the fill and the weight back it up (never colour alone). */
+.odc-tf-row[aria-current='true'] { background: var(--od-x-selected); }
+.odc-tf-row[aria-current='true'] .odc-tf-name-text { font-weight: var(--od-font-weight-semibold); }
+
+/* Above the name's click area (below), so the checkbox and the delete button stay their own controls */
+.odc-tf-check,
+.odc-tf-delete {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  flex: none;
+}
+
+/* The name: a native button. Its ::after covers the row, so a click anywhere on it opens the editor */
+.odc-tf-name {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-tf-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Inside a row the ring is inset so the list never clips it */
+.odc-tf-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-tf-name-text {
+  max-inline-size: 100%;
+  overflow: hidden;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-tf-name-meta {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

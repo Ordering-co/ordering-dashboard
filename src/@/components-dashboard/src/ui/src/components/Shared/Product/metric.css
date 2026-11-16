@@ -1,0 +1,106 @@
+/* redesign bi FA0 (promoción, auditor 10): the figure card and its grid, moved from Home (.odc-today-*) with the same values */
+.odc-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+}
+
+.odc-metric-label {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-metric-value {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-display-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-metric-ref {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* the full day is the second line, dimmer than the reference by now (D2) */
+.odc-metric-ref[data-secondary] {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-metric-ref .odc-figure {
+  color: var(--od-text);
+  /* redesign bi R1 (F4): a figure with its currency never breaks («Yesterday by this time: $» / «119.03») */
+  white-space: nowrap;
+}
+
+.odc-metric-ref[data-secondary] .odc-figure {
+  color: inherit;
+}
+
+/* an optional line of help under the figure */
+.odc-metric-help {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* four columns from 1024; two below (also at 390). Six: three from 1024, six from 1280 */
+@media (min-width: 1024px) {
+  .odc-metric-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .odc-metric-grid[data-columns='6'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .odc-metric-grid[data-columns='6'] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Phone (< 768): smaller card padding */
+@media (max-width: 767px) {
+  .odc-metric {
+    padding: var(--od-space-3);
+  }
+
+  /* redesign home R1 (Q-01): in the two-column cards of a phone the first reference («Friday last week, by now $10.00») wraps to two lines;
+     the skeleton line reserves them so the card does not grow when the figures arrive */
+  .odc-metric-ref[data-lead] {
+    min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui) * 2);
+  }
+}
+
+/* redesign bi FD (D3, live check a1): six figures share a row, so their value takes the title size; at display size a
+   price («$ 5,594.18») or a duration («5 h 45 min») broke into two lines at 1440 and at 390 */
+.odc-metric-grid[data-columns='6'] .odc-metric-value {
+  font-size: var(--od-x-type-title-size);
+}

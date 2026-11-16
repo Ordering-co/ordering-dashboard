@@ -1,23 +1,11 @@
 import React, { useId, useState } from 'react'
-import { ChevronDown } from 'react-bootstrap-icons'
 
-import {
-  ChangedDot,
-  ContrastBadge,
-  EditorCard,
-  FieldError,
-  GroupToggle,
-  RowControls,
-  RowHead,
-  SourceTag,
-  SourceTags,
-  SrOnly,
-  ValueRow
-} from '../BuilderWebTheme/styles'
+import { ChevronDown } from '../../Shared/Icon'
 import { getContrast, getContrastLevel } from './colors'
 import { CONTROLS, ComputedValue, ResetValue, Toggle } from './controls'
 import { isReadOnly, ReadOnlyValue } from './ReadOnlyValue'
 import { SectionsControl } from './SectionsControl'
+import { byKind } from '../utils'
 import {
   childKeys,
   controlOf,
@@ -45,6 +33,10 @@ import {
   themePathOf,
   typeOf
 } from './schemaNodes'
+import './theme-editor.css'
+
+// redesign B3b: cards, rows, tags, the contrast badge and the errors on the editor's own CSS (tokens, theme-editor.css)
+// instead of BuilderWebTheme/styles; the controls of controls.js are called with the same props as before.
 
 // The recursive renderer: a node is a row with the
 // control its metadata names; a group is its cards (`groups`), or its nodes in
@@ -60,9 +52,9 @@ import {
  * which drops it when the theme saves; but a number out of its range, which
  * reads at the closest limit and saves there.
  */
-export const invalidText = (t, codes, { stored = false } = {}) => {
+export const invalidText = (t, codes, { stored = false, kind = 'web' } = {}) => {
   const ends = (end) => codes.some(code => String(code).endsWith(end))
-  if (stored && codes.every(isClamped)) return t('BUILDER_THEME_CLAMPED_STORED', 'It was saved outside the range this version of the website takes and was set to the closest limit. It’s saved like that when you save.')
+  if (stored && codes.every(isClamped)) return byKind(kind, t('BUILDER_THEME_CLAMPED_STORED', 'It was saved outside the range this version of the website takes and was set to the closest limit. It’s saved like that when you save.'), t('BUILDER_APP_THEME_CLAMPED_STORED', 'It was saved outside the range this version of the app takes and was set to the closest limit. It’s saved like that when you save.'))
   const why = ends('.alpha')
     ? t('BUILDER_THEME_INVALID_ALPHA', 'This color can’t be transparent. Choose an opaque one.')
     : ends('.alias')
@@ -72,13 +64,13 @@ export const invalidText = (t, codes, { stored = false } = {}) => {
         : ends('.format')
           ? t('BUILDER_THEME_INVALID_FORMAT', 'This image’s format isn’t taken here. Upload it in one of the formats below.')
           : t('BUILDER_THEME_INVALID_VALUE', 'This value isn’t valid. Choose another one.')
-  return stored ? `${why} ${t('BUILDER_THEME_INVALID_STORED', 'It was saved before this version of the website and is dropped when you save.')}` : why
+  return stored ? `${why} ${byKind(kind, t('BUILDER_THEME_INVALID_STORED', 'It was saved before this version of the website and is dropped when you save.'), t('BUILDER_APP_THEME_INVALID_STORED', 'It was saved before this version of the app and is dropped when you save.'))}` : why
 }
 
 export const Changed = ({ t }) => (
   <>
-    <ChangedDot aria-hidden='true' title={t('BUILDER_THEME_CHANGED', 'Changed')} />
-    <SrOnly>{t('BUILDER_THEME_CHANGED', 'Changed')}</SrOnly>
+    <span className='odc-te-changed' aria-hidden='true' title={t('BUILDER_THEME_CHANGED', 'Changed')} />
+    <span className='odc-sr-only'>{t('BUILDER_THEME_CHANGED', 'Changed')}</span>
   </>
 )
 
@@ -223,35 +215,35 @@ export const NodeField = ({ ctx, path, pairPath }) => {
   const contrastText = level && `${ratio}:1 · ${level === 'aaa' ? 'AAA' : level === 'aa' ? 'AA' : level === 'large' ? t('BUILDER_THEME_CONTRAST_LARGE', 'Large text') : t('BUILDER_THEME_CONTRAST_LOW', 'Low')}`
 
   return (
-    <ValueRow data-path={joinPath(keys)} style={disabled ? { opacity: 0.5 } : undefined}>
-      <span>
+    <div className='odc-te-row' data-path={joinPath(keys)} data-disabled={disabled ? 'true' : undefined}>
+      <span className='odc-te-label'>
         {label}
         {own && !fromName && !identity && <Changed t={t} />}
         {(fromName || identity) && (
-          <SourceTags>
-            {fromName && <SourceTag>{t('BUILDER_THEME_FROM_PARENT', 'From _name_').replace('_name_', fromName)}</SourceTag>}
-            {identity && !read.own && <SourceTag>{t('BUILDER_THEME_FROM_PARENT', 'From _name_').replace('_name_', identity)}</SourceTag>}
-            {identity && read.own && <SourceTag custom>{t('BUILDER_THEME_CUSTOM', 'Custom')}</SourceTag>}
-          </SourceTags>
+          <span className='odc-te-tags'>
+            {fromName && <span className='odc-te-tag'>{t('BUILDER_THEME_FROM_PARENT', 'From _name_').replace('_name_', fromName)}</span>}
+            {identity && !read.own && <span className='odc-te-tag'>{t('BUILDER_THEME_FROM_PARENT', 'From _name_').replace('_name_', identity)}</span>}
+            {identity && read.own && <span className='odc-te-tag' data-custom='true'>{t('BUILDER_THEME_CUSTOM', 'Custom')}</span>}
+          </span>
         )}
-        {info && <small style={{ flexBasis: '100%', fontWeight: 400, fontSize: 12, color: '#5E6B7D' }}>{formatText(t, info)}</small>}
+        {info && <small className='odc-te-info'>{formatText(t, info)}</small>}
       </span>
-      <fieldset disabled={disabled} style={{ margin: 0, padding: 0, border: 0, minWidth: 0 }}>
+      <fieldset className='odc-te-fieldset' disabled={disabled}>
         {pair
           ? (
-            <RowControls columns='minmax(0, 1fr) minmax(0, 1fr) 130px'>
+            <div className='odc-te-controls' data-layout='pair'>
               {renderControl(path, shownValue(ctx, path, read), onChange, label)}
               {renderControl(pairPath, shownValue(ctx, pairPath, pair), (next) => setValue(pair.themeKeys, next), pairLabel, pair)}
-              {level ? <ContrastBadge level={level}>{contrastText}</ContrastBadge> : <span />}
-            </RowControls>
+              {level ? <span className='odc-te-contrast' data-level={level}>{contrastText}</span> : <span />}
+            </div>
             )
           : renderControl(path, shownValue(ctx, path, read), onChange, label)}
       </fieldset>
       {own
         ? <ResetValue label={identity && read.own ? t('BUILDER_THEME_BACK_TO_PARENT_OF', '_name_: back to _parent_').replace('_name_', label).replace('_parent_', identity) : t('BUILDER_THEME_RESTORE_DEFAULT_OF', 'Restore _name_ to its default').replace('_name_', label)} onClick={() => { if (!isReadOnly(schema, path)) onChange(null); if (pair && !isReadOnly(schema, pairPath)) setValue(pair.themeKeys, null) }} />
         : <span />}
-      {errors.length > 0 && <FieldError id={errorId} role={stored ? undefined : 'alert'}>{invalidText(t, errorCodes, { stored })}</FieldError>}
-    </ValueRow>
+      {errors.length > 0 && <span className='odc-te-error' id={errorId} role={stored ? undefined : 'alert'}>{invalidText(t, errorCodes, { stored, kind: ctx.kind })}</span>}
+    </div>
   )
 }
 
@@ -286,18 +278,19 @@ const MatrixRows = ({ ctx, paths }) => {
   rows.forEach(row => orderedChildren(schema, row).forEach(key => {
     if (isNode(getAt(schema, [...splitPath(row), key])) && !columns.includes(key)) columns.push(key)
   }))
-  const template = `repeat(${columns.length}, minmax(0, 1fr))`
+  // The columns' count, for the grid (theme-editor.css)
+  const template = { '--odc-te-columns': columns.length }
   const columnLabel = (key) => {
     const row = rows.find(item => isNode(getAt(schema, [...splitPath(item), key])))
     return formatText(t, labelOf(schema, [...splitPath(row), key]), { fallback: key })
   }
   return (
     <>
-      <RowHead aria-hidden='true'>
+      <div className='odc-te-row odc-te-row-head' aria-hidden='true'>
         <span />
-        <RowControls columns={template}>{columns.map(key => <span key={key}>{columnLabel(key)}</span>)}</RowControls>
+        <div className='odc-te-controls' data-layout='matrix' style={template}>{columns.map(key => <span key={key}>{columnLabel(key)}</span>)}</div>
         <span />
-      </RowHead>
+      </div>
       {rows.map(row => {
         const name = formatText(t, labelOf(schema, row), { fallback: splitPath(row).pop() })
         const cells = columns.map(key => [...splitPath(row), key])
@@ -306,13 +299,13 @@ const MatrixRows = ({ ctx, paths }) => {
         const own = reads.some((read, index) => editable[index] && read.own)
         const info = infoOf(schema, row)
         return (
-          <ValueRow key={row} data-path={row}>
-            <span>
+          <div className='odc-te-row' key={row} data-path={row}>
+            <span className='odc-te-label'>
               {name}
               {own && <Changed t={t} />}
-              {info && <small style={{ flexBasis: '100%', fontWeight: 400, fontSize: 12, color: '#5E6B7D' }}>{formatText(t, info)}</small>}
+              {info && <small className='odc-te-info'>{formatText(t, info)}</small>}
             </span>
-            <RowControls columns={template}>
+            <div className='odc-te-controls' data-layout='matrix' style={template}>
               {cells.map((cell, index) => {
                 const read = reads[index]
                 const cellLabel = `${name}: ${columnLabel(columns[index])}`
@@ -320,18 +313,18 @@ const MatrixRows = ({ ctx, paths }) => {
                   // Not in the schema: what the API works out for it, if anything, to read
                   const computed = isNode(getAt(schema, cell)) ? undefined : getIn(ctx.resolved, themePathOf(cell))
                   if (computed !== undefined && computed !== null && typeof computed !== 'object') return <ComputedValue key={index} t={t} label={cellLabel} value={computed} />
-                  return <span key={index} aria-hidden='true' style={{ textAlign: 'center', color: '#ADB5BD' }}>—</span>
+                  return <span key={index} className='odc-te-empty' aria-hidden='true'>—</span>
                 }
                 const Control = controlFor(schema, cell, read.value)
                 if (!editable[index] || !Control) return <ReadOnlyValue key={index} ctx={ctx} path={joinPath(cell)} label={cellLabel} read={read} />
                 // Cells are narrow: a color shows its link as an icon, and its whole name on hover
                 return <Control key={index} ctx={ctx} path={joinPath(cell)} label={cellLabel} value={shownValue(ctx, joinPath(cell), read)} own={read.own} fallback={read.fallback} onChange={(next) => setValue(read.themeKeys, next)} compact />
               })}
-            </RowControls>
+            </div>
             {own
               ? <ResetValue label={t('BUILDER_THEME_RESTORE_DEFAULT_OF', 'Restore _name_ to its default').replace('_name_', name)} onClick={() => reads.forEach((read, index) => editable[index] && read.own && setValue(read.themeKeys, null))} />
               : <span />}
-          </ValueRow>
+          </div>
         )
       })}
     </>
@@ -368,25 +361,25 @@ export const GroupCard = ({ ctx: outerCtx, group }) => {
   const body = (
     <>
       {matrix ? <MatrixRows ctx={ctx} paths={paths} /> : <NodeRows ctx={ctx} paths={nodes.filter(path => path !== group.toggle?.path)} />}
-      {offNotes(ctx, nodes).map(note => <p key={note} style={{ margin: 0, padding: '4px 20px 12px', color: '#5E6B7D' }}>{note}</p>)}
+      {offNotes(ctx, nodes).map(note => <p key={note} className='odc-te-note'>{note}</p>)}
     </>
   )
   return (
     <>
-      <EditorCard aria-labelledby={label ? id : undefined} $bare={!label}>
+      <section className='odc-te-card' aria-labelledby={label ? id : undefined} data-bare={!label ? 'true' : undefined}>
         {collapsible && label
           ? (
-            <GroupToggle type='button' id={id} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(prev => !prev)}>
+            <button type='button' className='odc-te-fold' id={id} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(prev => !prev)}>
               {label}
-              {changed && <span>{t('BUILDER_THEME_CHANGED', 'Changed')}</span>}
-              <ChevronDown aria-hidden='true' />
-            </GroupToggle>
+              {changed && <span className='odc-te-fold-changed'>{t('BUILDER_THEME_CHANGED', 'Changed')}</span>}
+              <ChevronDown className='odc-icon' aria-hidden='true' />
+            </button>
             )
           : label && (
-            <header>
-              <h3 id={id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>{label}{toggle?.own && <Changed t={t} />}</h3>
+            <header className='odc-te-card-head'>
+              <h3 id={id}>{label}{toggle?.own && <Changed t={t} />}</h3>
               {toggle && (
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className='odc-te-card-switch'>
                   <Toggle label={toggleLabel} checked={toggle.value !== false} onChange={(next) => setValue(toggle.themeKeys, next)} />
                   <span aria-hidden='true'>{toggleLabel}</span>
                   {toggle.own && <ResetValue label={t('BUILDER_THEME_RESTORE_DEFAULT_OF', 'Restore _name_ to its default').replace('_name_', toggleLabel)} onClick={() => setValue(toggle.themeKeys, null)} />}
@@ -396,7 +389,7 @@ export const GroupCard = ({ ctx: outerCtx, group }) => {
             </header>
           )}
         {(!collapsible || open) && body}
-      </EditorCard>
+      </section>
       {(!collapsible || open) && !matrix && groups.map(path => <SchemaGroup key={path} ctx={ctx} path={path} titled />)}
     </>
   )
@@ -434,7 +427,7 @@ export const SchemaGroup = ({ ctx, path, titled, skip = [], exclude }) => {
   const keys = splitPath(path)
   const item = getAt(schema, keys)
   if (item === undefined || isHidden(item)) return null
-  if (isNode(item)) return <EditorCard $bare><NodeField ctx={ctx} path={joinPath(keys)} /></EditorCard>
+  if (isNode(item)) return <section className='odc-te-card' data-bare='true'><NodeField ctx={ctx} path={joinPath(keys)} /></section>
   const meta = editorOf(item)
   const cards = (meta.groups || []).filter(card => !skip.includes(card.key))
   const inCards = pathsInCards(meta.groups || [])
@@ -447,7 +440,7 @@ export const SchemaGroup = ({ ctx, path, titled, skip = [], exclude }) => {
     <>
       {cards.filter(card => card.placement === 'before').map(card => <GroupCard key={card.key} ctx={ctx} group={card} />)}
       {nodes.length > 0 && <GroupCard ctx={ctx} group={{ key: 'rows', label: titled ? meta.label : null, info: titled ? meta.info : null, paths: nodes }} />}
-      {nodes.length === 0 && titled && label && groups.length > 0 && <h4 style={{ margin: '4px 0 0', fontSize: 14, fontWeight: 600 }}>{label}</h4>}
+      {nodes.length === 0 && titled && label && groups.length > 0 && <h4 className='odc-te-subhead'>{label}</h4>}
       {cards.filter(card => card.placement !== 'before').map(card => <GroupCard key={card.key} ctx={ctx} group={card} />)}
       {groups.map(child => <SchemaGroup key={child} ctx={ctx} path={child} titled exclude={exclude} />)}
     </>

@@ -1,0 +1,116 @@
+/* Column manager · popover with a checkbox, a note and two move buttons per column. */
+
+.odc-cm-positioner { z-index: calc(var(--od-x-layer-overlay) + 19); } /* : mounts in body, so it takes the overlay role (above sticky headers and the dialog host) */
+
+.odc-cm-popup {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: var(--od-x-popover);
+  max-inline-size: calc(100vw - var(--od-space-4));
+  max-block-size: min(70vh, calc(100dvh - var(--od-space-9)));
+  padding: var(--od-space-1);
+  overflow-y: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+.odc-cm-popup:focus { outline: none; }
+
+.odc-cm-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-2-5) var(--od-x-space-1-5);
+}
+
+.odc-cm-title {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cm-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-cm-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  padding-inline-end: var(--od-x-space-half);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-cm-row[data-dragging] {
+  background: var(--od-x-hover);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+.odc-cm-grip {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-target-fine);
+  block-size: var(--od-x-control-height);
+  color: var(--od-x-text-subtle);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.odc-cm-row[data-dragging] .odc-cm-grip { cursor: grabbing; }
+
+.odc-cm-grip .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-cm-row .odc-checkbox-labelled {
+  flex: 1;
+  inline-size: auto;
+  min-inline-size: 0;
+  padding-inline-start: var(--od-x-space-half);
+}
+
+.odc-cm-note {
+  flex: none;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-cm-moves {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+/* The checkbox focus ring sits inside its clipped row. */
+.odc-cm-popup .odc-btn:focus-visible { outline-offset: var(--od-x-focus-inset); }
+
+/* Touch (C3): rows and buttons reach 44px; dragging gives way to the move buttons. */
+@media (pointer: coarse) {
+  .odc-cm-grip { display: none; }
+  .odc-cm-row .odc-checkbox-labelled { padding-inline-start: var(--od-x-space-2-5); }
+  .odc-cm-row { min-block-size: var(--od-x-target-coarse); }
+
+  /* redesign W0 close-fixes-5 (W0-E-17, decision 12): the two move buttons touch each other and sit at the end of the row, so a 28px button with a
+     44px pseudo-element area (W0-3d, 231eac6b) crossed its neighbour's area and pushed 8px of its own past the row's end (the row scrolled by 6px).
+     They keep 44 visible, the case decision 12 allows for neighbours closer than 12px: the area is then the box and nothing leaves the row. */
+  .odc-cm-popup .odc-cm-moves .odc-btn[data-icon-only][data-size='sm'] {
+    inline-size: var(--od-x-target-coarse);
+    block-size: var(--od-x-target-coarse);
+  }
+}

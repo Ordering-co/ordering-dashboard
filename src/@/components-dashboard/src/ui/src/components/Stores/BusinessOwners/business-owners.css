@@ -1,0 +1,89 @@
+/*
+ * redesign stores 5.2 · Owners and agents of a store: the count and «Add», then one row per person (avatar, name, email,
+ * «Remove»). Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * Prefix: odc-people-*.
+ */
+
+.odc-people {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+}
+
+.odc-people-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-people-count {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-notice {
+  min-inline-size: 0;
+}
+
+.odc-people-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-people-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-people-who {
+  display: grid;
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-people-name,
+.odc-people-email {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-people-name {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-email {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-remove {
+  flex: none;
+}
+
+.odc-people-empty,
+.odc-people-note {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}

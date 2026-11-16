@@ -1,112 +1,42 @@
 /* eslint-disable import/first */
+// redesign IM-A: /connect/importers is the Connect shell with the kind `importer` (PosMenu). What the shell does (the table, the
+// panel, ?id=) is tested in PosMenu/__tests__/ImportersShell.test.jsx; here, that `Importers` is that wiring and nothing else.
 import React from 'react'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { render, screen } from '@testing-library/react'
 
-import { renderWithProviders } from '~/__tests__/helpers/testUtils'
+const seen = vi.hoisted(() => ({ props: null }))
 
-vi.mock('../../../../../index.js', () => ({
-  useLanguage: () => [null, (_key, fallback) => fallback],
-  PosMenuBusinessList: () => null
+vi.mock('../../PosMenu', () => ({
+  PosMenu: (props) => {
+    seen.props = props
+    return <div data-testid='pos-menu' />
+  }
 }))
 
-vi.mock('../../../utils', () => ({
-  getStorageItem: vi.fn().mockResolvedValue({}),
-  setStorageItem: vi.fn().mockResolvedValue(undefined)
-}))
+import { Importers } from '../index'
+import * as importersModule from '../index'
 
-vi.mock('../../BusinessesListingHeader', () => ({
-  BusinessesListingHeader: () => <div data-testid='businesses-header' />
-}))
-
-vi.mock('../../BusinessesList', () => ({
-  BusinessesList: () => <div data-testid='businesses-list' />
-}))
-
-vi.mock('../../Stores/BusinessActiveStateFilter', () => ({
-  BusinessActiveStateFilter: () => <div data-testid='active-filter' />
-}))
-
-vi.mock('../../ImportersPanel', () => ({
-  ImportersPanel: ({ business }) => (
-    business
-      ? <div data-testid='importers-panel'>{business.name}</div>
-      : null
-  )
-}))
-
-vi.mock('../MenuImportModal', () => ({
-  MenuImportModal: () => null
-}))
-
-import { ImportersUI } from '../index'
-
-const business = { id: 2147, name: 'Pan Pizza' }
-
-const renderImporters = (props = {}, route = '/connect/importers') => {
-  const onBusinessRedirect = vi.fn()
-
-  renderWithProviders(
-    <MemoryRouter initialEntries={[route]}>
-      <ImportersUI
-        businessList={{ loading: false, businesses: [business] }}
-        integrationsList={{}}
-        pagination={{ currentPage: 1, pageSize: 10, total: 1 }}
-        searchValue={null}
-        selectedBusinessActiveState={false}
-        handleChangeBusinessActiveState={vi.fn()}
-        loadMoreBusinesses={vi.fn()}
-        handleSucessRemoveBusiness={vi.fn()}
-        handleSucessAddBusiness={vi.fn()}
-        handleSucessUpdateBusiness={vi.fn()}
-        loadBusinesses={vi.fn()}
-        onSearch={vi.fn()}
-        onBusinessRedirect={onBusinessRedirect}
-        getPageBusinesses={vi.fn()}
-        filterValues={{}}
-        businessTypeSelected={null}
-        inActiveBusinesses={{ businesses: [] }}
-        citiesList={[]}
-        isUseQuery
-        {...props}
-      />
-    </MemoryRouter>
-  )
-
-  return { onBusinessRedirect }
-}
-
-describe('Connect ImportersUI — URL business restore', () => {
+describe('Connect Importers', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    seen.props = null
   })
 
-  it('opens the panel when the URL id matches a loaded business', async () => {
-    renderImporters(
-      {},
-      '/connect/importers?active=false&page=1&pageSize=10&id=2147'
-    )
-
-    expect(await screen.findByTestId('importers-panel')).toHaveTextContent('Pan Pizza')
+  it('mounts the Connect shell with the kind importer', () => {
+    render(<Importers />)
+    expect(screen.getByTestId('pos-menu')).toBeInTheDocument()
+    expect(seen.props.kind).toBe('importer')
   })
 
-  it('closes the panel and clears the URL id when the business is not in the loaded list', async () => {
-    const { onBusinessRedirect } = renderImporters(
-      { businessList: { loading: false, businesses: [] } },
-      '/connect/importers?active=false&page=1&pageSize=10&id=2147'
-    )
-
-    expect(screen.queryByTestId('importers-panel')).not.toBeInTheDocument()
-    expect(onBusinessRedirect).toHaveBeenCalledWith()
+  it('passes the page props through (isUseQuery and onBusinessRedirect), and the kind cannot be changed by them', () => {
+    const onBusinessRedirect = vi.fn()
+    render(<Importers isUseQuery onBusinessRedirect={onBusinessRedirect} kind='pos' />)
+    expect(seen.props.isUseQuery).toBe(true)
+    expect(seen.props.onBusinessRedirect).toBe(onBusinessRedirect)
+    expect(seen.props.kind).toBe('importer')
   })
 
-  it('does not open the panel while the business list is still loading', () => {
-    renderImporters(
-      { businessList: { loading: true, businesses: [] } },
-      '/connect/importers?active=false&page=1&pageSize=10&id=2147'
-    )
-
-    expect(screen.queryByTestId('importers-panel')).not.toBeInTheDocument()
+  it('ImportersUI is gone: the old panel, list and header are no longer wired here', () => {
+    expect(importersModule.ImportersUI).toBeUndefined()
   })
 })

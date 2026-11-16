@@ -1,0 +1,72 @@
+.od-ui:where(.od-confirm-legacy-wrap) {
+  @apply od-fixed od-flex od-items-center od-justify-center;
+  inset: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
+  outline: none;
+}
+
+.od-ui:where(.od-confirm-legacy-dialog) {
+  @apply od-box-border;
+  width: var(--od-confirm-legacy-width);
+  max-height: calc(var(--vh, 1vh) * 100 - 32px);
+  padding: 20px;
+  overflow: auto;
+  background: var(--od-confirm-legacy-surface);
+  border-radius: var(--od-confirm-legacy-radius-panel);
+}
+
+.od-ui:where(.od-confirm-legacy-actions) {
+  @apply od-flex od-justify-between;
+  margin: 30px 0 0;
+}
+
+.od-ui:where(.od-confirm-legacy-actions) button {
+  width: 100%;
+  min-height: 45px;
+  height: auto;
+  border-radius: 32px;
+  opacity: 1;
+}
+
+.od-ui:where(.od-confirm-legacy-title) {
+  margin-top: 0;
+  color: var(--od-confirm-legacy-text);
+  letter-spacing: 0;
+  text-align: left;
+  opacity: 1;
+}
+
+.od-ui:where(.od-confirm-legacy-content) {
+  color: var(--od-confirm-legacy-text);
+  letter-spacing: 0;
+  text-align: left;
+  opacity: 1;
+}
+
+.od-ui:where(.od-confirm-legacy-content) ul {
+  padding-left: 30px;
+}
+
+.od-ui:where(.od-confirm-legacy-content) ul li {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+.od-ui:where(.od-confirm-legacy-icon) {
+  float: right;
+  color: var(--od-confirm-legacy-text);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-confirm-legacy-icon) > button {
+  min-width: var(--od-confirm-legacy-touch-target);
+  min-height: var(--od-confirm-legacy-touch-target);
+  width: var(--od-confirm-legacy-touch-target);
+  height: var(--od-confirm-legacy-touch-target);
+}
+
+.od-ui:where(.od-confirm-legacy-icon) svg {
+  width: var(--od-confirm-legacy-icon-size);
+  height: var(--od-confirm-legacy-icon-size);
+}

@@ -1,26 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { ExclamationCircle, Sliders } from 'react-bootstrap-icons'
 
 import { BuilderAppConstants as BuilderAppConstantsController, ToastType, useLanguage, useToast } from '../../../../../index'
-import { Button } from '../../../styles'
-import { BuilderMessage } from '../BuilderShared'
+import { CircleAlert, SlidersHorizontal } from '../../Shared/Icon'
+import { Button, EmptyState, Switch, TextArea, TextField } from '../../Shared/Product'
+import { LoadingRows } from '../BuilderAppSettings'
 import { getValueErrorMessage } from '../utils'
-import {
-  JsonInput,
-  LinkButton,
-  MonoInput,
-  MutedText,
-  RowAside,
-  SettingList,
-  SettingName,
-  SettingRow,
-  Switch,
-  Tag,
-  ValueEditor,
-  ValueField
-} from '../styles'
+import '../BuilderAppSettings/builder-app-edit.css'
+
+// redesign B2: Constants on Product pieces (Switch, TextField, TextArea, Buttons, Skeleton, EmptyState) and --od-* tokens.
+// The switch saves '1' or '0' at once and is disabled while it saves, as main's; the rest keeps main's checks, Enter, Cancel and Save.
 
 const isTrue = (value) => value === true || value === 1 || ['1', 'true'].includes(String(value).toLowerCase())
 
@@ -91,88 +79,73 @@ const ConstantRow = (props) => {
       ? t('BUILDER_NOT_SET', 'Not set')
       : t('BUILDER_BASE_VALUE', 'Base value')
 
+  const fieldProps = {
+    id: inputId,
+    'aria-label': constant.name,
+    className: 'odc-be-mono',
+    value: draft,
+    error: error || undefined,
+    onChange: (value) => { setDraft(value); setError(null) }
+  }
+
   return (
-    <SettingRow>
-      <div>
-        <SettingName>
-          <label htmlFor={inputId} style={{ margin: 0 }}>{constant.name}</label>
-          {constant.required && <Tag>{t('BUILDER_REQUIRED', 'Required')}</Tag>}
-        </SettingName>
-        <MutedText small>{[constant.group, source].filter(Boolean).join(' · ')}</MutedText>
+    <div className='odc-be-row'>
+      <div className='odc-be-row-name'>
+        <span className='odc-be-name'>
+          <label htmlFor={inputId}>{constant.name}</label>
+          {constant.required && <span className='odc-be-tag'>{t('BUILDER_REQUIRED', 'Required')}</span>}
+        </span>
+        <span className='odc-be-muted'>{[constant.group, source].filter(Boolean).join(' · ')}</span>
       </div>
-      <ValueEditor>
+      <div className='odc-be-value'>
         {isBoolean
           ? (
-            <ValueField invalid={!!error}>
+            <div className='odc-be-switch'>
               <div>
                 <Switch
                   id={inputId}
-                  type='button'
-                  role='switch'
+                  label={constant.name}
                   checked={isTrue(stored)}
-                  aria-checked={isTrue(stored) ? 'true' : 'false'}
                   disabled={saving}
-                  onClick={() => save(isTrue(stored) ? '0' : '1')}
+                  onCheckedChange={() => save(isTrue(stored) ? '0' : '1')}
                 />
                 <span>{isTrue(stored) ? t('BUILDER_ON', 'On') : t('BUILDER_OFF', 'Off')}</span>
               </div>
-              {error && <span role='alert'>{error}</span>}
-            </ValueField>
+              {error && <span className='odc-be-error' role='alert'>{error}</span>}
+            </div>
             )
-          : (
-            <ValueField invalid={!!error}>
-              <div>
-                {constant.type === 'json'
-                  ? (
-                    <JsonInput
-                      id={inputId}
-                      value={draft}
-                      spellCheck={false}
-                      aria-invalid={error ? 'true' : 'false'}
-                      aria-describedby={error ? `${inputId}-error` : undefined}
-                      onChange={(e) => { setDraft(e.target.value); setError(null) }}
-                    />
-                    )
-                  : (
-                    <MonoInput
-                      id={inputId}
-                      type='text'
-                      wide
-                      inputMode={constant.type === 'integer' ? 'numeric' : constant.type === 'decimal' ? 'decimal' : undefined}
-                      value={draft}
-                      maxLength={constant.type === 'string' ? 255 : undefined}
-                      placeholder={constant.required && !stored ? t('BUILDER_REQUIRED', 'Required') : ''}
-                      autoComplete='off'
-                      aria-invalid={error ? 'true' : 'false'}
-                      aria-describedby={error ? `${inputId}-error` : undefined}
-                      onChange={(e) => { setDraft(e.target.value); setError(null) }}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && dirty) handleSave() }}
-                    />
-                    )}
-              </div>
-              {error && <span id={`${inputId}-error`} role='alert'>{error}</span>}
-            </ValueField>
-            )}
-      </ValueEditor>
-      <RowAside>
+          : constant.type === 'json'
+            ? <TextArea {...fieldProps} spellCheck={false} />
+            : (
+              <TextField
+                {...fieldProps}
+                inputMode={constant.type === 'integer' ? 'numeric' : constant.type === 'decimal' ? 'decimal' : undefined}
+                maxLength={constant.type === 'string' ? 255 : undefined}
+                placeholder={constant.required && !stored ? t('BUILDER_REQUIRED', 'Required') : ''}
+                autoComplete='off'
+                onKeyDown={(e) => { if (e.key === 'Enter' && dirty) handleSave() }}
+              />
+              )}
+      </div>
+      <div className='odc-be-aside'>
         {!isBoolean && dirty
           ? (
             <>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={() => { setDraft(stored); setError(null) }}>
+              <Button onClick={() => { setDraft(stored); setError(null) }}>
                 {t('CANCEL', 'Cancel')}
               </Button>
-              <Button type='button' color='primary' borderRadius='8px' disabled={saving} onClick={handleSave}>
+              <Button variant='primary' disabled={saving} onClick={handleSave}>
                 {saving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
               </Button>
             </>
             )
           : constant.customized && (
-            <LinkButton type='button' disabled={saving} onClick={handleReset}>
+            <Button variant='link' disabled={saving} onClick={handleReset}>
               {t('BUILDER_RESTORE_BASE_VALUE', 'Restore base value')}
-            </LinkButton>
+            </Button>
           )}
-      </RowAside>
-    </SettingRow>
+      </div>
+    </div>
   )
 }
 
@@ -182,30 +155,29 @@ const BuilderAppConstantsUI = (props) => {
   const { loading, constants, error } = constantsState
 
   if (loading && !constants.length) {
-    return <div aria-busy='true'><Skeleton height={64} count={4} style={{ marginBottom: 8 }} /></div>
+    return <LoadingRows />
   }
   if (error) {
     return (
-      <BuilderMessage
-        role='alert'
+      <EmptyState
         tone='error'
-        icon={<ExclamationCircle aria-hidden='true' />}
+        icon={CircleAlert}
+        titleAs='h2'
         title={t('BUILDER_CONSTANTS_LOAD_ERROR', 'We couldn’t load the constants')}
-        text={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
-      >
-        <Button color='primary' borderRadius='8px' onClick={reloadConstants}>{t('BUILDER_RETRY', 'Try again')}</Button>
-      </BuilderMessage>
+        description={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
+        action={<Button variant='primary' onClick={reloadConstants}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+      />
     )
   }
   if (!constants.length) {
-    return <BuilderMessage icon={<Sliders aria-hidden='true' />} title={t('BUILDER_NOTHING_TO_EDIT', 'This base has nothing to edit here')} />
+    return <EmptyState icon={SlidersHorizontal} titleAs='h2' title={t('BUILDER_NOTHING_TO_EDIT', 'This base has nothing to edit here')} />
   }
   return (
-    <SettingList aria-label={t('BUILDER_TAB_CONSTANTS', 'Constants')}>
+    <div className='odc-be-list' role='group' aria-label={t('BUILDER_TAB_CONSTANTS', 'Constants')}>
       {constants.map(constant => (
         <ConstantRow key={constant.id} {...props} constant={constant} saving={savingId === constant.id} />
       ))}
-    </SettingList>
+    </div>
   )
 }
 

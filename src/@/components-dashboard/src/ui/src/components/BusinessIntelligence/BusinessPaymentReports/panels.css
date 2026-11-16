@@ -1,0 +1,74 @@
+/*
+ * redesign business-payments FD (D8, D9): the two panels of the page (an invoice, a legacy EatStreet report) and the
+ * loading and error states of their documents. Values come from --od-* (release) and --od-x-* (src/brand/candidates.css)
+ * only; the literal guard fails on anything else. Logical properties only (C17).
+ *
+ * The documents themselves (the invoice, the iframe of the legacy report) keep their own styles: the invoice is the page
+ * that is printed (l6-b3), the legacy report is the HTML of a third party.
+ */
+
+/* The document brings its own padding (the invoice) or fills the panel (the iframe), so the body adds none. */
+.bpp-panel .odc-record-body {
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+/* The legacy report is an iframe with its own scroll: the body is the column it fills. */
+.bpp-panel[data-kind='legacy'] .odc-record-body {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
+/* ── Loading: the box of the document, so nothing jumps when it arrives ── */
+.bpp-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding-block: var(--od-space-6);
+  padding-inline: var(--od-space-6);
+  box-sizing: border-box;
+}
+
+.bpp-skeleton[data-fill] {
+  flex: 1 1 0;
+  block-size: 100%;
+  min-block-size: 0;
+}
+
+.bpp-skeleton-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.bpp-skeleton-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--od-space-4);
+}
+
+.bpp-skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.bpp-skeleton-frame {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* ── Error: the state keeps the place of the document ── */
+.bpp-error {
+  display: flex;
+  justify-content: center;
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding-block: var(--od-space-8);
+  padding-inline: var(--od-space-5);
+  box-sizing: border-box;
+}

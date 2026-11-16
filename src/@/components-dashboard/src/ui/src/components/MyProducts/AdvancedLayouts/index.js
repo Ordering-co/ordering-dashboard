@@ -102,7 +102,7 @@ export const AdvancedLayouts = (props) => {
         {isApp
           ? (
           <BoxLayout>
-            <h1>{t('CUSTOMER_APP_ADVANCED_LAYOUTS', 'Customer App  Advanced Layouts')}</h1>
+            <h1>{t('CUSTOMER_APP_ADVANCED_LAYOUTS', 'Customer App Advanced Layouts')}</h1>
             <h2>{t('HOMEPAGE', 'Homepage')}</h2>
             <HeadingWrapper>
               <LayoutStyleGroup
@@ -222,7 +222,7 @@ export const AdvancedLayouts = (props) => {
         </ButtonWrapper>
       </Container>
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

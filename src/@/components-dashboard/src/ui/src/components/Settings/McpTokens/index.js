@@ -200,7 +200,13 @@ const McpTokensUI = (props) => {
         <TokenSide>
           <StatusBadge $status={tokenStatus}>{statusLabels[tokenStatus]}</StatusBadge>
           {isActive && (
-            <LinkAction type='button' $danger disabled={revoking === item.id} onClick={() => onRevoke(item)}>
+            <LinkAction
+              type='button'
+              $danger
+              disabled={revoking === item.id}
+              aria-label={revoking === item.id ? undefined : t('MCP_REVOKE_NAMED', 'Revoke _name_').replace('_name_', item.name)}
+              onClick={() => onRevoke(item)}
+            >
               {revoking === item.id ? t('MCP_REVOKING', 'Revoking') : t('MCP_REVOKE', 'Revoke')}
             </LinkAction>
           )}

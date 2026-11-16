@@ -1,10 +1,14 @@
 import React from 'react'
 import { useLanguage, useSession } from '../../../../../index'
-import { DragScroll } from '../../Shared'
-import {
-  SettingListConatiner,
-  Tab
-} from './styles'
+import { SectionNav } from '../../Shared/Product'
+
+// redesign stores 5.1b (decision 35, G2-03): the subsections of Store details are one selector at every width
+// («Information ▾»), never a strip of tabs that scrolls sideways. Same keys (`?tab=`), same order and same rules as the strip:
+// Owner is not offered to level 2 (main dropped the EatStreet owner's Agents rule).
+export const STORE_DETAILS_TABS = ['information', 'owner', 'categories', 'location', 'agents', 'images', 'videos', 'seo_options']
+
+/** The subsections this person sees, in order (the strip's rules). */
+export const visibleStoreDetailsTabs = ({ level } = {}) => STORE_DETAILS_TABS.filter(key => !(level === 2 && key === 'owner'))
 
 export const BusinessInfoSettingList = (props) => {
   const {
@@ -14,33 +18,27 @@ export const BusinessInfoSettingList = (props) => {
   const [, t] = useLanguage()
   const [{ user }] = useSession()
 
-  const listOptions = [
-    { key: 'information', content: t('INFORMATION', 'Information') },
-    { key: 'owner', content: t('OWNER_ID', 'Owner') },
-    { key: 'categories', content: t('CATEGORIES', 'Categories') },
-    { key: 'location', content: t('LOCATION', 'Location') },
-    { key: 'agents', content: t('AGENTS', 'Agents') },
-    { key: 'images', content: t('IMAGES', 'Images') },
-    { key: 'videos', content: t('VIDEOS', 'Videos') },
-    { key: 'seo_options', content: t('SEO_OPTIONS', 'SEO Options') }
-  ]
+  const labels = {
+    information: t('INFORMATION', 'Information'),
+    owner: t('OWNER_ID', 'Owner'),
+    categories: t('CATEGORIES', 'Categories'),
+    location: t('LOCATION', 'Location'),
+    agents: t('AGENTS', 'Agents'),
+    images: t('IMAGES', 'Images'),
+    videos: t('VIDEOS', 'Videos'),
+    seo_options: t('SEO_OPTIONS', 'SEO Options')
+  }
+  const items = visibleStoreDetailsTabs({ level: user?.level }).map(key => ({ id: key, label: labels[key] }))
+
   return (
-    <>
-      <SettingListConatiner>
-        <DragScroll>
-          {listOptions.map(option => (
-            !(user?.level === 2 && option.key === 'owner') && (
-              <Tab
-                key={option.key}
-                active={selectedInfoItem === option.key}
-                onClick={() => handleSelectInfoItem(option.key)}
-              >
-                {option.content}
-              </Tab>
-            )
-          ))}
-        </DragScroll>
-      </SettingListConatiner>
-    </>
+    <SectionNav
+      selectorOnly
+      className='odc-sd-subnav'
+      label={t('STORE_DETAILS_SUBSECTIONS', 'Store details subsections')}
+      compactLabel={t('SUBSECTION', 'Subsection')}
+      items={items}
+      value={selectedInfoItem}
+      onValueChange={handleSelectInfoItem}
+    />
   )
 }

@@ -1,0 +1,1001 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b1-analytics-filters-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-b1-analytics-filters-analyticsavailabletimes-index-js-962291",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsavailabletimes-styles-js-155d30",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta de grafico."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsbusytimes-index-js-46f1a6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsbusytimes-styles-js-d7bba3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta de grafico."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsdriversfilter-index-js-224b73",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "analyticsDriversFilterProps /* binding-sha256:019a7faa423dcddace7ca32b8418edfa222528bdf2aab37c1de947f315ac9ef3 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "(isAllCheck === 'all') ? 'primary' : 'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "(isAllCheck === 'none') ? 'primary' : 'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsdriversfilter-styles-js-f911bc",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriversFilter/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "SelectBtnWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "SelectBtnWrapper button > svg: el glifo dentro de los botones Select All / Select None."
+          },
+          {
+            "component": "SelectBtnWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SelectBtnWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TreeViewChildrenContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 10px;\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    margin-left: 10px;\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TreeViewChildrenItem",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "TreeViewChildrenItem svg: el glifo de la casilla del conductor."
+          },
+          {
+            "component": "TreeViewChildrenItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 40px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TreeViewChildrenLabel",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 30px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TreeViewParentItem",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "TreeViewParentItem svg: el glifo de la casilla del grupo."
+          },
+          {
+            "component": "TreeViewParentLabel",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "SelectBtnWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectBtnWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenContainer",
+            "property": "border-left",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenContainer",
+            "property": "border-right",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 10px;\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    margin-left: 10px;\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 40px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenItem",
+            "property": "color",
+            "match": "props => props.theme?.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenLabel",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 30px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewChildrenLabel",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewParentItem",
+            "property": "color",
+            "match": "props => props.theme?.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewParentItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewParentLabel",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TreeViewParentLabel",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsstatusfilterbar-index-js-a81b1f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsStatusFilterBar/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-analyticsstatusfilterbar-styles-js-53d26c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsStatusFilterBar/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 3px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "OrderStatusFilterContainer",
+            "property": "border-bottom",
+            "match": "1px solid #CCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 3px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-businessanalytics-index-js-74b626",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessAnalytics/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "businessAnalyticsProps /* binding-sha256:ec7d000db63edfd167544f78902220fbb9752d071c4feda7d2e67040c3a989fb */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-driveranalytics-index-js-a04374",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/DriverAnalytics/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driverAnalyticsProps /* binding-sha256:2327fd65260367bf5629b14718e77fb36dc60cd35b05869f686b1c9b4d64da50 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-driveranalytics-styles-js-bd18e2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/DriverAnalytics/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BusinessCalendarWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "> button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "BusinessCalendarWrapper button > svg: el glifo del calendario."
+          },
+          {
+            "component": "BusinessCalendarWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 12px;\n        margin-right: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessFilterWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 25px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b1-analytics-filters: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BusinessCalendarWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 12px;\n        margin-right: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessFilterWrapper",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "> button",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessFilterWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 25px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessFilterWrapper",
+            "property": "color",
+            "match": "#748194",
+            "context": "> button",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-graphloadingmessage-index-js-c18004",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/GraphLoadingMessage/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-graphloadingmessage-styles-js-3c92d2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/GraphLoadingMessage/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "LoadingMessage",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b1-analytics-filters semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b1-analytics-filters-businessintelligence-index-js-e1b819",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

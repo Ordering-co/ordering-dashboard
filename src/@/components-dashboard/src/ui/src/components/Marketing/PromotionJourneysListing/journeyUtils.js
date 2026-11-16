@@ -116,7 +116,33 @@ export const getJourneyTemplateForPromotion = promotion => {
   return getJourneyTemplate('minimum_purchase')
 }
 
-export const getJourneyFormFromPromotion = ({ promotion, allSiteIds = [], allBusinessIds = [] }) => {
+// The way the summary of a promotion writes a stamp `YYYY-MM-DDTHH:mm`: in the project's format through the host's `parseDate`.
+// The time is left out when it is the default one of its end (00:00 of the start, 23:59 of the end): the day says it all.
+export const createSummaryDateFormatter = (parseDate) => (value, type) => parseDate(`${String(value).replace('T', ' ')}:00`, {
+  utc: false,
+  dateOnly: (type === 'start' ? /T00:00$/ : /T23:59$/).test(String(value))
+})
+
+const DESCRIPTION_STAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?/g
+
+// descriptions saved by an older version carry raw stamps (`from 2026-09-01T16:57 to 2026-09-30T16:57`). This is PRESENTATION ONLY:
+// it returns the text with each stamp written by `formatDate(stamp, 'start' | 'end')`; the stored description is never rewritten here.
+// The stamp reaches `formatDate` normalised to minutes (seconds dropped, so `T23:59:59` still counts as the end of the day). The summaries
+// read «from <start> to <end>», so the first stamp of the text is the 'start' and every later one the 'end'. The rest of the text is
+// byte-identical. Without a formatter, an empty or non-string text, or a stamp that is not a real date, it is left as it came.
+export const formatDescriptionStamps = (text, formatDate) => {
+  if (typeof text !== 'string' || !text || typeof formatDate !== 'function') return text
+  let position = 0
+  return text.replace(DESCRIPTION_STAMP, (stamp) => {
+    const type = position++ === 0 ? 'start' : 'end'
+    const minutes = stamp.slice(0, 16)
+    if (Number.isNaN(Date.parse(minutes))) return stamp
+    const written = formatDate(minutes, type)
+    return typeof written === 'string' && written ? written : stamp
+  })
+}
+
+export const getJourneyFormFromPromotion = ({ promotion, allSiteIds = [], allBusinessIds = [], formatDate }) => {
   const template = getJourneyTemplateForPromotion(promotion)
   const businesses = relationshipIds(promotion?.businesses)
   const sites = relationshipIds(promotion?.sites)
@@ -138,7 +164,8 @@ export const getJourneyFormFromPromotion = ({ promotion, allSiteIds = [], allBus
     form: {
       ...getInitialJourneyForm(template.key),
       name: promotion?.name?.trim() || template.title,
-      description: promotion?.description || '',
+      // what the person reads in the textarea is the description with its stamps written as dates (`formatDate` is optional)
+      description: formatDescriptionStamps(promotion?.description, formatDate) || '',
       descriptionEdited: !!promotion?.description,
       application: Number(promotion?.type) === 2 ? 'coupon' : 'automatic',
       applicationEdited: false,
@@ -247,7 +274,8 @@ const selectionToArray = selection => Object.values(selection || {}).map(item =>
   is_condition: true
 }))
 
-export const buildJourneyPayload = ({ template, form }) => {
+// redesign PE-B4 (decision 7; PE-02): `formatDate` is optional and goes down to the generated summary
+export const buildJourneyPayload = ({ template, form, formatDate }) => {
   const isBuyXGetY = template.key === 'buy_x_get_y'
   const preserveApplication = form.applicationEdited === false
   const conditionType = isBuyXGetY
@@ -258,7 +286,7 @@ export const buildJourneyPayload = ({ template, form }) => {
     : (form.scopeMode === 'selected' ? form.businesses : form.allBusinesses)
   const payload = {
     name: form.name.trim(),
-    description: form.description?.trim() || buildJourneySummary({ template, form }),
+    description: form.description?.trim() || buildJourneySummary({ template, form, formatDate }),
     enabled: false,
     auto: preserveApplication && typeof form.originalAuto === 'boolean'
       ? form.originalAuto
@@ -298,14 +326,18 @@ export const buildJourneyPayload = ({ template, form }) => {
   return payload
 }
 
-export const buildJourneySummary = ({ template, form, translate = fallbackTranslate, audience: translatedAudience }) => {
+// redesign PE-B4 (decision 7; PE-02): `formatDate(value, 'start' | 'end')` writes a stamp `YYYY-MM-DDTHH:mm` the way people read dates
+// (the host gives the project's format). Without it the stamp goes in as it is, so the other callers do not change. A missing date stays `___`.
+export const buildJourneySummary = ({ template, form, translate = fallbackTranslate, audience: translatedAudience, formatDate }) => {
+  const shownStart = form.start ? (formatDate ? formatDate(form.start, 'start') : form.start) : '___'
+  const shownEnd = form.end ? (formatDate ? formatDate(form.end, 'end') : form.end) : '___'
   if (template.key === 'buy_x_get_y') {
     const selectedItems = form.eligibilityKind === 'categories' ? form.categories : form.products
     const selectedCount = Object.keys(selectedItems || {}).length || '___'
     const scope = form.selectedBusinessId
       ? translate('QUICK_OFFER_SUMMARY_SELECTED_STORE', 'the selected store')
       : translate('QUICK_OFFER_SUMMARY_STORE_PLACEHOLDER', 'the selected store')
-    return `${translate('QUICK_OFFER_BUY_X_SUMMARY_WHEN', 'When the cart contains')} ${form.minimum || '___'} ${translate('QUICK_OFFER_BUY_X_SUMMARY_ELIGIBLE_FROM', 'eligible items from')} ${selectedCount} ${translate('QUICK_OFFER_BUY_X_SUMMARY_SELECTED_PRODUCTS', 'selected product(s)')}, ${form.rate || '___'} ${translate('QUICK_OFFER_BUY_X_SUMMARY_BECOME_FREE', 'of those eligible items become free at')} ${scope}, ${translate('QUICK_OFFER_SUMMARY_FROM', 'from')} ${form.start || '___'} ${translate('QUICK_OFFER_SUMMARY_TO', 'to')} ${form.end || '___'}.`
+    return `${translate('QUICK_OFFER_BUY_X_SUMMARY_WHEN', 'When the cart contains')} ${form.minimum || '___'} ${translate('QUICK_OFFER_BUY_X_SUMMARY_ELIGIBLE_FROM', 'eligible items from')} ${selectedCount} ${translate('QUICK_OFFER_BUY_X_SUMMARY_SELECTED_PRODUCTS', 'selected product(s)')}, ${form.rate || '___'} ${translate('QUICK_OFFER_BUY_X_SUMMARY_BECOME_FREE', 'of those eligible items become free at')} ${scope}, ${translate('QUICK_OFFER_SUMMARY_FROM', 'from')} ${shownStart} ${translate('QUICK_OFFER_SUMMARY_TO', 'to')} ${shownEnd}.`
   }
   const scope = form.scopeMode === 'selected'
     ? `${form.businesses.length || '___'} ${form.businesses.length === 1 ? translate('QUICK_OFFER_SUMMARY_SELECTED_BUSINESS', 'selected business') : translate('QUICK_OFFER_SUMMARY_SELECTED_BUSINESSES', 'selected businesses')} ${translate('QUICK_OFFER_SUMMARY_AND_CHANNELS', 'and all sales channels')}`
@@ -323,7 +355,7 @@ export const buildJourneySummary = ({ template, form, translate = fallbackTransl
     : template.fields?.orderCount !== undefined
       ? `${translate('QUICK_OFFER_SUMMARY_EXACT_ORDERS', 'Customers with exactly')} ${template.fields.orderCount} ${template.fields.orderCount === 1 ? translate('QUICK_OFFER_SUMMARY_ORDER', 'order') : translate('QUICK_OFFER_SUMMARY_ORDERS', 'orders')}`
       : translatedAudience || template.audience
-  return `${audience} ${translate('QUICK_OFFER_SUMMARY_RECEIVE', 'receive')} ${benefit} ${translate('QUICK_OFFER_SUMMARY_ACROSS', 'across')} ${scope}, ${translate('QUICK_OFFER_SUMMARY_WITH', 'with')} ${minimum}, ${translate('QUICK_OFFER_SUMMARY_FROM', 'from')} ${form.start || '___'} ${translate('QUICK_OFFER_SUMMARY_TO', 'to')} ${form.end || '___'}.`
+  return `${audience} ${translate('QUICK_OFFER_SUMMARY_RECEIVE', 'receive')} ${benefit} ${translate('QUICK_OFFER_SUMMARY_ACROSS', 'across')} ${scope}, ${translate('QUICK_OFFER_SUMMARY_WITH', 'with')} ${minimum}, ${translate('QUICK_OFFER_SUMMARY_FROM', 'from')} ${shownStart} ${translate('QUICK_OFFER_SUMMARY_TO', 'to')} ${shownEnd}.`
 }
 
 const FORM_PAYLOAD_KEYS = {

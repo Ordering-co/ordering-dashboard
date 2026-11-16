@@ -1,0 +1,582 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c2-connect-delivery-zones-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-c2-connect-delivery-zones-doordashcontent-index-js-5361fd",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DeliveryServiceDetails/DoordashContent/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "FRAME_STYLE /* binding-sha256:038cd4085ace8375ebb10014e1d39d50d700b81ba71314d37e85f8e877437bc8 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This immutable inline bundle controls only the guide iframe's existing width and height and contains no typography value.",
+            "evidence": "The guard binds the exact initializer digest ({ width: 100%, height: 400px }) and rejects mutations, aliases or visual additions."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "FRAME_STYLE /* binding-sha256:038cd4085ace8375ebb10014e1d39d50d700b81ba71314d37e85f8e877437bc8 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This immutable inline bundle controls only the guide iframe's existing width and height and contains no color value.",
+            "evidence": "The guard binds the exact initializer digest ({ width: 100%, height: 400px }) and rejects mutations, aliases or visual additions."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c2-connect-delivery-zones-deliveryservicepaymethods-index-js-741638",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DeliveryServicePaymethods/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c2-connect-delivery-zones-deliveryservices-index-js-463e1e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DeliveryServices/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "deliveryServicesProps /* binding-sha256:12ce150689ffc6fa2bcdc85fa02baa1139562344283b9ea1492f1a2f4b6bd21f */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Redesign  (B4): re-pinned to the current source; the spread is the page props plus UIComponent: DeliveryServicesListingUI and the same paginationSettings (no colour, token or state). Checked with verifyMigration."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c2-connect-delivery-zones-deliveryservicesbusinesses-index-js-72db77",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DeliveryServicesBusinesses/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c2-connect-delivery-zones-driversgroupautoassignservice-index-js-f3d474",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversGroupAutoassignProps /* binding-sha256:b234d7dcbc1fcc2512076b73d9d3804ac42ecc4de2e44b716455867f9b31f970 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c2-connect-delivery-zones-driversgroupautoassignservice-styles-js-d33095",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AutoassignContainer",
+            "property": "font-size",
+            "match": "20px",
+            "context": "h1",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "AutoassignContainer h1: el componente esta VIVO y envuelve todo, pero su index.js no renderiza ningun <h1> en ninguna rama."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "font-size",
+            "match": "12px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "AutoassignItem p: sin importar en esa fila."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    p {\n      color: ${props => props.theme.colors.headingColor};\n    }\n    > div {\n      background-color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "({ isPadding }) => isPadding && css`\n    padding-bottom: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CustomItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n\n    p {\n      color: ${props => props.theme.colors.headingColor};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "font",
+            "match": "({ isBlue }) => isBlue && css`\n    input {\n      &:focus {\n        border-color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "font",
+            "match": "({ isGreen }) => isGreen && css`\n    input {\n      &:focus {\n        border-color: #0b720b;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "font",
+            "match": "({ isPink }) => isPink && css`\n    input {\n      &:focus {\n        border-color: #ff0095;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ForcedAssignSettingWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "ForcedAssignSettingWrapper p: sin importar en esa fila."
+          },
+          {
+            "component": "ForcedAssignSettingWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LargeArea",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-color: #ff0095;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MaxDistanceCustomerContainer",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> div:first-child > p > &:first-child",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "MaxDistanceCustomerContainer: sin importar en esa fila."
+          },
+          {
+            "component": "MaxDistanceCustomerContainer",
+            "property": "font-size",
+            "match": "12px",
+            "context": "> div:first-child > p > &:not(:first-child)",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "MaxDistanceCustomerContainer, segundo contexto del mismo export sin importar."
+          },
+          {
+            "component": "MediumArea",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-color: #0b720b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SmallArea",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c2-connect-delivery-zones: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AutoassignItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    p {\n      color: ${props => props.theme.colors.headingColor};\n    }\n    > div {\n      background-color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AutoassignItem",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "({ isPadding }) => isPadding && css`\n    padding-bottom: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n\n    p {\n      color: ${props => props.theme.colors.headingColor};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomItem",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "border-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "border-color",
+            "match": "#0b720b",
+            "context": "input > &:focus",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "border-color",
+            "match": "#ff0095",
+            "context": "input > &:focus",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "color-block",
+            "match": "({ isBlue }) => isBlue && css`\n    input {\n      &:focus {\n        border-color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "color-block",
+            "match": "({ isGreen }) => isGreen && css`\n    input {\n      &:focus {\n        border-color: #0b720b;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "color-block",
+            "match": "({ isPink }) => isPink && css`\n    input {\n      &:focus {\n        border-color: #ff0095;\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ForcedAssignSettingWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconImage",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LargeArea",
+            "property": "border-color",
+            "match": "#ff0095",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LargeArea",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LargeArea",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-color: #ff0095;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MaxDistanceCustomerContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MediumArea",
+            "property": "border-color",
+            "match": "#0b720b",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MediumArea",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MediumArea",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-color: #0b720b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SmallArea",
+            "property": "border-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SmallArea",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SmallArea",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c2-connect-delivery-zones semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

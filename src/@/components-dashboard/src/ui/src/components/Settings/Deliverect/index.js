@@ -92,6 +92,7 @@ export const Deliverect = (props) => {
     return (
       <CategoryExtraContent>
         <IconButton
+          aria-label={t('CLOSE', 'Close')}
           color='black'
           onClick={() => handleCloseDescription()}
         >
@@ -139,6 +140,7 @@ export const Deliverect = (props) => {
           <HeaderIcons>
             {width > 576 && !settingsOpen && (
               <IconButton
+                aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
                 color='black'
                 onClick={expandSidebar}
               >
@@ -146,6 +148,7 @@ export const Deliverect = (props) => {
               </IconButton>
             )}
             <IconButton
+              aria-label={t('CLOSE', 'Close')}
               color='black'
               onClick={onClose}
             >

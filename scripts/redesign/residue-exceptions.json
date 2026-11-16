@@ -1,0 +1,27 @@
+[
+  {
+    "route": "/builder/:productId",
+    "legacy": "legacy-button",
+    "reason": ": main's Tiptap editor for the website's home and footer HTML (, Shared/RichHtmlEditor) still uses the legacy link, image and video dialogs, Modal, react-bootstrap-icons and react-loading-skeleton. Kept so beta does not lose the feature; drop this exception when the editor moves to Product pieces."
+  },
+  {
+    "route": "/builder/:productId",
+    "legacy": "legacy-confirm",
+    "reason": ": main's Tiptap editor for the website's home and footer HTML (, Shared/RichHtmlEditor) still uses the legacy link, image and video dialogs, Modal, react-bootstrap-icons and react-loading-skeleton. Kept so beta does not lose the feature; drop this exception when the editor moves to Product pieces."
+  },
+  {
+    "route": "/builder/:productId",
+    "legacy": "legacy-inputs",
+    "reason": ": main's Tiptap editor for the website's home and footer HTML (, Shared/RichHtmlEditor) still uses the legacy link, image and video dialogs, Modal, react-bootstrap-icons and react-loading-skeleton. Kept so beta does not lose the feature; drop this exception when the editor moves to Product pieces."
+  },
+  {
+    "route": "/builder/:productId",
+    "legacy": "legacy-modal",
+    "reason": ": main's Tiptap editor for the website's home and footer HTML (, Shared/RichHtmlEditor) still uses the legacy link, image and video dialogs, Modal, react-bootstrap-icons and react-loading-skeleton. Kept so beta does not lose the feature; drop this exception when the editor moves to Product pieces."
+  },
+  {
+    "route": "/builder/:productId",
+    "legacy": "pkg-react-loading-skeleton",
+    "reason": ": main's Tiptap editor for the website's home and footer HTML (, Shared/RichHtmlEditor) still uses the legacy link, image and video dialogs, Modal, react-bootstrap-icons and react-loading-skeleton. Kept so beta does not lose the feature; drop this exception when the editor moves to Product pieces."
+  }
+]

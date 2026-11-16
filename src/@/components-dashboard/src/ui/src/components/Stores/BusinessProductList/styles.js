@@ -54,7 +54,7 @@ export const BusinessProductListTable = styled.table`
   transition: all 0.3s;
 
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
   }
 
@@ -99,7 +99,7 @@ export const BusinessProductListTable = styled.table`
         ${({ noFixedHeader }) => !noFixedHeader && css`
           position: sticky;
           top: 0px;
-          z-index: 100;
+          z-index: var(--od-x-layer-sticky);
         `}
         background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
       }
@@ -108,7 +108,7 @@ export const BusinessProductListTable = styled.table`
 `
 
 export const WrapperNotFound = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-content-size);
   text-align: center;
   font-weight: 500;
   margin: 20px;

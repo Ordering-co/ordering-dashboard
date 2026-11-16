@@ -58,16 +58,19 @@ export const BusinessProductsCategories = (props) => {
   }, [sortedCategories, searchValue])
 
   useEffect(() => {
+    // bugs E D10: `window.addEventListener` returns undefined, so the cleanup removed nothing and each run of this effect
+    // left one more global click handler. Keep the handler itself and remove that one.
     let listener
     if (containerRef?.current && categoryListRef) {
-      listener = window.addEventListener('click', (e) => {
+      listener = (e) => {
         if (!containerRef?.current?.contains(e.target) && !addButtonRef?.current?.contains(e.target) && categoryListRef?.contains(e.target)) {
           handleChangeCategory(null, null)
         }
-      })
+      }
+      window.addEventListener('click', listener)
     }
     return () => {
-      window.removeEventListener('click', listener)
+      if (listener) window.removeEventListener('click', listener)
     }
   }, [containerRef?.current, categoryListRef])
 
@@ -102,7 +105,20 @@ export const BusinessProductsCategories = (props) => {
         {
           productLayout && (
             <>
-              <SelectedCategoriesWrapper onClick={() => setShowCategories(!showCategories)}>
+              {/* bugs E D21: the opener of the list was a div with onClick, out of the tab order. Same element and look
+                  (the wrapper is a styled div); it is a named button with its open state, and Enter or Space toggle it like the click. */}
+              <SelectedCategoriesWrapper
+                role='button'
+                tabIndex={0}
+                aria-expanded={showCategories}
+                aria-label={productCategorySelected?.name || t('BUSINESS_CATEGORY', 'Business category')}
+                onClick={() => setShowCategories(!showCategories)}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return
+                  e.preventDefault()
+                  setShowCategories(!showCategories)
+                }}
+              >
                 <p>{productCategorySelected?.name}</p>
                 <Pencil />
               </SelectedCategoriesWrapper>

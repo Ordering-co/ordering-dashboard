@@ -1,0 +1,134 @@
+{
+  "_doc": "Exceptions for src/__tests__/tools/productCompleteness.test.js (W0-8d, T0-33). barrel: a Product file exports it, P/index.js does not, on purpose. gallery: P/index.js exports it, the gallery has no P.<Name> of its own. An entry that no longer applies fails the test. 'evidence' (optional) is a file that must still contain the text: it proves the thing is drawn some other way.",
+  "barrel": [
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Chart.jsx",
+      "export": "Chart",
+      "reason": "By file (Shared/Product/Chart): it pulls Chart.js (~200 KB) into every page that imports the barrel; only chart pages load it (redesign home FA, decision 36)."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Chart.jsx",
+      "export": "useChartTheme",
+      "reason": "By file, with Chart: the theme hook of the chart (resolved --od-x-chart-* values for canvas)."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Dialog.jsx",
+      "export": "useOverlayLayer",
+      "reason": "Per-file hook, documented as 'por archivo' in docs/REDESIGN_PLAYBOOK.md section 3 (layer for popovers and dialogs)."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Dialog.jsx",
+      "export": "OverlayHeader",
+      "reason": "Per-file component, documented as 'por archivo' in docs/REDESIGN_PLAYBOOK.md section 3."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/useOverflowEdges.js",
+      "export": "useOverflowEdges",
+      "reason": "Per-file hook, documented as 'por archivo' in docs/REDESIGN_PLAYBOOK.md section 3 (edge fade on scrollers)."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/Wizard.jsx",
+      "export": "Wizard",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/Stepper.jsx",
+      "export": "Stepper",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/Summary.jsx",
+      "export": "Summary",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/WizardFooter.jsx",
+      "export": "WizardFooter",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/StepBoundary.jsx",
+      "export": "StepBoundary",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/Wizard/useGoogleMapsFailure.js",
+      "export": "useGoogleMapsFailure",
+      "reason": "By file (Shared/Product/Wizard): kept out of the barrel so the create-order wizard stays in its on-demand chunk (pilot N-05); W0-P1-02."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+      "export": "usePopoverTabOut",
+      "reason": "Per-file hook (tramo A, W0-Q2-02/-03): Tab out of a pill popover goes to the next focusable control after its opener; shared by FilterPopover and DateRangePopover; documented as 'por archivo' in docs/REDESIGN_PLAYBOOK.md section 3 at W0-11."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/ImageField.jsx",
+      "export": "ImageField",
+      "reason": "By file (Shared/Product/ImageField): imports legacy pieces that load bootstrap; by file, so the barrel (and the gallery) do not repaint the page; W0-7, T0-29."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/ColorField.jsx",
+      "export": "ColorField",
+      "reason": "By file (Shared/Product/ColorField): imports legacy pieces that load bootstrap; by file, so the barrel (and the gallery) do not repaint the page; W0-7, T0-29."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/PhoneField.jsx",
+      "export": "PhoneField",
+      "reason": "By file (Shared/Product/PhoneField): imports legacy pieces that load bootstrap; by file, so the barrel (and the gallery) do not repaint the page; W0-7, T0-29."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/legacyField.jsx",
+      "export": "useFrameIds",
+      "reason": "Internal frame of ImageField, ColorField and PhoneField (W0-7, T0-28b): shared by the three legacy-piece wrappers, not a wrapper of its own; consumers import the three fields by file."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/legacyField.jsx",
+      "export": "useAssociate",
+      "reason": "Internal frame of ImageField, ColorField and PhoneField (W0-7, T0-28b): shared by the three legacy-piece wrappers, not a wrapper of its own; consumers import the three fields by file."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/legacyField.jsx",
+      "export": "LegacyFieldFrame",
+      "reason": "Internal frame of ImageField, ColorField and PhoneField (W0-7, T0-28b): shared by the three legacy-piece wrappers, not a wrapper of its own; consumers import the three fields by file."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/DayCalendar.jsx",
+      "export": "DayCalendar",
+      "reason": "Per-file helper (W0-7, T0-29): the day grid promoted from DateRangePopover, shared by DatePicker and DateRangePopover; no consumer needs it from the barrel."
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/useIsPhone.js",
+      "export": "useIsPhone",
+      "reason": "Per-file hook (W0-7, T0-29): the phone breakpoint shared by DatePicker and DateRangePopover; not part of the public barrel."
+    }
+  ],
+  "gallery": [
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+      "export": "FilterPopover",
+      "reason": "The gallery mounts it through P.ChecklistPopover (ChecklistPopoverDemo), which renders <FilterPopover> itself.",
+      "evidence": {
+        "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+        "contains": "<FilterPopover"
+      }
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+      "export": "PopoverFoot",
+      "reason": "ChecklistBody renders it once something is selected; the gallery's P.ChecklistPopover starts with selected=[2].",
+      "evidence": {
+        "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/FilterPopover.jsx",
+        "contains": "<PopoverFoot"
+      }
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/Product/WebsocketStatus.jsx",
+      "export": "WebsocketStatus",
+      "reason": " (row 32): promoted from Orders/WebsocketStatus; it reads the live socket (WebsocketContext) the gallery does not mount. The Orders content header draws it, and the L3 Orders list harness and its guard rule (l3-orders-list-websocketstatus-index-js) cover it.",
+      "evidence": {
+        "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersContentHeader/index.js",
+        "contains": "<WebsocketStatus"
+      }
+    }
+  ]
+}

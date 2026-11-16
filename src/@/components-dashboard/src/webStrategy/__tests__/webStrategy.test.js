@@ -18,11 +18,11 @@ describe('WebStrategy', () => {
     'removes a malformed JSON value without clearing other keys',
     (value) => {
       localStorage.setItem('language', value)
-      localStorage.setItem('project', 'rokys')
+      localStorage.setItem('project', 'examplerestaurant')
 
       expect(getLocalStorageItem('language', true)).toBeNull()
       expect(localStorage.getItem('language')).toBeNull()
-      expect(localStorage.getItem('project')).toBe('rokys')
+      expect(localStorage.getItem('project')).toBe('examplerestaurant')
     }
   )
 

@@ -1,26 +1,18 @@
-import React, { useMemo, useState } from 'react'
-import { ExclamationCircle, Globe, Phone } from 'react-bootstrap-icons'
+import React, { useMemo, useRef, useState } from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { Button, Input } from '../../../styles'
-import { SideBar } from '../../Shared/SideBar'
+import { CircleAlert, Globe } from '../../Shared/Icon'
+import { Button, ConfirmDialog, InlineNotice, RadioGroup, Sheet, TextField } from '../../Shared/Product'
 import { PlatformIcon, TypeGlyph } from '../BuilderShared'
 import { BUILDER_KINDS, BUILDER_TYPE_OPTIONS, getNameMaxLength, getNameTooLongMessage, sortCatalogBases } from '../utils'
-import {
-  ErrorBanner,
-  Field,
-  FieldHelp,
-  KindOption,
-  KindSwitch,
-  MutedText,
-  PanelContainer,
-  PanelFooter,
-  TypeFieldset,
-  TypeIcon,
-  TypeOption,
-  TypePlatforms,
-  TypeText
-} from '../styles'
+import '../BuilderProductsList/builder-list.css'
+
+// redesign B1: the create panel on P/Sheet, P/TextField and P/RadioGroup (cards). Same catalog, checks, codes and texts
+// as main. The sheet is a dialog: focus starts in it and is kept there. main's SideBar never closed on an outside click (Escape only
+// from 1000px), so a typed name was never lost by accident: Escape, the scrim, the X and Cancel ask before dropping one, and nothing
+// closes while it creates (its answer would land on a closed panel). The pattern of GiftCardsCatalogUI and DriversListing.
+
+const FORM_ID = 'builder-create-form'
 
 /** The catalog entry's own key: the base of an app, the type of a website (its `id` is null). */
 const getEntryKey = (entry) => entry.kind === 'web' ? `web-${entry.product_type}` : `app-${entry.id}`
@@ -37,6 +29,7 @@ export const BuilderCreatePanel = (props) => {
   const [name, setName] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [withdrawnBase, setWithdrawnBase] = useState(null)
+  const [discard, setDiscard] = useState(false)
 
   const entries = useMemo(() => sortCatalogBases(catalogState?.bases)
     .map(entry => ({ ...entry, kind: entry.kind === 'web' ? 'web' : 'app' })), [catalogState?.bases])
@@ -64,14 +57,25 @@ export const BuilderCreatePanel = (props) => {
     code.startsWith('name.') || isTypeCode(code) || code === 'product_type.in' || code === 'builder_base.not_offered'
   )
 
+  // P/Button `busy` ignores clicks but, unlike main's disabled button, still submits its form (a second click, Enter): one create at a time
+  const creating = useRef(false)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (creating.current || createState?.loading) return
     setSubmitted(true)
     setWithdrawnBase(null)
     if (!selected || !trimmedName || nameTooLong) return
-    const { product, errorCodes = [] } = await createProduct(isWeb
-      ? { productType: selected.product_type, name: trimmedName }
-      : { builderBaseId: selected.id, name: trimmedName })
+    creating.current = true
+    let response
+    try {
+      response = await createProduct(isWeb
+        ? { productType: selected.product_type, name: trimmedName }
+        : { builderBaseId: selected.id, name: trimmedName })
+    } finally {
+      creating.current = false
+    }
+    const { product, errorCodes = [] } = response
     if (product) {
       onCreated(product)
     } else if (errorCodes.includes('builder_base.not_offered')) {
@@ -87,146 +91,137 @@ export const BuilderCreatePanel = (props) => {
     setEntryKey(null)
   }
 
-  const getTypeOption = (type) => BUILDER_TYPE_OPTIONS.find(option => option.value === type)
-
-  const renderEntry = (entry) => {
-    const option = getTypeOption(entry.product_type)
-    const key = getEntryKey(entry)
-    const checked = key === entryKey
-    const web = entry.kind === 'web'
-    return (
-      <TypeOption key={key} selected={checked}>
-        <input
-          type='radio'
-          name='builder-catalog'
-          value={key}
-          checked={checked}
-          onChange={() => setEntryKey(key)}
-        />
-        <TypeIcon selected={checked}>
-          <TypeGlyph type={entry.product_type} />
-        </TypeIcon>
-        <TypeText>
-          <strong>{option ? option.label(t) : (entry.name || entry.product_type)}</strong>
-          <span>
-            {web
-              ? option?.description(t)
-              : <>{entry.name}{option && ` · ${option.description(t)}`}</>}
-          </span>
-        </TypeText>
-        <TypePlatforms>
-          {web
-            ? <><Globe aria-hidden='true' /><span>{t('BUILDER_WEB', 'Web')}</span></>
-            : (entry.platforms || []).map(platform => <PlatformIcon key={platform} platform={platform} />)}
-        </TypePlatforms>
-      </TypeOption>
-    )
+  const dirty = name.trim() !== ''
+  const requestClose = () => {
+    if (createState?.loading || creating.current) return
+    if (dirty) setDiscard(true)
+    else onClose()
   }
 
+  const getTypeOption = (type) => BUILDER_TYPE_OPTIONS.find(option => option.value === type)
+
+  const typeOptions = kindEntries.map(entry => {
+    const option = getTypeOption(entry.product_type)
+    const web = entry.kind === 'web'
+    return {
+      value: getEntryKey(entry),
+      media: <TypeGlyph type={entry.product_type} />,
+      label: option ? option.label(t) : (entry.name || entry.product_type),
+      description: (
+        <>
+          <span>{web ? option?.description(t) : <>{entry.name}{option && ` · ${option.description(t)}`}</>}</span>
+          <span className='odc-builder-option-platforms'>
+            {web
+              ? <><Globe className='odc-icon' /><span>{t('BUILDER_WEB', 'Web')}</span></>
+              : (entry.platforms || []).map(platform => <PlatformIcon key={platform} platform={platform} />)}
+          </span>
+        </>
+      )
+    }
+  })
+
+  const nameHelp = nameError === 'required'
+    ? t('BUILDER_ERROR_NAME_REQUIRED', 'Enter a name.')
+    : nameError === 'max' ? nameMaxMessage : null
+
+  const footer = (
+    <>
+      <Button disabled={!!createState?.loading} onClick={requestClose}>{t('CANCEL', 'Cancel')}</Button>
+      <Button type='submit' form={FORM_ID} variant='primary' busy={!!createState?.loading}>
+        {createState?.loading
+          ? t('BUILDER_CREATING', 'Creating…')
+          : isWeb ? t('BUILDER_CREATE_WEBSITE', 'Create website') : t('BUILDER_CREATE_APP', 'Create app')}
+      </Button>
+    </>
+  )
+
   return (
-    <SideBar
-      open
-      sidebarId='builder-create-panel'
-      defaultSideBarWidth={500}
-      moveDistance={0}
-      onClose={onClose}
-    >
-      <form onSubmit={handleSubmit} noValidate style={{ height: '100%' }}>
-        <PanelContainer>
-          <h2 id='builder-create-title'>{t('BUILDER_NEW_PRODUCT', 'New app or website')}</h2>
+    <>
+      <Sheet
+        open
+        onOpenChange={(open) => { if (!open) requestClose() }}
+        title={t('BUILDER_NEW_PRODUCT', 'New app or website')}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={footer}
+      >
+        <form id={FORM_ID} className='odc-builder-create' onSubmit={handleSubmit} noValidate>
           {withdrawnBase && (
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>
-                {t('BUILDER_BASE_NOT_OFFERED', '_name_ is no longer available. Choose another option.').replace('_name_', withdrawnBase)}
-              </span>
-            </ErrorBanner>
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+              {t('BUILDER_BASE_NOT_OFFERED', '_name_ is no longer available. Choose another option.').replace('_name_', withdrawnBase)}
+            </InlineNotice>
           )}
           {typeUnavailable && (
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>{t('BUILDER_CREATE_TYPE_UNAVAILABLE', 'This type can’t be created here. Choose another one.')}</span>
-            </ErrorBanner>
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+              {t('BUILDER_CREATE_TYPE_UNAVAILABLE', 'This type can’t be created here. Choose another one.')}
+            </InlineNotice>
           )}
           {showGenericError && (
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>{t('BUILDER_CREATE_PRODUCT_ERROR', 'We couldn’t create it. Try again.')}</span>
-            </ErrorBanner>
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+              {t('BUILDER_CREATE_PRODUCT_ERROR', 'We couldn’t create it. Try again.')}
+            </InlineNotice>
           )}
           {kinds.length > 1 && (
-            <KindSwitch>
-              <legend className='sr-only'>{t('BUILDER_CREATE_KIND', 'What do you want to create?')}</legend>
-              {kinds.map(item => (
-                <KindOption key={item.value} selected={item.value === kind}>
-                  <input
-                    type='radio'
-                    name='builder-create-kind'
-                    value={item.value}
-                    checked={item.value === kind}
-                    onChange={() => changeKind(item.value)}
-                  />
-                  {item.value === 'web' ? <Globe aria-hidden='true' /> : <Phone aria-hidden='true' />}
-                  {item.label(t)}
-                </KindOption>
-              ))}
-            </KindSwitch>
+            <RadioGroup
+              label={t('BUILDER_CREATE_KIND', 'What do you want to create?')}
+              hideLabel
+              orientation='horizontal'
+              value={kind}
+              onValueChange={changeKind}
+              options={kinds.map(item => ({ value: item.value, label: item.label(t) }))}
+            />
           )}
 
-          <Field invalid={!!nameError}>
-            <label htmlFor='builder-app-name'>{t('BUILDER_NAME', 'Name')}</label>
-            <Input
-              id='builder-app-name'
-              type='text'
-              value={name}
-              maxLength={nameMaxLength}
-              autoComplete='off'
-              placeholder={isWeb
-                ? t('BUILDER_WEB_NAME_PLACEHOLDER', 'e.g. Burger Town website')
-                : t('BUILDER_APP_NAME_PLACEHOLDER', 'e.g. Delivery drivers')}
-              aria-invalid={nameError ? 'true' : 'false'}
-              aria-describedby='builder-app-name-help'
-              onChange={(e) => setName(e.target.value)}
-            />
-            <FieldHelp id='builder-app-name-help'>
-              {nameError === 'required' && <span role='alert'>{t('BUILDER_ERROR_NAME_REQUIRED', 'Enter a name.')}</span>}
-              {nameError === 'max' && <span role='alert'>{nameMaxMessage}</span>}
-              {!nameError && <span>{t('BUILDER_APP_NAME_HELP', 'You can change it later.')}</span>}
-              <span data-over={nameTooLong ? 'true' : undefined}>{name.length}/{nameMaxLength}</span>
-            </FieldHelp>
-          </Field>
+          <TextField
+            id='builder-app-name'
+            label={t('BUILDER_NAME', 'Name')}
+            value={name}
+            onChange={(value) => setName(value)}
+            maxLength={nameMaxLength}
+            autoComplete='off'
+            placeholder={isWeb
+              ? t('BUILDER_WEB_NAME_PLACEHOLDER', 'e.g. Burger Town website')
+              : t('BUILDER_APP_NAME_PLACEHOLDER', 'e.g. Delivery drivers')}
+            error={nameHelp || undefined}
+            hint={nameHelp ? undefined : t('BUILDER_APP_NAME_HELP', 'You can change it later.')}
+            // the counter is read with the field, as main's help block (the field keeps a description of its own)
+            aria-describedby='builder-app-name-count'
+          />
+          <span id='builder-app-name-count' className='odc-builder-count odc-figure' data-over={nameTooLong ? 'true' : undefined}>{name.length}/{nameMaxLength}</span>
 
           {kindEntries.length > 0 && (
-            <TypeFieldset aria-describedby={typeError ? 'builder-type-error' : undefined}>
-              <legend>{isWeb ? t('BUILDER_TYPE_OF_WEBSITE', 'Type of website') : t('BUILDER_TYPE_OF_APP', 'Type of app')}</legend>
-              {kindEntries.map(renderEntry)}
-              {isWeb && (
-                <MutedText small>
-                  {t('BUILDER_WEBSITE_ONLINE_NOTE', 'Websites go online right away at a temporary address, even as a draft. You can add your own domain, theme and stores later.')}
-                </MutedText>
-              )}
-            </TypeFieldset>
+            <RadioGroup
+              label={isWeb ? t('BUILDER_TYPE_OF_WEBSITE', 'Type of website') : t('BUILDER_TYPE_OF_APP', 'Type of app')}
+              variant='cards'
+              value={selected ? getEntryKey(selected) : null}
+              onValueChange={setEntryKey}
+              options={typeOptions}
+              aria-describedby={typeError ? 'builder-type-error' : undefined}
+            />
+          )}
+          {isWeb && kindEntries.length > 0 && (
+            <p className='odc-builder-note'>
+              {t('BUILDER_WEBSITE_ONLINE_NOTE', 'Websites go online right away at a temporary address, even as a draft. You can add your own domain, theme and stores later.')}
+            </p>
           )}
           {typeError && (
-            <FieldHelp>
-              <span id='builder-type-error' role='alert'>{t('BUILDER_APP_TYPE_REQUIRED', 'Choose what you want to create.')}</span>
-            </FieldHelp>
+            <p id='builder-type-error' className='odc-builder-error' role='alert'>{t('BUILDER_APP_TYPE_REQUIRED', 'Choose what you want to create.')}</p>
           )}
-
-          <PanelFooter>
-            <div>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={onClose}>
-                {t('CANCEL', 'Cancel')}
-              </Button>
-              <Button type='submit' color='primary' borderRadius='8px' disabled={!!createState?.loading}>
-                {createState?.loading
-                  ? t('BUILDER_CREATING', 'Creating…')
-                  : isWeb ? t('BUILDER_CREATE_WEBSITE', 'Create website') : t('BUILDER_CREATE_APP', 'Create app')}
-              </Button>
-            </div>
-          </PanelFooter>
-        </PanelContainer>
-      </form>
-    </SideBar>
+        </form>
+      </Sheet>
+      <ConfirmDialog
+        open={discard}
+        title={t('ORDER_PANEL_DISCARD_TITLE', 'Discard your changes?')}
+        confirmLabel={t('DISCARD', 'Discard')}
+        cancelLabel={t('KEEP_EDITING', 'Keep editing')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => {
+          setDiscard(false)
+          onClose()
+        }}
+        onCancel={() => setDiscard(false)}
+      >
+        {t('DRIVERS_DISCARD_BODY', 'What you changed here is not saved yet.')}
+      </ConfirmDialog>
+    </>
   )
 }

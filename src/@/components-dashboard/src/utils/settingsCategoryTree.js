@@ -18,7 +18,24 @@ const toId = (value) => {
 const sortByRank = (categories = []) =>
   [...categories].sort((a, b) => (Number(a?.rank) || 0) - (Number(b?.rank) || 0))
 
-const attachChildren = (category, childrenByParentId, seen) => {
+// the API can repeat a config inside one category (delivery_fee_free_multi_checkout in
+// addon_multi_business_checkout). The hub addresses configs by key (focus, dependents, search), so a second row with the same
+// key is the same field drawn twice: keep the first, in the API order. Configs without a key are kept as they are.
+export const dedupeCategoryConfigs = (category) => {
+  if (!Array.isArray(category?.configs)) return category
+  const seenKeys = new Set()
+  const configs = category.configs.filter(config => {
+    const key = config?.key
+    if (key === undefined || key === null || key === '') return true
+    if (seenKeys.has(key)) return false
+    seenKeys.add(key)
+    return true
+  })
+  return configs.length === category.configs.length ? category : { ...category, configs }
+}
+
+const attachChildren = (rawCategory, childrenByParentId, seen) => {
+  const category = dedupeCategoryConfigs(rawCategory)
   const id = toId(category?.id)
   if (id === null) return { ...category, children: [] }
   if (seen.has(id)) return { ...category, children: [] }

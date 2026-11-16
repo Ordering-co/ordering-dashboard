@@ -1,0 +1,149 @@
+/*
+ * The drivers list (redesign DL-B2): the cells of the table and the cards of a phone. Product's DataTable and RecordCard own
+ * the structure; this adds what a driver cell is made of, the state (a dot AND a word) and the row of switches. Tokens only
+ * (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ */
+
+/* ── The Driver cell ── */
+.odc-drv-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-drv-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-drv-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-drv-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A datum and its verified mark stay on one line */
+.odc-drv-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-drv-email { unicode-bidi: isolate; }
+
+.odc-drv-verified {
+  display: inline-flex;
+  flex: none;
+  color: var(--od-success-signal);
+}
+
+.odc-drv-verified .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-drv-dash { color: var(--od-x-text-subtle); }
+
+/* Inside table cells the name and the second line wrap (long emails break anywhere) and stop at two lines */
+td .odc-drv-name,
+th .odc-drv-name,
+td .odc-drv-sub,
+th .odc-drv-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* : a phone and an id never split between two lines («· +1» / «7025556279 · #43») */
+.odc-drv-sub bdi { white-space: nowrap; }
+
+/* ── The state: a dot AND a word, never color alone (the form of the drivers board's .odd-state, its own classes) ── */
+.odc-drv-state {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-drv-dot {
+  flex: none;
+  inline-size: var(--od-x-dot-lg);
+  block-size: var(--od-x-dot-lg);
+  border-radius: var(--od-radius-round);
+  background: var(--od-border-strong);
+}
+
+.odc-drv-state[data-state='available'] .odc-drv-dot { background: var(--od-success-signal); }
+.odc-drv-state[data-state='busy'] .odc-drv-dot { background: var(--od-x-info-signal, var(--od-action)); }
+
+/* ── The Availability cell: Online, Busy (only when busy) and Active; they wrap rather than clip ── */
+.odc-drv-switches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-3);
+}
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-drv-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-drv-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-drv-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-drv-contact {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-drv-card-id { color: var(--od-text-muted); }
+
+.odc-drv-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* redesign DL-R2 (decision 12): 16px between controls so the checkbox's 44px reach never lands on the Online switch (it overlapped by 1px) */
+  gap: var(--od-space-2) var(--od-space-4);
+  padding-block-start: var(--od-space-1);
+}

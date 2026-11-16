@@ -37,10 +37,14 @@ const AccordionStyled = styled.div`
 `
 
 export const Accordion = (props) => {
-  const style = {}
-  if (!props.isValid) {
-    style.opacity = '0.5'
-  }
+  // Same shape as the already-migrated twin in Orders/ProductItemAccordion, and
+  // for the reason section 4.1 gives: where the declaration is the same, the two
+  // copies take the same treatment. A mutated `const style = {}` is a binding the
+  // engine cannot resolve, so the expression stays ungoverned and no guard can
+  // pin it; a constant one is pinned like its twin. Behaviour is unchanged —
+  // `style={{}}` and `style={undefined}` render identically, and the invalid
+  // branch still sets the same opacity.
+  const style = props.isValid ? undefined : { opacity: '0.5' }
   return (
     <AccordionStyled
       {...props}
@@ -94,7 +98,7 @@ export const ContentInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-transform: capitalize;
+  /* : no text-transform: the product reads as in the queue row («10 ct Chick-fil-A»), as the business wrote it */
   margin-left: 10px;
   width: 100%;
 
@@ -108,10 +112,15 @@ export const ContentInfo = styled.div`
   `}
 
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 0px;
     font-weight: 400;
     color: ${props => props.theme.colors.headingColor};
+  }
+
+  /* redesign  (row 15): the price under the name at <= 410px starts where the name does */
+  .mobile-product-price {
+    justify-content: flex-start;
   }
 
   span {
@@ -167,7 +176,7 @@ export const AccordionContent = styled.div`
 
 export const AccordionText = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   padding: 18px;
 `
 
@@ -183,9 +192,9 @@ export const ProductComment = styled.div`
   }
 
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: normal;
-    text-transform: capitalize;
+    /* : as written (no text-transform), as in the queue row */
     margin: 0px 20px 0px 40px;
     display: -webkit-box;
     line-height: 1.5;
@@ -202,11 +211,11 @@ export const ProductInfo = styled.div`
 
   h1,
   h3 {
-    font-size: 15px;
+    font-size: var(--od-type-content-size);
   }
 
   p {
-    font-size: 20px;
+    font-size: var(--od-type-identifier-size);
     margin: 0px 5px;
   }
 
@@ -226,7 +235,7 @@ export const ProductError = styled.div`
   justify-content: center;
 
   span {
-    font-size: 18px;
+    font-size: var(--od-type-content-size);
     text-align: center;
   }
 
@@ -280,7 +289,7 @@ export const ProductPrice = styled.div`
 
   p,
   span {
-    font-size: 14px;
+    font-size: var(--od-type-identifier-size);
     color: ${props => props.theme.colors.headingColor};
   }
 
@@ -302,7 +311,7 @@ export const ProductSelect = styled.select`
   height: 50px;
   border: 0;
   background-color: transparent;
-  font-size: 17px;
+  font-size: var(--od-type-control-value-size);
   outline: none;
   margin-left: 5px;
 
@@ -335,12 +344,12 @@ export const ProductOptionsList = styled.ul`
     font-weight: 400;
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
   li span {
     color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
   li.ingredient {
@@ -368,7 +377,7 @@ export const ScheduleInfoWrapper = styled.div`
   box-sizing: border-box;
   h3 {
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -384,7 +393,13 @@ export const ScheduleInfoWrapper = styled.div`
 export const ScheduleInfo = styled.div`
   span {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--od-type-identifier-size);
     line-height: 15px;
   }
+`
+
+// redesign (row 77): reason line under a dimmed unavailable row
+// (no font-size of its own: it reads at the size of the line it sits under, like the Orders twin's ProductNotAvailable; the type roles are the coordinator's)
+export const ProductUnavailableNote = styled(ProductNotAvailable)`
+  padding-top: 2px;
 `

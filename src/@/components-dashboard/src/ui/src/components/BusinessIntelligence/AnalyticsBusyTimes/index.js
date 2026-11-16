@@ -189,8 +189,12 @@ export const AnalyticsBusyTimes = (props) => {
         <ChartHeaderContainer>
           <p>{t('BUSY_TIMES', 'Busy Times')}</p>
           <ActionBlock disabled={!(busyTimesList?.data?.busy?.length > 0 || busyTimesList?.data?.not_busy?.length > 0)}>
-            <BsArrowsAngleExpand onClick={previewChart} />
-            <BsDownload className='download-view' onClick={downloadCSV} />
+            <button type='button' aria-label={t('EXPAND', 'Expand')} onClick={previewChart}>
+              <BsArrowsAngleExpand />
+            </button>
+            <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+              <BsDownload className='download-view' />
+            </button>
           </ActionBlock>
         </ChartHeaderContainer>
         {
@@ -209,7 +213,7 @@ export const AnalyticsBusyTimes = (props) => {
               </BarChartWrapper>
                     )
                   : (
-              <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+              <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                     )
               )
         }

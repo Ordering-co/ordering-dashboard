@@ -1,0 +1,210 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-d3-importers-single-guides-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "d3-singlebusinesscategoryedit-categoryenablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessCategoryEdit/styles.js",
+   "component": "CategoryEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-singlebusinesscategoryedit-categoryenablewrapper-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessCategoryEdit/styles.js",
+   "component": "CategoryEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-singlebusinesscategoryedit-actionselectorwrapper-dropdown-item-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessCategoryEdit/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": ".dropdown-item",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-singlebusinessproduct-businessgeneralinfo-div-product-name-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/styles.js",
+   "component": "BusinessGeneralInfo",
+   "property": "font-size",
+   "context": "div.product_name",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-singlebusinessproduct-infoblock-div-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/styles.js",
+   "component": "InfoBlock",
+   "property": "font-size",
+   "context": "div",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-singlebusinessproduct-infoblock-div-----product-description-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/styles.js",
+   "component": "InfoBlock",
+   "property": "font-size",
+   "context": "div > &.product_description",
+   "match": "10px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "d3-singlebusinessproduct-businessenablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/styles.js",
+   "component": "BusinessEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-singlebusinesssubcateogries-accordionitem-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/styles.js",
+   "component": "AccordionItem",
+   "property": "font-size",
+   "context": "> div > span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-singlebusinesssubcateogries-productlayout-accordionitem-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/ProductLayout/styles.js",
+   "component": "AccordionItem",
+   "property": "font-size",
+   "context": "> div > span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d3-batchimageform-title-h2-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "Title",
+   "property": "font-size",
+   "context": "h2",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d3-batchimageform-title-h2-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "Title",
+   "property": "font-size",
+   "context": "@media (min-width: 768px) > h2",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d3-batchimageform-conditiontitle-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "ConditionTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-batchimageform-conditiontitle-root-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "ConditionTitle",
+   "property": "font-size",
+   "context": "@media (min-width: 768px)",
+   "match": "16px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-batchimageform-conditions-li-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "Conditions",
+   "property": "font-size",
+   "context": "li",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-batchimageform-conditions-li-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "Conditions",
+   "property": "font-size",
+   "context": "@media (min-width: 768px) > li",
+   "match": "16px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-batchimageform-imageissue-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "ImageIssue",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-batchimageform-imageissue-ul---li-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "component": "ImageIssue",
+   "property": "font-size",
+   "context": "ul > li",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "d3-wizardbusiness-turtorialendcontainier-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/WizardBusiness/styles.js",
+   "component": "TurtorialEndContainier",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d3-wizardbusiness-firststorecontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/WizardBusiness/styles.js",
+   "component": "FirstStoreContainer",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d3-wizardbusiness-firststorecontainer-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/WizardBusiness/styles.js",
+   "component": "FirstStoreContainer",
+   "property": "font-size",
+   "context": "> p",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  }
+ ],
+ "preservations": []
+}

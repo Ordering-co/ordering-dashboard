@@ -462,6 +462,15 @@ export const getBuilderBuildLog = (ordering, token, productId, appId, attemptId)
 export const getBuilderBuildDownload = (ordering, token, productId, appId, attemptId) =>
   request(`${buildsUrl(ordering, productId, appId)}/${encodeURIComponent(attemptId)}/download`, { method: 'GET', headers: jsonHeaders(token) })
 
+/**
+ * A link that installs the attempt's file on a phone (an iOS ad hoc IPA or an
+ * Android APK) and lasts 24 hours: `{ url, expires_at, platform, mode, file }`,
+ * `expires_at` in ISO 8601 UTC. An AAB or an App Store IPA answers
+ * `build.not_installable`.
+ */
+export const createBuilderInstallLink = (ordering, token, productId, appId, attemptId) =>
+  request(`${buildsUrl(ordering, productId, appId)}/${encodeURIComponent(attemptId)}/install-link`, { method: 'POST', headers: jsonHeaders(token) })
+
 /** Builds the attempt again with its own settings. Answers the new attempt. */
 export const retryBuilderBuild = (ordering, token, productId, appId, attemptId) =>
   request(`${buildsUrl(ordering, productId, appId)}/${encodeURIComponent(attemptId)}/retry`, { method: 'POST', headers: jsonHeaders(token) })
@@ -469,13 +478,6 @@ export const retryBuilderBuild = (ordering, token, productId, appId, attemptId) 
 /** Answers the attempt, cancelled. */
 export const cancelBuilderBuild = (ordering, token, productId, appId, attemptId) =>
   request(`${buildsUrl(ordering, productId, appId)}/${encodeURIComponent(attemptId)}/cancel`, { method: 'POST', headers: jsonHeaders(token) })
-
-/**
- * The public route that installs the latest ad hoc build on an iPhone. It
- * needs no session: opened on an iPhone it redirects to `itms-services`.
- */
-export const getBuilderAdHocInstallUrl = (ordering, appId) =>
-  `${ordering.root}/builder/apps/${encodeURIComponent(appId)}/downloads/ios/ad-hoc/ipa`
 
 /**
  * Every page of a paginated app list. The API ignores a page_size over 50

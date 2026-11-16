@@ -1,0 +1,226 @@
+/*
+ * redesign my-products B4 · The «Builds», «Images», «Icons and splash» and «Colors» sections of the app editor.
+ * `odc-apb-*`: Builds (a block per platform: state, version line, what is missing, the file types as the Builder's tabs, facts,
+ *   actions).
+ * `odc-api-*`: the grids of images and colors. The section's h2 is the editor's; the h3 of a platform or a group is here.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Breakpoints as literals only in @media. Logical properties (C17).
+ */
+
+/* ── Builds ── */
+.odc-apb {
+  display: grid;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-apb-platform {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-apb-platform + .odc-apb-platform {
+  padding-block-start: var(--od-space-6);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-apb-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-apb-title,
+.odc-api-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The notices sit in the section, not in a page gutter, and may take several lines (the missing fields are a list). */
+.odc-apb .odc-notice {
+  align-items: flex-start;
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+.odc-apb .odc-notice-dot { margin-block-start: var(--od-x-space-1-5); }
+
+.odc-apb .odc-notice-text {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-apb-sub { color: var(--od-text-muted); }
+
+.odc-apb-missing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-x-space-half) var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-apb-missing > li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+}
+
+.odc-apb-missing .odc-muted {
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The file of a type a phone installs (an APK, an Ad hoc IPA), inside its tab (the Builder's odc-bb-* tabs and panel): its QR, as
+   wide as the code is read at, and what it is for. */
+.odc-apb-file {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-apb-file > .odc-apb-install { max-inline-size: calc(var(--od-x-control-height) * 5); }
+
+.odc-apb-qr {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* The QR of a signed install link: the code (or its placeholder while the link is asked for), its expiry and its renewal. */
+.odc-apb-install {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-apb-install .odc-muted {
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-apb-install .odc-btn { justify-self: start; }
+
+.odc-apb-qr-skeleton {
+  display: block;
+  aspect-ratio: 1 / 1;
+}
+
+/* The facts of the last build: the label small and quiet, the value as text (the figures in mono, by their own class). */
+.odc-apb-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--od-x-control-height) * 5), 1fr));
+  gap: var(--od-space-3) var(--od-space-4);
+  margin: 0;
+  min-inline-size: 0;
+}
+
+/* R1-06: the value sits at the top of its cell even if another cell of the row takes two lines (the package breaks at its dots). */
+.odc-apb-fact {
+  display: grid;
+  align-content: start;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-apb-fact > dt {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-apb-fact > dd {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-apb-failed {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-apb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-apb-error {
+  display: grid;
+  gap: var(--od-x-space-half);
+}
+
+.odc-apb-error > p {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* Touch (decision 12): the controls are seen at 32px and reach 44px through their area; stacked or side by side they are at least
+   --od-space-4 apart, so the areas do not cross. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-apb-actions { gap: var(--od-space-4); }
+  .odc-apb-missing { row-gap: var(--od-space-4); }
+}
+
+/* ── Images and colors ── */
+.odc-api {
+  display: grid;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-api-group {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The image box of the legacy piece is 161px wide: a cell takes it whole, so two fit a phone of 390 and more fit as the window grows. */
+.odc-api-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--od-x-control-height) * 5.25), 1fr));
+  align-items: start;
+  gap: var(--od-space-5) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-api-colors {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--od-x-control-height) * 5), 1fr));
+  align-items: start;
+  gap: var(--od-space-5) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The names of the colors came capitalized in main (`p.color`). */
+.odc-api-colors .odc-legacy-field-label { text-transform: capitalize; }

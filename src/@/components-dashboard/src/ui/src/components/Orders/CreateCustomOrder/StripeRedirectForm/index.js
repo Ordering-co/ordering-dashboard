@@ -24,8 +24,9 @@ const StripeRedirectFormUI = (props) => {
       <FormRedirect onSubmit={handleSubmit(handleSubmitPaymentMethod)}>
 
         <FormGroup>
-          <label>{t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}</label>
+          <label htmlFor='stripe_redirect_type'>{t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}</label>
           <select
+            id='stripe_redirect_type'
             name='type'
             ref={
               register({
@@ -44,8 +45,9 @@ const StripeRedirectFormUI = (props) => {
         </FormGroup>
 
         <FormGroup>
-          <label>{t('ACCOUNT_HOLDER', 'Account holder')}</label>
+          <label htmlFor='stripe_redirect_name'>{t('ACCOUNT_HOLDER', 'Account holder')}</label>
           <Input
+            id='stripe_redirect_name'
             name='name'
             defaultValue={user?.name}
             placeholder={t('TYPE_ACCOUNT_HOLDER', 'Type an Account holder')}
@@ -62,8 +64,9 @@ const StripeRedirectFormUI = (props) => {
         </FormGroup>
 
         <FormGroup>
-          <label>{t('EMAIL', 'Email')}</label>
+          <label htmlFor='stripe_redirect_email'>{t('EMAIL', 'Email')}</label>
           <Input
+            id='stripe_redirect_email'
             name='email'
             type='email'
             defaultValue={user?.email}

@@ -62,7 +62,7 @@ export const AccordionItem = styled.div`
     }
 
     span {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       font-weight: 500;
     }
   }

@@ -5,7 +5,7 @@ export const DetailsContainer = styled.div`
   padding: 20px;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 5px;
     margin-bottom: 26px;
@@ -16,7 +16,7 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   margin-bottom: 36px;
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 11px;
   }
@@ -37,14 +37,14 @@ export const SwitchWrapper = styled.div`
   label {
     &:first-child {
       margin-bottom: 0;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
     }
   }
 `
 export const SearchbarWrapper = styled.div`
   margin: 59px 0 16px 0;
   label {
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     font-weight: 600;
     margin-bottom: 17px;
@@ -56,7 +56,7 @@ export const ProductExtraWrapper = styled.div`
   padding: 14px 0;
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 20px;
@@ -79,7 +79,7 @@ export const ProductOptionWrapper = styled.div`
     margin-left: 25px;
   `}
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 20px;
@@ -102,7 +102,7 @@ export const ProductSuboptionWrapper = styled.div`
     margin-left: 50px;
   `}
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 20px;

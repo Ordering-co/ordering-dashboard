@@ -26,7 +26,7 @@ export const SchoolsHeader = styled.div`
 
 export const SchoolsTitle = styled.p`
   margin: 0;
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   font-weight: bold;
   line-height: 1.2;
   color: ${({ theme }) => theme?.colors?.headingColor || '#151b26'};
@@ -43,7 +43,7 @@ export const SchoolsHeaderActions = styled.div`
   > button {
     min-height: 43px;
     padding: 0 20px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     white-space: nowrap;
   }
 `
@@ -52,7 +52,7 @@ export const TextButton = styled.button`
   background: transparent;
   border: none;
   padding: 6px 4px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 500;
   color: ${({ theme }) => theme?.colors?.danger || '#E63757'};
   cursor: pointer;
@@ -90,7 +90,7 @@ export const SchoolModulePanel = styled.section`
 
 export const SchoolModulePanelTitle = styled.h2`
   margin: 0 0 12px 0;
-  font-size: 22px;
+  font-size: var(--od-type-title-size);
   font-weight: 700;
   line-height: 1.25;
   color: ${({ theme }) => theme?.colors?.headingColor || '#151b26'};
@@ -99,7 +99,7 @@ export const SchoolModulePanelTitle = styled.h2`
 export const SchoolModulePanelText = styled.p`
   margin: 0;
   max-width: 58ch;
-  font-size: 15px;
+  font-size: var(--od-type-content-size);
   line-height: 1.6;
   color: ${({ theme }) => theme?.colors?.secundaryText || '#748194'};
 
@@ -118,7 +118,7 @@ export const SchoolModulePanelActions = styled.div`
   > button {
     min-height: 43px;
     padding: 0 24px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     white-space: nowrap;
   }
 `
@@ -154,7 +154,7 @@ export const Tab = styled.button`
   font-weight: ${({ active }) => (active ? 600 : 400)};
   padding: 10px 14px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
 `
 
@@ -174,7 +174,7 @@ export const Toolbar = styled.div`
   }
 
   label {
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     font-weight: 500;
     color: ${({ theme }) => theme?.colors?.headingColor || '#263238'};
   }
@@ -188,7 +188,7 @@ export const Toolbar = styled.div`
   .select {
     width: 100%;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   .select > div:first-child {
@@ -204,7 +204,7 @@ export const Table = styled.table`
     text-align: start;
     padding: 12px 10px;
     border-bottom: 1px solid ${({ theme }) => theme?.colors?.borderColor || '#E9ECEF'};
-    font-size: 13px;
+    font-size: var(--od-type-content-size);
   }
 
   th {
@@ -233,7 +233,7 @@ export const FormGrid = styled.div`
 
   label {
     display: block;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     font-weight: 500;
     color: ${({ theme }) => theme?.colors?.headingColor || '#263238'};
   }
@@ -250,7 +250,7 @@ export const FormGrid = styled.div`
 
   .select {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   .select > div:first-child {
@@ -267,7 +267,7 @@ export const FormActions = styled.div`
   button {
     min-height: 43px;
     padding: 0 24px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 
@@ -282,7 +282,7 @@ export const Chip = styled.span`
   color: ${({ theme }) => theme?.colors?.primaryContrast || '#FFF'};
   border-radius: 12px;
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
 `
 
 export const EmptyState = styled.div`
@@ -305,12 +305,12 @@ export const ReportCard = styled.div`
 
   h3 {
     margin: 0 0 6px 0;
-    font-size: 15px;
+    font-size: var(--od-type-section-title-size);
   }
 
   p {
     margin: 0 0 14px 0;
-    font-size: 13px;
+    font-size: var(--od-type-content-size);
     color: ${({ theme }) => theme?.colors?.secundaryText || '#748194'};
   }
 `

@@ -2,8 +2,9 @@ import React, { useContext } from 'react'
 import { BusinessInfo, CheckBox, CustomerInfo, LogisticStatusDot, OrderNumberContainer, OrdersCountWrapper, PriorityDot, StatusInfo, Timer, Timestatus, WrapperImage, InfoWrapper, ChannelInfo, EtaInfo, PodInfo } from './styles'
 import RiCheckboxFill from '@meronex/icons/ri/RiCheckboxFill'
 import RiCheckboxBlankLine from '@meronex/icons/ri/RiCheckboxBlankLine'
-import { useLanguage, useUtils } from '../../../../../index'
+import { useLanguage, useUtils, useConfig } from '../../../../../index'
 import { ConfigFileContext } from '../../../contexts/ConfigFileContext'
+import { formatOrderEta } from './orderEta'
 
 import { useTheme } from 'styled-components'
 import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
@@ -49,6 +50,7 @@ export const Order = React.memo((props) => {
   const theme = useTheme()
 
   const [{ parseDate, optimizeImage, getTimeAgo, parsePrice }] = useUtils()
+  const [{ configs }] = useConfig()
   const cateringTypes = [7, 8]
   return (
     <tr
@@ -89,6 +91,8 @@ export const Order = React.memo((props) => {
                   {!isSelectedOrders && !isOrderLocked?.(order) && (
                     <CheckBox
                       isChecked={selectedOrderIds.includes(order?.id)}
+                      aria-pressed={selectedOrderIds.includes(order?.id)}
+                      aria-label={`${t('ORDER', 'Order')} ${order.id}`}
                       onClick={() => handleSelectedOrderIds(order.id)}
                       className='orderCheckBox'
                     >
@@ -103,7 +107,7 @@ export const Order = React.memo((props) => {
                   )}
                   <div className='info'>
                     {allowColumns?.orderNumber?.visable && !showExternalId && (
-                      <p className='bold'>{t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}</p>
+                      <p className='bold'>{t('INVOICE_ORDER_NO', 'Order number')} {order?.id}</p>
                     )}
                     {allowColumns?.dateTime?.visable && (
                       <>
@@ -305,10 +309,22 @@ export const Order = React.memo((props) => {
             )
           }
           if (column === 'eta') {
+            const etaLabel = formatOrderEta(order, { parseDate, formatTime: configs?.format_time?.value })
             return (
               <td className='eta' key={`eta${i}-${index}`}>
                 <EtaInfo>
-                  <p className='bold'>{''}</p>
+                  {etaLabel
+                    ? (
+                      <>
+                        <p className='bold'>{etaLabel.time}</p>
+                        {etaLabel.date && <p>{etaLabel.date}</p>}
+                      </>
+                      )
+                    : (
+                      <p className='empty'>
+                        <span role='img' aria-label={t('NO_ETA', 'No ETA')}>—</span>
+                      </p>
+                      )}
                 </EtaInfo>
               </td>
             )
@@ -326,7 +342,13 @@ export const Order = React.memo((props) => {
             return (
               <td className='podInfo' key={`podInfo${i}-${index}`}>
                 <PodInfo>
-                  <p className='bold'>{order?.codigoPod}</p>
+                  {order?.codigoPod
+                    ? <p className='bold'>{order?.codigoPod}</p>
+                    : (
+                      <p className='empty'>
+                        <span role='img' aria-label={t('NO_DATA', 'No data')}>—</span>
+                      </p>
+                      )}
                 </PodInfo>
               </td>
             )

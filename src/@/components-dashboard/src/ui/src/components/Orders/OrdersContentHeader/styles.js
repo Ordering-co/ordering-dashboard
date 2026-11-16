@@ -23,15 +23,8 @@ export const HeaderSection = styled.div`
   width: fit-content;
   padding-bottom: 15px;
   > button {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 8px;
-      margin-right: -8px;
-    `
-: css`
-      margin-right: 8px;
-      margin-left: -8px;
-    `}
+    margin-inline-start: -8px;
+    margin-inline-end: 8px;
 
     svg {
       width: 25px;
@@ -39,15 +32,8 @@ export const HeaderSection = styled.div`
     }
 
     &.tour_btn {
-      ${props => props.theme?.rtl
-? css`
-        margin-left: -8px;
-        margin-right: 8px;
-      `
-: css`
-        margin-right: -8px;
-        margin-left: 8px;
-      `}
+      margin-inline-start: 8px;
+      margin-inline-end: -8px;
       svg {
         width: 20px;
         height: 20px;
@@ -56,8 +42,8 @@ export const HeaderSection = styled.div`
   }
 `
 export const HeaderTitle = styled.p`
-  color: ${(props) => props.theme.colors.headingColor};
-  font-size: 20px;
+  color: ${(props) => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
+  font-size: var(--od-type-title-size);
   font-weight: bold;
   margin: 0px;
   text-transform: capitalize;
@@ -72,7 +58,8 @@ export const TopRightSection = styled.div`
   display: flex;
   flex-direction: column-reverse;
   flex-wrap: nowrap;
-  margin: 0px 0px 10px 15px;
+  margin: 0px 0px 10px;
+  margin-inline-start: 15px;
 
   ${({ isCustomLayout }) => !isCustomLayout && css`
     justify-content: flex-end;
@@ -130,18 +117,12 @@ export const WrapperSearchAndFilter = styled.div`
   `}
 
   input {
-    background: ${props => props.theme.colors.secundary};
+    background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.secundary};
     border: none;
   }
 
   > button {
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 8px;
-    `
-: css`
-      margin-left: 8px;
-    `}
+    margin-inline-start: 8px;
   }
 
   @media (min-width: 760px) {

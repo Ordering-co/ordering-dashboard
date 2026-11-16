@@ -1,22 +1,8 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
+import './product-editor.css'
 
-export const Container = styled.div`
-  display: flex;
-  width: 0;
-  position: fixed;
-  z-index: 1005;
-  top: 0;
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-  overflow-x: hidden;
-  transition: 0.3s;
-  height: calc(var(--vh, 1vh) * 100);
-  box-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
-
-  ${props => props.theme?.rtl
-? css`
-    left: var(--assistant-offset, 0px);
-  `
-: css`
-    right: var(--assistant-offset, 0px);
-  `}
-`
+// redesign SP-F1 (D1): the panel of the product editor. Every rule lives in product-editor.css (tokens only, and no
+// container-type, contain or transform: the legacy fixed SideBars that the sections open must paint over the page).
+export const BarContainer = styled.aside.attrs({
+  className: 'odc-root odc-pe-panel'
+})``

@@ -26,4 +26,15 @@ describe('getTicketExcludedIngredientLines', () => {
     expect(getTicketExcludedIngredientLines(null, t)).toEqual([])
     expect(getTicketExcludedIngredientLines([], t)).toEqual([])
   })
+
+  it('uses the active translation without mutating or printing invalid ingredient records', () => {
+    const ingredients = [
+      null,
+      { id: 1, selected: false },
+      { id: 2, name: 'Cebolla', selected: false }
+    ]
+
+    expect(getTicketExcludedIngredientLines(ingredients, (key, fallback) => key === 'NO' ? 'Sin' : fallback)).toEqual(['Sin Cebolla'])
+    expect(ingredients).toHaveLength(3)
+  })
 })

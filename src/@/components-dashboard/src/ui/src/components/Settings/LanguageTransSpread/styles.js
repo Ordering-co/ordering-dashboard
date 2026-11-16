@@ -5,12 +5,12 @@ export const TransSpreadContainer = styled.div`
   table {
     th {
       > div {
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
         padding: 15px 0 !important;
       }
     }
     td {
-      font-size: 12px;
+      font-size: var(--od-type-content-size);
       padding: 15px 0;
     }
   }

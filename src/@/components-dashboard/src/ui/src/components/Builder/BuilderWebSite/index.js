@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { ExclamationCircle, Gear } from 'react-bootstrap-icons'
 
 import { BuilderSiteSettings as BuilderSiteSettingsController, ToastType, useLanguage, useToast } from '../../../../../index'
-import { Button } from '../../../styles'
-import { BuilderMessage } from '../BuilderShared'
-import { NoticeBox } from '../BuilderWebTheme/styles'
+import { CircleAlert, Settings } from '../../Shared/Icon'
+import { Button, EmptyState, InlineNotice, Skeleton } from '../../Shared/Product'
 import { SiteSettingsEditor } from '../ThemeSchemaEditor'
+import './builder-site.css'
+
+// redesign B3a: the website's settings tab on Product pieces (P/Skeleton, P/EmptyState, P/Button); same
+// controller, states, texts, toast and beforeunload guard (main has no in-app leave guard on this tab).
 
 const BuilderWebSiteSettingsUI = (props) => {
   const { schemaState, reloadSchema, hasEdits, save, hasActiveTheme, onGoToTheme } = props
@@ -27,33 +27,34 @@ const BuilderWebSiteSettingsUI = (props) => {
 
   if (schemaState.loading && !schema) {
     return (
-      <div aria-busy='true'>
-        <Skeleton height={56} />
-        <Skeleton height={320} style={{ marginTop: 16 }} />
+      <div className='odc-bs-busy' aria-busy='true'>
+        <span className='odc-sr-only'>{t('LOADING', 'Loading')}</span>
+        <Skeleton shape='box' block='calc(var(--od-space-6) + var(--od-space-6))' />
+        <Skeleton shape='box' block='calc(var(--od-space-10) * 2.5)' />
       </div>
     )
   }
 
   if (schemaState.error) {
     return (
-      <BuilderMessage
-        role='alert'
+      <EmptyState
         tone='error'
-        icon={<ExclamationCircle aria-hidden='true' />}
+        icon={CircleAlert}
+        titleAs='h2'
         title={t('BUILDER_SITE_LOAD_ERROR', 'We couldn’t load the website settings')}
-        text={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
-      >
-        <Button color='primary' borderRadius='8px' onClick={reloadSchema}>{t('BUILDER_RETRY', 'Try again')}</Button>
-      </BuilderMessage>
+        description={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
+        action={<Button variant='primary' onClick={reloadSchema}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+      />
     )
   }
 
   if (!Array.isArray(schema?.editor?.sections)) {
     return (
-      <BuilderMessage
-        icon={<Gear aria-hidden='true' />}
+      <EmptyState
+        icon={Settings}
+        titleAs='h2'
         title={t('BUILDER_THEME_SCHEMA_PENDING', 'The editor for this website isn’t ready yet')}
-        text={t('BUILDER_THEME_SCHEMA_PENDING_HELP', 'Its theme schema hasn’t moved to the new format. Try again later.')}
+        description={t('BUILDER_THEME_SCHEMA_PENDING_HELP', 'Its theme schema hasn’t moved to the new format. Try again later.')}
       />
     )
   }
@@ -70,19 +71,16 @@ const BuilderWebSiteSettingsUI = (props) => {
 
   return (
     <>
+      {/* main without an active theme the website reads none of these settings */}
       {hasActiveTheme === false && (
-        <NoticeBox role='status'>
-          <ExclamationCircle aria-hidden='true' />
-          <div>
-            <strong>{t('BUILDER_SITE_NO_ACTIVE_THEME_TITLE', 'Your website doesn’t use these settings yet')}</strong>
-            {t('BUILDER_SITE_NO_ACTIVE_THEME', 'It has no active theme. Its type, store or franchise and these settings apply once you create a theme and activate it.')}
-            {onGoToTheme && (
-              <div style={{ marginTop: 12 }}>
-                <Button type='button' color='primary' borderRadius='8px' onClick={onGoToTheme}>{t('BUILDER_SITE_GO_TO_THEME', 'Go to Theme')}</Button>
-              </div>
-            )}
-          </div>
-        </NoticeBox>
+        <InlineNotice
+          tone='warning'
+          className='odc-bs-no-theme'
+          action={onGoToTheme && <Button variant='secondary' onClick={onGoToTheme}>{t('BUILDER_SITE_GO_TO_THEME', 'Go to Theme')}</Button>}
+        >
+          <strong>{t('BUILDER_SITE_NO_ACTIVE_THEME_TITLE', 'Your website doesn’t use these settings yet')}</strong>{' '}
+          {t('BUILDER_SITE_NO_ACTIVE_THEME', 'It has no active theme. Its type, store or franchise and these settings apply once you create a theme and activate it.')}
+        </InlineNotice>
       )}
       <SiteSettingsEditor schema={schema} format={format} site={site} />
     </>

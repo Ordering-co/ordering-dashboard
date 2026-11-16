@@ -8,6 +8,12 @@ ${({ isParent }) => isParent && css`
 `
 
 const AccordionStyled = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+  width: 100%;
   cursor: pointer;
   transition: background-color 0.6s ease;
 
@@ -26,6 +32,17 @@ const AccordionStyled = styled.div`
 
   @media (min-width: 411px){
     flex-direction: row;
+  }
+
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
   }
 
 `
@@ -53,7 +70,7 @@ export const AccordionItem = styled.div`
     align-items: center;
 
     span {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       font-weight: 600;
       margin: 0 12px;
     }
@@ -82,6 +99,14 @@ export const AccordionContent = styled.div`
   width: 100%;
 `
 export const CheckboxWrapper = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
   cursor: pointer;
   svg {
     font-size: 18px;
@@ -91,4 +116,16 @@ export const CheckboxWrapper = styled.div`
       color: ${props => props.theme.colors.primary};
     `}
   }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
+
 `

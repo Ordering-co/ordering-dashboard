@@ -1,0 +1,90 @@
+/*
+ * redesign UF-B2 (, decision 3 A) · The profile panel of Users: the photo block (a 56px avatar and «Change photo») above
+ * the form. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * `.odc-uf-profile` is the scroller the sticky save bar of the form sticks to. Inside a side bar it takes the height that is left
+ * under the header (`data-calc-height`, what `isCalcHeight` did: 100% minus 100px, written as the sum of three space tokens);
+ * the service professional editor (`isService`) sits in a modal that scrolls by itself.
+ */
+
+.odc-uf-profile {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding-inline: var(--od-space-1);
+  padding-block-end: var(--od-space-5);
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* redesign UF integration (live check): only the legacy side bar (business owners, call center, admins, professionals) needs this
+   block to be the scroller. Anywhere else (the customer panel, a dialog) an `overflow` here would trap the sticky save bar in a box
+   that never scrolls: the host's own scroller carries it. */
+#user_lateral_bar .odc-uf-profile[data-calc-height] {
+  overflow: auto;
+  block-size: calc(100% - var(--od-space-8) - var(--od-space-5) - var(--od-space-3));
+}
+
+/* ── Photo block ── */
+.odc-uf-photo {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-4);
+  margin-block: var(--od-space-4) 0; /* the form below brings its own top padding */
+  padding: var(--od-space-2);
+  border: var(--od-x-hairline) solid transparent;
+  border-radius: var(--od-radius-component);
+}
+
+/* A file is being dragged over the block (the class `dragover` comes from DragAndDrop). */
+.odc-uf-photo.dragover {
+  border-color: var(--od-focus);
+  background: var(--od-surface-subtle);
+}
+
+/* 56px: three space tokens, 3rem and 0.5rem, so it follows the root size as the rest of the form does. */
+.odc-uf-avatar {
+  display: grid;
+  flex: none;
+  inline-size: calc(var(--od-space-7) + var(--od-space-2));
+  block-size: calc(var(--od-space-7) + var(--od-space-2));
+}
+
+.odc-uf-avatar .odc-avatar {
+  inline-size: 100%;
+  block-size: 100%;
+  font-size: var(--od-x-type-section-size);
+}
+
+.odc-uf-photo-actions {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  justify-items: start;
+  min-inline-size: 0;
+}
+
+.odc-uf-photo-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* An error is icon and words, never colour alone. */
+.odc-uf-photo-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-photo-error-icon.odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}
+
+.odc-uf-profile-form { min-inline-size: 0; }

@@ -1,0 +1,1615 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a5-settings-language-whitelabel-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-a5-settings-language-whitelabel-cms-index-js-c22ceb",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "pageListProps /* binding-sha256:5141d38cd9a702aaede3daf1f3e095a2b316eca3c5946b27930dee6737b30e07 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-cms-styles-js-353233",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionsContainer",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    padding-right: 15px;\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderRight",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 11px;\n    `\n: css`\n      margin-right: 11px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PageListTable",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PageTbody",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionsContainer",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContainer",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContainer",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    padding-right: 15px;\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "EmptyMessage",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".show > >div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "#E63757",
+            "context": "> div > > div > .dropdown-item:last-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderRight",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderRight",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 11px;\n    `\n: css`\n      margin-right: 11px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageListTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageListTable",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageTbody",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PageTbody",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagemanager-index-js-a2f05b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "languageManagerProps /* binding-sha256:6821ac24f385d24057531646b9846ef5e6aec0e8fd659fe20927194ed76a3f90 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagemanager-styles-js-b318d1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionGroupWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    justify-content: flex-start;\n  `\n: css`\n    justify-content: flex-end;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LanguageManagerContainer",
+            "property": "font",
+            "match": "({ allowOverflow }) => allowOverflow && css`\n    overflow: visible;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SelectContent",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "SelectContent p: ningun <p> existe en la cadena del Select (LegacySelect, SearchBar, Pagination: cero etiquetas <p>)."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "> svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ViewIconWrapper > svg: los glifos de los iconos de vista lista/tabla."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    > svg {\n      color: ${props => props.theme?.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 12px;\n    `\n: css`\n      margin-right: 12px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "font",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionGroupWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    justify-content: flex-start;\n  `\n: css`\n    justify-content: flex-end;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "input",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LanguageManagerContainer",
+            "property": "color-block",
+            "match": "({ allowOverflow }) => allowOverflow && css`\n    overflow: visible;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LanguageSelectorContainer",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectContent",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectContent",
+            "property": "color",
+            "match": "#748194",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    > svg {\n      color: ${props => props.theme?.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 12px;\n    `\n: css`\n      margin-right: 12px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color-block",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ViewIconWrapper",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagesetting-index-js-8912c4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "languageSettingProps /* binding-sha256:e86b31f68727516a9ae6b43dad3291f9bdf12a9850c30b82de15d8cce099a263 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagesetting-styles-js-c57fa8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "FieldContainer",
+            "property": "font-size",
+            "match": "20px",
+            "context": ".default > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "FieldContainer .default > svg: los glifos Circle/RecordCircle del radio."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "font",
+            "match": "({ isHeader }) => isHeader && css`\n    border-bottom: 1px solid ${props => props.theme.colors.borderColor};\n    margin-bottom: 15px;\n    > div {\n      font-weight: 700;\n      font-size: var(--od-type-control-size);\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Bugs H R1-02 re-pinned this rule: the Default mark RadioWrapper is now a native button (replacing the isDisabled pointer-events interpolation); `font: inherit` only resets the user-agent button font and declares no size."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "font",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Bugs H R1-02 re-pinned this rule. The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js) for the coarse-pointer hit area. It declares no readable-text size and no colour of its own."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Bugs H R1-02 re-pinned this rule. The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js) for the brand focus ring. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "FieldContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "color-block",
+            "match": "({ isHeader }) => isHeader && css`\n    border-bottom: 1px solid ${props => props.theme.colors.borderColor};\n    margin-bottom: 15px;\n    > div {\n      font-weight: 700;\n      font-size: var(--od-type-control-size);\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FieldContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "color-block",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Bugs H R1-02 re-pinned this rule (the Default mark became a native button). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js) for the coarse-pointer hit area. It declares no readable-text size and no colour of its own."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Bugs H R1-02 re-pinned this rule (the Default mark became a native button). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js) for the brand focus ring. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "RadioWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagetransspread-index-js-07cfc1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransSpread/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "languageTransSpreadProps /* binding-sha256:6d7c88a1f13cc9ce41ea5344c7278b2a84c1753eeaa3f8c11cad21aa5f4049e5 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagetransspread-styles-js-57b206",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransSpread/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagetranstable-index-js-b56c46",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransTable/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "languageTransTableProps /* binding-sha256:9bdf55cf6540d46cc16446800b13a70070220cfa2e26d174012009c1a84e7591 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-languagetranstable-styles-js-dc343f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransTable/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "TableBody",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-left: 20px;\n      `\n: css`\n        padding-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TableBody",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-right: 25px;\n        border-right: 1px solid ${props => props.theme?.colors.borderColor};\n      `\n: css`\n        padding-left: 25px;\n        border-left: 1px solid ${props => props.theme?.colors.borderColor};\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TableHeader",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-left: 20px;\n      `\n: css`\n        padding-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TableHeader",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        padding-right: 25px;\n        padding-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "TableBody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableBody",
+            "property": "border-left",
+            "match": "props => props.theme?.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableBody",
+            "property": "border-right",
+            "match": "props => props.theme?.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableBody",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-left: 20px;\n      `\n: css`\n        padding-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableBody",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-right: 25px;\n        border-right: 1px solid ${props => props.theme?.colors.borderColor};\n      `\n: css`\n        padding-left: 25px;\n        border-left: 1px solid ${props => props.theme?.colors.borderColor};\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableHeader",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableHeader",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        padding-left: 20px;\n      `\n: css`\n        padding-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TableHeader",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        padding-right: 25px;\n        padding-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-pickerexpress-index-js-8bb4c0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "apiKeysProps /* binding-sha256:47dcf556d0df6962fbc05cb35c27a2c0d307f567210a367ed05b34cde95012ad */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 3,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'lightPrimary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-pickerexpress-styles-js-a6920e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AllSetting",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 20px;\n    `\n: css`\n      right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ isDriverOrders }) => isDriverOrders && css`\n    position: absolute;\n    box-shadow: none;\n\n    ${props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    left: var(--assistant-offset, 0px);\n    `\n: css`\n    right: var(--assistant-offset, 0px);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "font",
+            "match": "props => props?.theme?.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 15px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderIcons",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PickerExpressContainer",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 5px;\n        margin-left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a5-settings-language-whitelabel: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AddNewButton",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AddNewButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AllSetting",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AllSetting",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ApiKeysListTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ApiKeysListTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "border-left",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "border-right",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 20px;\n    `\n: css`\n      right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "border-left",
+            "match": "1px solid #CCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "border-right",
+            "match": "1px solid #CCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "-4px 0px 7px #ccc",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ isDriverOrders }) => isDriverOrders && css`\n    position: absolute;\n    box-shadow: none;\n\n    ${props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    left: var(--assistant-offset, 0px);\n    `\n: css`\n    right: var(--assistant-offset, 0px);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".show > >div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "color-block",
+            "match": "props => props?.theme?.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropdownButtonWrapper",
+            "property": "color",
+            "match": "#E63757",
+            "context": "> div > > div > .dropdown-item:last-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 15px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderIcons",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Paragraph",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PickerExpressContainer",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 5px;\n        margin-left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingListConatiner",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-purchaseaddondetails-index-js-89bb30",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PurchaseAddonDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "purchaseAddonsProps /* binding-sha256:8d3e991dc428abedea9eef320509a224dfef46d8b281480d95dc083a81a85207 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-purchaseaddons-index-js-ef28c7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PurchaseAddons/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "purchaseAddonsProps /* binding-sha256:fd87f421dd4155e341cac82a0c56419815deb94b9265efe6ea0efd8965eaecb5 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-sitesettingdetails-index-js-eae894",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SiteSettingDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-a5-settings-language-whitelabel-sitesauthsettings-index-js-7df862",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SitesAuthSettings/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "sitesAuthSettinsProps /* binding-sha256:531fc99360031778de3f2b59a5d32fddf076cae398cdb9f28c10c1a4945e14c9 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a5-settings-language-whitelabel semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

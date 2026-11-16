@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const Option = styled.div`
   display: flex;
@@ -7,11 +7,7 @@ export const Option = styled.div`
   padding: 10px;
 
   svg {
-    margin-right: 5px;
-    ${props => props.theme?.rtl && css`
-      margin-left: 5px;
-      margin-right: 0px;
-    `} 
+    margin-inline-end: 5px;
   }
 `
 export const PlaceholderTitle = styled(Option)`

@@ -2,26 +2,27 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useConfig, useLanguage, useApi, useSession } from '../../../../../index'
 import GoogleMapReact, { fitBounds } from 'google-map-react'
 import { InterActOrderMarker } from '../InterActOrderMarker'
-import { AutoScroll } from '../../Shared'
-import { useTheme } from 'styled-components'
+import { AssignCommentDialog, MapFrame } from '../../Shared/Product'
+import { boundsFor, collectPoints, defaultCenter as getDefaultCenter, parseLocation } from '../../../../../utils/mapBounds'
+import { DriversDock } from './DriversDock'
+import { useAssignDriver } from './useAssignDriver'
 
-import {
-  WrapperMap,
-  WrapperOnlineDrivers,
-  OnlineDrivers,
-  WrapperDriverImage,
-  DriverImage,
-  WrapDriverInfo,
-  DriverInfo
-} from './styles'
+import { WrapperMap } from './styles'
+
+// redesign W1-2 (T1-4): the classes the map needs; a blocked or half-loaded Google script leaves `window.google` without them (M-01).
+const mapsReady = (maps) => typeof maps?.LatLngBounds === 'function' && typeof maps?.LatLng === 'function'
 
 export const DeliveriesLocation = (props) => {
   const {
     driversList,
-    interActionMapOrder
+    interActionMapOrder,
+    // redesign deliveries F2-B2 (decision 3): the board decides who may assign (canAssign), asks for the candidates to take the focus
+    // (focusCandidatesToken changes) and hears about a successful assignment (onAssigned).
+    canAssign,
+    focusCandidatesToken,
+    onAssigned
   } = props
 
-  const theme = useTheme()
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const [session] = useSession()
@@ -29,103 +30,66 @@ export const DeliveriesLocation = (props) => {
 
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
-  const defaultLatitude = Number(configState?.configs?.location_default_latitude?.value)
-  const defaultLongitude = Number(configState?.configs?.location_default_longitude?.value)
-  const isInvalidDefaultLocation = isNaN(defaultLatitude) || isNaN(defaultLongitude)
-  const defaultCenter = {
-    lat: !isInvalidDefaultLocation ? defaultLatitude : 40.7744146,
-    lng: !isInvalidDefaultLocation ? defaultLongitude : -73.9678064
-  }
+  // redesign W1-2 (T1-4): one tolerant centre and one location parser (utils/mapBounds.js) instead of the inline copies.
+  const defaultCenter = getDefaultCenter(configState?.configs)
+  const pointOf = (location) => parseLocation(location, defaultCenter)
 
   const [mapCenter, setMapCenter] = useState(defaultCenter)
   const [mapZoom, setMapZoom] = useState(10)
   const [activeDrivers, setActiveDrivers] = useState([])
-  const [mapLoaded, setMapLoaded] = useState(true)
+  const [mapLoaded, setMapLoaded] = useState(false)
+  const [unavailable, setUnavailable] = useState(false)
   const [mapFitted, setMapFitted] = useState(false)
+
+  // redesign deliveries F2-B2 (DV-13): which order the candidates belong to and how the request went, so the dock can say «loading»,
+  // «could not load» or «nobody» apart. `requestedOrderId` drops the answer of a request whose order is no longer the chosen one.
+  const [candidatesState, setCandidatesState] = useState({ orderId: null, status: 'idle' })
+  const requestedOrderId = useRef(null)
+  const assigner = useAssignDriver({ onAssigned })
 
   const [interActionOrderDriverLocation, setInterActionOrderDriverLocation] = useState(null)
   const defaultZoom = 10
   const mapRef = useRef(null)
 
   const mapFit = () => {
-    const bounds = new window.google.maps.LatLngBounds()
-
+    const drivers = driversList?.drivers || []
+    let points
     if (interActionMapOrder === null) {
-      if (driversList.drivers.length === 1) {
-        setMapCenter(
-          (driversList.drivers[0].location !== null && typeof driversList.drivers[0].location === 'object' && driversList.drivers[0].location?.lat && driversList.drivers[0].location?.lng)
-            ? driversList.drivers[0].location
-            : typeof driversList.drivers[0].location === 'string'
-              ? {
-                  lat: parseFloat(driversList.drivers[0]?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
-                  lng: parseFloat(driversList.drivers[0]?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
-                }
-              : defaultCenter
-        )
+      if (drivers.length === 1) {
+        setMapCenter(pointOf(drivers[0]?.location))
         setMapZoom(defaultZoom)
         return
       }
-      for (const driver of driversList.drivers) {
-        const marker = (driver.location !== null && typeof driver.location === 'object' && driver.location?.lat && driver.location?.lng)
-          ? driver.location
-          : typeof driver?.location === 'string'
-            ? {
-                lat: parseFloat(driver?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
-                lng: parseFloat(driver?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
-              }
-            : defaultCenter
-        const newPoint = new window.google.maps.LatLng(marker.lat, marker.lng)
-        bounds.extend(newPoint)
-      }
-    }
-
-    if (interActionMapOrder !== null) {
-      let marker, newPoint
-      marker = interActionMapOrder?.business?.location !== null ? interActionMapOrder?.business?.location : defaultCenter
-      newPoint = new window.google.maps.LatLng(marker.lat, marker.lng)
-      bounds.extend(newPoint)
-
-      marker = interActionMapOrder?.customer?.location !== null && interActionMapOrder?.customer?.location?.lat ? interActionMapOrder.customer.location : defaultCenter
-      newPoint = new window.google.maps.LatLng(marker.lat, marker.lng)
-      bounds.extend(newPoint)
-
-      if (interActionMapOrder.driver !== null) {
-        marker = (interActionOrderDriverLocation !== null && typeof interActionOrderDriverLocation === 'object' && interActionOrderDriverLocation?.lat && interActionOrderDriverLocation?.lng) ? interActionOrderDriverLocation : defaultCenter
-        newPoint = new window.google.maps.LatLng(marker.lat, marker.lng)
-        bounds.extend(newPoint)
+      points = collectPoints(drivers.map(driver => driver?.location), defaultCenter)
+    } else {
+      points = [
+        pointOf(interActionMapOrder?.business?.location),
+        pointOf(interActionMapOrder?.customer?.location)
+      ]
+      if (interActionMapOrder?.driver !== null) {
+        points.push(pointOf(interActionOrderDriverLocation))
       } else {
-        for (const activeDriver of activeDrivers) {
-          const marker = (activeDriver.location !== null && typeof activeDriver.location === 'object' && activeDriver.location?.lat && activeDriver.location?.lng) ? activeDriver.location : defaultCenter
-          const newPoint = new window.google.maps.LatLng(marker.lat, marker.lng)
-          bounds.extend(newPoint)
-        }
+        points.push(...collectPoints(activeDrivers.map(driver => driver?.location), defaultCenter))
       }
     }
 
-    const newBounds = {
-      ne: {
-        lat: bounds.getNorthEast()?.lat?.(),
-        lng: bounds.getNorthEast()?.lng?.()
-      },
-      sw: {
-        lat: bounds.getSouthWest()?.lat?.(),
-        lng: bounds.getSouthWest()?.lng?.()
-      }
-    }
-
-    const mapSize = {
-      width: mapRef.current.clientWidth,
-      height: mapRef.current.clientHeight
-    }
-    const { center, zoom } = fitBounds(newBounds, mapSize)
-    setMapZoom(zoom)
-    setMapCenter(center)
+    // redesign W1-2 (T1-4): the size comes from the frame; with no size (hidden tab) or no usable bounds the map keeps its view.
+    const fitted = boundsFor(points, {
+      width: mapRef.current?.clientWidth,
+      height: mapRef.current?.clientHeight,
+      defaultZoom,
+      fitBounds
+    })
+    if (!fitted) return
+    setMapZoom(fitted.zoom)
+    setMapCenter(fitted.center)
     setMapFitted(true)
   }
 
   // Fit bounds on mount, and when the markers change
+  // redesign W1-2 (T1-4): only once Google really loaded (mapLoaded is true only with `maps` in hand).
   useEffect(() => {
-    if (driversList.loading || driversList.drivers.length === 0 || mapLoaded) return
+    if (driversList.loading || driversList.drivers.length === 0 || !mapLoaded) return
     if (interActionMapOrder !== null) {
       for (const driver of driversList.drivers) {
         if (driver.id === interActionMapOrder?.driver?.id) {
@@ -138,31 +102,58 @@ export const DeliveriesLocation = (props) => {
     }
   }, [interActionMapOrder, mapLoaded, driversList, mapFitted])
 
+  // redesign W1-2 (T1-4): Google answered without its classes (blocked, or a failed load): the frame says «Map unavailable», nothing else changes.
+  const handleGoogleApiLoaded = ({ maps } = {}) => {
+    if (!mapsReady(maps)) {
+      setMapLoaded(false)
+      setUnavailable(true)
+      return
+    }
+    setMapLoaded(true)
+  }
+
+  // redesign deliveries F2-B2 (DV-13): `controls` answers a list or an error. Only a list reaches `activeDrivers`; an error leaves it empty
+  // and the dock says it could not load, with a retry. The request itself is the one the panel always made.
+  const getControls = async (order) => {
+    const { content: { error: errorResponse, result: response } } = await ordering.setAccessToken(session?.token).controls(order?.id).get()
+    const error = await errorResponse
+    const result = await response
+    if (error) return null
+    if (Array.isArray(result?.drivers) && result?.drivers.length > 0) {
+      return result.drivers.filter((driver) => driver.available && !driver.busy)
+    }
+    return []
+  }
+
+  const loadCandidates = async (order) => {
+    const orderId = order?.id
+    requestedOrderId.current = orderId
+    setActiveDrivers([])
+    setCandidatesState({ orderId, status: 'loading' })
+    let list = null
+    try {
+      list = await getControls(order)
+    } catch (err) {
+      list = null
+    }
+    if (requestedOrderId.current !== orderId) return
+    if (Array.isArray(list)) {
+      setActiveDrivers(list)
+      setCandidatesState({ orderId, status: 'ready' })
+    } else {
+      setActiveDrivers([])
+      setCandidatesState({ orderId, status: 'error' })
+    }
+  }
+
   useEffect(() => {
-    if (!interActionMapOrder || interActionMapOrder?.driver) return
-    const getControls = async (order) => {
-      const { content: { error: errorResponse, result: response } } = await ordering.setAccessToken(session?.token).controls(order?.id).get()
-      const error = await errorResponse
-      const result = await response
-      if (!error) {
-        let driversControls = []
-        if (Array.isArray(result?.drivers) && result?.drivers.length > 0) {
-          driversControls = (result?.drivers?.filter((driver) => driver.available && !driver.busy))
-        }
-        return driversControls
-      }
-      return error
+    requestedOrderId.current = interActionMapOrder?.id ?? null
+    assigner.dismissError()
+    if (!interActionMapOrder || interActionMapOrder?.driver) {
+      setCandidatesState({ orderId: null, status: 'idle' })
+      return
     }
-
-    const fetchData = async () => {
-      if (interActionMapOrder !== null) {
-        setActiveDrivers([])
-        const driversControls = await getControls(interActionMapOrder)
-        setActiveDrivers(driversControls)
-      }
-    }
-
-    fetchData()
+    loadCandidates(interActionMapOrder)
   }, [interActionMapOrder?.id])
 
   useEffect(() => {
@@ -193,14 +184,23 @@ export const DeliveriesLocation = (props) => {
   }
 
   return (
-    <WrapperMap ref={mapRef} className='drivers-location'>
-      {googleMapsApiKey && (
+    <WrapperMap className='drivers-location'>
+      {/* redesign W1-2 (T1-3): the map is the frame's child; the «Drivers online» panel below is not, so it still helps when the map fails. */}
+      <MapFrame
+        ref={mapRef}
+        size='fill'
+        label={t('DELIVERY_MAP', 'Delivery map')}
+        apiKey={googleMapsApiKey}
+        unavailable={unavailable}
+        unavailableTitle={t('MAP_UNAVAILABLE', 'Map unavailable')}
+        unavailableDescription={t('MAP_UNAVAILABLE_DASHBOARD_TEXT', 'The map could not load. Everything else on this page still works.')}
+      >
         <GoogleMapReact
           bootstrapURLKeys={{
             key: window.document.getElementById('__googleMapsScriptId') ? null : googleMapsApiKey,
             libraries: ['places', 'geometry', 'drawing', 'visualization']
           }}
-          onGoogleApiLoaded={() => setMapLoaded(false)}
+          onGoogleApiLoaded={handleGoogleApiLoaded}
           defaultCenter={defaultCenter}
           center={mapCenter}
           defaultZoom={defaultZoom}
@@ -213,8 +213,7 @@ export const DeliveriesLocation = (props) => {
           {interActionMapOrder !== null && (
             <InterActOrderMarker
               business={interActionMapOrder?.business}
-              lat={interActionMapOrder?.business?.location?.lat}
-              lng={interActionMapOrder?.business?.location?.lng}
+              lat={pointOf(interActionMapOrder?.business?.location).lat} lng={pointOf(interActionMapOrder?.business?.location).lng}
               image={interActionMapOrder?.business?.logo}
             />
           )}
@@ -222,8 +221,7 @@ export const DeliveriesLocation = (props) => {
           {interActionMapOrder !== null && (
             <InterActOrderMarker
               customer={interActionMapOrder?.customer}
-              lat={interActionMapOrder?.customer?.location?.lat ? interActionMapOrder?.customer?.location?.lat : defaultCenter.lat}
-              lng={interActionMapOrder?.customer?.location?.lng ? interActionMapOrder?.customer?.location?.lng : defaultCenter.lng}
+              lat={pointOf(interActionMapOrder?.customer?.location).lat} lng={pointOf(interActionMapOrder?.customer?.location).lng}
               image={interActionMapOrder?.customer?.photo}
             />
           )}
@@ -232,20 +230,7 @@ export const DeliveriesLocation = (props) => {
             <InterActOrderMarker
               driver={interActionMapOrder?.driver}
               timeStatus={interActionMapOrder?.time_status}
-              lat={
-                (interActionOrderDriverLocation !== null && typeof interActionOrderDriverLocation === 'object' && interActionOrderDriverLocation?.lat)
-                  ? interActionOrderDriverLocation.lat
-                  : typeof interActionOrderDriverLocation === 'string'
-                    ? parseFloat(interActionOrderDriverLocation?.split(',')[0].replace(/[^-.0-9]/g, ''))
-                    : defaultCenter.lat
-              }
-              lng={
-                (interActionOrderDriverLocation !== null && typeof interActionOrderDriverLocation === 'object' && interActionOrderDriverLocation?.lng)
-                  ? interActionOrderDriverLocation.lng
-                  : typeof interActionOrderDriverLocation === 'string'
-                    ? parseFloat(interActionOrderDriverLocation?.split(',')[1].replace(/[^-.0-9]/g, ''))
-                    : defaultCenter.lng
-              }
+              lat={pointOf(interActionOrderDriverLocation).lat} lng={pointOf(interActionOrderDriverLocation).lng}
               image={interActionMapOrder?.driver?.photo}
             />
           )}
@@ -256,49 +241,31 @@ export const DeliveriesLocation = (props) => {
                 key={driver.id}
                 driver={driver}
                 timeStatus={interActionMapOrder?.time_status}
-                lat={
-                  (driver.location !== null && typeof driver.location === 'object' && driver.location?.lat)
-                    ? driver.location.lat
-                    : typeof driver.location === 'string'
-                      ? parseFloat(driver?.location?.split(',')[0].replace(/[^-.0-9]/g, ''))
-                      : defaultCenter.lat
-                }
-                lng={
-                  (driver.location !== null && typeof driver.location === 'object' && driver.location?.lng)
-                    ? driver.location.lng
-                    : typeof driver.location === 'string'
-                      ? parseFloat(driver?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
-                      : defaultCenter.lng
-                }
+                lat={pointOf(driver?.location).lat} lng={pointOf(driver?.location).lng}
                 image={driver?.photo}
               />
             ))
           )}
         </GoogleMapReact>
-      )}
+      </MapFrame>
 
-      {interActionMapOrder !== null && interActionMapOrder?.driver === null && activeDrivers.length >= 0 && (
-        <WrapperOnlineDrivers>
-          <p>{activeDrivers.length === 0 ? t('NO_DRIVERS_AVAILABLE_FOR_ORDER', 'No Drivers Available for Order') : t('ACTIVE_DRIVERS', 'Drivers online')}</p>
-          {activeDrivers.length > 0 && (
-            <OnlineDrivers>
-              <AutoScroll innerScroll>
-                {activeDrivers.map(driver => (
-                  <WrapDriverInfo key={driver.id}>
-                    <WrapperDriverImage>
-                      <DriverImage bgimage={driver?.photo || theme?.images?.icons?.noDriver} />
-                    </WrapperDriverImage>
-                    <DriverInfo>
-                      <p>{driver.name} {driver.lastname}</p>
-                      <p>{t('DRIVER', 'Driver')}</p>
-                    </DriverInfo>
-                  </WrapDriverInfo>
-                ))}
-              </AutoScroll>
-            </OnlineDrivers>
-          )}
-        </WrapperOnlineDrivers>
-      )}
+      {/* redesign deliveries F2-B2 (decisions 1 and 3; DV-01): the strip is the column's second child, outside the frame. */}
+      <DriversDock
+        order={interActionMapOrder}
+        drivers={driversList?.drivers}
+        driversLoading={driversList?.loading}
+        candidates={activeDrivers}
+        candidatesStatus={interActionMapOrder && candidatesState.orderId === interActionMapOrder.id ? candidatesState.status : 'loading'}
+        onRetryCandidates={() => loadCandidates(interActionMapOrder)}
+        canAssign={canAssign}
+        assigner={assigner}
+        focusToken={focusCandidatesToken}
+      />
+      <AssignCommentDialog
+        open={assigner.comment.open}
+        onSubmit={assigner.comment.onSubmit}
+        onCancel={assigner.comment.onCancel}
+      />
     </WrapperMap>
   )
 }

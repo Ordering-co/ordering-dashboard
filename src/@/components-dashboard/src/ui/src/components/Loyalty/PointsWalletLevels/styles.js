@@ -9,7 +9,7 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   font-weight: bold;
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   line-height: 30px;
   margin-bottom: 13px;
   margin-top: 0px;
@@ -91,7 +91,7 @@ export const Image = (props) => {
 }
 
 export const LevelName = styled.span`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   ${props => props.theme?.rtl
 ? css`
     margin-right: 12px;
@@ -113,7 +113,7 @@ export const LevelBottomContainer = styled.div`
 
 export const AddNewLevelButton = styled.div`
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.primary};
   user-select: none;
 `

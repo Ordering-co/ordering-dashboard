@@ -25,10 +25,7 @@ export const BusinessProductsListing = (props) => {
     isSearchByName,
     isSearchByDescription,
     slug,
-    categoryId,
-    productId,
     isAllCategoryProducts,
-    isInitialRender,
     ordering,
     UIComponent,
     propsToFetch,
@@ -91,6 +88,8 @@ export const BusinessProductsListing = (props) => {
     }
   })
   const previousSearchValueRef = useRef(searchValue)
+  // bugs E D8: the deep link used to fetch the product here (`getProduct`) while ProductDetails fetches its own. Nothing reads
+  // `productModal` (checked across src/@), so that second request is gone; the state and `updateProductModal` stay for the props they give.
   const [productModal, setProductModal] = useState({ product: null, loading: false, error: null })
   const [openCategories, setOpenCategories] = useState({ values: [] })
   const [businessSlug, setBusinessSlug] = useState(slug)
@@ -301,6 +300,11 @@ export const BusinessProductsListing = (props) => {
     try {
       const resolvedBusinessId = businessState.business?.id || businessId
       if (!resolvedBusinessId) {
+        // bugs E 260-R: this runs on mount, before the business request answers (`business` is `{}`, no `businessId`). That is not a
+        // failed load: a store with categories recovers when the page chooses its first category and this runs again, but a store with none never
+        // runs again and kept the error, which replaced the list (and its «create a category» empty state). While the business is pending there
+        // is nothing to ask yet, and nothing to report; once it answered without an id the error is real.
+        if (businessState.loading) return
         throw new Error('A business is required to load products.')
       }
       const functionFetch = categorySelected?.id && categorySelected?.id !== 'featured'
@@ -361,38 +365,6 @@ export const BusinessProductsListing = (props) => {
       if (productsRequestRef.current.id === requestId) {
         productsRequestRef.current = { id: requestId, source: null }
         setCategoryState(prev => ({ ...prev, loading: false }))
-      }
-    }
-  }
-
-  const getProduct = async () => {
-    if (categoryId && productId && businessState.business?.id) {
-      try {
-        setProductModal({
-          ...productModal,
-          loading: true
-        })
-        const source = {}
-        requestsState.product = source
-
-        const { content: { result } } = await ordering
-          .businesses(businessState.business?.id)
-          .categories(categoryId)
-          .products(productId)
-          .parameters({ params: 'taxes', version: 'v2' })
-          .get({ cancelToken: source })
-        const product = Array.isArray(result) ? null : result
-        setProductModal({
-          ...productModal,
-          product,
-          loading: false
-        })
-      } catch (e) {
-        setProductModal({
-          ...productModal,
-          loading: false,
-          error: [e]
-        })
       }
     }
   }
@@ -478,7 +450,10 @@ export const BusinessProductsListing = (props) => {
     try {
       const response = await fetch(`${ordering.root}/business_types?where=[{"attribute":"enabled","value":true}]`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
       })
       const { error, result } = await response.json()
       if (!error) {
@@ -488,25 +463,30 @@ export const BusinessProductsListing = (props) => {
   }
 
   useEffect(() => {
-    if (isInitialRender) {
-      getProduct()
-    }
-  }, [JSON.stringify(businessState.business?.id), isInitialRender])
-
-  useEffect(() => {
     setBusinessSlug(slug)
   }, [slug])
 
   const getBusiness = async () => {
     try {
-      setBusinessState({ ...businessState, loading: true })
+      // redesign SP-FA SP-06: a retry starts without the error of the failed try, and a success ends without it (the spread brought it back)
+      setBusinessState({ ...businessState, loading: true, error: null })
       const source = {}
       requestsState.business = source
       setRequestsState({ ...requestsState })
       const parameters = {
         version: version || 'v2'
       }
-      const { content: { result } } = await ordering.businesses(businessSlug).asDashboard().select(propsToFetch).parameters(parameters).get()
+      const { content: { error, result } } = await ordering.businesses(businessSlug).asDashboard().select(propsToFetch).parameters(parameters).get()
+
+      // redesign SP-FA SP-06 (D5): an answer with `error` is the error, never the business (it was stored as one, an array of messages)
+      if (error) {
+        setBusinessState({
+          ...businessState,
+          loading: false,
+          error: Array.isArray(result) ? result : [result]
+        })
+        return
+      }
 
       if (!result?.categories || result?.categories?.length === 0) {
         setErrorQuantityProducts(true)
@@ -515,7 +495,8 @@ export const BusinessProductsListing = (props) => {
       setBusinessState({
         ...businessState,
         business: result,
-        loading: false
+        loading: false,
+        error: null
       })
     } catch (err) {
       setBusinessState({
@@ -584,7 +565,8 @@ export const BusinessProductsListing = (props) => {
           }
         }
         if (category.subcategories?.length > 0) {
-          categories.subcategories = replaceSameTaxes(categories.subcategories, tax)
+          // bugs E D9: it was `categories.subcategories` (a property of the array, always undefined), so nothing below the first level was visited
+          category.subcategories = replaceSameTaxes(category.subcategories, tax)
         }
       }
       return categories
@@ -598,12 +580,15 @@ export const BusinessProductsListing = (props) => {
     })
   }
 
-  const handleUpdateFeesProducts = ({ fee, isRemove }) => {
+  // bugs E D9: `fee_changed` sends `{ fee }` and so does ProductDetailsAdvanced's `fee_deleted`, but BusinessDetails still sends
+  // `fee_deleted` with `{ tax }` (the fee in the `tax` key), so both shapes are read
+  const handleUpdateFeesProducts = ({ fee: feeFromEvent, tax: feeInTaxKey, isRemove }) => {
+    const fee = feeFromEvent ?? feeInTaxKey
     const _categories = [...businessState?.business?.categories]
     const replaceSameFees = (categories, fee) => {
       for (let i = 0; i < categories?.length; i++) {
         const category = categories[i]
-        for (let j = 0; j < category.products.length; j++) {
+        for (let j = 0; j < category.products?.length; j++) {
           const product = category.products[j]
           if (isRemove && product.fee?.id === fee?.id) {
             product.fee = null
@@ -614,7 +599,7 @@ export const BusinessProductsListing = (props) => {
           }
         }
         if (category.subcategories?.length > 0) {
-          categories.subcategories = replaceSameFees(categories.subcategories, fee)
+          category.subcategories = replaceSameFees(category.subcategories, fee)
         }
       }
       return categories
@@ -689,7 +674,9 @@ export const BusinessProductsListing = (props) => {
       return () => {
         events.off('tax_changed', handleUpdateTaxesProducts)
         events.off('fee_changed', handleUpdateFeesProducts)
-        events.off('tax_deleted', handleUpdateFeesProducts)
+        // bugs E D9: this removed the fee handler from `tax_deleted`, so the tax one was never removed and a new copy was
+        // added on every change of the business
+        events.off('tax_deleted', handleUpdateTaxesProducts)
         events.off('fee_deleted', handleUpdateFeesProducts)
       }
     }

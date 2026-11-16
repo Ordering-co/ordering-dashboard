@@ -1,0 +1,88 @@
+/*
+ * redesign BO-B4: the panel of a staff record (RecordPanel with tabs). Values come from --od-* (release) and --od-x-*
+ * (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `sdp-` prefix; the wrappers keep `odc-`.
+ */
+
+/* The body of the states (loading, error) and the content of each tab share one voice */
+.sdp-body,
+.sdp-section {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* With a SectionNav (more than four sections) a section that is kept mounted for its draft is hidden, not removed */
+.sdp-section[hidden] { display: none; }
+
+/* ── Subtitle: «email ✓ · phone ✓ · #id». A datum and its mark stay on one line ── */
+.sdp-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  vertical-align: bottom;
+}
+
+.sdp-datum { unicode-bidi: isolate; }
+
+/* The check is a graphic (signal), its word is the accessible name: the state is never colour alone */
+.sdp-verified {
+  display: inline-flex;
+  flex: none;
+  color: var(--od-success-signal);
+}
+
+.sdp-verified .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* ── Sections: the legacy tables and forms fitted to the column (they were 100% of a side bar) ── */
+.sdp-orders,
+.sdp-addresses {
+  min-inline-size: 0;
+}
+
+.sdp-orders #orderTable table {
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+/* ── Loading ── */
+.sdp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.sdp-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+/* redesign UC-R2 (M3-4), as the customers' panel: on a phone the status drops under the title row, where «Back» (32px, 44px area) ends;
+   the switch's own 44px area would reach into it. The status row keeps its distance. */
+@container odc-record (max-width: 480px) {
+  .sdp-status {
+    margin-block-start: var(--od-space-3);
+  }
+}
+
+/* redesign  R-4: your own record's switch is disabled; the reason shows under it as the Field hint (caption size from
+   .odc-field-hint), in the muted ink the card text uses */
+.sdp-status-own {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+}
+
+.sdp-self-note { color: var(--od-text-muted); }
+
+/* redesign  (phase 3 F3): Calendar sync as an icon sits before the ⋯ menu; 32px + this space keeps their 44px areas apart */
+.sdp-sync { margin-inline-end: var(--od-space-3); }

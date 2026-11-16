@@ -1,0 +1,135 @@
+/*
+ * redesign stores devices (, D1, D2 | G5-36, DV-02, DV-07) · /stores/devices: the frame of the list beside the device panel
+ * (split view), its header, its search and column manager, its cells, its phone cards and its foot.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second
+ * set. Prefix: odc-dv-*. The panel has its own file (Stores/BusinessDeviceDetail/device-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders, /delivery/drivers-groups and /cart-recovery/open-carts). */
+.odc-split.odc-dv-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, search and columns, table (or cards) and foot, one under the other. */
+.odc-dv-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-dv-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-dv-frame {
+    display: none;
+  }
+}
+
+/* ── Header: the page header (: the opener is its `leading`), then the bar of the search and the columns ── */
+.odc-dv-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dv-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-dv-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* ── The list (table or cards) ── */
+.odc-dv-list {
+  min-inline-size: 0;
+}
+
+/* ── The cells of the table ── */
+.odc-dv-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dv-store,
+.odc-dv-owner {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-dv-store-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-dv-store-name,
+.odc-dv-owner-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The address under the store, and «No owner»: what is not the main fact of the cell */
+.odc-dv-sub,
+.odc-dv-none {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dv-none {
+  font-size: inherit;
+}
+
+/* ── Phone: the cards (DV-07) ── */
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-dv-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-dv-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* «store · owner»: one line that wraps instead of running out of the card */
+.odc-dv-card-meta {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}

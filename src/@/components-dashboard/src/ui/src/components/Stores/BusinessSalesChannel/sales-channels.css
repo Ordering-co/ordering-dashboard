@@ -1,0 +1,230 @@
+/*
+ * redesign stores 5.15b · Sales channel guides of a store on P/SectionSplit: the title, a lead line and one card per
+ * channel; the SectionSplit draws the guide's title and its X / «‹ Back». The four guides share these classes (GuideParts.jsx).
+ * Values: --od-* and --od-x-* only, logical properties only. No `overflow`, `container-type`, `contain`, `transform` or `filter` on
+ * any wrapper between the root and the editor's scroller (stores-2-b-section-split/decisions.md, instructions 3 and 3b): the
+ * detail is sticky to that scroller. Prefix: odc-sales-*.
+ */
+
+.odc-sales {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (min-width: 576px) {
+  .odc-sales {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-sales-pane {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-sales-intro {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sales-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-sales-lead {
+  margin: 0;
+  max-inline-size: calc(var(--od-x-measure) * 1.5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Channel cards ── */
+.odc-sales-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 9)), 1fr));
+  gap: var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sales-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+/* The channel open in the guide. aria-current says it; the frame and the fill back it up (never colour alone). */
+.odc-sales-card[aria-current='true'] {
+  border-color: var(--od-action);
+  box-shadow: 0 0 0 var(--od-x-hairline) var(--od-action);
+  background: var(--od-x-selected);
+}
+
+.odc-sales-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sales-card-icon {
+  flex: none;
+  inline-size: var(--od-space-6);
+  block-size: var(--od-space-6);
+  object-fit: contain;
+}
+
+.odc-sales-card-name {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-sales-card-text {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Guide (detail) ── */
+.odc-sales-guide {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-sales-tab-panel {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+}
+
+.odc-sales-guide-intro {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-sales-guide-link {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-sales-guide-link a {
+  color: var(--od-action);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+  overflow-wrap: anywhere;
+}
+
+.odc-sales-guide-link a:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-width);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-sales-steps {
+  display: grid;
+  gap: var(--od-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sales-step {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sales-step-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sales-step-text {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-sales-step-images {
+  display: grid;
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-1);
+}
+
+.odc-sales-step-images[data-count='2'] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-control-height) * 5)), 1fr));
+}
+
+.odc-sales-step-image {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+/* ── The store's link ── */
+.odc-sales-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-sales-link > .odc-notice { align-self: stretch; }
+
+.odc-sales-link-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sales-link-url {
+  align-self: stretch;
+  min-inline-size: 0;
+  padding: var(--od-space-2) var(--od-space-3);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+  user-select: all;
+}

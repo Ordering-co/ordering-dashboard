@@ -1,88 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { useWindowSize } from '../../../hooks/useWindowSize'
-import { IconButton, Input } from '../../../styles'
-import { XLg } from 'react-bootstrap-icons'
-import { useTheme } from 'styled-components'
-import {
-  Container,
-  Header,
-  LeftHeader,
-  Step,
-  LinkText,
-  CopyInputWrapper
-} from './styles'
+import { GuideExternalLink, GuideIntro, GuideStep, GuideSteps, StoreLink } from '../BusinessSalesChannel/GuideParts'
 
-export const BusinessSalesGoogle = (props) => {
-  const { onClose, socialItem, storeUrl } = props
-
-  const { width } = useWindowSize()
+// redesign stores 5.15b (; G5-04, G5-10, G5-11, G5-13): the Google Business Profile guide, drawn inside
+// BusinessSalesChannel's P/SectionSplit (which owns its title, X and «‹ Back»). The three steps and screenshots are main's; the
+// sign-up link no longer forces the Spanish page (main: /intl/es/business/sign-up).
+export const BusinessSalesGoogle = ({ link }) => {
   const [, t] = useLanguage()
-  const theme = useTheme()
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const actionSidebar = (value) => {
-    if (!value) {
-      onClose && onClose()
-    }
-    setIsMenuOpen(value)
-    document.getElementById('businessSocial').style.width = value
-      ? width > 1000 ? '500px' : '100%'
-      : '0'
-  }
-
-  useEffect(() => {
-    if (isMenuOpen) {
-      if (width < 1000) {
-        document.getElementById('businessSocial').style.width = '100%'
-      } else {
-        document.getElementById('businessSocial').style.width = '500px'
-      }
-    }
-  }, [width])
-
-  useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open])
 
   return (
-    <Container id='businessSocial'>
-      <Header>
-        <LeftHeader>
-          <img src={socialItem.icon} alt='' />
-          <h2>{socialItem.name}</h2>
-        </LeftHeader>
-        <IconButton onClick={onClose} color='black'>
-          <XLg />
-        </IconButton>
-      </Header>
-      <p>{t('BUSINESS_GOOGLE_DESC', 'Lorem ipsum dolor sit amet consectetur. Vitae odio aliquam adipiscing vitae. Nulla sed integer congue gravida lobortis tristique condimentum fusce tincidunt.')}</p>
-      <LinkText>
-        <a href='https://www.google.com/intl/es/business/sign-up' target='_blank' rel='noopener noreferrer'>https://www.google.com/intl/es/business/sign-up</a>
-      </LinkText>
-      <Step>
-        <h3>{t('STEP', 'Step')} 1</h3>
-        <p>{t('BUSINESS_GOOGLE_STEP1_DESC', 'On Google My Business, access your Locations page.')}</p>
-        <img src={theme.images.salesChannels.googleStep1} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 2</h3>
-        <p>{t('BUSINESS_GOOGLE_STEP2_DESC', 'Then click on info section on the sidebar inside your location.')}</p>
-        <img src={theme.images.salesChannels.googleStep2} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 3</h3>
-        <p>{t('BUSINESS_GOOGLE_STEP3_DESC', 'Scroll down and find Order ahead links and Menu link fields. Paste the link below.')}</p>
-        <CopyInputWrapper isBottom>
-          <Input
-            defaultValue={storeUrl || 'https://yourbusinessname.com/store/storename'}
-            disabled
-          />
-        </CopyInputWrapper>
-        <img src={theme.images.salesChannels.googleStep3} alt='' />
-      </Step>
-    </Container>
+    <div className='odc-sales-guide'>
+      <GuideIntro>
+        {t('SALES_GOOGLE_INTRO', 'Your Business Profile is what people see for your business on Google Search and Maps. If you don\'t have one yet, create it first.')}
+      </GuideIntro>
+      <GuideExternalLink href='https://www.google.com/business/'>
+        {t('SALES_GOOGLE_OPEN', 'Open Google Business Profile')}
+      </GuideExternalLink>
+      <GuideSteps>
+        <GuideStep number={1} text={t('SALES_GOOGLE_STEP_1', 'Sign in to Google Business Profile and open your business\'s location.')} />
+        <GuideStep number={2} text={t('SALES_GOOGLE_STEP_2', 'Open the Info section of that location.')} />
+        <GuideStep number={3} text={t('SALES_GOOGLE_STEP_3', 'Scroll down to the “Order ahead links” and “Menu link” fields and paste this link in them.')}>
+          <StoreLink link={link} />
+        </GuideStep>
+      </GuideSteps>
+    </div>
   )
 }

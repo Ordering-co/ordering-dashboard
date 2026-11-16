@@ -1,0 +1,1778 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b8-business-payments-brands-promos-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-b8-stores-businessbrandbusidetail-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandBUSIDetail/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessBrandBUSIDetailProps /* binding-sha256:c98311130ae9de4a8b0aaaad66283536ff9f5a39997a005953d1b4778b844ef2 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessbrandbusidetail-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandBUSIDetail/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessName",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 16px;\n    `\n: css`\n      margin-right: 16px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "BusinessItemContainer",
+      "property": "border-bottom",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "box-shadow",
+      "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessName",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 16px;\n    `\n: css`\n      margin-right: 16px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessbrandgendetail-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessBrandGENDetailProps /* binding-sha256:e8fce16a688abe924254b985e8a8f9fc482d79337649ce44e0dc8c12ce8c903c */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessbrandgendetail-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandGENDetail/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "UploadImageIconContainer",
+      "property": "font",
+      "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "font",
+      "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 32px;\n      height: 32px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SwitchWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ shapeRect }) => shapeRect && css`\n     > div {\n       border-radius: 7.6px;\n     }\n    margin: 0px 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ round }) => round && css`\n     > div {\n       border-radius: 50px;\n     }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    > div {\n      border: 1px solid ${props => props.theme.colors.primary};\n    }\n\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "BrandLogo",
+      "property": "background",
+      "match": "#E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIconContainer",
+      "property": "color-block",
+      "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color",
+      "match": "#ADB5BD",
+      "context": "span",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color",
+      "match": "#CED4DA",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color-block",
+      "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 32px;\n      height: 32px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "FormControl",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "FormControl",
+      "property": "border",
+      "match": "1px solid #DEE2E6",
+      "context": "input",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "FormControl",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Label",
+      "property": "color",
+      "match": "props => props.theme?.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SwitchWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ shapeRect }) => shapeRect && css`\n     > div {\n       border-radius: 7.6px;\n     }\n    margin: 0px 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ round }) => round && css`\n     > div {\n       border-radius: 50px;\n     }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    > div {\n      border: 1px solid ${props => props.theme.colors.primary};\n    }\n\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ShapeBoxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessbrandlisting-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessBrandListingProps /* binding-sha256:abd4f8b61519c3f383db491e17d819144ff27427a49004b64bb0bc2bea1594a1 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessbrandlisting-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessBrandListing/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "HeaderTitleContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionsGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BrandListTable",
+      "property": "font",
+      "match": "props => props.theme.colors.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BrandBody",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionsContainer",
+      "property": "font",
+      "match": "props => props.theme.colors.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    padding-right: 15px;\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    padding-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "EnableWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "DetailHeder",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 40px;\n  `\n: css`\n    margin-right: 40px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => !active && css`\n    color: ${props => props.theme?.colors.lightGray};\n    font-size: var(--od-type-control-size);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "context": ".select > > div:first-child > svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "HeaderContainer",
+      "property": "background",
+      "match": "#E9ECEF",
+      "context": "input",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HeaderTitleContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HeaderTitleContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 20px;\n    `\n: css`\n      margin-right: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandListTable",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandListTable",
+      "property": "color-block",
+      "match": "props => props.theme.colors.rtl\n? css`\n      padding-right: 15px;\n    `\n: css`\n      padding-left: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandBody",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandBody",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandBody",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BrandBody",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsContainer",
+      "property": "color-block",
+      "match": "props => props.theme.colors.rtl\n? css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    padding-right: 15px;\n  `\n: css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    padding-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsContainer",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionsContainer",
+      "property": "border-left",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "EnableWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "EnableWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "box-shadow",
+      "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InfoBlock",
+      "property": "color",
+      "match": "props => props.theme?.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DetailHeder",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 40px;\n  `\n: css`\n    margin-right: 40px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TabContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme?.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => !active && css`\n    color: ${props => props.theme?.colors.lightGray};\n    font-size: var(--od-type-control-size);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme?.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.04, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.1, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "#E63757",
+      "context": ".select > .list > .list-wrapper > > div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessfeeform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessFeeForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessfees-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessFees/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessFeesProps /* binding-sha256:41f144c0c998abe07e5ead0982e04b1400913345895c6a5755fc55ec7043ffb2 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessmarkups-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMarkups/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessMarkupsProps /* binding-sha256:f542bb4dbfe1d5d120f77b15fd5d988ef04adf0fe235d2253677d6d8009d4e03 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspaymentaccount-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPaymentAccount/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessPaymentAccountProps /* binding-sha256:87e28b775177eec57d913c073bb6294e52763b5397be48027d4cd0efdf9420aa */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspaymentmethods-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPaymentMethods/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessPaymethodProps /* binding-sha256:adbaf9c1e03466e531f34e7b00b368b4730e0c6f7ca8b4501fa111806162b274 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspaymentmethods-utils-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPaymentMethods/utils.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspromotioncustomfields-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPromotionCustomFields/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "MetaFieldsProps /* binding-sha256:ca0279e0e4b83fa92b3d9814af36021d717b843631c9034e070132861d91eca6 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspromotiongeneralform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPromotionGeneralForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessPromotionFormProps /* binding-sha256:b0b7296d25d3f38b1dc10e013bd49788827224286dab5f56345b030df6bb93c0 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesspromotionlist-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPromotionList/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessPromotionsController /* binding-sha256:f585058b453f0ff360ef08a135364fb5909a1a9e763275dbada34a1dd34d76a0 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessserviceprofessionaldetail-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionalDetail/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'black'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessserviceprofessionaldetail-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionalDetail/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "({ noPadding }) => noPadding && css`\n    padding: 0px;\n    > div {\n      height: 100%;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Header",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 80px;\n    `\n: css`\n      margin-right: 80px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionBlock",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    left: 0px;\n  `\n: css`\n    right: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionBlock",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "context": "button > svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "({ noPadding }) => noPadding && css`\n    padding: 0px;\n    > div {\n      height: 100%;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Container",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Container",
+      "property": "border-left",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Header",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Header",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 80px;\n    `\n: css`\n      margin-right: 80px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionBlock",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionBlock",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    left: 0px;\n  `\n: css`\n    right: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionBlock",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.04, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.1, props.theme.colors.secundaryDarkContrast)",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+      "context": ".show > >div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.1, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.danger",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessserviceprofessionals-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'lightPrimary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessProfessionalListProps /* binding-sha256:c3b84915103a43a4de8d83183cb3919a5ae25d555cc897f74c937b4a33dfb26f */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businessserviceprofessionals-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessServiceProfessionals/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "InnerContainer",
+      "property": "font",
+      "match": "({ isHide }) => isHide\n? css`\n    width: 0px;\n    overflow: hidden;\n    flex: initial;\n  `\n: css`\n    flex: 1;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "InnerContainer",
+      "property": "font",
+      "match": "({ isHide }) => isHide\n? css`\n      padding: 0;\n    `\n: css`\n      padding: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Header",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n      margin-left: 40px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "font-size",
+      "match": "18px",
+      "context": "> svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "context": "span > svg",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 1px;\n  `\n: css`\n    margin-left: 1px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "UserInfo",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n    margin-left: 0px;\n    margin-right: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "InnerContainer",
+      "property": "color-block",
+      "match": "({ isHide }) => isHide\n? css`\n    width: 0px;\n    overflow: hidden;\n    flex: initial;\n  `\n: css`\n    flex: 1;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InnerContainer",
+      "property": "color-block",
+      "match": "({ isHide }) => isHide\n? css`\n      padding: 0;\n    `\n: css`\n      padding: 20px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Header",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n      margin-left: 40px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundInfo",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProfessionalItemContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "box-shadow",
+      "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 1px;\n  `\n: css`\n    margin-left: 1px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UserInfo",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n    margin-left: 0px;\n    margin-right: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AddBtn",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AddBtn",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AddBtn",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesstaxandfees-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessTaxAndFees/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-b8-stores-businesswalletslist-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessWalletsList/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "businessWalletsListProps /* binding-sha256:2a577995264bf356182cd40ef5de3085ecb0d622197cd5a1b2053770ec8787ba */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b8-business-payments-brands-promos semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  }
+ ]
+}

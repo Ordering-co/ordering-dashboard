@@ -41,6 +41,8 @@ export const BusinessPaymentAccount = (props) => {
     accounts: []
   })
 
+  // redesign stores 5.11: the four writes (create, update, associate, dissociate) show no «Loading» Info toast and no Error
+  // toast any more: the UI shows the error in line, next to the action. The success toasts and the `{ error, result }` they return stay.
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   const getMethods = async () => {
@@ -78,8 +80,9 @@ export const BusinessPaymentAccount = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      // TODO: use where filter when API bug is fixed, remove frontend filter
-      const response = await fetch(`${ordering.root}/business_payment_accounts`, requestOptions)
+      // an owner asks only for its store's account; only an admin associates one, so only an admin gets the list
+      const query = isAdmin ? '' : `?business_id=${businessId}`
+      const response = await fetch(`${ordering.root}/business_payment_accounts${query}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
         setAccountState({ loading: false, error: content?.result, account: null })
@@ -89,7 +92,7 @@ export const BusinessPaymentAccount = (props) => {
       const match = results.find(a => a?.businesses?.some(b => b?.id === businessId)) || null
       setAccountState({ loading: false, error: null, account: match })
       // Store all accounts for association feature
-      setAllAccountsState({ loading: false, error: null, accounts: results })
+      setAllAccountsState({ loading: false, error: null, accounts: isAdmin ? results : [] })
     } catch (err) {
       setAccountState({ loading: false, error: [err?.message || 'Unknown error'], account: null })
     }
@@ -103,7 +106,6 @@ export const BusinessPaymentAccount = (props) => {
     }
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const payload = {
@@ -128,7 +130,6 @@ export const BusinessPaymentAccount = (props) => {
       const response = await fetch(`${ordering.root}/business_payment_accounts`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
         setActionState({ loading: false, error: content?.result })
         return { error: true, result: content?.result }
       }
@@ -137,7 +138,6 @@ export const BusinessPaymentAccount = (props) => {
       showToast?.(ToastType.Success, t('PAYMENT_ACCOUNT_CREATED', 'Payment account created'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
       setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
@@ -145,10 +145,11 @@ export const BusinessPaymentAccount = (props) => {
 
   const updateAccount = async (id, changes) => {
     if (!token || !id) return
-    if (!isAdmin) return
+    // redesign stores 5.11 (B-7): main left here with `undefined`, so the UI left edit mode as if it had saved. The error shape lets it
+    // say so and stay in edit.
+    if (!isAdmin) return { error: true, result: [t('PAYMENT_ACCOUNT_ADMIN_ONLY', 'Only an administrator can edit the payment account.')] }
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const payload = {}
@@ -173,7 +174,6 @@ export const BusinessPaymentAccount = (props) => {
       const response = await fetch(`${ordering.root}/business_payment_accounts/${id}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
         setActionState({ loading: false, error: content?.result })
         return { error: true, result: content?.result }
       }
@@ -183,7 +183,6 @@ export const BusinessPaymentAccount = (props) => {
       showToast?.(ToastType.Success, t('PAYMENT_ACCOUNT_UPDATED', 'Payment account updated'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
       setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
@@ -193,7 +192,6 @@ export const BusinessPaymentAccount = (props) => {
     if (!token || !businessId || !accountId) return
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const requestOptions = {
@@ -207,7 +205,6 @@ export const BusinessPaymentAccount = (props) => {
       const response = await fetch(`${ordering.root}/business/${businessId}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
         setActionState({ loading: false, error: content?.result })
         return { error: true, result: content?.result }
       }
@@ -217,7 +214,6 @@ export const BusinessPaymentAccount = (props) => {
       showToast?.(ToastType.Success, t('PAYMENT_ACCOUNT_ASSOCIATED', 'Payment account associated'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
       setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
@@ -227,7 +223,6 @@ export const BusinessPaymentAccount = (props) => {
     if (!token || !businessId) return
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const requestOptions = {
@@ -241,7 +236,6 @@ export const BusinessPaymentAccount = (props) => {
       const response = await fetch(`${ordering.root}/business/${businessId}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
         setActionState({ loading: false, error: content?.result })
         return { error: true, result: content?.result }
       }
@@ -251,7 +245,6 @@ export const BusinessPaymentAccount = (props) => {
       showToast?.(ToastType.Success, t('PAYMENT_ACCOUNT_DISSOCIATED', 'Payment account dissociated'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
       setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
@@ -284,6 +277,7 @@ export const BusinessPaymentAccount = (props) => {
           associateAccount={associateAccount}
           dissociateAccount={dissociateAccount}
           getAccount={getAccount}
+          getMethods={getMethods}
         />
       )}
     </>

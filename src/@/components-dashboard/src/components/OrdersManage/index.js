@@ -8,6 +8,8 @@ import { isOrderStatusRegressionError } from '../../utils'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { advanceBulkStatusQueue } from './bulkStatusQueue'
+import { limitOrderSearchInput } from '../DashboardOrdersList/orderSearchInput'
+import { confirmationPayload } from '../../utils/confirmationPayload'
 
 export const OrdersManage = (props) => {
   props = { ...defaultProps, ...props }
@@ -18,6 +20,7 @@ export const OrdersManage = (props) => {
     disableSocketRoomDriver,
     useFranchiseImages,
     defaultFilterValues,
+    defaultTimeStatus,
     getDriversByControls,
     disableDriverLocationsSockets,
     searchSeed
@@ -41,7 +44,8 @@ export const OrdersManage = (props) => {
   const [searchValue, setSearchValue] = useState(searchSeed?.value || null)
   const [ordersStatusGroup, setOrdersStatusGroup] = useState(statusGroup || 'pending')
   const [filterValues, setFilterValues] = useState(defaultFilterValues || {})
-  const [timeStatus, setTimeStatus] = useState(null)
+  // (D-22): `defaultTimeStatus` ('delayed' from /orders?late=1) starts the late filter; null keeps today's behaviour
+  const [timeStatus, setTimeStatus] = useState(defaultTimeStatus || null)
   const [updateStatus, setUpdateStatus] = useState(null)
   const [startMulitOrderStatusChange, setStartMulitOrderStatusChange] = useState(false)
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
@@ -62,17 +66,17 @@ export const OrdersManage = (props) => {
     slaBar: { visable: false, title: '', className: '', draggable: false, colSpan: 1, order: -2 },
     orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
     dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 },
-    externalId: { visable: false, title: t('EXTERNAL_ID', 'External id'), className: 'externalId', draggable: true, colSpan: 1, order: 1 },
+    externalId: { visable: false, title: t('EXTERNAL_ID', 'External ID'), className: 'externalId', draggable: true, colSpan: 1, order: 1 },
     status: { visable: true, title: t('STATUS', 'Status'), className: 'statusInfo', draggable: true, colSpan: 1, order: 2 },
     agent: { visable: false, title: t('AGENT', 'Agent'), className: 'agent', draggable: true, colSpan: 1, order: 3 },
-    cartGroupId: { visable: true, title: t('GROUP_ORDER', 'Group Order'), className: 'groupOrderId', draggable: true, colSpan: 1, order: 4 },
-    driverGroupId: { visable: true, title: t('EXPORT_DRIVER_GROUP_ID', 'Driver Group Id'), className: 'driverGroupId', draggable: true, colSpan: 1, order: 5 },
+    cartGroupId: { visable: true, title: t('GROUP_ORDER', 'Group order'), className: 'groupOrderId', draggable: true, colSpan: 1, order: 4 },
+    driverGroupId: { visable: true, title: t('EXPORT_DRIVER_GROUP_ID', 'Driver group ID'), className: 'driverGroupId', draggable: true, colSpan: 1, order: 5 },
     business: { visable: true, title: t('BUSINESS', 'Business'), className: 'businessInfo', draggable: true, colSpan: 1, order: 6 },
     customer: { visable: true, title: t('CUSTOMER', 'Customer'), className: 'customerInfo', draggable: true, colSpan: 1, order: 7 },
     driver: { visable: true, title: t('DRIVER', 'Driver'), className: 'driverInfo', draggable: true, colSpan: 1, order: 8 },
     advanced: { visable: true, title: t('ADVANCED_LOGISTICS', 'Advanced logistics'), className: 'advanced', draggable: true, colSpan: 3, order: 9 },
     cloned: { visable: true, title: t('CLONED', 'Cloned'), className: 'cloned', draggable: true, colSpan: 1, order: 10 },
-    timer: { visable: false, title: t('SLA_TIMER', 'SLA’s timer'), className: 'timer', draggable: true, colSpan: 1, order: 11 },
+    timer: { visable: false, title: t('SLA_TIMER', 'SLA timer'), className: 'timer', draggable: true, colSpan: 1, order: 11 },
     eta: { visable: true, title: t('ETA', 'ETA'), className: 'eta', draggable: true, colSpan: 1, order: 12 },
     channel: { visable: false, title: t('CHANNEL', 'Channel'), className: 'channelInfo', draggable: true, colSpan: 1, order: 13 },
     pod: { visable: true, title: t('PODS', 'Pod'), className: 'podInfo', draggable: true, colSpan: 1, order: 14 },
@@ -163,12 +167,12 @@ export const OrdersManage = (props) => {
    * @param {string} search Search value
    */
   const handleChangeSearch = (search) => {
-    setSearchValue(search)
+    setSearchValue(limitOrderSearchInput(search))
   }
 
   // Text carried from the command palette (`/orders?q=`)
   useEffect(() => {
-    if (searchSeed?.value) setSearchValue(searchSeed.value)
+    if (searchSeed?.value) setSearchValue(limitOrderSearchInput(searchSeed.value))
   }, [searchSeed?.key])
   /**
    * Save filter type values
@@ -246,17 +250,16 @@ export const OrdersManage = (props) => {
 
   /**
    * Delete orders for orders selected
+   * `confirmationToken` is the ConfirmAdmin confirmation_token (action `orders_delete`).
    */
-  const handleDeleteMultiOrders = async (code, ids) => {
+  const handleDeleteMultiOrders = async (confirmationToken, ids) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
 
       const payload = {
-        orders_id: ids ?? selectedOrderIds
-      }
-      if (code) {
-        payload.deleted_action_code = code
+        orders_id: ids ?? selectedOrderIds,
+        ...confirmationPayload(confirmationToken)
       }
       const requestOptions = {
         method: 'DELETE',

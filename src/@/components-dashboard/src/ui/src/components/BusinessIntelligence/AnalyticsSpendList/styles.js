@@ -12,7 +12,7 @@ export const AnalyticsSpendListHeader = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme?.colors.headingColor};
     text-transform: uppercase;
   }
@@ -25,7 +25,7 @@ export const ReviewContentWrapper = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: #909BA9;
     text-align: center;
   }

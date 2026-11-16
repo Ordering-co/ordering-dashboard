@@ -10,5 +10,6 @@ export function publicAssetUrl (path) {
   const rel = s.replace(/^\//, '')
   if (!base || base === '/') return `/${rel}`
   const prefix = base.endsWith('/') ? base : `${base}/`
+  if (s.startsWith(prefix)) return s
   return `${prefix}${rel}`
 }

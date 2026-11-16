@@ -1,0 +1,189 @@
+/* Scoped Handsontable surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-spreadsheet) {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) > div {
+  min-width: 900px !important;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) > div > div {
+  min-width: 100% !important;
+}
+
+.od-ui:where(.od-spreadsheet) .ht_clone_top {
+  height: auto !important;
+}
+
+.od-ui:where(.od-spreadsheet) .wtHider,
+.od-ui:where(.od-spreadsheet) .wtHider .wtSpreader {
+  width: 100% !important;
+}
+
+.od-ui:where(.od-spreadsheet) .wtHolder {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable table {
+  min-width: 900px;
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  font-family: var(--od-entity-selector-font);
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable table td {
+  padding: 15px;
+  color: var(--od-entity-selector-text) !important;
+  background: var(--od-entity-selector-surface);
+  border: 0 !important;
+  border-bottom: 1px solid var(--od-entity-selector-border) !important;
+  font-size: 13px;
+  text-align: start !important;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable table th {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  border: 0 !important;
+  border-bottom: 1px solid var(--od-entity-selector-border-strong) !important;
+  text-align: start;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable table th > div {
+  padding: 15px !important;
+  color: var(--od-entity-selector-text) !important;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable td.current,
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable td.area,
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable th.current,
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable th.area {
+  background: var(--od-entity-selector-action-soft);
+}
+
+.od-ui:where(.od-spreadsheet-scrollport) .handsontable .wtBorder {
+  background: var(--od-entity-selector-action) !important;
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu {
+  z-index: calc(var(--od-x-layer-overlay) + 102);
+  max-width: calc(100vw - 24px);
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: var(--od-entity-selector-radius-component);
+  pointer-events: auto;
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu table,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu table {
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td {
+  color: var(--od-entity-selector-text) !important;
+  background: var(--od-entity-selector-surface);
+  border-color: var(--od-entity-selector-border) !important;
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td.current,
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td.zeroclipboard-is-hover,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td.current,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td.zeroclipboard-is-hover {
+  color: var(--od-entity-selector-text) !important;
+  background: var(--od-entity-selector-action-soft);
+}
+
+.od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td.htDisabled,
+.od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td.htDisabled {
+  color: var(--od-entity-selector-muted) !important;
+}
+
+.od-ui:where(.od-spreadsheet) #hot-display-license-info,
+.od-ui:where(.od-spreadsheet-menu-host) #hot-display-license-info {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .od-ui:where(.od-spreadsheet) .ht_master .wtHolder {
+    max-height: calc(100vh - 230px);
+  }
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-spreadsheet-scrollport) .handsontable table td,
+  .od-ui:where(.od-spreadsheet-scrollport) .handsontable table th,
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu tr,
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu tr,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td {
+    height: var(--od-entity-selector-touch-target) !important;
+  }
+
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu td,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu td {
+    box-sizing: border-box;
+    padding-block: 10px !important;
+  }
+
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu {
+    right: auto !important;
+    left: 12px !important;
+  }
+
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu .ht_master .wtHolder,
+  .od-ui:where(.od-spreadsheet-menu-host) .htContextMenu .ht_master .wtHider,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu .ht_master .wtHolder,
+  .od-ui:where(.od-spreadsheet-menu-host) .htDropdownMenu .ht_master .wtHider {
+    height: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-spreadsheet) *,
+  .od-ui:where(.od-spreadsheet) *::before,
+  .od-ui:where(.od-spreadsheet) *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+
+  .od-ui:where(.od-spreadsheet-menu-host) *,
+  .od-ui:where(.od-spreadsheet-menu-host) *::before,
+  .od-ui:where(.od-spreadsheet-menu-host) *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}

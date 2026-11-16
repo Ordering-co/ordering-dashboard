@@ -4,7 +4,7 @@ export const FormContainer = styled.div`
   width: 100%;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     width: 100%;
     margin-bottom: 0px;

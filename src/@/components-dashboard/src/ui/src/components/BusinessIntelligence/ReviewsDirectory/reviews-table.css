@@ -1,0 +1,117 @@
+/*
+ * The reviews lists (redesign reviews FD1, D1, D3, D9): the cells of the table and the cards of a phone. Product's DataTable and
+ * RecordCard own the structure; this adds what a name cell and a rating cell are made of. Tokens only (--od-*, --od-x-*);
+ * logical properties only, so right-to-left needs no second set of rules.
+ */
+
+/* ── The name cell ── */
+.odc-rv-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-rv-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-rv-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-rv-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name and the second line wrap (long addresses and emails break anywhere) and stop at two lines */
+td .odc-rv-name,
+th .odc-rv-name,
+td .odc-rv-sub,
+th .odc-rv-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── The rating and the count ── */
+.odc-rv-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-rv-star {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  fill: var(--od-warning-functional);
+  stroke: var(--od-warning-functional);
+}
+
+/* No note yet: a dash, never a «0» (RV-03). The words for a screen reader sit beside it. */
+.odc-rv-dash { color: var(--od-x-text-subtle); }
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-rv-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-rv-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-rv-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-rv-card-sub {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  color: var(--od-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-rv-card-count { color: var(--od-text-muted); }
+
+/* ── The foot ── */
+.odc-rv-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-3);
+}
+
+.odc-rv-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

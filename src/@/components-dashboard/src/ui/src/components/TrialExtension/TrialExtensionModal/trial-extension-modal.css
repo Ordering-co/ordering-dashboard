@@ -1,0 +1,43 @@
+/* redesign  (R2): the body of the trial-extension booking Dialog. Tokens only, logical properties.
+   No height or overflow here on purpose: the Dialog's own body (.odc-overlay-body) is the scroller (overflow: auto inside a
+   viewport-capped grid row), so a tall Calendly embed scrolls inside the dialog instead of growing it past the screen. */
+
+.odc-trial-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-trial-modal-description {
+  margin: 0;
+  color: var(--od-text);
+}
+
+.odc-trial-modal-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-5) var(--od-space-2);
+  text-align: center;
+}
+
+.odc-icon.odc-trial-modal-success-icon {
+  inline-size: calc(var(--od-x-icon-lg) * 2);
+  block-size: calc(var(--od-x-icon-lg) * 2);
+  color: var(--od-success-signal);
+}
+
+.odc-trial-modal-success-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-trial-modal-success-text {
+  margin: 0;
+  max-inline-size: var(--od-x-dialog-sm);
+  color: var(--od-text);
+}

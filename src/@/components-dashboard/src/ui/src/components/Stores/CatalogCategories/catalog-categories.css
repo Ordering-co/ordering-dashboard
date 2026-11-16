@@ -1,0 +1,259 @@
+/*
+ * redesign SP-FB · /stores/products: the category tree.
+ * Product's Button, IconButton, Switch, InlineNotice and Skeleton own their own structure; this adds what a row of the tree is made of.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+.odc-cc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-block-size: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Head: «Categories» and «Add new category» ── */
+.odc-cc-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  padding-inline: var(--od-space-2);
+}
+
+.odc-cc-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* ── The lists. The list of the page scrolls on its own when the column is shorter than the tree (a phone: the box below). ── */
+.odc-cc-list,
+.odc-cc-sublist {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-cc-list {
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* a `display` above would win over the UA rule of the hidden attribute */
+.odc-cc-sublist[hidden] { display: none; }
+
+.odc-cc-item {
+  min-inline-size: 0;
+}
+
+/* ── A row: [grip] [chevron] [name] [switch] [⋯]. The indentation is the depth times one step.
+   redesign J2 (, row 9): the last column is the ⋯ menu with Move up / Move down (the trigger is a direct cell of the grid). ── */
+.odc-cc-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--od-x-icon) auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: var(--od-space-1);
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  padding-inline:
+    calc(var(--od-space-2) + var(--odc-cc-depth, 0) * var(--od-space-4))
+    var(--od-space-2);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-cc-row:hover { background: var(--od-x-hover); }
+
+/* The chosen row: soft action fill, action text and a 2px indicator. aria-current says it, and the weight changes (never colour alone). */
+.odc-cc-row[data-current] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-cc-row[data-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action-content);
+}
+
+.odc-cc-row[data-disabled] .odc-cc-name { color: var(--od-text-muted); }
+.odc-cc-row[data-disabled][data-current] .odc-cc-name { color: inherit; }
+
+/* The drop target of a drag: a line above the row, or below the last one of its siblings */
+.odc-cc-row[data-accept] {
+  border-radius: 0;
+  box-shadow: inset 0 var(--od-x-indicator) 0 0 var(--od-action);
+}
+
+.odc-cc-row[data-border-bottom] {
+  border-radius: 0;
+  box-shadow: inset 0 calc(var(--od-x-indicator) * -1) 0 0 var(--od-action);
+}
+
+/* ── The cells ── */
+.odc-cc-grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--od-x-text-subtle);
+  cursor: grab;
+}
+
+.odc-cc-grip:active { cursor: grabbing; }
+
+.odc-cc-spacer {
+  inline-size: var(--od-x-control-height-sm);
+}
+
+.odc-cc-name {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-sm);
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-1);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* The ring is inset: the list scrolls, and a ring outside its box would be cut */
+.odc-cc-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-cc-label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+/* redesign bugs F row 24: the Enable switch is the Product AsyncSwitch, whose wrapper holds the switch and, after a failed
+   save, the notice. The wrapper takes no box of its own, so the switch stays in the last column of the row (as before) and the
+   notice becomes a second grid row of the row, across it and below the other cells. async-switch.css places the notice only inside
+   tables, cards and panel heads: this is the row's own place. */
+.odc-cc-row .odc-cc-switch { display: contents; }
+
+.odc-cc-row .odc-switch { justify-self: end; }
+
+/* M-12: what a failed save says, under the row's cells. Two classes: they win over the notice's own max width and gutter margin. */
+.odc-cc-row .odc-async-switch-notice {
+  grid-column: 1 / -1;
+  max-inline-size: none;
+  margin-block: var(--od-space-1) 0;
+  margin-inline: 0;
+}
+
+/* ── Skeleton: the shape of a row (name and switch) ── */
+.odc-cc-item[data-skeleton] .odc-cc-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--od-space-4);
+  padding-inline-start: calc(var(--od-space-2) + var(--od-x-icon) + var(--od-x-control-height-sm) + var(--od-space-2));
+}
+
+.odc-cc-item[data-skeleton] .odc-cc-row:hover { background: transparent; }
+
+/* ── Touch (decision 12): stacked rows touch each other, so on a coarse pointer or under 768px the rows themselves are 44px. ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-cc-row,
+  .odc-cc-name {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  /* tanda AG (, A3-4): the switch (40 wide) and the ⋯ (32) were 4px apart, so their centred 44px areas crossed. 12px
+     between them (the row's 4px gap plus this) keeps each area to its own control. */
+  .odc-cc-row .odc-switch {
+    margin-inline-end: calc(var(--od-space-3) - var(--od-space-1));
+  }
+}
+
+/* ── Phone (tanda AG,  (b), Decisión AG-1, pending the owner): the tree folds behind a button that names the chosen
+   category and how many there are, so the first product is in view. Opened, the tree is in the flow of the page (it was a 40dvh
+   box with its own scroll that kept the finger until its end). The button only exists on a phone (CatalogCategories). ── */
+.odc-cc-list[hidden] { display: none; }
+
+.odc-cc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-cc-toggle:hover { background: var(--od-x-hover); }
+
+.odc-cc-toggle:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-cc-toggle-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-cc-toggle-name {
+  overflow-wrap: anywhere;
+  font-weight: var(--od-font-weight-semibold);
+  unicode-bidi: isolate;
+}
+
+.odc-cc-toggle-count {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-cc-toggle-chevron {
+  flex: none;
+  color: var(--od-text-muted);
+  transition: transform var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-cc-toggle[aria-expanded='true'] .odc-cc-toggle-chevron { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-cc-toggle-chevron { transition: none; }
+}
+
+@media (max-width: 767px) {
+  .odc-cc-list {
+    overflow-y: visible;
+  }
+}

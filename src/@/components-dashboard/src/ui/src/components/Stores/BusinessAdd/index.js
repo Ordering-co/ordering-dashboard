@@ -1,116 +1,123 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { BusinessDetails } from './BusinessDetails'
-import { useLanguage, useEvent, useConfig, BusinessAdd as BusinessAddController } from '../../../../../index'
-import { List as MenuIcon } from 'react-bootstrap-icons'
-import { Images } from './Images'
-import { Schedule } from './Schedule'
-import { Photos } from './Photos'
-import { OrderTypePriceLevel } from './OrderTypePriceLevel'
-import { PaymentMethods } from './PaymentMethods'
-import { ReceiveOrders } from './ReceiveOrders'
-import { useInfoShare } from '../../../contexts/InfoShareContext'
-import { Button, IconButton, Input } from '../../../styles'
-import { DeliveryZone } from './DeliveryZone'
-import { GoogleBusinessSearch } from '../GoogleBusinessSearch'
-import { getUniqueId, stringToSlug } from '../../../utils'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Alert, Modal } from '../../Shared'
-import {
-  AddNewBusinessContainer,
-  BoxLayout,
-  ButtonWrapper,
-  HeaderTitleContainer,
-  SlugEditWrapper,
-  SlugFormControl
-} from './styles'
-import { ButtonLink } from '../../../styles/Buttons'
+import { BusinessAdd as BusinessAddController, useConfig, useEvent, useLanguage } from '../../../../../index'
+import { allDaySchedule, PROBLEM_ORDER, slugFromName } from '../../../../../utils/storeAdd'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { getScheduleLabels } from '../../../utils/scheduleLabels'
+import { ConfirmDialog, IconButton, PageHeader, ScheduleEditor } from '../../Shared/Product'
+import { Menu as MenuIcon } from '../../Shared/Icon'
+import { useInfoShare } from '../../../contexts/InfoShareContext'
+import { getUniqueId } from '../../../utils'
+import { StoreAddDetails } from './StoreAddDetails'
+import { StoreAddGoogle } from './StoreAddGoogle'
+import { StoreAddLocation } from './StoreAddLocation'
+import { StoreAddOrders } from './StoreAddOrders'
+import { StoreAddZone } from './StoreAddZone'
+import { StoreAddImages } from './StoreAddImages'
+import { StoreAddSummary } from './StoreAddSummary'
+import { StoreAddOutcome } from './StoreAddOutcome'
+import './store-add.css'
 
-const DEFAULT_SCHEDULE = Array.from({ length: 7 }, () => ({
-  enabled: true,
-  lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }]
-}))
+// redesign (/stores/add; decisions D1–D6 in redesign/pages/stores-add/decisions.md): the store add on Product. One page
+// in the order of main's guided onboarding (your store · location · opening hours · orders and payments · images) with a fixed
+// summary that says what will be created and what is missing, and «Create store» always in sight (from 1280px in the summary,
+// below that in a bar at the foot). The Google search sits on top (Tiendas decision 9 A); since it is main's
+// (StoreAddGoogle) and `?placeId=` still fills the form. this page is the only way to add a store; with
+// `continueTutorial` (the list's «Add your first store») a created store goes back to the list, where the tutorial goes on with its
+// category and product. Errors are said in their field and the focus goes to the first one. Leaving with
+// changes asks first (decision 4). The controller sends main's requests; a store created with a write left over stays on the
+// page as «created, this is missing» with a retry that never creates a second store.
 
 const BusinessAddUI = (props) => {
   const {
-    formState,
-    handleChangeAddress,
-    handleChangeInput,
-    handleChangeCenter,
-    handleChangeSwtich,
-    handleChangeGallery,
-    changeFormState,
-    paymethodsList,
-    handleAddBusiness,
-    kmlData,
-    handleUploadKmlFiles,
-    zoneState,
-    handleChangeZoneState,
-    gallery,
-    handleChangePaymethodIds,
-    paymethodIds,
-    handleChangeSchedule,
+    form,
+    changeFields,
     schedule,
+    changeSchedule,
+    gallery,
+    changeGallery,
+    paymethodsList,
+    paymethodIds,
+    changePaymethodIds,
+    zone,
+    changeZone,
+    cities,
+    citiesLoading,
+    cityId,
+    changeCity,
+    problems,
+    dirty,
+    submitState,
+    submit,
+    retry,
+    retryPaymethods,
     placeId,
-    googleBusiness,
-    setShowBillingPayment
+    handleOpenCategory,
+    onCreated,
+    leaving
   } = props
 
   const [, t] = useLanguage()
-  const [events] = useEvent()
   const [{ configs }] = useConfig()
+  const [events] = useEvent()
+  const history = useHistory()
+  // review 3: with the sidebar collapsed the page offers «Open menu», as main's add and the list do
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [isSlugEdit, setIsSlugEdit] = useState(false)
+  const apiKey = configs?.google_maps_api_key?.value
+  const status = submitState.status
+  const editable = status === 'editing'
+  const busy = status === 'creating' || status === 'finishing'
+  const [showErrors, setShowErrors] = useState(false)
+  const [scheduleKey, setScheduleKey] = useState(0)
+  // what Google filled in, by group, so a later business replaces it and a field the user changed becomes a suggestion (main's)
   const [googleApplied, setGoogleApplied] = useState({})
   const [addressVersion, setAddressVersion] = useState(0)
-  const configTypes = configs?.order_types_allowed?.value?.split('|').map(value => Number(value)) || []
-  const isDeliveryAllowed = configTypes.includes(1)
 
-  const handleSubmit = () => {
-    if (paymethodIds?.length === 0) {
-      setAlertState({
-        open: true,
-        content: t('AT_LEAST_A_PAYMENT_METHOD_REQUIRED', 'At least a payment method is required')
-      })
-      return
-    }
-    if (!formState?.changes?.slug) {
-      setAlertState({
-        open: true,
-        content: t(
-          'VALIDATION_ERROR_REQUIRED',
-          'Slug is required'
-        ).replace('_attribute_', t('SLUG', 'Slug'))
-      })
-      return
-    }
-    isSlugEdit && setIsSlugEdit(false)
-    handleAddBusiness()
-  }
+  const fieldRefs = { name: useRef(null), slug: useRef(null), email: useRef(null) }
+  const paymentsRef = useRef(null)
+  const zoneRef = useRef(null)
+  const outcomeRef = useRef(null)
 
-  const handleGoToBusinessList = (e) => {
-    e.preventDefault()
-    events.emit('go_to_page', { page: 'businesses' })
-  }
-
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-  }
-
+  // The project's time zone until an address gives one (D5). Not an edit: leaving still goes without asking.
+  const projectTimezone = configs?.timezone?.value || configs?.default_timezone?.value
   useEffect(() => {
-    if (!formState?.loading && formState?.result?.error) {
-      if (formState?.result?.result?.length === 0 && formState?.result?.result[0].toLowerCase().includes(t('SLUG', 'Slug').toLowerCase())) setIsSlugEdit(true)
-      else setAlertState({ open: true, content: formState?.result?.result })
+    if (!form.timezone && projectTimezone) changeFields({ timezone: projectTimezone }, { silent: true })
+  }, [projectTimezone])
+
+  // ---- leaving with changes asks (decision 4, D6) ---------------------------------------------------------------------------
+  const [pendingLeave, setPendingLeave] = useState(null)
+  // review 5: while the store is being created leaving asks too (the writes would go on with nobody to see how they ended)
+  const guardOn = (dirty && editable) || busy
+  useEffect(() => {
+    if (!guardOn) return undefined
+    const unblock = history.block((location, action) => {
+      if (leaving.current) return undefined
+      setPendingLeave({ location, action })
+      return false
+    })
+    const warn = (event) => { event.preventDefault(); event.returnValue = '' }
+    window.addEventListener('beforeunload', warn)
+    return () => {
+      unblock()
+      window.removeEventListener('beforeunload', warn)
     }
-  }, [formState?.result])
+  }, [guardOn, history])
 
-  const changeSchedule = useCallback((e) => handleChangeSchedule(e), [])
+  const discardAndLeave = () => {
+    const target = pendingLeave
+    setPendingLeave(null)
+    leaving.current = true
+    if (!target) return
+    if (target.action === 'POP') history.goBack()
+    else if (target.action === 'REPLACE') history.replace(target.location)
+    else history.push(target.location)
+  }
 
+  const goToStores = () => events.emit('go_to_page', { page: 'businesses' })
+
+  // ---- Google business (main ): what each group of Google's data fills in the add --------------------------------------
   const getGoogleFields = (business) => ({
-    name: { name: business.name, slug: business.name ? stringToSlug(business.name) : '' },
+    name: { name: business.name, slug: business.name ? slugFromName(business.name) : '' },
     phone: { cellphone: business.phone },
     address: {
       address: business.address,
@@ -121,165 +128,240 @@ const BusinessAddUI = (props) => {
     priceLevel: { price_level: business.priceLevel >= 1 ? `${business.priceLevel}` : null }
   })
 
-  const handleGoogleChange = (changes) => {
-    if (changes.schedule) handleChangeSchedule(changes.schedule)
-    if (Object.prototype.hasOwnProperty.call(changes, 'address')) setAddressVersion(version => version + 1)
-    changeFormState(changes)
+  const handleGoogleChange = ({ schedule: nextSchedule, ...fields }) => {
+    if (nextSchedule) {
+      changeSchedule(nextSchedule)
+      setScheduleKey(key => key + 1)
+    }
+    if (Object.prototype.hasOwnProperty.call(fields, 'address') || Object.prototype.hasOwnProperty.call(fields, 'location')) setAddressVersion(version => version + 1)
+    if (Object.keys(fields).length) changeFields(fields)
   }
 
   const handleGooglePhotos = (photos) => {
-    const galleryPhotos = photos.filter(photo => photo.role === 'gallery').map(photo => ({ file: photo.file, type: 1, temp_id: getUniqueId() }))
-    if (galleryPhotos.length) handleChangeGallery([...gallery, ...galleryPhotos])
+    const galleryPhotos = photos.filter(photo => photo.role === 'gallery').map(photo => ({ temp_id: getUniqueId(), file: photo.file }))
+    if (galleryPhotos.length) changeGallery(previous => [...previous, ...galleryPhotos])
     const images = Object.fromEntries(photos.filter(photo => photo.role !== 'gallery').map(photo => [photo.role, photo.file]))
-    if (Object.keys(images).length) changeFormState(images)
+    if (Object.keys(images).length) changeFields(images)
   }
 
+  // A store created with a write left over: the focus (and the view) go to what says so, once it is drawn. The panel stays while
+  // «Try again» runs (review 4), so its buttons and the focus are not lost.
+  const [outcomeShown, setOutcomeShown] = useState(false)
+  useEffect(() => { if (status === 'partial') setOutcomeShown(true) }, [status])
+  const showOutcome = outcomeShown && !!submitState.business && status !== 'created'
+  useEffect(() => {
+    if (status !== 'partial') return
+    outcomeRef.current?.focus()
+    outcomeRef.current?.scrollIntoView?.({ block: 'start' })
+  }, [status, submitState.jobs])
+
+  // ---- create ---------------------------------------------------------------------------------------------------------------
+  const focusProblem = (keys) => {
+    const first = PROBLEM_ORDER.find(key => keys.includes(key))
+    if (!first) return
+    if (fieldRefs[first]?.current) fieldRefs[first].current.focus()
+    else if (first === 'payments') paymentsRef.current?.focus()
+    // the first zone field that says what is wrong (the zone's own fields carry aria-invalid), else its first field
+    else if (first.startsWith('zone')) (zoneRef.current?.querySelector('[aria-invalid="true"]') || zoneRef.current?.querySelector('input, select'))?.focus()
+  }
+
+  const handleCreate = async () => {
+    if (busy) return
+    setShowErrors(true)
+    const result = await submit()
+    if (result?.problems) focusProblem(Object.keys(result.problems))
+    else if (!result?.ok && result?.error) {
+      const slugError = result.error.some(message => /slug/i.test(String(message)))
+      if (slugError) fieldRefs.slug.current?.focus()
+    }
+  }
+
+  const apiErrorText = (() => {
+    const error = submitState.error
+    if (!error) return null
+    if (error.network) return t('STORE_ADD_NETWORK_ERROR', 'The store could not be created: the connection failed. Try again; we check first that it was not created.')
+    const fallback = t('STORE_ADD_CREATE_FAILED', 'The store could not be created.')
+    const messages = (error.messages || []).map(message => translateApiMessage(t, message, null)).filter(Boolean)
+    return messages.join(' ') || fallback
+  })()
+  const slugApiError = submitState.error?.messages?.find(message => /slug/i.test(String(message)))
+
+  const configTypes = configs?.order_types_allowed?.value?.split('|').map(value => Number(value)) || []
+  const deliveryAllowed = configTypes.includes(1)
+  const disabled = !editable
+
   return (
-    <>
-      <AddNewBusinessContainer>
-        <HeaderTitleContainer>
-          {isCollapse && (
-            <IconButton
-              color='black'
-              onClick={() => handleMenuCollapse(false)}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <h1>{t('NEW_BUSINESS', 'New business')}</h1>
-        </HeaderTitleContainer>
-        <BoxLayout>
-          <GoogleBusinessSearch
-            initialBusiness={googleBusiness}
-            initialPlaceId={googleBusiness ? undefined : placeId}
+    <div className='odc-sadd-page'>
+      <PageHeader
+        className='odc-sadd-head'
+        title={t('ADD_NEW_STORE', 'Add new store')}
+        onBack={goToStores}
+        backLabel={t('STORES', 'Stores')}
+        leading={isCollapse ? <IconButton icon={MenuIcon} label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)} /> : undefined}
+      />
+
+      {showOutcome && (
+        <StoreAddOutcome
+          ref={outcomeRef}
+          business={submitState.business}
+          jobs={submitState.jobs}
+          paymethods={paymethodsList.paymethods}
+          zone={zone}
+          busy={busy}
+          onRetry={retry}
+          onContinue={() => {
+            leaving.current = true
+            if (onCreated) onCreated(submitState.business)
+            else handleOpenCategory(submitState.business?.slug)
+          }}
+          onOpenStore={() => { leaving.current = true; history.push(`/stores/list?id=${submitState.business?.id}`) }}
+        />
+      )}
+
+      <div className='odc-sadd-columns'>
+        <form className='odc-sadd-form' noValidate onSubmit={event => { event.preventDefault(); handleCreate() }} aria-busy={busy || undefined}>
+          <StoreAddGoogle
+            initialPlaceId={placeId}
             getFields={getGoogleFields}
-            values={{ ...formState?.changes, schedule }}
-            defaults={{ schedule: DEFAULT_SCHEDULE }}
+            values={{ ...form, schedule }}
+            // the time zone the page put by itself and the all-day hours are not the user's: Google may replace them
+            defaults={{ schedule: allDaySchedule(), ...(projectTimezone ? { timezone: projectTimezone } : {}) }}
             applied={googleApplied}
             onAppliedChange={setGoogleApplied}
             onChange={handleGoogleChange}
             photoRoles={['gallery', 'header', 'logo']}
             onPhotos={handleGooglePhotos}
-            disabled={formState?.loading}
+            disabled={disabled}
           />
-        </BoxLayout>
-        <BoxLayout>
-          <BusinessDetails
-            formState={formState}
-            handleChangeAddress={handleChangeAddress}
-            handleChangeInput={handleChangeInput}
-            handleChangeCenter={handleChangeCenter}
-            addressKey={addressVersion}
-            setShowBillingPayment={setShowBillingPayment}
-          />
-        </BoxLayout>
-        <BoxLayout>
-          <Images
-            formState={formState}
-            handleChangeSwtich={handleChangeSwtich}
-          />
-        </BoxLayout>
-        <BoxLayout>
-          <Schedule
-            handleChangeSchedule={changeSchedule}
-            schedule={formState?.changes?.schedule}
-          />
-        </BoxLayout>
-        <BoxLayout>
-          <Photos
-            gallery={gallery}
-            handleChangeGallery={handleChangeGallery}
-          />
-        </BoxLayout>
-        <BoxLayout>
-          <OrderTypePriceLevel
-            formState={formState}
-            changeFormState={changeFormState}
-          />
-        </BoxLayout>
-        <DeliveryZone
-          kmlData={kmlData}
-          zoneState={zoneState}
-          formState={formState}
-          handleChangeZoneState={handleChangeZoneState}
-          handleUploadKmlFiles={handleUploadKmlFiles}
-          disabled={!isDeliveryAllowed}
-        />
 
-        <BoxLayout>
-          <PaymentMethods
-            handleChangePaymethodIds={handleChangePaymethodIds}
-            paymethodIds={paymethodIds}
+          <StoreAddDetails
+            form={form}
+            changeFields={changeFields}
+            problems={{ ...problems, ...(slugApiError ? { slug: 'api' } : {}) }}
+            showErrors={showErrors || !!slugApiError}
+            disabled={disabled}
+            fieldRefs={fieldRefs}
+            slugApiErrorText={slugApiError ? translateApiMessage(t, slugApiError, null) : null}
+          />
+
+          <StoreAddLocation
+            form={form}
+            changeFields={changeFields}
+            cities={cities}
+            citiesLoading={citiesLoading}
+            cityId={cityId}
+            onCityChange={changeCity}
+            apiKey={apiKey}
+            addressVersion={addressVersion}
+            disabled={disabled}
+          />
+
+          <section className='odc-sadd-group' aria-labelledby='odc-sadd-hours-title'>
+            <h2 className='odc-sadd-group-title' id='odc-sadd-hours-title'>{t('STORE_ADD_OPENING_HOURS', 'Opening hours')}</h2>
+            <ScheduleEditor
+              key={scheduleKey}
+              scheduleList={schedule}
+              handleChangeScheduleState={changeSchedule}
+              disableSchedule={disabled}
+              labels={getScheduleLabels(t)}
+            />
+          </section>
+
+          <StoreAddOrders
             paymethodsList={paymethodsList}
+            paymethodIds={paymethodIds}
+            onPaymethodsChange={changePaymethodIds}
+            onRetryPaymethods={retryPaymethods}
+            form={form}
+            changeFields={changeFields}
+            problems={problems}
+            showErrors={showErrors}
+            disabled={disabled}
+            paymentsRef={paymentsRef}
+            zoneSlot={(
+              <div ref={zoneRef}>
+                <StoreAddZone
+                  zone={zone}
+                  onZoneChange={changeZone}
+                  problems={problems}
+                  showErrors={showErrors}
+                  disabled={disabled}
+                  deliveryAllowed={deliveryAllowed}
+                  apiKey={apiKey}
+                  location={form.location}
+                  currency={configs?.format_number_currency?.value?.trim() || ''}
+                  // the project's unit as main sent it (none when unset); the zone says «km» on screen then
+                  distanceUnit={configs?.distance_unit?.value}
+                />
+              </div>
+            )}
           />
-        </BoxLayout>
-        <BoxLayout>
-          <ReceiveOrders
-            formState={formState}
-            handleChangeInput={handleChangeInput}
-            changeFormState={changeFormState}
+
+          <StoreAddImages
+            form={form}
+            changeFields={changeFields}
+            gallery={gallery}
+            onGalleryChange={changeGallery}
+            disabled={disabled}
           />
-        </BoxLayout>
-        <ButtonWrapper>
-          <ButtonLink
-            color='primary'
-            outline
-            onClick={handleGoToBusinessList}
-            href='/stores'
-          >
-            {t('Cancel', 'Cancel')}
-          </ButtonLink>
-          <Button
-            color='primary'
-            onClick={handleSubmit}
-            disabled={formState?.loading}
-          >
-            {t('CONFIRM', 'Confirm')}
-          </Button>
-        </ButtonWrapper>
-      </AddNewBusinessContainer>
-      <Alert
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
-      {isSlugEdit && (
-        <Modal
-          width='769px'
-          padding='30px'
-          title={t('WEB_APPNAME', 'Ordering')}
-          open={isSlugEdit}
-          onClose={() => setIsSlugEdit(false)}
-        >
-          <SlugEditWrapper>
-            <p>{formState?.result?.result}</p>
-            <SlugFormControl>
-              <label>{t('SLUG', 'Slug')}</label>
-              <Input
-                name='slug'
-                placeholder={t('SLUG', 'Slug')}
-                value={formState?.changes?.slug}
-                onChange={handleChangeInput}
-              />
-            </SlugFormControl>
-            <Button color='primary' borderRadius='8px' onClick={handleSubmit}>{t('ACCEPT', 'Accept')}</Button>
-          </SlugEditWrapper>
-        </Modal>
-      )}
-    </>
+        </form>
+
+        <StoreAddSummary
+          form={form}
+          schedule={schedule}
+          paymethods={paymethodsList.paymethods}
+          paymethodIds={paymethodIds}
+          zone={zone}
+          gallery={gallery}
+          cities={cities}
+          cityId={cityId}
+          problems={problems}
+          showErrors={showErrors}
+          status={status}
+          errorText={apiErrorText}
+          onCreate={handleCreate}
+          onCancel={goToStores}
+        />
+      </div>
+
+      <ConfirmDialog
+        open={!!pendingLeave}
+        tone='danger'
+        title={busy ? t('STORE_ADD_LEAVE_BUSY_TITLE', 'The store is being created. Leave anyway?') : t('STORE_ADD_LEAVE_TITLE', 'Leave without creating the store?')}
+        confirmLabel={t('DISCARD', 'Discard')}
+        cancelLabel={t('KEEP_EDITING', 'Keep editing')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={discardAndLeave}
+        onCancel={() => setPendingLeave(null)}
+      >
+        {busy
+          ? t('STORE_ADD_LEAVE_BUSY_TEXT', 'If you leave now you will not see whether every part of the store was saved.')
+          : t('STORE_ADD_LEAVE_TEXT', 'What you filled in is not saved anywhere until you create the store.')}
+      </ConfirmDialog>
+    </div>
   )
 }
 
-export const BusinessAdd = (props) => {
+export const BusinessAdd = ({ placeId, continueTutorial }) => {
   const history = useHistory()
-  const addNewBusinessProps = {
-    ...props,
-    UIComponent: BusinessAddUI,
-    handleOpenCategory: (slug) => history.push(`/stores/products/${slug}`)
+  // set before any navigation the page starts itself (created, continue, open the store), so the leave guard lets it through
+  const leaving = useRef(false)
+  const handleOpenCategory = (slug) => {
+    leaving.current = true
+    history.push(`/stores/products/${slug}`)
   }
-  return <BusinessAddController {...addNewBusinessProps} />
+  // the list picks the tutorial up from this state (Stores/BusinessesListing)
+  const handleContinueTutorial = (business) => {
+    leaving.current = true
+    history.push('/stores/list', { tutorialBusiness: business })
+  }
+  return (
+    <BusinessAddController
+      UIComponent={BusinessAddUI}
+      placeId={placeId}
+      leaving={leaving}
+      handleOpenCategory={handleOpenCategory}
+      onCreated={continueTutorial ? handleContinueTutorial : undefined}
+    />
+  )
 }

@@ -21,7 +21,10 @@ export const PostionItemUI = (props) => {
 
   return (
     <ItemContainer
+      as='button'
+      type='button'
       active={!isSkeleton && active}
+      aria-pressed={!isSkeleton && active}
       onClick={() => props.onClick()}
     >
       <IconWrapper>

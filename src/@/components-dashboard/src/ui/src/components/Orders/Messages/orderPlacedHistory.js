@@ -1,3 +1,7 @@
+// callers paint this with dangerouslySetInnerHTML. `app_id` comes from the app that placed the order and,
+// without a translation, its fallback is the raw value: the date and the label are escaped, only the <b> is markup.
+import { escapeHtml } from '../../../../../components/Messages/historyComment'
+
 const capitalize = (value) => {
   if (!value) return ''
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -23,7 +27,7 @@ export const getOrderPlacedDatetimeHtml = ({
   parseLocalDate
 }) => {
   const datetime = deliveryDatetimeUtc ? parseUtcDate() : parseLocalDate()
-  return `<b>${datetime ?? ''}</b>`
+  return `<b>${escapeHtml(datetime)}</b>`
 }
 
 export const buildOrderPlacedForViaHtml = ({
@@ -39,5 +43,5 @@ export const buildOrderPlacedForViaHtml = ({
       parseUtcDate,
       parseLocalDate
     }))
-    .replace('_via_', `<b>${viaLabel ?? ''}</b>`)
+    .replace('_via_', `<b>${escapeHtml(viaLabel)}</b>`)
 }

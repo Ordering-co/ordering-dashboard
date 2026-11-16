@@ -1,0 +1,72 @@
+/* redesign 2.G: the switch and, below it, the notice of a save that failed (moved from the store list,
+   where it was .odc-sl-switch). */
+.odc-async-switch {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-async-switch-notice {
+  max-inline-size: var(--od-x-popover);
+  font-size: var(--od-x-type-caption-size);
+  white-space: normal;
+  /*  AB-S04: a long word breaks instead of overflowing the notice */
+  overflow-wrap: anywhere;
+}
+
+/*  R1-4 (of ) and AB-S04 (of ): where the switch sits in a row with other things (the actions of a card,
+   the header of a panel) the notice must ask for no room. In the flow it made the wrapper as wide as the notice: the switch moved
+   toward the start of its card, and in a header it pushed the title and overflowed when narrow. There it hangs under the switch, out
+   of the flow, toward the start (the switch ends a panel header; in a card it starts the row, so there it hangs toward the end, see
+   below) and never wider than the room there is; it is still the same alert, read in the same place of the DOM. In a form the notice
+   stays in the flow and pushes what is below, as before. `:where` keeps the specificity of a page's own rule above it. */
+:where(.odc-order-card, .odc-record-head) .odc-async-switch { position: relative; }
+
+:where(.odc-order-card, .odc-record-head) .odc-async-switch-notice {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-end: 0;
+  z-index: var(--od-x-layer-raised);
+  inline-size: max-content;
+  max-inline-size: min(var(--od-x-popover), calc(100cqw - var(--od-space-5)));
+  margin-block-start: var(--od-space-1);
+  /* .odc-notice brings the page gutter as its inline margin: hanging, it would sit 24px in from the switch's edge */
+  margin-inline: 0;
+}
+
+/* In a phone card the switch STARTS its row (the card's actions), so the notice hangs from the switch's start instead; hung from
+   its end it left the screen (review of : -185 -> 75 at 390). */
+:where(.odc-order-card) .odc-async-switch-notice {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+/* : in a table cell the notice hung from the switch fell on the next row (its switch, the figure of its rule) or, opened
+   upward from the last row, on the row above; in the flow it widened its column instead, and the switch just pressed moved ~100px.
+   So it takes a line of its own at the foot of its row, across the row (as in Catalog categories): every cell of that row keeps the
+   band free below its content, so nothing is painted over, no column changes width and the switch stays where it was. The band
+   has one line: a message longer than the row is cut with an ellipsis (screen readers still read it whole, it is the same alert).
+   A table row is the containing block (the cells and the wrapper are static). */
+.odc-table tbody tr:has(.odc-async-switch[data-failed]) { position: relative; }
+
+.odc-table tbody tr:has(.odc-async-switch[data-failed]) > :where(td, th[scope='row']) {
+  padding-block-end: calc(var(--od-x-control-height-sm) + var(--od-space-2));
+}
+
+:where(.odc-table td) .odc-async-switch-notice {
+  position: absolute;
+  inset-inline: var(--od-space-3);
+  inset-block-end: var(--od-space-1);
+  block-size: var(--od-x-control-height-sm);
+  max-inline-size: none;
+  margin: 0;
+  padding-block: 0;
+  white-space: nowrap;
+}
+
+:where(.odc-table td) .odc-async-switch-notice .odc-notice-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

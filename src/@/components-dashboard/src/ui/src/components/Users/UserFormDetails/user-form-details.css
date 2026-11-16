@@ -1,0 +1,70 @@
+/*
+ * redesign UF-B2 (, decision 1 A) · The profile form of Users: groups with a heading, a visible label on every control,
+ * the save bar at the foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (its containing block
+ * would be its own grid row). The scroller that holds the form (the profile panel, a side bar, a sheet) is where it sticks.
+ */
+
+.odc-uf-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-uf-form:focus { outline: none; }
+
+.odc-uf-group {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-uf-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The label of a control that is not a Field (the occupation selector keeps its own legacy select). */
+.odc-uf-label {
+  margin: 0 0 var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-occupation { min-inline-size: 0; }
+
+/* The wrapper only gives the label a way to find the C18 trigger; it adds no box. */
+.odc-uf-select { display: contents; }
+
+/* ── Loading the validation fields: a label line and a control per row, no jump when the fields arrive ── */
+.odc-uf-loading {
+  display: grid;
+  gap: var(--od-space-4);
+}
+
+.odc-uf-loading-row {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+}
+
+/* redesign UF-R1 (review r1 F1): the browser scrolls a focused field into view without counting the sticky bar, so at 390 the bar
+   (about 96px, taller with an error or three lines of names) covered the field being edited and its error. Every control keeps a
+   margin at its foot that clears the bar and a gap: 2 x --od-space-8 (128px) + --od-space-4 (16px). The scripts that bring the field
+   into view (`scrollIntoView({ block: 'nearest' })` in index.js) honor it. Not measured in a browser in this batch. */
+.odc-uf-form :is(input, select, textarea, button, [role='button'], [role='combobox'], [role='switch'], [tabindex]) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

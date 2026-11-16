@@ -8,7 +8,7 @@ export const WrapMetaFields = styled.div`
   }
 `
 export const MetaTitle = styled.p`
-  font-size: 24px;
+  font-size: var(--od-type-title-size);
   font-weight: 600;
   color: ${props => props.theme.colors?.headingColor};
   margin-bottom: 30px;
@@ -20,7 +20,7 @@ export const MetaContainer = styled.div`
 
   .meta_type {
     width: 25%;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     .select {
       background: ${props => props.theme.colors.secundary};
     }
@@ -53,7 +53,7 @@ export const MetaAddContainer = styled(MetaContainer)`
     border-radius: 5px;
     padding: 5px 10px;
     outline: none;
-    font-size: 16px;
+    font-size: var(--od-type-control-value-size);
     box-sizing: border-box;
     width: 100%;
   }
@@ -69,7 +69,7 @@ export const RoundBorder = styled.div`
   border: 1px solid #c2c2c2;
   border-radius: 5px;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme.colors?.headingColor};
   overflow: hidden;
 `

@@ -4,6 +4,7 @@
  */
 
 import { parseJsonObject } from './safeJsonParse'
+import { SETTINGS_CONFIG_NAMES } from './settingsConfigNames'
 
 export const SETTINGS_CONFIG_COPY = {
   security_recaptcha_auth: {
@@ -269,8 +270,6 @@ export const getRecaptchaFieldGroups = (type) => {
   return groups
 }
 
-const isFilledConfig = (config) => String(config?.value ?? '').trim() !== ''
-
 export const isSettingsCredentialFilled = (config) => {
   const value = String(config?.value ?? '').trim()
   if (!value) return false
@@ -279,6 +278,9 @@ export const isSettingsCredentialFilled = (config) => {
   if (/^add your\s/i.test(value)) return false
   return true
 }
+
+// a key shipped as «Add your Recaptcha Site Key» is a hint, not a value: it does not count as filled.
+const isFilledConfig = (config) => isSettingsCredentialFilled(config)
 
 export const getRecaptchaValidation = ({ type, configs = [] } = {}) => {
   const mode = normalizeRecaptchaType(type)
@@ -443,7 +445,8 @@ export const SETTINGS_CONFIG_EFFECT = {
   }
 }
 
-export const getSettingsConfigCopy = (config = {}) => SETTINGS_CONFIG_COPY[config.key] || null
+// redesign (owner decision 32 A): after the hub copy, the dashboard's names for the API's settings
+export const getSettingsConfigCopy = (config = {}) => SETTINGS_CONFIG_COPY[config.key] || SETTINGS_CONFIG_NAMES[config.key] || null
 
 export const getCustomBlockCopy = (blockId) => SETTINGS_CUSTOM_BLOCK_COPY[blockId] || null
 
@@ -624,6 +627,70 @@ export const updateReservationSettingValue = (current, key, nextValue) => {
   })
 }
 
+const normalizeChoice = (text) => String(text ?? '').toLowerCase().replace(/\s+/g, '')
+
+/**
+ * a type 3 config (values joined with «|») whose only two options are exactly Yes and No is one exclusive choice,
+ * not two independent boxes (both ticked would send «1|0»). Same strictness as getSettingsSwitchModel: a real list (any other
+ * option, a different count) returns `null` and keeps its checkboxes. «On» is the value of the `yes`
+ * option, found by its text. The caller leaves out the order-type lists (SETTINGS_ORDER_TYPE_SELECT_KEYS). A stored value that is not exactly the `yes` value (empty, «1|0») reads as off; nothing is
+ * written until the user chooses.
+ *
+ * @returns {{ onValue: string, offValue: string, checked: boolean } | null}
+ */
+export const getSettingsPipeYesNoModel = (config) => {
+  const choices = config?.options
+  if (!Array.isArray(choices) || choices.length !== 2) return null
+  const yes = choices.find(choice => normalizeChoice(choice?.text) === 'yes')
+  const no = choices.find(choice => normalizeChoice(choice?.text) === 'no')
+  if (!yes || !no || String(yes.value) === String(no.value)) return null
+  return { onValue: yes.value, offValue: no.value, checked: String(config.value ?? '') === String(yes.value) }
+}
+
+const RESERVATION_RANGES = [
+  // [min field, max field, minutes per unit of the min, minutes per unit of the max]
+  ['min_guests_reservation', 'max_guests_reservation', 1, 1],
+  ['min_time_reserve_minutes', 'max_time_reserve_days', 1, 1440]
+]
+
+/**
+ * what the reservation table must satisfy before it is sent. Numbers cannot be negative, and a minimum cannot
+ * exceed its maximum (guests; time in advance, comparing minutes with days). A maximum of 0 is «not set» (the table writes
+ * 0 for an emptied cell), so it limits nothing. Returns the translated messages, one per broken rule, in table order.
+ */
+export const getReservationSettingIssues = (value, t) => {
+  const translate = (key, fallback) => (t ? t(key, fallback) : fallback)
+  const parsed = parseReservationSettingValue(value)
+  const labelOf = (key) => {
+    const field = RESERVATION_SETTING_FIELDS.find(item => item.key === key)
+    return translate(field.labelKey, field.label)
+  }
+  const issues = []
+  RESERVATION_SETTING_FIELDS.filter(field => field.type === 'number').forEach(field => {
+    const number = Number(parsed[field.key])
+    if (Number.isFinite(number) && number < 0) {
+      issues.push(
+        translate('VALIDATION_ERROR_MIN_NUMERIC', 'The _attribute_ may not be less than _min_.')
+          .replace('_attribute_', labelOf(field.key))
+          .replace('_min_', '0')
+      )
+    }
+  })
+  RESERVATION_RANGES.forEach(([minKey, maxKey, minUnit, maxUnit]) => {
+    const min = Number(parsed[minKey])
+    const max = Number(parsed[maxKey])
+    if (!Number.isFinite(min) || !Number.isFinite(max) || max <= 0 || min < 0) return
+    if (min * minUnit > max * maxUnit) {
+      issues.push(
+        translate('SETTINGS_MIN_ABOVE_MAX', '_min_ cannot be greater than _max_.')
+          .replace('_min_', labelOf(minKey))
+          .replace('_max_', labelOf(maxKey))
+      )
+    }
+  })
+  return issues
+}
+
 export const normalizeConfigOptions = (options) => {
   if (Array.isArray(options)) return options
   if (typeof options === 'string' && options.trim()) {
@@ -800,10 +867,60 @@ export const resolveSettingsFocusKey = (focusKey, configs = []) => {
   return key
 }
 
+// the custom blocks draw some configs as a cell of a table (location checks, multi checkout, OneSignal) or as
+// one row of a table held in a single config (reservation). The block and the save bar read the visible name from here, so
+// the bar never falls back to the API name («Location Validation Status 3») while the screen says something else.
+const LOCATION_COLUMNS = {
+  enabled: { labelKey: 'SETTINGS_LOCATION_ENABLE', label: 'Enable' },
+  distance: { labelKey: 'SETTINGS_LOCATION_DISTANCE', label: 'Min distance (m)' },
+  validity: { labelKey: 'SETTINGS_LOCATION_AGE', label: 'Max age (min)' }
+}
+
+const joinCellName = (row, column) => `${row} — ${column}`
+
+/**
+ * The name a custom block shows for `config`, or `null` when the block does not rename it. `t` is optional (the copy then
+ * stays in English). The block's aria-labels and the save bar both call this.
+ */
+export const getSettingsBlockFieldName = (config, t) => {
+  const translate = (key, fallback) => (t ? t(key, fallback) : fallback)
+  const key = config?.key
+  if (!key) return null
+
+  const location = /^location_validation_(enabled|distance|validity)_status_(\d+)$/.exec(key)
+  if (location) {
+    const status = LOCATION_CHECK_STATUSES.find(row => String(row.status) === location[2])
+    if (status) {
+      const column = LOCATION_COLUMNS[location[1]]
+      return joinCellName(translate(status.labelKey, status.label), translate(column.labelKey, column.label))
+    }
+  }
+
+  const cart = MULTI_CHECKOUT_DISCOUNT_LABELS[key]
+  if (cart) {
+    return joinCellName(translate(cart.labelKey, cart.label), translate('SETTINGS_MULTI_DISCOUNT', 'Discount %'))
+  }
+
+  const app = ONESIGNAL_APPS.find(candidate => candidate.idKey === key || candidate.secretKey === key)
+  if (app) {
+    const field = app.idKey === key
+      ? translate('SETTINGS_ONESIGNAL_ID', 'App ID')
+      : translate('SETTINGS_ONESIGNAL_KEY', 'REST API key')
+    return joinCellName(translate(app.labelKey, app.label), field)
+  }
+
+  if (key === 'reservation_setting') {
+    const copy = SETTINGS_CUSTOM_BLOCK_COPY.reservation
+    return translate(copy.titleKey, copy.title)
+  }
+  return null
+}
+
 export const applySettingsConfigCopy = (config = {}, t) => {
   const copy = getSettingsConfigCopy(config)
   const effect = SETTINGS_CONFIG_EFFECT[config.key]
-  if (!copy && !effect) return config
+  const blockName = getSettingsBlockFieldName(config, t)
+  if (!copy && !effect && !blockName) return config
   return {
     ...config,
     ...(copy
@@ -814,6 +931,7 @@ export const applySettingsConfigCopy = (config = {}, t) => {
             : config.description
         }
       : {}),
+    ...(blockName ? { name: blockName } : {}),
     ...(effect
       ? { description: t ? t(effect.helpKey, effect.help) : effect.help }
       : {})
@@ -842,13 +960,24 @@ export const isSettingsCustomBlockMaster = (configKey) => {
   ))
 }
 
-export const isSettingsValueDirty = (nextValue, savedValue) =>
-  String(nextValue) !== String(savedValue)
+// Keys whose saved value is an array («[10,15]») while the field emits «10,15» (ST-16).
+const SETTINGS_ARRAY_VALUE_KEYS = new Set(['driver_tip_options'])
+
+const normalizeArrayValue = (value) => String(value ?? '').replace(/[[\]\s]/g, '')
+
+export const isSettingsValueDirty = (nextValue, savedValue, key) => (
+  SETTINGS_ARRAY_VALUE_KEYS.has(key)
+    ? normalizeArrayValue(nextValue) !== normalizeArrayValue(savedValue)
+    : String(nextValue) !== String(savedValue)
+)
+
+// What the save bar calls a changed config: the name the screen gives it (see getSettingsBlockFieldName), else the API name.
+export const getSettingsChangeName = (item = {}, t) => applySettingsConfigCopy(item, t)?.name
 
 export const mergeSettingsChanges = (changes, item, nextValue, savedValue) => {
   const next = [...(changes || [])]
   if (!item?.id) return next
-  if (!isSettingsValueDirty(nextValue, savedValue)) {
+  if (!isSettingsValueDirty(nextValue, savedValue, item.key)) {
     return next.filter(config => config.id !== item.id)
   }
   if (next.some(config => config.id === item.id)) {

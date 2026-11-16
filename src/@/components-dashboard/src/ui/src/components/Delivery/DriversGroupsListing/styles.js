@@ -3,9 +3,13 @@ import styled, { css } from 'styled-components'
 export const DriversGroupsListingContainer = styled.div`
   flex: 1;
   box-sizing: border-box;
-  transition: all 0.5s;
+  transition: all ${props => props.theme?.ordering?.motion?.duration?.slow ?? '0.5s'};
   max-height: 100vh;
   overflow: auto;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 `
 export const HeaderContainer = styled.div`
   display: flex;
@@ -24,7 +28,7 @@ export const HeaderLeftContainer = styled.div`
   align-items: center;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0px;
     font-weight: 700;
   }
@@ -79,7 +83,7 @@ export const HeaderRightContainer = styled.div`
   }
 
   input {
-    background: ${props => props.theme.colors.secundary};
+    background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary};
     border: none;
   }
 

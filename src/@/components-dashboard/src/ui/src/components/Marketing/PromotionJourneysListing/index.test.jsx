@@ -1,83 +1,76 @@
-import React, { act } from 'react'
-import { createRoot } from 'react-dom/client'
+/* eslint-disable import/first */
+import React from 'react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { ThemeProvider } from 'styled-components'
-import { afterEach, describe, expect, test, vi } from 'vitest'
-import { PromotionJourneysListing, PromotionJourneysListingUI } from './index'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+
+import theme from '~/theme.json'
+import { createDashboardTheme } from '~/brand/adapter'
+
+// redesign PE-B4 (decisions 2, 3, 4, 6, 7, 9, 10; PE-01, PE-02, PE-06): Quick offers with Product. The Product wrappers, the real
+// UtilsProviders (parseDate, parsePrice) and the real PromotionsTable are the ones that ship; only the environment (language, config, the
+// controller's data and the API calls) is played by the test. The logic tests of the old file keep their assertions on requests and
+// payloads; what moved with the new controls (a store picker, day pickers, segmented controls, confirmation dialogs) has the marker.
 
 const hookState = vi.hoisted(() => ({
   configs: {},
+  dictionary: {},
   ordering: { root: 'https://api.test' },
   showToast: vi.fn(),
   token: 'token',
   user: { level: 0 }
 }))
 
-vi.mock('../../../../../contexts/ApiContext', () => ({ useApi: () => [hookState.ordering] }))
-vi.mock('../../../../../contexts/SessionContext', () => ({ useSession: () => [{ token: hookState.token, user: hookState.user }] }))
-vi.mock('../../../../../contexts/LanguageContext', () => ({ useLanguage: () => [{}, (key, fallback) => fallback || key] }))
-vi.mock('../../../../../contexts/ToastContext', () => ({ useToast: () => [{}, { showToast: hookState.showToast }], ToastType: { Success: 'success' } }))
-
-vi.mock('../../../../../index', async () => ({
-  EnterprisePromotionList: (await vi.importActual('../../../../../components/EnterprisePromotionList')).EnterprisePromotionList,
-  ToastType: { Success: 'success' },
-  useApi: () => [hookState.ordering],
-  useConfig: () => [{ configs: hookState.configs }],
-  useLanguage: () => [{}, (key, fallback) => fallback || key],
-  useSession: () => [{ token: hookState.token, user: hookState.user }],
-  useToast: () => [{}, { showToast: hookState.showToast }]
+vi.mock('../../../../../contexts/ConfigContext', () => ({
+  useConfig: () => [{ configs: hookState.configs }]
 }))
+vi.mock('../../../../../contexts/LanguageContext', () => ({
+  useLanguage: () => [{ loading: false, dictionary: {} }, (_key, fallback) => fallback]
+}))
+vi.mock('../../../../../index', async () => {
+  const { useUtils } = await import('../../../../../contexts/UtilsContext')
+  return {
+    EnterprisePromotionList: () => null,
+    ToastType: { Success: 'success' },
+    useApi: () => [hookState.ordering],
+    useConfig: () => [{ configs: hookState.configs }],
+    useLanguage: () => [{ dictionary: hookState.dictionary, language: { code: 'en' } }, (key, fallback) => hookState.dictionary[key] ?? (fallback || key)],
+    useSession: () => [{ token: hookState.token, user: hookState.user }],
+    useToast: () => [{}, { showToast: hookState.showToast }],
+    useUtils
+  }
+})
 
 vi.mock('../../Shared', () => ({
-  Confirm: ({ open, title, content, children, onAccept, onCancel, acceptText, cancelText }) => open
-    ? (
-      <div role='dialog' aria-label={title}>
-        <p>{content}</p>
-        {children}
-        <button type='button' onClick={onCancel}>{cancelText}</button>
-        <button type='button' onClick={onAccept}>{acceptText}</button>
-      </div>
-      )
-    : null,
-  Schedule: () => <div>Schedule</div>,
   SelectBusinessCategories: () => <div>Categories</div>
 }))
 
 vi.mock('./JourneyProductPicker', () => ({
-  JourneyProductPicker: ({ setSelectedProductsIds, businessId }) => (
-    <button type='button' data-business-id={businessId} onClick={() => setSelectedProductsIds({ 22: { id: 22, include: true } })}>Select product 22</button>
+  JourneyProductPicker: ({ setSelectedProductsIds, selectedProductsIds, businessId }) => (
+    <button type='button' data-business-id={businessId} data-selected-count={Object.keys(selectedProductsIds || {}).length} onClick={() => setSelectedProductsIds({ 22: { id: 22, include: true } })}>Select product 22</button>
   )
 }))
 
-global.IS_REACT_ACT_ENVIRONMENT = true
+import { UtilsProviders, useUtils } from '../../../../../contexts/UtilsContext'
+import { PromotionJourneysListingUI } from './index'
 
-const theme = {
-  colors: {
-    primary: '#266DF0',
-    backgroundPage: '#FFFFFF',
-    headingColor: '#0B0C0D',
-    lightGray: '#3F4145',
-    borderColor: '#DEE0E3',
-    secundary: '#F6F7F7'
-  }
+const dashboardTheme = createDashboardTheme(theme)
+
+// the project writes its dates day first, so a stamp in the wrong format is easy to tell from an ISO one
+const PROJECT_DATES = { dates_general_format: { value: 'DD/MM/YYYY HH:mm' } }
+
+const util = {}
+const Probe = () => {
+  Object.assign(util, useUtils()[0])
+  return null
 }
 
-const setInputValue = (input, value) => {
-  const prototype = input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype
-  const setter = Object.getOwnPropertyDescriptor(prototype, 'value').set
-  act(() => {
-    setter.call(input, value)
-    input.dispatchEvent(new Event('input', { bubbles: true }))
-    input.dispatchEvent(new Event('change', { bubbles: true }))
-  })
-}
-
-const setSelectValue = (select, value) => {
-  const setter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value').set
-  act(() => {
-    setter.call(select, value)
-    select.dispatchEvent(new Event('change', { bubbles: true }))
-  })
-}
+const Wrapper = ({ children }) => (
+  <ThemeProvider theme={dashboardTheme}>
+    <UtilsProviders><Probe />{children}</UtilsProviders>
+  </ThemeProvider>
+)
 
 const baseProps = {
   promotionListState: { promotions: [], loading: false, error: null },
@@ -88,6 +81,8 @@ const baseProps = {
   sitesState: { sites: [{ id: 3, name: 'Website' }], loading: false },
   getPromotions: vi.fn(),
   paginationProps: { currentPage: 1, pageSize: 10, totalPages: 1, totalItems: 0 },
+  searchValue: '',
+  onSearch: vi.fn(),
   handleEnablePromotion: vi.fn(),
   handleSuccessDeletePromotion: vi.fn(),
   handleSuccessUpdatePromotions: vi.fn(),
@@ -117,97 +112,302 @@ const baseProps = {
   loadPromotionSites: vi.fn()
 }
 
-const renderComponent = (configs, props = {}) => {
-  hookState.configs = configs
-  const container = document.createElement('div')
-  document.body.appendChild(container)
-  const root = createRoot(container)
-  act(() => {
-    const componentProps = { ...baseProps, ...props }
-    root.render(
-      <ThemeProvider theme={theme}>
-        <PromotionJourneysListingUI
-          {...componentProps}
-          loadAllJourneyBusinesses={props.loadAllJourneyBusinesses || vi.fn().mockResolvedValue(componentProps.businessesList.businesses)}
-        />
-      </ThemeProvider>
-    )
-  })
-  return { container, root }
+// async: the businesses of the scope load on mount, so the first render is let to settle before a test looks at it
+const renderComponent = async (configs, props = {}) => {
+  hookState.configs = { ...PROJECT_DATES, ...configs }
+  const componentProps = { ...baseProps, ...props }
+  const view = render(
+    <PromotionJourneysListingUI
+      {...componentProps}
+      loadAllJourneyBusinesses={props.loadAllJourneyBusinesses || vi.fn().mockResolvedValue(componentProps.businessesList.businesses)}
+    />,
+    { wrapper: Wrapper }
+  )
+  await act(async () => { await Promise.resolve() })
+  return view
 }
 
-const completeFirstPurchase = async container => {
-  const numberInputs = container.querySelectorAll('input[type="number"]')
-  const dateInputs = container.querySelectorAll('input[type="datetime-local"]')
-  setInputValue(numberInputs[0], '20')
-  setInputValue(numberInputs[1], '200')
-  setInputValue(numberInputs[2], '40')
-  setInputValue(dateInputs[0], '2026-09-01T09:00')
-  setInputValue(dateInputs[1], '2026-09-30T22:00')
-  expect(dateInputs[0].value).toBe('2026-09-01T09:00')
-  expect(dateInputs[1].value).toBe('2026-09-30T22:00')
-  await act(async () => Promise.resolve())
+const CURRENCY = { format_number_currency: { value: '$' } }
+
+const templateButton = (container, key) => container.querySelector(`[data-template-key="${key}"]`)
+const buttonNamed = name => screen.getByRole('button', { name })
+// the builder is a region; with a modal open the page behind is hidden from the accessibility tree, so it is found by its attribute
+const regionOf = () => document.querySelector('[role="region"]')
+const numberField = name => screen.getByRole('textbox', { name })
+const dateTrigger = name => screen.getByRole('combobox', { name: new RegExp(`^${name}`) })
+const timeSelect = name => screen.getByRole('combobox', { name })
+
+// types a figure into a Product NumberField the way a person does (clear, then type)
+const fill = async (user, field, value) => {
+  await user.clear(field)
+  await user.type(field, value)
 }
 
-describe('PromotionJourneysListingUI', () => {
-  afterEach(() => {
-    document.body.innerHTML = ''
-    vi.clearAllMocks()
-  })
+// picks a day by typing it in the project's format (DD/MM/YYYY) inside the picker, then closes the picker
+const pickDay = async (user, name, digits) => {
+  await user.click(dateTrigger(name))
+  const dialog = await screen.findByRole('dialog', { name: 'Select a date' })
+  await user.type(within(dialog).getByRole('textbox'), digits)
+  await user.keyboard('{Escape}')
+  await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Select a date' })).toBeNull())
+}
 
-  test('renders the catalog and opens the guided builder', () => {
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    expect(container.textContent).toContain('Promotion templates')
-    expect(container.textContent).not.toContain('Validated before activation')
-    expect(container.textContent).not.toContain('All templates')
-    expect(container.textContent).not.toContain('Acquisition')
-    const firstPurchase = container.querySelector('[data-template-key="first_order"]')
-    expect(firstPurchase.children).toHaveLength(2)
-    act(() => firstPurchase.click())
-    expect(container.textContent).toContain('Customers with exactly 0 orders')
-    expect(container.textContent).not.toContain('Review')
-    expect(container.textContent).not.toContain('Test')
-    expect(container.textContent).toContain('Save draft')
-    expect(container.textContent).toContain('Activate')
-    expect(container.querySelector('input').value).toBe('First purchase')
-    expect(container.textContent).toContain('This will be the offer name your customers see at checkout.')
-    expect(container.textContent).not.toContain('I reviewed dates and times')
-    expect(container.textContent).not.toContain('Advanced settings')
-    expect(container.textContent).not.toContain('Uses per customer')
-    expect(container.textContent).not.toContain('Sites')
-    expect(container.textContent).toContain('Product options')
-    expect(container.textContent).toContain('Include product options')
-    expect(container.textContent).toContain('Do not include product options')
-    expect(container.querySelector('textarea').value).toContain('Customers with exactly 0 orders')
-    const startDate = container.querySelector('input[type="datetime-local"]')
-    startDate.showPicker = vi.fn()
-    act(() => startDate.click())
-    expect(startDate.showPicker).toHaveBeenCalledTimes(1)
-    act(() => root.unmount())
-  })
+const completeFirstPurchase = async (user) => {
+  await fill(user, numberField('Discount (%)'), '20')
+  await fill(user, numberField('Minimum purchase'), '200')
+  await fill(user, numberField('Maximum discount'), '40')
+  await pickDay(user, 'Start date', '01092026')
+  await pickDay(user, 'End date', '30092026')
+  await user.selectOptions(timeSelect('Start time Hour'), '9')
+  await user.selectOptions(timeSelect('End time Hour'), '22')
+  await user.selectOptions(timeSelect('End time Minute'), '0')
+  expect(dateTrigger('Start date')).toHaveTextContent('01/09/2026')
+  expect(dateTrigger('End date')).toHaveTextContent('30/09/2026')
+}
 
-  test('does not show product options for a delivery-fee discount', () => {
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="free_delivery"]').click())
-    expect(container.textContent).not.toContain('Product options')
-    expect(container.textContent).not.toContain('Include product options')
-    act(() => root.unmount())
-  })
+const openTemplate = async (user, container, key) => {
+  await user.click(templateButton(container, key))
+}
 
-  test('uses one business selector as the Buy X, get Y scope and saves selected products', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 78, enabled: false } })
+const lastBody = () => JSON.parse(global.fetch.mock.calls[0][1].body)
+
+const welcome = {
+  id: 99,
+  name: 'Welcome offer',
+  description: 'Description',
+  enabled: false
+}
+
+beforeEach(() => {
+  global.fetch = vi.fn()
+  hookState.dictionary = {}
+})
+
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+  vi.clearAllMocks()
+  document.getElementById('app-modals')?.remove()
+})
+
+describe('PromotionJourneysListingUI · the catalog', () => {
+  test('the eight templates are one-click buttons with their icon, title, description and audience; nothing structural inside a button', async () => {
+    const { container } = await renderComponent(CURRENCY)
+    expect(screen.getByRole('heading', { level: 2, name: 'Promotion templates' })).toBeInTheDocument()
+    const cards = container.querySelectorAll('[data-template-key]')
+    expect(cards).toHaveLength(8)
+    cards.forEach(card => {
+      expect(card.tagName).toBe('BUTTON')
+      expect(card).toHaveAttribute('type', 'button')
+      // redesign PE-B4 (decision 2; inventory D39): a button holds phrasing content, never a heading, a paragraph or a block
+      expect(card.querySelector('h1,h2,h3,h4,h5,h6,p,div,ul,ol,li')).toBeNull()
+      expect(card.querySelector('svg')).not.toBeNull()
     })
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-
+    const first = templateButton(container, 'first_order')
+    expect(first.children).toHaveLength(2)
+    expect(first).toHaveTextContent('First purchase')
+    expect(first).toHaveTextContent('Welcome customers who have not placed an order yet.')
+    expect(first).toHaveTextContent('Customers with exactly 0 orders')
     expect(container.textContent).toContain('Happy hour')
     expect(container.textContent).toContain('We miss you')
     expect(container.textContent).toContain('Make items free from the same product selection used to qualify.')
     expect(container.textContent).not.toContain('Slow hours boost')
     expect(container.textContent).not.toContain('Win back inactive customers')
+    expect(container.textContent).not.toContain('Validated before activation')
+    expect(container.textContent).not.toContain('All templates')
+    expect(container.textContent).not.toContain('Acquisition')
+  })
 
-    act(() => container.querySelector('[data-template-key="buy_x_get_y"]').click())
+  // redesign AC-D (G5): the eight template icons are Lucide, through the Ordering icon barrel, not react-bootstrap-icons
+  test('the template icons are Lucide glyphs with the house defaults, none of them a Bootstrap icon', async () => {
+    const { container } = await renderComponent(CURRENCY)
+    const expected = {
+      first_order: 'lucide-user-check',
+      second_order: 'lucide-repeat',
+      free_delivery: 'lucide-truck',
+      minimum_purchase: 'lucide-shopping-basket',
+      buy_x_get_y: 'lucide-gift',
+      loyalty_reward: 'lucide-star',
+      slow_hours: 'lucide-history',
+      winback: 'lucide-shopping-bag'
+    }
+    Object.entries(expected).forEach(([key, glyph]) => {
+      const icon = templateButton(container, key).querySelector('svg')
+      expect(icon).toHaveClass('odc-promo-quick-template-icon', glyph)
+      expect(icon).toHaveAttribute('aria-hidden', 'true')
+      expect(icon).toHaveAttribute('stroke-width', '1.75')
+    })
+    container.querySelectorAll('[data-template-key] svg').forEach(icon => {
+      expect(Array.from(icon.classList).some(name => name === 'bi' || name.startsWith('bi-'))).toBe(false)
+    })
+  })
+
+  test('the loyalty template is available without an addon flag', async () => {
+    await renderComponent(CURRENCY)
+    const loyalty = screen.getAllByRole('button').find(button => button.textContent.includes('Loyalty level reward'))
+    expect(loyalty.disabled).toBe(false)
+    expect(loyalty.textContent).not.toContain('Requires Loyalty Levels')
+  })
+
+  test('one click on a template opens the builder with the template name', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    expect(regionOf()).toHaveAccessibleName('First purchase promotion builder')
+    expect(screen.getByRole('textbox', { name: 'Promotion name' })).toHaveValue('First purchase')
+  })
+})
+
+describe('PromotionJourneysListingUI · the builder, with Product controls', () => {
+  test('opens the guided builder with the same fields and hints', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    expect(container.textContent).toContain('Customers with exactly 0 orders')
+    expect(container.textContent).not.toContain('Review')
+    expect(container.textContent).not.toContain('Test')
+    expect(container.textContent).toContain('This will be the offer name your customers see at checkout.')
+    expect(container.textContent).not.toContain('I reviewed dates and times')
+    expect(container.textContent).not.toContain('Advanced settings')
+    expect(container.textContent).not.toContain('Uses per customer')
+    expect(container.textContent).not.toContain('Sites')
+    expect(buttonNamed('Save draft')).toBeInTheDocument()
+    expect(buttonNamed('Activate')).toBeInTheDocument()
+    expect(buttonNamed('Cancel')).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: 'Description' }).value).toContain('Customers with exactly 0 orders')
+    expect(container.textContent).toContain('Product options')
+    expect(container.textContent).toContain('Choose whether the discount also applies to product options.')
+  })
+
+  test('the builder has no native select of its own and no datetime-local input (PE-06)', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    expect(container.querySelectorAll('input[type="datetime-local"]')).toHaveLength(0)
+    // the only <select>s are the hour and minute of the two time fields (Product's own, with their names); the rest are not selects
+    const selects = [...container.querySelectorAll('select')]
+    expect(selects.every(select => select.classList.contains('odc-time-field-select'))).toBe(true)
+    expect(selects).toHaveLength(4)
+  })
+
+  test('the Buy X, get Y builder has no native store select either: the store is a Product picker', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'buy_x_get_y')
+    expect([...container.querySelectorAll('select')].every(select => select.classList.contains('odc-time-field-select'))).toBe(true)
+    expect(screen.getByRole('button', { name: /Promotion store/ })).toBeInTheDocument()
+  })
+
+  test('the numbers are Product number fields, each with its hint or error', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'minimum_purchase')
+    // (Base UI keeps one hidden number input per field for forms; what a person reaches is a text input with the figure class)
+    expect([...container.querySelectorAll('input[type="number"]')].filter(input => input.getAttribute('aria-hidden') !== 'true')).toHaveLength(0)
+    expect(numberField('Discount (%)')).toHaveClass('odc-figure')
+    expect(numberField('Minimum purchase')).toBeInTheDocument()
+    expect(numberField(/Uses per customer|used per user/)).toBeInTheDocument()
+    expect(numberField('Maximum discount')).toBeInTheDocument()
+    await user.click(buttonNamed('Activate'))
+    const alerts = screen.getAllByRole('alert').map(alert => alert.textContent)
+    expect(alerts).toEqual(expect.arrayContaining([
+      expect.stringContaining('Enter a benefit greater than 0.'),
+      expect.stringContaining('Enter a minimum purchase greater than 0.'),
+      expect.stringContaining('Select a start date.'),
+      expect.stringContaining('Select an end date.')
+    ]))
+    expect(numberField('Discount (%)')).toBeInvalid()
+  })
+
+  test('does not show product options for a delivery-fee discount', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'free_delivery')
+    expect(container.textContent).not.toContain('Product options')
+    expect(screen.queryByRole('group', { name: 'Product options' })).toBeNull()
+  })
+
+  test('Application and Product options are segmented controls that stage the same values', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+
+    const application = screen.getByRole('group', { name: "How it's going to be applied?" })
+    expect(within(application).getByRole('button', { name: 'Automatic' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByRole('textbox', { name: 'Coupon code' })).toBeNull()
+    await user.click(within(application).getByRole('button', { name: 'Coupon' }))
+    expect(within(application).getByRole('button', { name: 'Coupon' })).toHaveAttribute('aria-pressed', 'true')
+    // the code has a visible label now (inventory D37), not a placeholder only
+    const code = screen.getByRole('textbox', { name: 'Coupon code' })
+    await user.type(code, 'SAVE 10')
+    expect(code).toHaveValue('SAVE10')
+
+    const options = screen.getByRole('group', { name: 'Product options' })
+    expect(within(options).getByRole('button', { name: 'Exclude' })).toHaveAttribute('aria-pressed', 'true')
+    await user.click(within(options).getByRole('button', { name: 'Include' }))
+    expect(within(options).getByRole('button', { name: 'Include' })).toHaveAttribute('aria-pressed', 'true')
+
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody()).toMatchObject({ auto: false, type: 2, coupon: 'SAVE10', include_options: true, enabled: false })
+  })
+
+  test('the generated description writes the dates in the project format, never as an ISO stamp (decision 7, PE-02)', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    const description = screen.getByRole('textbox', { name: 'Description' })
+    // 09:00 shows with its time; the end is 22:00 here
+    const start = util.parseDate('2026-09-01 09:00:00', { utc: false })
+    const end = util.parseDate('2026-09-30 22:00:00', { utc: false })
+    expect(start).toBe('01/09/2026 09:00')
+    expect(description.value).toContain(`from ${start} to ${end}.`)
+    expect(description.value).not.toMatch(/\d{4}-\d{2}-\d{2}T/)
+    expect(description.value).not.toContain('T09:00')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    // what is saved (and shown to the customer at checkout) is the same text
+    expect(lastBody().description).toContain(`from ${start} to ${end}.`)
+    expect(lastBody().description).not.toMatch(/\d{4}-\d{2}-\d{2}T/)
+    expect(lastBody()).toMatchObject({ start: '2026-09-01 09:00:00', end: '2026-09-30 22:00:59' })
+  })
+
+  test('a day with no time yet takes the default time: 00:00 for the start, 23:59 for the end, and the generated text shows only the day', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    // the time cannot be set before there is a day
+    expect(timeSelect('Start time Hour')).toBeDisabled()
+    await fill(user, numberField('Discount (%)'), '20')
+    await fill(user, numberField('Minimum purchase'), '200')
+    await fill(user, numberField('Maximum discount'), '40')
+    await pickDay(user, 'Start date', '01092026')
+    await pickDay(user, 'End date', '30092026')
+    expect(timeSelect('Start time Hour')).toHaveValue('0')
+    expect(timeSelect('End time Hour')).toHaveValue('23')
+    expect(timeSelect('End time Minute')).toHaveValue('59')
+    expect(screen.getByRole('textbox', { name: 'Description' }).value).toContain('from 01/09/2026 to 30/09/2026.')
+    // a later day keeps the time that was chosen
+    await user.selectOptions(timeSelect('Start time Hour'), '9')
+    await pickDay(user, 'Start date', '02092026')
+    expect(timeSelect('Start time Hour')).toHaveValue('9')
+    await pickDay(user, 'Start date', '01092026')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody()).toMatchObject({ start: '2026-09-01 09:00:00', end: '2026-09-30 23:59:59' })
+  })
+
+  test('uses one business selector as the Buy X, get Y scope and saves selected products', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 78, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+
+    await openTemplate(user, container, 'buy_x_get_y')
     expect(container.textContent).not.toContain('Use every business, or choose only the locations')
     expect(container.textContent).not.toContain('Choose businesses')
     expect(container.textContent).not.toContain('Condition type')
@@ -220,27 +420,25 @@ describe('PromotionJourneysListingUI', () => {
     expect(container.textContent).toContain('Product options are not available for Buy X, get Y promotions yet. Extra option charges will not be discounted.')
     expect(container.textContent).not.toContain('Include product options')
     expect(container.textContent).not.toContain('Do not include product options')
+    expect(screen.queryByRole('group', { name: 'Product options' })).toBeNull()
     expect(container.textContent).toContain('Rule: When the cart contains 2 eligible items, 1 of them become free.')
     expect(container.textContent).not.toContain('Minimum items')
     expect(container.textContent).not.toContain('Free products')
 
-    const businessSelect = [...container.querySelectorAll('select')]
-      .find(select => [...select.options].some(option => option.textContent === 'Store One'))
-    setSelectValue(businessSelect, '10')
-    const productButton = [...container.querySelectorAll('button')].find(button => button.textContent === 'Select product 22')
-    expect(productButton).toBeTruthy()
+    // redesign PE-B4 (decision 6): the store is picked in Product's list, with a search, instead of a native select
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    expect(screen.getByRole('searchbox')).toBeInTheDocument()
+    await user.click(screen.getByRole('option', { name: 'Store One' }))
+    const productButton = buttonNamed('Select product 22')
     expect(productButton.getAttribute('data-business-id')).toBe('10')
-    act(() => productButton.click())
+    await user.click(productButton)
 
-    const dateInputs = container.querySelectorAll('input[type="datetime-local"]')
-    setInputValue(dateInputs[0], '2026-09-01T09:00')
-    setInputValue(dateInputs[1], '2026-09-30T22:00')
+    await pickDay(user, 'Start date', '01092026')
+    await pickDay(user, 'End date', '30092026')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
 
-    const saveDraft = [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft')
-    await act(async () => saveDraft.click())
-
-    const body = JSON.parse(global.fetch.mock.calls[0][1].body)
-    expect(body).toMatchObject({
+    expect(lastBody()).toMatchObject({
       businesses: [10],
       sites: [3],
       products: [{ id: 22, include: true, is_condition: true }],
@@ -249,292 +447,518 @@ describe('PromotionJourneysListingUI', () => {
       include_options: false,
       enabled: false
     })
-    expect(body.categories).toBeUndefined()
-    act(() => root.unmount())
+    expect(lastBody().categories).toBeUndefined()
   })
 
-  test('blocks an invalid Buy X, get Y quantity before saving', () => {
-    global.fetch = vi.fn()
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="buy_x_get_y"]').click())
-    const businessSelect = [...container.querySelectorAll('select')]
-      .find(select => [...select.options].some(option => option.textContent === 'Store One'))
-    setSelectValue(businessSelect, '10')
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent === 'Select product 22').click())
-    const quantityInputs = container.querySelectorAll('input[type="number"]')
-    setInputValue(quantityInputs[2], '2')
-    const saveDraft = [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft')
-    act(() => saveDraft.click())
+  test('blocks an invalid Buy X, get Y quantity before saving', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'buy_x_get_y')
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.click(screen.getByRole('option', { name: 'Store One' }))
+    await user.click(buttonNamed('Select product 22'))
+    await fill(user, numberField('Eligible items that become free'), '2')
+    await user.click(buttonNamed('Save draft'))
     expect(container.textContent).toContain('Free items must be fewer than the eligible items required in the cart.')
     expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
   })
 
-  test('changing the Buy X, get Y store clears products selected for the previous store', () => {
-    global.fetch = vi.fn()
+  test('changing the Buy X, get Y store clears products selected for the previous store', async () => {
+    const user = userEvent.setup()
     const businesses = [
       { id: 10, name: 'Store One', slug: 'store-one' },
       { id: 20, name: 'Store Two', slug: 'store-two' }
     ]
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        businessesList: { businesses, loading: false },
-        businessesPaginationProps: { currentPage: 1, totalPages: 1, totalItems: 2, pageSize: 10 }
-      }
-    )
+    const { container } = await renderComponent(CURRENCY, {
+      businessesList: { businesses, loading: false },
+      businessesPaginationProps: { currentPage: 1, totalPages: 1, totalItems: 2, pageSize: 10 }
+    })
+    await openTemplate(user, container, 'buy_x_get_y')
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.click(screen.getByRole('option', { name: 'Store One' }))
+    await user.click(buttonNamed('Select product 22'))
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.click(screen.getByRole('option', { name: 'Store Two' }))
+    expect(buttonNamed('Select product 22').getAttribute('data-business-id')).toBe('20')
 
-    act(() => container.querySelector('[data-template-key="buy_x_get_y"]').click())
-    const businessSelect = [...container.querySelectorAll('select')]
-      .find(select => [...select.options].some(option => option.textContent === 'Store One'))
-    setSelectValue(businessSelect, '10')
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent === 'Select product 22').click())
-    setSelectValue(businessSelect, '20')
-    expect([...container.querySelectorAll('button')].find(button => button.textContent === 'Select product 22').getAttribute('data-business-id')).toBe('20')
-
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft').click())
+    await user.click(buttonNamed('Save draft'))
     expect(container.textContent).toContain('Select at least one product.')
     expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
   })
 
-  test('keeps the loyalty template available without an addon flag', () => {
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    const loyalty = [...container.querySelectorAll('button')].find(button => button.textContent.includes('Loyalty level reward'))
-    expect(loyalty.disabled).toBe(false)
-    expect(loyalty.textContent).not.toContain('Requires Loyalty Levels')
-    act(() => root.unmount())
+  // redesign review r1 (R3): main's native <select> only fired on a change; choosing the same store again keeps its products
+  test('choosing the same Buy X, get Y store again keeps the products already selected', async () => {
+    const user = userEvent.setup()
+    const businesses = [{ id: 10, name: 'Store One', slug: 'store-one' }]
+    const { container } = await renderComponent(CURRENCY, {
+      businessesList: { businesses, loading: false },
+      businessesPaginationProps: { currentPage: 1, totalPages: 1, totalItems: 1, pageSize: 10 }
+    })
+    await openTemplate(user, container, 'buy_x_get_y')
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.click(screen.getByRole('option', { name: 'Store One' }))
+    await user.click(buttonNamed('Select product 22'))
+    expect(buttonNamed('Select product 22').getAttribute('data-selected-count')).toBe('1')
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.click(screen.getByRole('option', { name: 'Store One' }))
+    expect(buttonNamed('Select product 22').getAttribute('data-selected-count')).toBe('1')
+  })
+
+  // redesign review r1 (R5): main kept a value out of range and said why on save; the field never rewrites it on its own
+  test('an out-of-range number stays as typed and the save says why', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'minimum_purchase')
+    await fill(user, numberField(/Uses per customer|used per user/), '0')
+    await user.tab()
+    expect(numberField(/Uses per customer|used per user/).value).toBe('0')
+    await user.click(buttonNamed('Save draft'))
+    expect(container.textContent).toContain('Enter a per-customer usage limit.')
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  test('the store list of Buy X, get Y can be searched', async () => {
+    const user = userEvent.setup()
+    const businesses = [
+      { id: 10, name: 'Store One', slug: 'store-one' },
+      { id: 20, name: 'Harbour', slug: 'harbour' }
+    ]
+    const { container } = await renderComponent(CURRENCY, { businessesList: { businesses, loading: false } })
+    await openTemplate(user, container, 'buy_x_get_y')
+    await user.click(screen.getByRole('button', { name: /Promotion store/ }))
+    await user.type(screen.getByRole('searchbox'), 'harb')
+    expect(within(screen.getByRole('listbox')).getAllByRole('option').map(option => option.textContent)).toEqual(['Harbour'])
   })
 
   test('saves the editable natural description with every site and business included automatically', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 77, enabled: false } })
-    })
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    const description = container.querySelector('textarea')
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    const description = screen.getByRole('textbox', { name: 'Description' })
     expect(description.value).toContain('Customers with exactly 0 orders receive 20% off across all businesses and sales channels')
-    setInputValue(description, 'Custom customer-facing description')
-    const saveDraft = [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft')
-    await act(async () => saveDraft.click())
-    const body = JSON.parse(global.fetch.mock.calls[0][1].body)
-    expect(body).toMatchObject({ description: 'Custom customer-facing description', enabled: false, businesses: [10], sites: [3] })
+    await user.clear(description)
+    await user.type(description, 'Custom customer-facing description')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody()).toMatchObject({ description: 'Custom customer-facing description', enabled: false, businesses: [10], sites: [3] })
     expect(baseProps.getPromotions).toHaveBeenCalledWith(1, 10)
     expect(container.textContent).toContain('Your promotions')
     expect(container.textContent).not.toContain('Promotion name')
-    act(() => root.unmount())
   })
 
   test('validates and activates directly from Configure', async () => {
+    const user = userEvent.setup()
     global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: true } }) })
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    const activate = [...container.querySelectorAll('button')].find(button => button.textContent === 'Activate')
-    await act(async () => activate.click())
-    expect(global.fetch).toHaveBeenCalledTimes(1)
-    expect(JSON.parse(global.fetch.mock.calls[0][1].body).enabled).toBe(true)
-    expect(baseProps.getPromotions).toHaveBeenCalledWith(1, 10)
-    expect(container.textContent).toContain('Your promotions')
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Activate'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody().enabled).toBe(true)
+    await waitFor(() => expect(baseProps.getPromotions).toHaveBeenCalledWith(1, 10))
+    await waitFor(() => expect(container.textContent).toContain('Your promotions'))
     expect(container.textContent).not.toContain('Promotion name')
-    act(() => root.unmount())
   })
 
-  test('blocks save and activation in Configure before calling the API when fields are missing', () => {
-    global.fetch = vi.fn()
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    const activate = [...container.querySelectorAll('button')].find(button => button.textContent === 'Activate')
-    act(() => activate.click())
+  test('blocks save and activation in Configure before calling the API when fields are missing', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await user.click(buttonNamed('Activate'))
     expect(container.textContent).toContain('Enter a benefit greater than 0.')
     expect(container.textContent).toContain('Select a start date.')
     expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
   })
 
   test('blocks submission before the API when automatic sales-channel scope is unavailable', async () => {
-    global.fetch = vi.fn()
+    const user = userEvent.setup()
     const loadPromotionSites = vi.fn()
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        sitesState: { sites: [], loading: false, error: ['Channels unavailable'] },
-        loadPromotionSites
-      }
-    )
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft').click())
+    const { container } = await renderComponent(CURRENCY, {
+      sitesState: { sites: [], loading: false, error: ['Channels unavailable'] },
+      loadPromotionSites
+    })
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Save draft'))
 
     expect(container.textContent).toContain('Sales channels could not be loaded. Retry before saving.')
     expect(global.fetch).not.toHaveBeenCalled()
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent === 'Retry').click())
+    await user.click(buttonNamed('Retry'))
     expect(loadPromotionSites).toHaveBeenCalledTimes(1)
-    act(() => root.unmount())
   })
 
   test('allows saving when sales channels loaded successfully with an empty list', async () => {
+    const user = userEvent.setup()
     global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: false } }) })
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { sitesState: { sites: [], loading: false, error: null } }
-    )
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft').click())
+    const { container } = await renderComponent(CURRENCY, { sitesState: { sites: [], loading: false, error: null } })
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Save draft'))
 
-    expect(global.fetch).toHaveBeenCalledTimes(1)
-    const body = JSON.parse(global.fetch.mock.calls[0][1].body)
-    expect(body.enabled).toBe(false)
-    expect(body).not.toHaveProperty('sites')
-    expect(container.textContent).toContain('Your promotions')
-    act(() => root.unmount())
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody().enabled).toBe(false)
+    expect(lastBody()).not.toHaveProperty('sites')
+    await waitFor(() => expect(container.textContent).toContain('Your promotions'))
   })
 
-  test('keeps the builder open and creates no ghost card when saving fails', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      json: async () => ({ error: true, result: ['The offer could not be saved'] })
-    })
+  test('keeps the builder open and creates no ghost card when saving fails; the pressed button is busy, not relabelled', async () => {
+    const user = userEvent.setup()
+    let release
+    global.fetch = vi.fn(() => new Promise(resolve => { release = resolve }))
     const getPromotions = vi.fn()
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { getPromotions }
-    )
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    const saveDraft = [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft')
-    await act(async () => saveDraft.click())
-    expect(container.textContent).toContain('The offer could not be saved')
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    expect(container.querySelector('[data-promotion-id]')).toBeNull()
+    const { container } = await renderComponent(CURRENCY, { getPromotions })
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Save draft'))
+    // redesign PE-B4 (decision 6): `busy` on the button that was pressed instead of the «Loading...» text
+    expect(buttonNamed('Save draft')).toHaveAttribute('aria-busy', 'true')
+    expect(buttonNamed('Activate')).not.toHaveAttribute('aria-busy')
+    expect(buttonNamed('Activate')).toBeDisabled()
+    expect(container.textContent).not.toContain('Loading...')
+    await act(async () => {
+      release({ ok: false, json: async () => ({ error: true, result: ['The offer could not be saved'] }) })
+    })
+    expect(await screen.findByText('The offer could not be saved')).toBeInTheDocument()
+    expect(regionOf()).not.toBeNull()
+    expect(container.querySelector('[data-row-id]')).toBeNull()
     expect(getPromotions).not.toHaveBeenCalled()
-    act(() => root.unmount())
+    expect(buttonNamed('Save draft')).not.toHaveAttribute('aria-busy')
   })
 
   test('retries a failed atomic activation without creating a hidden draft', async () => {
+    const user = userEvent.setup()
     global.fetch = vi.fn()
       .mockResolvedValueOnce({ ok: false, json: async () => ({ error: true, result: ['Activation failed'] }) })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ error: false, result: { id: 77, enabled: true } }) })
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    let activate = [...container.querySelectorAll('button')].find(button => button.textContent === 'Activate')
-    await act(async () => activate.click())
-    expect(container.textContent).toContain('Activation failed')
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    activate = [...container.querySelectorAll('button')].find(button => button.textContent === 'Activate')
-    await act(async () => activate.click())
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Activate'))
+    expect(await screen.findByText('Activation failed')).toBeInTheDocument()
+    expect(regionOf()).not.toBeNull()
+    await user.click(buttonNamed('Activate'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2))
     expect(global.fetch.mock.calls.map(call => call[0])).toEqual([
       'https://api.test/offers',
       'https://api.test/offers'
     ])
-    expect(container.querySelector('[role="region"]')).toBeNull()
-    act(() => root.unmount())
+    await waitFor(() => expect(regionOf()).toBeNull())
   })
 
-  test('closes the builder with Escape without saving', () => {
-    global.fetch = vi.fn()
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    act(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })))
-    expect(container.querySelector('[role="region"]')).toBeNull()
-    expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
+  test('the business scope: all businesses by default, or a searchable checklist of the chosen ones', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+    const searchBusinesses = vi.fn()
+    const { container } = await renderComponent(CURRENCY, {
+      searchBusinesses,
+      businessesList: { businesses: [{ id: 10, name: 'Store One', slug: 'store-one' }, { id: 11, name: 'Store Two', slug: 'store-two' }], loading: false }
+    })
+    await openTemplate(user, container, 'first_order')
+    const scope = screen.getByRole('group', { name: 'Businesses' })
+    expect(within(scope).getByRole('button', { name: 'All businesses' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByRole('checkbox', { name: 'Store One' })).toBeNull()
+
+    await user.click(within(scope).getByRole('button', { name: 'Choose businesses' }))
+    expect(within(scope).getByRole('button', { name: 'Choose businesses' })).toHaveAttribute('aria-pressed', 'true')
+    const one = screen.getByRole('checkbox', { name: 'Store One' })
+    await user.click(one)
+    expect(one).toHaveAttribute('aria-checked', 'true')
+    expect(container.textContent).toContain('1 businesses selected')
+    await user.click(screen.getByRole('checkbox', { name: 'Store Two' }))
+    expect(container.textContent).toContain('2 businesses selected')
+    await user.click(one)
+    expect(one).toHaveAttribute('aria-checked', 'false')
+
+    // one request after the wait, not one per key (inventory D29)
+    const search = screen.getByRole('searchbox', { name: 'Search businesses' })
+    await user.type(search, 'sto')
+    expect(searchBusinesses).not.toHaveBeenCalled()
+    act(() => { vi.advanceTimersByTime(300) })
+    expect(searchBusinesses).toHaveBeenCalledTimes(1)
+    expect(searchBusinesses).toHaveBeenCalledWith('sto')
+
+    await user.click(within(scope).getByRole('button', { name: 'All businesses' }))
+    expect(screen.queryByRole('checkbox', { name: 'Store One' })).toBeNull()
   })
 
-  test('Escape dismisses a date interaction without closing the builder', () => {
-    global.fetch = vi.fn()
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    const startDate = container.querySelector('input[type="datetime-local"]')
-    act(() => startDate.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })))
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
+  test('the businesses of a long list are paged with the Product pager, without a size selector', async () => {
+    const user = userEvent.setup()
+    const handleChangeBusinessPage = vi.fn()
+    const { container } = await renderComponent(CURRENCY, {
+      handleChangeBusinessPage,
+      businessesPaginationProps: { currentPage: 2, totalPages: 3, totalItems: 25, pageSize: 10 }
+    })
+    await openTemplate(user, container, 'first_order')
+    await user.click(screen.getByRole('button', { name: 'Choose businesses' }))
+    const pager = screen.getByRole('navigation', { name: 'Pagination' })
+    expect(within(pager).queryByText('Items per page')).toBeNull()
+    await user.click(within(pager).getByRole('button', { name: 'Next page' }))
+    expect(handleChangeBusinessPage).toHaveBeenCalledWith(3)
+    await user.click(within(pager).getByRole('button', { name: 'Previous page' }))
+    expect(handleChangeBusinessPage).toHaveBeenLastCalledWith(1)
   })
 
-  test('asks before closing a builder that contains unsaved changes', () => {
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    setInputValue(container.querySelector('input'), 'Renamed offer')
-
-    act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })))
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    expect(container.querySelector('[role="dialog"]').getAttribute('aria-label')).toBe('Discard unsaved changes?')
-
-    act(() => [...container.querySelectorAll('[role="dialog"] button')].find(button => button.textContent === 'Keep editing').click())
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    act(() => root.unmount())
+  test('loyalty levels are checkboxes that stage the chosen ids', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 80, enabled: false } }) })
+    const loadJourneyLoyaltyLevels = vi.fn().mockResolvedValue([{ id: 4, name: 'Gold' }, { id: 5, name: 'Silver' }])
+    const { container } = await renderComponent(CURRENCY, { loadJourneyLoyaltyLevels })
+    await openTemplate(user, container, 'loyalty_reward')
+    const gold = await screen.findByRole('checkbox', { name: 'Gold' })
+    await user.click(gold)
+    expect(gold).toHaveAttribute('aria-checked', 'true')
+    await fill(user, numberField('Discount (%)'), '10')
+    await fill(user, numberField('Minimum purchase'), '20')
+    await fill(user, numberField('Maximum discount'), '5')
+    await pickDay(user, 'Start date', '01092026')
+    await pickDay(user, 'End date', '30092026')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody().loyalty_levels).toEqual([4])
   })
 
-  test('does not close the builder when a nested control already handled Escape', () => {
-    const { container, root } = renderComponent({ format_number_currency: { value: '$' } })
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
-    event.preventDefault()
-    act(() => window.dispatchEvent(event))
-    expect(container.querySelector('[role="region"]')).not.toBeNull()
-    act(() => root.unmount())
+  test('Happy hour uses the Product schedule editor on the same controller', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'slow_hours')
+    expect(screen.getByRole('heading', { level: 3, name: 'Schedule' })).toBeInTheDocument()
+    expect(container.querySelector('.odc-sched')).not.toBeNull()
+    expect(screen.getAllByRole('switch').length).toBeGreaterThanOrEqual(7)
+  })
+
+  test('inactive days is a number field that sets the minutes of the offer', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 81, enabled: false } }) })
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'winback')
+    await fill(user, numberField('Inactive days'), '30')
+    await fill(user, numberField('Discount (%)'), '10')
+    await fill(user, numberField('Minimum purchase'), '20')
+    await fill(user, numberField('Maximum discount'), '5')
+    await pickDay(user, 'Start date', '01092026')
+    await pickDay(user, 'End date', '30092026')
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+    expect(lastBody().valid_from_after_user_last_order_minutes).toBe(30 * 24 * 60)
   })
 
   test('recovers from an all-business load error instead of remaining stuck', async () => {
+    const user = userEvent.setup()
     const loadAllJourneyBusinesses = vi.fn()
       .mockRejectedValueOnce(new Error('Businesses unavailable'))
       .mockResolvedValueOnce([{ id: 10, name: 'Store One', slug: 'store-one' }])
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { loadAllJourneyBusinesses }
-    )
+    const { container } = await renderComponent(CURRENCY, { loadAllJourneyBusinesses })
     await act(async () => Promise.resolve())
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
+    await openTemplate(user, container, 'first_order')
     expect(container.textContent).toContain('Businesses unavailable')
 
-    await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Retry').click())
+    await user.click(buttonNamed('Retry'))
     expect(loadAllJourneyBusinesses).toHaveBeenCalledTimes(2)
-    expect(container.textContent).not.toContain('Businesses unavailable')
+    await waitFor(() => expect(container.textContent).not.toContain('Businesses unavailable'))
     expect(container.textContent).not.toContain('Loading businesses...')
-    act(() => root.unmount())
+  })
+})
+
+describe('PromotionJourneysListingUI · closing the builder', () => {
+  test('the close button is a named icon button and closes a clean builder at once', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await user.click(buttonNamed('Close'))
+    expect(regionOf()).toBeNull()
+    expect(screen.queryByRole('alertdialog')).toBeNull()
   })
 
-  test('opens an existing promotion in the same Quick Offers builder', () => {
-    const promotion = {
+  test('closes the builder with Escape without saving', async () => {
+    const { container } = await renderComponent(CURRENCY)
+    fireEvent.click(templateButton(container, 'first_order'))
+    expect(regionOf()).not.toBeNull()
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(regionOf()).toBeNull()
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  test('Escape inside a day picker closes only the picker, not the builder', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await user.click(dateTrigger('Start date'))
+    await screen.findByRole('dialog', { name: 'Select a date' })
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Select a date' })).toBeNull())
+    expect(regionOf()).not.toBeNull()
+    expect(screen.queryByRole('alertdialog')).toBeNull()
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  // Owner decision 22 B (2026-10-21, T-1): the builder's guard is lent to the page's tabs, so Quick → Advanced asks before it drops the typing
+  test('registers a guard that asks before leaving a dirty builder, and proceeds after Discard (owner decision 22)', async () => {
+    const user = userEvent.setup()
+    let guard = null
+    const registerLeaveGuard = vi.fn(next => { guard = next })
+    const { container } = await renderComponent(CURRENCY, { registerLeaveGuard })
+    const proceed = vi.fn()
+    act(() => { guard(proceed) })
+    expect(proceed).toHaveBeenCalledTimes(1)
+
+    await openTemplate(user, container, 'first_order')
+    await user.type(screen.getByRole('textbox', { name: 'Promotion name' }), ' 2')
+    proceed.mockClear()
+    act(() => { guard(proceed) })
+    const dialog = await screen.findByRole('alertdialog', { name: 'Discard unsaved changes?' })
+    expect(proceed).not.toHaveBeenCalled()
+    await user.click(within(dialog).getByRole('button', { name: 'Keep editing' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(proceed).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox', { name: 'Promotion name' }).value).toMatch(/ 2$/)
+
+    act(() => { guard(proceed) })
+    await user.click(within(await screen.findByRole('alertdialog', { name: 'Discard unsaved changes?' })).getByRole('button', { name: 'Discard' }))
+    await waitFor(() => expect(proceed).toHaveBeenCalledTimes(1))
+  })
+
+  test('asks before closing a builder that contains unsaved changes, with the focus on Keep editing', async () => {
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    await user.type(screen.getByRole('textbox', { name: 'Promotion name' }), ' 2')
+
+    fireEvent.keyDown(window, { key: 'Escape' })
+    const dialog = await screen.findByRole('alertdialog', { name: 'Discard unsaved changes?' })
+    expect(regionOf()).not.toBeNull()
+    expect(dialog).toHaveTextContent('Your promotion changes have not been saved.')
+    await waitFor(() => expect(within(dialog).getByRole('button', { name: 'Keep editing' })).toHaveFocus())
+
+    await user.click(within(dialog).getByRole('button', { name: 'Keep editing' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(regionOf()).not.toBeNull()
+
+    await user.click(buttonNamed('Cancel'))
+    await user.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Discard' }))
+    await waitFor(() => expect(regionOf()).toBeNull())
+  })
+
+  test('does not close the builder when a nested control already handled Escape', async () => {
+    const { container } = await renderComponent(CURRENCY)
+    fireEvent.click(templateButton(container, 'first_order'))
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })
+    event.preventDefault()
+    act(() => { window.dispatchEvent(event) })
+    expect(regionOf()).not.toBeNull()
+  })
+})
+
+describe('PromotionJourneysListingUI · editing an existing promotion', () => {
+  const existing = {
+    id: 99,
+    name: 'Existing welcome offer',
+    rate: 20,
+    rate_type: 1,
+    minimum: 30,
+    limit_per_user: 1,
+    start: '2026-09-01 09:00:00',
+    end: '2026-09-30 22:00:00',
+    include_options: true,
+    user_order_count: 0,
+    user_order_count_condition: '=',
+    businesses: []
+  }
+
+  test('opens an existing promotion in the same Quick Offers builder', async () => {
+    const user = userEvent.setup()
+    await renderComponent(CURRENCY, { promotionListState: { promotions: [existing], loading: false, error: null } })
+    await user.click(buttonNamed('Edit promotion'))
+    expect(screen.getByRole('heading', { level: 2, name: 'Edit promotion' })).toBeInTheDocument()
+    expect(document.body.textContent).toContain('Customers with exactly 0 orders')
+    expect(screen.getByRole('textbox', { name: 'Promotion name' })).toHaveValue('Existing welcome offer')
+    expect(within(screen.getByRole('group', { name: 'Product options' })).getByRole('button', { name: 'Include' })).toHaveAttribute('aria-pressed', 'true')
+    // the stored day and time come into the pickers in the project's format
+    expect(dateTrigger('Start date')).toHaveTextContent('01/09/2026')
+    expect(timeSelect('Start time Hour')).toHaveValue('9')
+    expect(timeSelect('End time Hour')).toHaveValue('22')
+    expect(document.body.textContent).not.toContain('Manage in Advanced Offers')
+  })
+
+  // a description saved by an older version carries raw stamps; the textarea shows them as dates
+  describe('with a legacy description that carries ISO stamps', () => {
+    const legacy = {
       id: 99,
-      name: 'Existing welcome offer',
+      name: 'Legacy welcome offer',
+      description: 'Customers with exactly 0 orders receive 20% off, from 2026-09-01T16:57 to 2026-09-30T16:57.',
+      enabled: false,
+      auto: true,
+      type: 1,
+      condition_type: 1,
+      target: 1,
       rate: 20,
       rate_type: 1,
       minimum: 30,
+      max_discount: 20,
       limit_per_user: 1,
-      start: '2026-09-01 09:00:00',
-      end: '2026-09-30 22:00:00',
-      include_options: true,
+      start: '2026-09-01 16:57:00',
+      end: '2026-09-30 16:57:00',
       user_order_count: 0,
       user_order_count_condition: '=',
-      businesses: []
+      businesses: [{ id: 10 }]
     }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [promotion], loading: false, error: null } }
-    )
-    const editPromotion = [...container.querySelectorAll('button')].find(button => button.textContent.includes('Edit promotion'))
-    act(() => editPromotion.click())
-    expect(container.textContent).toContain('Edit promotion')
-    expect(container.textContent).toContain('Customers with exactly 0 orders')
-    expect(container.querySelector('input').value).toBe('Existing welcome offer')
-    const productOptionsSelect = [...container.querySelectorAll('select')]
-      .find(select => [...select.options].some(option => option.textContent === 'Include product options'))
-    expect(productOptionsSelect.value).toBe('include')
-    expect(container.textContent).not.toContain('Manage in Advanced Offers')
-    act(() => root.unmount())
+    const openLegacy = async () => {
+      const user = userEvent.setup()
+      global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 99, enabled: false } }) })
+      await renderComponent(CURRENCY, { promotionListState: { promotions: [legacy], loading: false, error: null } })
+      await user.click(buttonNamed('Edit promotion'))
+      return user
+    }
+
+    test('the Description textarea shows the stamps as dates in the project format', async () => {
+      await openLegacy()
+      const textarea = screen.getByRole('textbox', { name: /^Description/ })
+      expect(textarea.value).not.toMatch(/\d{4}-\d{2}-\d{2}T/)
+      expect(textarea.value).toBe('Customers with exactly 0 orders receive 20% off, from 01/09/2026 16:57 to 30/09/2026 16:57.')
+    })
+
+    test('saving without touching the textarea does not send the description', async () => {
+      const user = await openLegacy()
+      const name = screen.getByRole('textbox', { name: 'Promotion name' })
+      await user.clear(name)
+      await user.type(name, 'Renamed legacy offer')
+      await user.click(buttonNamed('Save changes'))
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+      expect(lastBody()).toEqual({ name: 'Renamed legacy offer', enabled: false })
+    })
+
+    test('when the person edits the textarea, what they see is what is sent', async () => {
+      const user = await openLegacy()
+      const textarea = screen.getByRole('textbox', { name: /^Description/ })
+      await user.type(textarea, ' Weekends only.')
+      await user.click(buttonNamed('Save changes'))
+      await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
+      expect(lastBody()).toEqual({
+        description: 'Customers with exactly 0 orders receive 20% off, from 01/09/2026 16:57 to 30/09/2026 16:57. Weekends only.',
+        enabled: false
+      })
+    })
+  })
+
+  // the live dictionary has START_DATE = «Start Date» (and END_DATE = «End Date»); the builder has its own keys
+  test('labels the dates «Start date» and «End date» even when the dictionary writes START_DATE as «Start Date»', async () => {
+    hookState.dictionary = { START_DATE: 'Start Date', END_DATE: 'End Date' }
+    const user = userEvent.setup()
+    const { container } = await renderComponent(CURRENCY)
+    await openTemplate(user, container, 'first_order')
+    expect(dateTrigger('Start date')).toBeInTheDocument()
+    expect(dateTrigger('End date')).toBeInTheDocument()
+    expect(screen.queryByRole('combobox', { name: /^Start Date/ })).toBeNull()
+    expect(screen.queryByRole('combobox', { name: /^End Date/ })).toBeNull()
   })
 
   test.each([
     ['product', { condition_type: 2, products: [{ id: 22, business_id: 10, pivot: { include: 0 } }] }],
     ['category', { condition_type: 3, categories: [{ id: 7, business_id: 10, include: false }] }]
-  ])('routes an existing promotion with an excluded %s to Advanced Offers', (_relationship, relationshipState) => {
+  ])('routes an existing promotion with an excluded %s to Advanced Offers', async (_relationship, relationshipState) => {
+    const user = userEvent.setup()
     const onOpenAdvancedPromotion = vi.fn()
     const promotion = {
       id: 99,
@@ -545,27 +969,21 @@ describe('PromotionJourneysListingUI', () => {
       businesses: [{ id: 10 }],
       ...relationshipState
     }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        promotionListState: { promotions: [promotion], loading: false, error: null },
-        onOpenAdvancedPromotion
-      }
-    )
+    await renderComponent(CURRENCY, {
+      promotionListState: { promotions: [promotion], loading: false, error: null },
+      onOpenAdvancedPromotion
+    })
 
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent.includes('Edit promotion')).click())
+    await user.click(buttonNamed('Edit promotion'))
 
     expect(onOpenAdvancedPromotion).toHaveBeenCalledWith(promotion)
-    expect(container.querySelector('[role="region"]')).toBeNull()
-    expect(container.textContent).not.toContain('Save changes')
-    act(() => root.unmount())
+    expect(regionOf()).toBeNull()
+    expect(document.body.textContent).not.toContain('Save changes')
   })
 
   test('turns off hidden product options when updating an existing Buy X, get Y promotion', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 99, enabled: false } })
-    })
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 99, enabled: false } }) })
     const promotion = {
       id: 99,
       name: 'Legacy options-included BOGO',
@@ -583,37 +1001,32 @@ describe('PromotionJourneysListingUI', () => {
       products: [{ id: 22, business_id: 10 }]
     }
     const onOpenAdvancedPromotion = vi.fn()
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        promotionListState: { promotions: [promotion], loading: false, error: null },
-        onOpenAdvancedPromotion
-      }
-    )
+    await renderComponent(CURRENCY, {
+      promotionListState: { promotions: [promotion], loading: false, error: null },
+      onOpenAdvancedPromotion
+    })
 
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent.includes('Edit promotion')).click())
+    await user.click(buttonNamed('Edit promotion'))
     expect(onOpenAdvancedPromotion).not.toHaveBeenCalled()
-    expect(container.textContent).toContain('Extra option charges will not be discounted.')
-    expect([...container.querySelectorAll('select')].some(select =>
-      [...select.options].some(option => option.textContent === 'Include product options')
-    )).toBe(false)
+    expect(document.body.textContent).toContain('Extra option charges will not be discounted.')
+    expect(screen.queryByRole('group', { name: 'Product options' })).toBeNull()
 
-    setInputValue(container.querySelector('input'), 'Renamed legacy BOGO')
-    await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save changes').click())
+    const name = screen.getByRole('textbox', { name: 'Promotion name' })
+    await user.clear(name)
+    await user.type(name, 'Renamed legacy BOGO')
+    await user.click(buttonNamed('Save changes'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
 
-    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({
+    expect(lastBody()).toEqual({
       name: 'Renamed legacy BOGO',
       include_options: false,
       enabled: false
     })
-    act(() => root.unmount())
   })
 
   test('saving changes preserves the enabled state of an existing active promotion', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 99, enabled: true } })
-    })
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 99, enabled: true } }) })
     const promotion = {
       id: 99,
       name: 'Active welcome offer',
@@ -633,42 +1046,158 @@ describe('PromotionJourneysListingUI', () => {
       user_order_count_condition: '=',
       businesses: [{ id: 10 }]
     }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        promotionListState: { promotions: [promotion], loading: false, error: null },
-        paginationProps: { currentPage: 3, pageSize: 10, totalPages: 3, totalItems: 25 }
-      }
-    )
+    await renderComponent(CURRENCY, {
+      promotionListState: { promotions: [promotion], loading: false, error: null },
+      paginationProps: { currentPage: 3, pageSize: 10, totalPages: 3, totalItems: 25 }
+    })
 
-    act(() => [...container.querySelectorAll('button')].find(button => button.textContent.includes('Edit promotion')).click())
-    setInputValue(container.querySelector('input'), 'Renamed active offer')
-    await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save changes').click())
+    await user.click(buttonNamed('Edit promotion'))
+    const name = screen.getByRole('textbox', { name: 'Promotion name' })
+    await user.clear(name)
+    await user.type(name, 'Renamed active offer')
+    await user.click(buttonNamed('Save changes'))
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1))
 
     expect(global.fetch).toHaveBeenCalledWith('https://api.test/offers/99', expect.objectContaining({ method: 'POST' }))
-    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({ name: 'Renamed active offer', enabled: true })
-    expect(baseProps.getPromotions).toHaveBeenCalledWith(3, 10)
-    expect(container.textContent).toContain('Promotion templates')
-    act(() => root.unmount())
+    expect(lastBody()).toEqual({ name: 'Renamed active offer', enabled: true })
+    await waitFor(() => expect(baseProps.getPromotions).toHaveBeenCalledWith(3, 10))
+    await waitFor(() => expect(document.body.textContent).toContain('Promotion templates'))
+  })
+})
+
+// redesign (row 81, review r1 R7, R8): the day picker and the row buttons against main
+describe('PromotionJourneysListingUI · gaps against main (R7, R8)', () => {
+  // a day already set is in the box: clear it first, then type the new one
+  const replaceDay = async (user, name, digits) => {
+    await user.click(dateTrigger(name))
+    const dialog = await screen.findByRole('dialog', { name: 'Select a date' })
+    const box = within(dialog).getByRole('textbox')
+    await user.clear(box)
+    await user.type(box, digits)
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Select a date' })).toBeNull())
+  }
+
+  const existing = {
+    id: 99,
+    name: 'Existing welcome offer',
+    rate: 20,
+    rate_type: 1,
+    minimum: 30,
+    limit_per_user: 1,
+    start: '2026-09-01 09:00:00',
+    end: '2026-09-30 22:00:00',
+    include_options: true,
+    user_order_count: 0,
+    user_order_count_condition: '=',
+    businesses: []
+  }
+
+  test('picking the day that is already set does not make the form dirty (R7)', async () => {
+    const user = userEvent.setup()
+    await renderComponent(CURRENCY, { promotionListState: { promotions: [existing], loading: false, error: null } })
+    await user.click(buttonNamed('Edit promotion'))
+    await replaceDay(user, 'Start date', '01092026')
+    expect(dateTrigger('Start date')).toHaveTextContent('01/09/2026')
+    await user.click(buttonNamed('Cancel'))
+    // nothing changed: the builder closes with no question
+    expect(screen.queryByRole('alertdialog')).toBeNull()
+    await waitFor(() => expect(regionOf()).toBeNull())
+  })
+
+  test('picking another day still dirties the form (R7 kept the guard)', async () => {
+    const user = userEvent.setup()
+    await renderComponent(CURRENCY, { promotionListState: { promotions: [existing], loading: false, error: null } })
+    await user.click(buttonNamed('Edit promotion'))
+    await replaceDay(user, 'Start date', '02092026')
+    expect(dateTrigger('Start date')).toHaveTextContent('02/09/2026')
+    await user.click(buttonNamed('Cancel'))
+    expect(await screen.findByRole('alertdialog', { name: 'Discard unsaved changes?' })).toBeInTheDocument()
+  })
+
+  test('the Delete of a row is disabled while that row\'s switch saves, the others stay on (R8)', async () => {
+    const user = userEvent.setup()
+    let finish
+    const updateJourneyStatus = vi.fn(() => new Promise(resolve => { finish = resolve }))
+    await renderComponent(CURRENCY, {
+      updateJourneyStatus,
+      promotionListState: { promotions: [{ ...existing, enabled: false }, { ...existing, id: 100, name: 'Second offer', enabled: false }], loading: false, error: null }
+    })
+    await user.click(screen.getByRole('switch', { name: 'Enable Existing welcome offer' }))
+    await waitFor(() => expect(updateJourneyStatus).toHaveBeenCalledTimes(1))
+    expect(screen.getByRole('button', { name: 'Delete Existing welcome offer' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Delete Second offer' })).not.toBeDisabled()
+    await act(async () => { finish({}) })
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Delete Existing welcome offer' })).not.toBeDisabled())
+  })
+})
+
+describe('PromotionJourneysListingUI · Your promotions (the shared list)', () => {
+  test('shows the promotions in the shared list with a status in words worked out from the switch and the dates', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-09-15T12:00:00'))
+    const promotions = [
+      { id: 1, name: 'Running offer', description: 'Now', enabled: true, start: '2026-09-01 00:00:00', end: '2026-09-30 23:59:59', rate_type: 1, rate: 10 },
+      { id: 2, name: 'Coming offer', description: 'Soon', enabled: true, start: '2026-10-01 00:00:00', end: '2026-10-31 23:59:59', rate_type: 1, rate: 10 },
+      { id: 3, name: 'Past offer', description: 'Then', enabled: true, start: '2026-08-01 00:00:00', end: '2026-08-31 23:59:59', rate_type: 1, rate: 10 },
+      { id: 4, name: 'Paused offer', description: 'Never', enabled: false, start: '2026-09-01 00:00:00', end: '2026-09-30 23:59:59', rate_type: 1, rate: 10 }
+    ]
+    const { container } = await renderComponent(CURRENCY, {
+      promotionListState: { promotions, loading: false, error: null },
+      paginationProps: { currentPage: 1, pageSize: 10, totalPages: 1, totalItems: 4 }
+    })
+    const row = id => container.querySelector(`[data-row-id="${id}"]`)
+    expect(row(1)).toHaveTextContent('Active')
+    expect(row(2)).toHaveTextContent('Scheduled')
+    expect(row(3)).toHaveTextContent('Ended')
+    expect(row(4)).toHaveTextContent('Off')
+    // the description stays on the row (it was the main datum of the card), the dates are the project's, never ISO
+    expect(row(1)).toHaveTextContent('Now')
+    expect(row(1)).toHaveTextContent(util.parseDate('2026-09-01 00:00:00', { utc: false, dateOnly: true }))
+    expect(container.querySelector('tbody').textContent).not.toMatch(/\d{4}-\d{2}-\d{2}/)
+    expect(screen.getByRole('heading', { level: 2, name: 'Your promotions' })).toBeInTheDocument()
+  })
+
+  test('the search box sends the text once, after the wait, and shares the controller state with Advanced', async () => {
+    vi.useFakeTimers()
+    const onSearch = vi.fn()
+    await renderComponent(CURRENCY, { onSearch, searchValue: '', promotionListState: { promotions: [welcome], loading: false, error: null } })
+    const search = screen.getByRole('searchbox', { name: 'Search promotions' })
+    fireEvent.change(search, { target: { value: 'wel' } })
+    fireEvent.change(search, { target: { value: 'welc' } })
+    act(() => { vi.advanceTimersByTime(749) })
+    expect(onSearch).not.toHaveBeenCalled()
+    act(() => { vi.advanceTimersByTime(1) })
+    expect(onSearch).toHaveBeenCalledTimes(1)
+    expect(onSearch).toHaveBeenCalledWith('welc')
+  })
+
+  test('an empty result of a search says so and Clear search asks for the whole list', async () => {
+    const user = userEvent.setup()
+    const onSearch = vi.fn()
+    await renderComponent(CURRENCY, { onSearch, searchValue: 'zzz', promotionListState: { promotions: [], loading: false, error: null } })
+    expect(screen.getByText('No promotions match your search')).toBeInTheDocument()
+    // the empty result brings its own «Clear search» (the search box has one too: both ask for the whole list)
+    const emptyState = screen.getByText('No promotions match your search').closest('.odc-state')
+    await user.click(within(emptyState).getByRole('button', { name: 'Clear search' }))
+    expect(onSearch).toHaveBeenCalledWith('')
+  })
+
+  test('says so when there is nothing yet', async () => {
+    await renderComponent(CURRENCY)
+    expect(screen.getByText('No promotions yet. Choose a template to create your first draft.')).toBeInTheDocument()
   })
 
   test('toggles a promotion without opening the editor or losing scroll position', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 99, enabled: true } })
-    })
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 99, enabled: true } }) })
     const scrollElement = document.scrollingElement || document.documentElement
     const getPromotions = vi.fn().mockImplementation(async () => {
       scrollElement.scrollTop = 0
     })
-    const promotion = { id: 99, name: 'Welcome offer', description: 'Description', enabled: false }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [promotion], loading: false, error: null }, getPromotions }
-    )
+    await renderComponent(CURRENCY, { promotionListState: { promotions: [welcome], loading: false, error: null }, getPromotions })
     scrollElement.scrollTop = 650
-    const toggle = container.querySelector('[role="switch"]')
-    await act(async () => toggle.click())
+    await user.click(screen.getByRole('switch', { name: 'Enable Welcome offer' }))
     await act(async () => new Promise(resolve => window.requestAnimationFrame(resolve)))
     expect(global.fetch).toHaveBeenCalledWith('https://api.test/offers/99', expect.objectContaining({
       method: 'POST',
@@ -676,112 +1205,115 @@ describe('PromotionJourneysListingUI', () => {
     }))
     expect(getPromotions).toHaveBeenCalledWith(1, 10)
     expect(scrollElement.scrollTop).toBe(650)
-    expect(container.textContent).not.toContain('Promotion name')
-    act(() => root.unmount())
+    expect(regionOf()).toBeNull()
+    expect(document.body.textContent).not.toContain('Promotion name')
   })
 
-  test('reports a toggle API error and leaves the page usable', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      json: async () => ({ error: true, result: ['Status update failed'] })
-    })
-    const promotion = { id: 99, name: 'Welcome offer', description: 'Description', enabled: false }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [promotion], loading: false, error: null } }
-    )
-    await act(async () => container.querySelector('[role="switch"]').click())
-    expect(container.textContent).toContain('Status update failed')
-    expect(container.textContent).toContain('Welcome offer')
+  test('a failed toggle keeps the switch where it was and says why in the row, with no page-level alert (decision 4, PE-03)', async () => {
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: false, json: async () => ({ error: true, result: ['Status update failed'] }) })
+    const getPromotions = vi.fn()
+    const { container } = await renderComponent(CURRENCY, { promotionListState: { promotions: [welcome], loading: false, error: null }, getPromotions })
+    await user.click(screen.getByRole('switch', { name: 'Enable Welcome offer' }))
+    const message = await screen.findByText('Status update failed')
+    expect(container.querySelector('[data-row-id="99"]')).toContainElement(message)
+    expect(screen.getByRole('switch', { name: 'Enable Welcome offer' })).not.toBeChecked()
+    expect(getPromotions).not.toHaveBeenCalled()
+    // the page is usable and the message is the row's, not a banner above the list
     expect(container.querySelector('[data-testid="promotion-journeys"]')).not.toBeNull()
-    act(() => root.unmount())
+    expect(container.querySelector('section > [role="alert"]')).toBeNull()
+    expect(container.textContent).toContain('Welcome offer')
   })
 
-  test('asks for confirmation and cancels without deleting the promotion', () => {
-    global.fetch = vi.fn()
-    const promotion = { id: 99, name: 'Welcome offer', description: 'Description', enabled: false }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [promotion], loading: false, error: null } }
-    )
+  // redesign review r1 (R4): main ignored a press while another toggle was saving, silently; no failure notice for a request never sent
+  test('a press while another toggle is saving is ignored, with no failure notice', async () => {
+    const user = userEvent.setup()
+    let release
+    global.fetch = vi.fn().mockImplementation(() => new Promise(resolve => { release = () => resolve({ ok: true, json: async () => ({ error: false, result: { id: 99, enabled: true } }) }) }))
+    const other = { ...welcome, id: 100, name: 'Other offer' }
+    const { container } = await renderComponent(CURRENCY, { promotionListState: { promotions: [welcome, other], loading: false, error: null }, getPromotions: vi.fn() })
+    await user.click(screen.getByRole('switch', { name: 'Enable Welcome offer' }))
+    await user.click(screen.getByRole('switch', { name: 'Enable Other offer' }))
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+    expect(container.querySelector('[data-row-id="100"]').textContent).not.toContain("We couldn't change this promotion")
+    await act(async () => { release() })
+  })
 
-    act(() => container.querySelector('button[aria-label="Delete Welcome offer"]').click())
-    expect(container.querySelector('[role="dialog"]').textContent).toContain('Are you sure that you want to delete the offer?')
-    act(() => [...container.querySelectorAll('[role="dialog"] button')].find(button => button.textContent === 'Cancel').click())
+  test('asks for confirmation naming the promotion, and cancels without deleting it', async () => {
+    const user = userEvent.setup()
+    await renderComponent(CURRENCY, { promotionListState: { promotions: [welcome], loading: false, error: null } })
 
+    await user.click(buttonNamed('Delete Welcome offer'))
+    const dialog = await screen.findByRole('alertdialog', { name: 'Delete "Welcome offer"?' })
+    expect(dialog).toHaveTextContent("This can't be undone.")
+    expect(within(dialog).getByRole('button', { name: 'Delete promotion' })).toBeInTheDocument()
+    await waitFor(() => expect(within(dialog).getByRole('button', { name: 'Cancel' })).toHaveFocus())
+    await user.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(global.fetch).not.toHaveBeenCalled()
-    expect(container.querySelector('[role="dialog"]')).toBeNull()
-    expect(container.textContent).toContain('Welcome offer')
+    expect(document.body.textContent).toContain('Welcome offer')
 
-    act(() => container.querySelector('button[aria-label="Delete Welcome offer"]').click())
-    act(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })))
-    expect(container.querySelector('[role="dialog"]')).toBeNull()
+    await user.click(buttonNamed('Delete Welcome offer'))
+    await screen.findByRole('alertdialog')
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
     expect(global.fetch).not.toHaveBeenCalled()
-    act(() => root.unmount())
+    expect(regionOf()).toBeNull()
   })
 
   test('deletes once, refreshes the correct page and reports success', async () => {
+    const user = userEvent.setup()
     let resolveDelete
     global.fetch = vi.fn(() => new Promise(resolve => { resolveDelete = resolve }))
     const getPromotions = vi.fn()
     const handleSuccessDeletePromotion = vi.fn()
     const promotion = { id: 99, name: 'Last page offer', description: 'Description', enabled: false }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        promotionListState: { promotions: [promotion], loading: false, error: null },
-        paginationProps: { currentPage: 2, pageSize: 10, totalPages: 2, totalItems: 11 },
-        getPromotions,
-        handleSuccessDeletePromotion
-      }
-    )
-
-    act(() => container.querySelector('button[aria-label="Delete Last page offer"]').click())
-    const acceptDelete = [...container.querySelectorAll('[role="dialog"] button')].find(button => button.textContent === 'Delete')
-    await act(async () => {
-      acceptDelete.click()
-      await Promise.resolve()
+    await renderComponent(CURRENCY, {
+      promotionListState: { promotions: [promotion], loading: false, error: null },
+      paginationProps: { currentPage: 2, pageSize: 10, totalPages: 2, totalItems: 11 },
+      getPromotions,
+      handleSuccessDeletePromotion
     })
-    act(() => [...container.querySelectorAll('[role="dialog"] button')].find(button => button.textContent === 'Loading...').click())
+
+    await user.click(buttonNamed('Delete Last page offer'))
+    const dialog = await screen.findByRole('alertdialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Delete promotion' }))
+    // busy: the same button cannot fire a second request
+    expect(within(dialog).getByRole('button', { name: 'Delete promotion' })).toHaveAttribute('aria-busy', 'true')
+    await user.click(within(dialog).getByRole('button', { name: 'Delete promotion' }))
     expect(global.fetch).toHaveBeenCalledTimes(1)
 
     await act(async () => {
       resolveDelete({ ok: true, status: 200, json: async () => ({ error: false, result: { id: 99 } }) })
-      await Promise.resolve()
-      await Promise.resolve()
     })
 
     expect(global.fetch).toHaveBeenCalledWith('https://api.test/offers/99', expect.objectContaining({ method: 'DELETE' }))
     expect(handleSuccessDeletePromotion).toHaveBeenCalledWith(99)
     expect(getPromotions).toHaveBeenCalledWith(1, 10)
     expect(hookState.showToast).toHaveBeenCalledWith('success', 'Promotion deleted')
-    expect(container.querySelector('[role="dialog"]')).toBeNull()
-    act(() => root.unmount())
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
   })
 
   test('keeps the confirmation and promotion available after a delete error', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 422,
-      json: async () => ({ error: true, result: ['Offer is in use'] })
-    })
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 422, json: async () => ({ error: true, result: ['Offer is in use'] }) })
     const promotion = { id: 99, name: 'Protected offer', description: 'Description', enabled: true }
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [promotion], loading: false, error: null } }
-    )
+    const { container } = await renderComponent(CURRENCY, { promotionListState: { promotions: [promotion], loading: false, error: null } })
 
-    act(() => container.querySelector('button[aria-label="Delete Protected offer"]').click())
-    await act(async () => [...container.querySelectorAll('[role="dialog"] button')].find(button => button.textContent === 'Delete').click())
+    await user.click(buttonNamed('Delete Protected offer'))
+    const dialog = await screen.findByRole('alertdialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Delete promotion' }))
 
-    expect(container.querySelector('[role="dialog"]')).not.toBeNull()
-    expect(container.querySelector('[role="alert"]').textContent).toContain('Offer is in use')
+    expect(await within(dialog).findByText('Offer is in use')).toBeInTheDocument()
+    expect(within(dialog).getByRole('alert')).toHaveTextContent('Offer is in use')
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument()
     expect(container.textContent).toContain('Protected offer')
     expect(container.querySelector('[data-testid="promotion-journeys"]')).not.toBeNull()
-    act(() => root.unmount())
   })
 
-  test('shows at most ten promotions and requests page two for item eleven', () => {
+  test('shows at most ten promotions and requests page two for item eleven', async () => {
+    const user = userEvent.setup()
     const promotions = Array.from({ length: 11 }, (_, index) => ({
       id: index + 1,
       name: `Promotion ${index + 1}`,
@@ -789,95 +1321,51 @@ describe('PromotionJourneysListingUI', () => {
       enabled: false
     }))
     const getPromotions = vi.fn()
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      {
-        promotionListState: { promotions, loading: false, error: null },
-        paginationProps: { currentPage: 1, pageSize: 10, totalPages: 2, totalItems: 11 },
-        getPromotions
-      }
-    )
-    expect(container.querySelectorAll('[role="switch"]')).toHaveLength(10)
-    expect(container.textContent).toContain('1 / 2')
-    const next = [...container.querySelectorAll('button')].find(button => button.textContent === 'Next')
-    act(() => next.click())
+    const { container } = await renderComponent(CURRENCY, {
+      promotionListState: { promotions, loading: false, error: null },
+      paginationProps: { currentPage: 1, pageSize: 10, totalPages: 2, totalItems: 11 },
+      getPromotions
+    })
+    expect(screen.getAllByRole('switch')).toHaveLength(10)
+    expect(container.querySelector('[data-row-id="11"]')).toBeNull()
+    // the pager of the shared list: no size selector (Quick keeps its ten)
+    expect(screen.queryByText('Items per page')).toBeNull()
+    await user.click(screen.getByRole('button', { name: 'Next page' }))
     expect(getPromotions).toHaveBeenCalledWith(2, 10)
-    act(() => root.unmount())
   })
 
   test('refreshes page one and keeps the newly created promotion visible', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ error: false, result: { id: 77, name: 'First purchase', enabled: false } })
-    })
+    const user = userEvent.setup()
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ error: false, result: { id: 77, name: 'First purchase', enabled: false } }) })
     const getPromotions = vi.fn()
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { getPromotions }
-    )
-    act(() => container.querySelector('[data-template-key="first_order"]').click())
-    await completeFirstPurchase(container)
-    const saveDraft = [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft')
-    await act(async () => saveDraft.click())
+    const { container } = await renderComponent(CURRENCY, { getPromotions })
+    await openTemplate(user, container, 'first_order')
+    await completeFirstPurchase(user)
+    await user.click(buttonNamed('Save draft'))
+    await waitFor(() => expect(regionOf()).toBeNull())
     expect(getPromotions.mock.calls).toEqual([[1, 10]])
-    expect(container.querySelector('[role="region"]')).toBeNull()
-    expect(container.textContent).toContain('First purchase')
-    act(() => root.unmount())
+    expect(container.textContent).toContain('Promotion templates')
   })
 
-  test('creating from page two puts the new card first through the real controller', async () => {
-    hookState.configs = { format_number_currency: { value: '$' } }
-    const offers = Array.from({ length: 23 }, (_, index) => ({ id: index + 1, name: `Existing offer ${index + 1}`, description: 'Existing', enabled: false }))
-    global.fetch = vi.fn(async (endpoint, options) => {
-      const url = new URL(endpoint)
-      if (url.pathname === '/offers' && options.method === 'POST') {
-        const promotion = { ...JSON.parse(options.body), id: 24 }
-        offers.push(promotion)
-        return { ok: true, json: async () => ({ error: false, result: promotion }) }
-      }
-      if (url.pathname === '/offers') {
-        const page = Number(url.searchParams.get('page'))
-        const pageSize = Number(url.searchParams.get('page_size'))
-        const sorted = url.searchParams.get('orderBy') === '-id' ? [...offers].reverse() : offers
-        return { json: async () => ({ error: false, result: sorted.slice((page - 1) * pageSize, page * pageSize), pagination: { current_page: page, page_size: pageSize, total: offers.length, total_pages: Math.ceil(offers.length / pageSize) } }) }
-      }
-      const result = url.pathname === '/sites'
-        ? [{ id: 3, name: 'Website' }]
-        : url.pathname === '/backoffice/businesses' ? [{ id: 10, name: 'Store One', slug: 'store-one' }] : []
-      return { ok: true, json: async () => ({ error: false, result }) }
+  test('a list that cannot load keeps the templates in view and shows the error with Retry on the current page (decision 3)', async () => {
+    const user = userEvent.setup()
+    const getPromotions = vi.fn()
+    const { container } = await renderComponent(CURRENCY, {
+      promotionListState: { promotions: [], loading: false, error: ['Advanced Offers is not available'] },
+      paginationProps: { currentPage: 3, pageSize: 10, totalPages: 3, totalItems: 25 },
+      getPromotions
     })
-    const container = document.createElement('div')
-    document.body.appendChild(container)
-    const root = createRoot(container)
-    try {
-      await act(async () => root.render(<ThemeProvider theme={theme}><PromotionJourneysListing /></ThemeProvider>))
-      expect(container.querySelector('[data-promotion-id]').getAttribute('data-promotion-id')).toBe('23')
-      await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Next').click())
-      expect(container.textContent).toContain('2 / 3')
-      act(() => container.querySelector('[data-template-key="first_order"]').click())
-      await completeFirstPurchase(container)
-      setInputValue(container.querySelector('input'), 'Brand new offer')
-      await act(async () => [...container.querySelectorAll('button')].find(button => button.textContent === 'Save draft').click())
-      const cards = container.querySelectorAll('[data-promotion-id]')
-      expect(cards).toHaveLength(10)
-      expect(cards[0].getAttribute('data-promotion-id')).toBe('24')
-      expect(cards[0].querySelector('h3').textContent).toBe('Brand new offer')
-      expect(container.textContent).toContain('1 / 3')
-      const requests = global.fetch.mock.calls.filter(([endpoint, options]) => new URL(endpoint).pathname === '/offers' && options.method === 'GET')
-      expect(requests.map(([endpoint]) => new URL(endpoint).searchParams.get('page'))).toEqual(['1', '2', '1'])
-      expect(requests.map(([endpoint]) => new URL(endpoint).searchParams.get('orderBy'))).toEqual(['-id', '-id', '-id'])
-    } finally {
-      act(() => root.unmount())
-    }
+    expect(templateButton(container, 'first_order')).not.toBeNull()
+    expect(container.querySelectorAll('[data-template-key]')).toHaveLength(8)
+    expect(screen.getByRole('alert')).toHaveTextContent("We couldn't load promotions.")
+    expect(screen.getByRole('alert')).toHaveTextContent('Advanced Offers is not available')
+    await user.click(buttonNamed('Retry'))
+    expect(getPromotions).toHaveBeenCalledWith(3, 10)
   })
 
-  test('renders a nonblank error state when promotions cannot be loaded', () => {
-    const { container, root } = renderComponent(
-      { format_number_currency: { value: '$' } },
-      { promotionListState: { promotions: [], loading: false, error: ['Advanced Offers is not available'] } }
-    )
-    expect(container.querySelector('[role="alert"]')).not.toBeNull()
-    expect(container.textContent).toContain('Advanced Offers is not available')
-    act(() => root.unmount())
+  test('the list is drawn from the first load: a skeleton while it has no rows, not the empty message', async () => {
+    const { container } = await renderComponent(CURRENCY, { promotionListState: { promotions: [], loading: true, error: null } })
+    expect(container.querySelector('[aria-busy="true"]')).not.toBeNull()
+    expect(screen.queryByText('No promotions yet. Choose a template to create your first draft.')).toBeNull()
   })
 })

@@ -1,0 +1,459 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a1-settings-core-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a1-settings-core-allsettings-headertitlecontainer-h1-20px-8a2842",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-settings-core-allsettings-categoryname-p-20px-0670a3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "CategoryName",
+      "property": "font-size",
+      "context": "> p",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-settings-core-allsettings-infocontent-root-12px-6e2d9b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-allsettings-menucontainer-span-10px-3a7d31",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "MenuContainer",
+      "property": "font-size",
+      "context": "> span",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-allsettings-submenu-root-14px-767a78",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "SubMenu",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-allsettings-sidebarcontent-button-14px-0c0809",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "SidebarContent",
+      "property": "font-size",
+      "context": "button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-filtersettings-headertitlecontainer-h1-20px-a61159",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-settings-core-filtersettings-loyaltyitemcontent-h5-14px-db9994",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "component": "LoyaltyItemContent",
+      "property": "font-size",
+      "context": "h5",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-filtersettings-loyaltyitemcontent-p-12px-4da669",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "component": "LoyaltyItemContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-filtersettings-infocontent-root-12px-4b1d2d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-infohelpbox-categoryname-p-20px-26ba7c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InfoHelpBox/styles.js",
+      "component": "CategoryName",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-settings-core-infohelpbox-description-root-14px-ac5015",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InfoHelpBox/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingitemui-title-root-13px-e96721",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingItemUI/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingitemui-settingitemdescription-root-12px-967356",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingItemUI/styles.js",
+      "component": "SettingItemDescription",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsdetail-content-button-all-setting-span-14px-b13704",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "component": "Content",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsdetail-categoryname-p-20px-284bb4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "component": "CategoryName",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsdetail-description-root-14px-8b90c3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsdetail-moreinfo-root-14px-7de98e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "component": "MoreInfo",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsimage-imagecontainer-p-14px-5ae5be",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsImage/styles.js",
+      "component": "ImageContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsimage-uploadimageicon-span-14px-0acbc3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsImage/styles.js",
+      "component": "UploadImageIcon",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-generaltitle-p-20px-3c1a1b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "GeneralTitle",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-optionserror-root-12px-3160d7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "OptionsError",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-formgrouptext-label-14px-b10e4e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "FormGroupText",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-formgrouptext-input-type-text-14px-a95c44",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "FormGroupText",
+      "property": "font-size",
+      "context": "input[type='text'],\n  input[type='password']",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-formgroupcheck-label-14px-7f759d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "FormGroupCheck",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-required-root-10px-f0558c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "Required",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-checkboxwrapper-label-14px-1ae0e6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "> label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-checkboxwrapper-p-14px-f2e8ec",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-submitbtnwrapper-button-14px-dfdc77",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "SubmitBtnWrapper",
+      "property": "font-size",
+      "context": "button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingslist-description-root-14px-a173fd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsselectui-selectheader-label-14px-f0dbe7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "SelectHeader",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsselectui-selectheader-p-14px-1a5137",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "SelectHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsselectui-selectcontent-select-div-first-child-1-1f850c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "SelectContent",
+      "property": "font-size",
+      "context": ".select > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsselectui-option-root-13px-a947fe",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsselectui-optionserror-root-12px-ac2709",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "OptionsError",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-settings-core-settingsimage-imageactions-button-13px-6c045c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsImage/styles.js",
+      "component": "ImageActions",
+      "property": "font-size",
+      "context": "button",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a1-settings-core-pres-allsettings-iconwrapper-svg-24px-fc393e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "IconWrapper svg: el glifo del icono de la categoria en la barra lateral."
+    },
+    {
+      "id": "a1-settings-core-pres-allsettings-sidebarcontent-button-svg-20px-104b0f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "component": "SidebarContent",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "SidebarContent button > svg: el glifo del icono dentro del boton de la barra lateral."
+    },
+    {
+      "id": "a1-settings-core-pres-filtersettings-iconwrapper-svg-24px-5f8836",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "IconWrapper svg: el glifo GearFill o la imagen del ajuste."
+    },
+    {
+      "id": "a1-settings-core-pres-infohelpbox-videocontainer-svg-34px-31f6d3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InfoHelpBox/styles.js",
+      "component": "VideoContainer",
+      "property": "font-size",
+      "context": "svg",
+      "match": "34px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "VideoContainer svg: el glifo MdcPlayCircle sobre el video."
+    },
+    {
+      "id": "a1-settings-core-pres-settingitemui-iconwrapper-svg-24px-fb06f2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingItemUI/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "IconWrapper svg: el glifo del icono de la tarjeta de ajuste."
+    },
+    {
+      "id": "a1-settings-core-pres-settingsdetail-videocontainer-svg-34px-a8e665",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "component": "VideoContainer",
+      "property": "font-size",
+      "context": "svg",
+      "match": "34px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "VideoContainer svg: el mismo glifo MdcPlayCircle que InfoHelpBox, en la otra pantalla que monta el video."
+    },
+    {
+      "id": "a1-settings-core-pres-settingslist-passwordinputwrapper-button-svg-18px-bddcd7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "component": "PasswordInputWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "18px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "PasswordInputWrapper button > svg: el glifo de mostrar/ocultar contrasena."
+    },
+    {
+      "id": "a1-settings-core-pres-settingsselectui-selectcontent-p-14px-2dfe66",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "component": "SelectContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup: it lives in a component the product does render, but nothing it renders is reached by it, so the declaration can never apply. Asserting a role over it would be asserting something unprovable. The distinction with a dead EXPORT is deliberate and decides the treatment: a whole component with no consumer is well formed and a fixture CAN mount it, so its role is demonstrable and it is migrated; a dead selector inside a live component is not.",
+      "evidence": "SelectContent p: SettingsSelectUI/index.js:89-92 mete dentro de SelectContent un unico hijo, el Select compartido de Shared/UI, y Shared/UI/Select.jsx no renderiza ningun elemento <p> — su unica coincidencia de 'p>' en todo el archivo es el cierre de </SelectPrimitive.Popup>. El selector no alcanza a nada."
+    }
+  ]
+}

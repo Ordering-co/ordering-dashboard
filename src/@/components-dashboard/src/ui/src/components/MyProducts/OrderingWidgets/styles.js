@@ -18,7 +18,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -49,7 +49,7 @@ export const FormGroup = styled.div`
   label {
     display: block;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 11px;
   }
@@ -64,14 +64,14 @@ export const FormGroup = styled.div`
 export const PopupContainer = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 20px;
   }
   h3 {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
     margin-bottom: 25px;
   }
@@ -80,7 +80,7 @@ export const PopupContainer = styled.div`
 export const InlineContainer = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 20px;

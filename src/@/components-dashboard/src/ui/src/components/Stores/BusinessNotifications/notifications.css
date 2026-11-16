@@ -1,0 +1,87 @@
+/*
+ * redesign stores 5.4 · Notifications section: email, orders app push and GPRS printers in one form with one Save.
+ * Values: --od-* and --od-x-* only, logical properties only. Shared by BusinessEmail and BusinessGprsPrinters.
+ */
+
+.odc-store-notif {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+@media (min-width: 576px) {
+  .odc-store-notif {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-store-notif-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* A block: its heading, then its fields, 16px apart */
+.odc-store-notif-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-store-notif-section {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-store-notif-push p {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-store-notif-switch {
+  display: flex;
+  align-items: center;
+}
+
+/* The native select of the model: the Product input look comes from `odc-field-input` (field.css) */
+.odc-store-notif-select {
+  cursor: pointer;
+}
+
+.odc-store-notif-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-store-notif-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-store-notif-loading-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* A notice here fills the block: the page gutter and the gap under it belong to the filter bar. */
+.odc-store-notif .odc-notice {
+  margin: 0;
+}

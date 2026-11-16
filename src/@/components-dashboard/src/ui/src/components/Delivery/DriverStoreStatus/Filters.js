@@ -1,22 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useLanguage } from '../../../../../index'
-import { SearchBar } from '../../Shared/SearchBar'
+import { SearchField } from '../../Shared/Product' // redesign W1-8 (T1-8-4): P/ search, not the legacy SearchBar
 import { FiltersContainer, FilterItem } from './styles'
 
 export const Filters = (props) => {
-  const { search, onSearch } = props
+  const { search, onSearch, inputRef } = props
   const [, t] = useLanguage()
 
   return (
     <FiltersContainer>
       <FilterItem>
-        <SearchBar
-          isCustomLayout
-          lazyLoad
-          search={search}
+        <SearchField
+          value={search}
+          onChange={onSearch}
+          label={t('SEARCH_STORE', 'Search store')}
           placeholder={t('SEARCH_STORE', 'Search store')}
-          onSearch={onSearch}
+          clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+          inputRef={inputRef}
         />
       </FilterItem>
     </FiltersContainer>

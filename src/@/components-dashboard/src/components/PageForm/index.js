@@ -22,11 +22,7 @@ export const PageForm = (props) => {
   const [, t] = useLanguage()
 
   const [pageState, setPageState] = useState({ page: {}, loading: false, error: null })
-  const [imageListState, setImageListState] = useState({ images: [], loading: false, error: null })
-  const [insertImageState, setInsertImageState] = useState({ loading: false, change: {}, error: null })
-  const [actionState, setActionState] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
-  const [selectedImageUrl, setSelectedImageUrl] = useState(null)
   const [isAddMode, setIsAddMode] = useState(null)
 
   /**
@@ -49,89 +45,6 @@ export const PageForm = (props) => {
       }
     } catch (err) {
       setPageState({ ...pageState, loading: false, error: [err.message] })
-    }
-  }
-
-  /**
-   * Method to get the image files from API
-   */
-  const getImages = async () => {
-    try {
-      setImageListState({ ...imageListState, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const response = await fetch(`${ordering.root}/files?where={%22type%22:1}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setImageListState({ images: content.result, loading: false })
-      }
-    } catch (err) {
-      setImageListState({ ...imageListState, loading: false, error: [err.message] })
-    }
-  }
-
-  /**
-   * Method to add new image to gallery
-   */
-  const handleAddImage = async () => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setInsertImageState({ ...insertImageState, loading: true })
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(insertImageState.change)
-      }
-      const response = await fetch(`${ordering.root}/files`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setInsertImageState({ loading: false, change: {}, error: null })
-        const _images = [...imageListState.images, content.result]
-        setImageListState({ ...imageListState, images: _images })
-        showToast(ToastType.Success, t('GALLERY_IMAGE_ADDED', 'Business gallery image added'))
-        setSelectedImageUrl(content?.result?.source)
-      } else {
-        setInsertImageState({ ...insertImageState, loading: false, error: content.result })
-      }
-    } catch (err) {
-      setInsertImageState({ ...insertImageState, loading: false, error: [err.message] })
-    }
-  }
-
-  /**
-   * Method to delete the image of gallery
-   */
-  const handleDeleteImage = async (imageId) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const response = await fetch(`${ordering.root}/files/${imageId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setActionState({ loading: false, error: null })
-        const _images = imageListState.images.filter(image => image.id !== imageId)
-        setImageListState({ ...imageListState, images: _images })
-        showToast(ToastType.Success, t('FILE_DELETED', 'File deleted'))
-      } else {
-        setActionState({ loading: false, error: content.result })
-      }
-    } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
     }
   }
 
@@ -242,20 +155,6 @@ export const PageForm = (props) => {
     }
   }
 
-  const handleInsertImage = (file) => {
-    const reader = new window.FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      setInsertImageState({
-        ...insertImageState,
-        change: {
-          source: reader.result,
-          type: 1
-        }
-      })
-    }
-  }
-
   const handleChangeFormState = (field, value) => {
     setFormState({
       ...formState,
@@ -267,12 +166,6 @@ export const PageForm = (props) => {
   }
 
   useEffect(() => {
-    if (Object.keys(insertImageState.change).length === 0) return
-    handleAddImage()
-  }, [insertImageState.change])
-
-  useEffect(() => {
-    getImages()
     if (pageId) {
       getPage()
       setIsAddMode(false)
@@ -288,13 +181,7 @@ export const PageForm = (props) => {
           {...props}
           isAddMode={isAddMode}
           pageState={pageState}
-          imageListState={imageListState}
-          insertImageState={insertImageState}
           formState={formState}
-          selectedImageUrl={selectedImageUrl}
-          setSelectedImageUrl={setSelectedImageUrl}
-          handleInsertImage={handleInsertImage}
-          handleDeleteImage={handleDeleteImage}
           handleChangeFormState={handleChangeFormState}
           handleSavePage={handleSavePage}
           handleAddPage={handleAddPage}

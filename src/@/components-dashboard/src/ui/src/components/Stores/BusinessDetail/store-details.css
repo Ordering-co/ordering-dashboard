@@ -1,0 +1,20 @@
+/*
+ * redesign stores 5.1b (, decision 35) · Store details: the title and the subsection selector on one row; the
+ * selector drops under the title when the row is too narrow. Values: --od-* and --od-x-* only.
+ */
+
+.odc-sd-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-4);
+  margin-block-end: var(--od-space-5);
+}
+
+.odc-sd-head h1 {
+  margin: 0;
+}
+
+.odc-sd-head .odc-sd-subnav {
+  min-inline-size: 0;
+}

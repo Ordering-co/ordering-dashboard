@@ -1,33 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useId, useRef } from 'react'
 import {
   useLanguage,
   useUtils,
   ReviewCustomer as ReviewCustomerController
 } from '../../../../../index'
-import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
-import MdClose from '@meronex/icons/md/MdClose'
-import { useTheme } from 'styled-components'
-import { Button, TextArea } from '../../../styles'
-import { Alert } from '../../Shared'
-
+import { Avatar, Button, Dialog } from '../../Shared/Product'
+import { Check } from '../../Shared/Icon'
+import { AlertDialog } from '../../Shared/Product/AlertDialog'
 import { reviewCommentList } from '../../../utils'
 
-import {
-  ReviewContainer,
-  PhotoWrapper,
-  Photo,
-  CustomerName,
-  ReviewsProgressWrapper,
-  ReviewsProgressContent,
-  ReviewsProgressBar,
-  ReviewsMarkPoint,
-  CommentsList,
-  CommentButton,
-  Comments
-} from './styles'
+import './review-customer.css'
 
+/**
+ * The customer review as a Product Dialog (redesign 5.4-B). The scale is a native radio group (five
+ * marks are more than a SegmentedControl takes) whose values are the same 1..5 the payload carries,
+ * the quick comments are toggle buttons, and the free text has a visible label. `open` and `onClose`
+ * come from the opener; the controller still calls `onClose` once the review is sent.
+ */
 const ReviewCustomerUI = (props) => {
   const {
+    open = true,
+    onClose,
     customer,
     reviewState,
     setReviewState,
@@ -35,22 +28,29 @@ const ReviewCustomerUI = (props) => {
     handleSendCustomerReview
   } = props
 
-  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
+  const scaleName = useId()
+  const scaleLabelId = useId()
+  const commentsLabelId = useId()
+  const extraId = useId()
+  const firstMarkRef = useRef(null)
 
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [comments, setComments] = useState([])
   const [extraComment, setExtraComment] = useState('')
 
   const qualificationList = [
-    { key: 1, text: t('TERRIBLE', 'Terrible'), middleNode: false, left: 0, right: 'initial' },
-    { key: 2, text: t('BAD', 'Bad'), middleNode: true, left: '25%', right: '75%' },
-    { key: 3, text: t('OKAY', 'Okay'), middleNode: true, left: '50%', right: '50%' },
-    { key: 4, text: t('GOOD', 'Good'), middleNode: true, left: '75%', right: '25%' },
-    { key: 5, text: t('GREAT', 'Great'), middleNode: false, left: 'initial', right: 0 }
+    { key: 1, text: t('TERRIBLE', 'Terrible') },
+    { key: 2, text: t('BAD', 'Bad') },
+    { key: 3, text: t('OKAY', 'Okay') },
+    { key: 4, text: t('GOOD', 'Good') },
+    { key: 5, text: t('GREAT', 'Great') }
   ]
 
+  // redesign fix-qa C3 (B3): the quick comments are `main`'s (`reviewCommentList(1)`, each mark with its own catalog
+  // keys, so the texts a project sets still apply). `main` showed them before a mark was chosen (under the first
+  // mark's title), so they stay visible; only the heading is neutral until a mark is chosen.
   const commentsList = reviewCommentList(1)
 
   const closeAlert = () => {
@@ -96,88 +96,105 @@ const ReviewCustomerUI = (props) => {
     })
   }, [actionState.error])
 
+  const fullName = [customer?.name, customer?.middle_name, customer?.lastname, customer?.second_lastname]
+    .filter(Boolean)
+    .join(' ')
+  const currentList = commentsList[reviewState?.qualification || 1]
+  const commentsTitle = reviewState?.qualification ? currentList?.title?.trim() : t('QUICK_COMMENTS', 'Quick comments')
+
   return (
     <>
-      <ReviewContainer>
-        <h1>{t('REVIEW_CUSTOMER', 'Review customer')}</h1>
-        <PhotoWrapper>
-          {customer?.photo
-            ? (
-            <Photo bgimage={optimizeImage(customer?.photo, 'h_150,c_limit')} />
-              )
-            : (
-            <FaUserAlt />
-              )}
-        </PhotoWrapper>
-        <CustomerName>{customer?.name} {customer?.middle_name} {customer?.lastname} {customer?.second_lastname}</CustomerName>
+      <Dialog
+        open={!!open}
+        onOpenChange={(next) => { if (!next) onClose?.() }}
+        size='md'
+        initialFocus={firstMarkRef}
+        title={t('REVIEW_CUSTOMER', 'Review customer')}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={(
+          <>
+            <Button onClick={() => onClose?.()}>{t('CANCEL', 'Cancel')}</Button>
+            <Button
+              variant='primary'
+              busy={!!actionState.loading}
+              disabled={!!actionState.loading}
+              onClick={() => handleSendCustomerReview()}
+            >
+              {t('SEND_REVIEW', 'Send review')}
+            </Button>
+          </>
+        )}
+      >
+        <div className='odc-review'>
+          <div className='odc-review-who'>
+            <Avatar
+              name={fullName}
+              src={customer?.photo ? optimizeImage(customer?.photo, 'h_150,c_limit') : undefined}
+              size='lg'
+            />
+            <span className='odc-review-name'>{fullName}</span>
+          </div>
 
-        <ReviewsProgressWrapper>
-          <p>{t('HOW_WAS_THE_DELIVERY', 'How was the delivery?')}</p>
-          <ReviewsProgressContent>
-            <ReviewsProgressBar style={{ width: `${(reviewState?.qualification === 0 ? 0 : (reviewState?.qualification - 1) / 4) * 100}%` }} />
-            {
-              qualificationList?.map(qualification => (
-                <ReviewsMarkPoint
-                  key={qualification?.key}
-                  style={{
-                    left: theme?.rtl ? (qualification?.middleNode ? 'initial' : qualification?.right) : qualification?.left,
-                    right: theme?.rtl ? qualification?.left : (qualification?.middleNode ? 'initial' : qualification?.right)
-                  }}
-                  active={reviewState?.qualification === qualification?.key}
-                  pass={reviewState?.qualification >= qualification?.key}
-                  className={qualification?.middleNode ? 'mark-point' : ''}
-                  onClick={() => handleChangeQualification(qualification?.key)}
+          <div className='odc-review-block'>
+            <p id={scaleLabelId} className='odc-review-label'>{t('HOW_WAS_THE_CUSTOMER', 'How was the customer?')}</p>
+            <div role='radiogroup' aria-labelledby={scaleLabelId} className='odc-review-scale'>
+              {qualificationList.map((qualification, index) => (
+                <label key={qualification.key} className='odc-review-mark'>
+                  <input
+                    ref={index === 0 ? firstMarkRef : undefined}
+                    type='radio'
+                    name={scaleName}
+                    value={qualification.key}
+                    checked={reviewState?.qualification === qualification.key}
+                    onChange={() => handleChangeQualification(qualification.key)}
+                  />
+                  <span>{qualification.text}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className='odc-review-block' role='group' aria-labelledby={commentsLabelId}>
+            <p id={commentsLabelId} className='odc-review-label'>{commentsTitle}</p>
+            <div className='odc-review-chips'>
+              {currentList?.list?.map((commentItem, i) => (
+                <button
+                  key={i}
+                  type='button'
+                  className='odc-review-chip'
+                  aria-pressed={!!isSelectedComment(commentItem?.key)}
+                  onClick={() => handleChangeComment(commentItem)}
                 >
-                  <span>{qualification?.text}<span /></span>
-                </ReviewsMarkPoint>
-              ))
-            }
-          </ReviewsProgressContent>
-        </ReviewsProgressWrapper>
-        <CommentsList>
-          <p>{commentsList[reviewState?.qualification || 1]?.title}</p>
-          {
-            commentsList[reviewState?.qualification || 1]?.list?.map((commentItem, i) => (
-              <CommentButton
-                key={i}
-                active={isSelectedComment(commentItem?.key)}
-                onClick={() => handleChangeComment(commentItem)}
-                initialIcon
-              >
-                {commentItem.content}
-                {
-                  isSelectedComment(commentItem?.key) && <MdClose />
-                }
-              </CommentButton>
-            ))
-          }
-        </CommentsList>
-        <Comments>
-          <p>{t('DO_YOU_WANT_TO_ADD_SOMETHING', 'Do you want to add something?')}</p>
-          <TextArea
-            name='comments'
-            value={extraComment}
-            onChange={(e) => setExtraComment(e.target.value)}
-            autoComplete='off'
-          />
-        </Comments>
-        <Button
-          borderRadius='8px'
-          color='primary'
-          onClick={() => handleSendCustomerReview()}
-          disabled={actionState.loading}
-        >
-          {t('SEND_REVIEW', 'Send review')}
-        </Button>
-      </ReviewContainer>
-      <Alert
-        title={t('WEB_APPNAME', 'Ordering')}
+                  {isSelectedComment(commentItem?.key) && <Check className='odc-icon' aria-hidden='true' />}
+                  {commentItem.content}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className='odc-review-block'>
+            <label className='odc-review-label' htmlFor={extraId}>
+              {t('DO_YOU_WANT_TO_ADD_SOMETHING', 'Do you want to add something?')}
+            </label>
+            <textarea
+              id={extraId}
+              name='comments'
+              className='odc-review-field'
+              rows={3}
+              value={extraComment}
+              onChange={(e) => setExtraComment(e.target.value)}
+              autoComplete='off'
+            />
+          </div>
+        </div>
+      </Dialog>
+      <AlertDialog
+        title={t('REVIEW_NOT_SENT', 'Review not sent')}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
         content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}
         onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
       />
     </>
   )

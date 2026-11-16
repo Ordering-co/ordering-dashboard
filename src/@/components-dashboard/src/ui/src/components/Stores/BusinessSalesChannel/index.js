@@ -1,173 +1,122 @@
 import React, { useState } from 'react'
-import { useLanguage } from '../../../../../index'
-import { useWindowSize } from '../../../hooks/useWindowSize'
 import { useTheme } from 'styled-components'
+import { useLanguage, useSite } from '../../../../../index'
 import { useStoreWebsiteUrl } from '../../../hooks/useWebsiteUrl'
-import { Button } from '../../../styles'
-import { Modal } from '../../Shared'
+import { useProjectState } from '../../../contexts/ProjectContext'
+import { EDITOR_PANEL_WIDE_FROM } from '../../../../../utils/editorPanel'
+import { Button, SectionSplit } from '../../Shared/Product'
 import { BusinessSalesFacebook } from '../BusinessSalesFacebook'
 import { BusinessSalesTiktok } from '../BusinessSalesTiktok'
 import { BusinessSalesInstagram } from '../BusinessSalesInstagram'
 import { BusinessSalesGoogle } from '../BusinessSalesGoogle'
-import {
-  Container,
-  SalesContainer,
-  SocialBlock,
-  BlockHeader,
-  ConnectingContainer
-} from './styles'
+import './sales-channels.css'
+
+// redesign stores 5.15b (; decision 5, G5-10, G5-11, G5-12, G5-13): the sales channel guides of a store.
+// - Nothing here connects to a third party (main's «Connect» opened a modal of placeholder text, then the guide): each card says what the
+//   guide gets you and its button says «How to connect». The line under the title says it plainly.
+// - The guide opens on P/SectionSplit, as the QR codes (5.15a): beside the list from 1000px of window (`EDITOR_PANEL_WIDE_FROM`,
+//   where main opened its column) and in its place below that, with «‹ Back» (main opened an 80% modal with two X, and handed the
+//   guides a slug they never read, so they showed a placeholder address). No width animation by element id.
+// - The address is the store's one address, `useStoreWebsiteUrl` (widgets, QR, Overview), at every width and in every tab. While
+//   it loads, a skeleton; without one, a notice in the step that needs it (main disabled the four buttons without a word).
+// - The Facebook «Post» tab stays out (decision 8, ).
+
+const CHANNEL_KEYS = ['facebook', 'tiktok', 'instagram', 'google_my_business']
+
+const GUIDES = {
+  facebook: BusinessSalesFacebook,
+  tiktok: BusinessSalesTiktok,
+  instagram: BusinessSalesInstagram,
+  google_my_business: BusinessSalesGoogle
+}
 
 export const BusinessSalesChannel = (props) => {
   const { setIsExtendExtraOpen, business } = props
 
   const [, t] = useLanguage()
   const theme = useTheme()
-  const { width } = useWindowSize()
-  const [selectedItem, setSelectedItem] = useState(null)
-  const [hasConnectModal, setHasConnectModal] = useState(false)
-  const [isOpenSocial, setIsOpenSocial] = useState(false)
+  const [{ loading: sitesLoading }] = useSite()
+  const [projectStatus] = useProjectState()
+  const [selectedKey, setSelectedKey] = useState(null)
+
   const storeUrl = useStoreWebsiteUrl(business?.slug)
+  // the address waits for the sites and for the project's plan (which says whether it has a website)
+  const link = { url: storeUrl, loading: !storeUrl && (sitesLoading || !!projectStatus?.loading) }
 
-  const socialList = [
-    { key: 'facebook', name: t('FACEBOOK', 'Facebook'), icon: theme.images.icons.facebook, description: t('FACEBOOK_DESCRIPTION', 'Now you can add a “Shop now” link on your business’s Facebook page that goes straight to your ordering menu.') },
-    { key: 'tiktok', name: t('TIKTOK', 'Tiktok'), icon: theme.images.icons.tiktok, description: t('TIKTOK_DESCRIPTION', 'After they purchase we install in 24 hours. Order and pay 99 per business. They can sell at whatever price. Also. If a business manager purchases then shared revenue?') },
-    { key: 'instagram', name: t('INSTAGRAM', 'Instagram'), icon: theme.images.icons.instagram, description: t('INSTAGRAM_DESCRIPTION', 'After they purchase we install in 24 hours. Order and pay 99 per business. They can sell at whatever price. Also. If a business manager purchases then shared revenue?') },
-    { key: 'google_my_business', name: t('GOOGLE_MY_BUSINESS', 'Google My Business'), icon: theme.images.icons.businessGoogle, description: t('GOOGLE_MY_BUSINESS_DESCRIPTION', 'After they purchase we install in 24 hours. Order and pay 99 per business. They can sell at whatever price. Also. If a business manager purchases then shared revenue?') }
-  ]
-
-  const handleConnect = (item) => {
-    if (!storeUrl) return
-    handleCloseDetail()
-    setSelectedItem(item)
-    setHasConnectModal(true)
+  const channels = {
+    facebook: {
+      name: t('FACEBOOK', 'Facebook'),
+      icon: theme.images.icons.facebook,
+      description: t('SALES_CHANNEL_FACEBOOK_SUMMARY', 'Add a “Start order” button to your Facebook page that opens this store\'s ordering page.')
+    },
+    tiktok: {
+      name: t('SALES_CHANNEL_TIKTOK', 'TikTok'),
+      icon: theme.images.icons.tiktok,
+      description: t('SALES_CHANNEL_TIKTOK_SUMMARY', 'Create a product catalog in TikTok Ads Manager so you can show this store\'s products on TikTok.')
+    },
+    instagram: {
+      name: t('INSTAGRAM', 'Instagram'),
+      icon: theme.images.icons.instagram,
+      description: t('SALES_CHANNEL_INSTAGRAM_SUMMARY', 'Put this store\'s ordering link on your Instagram profile, as a link or as an “Order food” action button.')
+    },
+    google_my_business: {
+      name: t('SALES_CHANNEL_GOOGLE', 'Google Business Profile'),
+      icon: theme.images.icons.businessGoogle,
+      description: t('SALES_CHANNEL_GOOGLE_SUMMARY', 'Add this store\'s ordering link to your Google Business Profile (formerly Google My Business), so people can order from Search and Maps.')
+    }
   }
 
-  const handleOpenSocial = () => {
-    setHasConnectModal(false)
-    setIsOpenSocial(true)
-    setIsExtendExtraOpen(true)
-  }
+  const selected = selectedKey ? { key: selectedKey, ...channels[selectedKey] } : null
+  const Guide = selected ? GUIDES[selected.key] : null
 
-  const handleCloseDetail = () => {
-    setIsOpenSocial(false)
-    setIsExtendExtraOpen(false)
-    setSelectedItem(null)
-  }
+  const list = (
+    <div className='odc-sales-pane'>
+      <div className='odc-sales-intro'>
+        <h1 className='odc-sales-title'>{t('SALES_CHANNELS_TITLE', 'Sales channels')}</h1>
+        <p className='odc-sales-lead'>
+          {t('SALES_CHANNELS_INTRO', 'Step-by-step guides to add this store\'s ordering link to your social and business profiles. Nothing is connected automatically: each guide shows where to paste the link.')}
+        </p>
+      </div>
+      <ul className='odc-sales-cards' aria-label={t('SALES_CHANNELS_TITLE', 'Sales channels')}>
+        {CHANNEL_KEYS.map(key => {
+          const channel = channels[key]
+          const active = key === selectedKey
+          return (
+            <li key={key} className='odc-sales-card' data-section-split-key={key} aria-current={active ? 'true' : undefined}>
+              <div className='odc-sales-card-head'>
+                <img className='odc-sales-card-icon' src={channel.icon} alt='' />
+                <h2 className='odc-sales-card-name'>{channel.name}</h2>
+              </div>
+              <p className='odc-sales-card-text'>{channel.description}</p>
+              <Button
+                variant='secondary'
+                aria-label={t('SALES_CHANNEL_HOW_TO_CONNECT_NAMED', 'How to connect _channel_').replace('_channel_', channel.name)}
+                onClick={() => setSelectedKey(key)}
+              >
+                {t('SALES_CHANNEL_HOW_TO_CONNECT', 'How to connect')}
+              </Button>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
 
   return (
-    <Container>
-      <SalesContainer>
-        <h1>{t('SALES_CHANNELS', 'Sales channels')}</h1>
-        {socialList.map((item, i) => (
-          <SocialBlock key={i}>
-            <BlockHeader>
-              <img src={item.icon} alt='' />
-              <p>{item.name}</p>
-            </BlockHeader>
-            <p>{item.description}</p>
-            <Button
-              color='primary'
-              onClick={() => handleConnect(item)}
-              disabled={!storeUrl}
-            >
-              {t('CONNECT', 'Connect')}
-            </Button>
-          </SocialBlock>
-        ))}
-      </SalesContainer>
-      {hasConnectModal && (
-        <Modal
-          title={t('CONNECTING_SALES_CHANNELS', 'Connecting sales Channels')}
-          open={hasConnectModal}
-          onClose={() => setHasConnectModal(false)}
-          width='768px'
-        >
-          <ConnectingContainer>
-            <p>{t('CONNECTING_SALES_CHANNELS_DESC_1', 'Lorem ipsum dolor sit amet consectetur. Fringilla nulla in tincidunt id in erat et. In massa commodo imperdiet varius pharetra ultricies nunc dapibus integer. Gravida scelerisque justo hendrerit elit neque. Nunc velit vel eu velit. Faucibus turpis feugiat id nisi orci sodales.')}</p>
-            <p>{t('CONNECTING_SALES_CHANNELS_DESC_2', 'Lorem ipsum dolor sit amet consectetur. Fringilla nulla in tincidunt id in erat et. In massa commodo imperdiet varius pharetra ultricies nunc dapibus integer. Gravida scelerisque justo hendrerit elit neque. Nunc velit vel eu velit. Faucibus turpis feugiat id nisi orci sodales.')}</p>
-            <Button
-              color='primary'
-              onClick={handleOpenSocial}
-            >
-              {t('OK_I_UNDERSTAND', 'Ok, I understand')}
-            </Button>
-          </ConnectingContainer>
-        </Modal>
-      )}
-      {width >= 1000
-        ? (
-            isOpenSocial && (
-          <>
-            {selectedItem?.key === 'facebook' && (
-              <BusinessSalesFacebook
-                socialItem={selectedItem}
-                storeUrl={storeUrl}
-                onClose={handleCloseDetail}
-              />
-            )}
-            {selectedItem?.key === 'tiktok' && (
-              <BusinessSalesTiktok
-                storeUrl={storeUrl}
-                socialItem={selectedItem}
-                onClose={handleCloseDetail}
-              />
-            )}
-            {selectedItem?.key === 'instagram' && (
-              <BusinessSalesInstagram
-                storeUrl={storeUrl}
-                socialItem={selectedItem}
-                onClose={handleCloseDetail}
-              />
-            )}
-            {selectedItem?.key === 'google_my_business' && (
-              <BusinessSalesGoogle
-                storeUrl={storeUrl}
-                socialItem={selectedItem}
-                onClose={handleCloseDetail}
-              />
-            )}
-          </>
-            )
-          )
-        : (
-            isOpenSocial && (
-          <Modal
-            width='80%'
-            open={isOpenSocial}
-            onClose={handleCloseDetail}
-          >
-            <>
-              {selectedItem?.key === 'facebook' && (
-                <BusinessSalesFacebook
-                  businessSlug={business.slug}
-                  socialItem={selectedItem}
-                  onClose={handleCloseDetail}
-                />
-              )}
-              {selectedItem?.key === 'tiktok' && (
-                <BusinessSalesTiktok
-                  socialItem={selectedItem}
-                  onClose={handleCloseDetail}
-                />
-              )}
-              {selectedItem?.key === 'instagram' && (
-                <BusinessSalesInstagram
-                  businessSlug={business.slug}
-                  socialItem={selectedItem}
-                  onClose={handleCloseDetail}
-                />
-              )}
-              {selectedItem?.key === 'google_my_business' && (
-                <BusinessSalesGoogle
-                  businessSlug={business.slug}
-                  socialItem={selectedItem}
-                  onClose={handleCloseDetail}
-                />
-              )}
-            </>
-          </Modal>
-            )
-          )}
-    </Container>
+    <div className='odc-root odc-sales'>
+      <SectionSplit
+        revealDetail // redesign bugs F row 6 (D5 of 5.18): stacked, the detail opens at its header
+        splitFrom={EDITOR_PANEL_WIDE_FROM}
+        open={!!selected}
+        detailKey={selected?.key}
+        onClose={() => setSelectedKey(null)}
+        onExtendChange={value => setIsExtendExtraOpen?.(value)}
+        detailTitle={selected?.name ?? ''}
+        closeLabel={t('CLOSE', 'Close')}
+        backLabel={t('BACK', 'Back')}
+        list={list}
+        detail={Guide ? <Guide key={selected.key} link={link} /> : null}
+      />
+    </div>
   )
 }

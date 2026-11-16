@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Swatch } from '../BuilderWebTheme/styles'
 import { formatColor, parseColor } from './colors'
 import { editorOf, formatText, getAt, getIn, humanize, resolveValue } from './schemaNodes'
+import './theme-editor.css'
 
 /** A node the editor shows but doesn't change (`readonly`): the theme may hold it, the API works it out. */
 export const isReadOnly = (schema, path) => editorOf(getAt(schema, path)).readonly === true
@@ -21,10 +21,11 @@ export const ReadOnlyValue = ({ ctx, path, label, read }) => {
   const name = (read?.value === null || read?.value === undefined) && unset
     ? formatText(t, unset)
     : color || (value === null || value === undefined ? '—' : typeof value === 'object' ? '' : humanize(value))
+  // redesign B3b: tokens; the swatch takes the colour from a custom property, not a styled prop
   return (
-    <span role='img' aria-label={`${label}: ${name}${color && name !== color ? ` (${color})` : ''}`} title={color || undefined} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minWidth: 0, padding: '0 10px', fontSize: 13, color: '#5E6B7D' }}>
-      {color && <Swatch color={value} aria-hidden='true' small />}
-      <span aria-hidden='true' style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</span>
+    <span role='img' className='odc-te-readonly' aria-label={`${label}: ${name}${color && name !== color ? ` (${color})` : ''}`} title={color || undefined}>
+      {color && <span className='odc-te-swatch' style={{ '--odc-te-swatch': value }} aria-hidden='true' />}
+      <span className='odc-te-readonly-text' aria-hidden='true'>{name}</span>
     </span>
   )
 }

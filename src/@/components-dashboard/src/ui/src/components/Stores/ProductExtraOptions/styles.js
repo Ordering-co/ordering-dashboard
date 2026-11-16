@@ -34,7 +34,7 @@ export const Header = styled.div`
     background-color: transparent;
     border: none;
     outline: none;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     padding: 0;
     margin: 5px 0;
@@ -71,7 +71,7 @@ export const OptionNameContainer = styled.div`
   align-items: center;
   width: 70%;
   margin: 12px 0;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   > input {
     flex: 1;
     height: 32px;
@@ -108,7 +108,7 @@ export const OptionNameContainer = styled.div`
   `}
 
   ${({ isHeader }) => isHeader && css`
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
     border-right: none;
     border-left: none;
@@ -196,7 +196,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {
@@ -221,7 +221,7 @@ export const AddOptionForm = styled.form`
     padding: 5px;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
 
     &:focus {
@@ -265,13 +265,10 @@ export const OptionItem = styled.div`
 `
 export const MinimumPurchase = styled.div`
   min-width: 75px;
-  ${({ isHeader }) => isHeader
-? css`
-    font-size: 12px;
+  font-size: var(--od-type-content-size);
+  ${({ isHeader }) => isHeader && css`
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
-  `
-: css`
-    font-size: 14px;
   `}
   @media (min-width: 450px) {
     min-width: 80px;
@@ -279,13 +276,10 @@ export const MinimumPurchase = styled.div`
 `
 export const MaxPurchase = styled.div`
   min-width: 75px;
-  ${({ isHeader }) => isHeader
-? css`
-    font-size: 12px;
+  font-size: var(--od-type-content-size);
+  ${({ isHeader }) => isHeader && css`
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
-  `
-: css`
-    font-size: 14px;
   `}
   @media (min-width: 450px) {
     min-width: 80px;

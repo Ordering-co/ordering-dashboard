@@ -1,0 +1,16 @@
+/*
+ * 5.4-B · The alert of the order detail dialogs on Product Dialog (C8): the messages as plain lines.
+ * Values come from --od-* (release) only. The dark mode is the tokens' own.
+ */
+
+.odc-alert-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-alert-messages > p {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}

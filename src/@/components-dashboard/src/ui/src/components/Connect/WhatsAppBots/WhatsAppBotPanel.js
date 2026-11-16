@@ -6,6 +6,7 @@ import { Button, Input, Switch } from '../../../styles'
 import { Confirm, SideBar } from '../../Shared'
 import { BrandSelect } from './BrandSelect'
 import { WhatsAppBotConnection } from './WhatsAppBotConnection'
+import { WhatsAppBotTranslations } from './WhatsAppBotTranslations'
 import {
   PanelBody,
   PanelTitle,
@@ -121,6 +122,7 @@ export const WhatsAppBotPanel = (props) => {
     loadBrands,
     loadMoreBrands,
     connectionProps,
+    translationsProps,
     enabled,
     enabledSaving = false,
     onEnabledChange
@@ -279,6 +281,13 @@ export const WhatsAppBotPanel = (props) => {
               </ConnectionActions>
             </ConnectionCard>
           </>
+        )}
+        {translationsProps && (
+          <WhatsAppBotTranslations
+            {...translationsProps}
+            brandName={selectedBrand?.name || brandName || title}
+            brandLogo={selectedBrand?.logo || null}
+          />
         )}
         {connectionProps && <WhatsAppBotConnection {...connectionProps} />}
       </PanelBody>

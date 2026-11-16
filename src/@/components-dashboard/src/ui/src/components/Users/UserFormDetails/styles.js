@@ -114,7 +114,7 @@ export const DriverZoneRestrictionWrapper = styled.div`
   margin-bottom: 20px;
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 export const WrapperPassword = styled.div`
@@ -186,7 +186,7 @@ export const InputWrapper = styled.div`
     padding-bottom: 4px;
     border: none;
     background-color: ${props => props.theme.colors.secundary};
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
 
     ${({ isTimezone }) => isTimezone && css`
       > div:first-child {
@@ -195,7 +195,7 @@ export const InputWrapper = styled.div`
         }
       }
       .list-wrapper {
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
         max-height: 220px;
       }
     `}

@@ -1,3 +1,4 @@
+import settings from '~/config'
 import { normalizeCommandText } from './commandPaletteSearch'
 
 /**
@@ -16,11 +17,13 @@ export const BACKOFFICE_BUSINESS_SEARCH_PARAMS = ['id', 'name', 'slug', 'enabled
 export const BUSINESS_SEARCH_DEBOUNCE_MS = 220
 export const BUSINESS_SEARCH_CACHE_TTL_MS = 60 * 1000
 
-/** Eatstreet admins list stores through the backoffice endpoint (see DashboardBusinessList). */
-export const BACKOFFICE_BUSINESS_PROJECTS = ['eatstreet', 'eatstreetstaging']
+export const isBackofficeBusinessProject = (project) => {
+  const projects = settings.dashboard_project_allowlists?.backoffice_businesses
+  return typeof project === 'string' && project !== '' && Array.isArray(projects) && projects.includes(project)
+}
 
 export const shouldUseBackofficeBusinessSearch = ({ project, level } = {}) =>
-  BACKOFFICE_BUSINESS_PROJECTS.includes(project) && level === 0
+  level === 0 && isBackofficeBusinessProject(project)
 
 /** Largest id the API accepts: ids are 32-bit integers and a bigger one fails the whole request. */
 export const MAX_RECORD_ID = 2147483647

@@ -6,6 +6,7 @@ import { readBotSettings } from './botSettings'
 import { createBotPayload } from './botCreate'
 import { formatWhatsAppPhone } from './botConnection'
 import { useBotConnection } from './useBotConnection'
+import { useBotTranslations } from './useBotTranslations'
 
 const WHATSAPP_PROVIDER = 'whatsapp'
 const CHAT_BOT_TYPE = 'chat_bot'
@@ -91,6 +92,7 @@ export const WhatsAppBotsList = (props) => {
       bots: prev.bots.map(bot => String(bot.id) === String(id) ? { ...bot, phone } : bot)
     }))
   })
+  const translationProps = useBotTranslations({ botId, root: ordering.root, token })
 
   /**
    * Add the brand name and logo to the bots of the page. A failure leaves the
@@ -444,6 +446,7 @@ export const WhatsAppBotsList = (props) => {
       loadMoreBrands={loadMoreBrands}
       createBot={createBot}
       {...connectionProps}
+      {...translationProps}
     />
   )
 }

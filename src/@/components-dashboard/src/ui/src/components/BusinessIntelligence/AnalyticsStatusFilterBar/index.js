@@ -25,6 +25,7 @@ export const AnalyticsStatusFilterBar = (props) => {
         <DragScroll>
           <Tab
             active={filterList?.lapse === 'today'}
+            aria-pressed={filterList?.lapse === 'today'}
             onClick={() => changeSelectedAnalyticsStatus('today')}
           >
             {t('TODAY', 'Today')}
@@ -32,6 +33,7 @@ export const AnalyticsStatusFilterBar = (props) => {
 
           <Tab
             active={filterList?.lapse === 'yesterday'}
+            aria-pressed={filterList?.lapse === 'yesterday'}
             onClick={() => changeSelectedAnalyticsStatus('yesterday')}
           >
             {t('YESTERDAY', 'Yesterday')}
@@ -39,6 +41,7 @@ export const AnalyticsStatusFilterBar = (props) => {
 
           <Tab
             active={filterList?.lapse === 'last_7_days'}
+            aria-pressed={filterList?.lapse === 'last_7_days'}
             onClick={() => changeSelectedAnalyticsStatus('last_7_days')}
           >
             {t('LAST_7_DAYS', 'Last 7 days')}
@@ -46,6 +49,7 @@ export const AnalyticsStatusFilterBar = (props) => {
 
           <Tab
             active={filterList?.lapse === 'last_30_days'}
+            aria-pressed={filterList?.lapse === 'last_30_days'}
             onClick={() => changeSelectedAnalyticsStatus('last_30_days')}
           >
             {t('LAST_30_DAYS', 'Last 30 days')}

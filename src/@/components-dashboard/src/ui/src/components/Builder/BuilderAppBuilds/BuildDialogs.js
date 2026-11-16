@@ -1,9 +1,8 @@
 import React, { useEffect, useId, useRef, useState } from 'react'
-import { ExclamationTriangle } from 'react-bootstrap-icons'
 
 import { useLanguage } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Modal } from '../../Shared'
+import { CircleAlert, TriangleAlert } from '../../Shared/Icon'
+import { Button, CopyButton, Dialog, InlineNotice, RadioGroup, StatusBadge } from '../../Shared/Product'
 import { GuideLink } from '../BuilderShared'
 import {
   BUILD_MODE_OPTIONS,
@@ -11,44 +10,33 @@ import {
   getBuildFailureText,
   getBuildModeLabel,
   getBuildStatusLabel,
-  getBuildKind,
   getCheckProblems,
   getDefaultBuildOption,
   getPlatformLabel,
   isBuildRunning,
   toPlatformChecks
 } from '../utils'
-import {
-  BlockedPanel,
-  DialogBody,
-  DialogFooter,
-  DialogTitle,
-  ErrorBanner,
-  LinkButton,
-  LogBox,
-  ModeOption,
-  MutedText,
-  Notice,
-  OwnerPill,
-  Pill,
-  ProblemList
-} from '../styles'
+import { BuildPill, DATE_TIME } from './BuildsCard'
+import './builder-builds.css'
 
-const DIALOG_WIDTH = 'min(560px, calc(100vw - 32px))'
+// redesign B2: the build, log and retry dialogs on P/Dialog, the modes on P/RadioGroup and Copy on P/CopyButton. Same
+// requests, rules, texts and closing as main's Modal.
 
 /** A problem of the checks, with the way to the tab that fixes it. */
 export const ProblemItem = ({ problem, onFix }) => {
   const [, t] = useLanguage()
   return (
-    <li>
-      <OwnerPill owner={problem.owner}>
-        {problem.owner === 'ordering' ? 'Ordering' : t('BUILDER_TO_DO', 'To do')}
-      </OwnerPill>
+    <li className='odc-bb-problem'>
+      {/* the same owner badge as the checks panel (review of #433) */}
+      <StatusBadge
+        family={problem.owner === 'ordering' ? 'review' : 'pending'}
+        label={problem.owner === 'ordering' ? 'Ordering' : t('BUILDER_TO_DO', 'To do')}
+      />
       <span>{problem.text}</span>
       {problem.tab && onFix && (
-        <LinkButton type='button' onClick={() => onFix(problem.tab, problem.group)}>
+        <Button variant='link' size='sm' onClick={() => onFix(problem.tab, problem.group)}>
           {t('BUILDER_FIX', 'Fix')}
-        </LinkButton>
+        </Button>
       )}
     </li>
   )
@@ -57,22 +45,26 @@ export const ProblemItem = ({ problem, onFix }) => {
 /**
  * Picks the mode of a build and asks for it. Shows what the checks already
  * say is missing (Build stays off) and, when the API refuses with
- * `build.blocked`, its list for the chosen mode instead.
+ * `build.blocked`, its list for the chosen mode instead. It opens on
+ * `initial`, the file type of the tab the Build button was pressed on, which
+ * can be changed like any other; `options` are the section's by default (My
+ * Products gives its own, with the debug files).
  */
 export const BuildDialog = (props) => {
-  const { platform, latest, productStatus, version, checkProblems, guides, onSubmit, onClose, onGoToTab } = props
+  const { platform, latest, productStatus, version, checkProblems, guides, initial, onSubmit, onClose, onGoToTab } = props
   const [, t] = useLanguage()
-  const options = BUILD_MODE_OPTIONS[platform] || []
-  const [value, setValue] = useState(() => getDefaultBuildOption(platform, latest, productStatus))
+  const options = props.options || BUILD_MODE_OPTIONS[platform] || []
+  const [value, setValue] = useState(() => getDefaultBuildOption(platform, latest, productStatus, { options, initial }))
   const [submitting, setSubmitting] = useState(false)
   const [refused, setRefused] = useState(null)
   const [error, setError] = useState(null)
-  const titleId = useId()
+  const formId = useId()
 
   const mine = (checkProblems || []).filter(problem => problem.platform === platform)
   const toDo = refused ?? mine.filter(problem => problem.owner === 'customer')
   const forOrdering = mine.filter(problem => problem.owner === 'ordering').length
   const platformLabel = getPlatformLabel(platform)
+  const guided = options.filter(option => option.guide && guides?.[option.guide])
 
   const choose = (next) => {
     setValue(next)
@@ -104,70 +96,64 @@ export const BuildDialog = (props) => {
   }
 
   return (
-    <Modal
+    <Dialog
       open
-      width={DIALOG_WIDTH}
-      padding='24px'
-      onClose={onClose}
+      onOpenChange={(open) => { if (!open) onClose() }}
+      title={t('BUILDER_BUILD_FOR', 'Build for _platform_').replace('_platform_', platformLabel)}
+      closeLabel={t('CLOSE', 'Close')}
+      footer={(
+        <>
+          <Button onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
+          <Button type='submit' form={formId} variant='primary' disabled={submitting || toDo.length > 0}>
+            {submitting ? t('BUILDER_BUILD_REQUESTING', 'Requesting…') : t('BUILDER_BUILD', 'Build')}
+          </Button>
+        </>
+      )}
     >
-      <DialogBody as='form' role='dialog' aria-labelledby={titleId} onSubmit={submit} noValidate>
-        <DialogTitle id={titleId}>{t('BUILDER_BUILD_FOR', 'Build for _platform_').replace('_platform_', platformLabel)}</DialogTitle>
+      <form id={formId} className='odc-bb-dialog' onSubmit={submit} noValidate>
         {version && (
-          <MutedText>{t('BUILDER_BUILD_VERSION_FROM_GENERAL', 'Version _version_ · from the General tab').replace('_version_', version)}</MutedText>
+          <p className='odc-bb-muted'>{t('BUILDER_BUILD_VERSION_FROM_GENERAL', 'Version _version_ · from the General tab').replace('_version_', version)}</p>
         )}
-        <fieldset>
-          <legend>{t('BUILDER_BUILD_WHAT_FOR', 'What do you need?')}</legend>
-          {options.map(option => (
-            <ModeOption key={option.value} selected={value === option.value}>
-              <input
-                type='radio'
-                name={`builder-build-mode-${platform}`}
-                value={option.value}
-                checked={value === option.value}
-                onChange={() => choose(option.value)}
-              />
-              <span>
-                <strong>{option.label(t)}</strong>
-                <small>{option.description(t)}</small>
-                <GuideLink href={option.guide && guides?.[option.guide]}>{t('BUILDER_GUIDE_HOW_IT_WORKS', 'How it works')}</GuideLink>
-              </span>
-            </ModeOption>
-          ))}
-        </fieldset>
+        <RadioGroup
+          label={t('BUILDER_BUILD_WHAT_FOR', 'What do you need?')}
+          value={value}
+          onValueChange={choose}
+          options={options.map(option => ({ value: option.value, label: option.label(t), description: option.description(t) }))}
+        />
+        {/* redesign B2: a link can't live inside a radio (a button), so each mode's «How it works» follows the options,
+            named by its mode; one click each, as in main */}
+        {guided.length > 0 && (
+          <p className='odc-bb-guides'>
+            <span>{t('BUILDER_GUIDE_HOW_IT_WORKS', 'How it works')}</span>
+            {guided.map(option => <GuideLink key={option.value} href={guides[option.guide]}>{option.label(t)}</GuideLink>)}
+          </p>
+        )}
 
         {toDo.length > 0 && (
-          <BlockedPanel role={refused ? 'alert' : undefined}>
+          <div className='odc-bb-blocked' role={refused ? 'alert' : undefined}>
             <strong>
-              <ExclamationTriangle aria-hidden='true' color='#7A5000' />
+              <TriangleAlert className='odc-icon' />
               {t('BUILDER_BUILD_BLOCKED', 'Complete these before building for _platform_:').replace('_platform_', platformLabel)}
             </strong>
-            <ProblemList>
+            <ul className='odc-bb-problems'>
               {toDo.map(problem => <ProblemItem key={problem.key} problem={problem} onFix={fix} />)}
-            </ProblemList>
-          </BlockedPanel>
+            </ul>
+          </div>
         )}
 
         {forOrdering > 0 && (
-          <Notice>
-            <OwnerPill owner='ordering'>Ordering</OwnerPill>
-            <span>
-              {t('BUILDER_BUILD_ORDERING_REVIEW', 'Ordering is reviewing _count_ issue(s) in the base. They don’t stop this build.').replace('_count_', forOrdering)}
-            </span>
-          </Notice>
+          <InlineNotice tone='warning' live={false} icon={null} className='odc-bb-notice'>
+            <StatusBadge family='review' label='Ordering' />
+            {' '}
+            {t('BUILDER_BUILD_ORDERING_REVIEW', 'Ordering is reviewing _count_ issue(s) in the base. They don’t stop this build.').replace('_count_', forOrdering)}
+          </InlineNotice>
         )}
 
-        {error && <ErrorBanner role='alert'>{error}</ErrorBanner>}
+        {error && <InlineNotice tone='danger' icon={CircleAlert} role='alert' className='odc-bb-notice'>{error}</InlineNotice>}
 
-        <MutedText small>{t('BUILDER_BUILD_LEAVE_PAGE', 'You can leave this page. The build’s status updates here.')}</MutedText>
-
-        <DialogFooter>
-          <Button type='button' color='secundary' borderRadius='8px' onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
-          <Button type='submit' color='primary' borderRadius='8px' disabled={submitting || toDo.length > 0}>
-            {submitting ? t('BUILDER_BUILD_REQUESTING', 'Requesting…') : t('BUILDER_BUILD', 'Build')}
-          </Button>
-        </DialogFooter>
-      </DialogBody>
-    </Modal>
+        <p className='odc-bb-muted'>{t('BUILDER_BUILD_LEAVE_PAGE', 'You can leave this page. The build’s status updates here.')}</p>
+      </form>
+    </Dialog>
   )
 }
 
@@ -176,9 +162,7 @@ export const BuildLogDialog = (props) => {
   const { attempt, getBuildLog, formatDate, onClose } = props
   const [, t] = useLanguage()
   const [logState, setLogState] = useState({ loading: true, log: null, error: null })
-  const [copied, setCopied] = useState(false)
   const boxRef = useRef(null)
-  const titleId = useId()
 
   const load = async () => {
     setLogState(prev => ({ ...prev, loading: true, error: null }))
@@ -198,15 +182,6 @@ export const BuildLogDialog = (props) => {
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight
   }, [logState.log])
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(logState.log || '')
-      setCopied(true)
-    } catch (err) {
-      setCopied(false)
-    }
-  }
-
   const download = () => {
     const url = URL.createObjectURL(new Blob([logState.log || ''], { type: 'text/plain' }))
     const link = document.createElement('a')
@@ -224,39 +199,54 @@ export const BuildLogDialog = (props) => {
   ].filter(Boolean).join(' · ')
 
   return (
-    <Modal open width='min(840px, calc(100vw - 32px))' padding='24px' onClose={onClose}>
-      <DialogBody role='dialog' aria-labelledby={titleId}>
-        <DialogTitle id={titleId}>{title}</DialogTitle>
-        <MutedText small>
-          <Pill kind={getBuildKind(attempt.status)}>{getBuildStatusLabel(attempt.status, t)}</Pill>
-          {' '}
-          {formatDate(attempt.created_at, 'MMM D, YYYY h:mm A')}
-        </MutedText>
-        {attempt.status === 'failed' && <Notice tone='error' role='status'>{getBuildFailureText(attempt, t)}</Notice>}
-        {logState.error && <ErrorBanner role='alert'>{logState.error}</ErrorBanner>}
-        {!logState.error && (
-          <LogBox ref={boxRef} tabIndex={0} aria-label={t('BUILDER_BUILD_LOG', 'Build log')} aria-busy={logState.loading ? 'true' : 'false'}>
-            {logState.loading && logState.log === null ? t('BUILDER_LOG_LOADING', 'Loading the log…') : logState.log}
-          </LogBox>
-        )}
-        <DialogFooter>
+    <Dialog
+      open
+      onOpenChange={(open) => { if (!open) onClose() }}
+      title={title}
+      closeLabel={t('CLOSE', 'Close')}
+      size='lg'
+      className='odc-bb-log-dialog'
+      footer={(
+        <>
           {logState.log !== null && (
             <>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={copy}>
-                {copied ? t('BUILDER_COPIED', 'Copied') : t('BUILDER_COPY', 'Copy')}
-              </Button>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={download}>{t('BUILDER_DOWNLOAD_TXT', 'Download .txt')}</Button>
+              {/* redesign B2: P/CopyButton («Copied» for two seconds; a failed copy says so) */}
+              <CopyButton
+                text={logState.log}
+                label={t('BUILDER_COPY', 'Copy')}
+                copyLabel={t('BUILDER_COPY', 'Copy')}
+                copiedLabel={t('BUILDER_COPIED', 'Copied')}
+                failedLabel={t('CUSTOMERS_COPY_FAILED', "We couldn't copy. Select the text and copy it.")}
+              />
+              <Button onClick={download}>{t('BUILDER_DOWNLOAD_TXT', 'Download .txt')}</Button>
             </>
           )}
           {(isBuildRunning(attempt) || logState.error) && (
-            <Button type='button' color='secundary' borderRadius='8px' disabled={logState.loading} onClick={load}>
+            <Button disabled={logState.loading} onClick={load}>
               {logState.error ? t('BUILDER_RETRY', 'Try again') : t('BUILDER_REFRESH', 'Refresh')}
             </Button>
           )}
-          <Button type='button' color='primary' borderRadius='8px' onClick={onClose}>{t('CLOSE', 'Close')}</Button>
-        </DialogFooter>
-      </DialogBody>
-    </Modal>
+          <Button variant='primary' onClick={onClose}>{t('CLOSE', 'Close')}</Button>
+        </>
+      )}
+    >
+      <div className='odc-bb-dialog'>
+        <p className='odc-bb-muted'>
+          <BuildPill status={attempt.status} />
+          {' '}
+          {formatDate(attempt.created_at, DATE_TIME)}
+        </p>
+        {attempt.status === 'failed' && (
+          <InlineNotice tone='danger' icon={CircleAlert} className='odc-bb-notice'>{getBuildFailureText(attempt, t)}</InlineNotice>
+        )}
+        {logState.error && <InlineNotice tone='danger' icon={CircleAlert} role='alert' className='odc-bb-notice'>{logState.error}</InlineNotice>}
+        {!logState.error && (
+          <pre ref={boxRef} className='odc-bb-log' tabIndex={0} aria-label={t('BUILDER_BUILD_LOG', 'Build log')} aria-busy={logState.loading ? 'true' : 'false'}>
+            {logState.loading && logState.log === null ? t('BUILDER_LOG_LOADING', 'Loading the log…') : logState.log}
+          </pre>
+        )}
+      </div>
+    </Dialog>
   )
 }
 
@@ -264,27 +254,30 @@ export const BuildLogDialog = (props) => {
 export const RetryDialog = (props) => {
   const { attempt, busy, formatDate, onRetry, onBuildNew, onClose } = props
   const [, t] = useLanguage()
-  const titleId = useId()
   const summary = [
     getPlatformLabel(attempt.platform),
     getBuildModeLabel(attempt, t),
     attempt.app_version && `v${attempt.app_version}`,
-    `${getBuildStatusLabel(attempt.status, t)} ${formatDate(attempt.updated_at, 'MMM D, YYYY h:mm A')}`
+    `${getBuildStatusLabel(attempt.status, t)} ${formatDate(attempt.updated_at, DATE_TIME)}`
   ].filter(Boolean).join(' · ')
   return (
-    <Modal open width={DIALOG_WIDTH} padding='24px' onClose={onClose}>
-      <DialogBody role='dialog' aria-labelledby={titleId}>
-        <DialogTitle id={titleId}>{t('BUILDER_RETRY_TITLE', 'Retry this build?')}</DialogTitle>
+    <Dialog
+      open
+      onOpenChange={(open) => { if (!open) onClose() }}
+      title={t('BUILDER_RETRY_TITLE', 'Retry this build?')}
+      closeLabel={t('CLOSE', 'Close')}
+      footer={(
+        <>
+          <Button disabled={busy} onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
+          <Button disabled={busy} onClick={onBuildNew}>{t('BUILDER_BUILD_WITH_CURRENT', 'Build with current settings')}</Button>
+          <Button variant='primary' disabled={busy} onClick={onRetry}>{t('BUILDER_RETRY_BUILD', 'Retry')}</Button>
+        </>
+      )}
+    >
+      <div className='odc-bb-dialog'>
         <p>{t('BUILDER_RETRY_HELP', 'It uses the settings of this attempt. Changes you made after it aren’t included: start a new build to use them.')}</p>
-        <MutedText small>{summary}</MutedText>
-        <DialogFooter>
-          <Button type='button' color='secundary' borderRadius='8px' disabled={busy} onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
-          <Button type='button' color='primary' outline borderRadius='8px' disabled={busy} onClick={onBuildNew}>
-            {t('BUILDER_BUILD_WITH_CURRENT', 'Build with current settings')}
-          </Button>
-          <Button type='button' color='primary' borderRadius='8px' disabled={busy} onClick={onRetry}>{t('BUILDER_RETRY_BUILD', 'Retry')}</Button>
-        </DialogFooter>
-      </DialogBody>
-    </Modal>
+        <p className='odc-bb-muted'>{summary}</p>
+      </div>
+    </Dialog>
   )
 }

@@ -18,7 +18,7 @@ export const Header = styled.div`
 
 export const Title = styled.h1`
   font-weight: bold;
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   line-height: 30px;
   margin-bottom: 13px;
   margin-top: 0px;
@@ -36,8 +36,20 @@ export const Tab = styled.div`
   padding: 10px 0px;
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
+  background: none;
+  border: none;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
   ${props => props.theme?.rtl
 ? css`
     margin-left: 30px;

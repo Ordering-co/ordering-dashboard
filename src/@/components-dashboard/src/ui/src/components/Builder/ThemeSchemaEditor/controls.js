@@ -1,30 +1,11 @@
 import React, { Suspense, lazy, useEffect, useId, useRef, useState } from 'react'
-import { Overlay, Popover } from 'react-bootstrap'
-import { ArrowCounterclockwise, Link45deg } from 'react-bootstrap-icons'
 
-import { Button } from '../../../styles'
-import { Confirm } from '../../Shared'
-import {
-  ColorPopover,
-  ColorValueButton,
-  FieldError,
-  NumberControl,
-  OpacityRow,
-  ResetButton,
-  RowControls,
-  Segmented,
-  SelectControl,
-  StyleOptions,
-  SwatchLabel,
-  Swatch,
-  SwitchTrack,
-  ThemeColorGrid,
-  ToggleControl,
-  ValueTag
-} from '../BuilderWebTheme/styles'
-import { alphaOf, formatColor, fromPickerColor, parseColor, toPickerColor, withAlpha } from './colors'
+import { RotateCcw } from '../../Shared/Icon'
+import { Button, ConfirmDialog, IconButton, RadioGroup, Select, Switch, TextArea, TextField, cx } from '../../Shared/Product'
+import { alphaOf, formatColor, parseColor } from './colors'
 import { Drawing } from './drawings'
 import { ScopeControl } from './ScopeControl'
+import { ColorSwatch, ColorSwatchInput, ThemeColorField } from './ThemeColorField'
 import { CROPPABLE_FORMATS, fileFormat, planImage, readImage, renderCrop } from './imageResize'
 import {
   childKeys,
@@ -45,10 +26,16 @@ import {
   toAlias,
   typeOf
 } from './schemaNodes'
+import './theme-controls.css'
 
 // The catalog of controls. Each one gets the node's
 // `path`, its `value` as the theme has it now and `onChange`; what it offers
 // comes from the schema. `ctx` brings the schema, `t` and the theme.
+// redesign B3b: on Product pieces. Selects → P/Select (the control of P/SelectField, without its frame: the row
+// draws the label), segmented and cards → P/RadioGroup `cards`, toggles → P/Switch, numbers and texts → P/TextField, html →
+// P/TextArea, the colour → ThemeColorField (local), buttons → P/Button, the small-image question → P/ConfirmDialog.
+
+export { ColorSwatchInput }
 
 const metaOf = (ctx, path) => editorOf(getAt(ctx.schema, path))
 
@@ -60,13 +47,9 @@ const optionText = (ctx, option, choose) => {
 }
 
 /** Back to the default. */
-export const ResetValue = ({ label, onClick }) => (
-  <ResetButton type='button' aria-label={label} title={label} onClick={onClick}>
-    <ArrowCounterclockwise aria-hidden='true' />
-  </ResetButton>
-)
+export const ResetValue = ({ label, onClick }) => <IconButton icon={RotateCcw} label={label} className='odc-tc-reset' onClick={onClick} />
 
-/** Values of any kind as the value of an <option>. */
+/** Values of any kind as the value of an option (P/Select and P/RadioGroup compare text). */
 const encode = (value) => JSON.stringify(value ?? null)
 const decode = (text) => JSON.parse(text)
 
@@ -75,39 +58,7 @@ const decode = (text) => JSON.parse(text)
 /** The theme's colors (`tokens.color`), named, as a color can follow them. */
 const themeColors = (ctx) => childKeys(ctx.schema?.tokens?.color)
   .filter(name => isNode(ctx.schema.tokens.color[name]))
-  .map(name => ({ name, label: formatText(ctx.t, labelOf(ctx.schema, `tokens.color.${name}`), { fallback: name }), value: resolveValue(ctx, toAlias('color', name)) }))
-
-/** The opacity of a color that may be translucent, 0 to 100 % in steps of 1. */
-const OpacityInput = ({ t, label, value, onChange }) => {
-  const percent = Math.round(alphaOf(value) * 100)
-  return (
-    <OpacityRow>
-      <span aria-hidden='true'>{t('BUILDER_THEME_OPACITY', 'Opacity')}</span>
-      <input type='range' min={0} max={100} step={1} value={percent} aria-label={t('BUILDER_THEME_OPACITY_OF', '_name_ opacity').replace('_name_', label)} aria-valuetext={`${percent} %`} onChange={(e) => onChange(withAlpha(value, Number(e.target.value) / 100))} />
-      <output aria-hidden='true'>{percent} %</output>
-    </OpacityRow>
-  )
-}
-
-/** A color picked with the browser's picker; with `alpha`, its opacity too (the schema's `alpha`). */
-export const ColorSwatchInput = ({ t, label, value, onChange, invalid, describedBy, alpha = false }) => {
-  const swatch = (
-    <SwatchLabel invalid={invalid}>
-      <input type='color' aria-label={label} aria-invalid={invalid ? 'true' : undefined} aria-describedby={describedBy} value={toPickerColor(value)} onChange={(e) => onChange(fromPickerColor(e.target.value, value, { alpha }))} />
-      <Swatch color={value} aria-hidden='true' />
-      <span aria-hidden='true' style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value === 'transparent' && t ? t('BUILDER_THEME_TRANSPARENT', 'Transparent') : formatColor(value)}</span>
-    </SwatchLabel>
-  )
-  if (!alpha) return swatch
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', minWidth: 0 }}>
-      {swatch}
-      <OpacityInput t={t} label={label} value={value} onChange={onChange} />
-    </div>
-  )
-}
-
-const POPOVER_FLIP = { modifiers: [{ name: 'flip', options: { fallbackPlacements: ['top-start'] } }] }
+  .map(name => ({ name, alias: toAlias('color', name), label: formatText(ctx.t, labelOf(ctx.schema, `tokens.color.${name}`), { fallback: name }), value: resolveValue(ctx, toAlias('color', name)) }))
 
 /**
  * A color: a token's own value (picker only), or a component's, which may
@@ -118,9 +69,6 @@ const POPOVER_FLIP = { modifiers: [{ name: 'flip', options: { fallbackPlacements
  */
 export const ColorControl = ({ ctx, path, label, value, onChange, invalid, describedBy, compact }) => {
   const { t } = ctx
-  const [open, setOpen] = useState(false)
-  const target = useRef(null)
-  const popoverId = useId()
   const alpha = metaOf(ctx, path).alpha === true
   if (String(path).startsWith('tokens.')) return <ColorSwatchInput t={t} label={label} value={value} onChange={onChange} invalid={invalid} describedBy={describedBy} alpha={alpha} />
   const role = parseRole(value)
@@ -136,34 +84,20 @@ export const ColorControl = ({ ctx, path, label, value, onChange, invalid, descr
       : value === 'transparent' ? t('BUILDER_THEME_TRANSPARENT', 'Transparent') : formatColor(value)
   if (role) return <span>{name}</span>
   return (
-    <>
-      <ColorValueButton ref={target} type='button' invalid={invalid} aria-haspopup='dialog' aria-expanded={open ? 'true' : 'false'} aria-controls={open ? popoverId : undefined} aria-label={`${label}: ${name}`} aria-describedby={describedBy} title={compact ? name : undefined} onClick={() => setOpen(prev => !prev)}>
-        <Swatch color={shown} aria-hidden='true' small />
-        <span aria-hidden='true'>{name}</span>
-        {compact
-          ? linked && <ValueTag linked aria-hidden='true' title={t('BUILDER_THEME_LINKED', 'Theme')}><Link45deg /></ValueTag>
-          : (
-            <ValueTag linked={linked} aria-hidden='true'>
-              {linked && <Link45deg />}
-              {linked ? t('BUILDER_THEME_LINKED', 'Theme') : t('BUILDER_THEME_CUSTOM', 'Custom')}
-            </ValueTag>
-            )}
-      </ColorValueButton>
-      <Overlay target={target.current} show={open} placement='bottom-start' flip popperConfig={POPOVER_FLIP} rootClose onHide={() => setOpen(false)}>
-        <Popover id={popoverId} role='dialog' aria-label={label} style={{ maxWidth: 'calc(100vw - 32px)' }}>
-          <ColorPopover>
-            <h4>{t('BUILDER_THEME_THEME_COLORS', 'Theme colors')}</h4>
-            <ThemeColorGrid>
-              {colors.map(color => (
-                <button key={color.name} type='button' aria-pressed={linked && alias[1] === color.name ? 'true' : 'false'} aria-label={color.label} title={color.label} style={{ background: color.value }} onClick={() => { onChange(toAlias('color', color.name)); setOpen(false) }} />
-              ))}
-            </ThemeColorGrid>
-            <h4>{t('BUILDER_THEME_CUSTOM_COLOR', 'Custom color')}</h4>
-            <ColorSwatchInput t={t} label={t('BUILDER_THEME_PICK_COLOR', 'Pick a color')} value={shown} onChange={onChange} alpha={alpha} />
-          </ColorPopover>
-        </Popover>
-      </Overlay>
-    </>
+    <ThemeColorField
+      t={t}
+      label={label}
+      valueText={name}
+      color={shown}
+      linked={linked}
+      compact={compact}
+      invalid={invalid}
+      describedBy={describedBy}
+      colors={colors}
+      selected={linked ? alias[1] : null}
+      alpha={alpha}
+      onChange={onChange}
+    />
   )
 }
 
@@ -175,9 +109,9 @@ export const ComputedValue = ({ t, label, value }) => {
   const color = typeof value === 'string' && parseColor(value) ? formatColor(value) : null
   const text = t('BUILDER_THEME_OPTION_AUTO', 'Automatic')
   return (
-    <span role='img' aria-label={`${label}: ${text}${color ? ` (${color})` : ''}`} title={color || undefined} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minWidth: 0, padding: '0 10px', fontSize: 13, color: '#5E6B7D' }}>
-      {color && <Swatch color={value} aria-hidden='true' small />}
-      <span aria-hidden='true' style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{text}</span>
+    <span role='img' aria-label={`${label}: ${text}${color ? ` (${color})` : ''}`} title={color || undefined} className='odc-tc-computed'>
+      {color && <ColorSwatch color={value} small />}
+      <span aria-hidden='true' className='odc-tc-ellipsis'>{text}</span>
     </span>
   )
 }
@@ -204,8 +138,11 @@ const rangeMessage = (t, unit) => {
 /**
  * A number in `min` to `max`, in `step`s, with its unit. What is typed
  * outside them shows the range and is not saved. A % of a 0–1 value shows ×100.
+ * redesign B3b (decision 3): a P/TextField of type number, not P/NumberField. Base UI's NumberField reformats and
+ * clamps what is typed on blur, so a value off the range would be saved at its limit without the message; this one keeps
+ * the draft as typed (1.5 isn't rewritten as 1.50 under the cursor), says the range and saves nothing outside it.
  */
-export const NumberField = ({ t, label, value, min, max, step = 1, unit, onChange, invalid, describedBy, scale = 1 }) => {
+export const NumberField = ({ t, label, value, min, max, step = 1, unit, onChange, invalid, describedBy, scale = 1, className }) => {
   const shown = (number) => {
     if (number === null || number === undefined || number === '') return ''
     const rounded = Math.round(Number(number) * scale * 100) / 100
@@ -219,36 +156,32 @@ export const NumberField = ({ t, label, value, min, max, step = 1, unit, onChang
   const fitsStep = decimals > 0 || step * scale !== 1 || Number.isInteger(number)
   const outside = draft === '' || !Number.isFinite(number) || !fitsStep ||
     (typeof min === 'number' && number < min * scale) || (typeof max === 'number' && number > max * scale)
-  const errorId = useId()
+  const message = outside && typeof min === 'number' && typeof max === 'number'
+    ? rangeMessage(t, unit).replace('_min_', isRatio(unit) ? min.toFixed(2) : min * scale).replace('_max_', isRatio(unit) ? max.toFixed(2) : max * scale)
+    : undefined
   return (
-    <span style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, maxWidth: 160 }}>
-      <span style={{ position: 'relative', display: 'block' }}>
-        <NumberControl
-          type='number'
-          min={typeof min === 'number' ? min * scale : undefined}
-          max={typeof max === 'number' ? max * scale : undefined}
-          step={scale === 1 ? step : 'any'}
-          aria-label={label}
-          aria-invalid={outside || invalid ? 'true' : undefined}
-          aria-describedby={[outside ? errorId : null, describedBy].filter(Boolean).join(' ') || undefined}
-          invalid={outside || invalid}
-          value={draft}
-          style={unit ? { paddingRight: 34 } : undefined}
-          onChange={(e) => {
-            setDraft(e.target.value)
-            const next = Number(e.target.value)
-            const inRange = (typeof min !== 'number' || next >= min * scale) && (typeof max !== 'number' || next <= max * scale)
-            if (e.target.value !== '' && Number.isFinite(next) && inRange) onChange(Math.round((next / scale) * 10000) / 10000)
-          }}
-          onBlur={() => setDraft(shown(value))}
-        />
-        {unit && <span aria-hidden='true' style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 13, color: '#5E6B7D', pointerEvents: 'none' }}>{unitText(unit)}</span>}
-      </span>
-      {outside && typeof min === 'number' && typeof max === 'number' && (
-        <FieldError id={errorId} role='alert' style={{ gridColumn: 'auto' }}>
-          {rangeMessage(t, unit).replace('_min_', isRatio(unit) ? min.toFixed(2) : min * scale).replace('_max_', isRatio(unit) ? max.toFixed(2) : max * scale)}
-        </FieldError>
-      )}
+    <span className={cx('odc-tc-number', className)}>
+      <TextField
+        type='number'
+        min={typeof min === 'number' ? min * scale : undefined}
+        max={typeof max === 'number' ? max * scale : undefined}
+        step={scale === 1 ? step : 'any'}
+        aria-label={label}
+        aria-describedby={describedBy}
+        invalid={outside || !!invalid}
+        error={message}
+        value={draft}
+        className='odc-figure'
+        fieldClassName='odc-tc-number-field'
+        onChange={(text) => {
+          setDraft(text)
+          const next = Number(text)
+          const inRange = (typeof min !== 'number' || next >= min * scale) && (typeof max !== 'number' || next <= max * scale)
+          if (text !== '' && Number.isFinite(next) && inRange) onChange(Math.round((next / scale) * 10000) / 10000)
+        }}
+        onBlur={() => setDraft(shown(value))}
+      />
+      {unit && <span aria-hidden='true' className='odc-tc-unit'>{unitText(unit)}</span>}
     </span>
   )
 }
@@ -305,36 +238,35 @@ export const LevelControl = ({ ctx, path, label, value, own, fallback, onChange,
   const unset = meta.labels?.unset && !own
   const amount = (level) => amountOf(scale, resolveValue(ctx, level.value))
   const selected = unset ? 'unset' : custom ? 'custom' : encode(value)
+  const options = [
+    ...(unset ? [{ value: 'unset', label: formatText(t, meta.labels.unset, { values: { _px_: resolveValue(ctx, fallback) ?? 0 } }) }] : []),
+    // A text style of its own the node no longer offers (`custom` off) has no value to name
+    ...(custom && !takesNumber ? [{ value: 'custom', label: typeof value === 'object' ? t('BUILDER_THEME_CUSTOM', 'Custom') : t('BUILDER_THEME_CUSTOM_NUMBER', 'Custom (_value_)').replace('_value_', value) }] : []),
+    ...shown.map(level => {
+      const name = level.label ? formatText(t, level.label) : humanize(parseAlias(level.value)?.[1] ?? level.value)
+      const extra = amount(level)
+      return { value: encode(level.value), label: extra ? `${name} · ${extra}` : name }
+    }),
+    ...(takesNumber ? [{ value: 'custom', label: t('BUILDER_THEME_CUSTOM', 'Custom') }] : [])
+  ]
   return (
-    <span style={{ display: 'flex', gap: 6, minWidth: 0 }}>
-      <SelectControl
-        aria-label={label}
+    <span className='odc-tc-level'>
+      <Select
+        label={label}
         invalid={invalid && !custom}
         aria-describedby={describedBy}
         value={selected}
-        style={{ flex: 1, minWidth: 0 }}
-        onChange={(e) => {
-          if (e.target.value === 'unset') return onChange(null)
-          if (e.target.value !== 'custom') return onChange(decode(e.target.value))
+        options={options}
+        onValueChange={(next) => {
+          if (next === 'unset') return onChange(null)
+          if (next !== 'custom') return onChange(decode(next))
           const from = Number(resolveValue(ctx, value ?? fallback))
           const start = Number.isFinite(from) ? from : meta.min
           onChange(Math.min(Math.max(start, meta.min), meta.max ?? start))
         }}
-      >
-        {unset && <option value='unset'>{formatText(t, meta.labels.unset, { values: { _px_: resolveValue(ctx, fallback) ?? 0 } })}</option>}
-        {/* A text style of its own the node no longer offers (`custom` off) has no value to name */}
-        {custom && !takesNumber && <option value='custom'>{typeof value === 'object' ? t('BUILDER_THEME_CUSTOM', 'Custom') : t('BUILDER_THEME_CUSTOM_NUMBER', 'Custom (_value_)').replace('_value_', value)}</option>}
-        {shown.map(level => {
-          const name = level.label ? formatText(t, level.label) : humanize(parseAlias(level.value)?.[1] ?? level.value)
-          const extra = amount(level)
-          return <option key={encode(level.value)} value={encode(level.value)}>{extra ? `${name} · ${extra}` : name}</option>
-        })}
-        {takesNumber && <option value='custom'>{t('BUILDER_THEME_CUSTOM', 'Custom')}</option>}
-      </SelectControl>
+      />
       {custom && takesNumber && (
-        <span style={{ width: meta.unit === 'ms' ? 100 : 90, flex: 'none' }}>
-          <NumberField t={t} label={t('BUILDER_THEME_CUSTOM_OF', '_name_: custom').replace('_name_', label)} value={value} min={meta.min} max={meta.max} step={meta.step ?? (type === 'opacity' ? 0.01 : 1)} unit={meta.unit} scale={type === 'opacity' ? 100 : 1} invalid={invalid} onChange={onChange} />
-        </span>
+        <NumberField t={t} className='odc-tc-level-number' label={t('BUILDER_THEME_CUSTOM_OF', '_name_: custom').replace('_name_', label)} value={value} min={meta.min} max={meta.max} step={meta.step ?? (type === 'opacity' ? 0.01 : 1)} unit={meta.unit} scale={type === 'opacity' ? 100 : 1} invalid={invalid} onChange={onChange} />
       )}
     </span>
   )
@@ -355,11 +287,18 @@ export const SelectOptionControl = ({ ctx, path, label, value, onChange, invalid
   const unset = !!unsetLabel && (value === null || value === undefined)
   const known = unset || options.some(option => encode(option.value) === encode(value))
   return (
-    <SelectControl aria-label={label} invalid={invalid} aria-describedby={describedBy} value={unset ? UNSET : encode(value)} onChange={(e) => onChange(e.target.value === UNSET ? null : decode(e.target.value))}>
-      {unsetLabel && <option value={UNSET}>{formatText(ctx.t, unsetLabel)}</option>}
-      {!known && <option value={encode(value)}>{value === null || value === undefined ? '—' : humanize(value)}</option>}
-      {options.map(option => <option key={encode(option.value)} value={encode(option.value)}>{optionText(ctx, option, choose)}</option>)}
-    </SelectControl>
+    <Select
+      label={label}
+      invalid={invalid}
+      aria-describedby={describedBy}
+      value={unset ? UNSET : encode(value)}
+      options={[
+        ...(unsetLabel ? [{ value: UNSET, label: formatText(ctx.t, unsetLabel) }] : []),
+        ...(!known ? [{ value: encode(value), label: value === null || value === undefined ? '—' : humanize(value) }] : []),
+        ...options.map(option => ({ value: encode(option.value), label: optionText(ctx, option, choose) }))
+      ]}
+      onValueChange={(next) => onChange(next === UNSET ? null : decode(next))}
+    />
   )
 }
 
@@ -368,40 +307,50 @@ const withValue = (options, value) => (value === null || value === undefined || 
   ? options
   : [...options, { value }])
 
-export const SegmentedControl = ({ ctx, path, label, value, onChange, choose }) => {
-  const name = useId()
-  return (
-    <Segmented role='radiogroup' aria-label={label}>
-      {withValue(optionsOf(ctx.schema, path), value).map(option => (
-        <label key={encode(option.value)}>
-          <input type='radio' name={name} value={encode(option.value)} checked={encode(value) === encode(option.value)} onChange={() => onChange(option.value)} />
-          <Drawing name={option.drawing} />
-          {optionText(ctx, option, choose)}
-        </label>
-      ))}
-    </Segmented>
-  )
-}
+/**
+ * Options side by side, each with its drawing (any number of them).
+ * redesign B3b (decision 1): a P/RadioGroup `cards` (P/SegmentedControl takes up to 4 and no drawings); the
+ * row names it, so the group's title is hidden. `odc-tc-segmented` narrows the cards so 5–6 fit in a row.
+ */
+export const SegmentedControl = ({ ctx, path, label, value, onChange, choose }) => (
+  <RadioGroup
+    label={label}
+    hideLabel
+    variant='cards'
+    className='odc-tc-choices odc-tc-segmented'
+    value={encode(value)}
+    onValueChange={(next) => onChange(decode(next))}
+    options={withValue(optionsOf(ctx.schema, path), value).map(option => ({
+      value: encode(option.value),
+      label: optionText(ctx, option, choose),
+      media: option.drawing ? <Drawing name={option.drawing} /> : undefined
+    }))}
+  />
+)
 
 /** Options as cards, each with its drawing and what it's for. */
 export const CardsControl = ({ ctx, path, label, value, onChange }) => {
-  const name = useId()
   if (typeOf(ctx.schema, path) === 'slot') return <SlotControl ctx={ctx} path={path} label={label} value={value} onChange={onChange} />
   return (
-    <StyleOptions role='radiogroup' aria-label={label} style={{ padding: 0 }}>
-      {withValue(optionsOf(ctx.schema, path), value).map((option, index) => (
-        <label key={encode(option.value)}>
-          <strong>
-            <input type='radio' name={name} value={encode(option.value)} aria-label={optionText(ctx, option)} aria-describedby={option.info ? `${name}-${index}` : undefined} checked={encode(value) === encode(option.value)} onChange={() => onChange(option.value)} />
-            {optionText(ctx, option)}
-          </strong>
-          <Drawing name={option.drawing} />
-          {option.info && <small id={`${name}-${index}`}>{formatText(ctx.t, option.info)}</small>}
-        </label>
-      ))}
-    </StyleOptions>
+    <RadioGroup
+      label={label}
+      hideLabel
+      variant='cards'
+      className='odc-tc-choices'
+      value={encode(value)}
+      onValueChange={(next) => onChange(decode(next))}
+      options={withValue(optionsOf(ctx.schema, path), value).map(option => ({
+        value: encode(option.value),
+        label: optionText(ctx, option),
+        description: option.info ? formatText(ctx.t, option.info) : undefined,
+        media: option.drawing ? <Drawing name={option.drawing} /> : undefined
+      }))}
+    />
   )
 }
+
+/** Controls side by side (one column on a narrow screen). */
+const Row = ({ columns, children }) => <div className='odc-tc-row' style={{ '--odc-tc-columns': columns }}>{children}</div>
 
 /**
  * A piece of a group (`slot`): always the same component, with a select per
@@ -412,27 +361,29 @@ export const SlotControl = ({ ctx, path, label, value, onChange }) => {
   const piece = value || {}
   const axes = Object.keys(fields).filter(axis => axis in piece)
   return (
-    <RowControls columns={`repeat(${Math.max(axes.length, 1)}, minmax(0, 1fr))`}>
+    <Row columns={`repeat(${Math.max(axes.length, 1)}, minmax(0, 1fr))`}>
       {axes.map(axis => {
         const field = fields[axis]
         const fieldLabel = `${label}: ${formatText(ctx.t, field.label, { fallback: axis })}`
+        const offered = field.options || []
         return (
-          <SelectControl key={axis} aria-label={fieldLabel} value={encode(piece[axis])} onChange={(e) => onChange({ ...piece, [axis]: decode(e.target.value) })}>
-            {!(field.options || []).some(option => encode(option.value) === encode(piece[axis])) && <option value={encode(piece[axis])}>{piece[axis] === null ? '—' : humanize(piece[axis])}</option>}
-            {(field.options || []).map(option => <option key={encode(option.value)} value={encode(option.value)}>{optionText(ctx, option)}</option>)}
-          </SelectControl>
+          <Select
+            key={axis}
+            label={fieldLabel}
+            value={encode(piece[axis])}
+            options={[
+              ...(!offered.some(option => encode(option.value) === encode(piece[axis])) ? [{ value: encode(piece[axis]), label: piece[axis] === null ? '—' : humanize(piece[axis]) }] : []),
+              ...offered.map(option => ({ value: encode(option.value), label: optionText(ctx, option) }))
+            ]}
+            onValueChange={(next) => onChange({ ...piece, [axis]: decode(next) })}
+          />
         )
       })}
-    </RowControls>
+    </Row>
   )
 }
 
-export const Toggle = ({ label, checked, onChange, disabled }) => (
-  <ToggleControl>
-    <input type='checkbox' role='switch' aria-label={label} checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} />
-    <SwitchTrack checked={checked} aria-hidden='true' />
-  </ToggleControl>
-)
+export const Toggle = ({ label, checked, onChange, disabled }) => <Switch label={label} checked={checked} disabled={disabled} onCheckedChange={(next) => onChange(next)} />
 
 export const ToggleNodeControl = ({ label, value, onChange }) => <Toggle label={label} checked={value !== false && value !== null && value !== undefined} onChange={onChange} />
 
@@ -440,6 +391,7 @@ export const ToggleNodeControl = ({ label, value, onChange }) => <Toggle label={
 
 const BORDER_STYLES = ['solid', 'dashed', 'dotted']
 const isNoBorder = (value) => value === null || value === undefined || value === 'none' || value?.width === 0
+const EMPTY_OPTION = [{ value: '', label: '—' }]
 
 /**
  * Width, style and color of a border. "No border" saves `none` (the API
@@ -467,28 +419,34 @@ export const BorderControl = ({ ctx, path, label, value, fallback, onChange, inv
     onChange({ width: next, color: none ? (roleColor || fallback?.color || '{color.border}') : color, style: value?.style || 'solid' })
   }
   const styleLabel = (style) => ({ solid: t('BUILDER_THEME_BORDER_SOLID', 'Solid'), dashed: t('BUILDER_THEME_BORDER_DASHED', 'Dashed'), dotted: t('BUILDER_THEME_BORDER_DOTTED', 'Dotted') }[style])
+  const colorLabel = t('BUILDER_THEME_BORDER_COLOR_OF', '_name_ color').replace('_name_', label)
   return (
-    <RowControls columns={(roleColor || none) && !unset ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))'}>
-      <SelectControl aria-label={t('BUILDER_THEME_BORDER_WIDTH_OF', '_name_ width').replace('_name_', label)} invalid={invalid} value={widthValue} onChange={(e) => changeWidth(e.target.value)}>
-        {unsetLabel
-          ? <option value='unset'>{formatText(t, unsetLabel)}</option>
-          : <option value='none'>{meta.labels?.none ? formatText(t, meta.labels.none) : t('BUILDER_THEME_NO_BORDER', 'No border')}</option>}
-        {widthValue === 'custom' && <option value='custom'>{typeof value.width === 'number' ? `${value.width} px` : t('BUILDER_THEME_CUSTOM_NUMBER', 'Custom (_value_)').replace('_value_', value.width)}</option>}
-        {widths.map(level => <option key={level.value} value={level.value}>{formatText(t, level.label, { fallback: level.name })}</option>)}
-      </SelectControl>
-      <SelectControl aria-label={t('BUILDER_THEME_BORDER_STYLE_OF', '_name_ style').replace('_name_', label)} disabled={none} value={none ? '' : value?.style || 'solid'} onChange={(e) => onChange({ ...value, style: e.target.value })}>
-        {none && <option value=''>—</option>}
-        {BORDER_STYLES.map(style => <option key={style} value={style}>{styleLabel(style)}</option>)}
-      </SelectControl>
-      {unset && (
-        <SelectControl aria-label={t('BUILDER_THEME_BORDER_COLOR_OF', '_name_ color').replace('_name_', label)} disabled value=''>
-          <option value=''>—</option>
-        </SelectControl>
-      )}
+    <Row columns={(roleColor || none) && !unset ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))'}>
+      <Select
+        label={t('BUILDER_THEME_BORDER_WIDTH_OF', '_name_ width').replace('_name_', label)}
+        invalid={invalid}
+        value={widthValue}
+        options={[
+          unsetLabel
+            ? { value: 'unset', label: formatText(t, unsetLabel) }
+            : { value: 'none', label: meta.labels?.none ? formatText(t, meta.labels.none) : t('BUILDER_THEME_NO_BORDER', 'No border') },
+          ...(widthValue === 'custom' ? [{ value: 'custom', label: typeof value.width === 'number' ? `${value.width} px` : t('BUILDER_THEME_CUSTOM_NUMBER', 'Custom (_value_)').replace('_value_', value.width) }] : []),
+          ...widths.map(level => ({ value: level.value, label: formatText(t, level.label, { fallback: level.name }) }))
+        ]}
+        onValueChange={changeWidth}
+      />
+      <Select
+        label={t('BUILDER_THEME_BORDER_STYLE_OF', '_name_ style').replace('_name_', label)}
+        disabled={none}
+        value={none ? '' : value?.style || 'solid'}
+        options={[...(none ? EMPTY_OPTION : []), ...BORDER_STYLES.map(style => ({ value: style, label: styleLabel(style) }))]}
+        onValueChange={(next) => onChange({ ...value, style: next })}
+      />
+      {unset && <Select label={colorLabel} disabled value='' options={EMPTY_OPTION} />}
       {!roleColor && !none && (
-        <ColorControl ctx={ctx} path={`${path}.color`} label={t('BUILDER_THEME_BORDER_COLOR_OF', '_name_ color').replace('_name_', label)} value={color} compact onChange={(next) => onChange({ ...value, color: next })} />
+        <ColorControl ctx={ctx} path={`${path}.color`} label={colorLabel} value={color} compact onChange={(next) => onChange({ ...value, color: next })} />
       )}
-    </RowControls>
+    </Row>
   )
 }
 
@@ -511,15 +469,19 @@ export const ShadowControl = ({ ctx, path, label, value, onChange, invalid }) =>
     if (next !== 'custom') onChange(next)
   }
   return (
-    <SelectControl aria-label={label} invalid={invalid} value={selected} onChange={(e) => change(e.target.value)}>
-      {(unset || unsetLabel) && (
-        <option value='unset'>
-          {unsetLabel ? formatText(t, unsetLabel) : t('BUILDER_THEME_DEFAULT_VALUE', 'Default (_value_)').replace('_value_', formatText(t, none?.label, { fallback: 'none' }))}
-        </option>
-      )}
-      {selected === 'custom' && <option value='custom'>{t('BUILDER_THEME_CUSTOM_SHADOW', 'Custom')}</option>}
-      {levels.map(level => <option key={level.value} value={level.value}>{formatText(t, level.label, { fallback: level.name })}</option>)}
-    </SelectControl>
+    <Select
+      label={label}
+      invalid={invalid}
+      value={selected}
+      options={[
+        ...(unset || unsetLabel
+          ? [{ value: 'unset', label: unsetLabel ? formatText(t, unsetLabel) : t('BUILDER_THEME_DEFAULT_VALUE', 'Default (_value_)').replace('_value_', formatText(t, none?.label, { fallback: 'none' })) }]
+          : []),
+        ...(selected === 'custom' ? [{ value: 'custom', label: t('BUILDER_THEME_CUSTOM_SHADOW', 'Custom') }] : []),
+        ...levels.map(level => ({ value: level.value, label: formatText(t, level.label, { fallback: level.name }) }))
+      ]}
+      onValueChange={change}
+    />
   )
 }
 
@@ -579,22 +541,22 @@ export const TypographyControl = ({ ctx, path, label, value, onChange, invalid, 
   // The font's weights; one it doesn't have still shows while the style has it
   const weightOptions = (fields.weight?.options || []).filter(option => !weights || weights.includes(option.value) || option.value === weight)
   return (
-    <span style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'flex-start' }}>
+    <span className='odc-tc-typography'>
       {number('size')}
       {number('line')}
       {isRatio(fields.line?.unit) && typeof style.size === 'number' && typeof style.line === 'number' && (
-        <small aria-label={t('BUILDER_THEME_LINE_HEIGHT_PX', '_px_ px between lines').replace('_px_', Math.round(style.size * style.line))} style={{ alignSelf: 'center', fontSize: 12, color: '#5E6B7D' }}>
+        <small aria-label={t('BUILDER_THEME_LINE_HEIGHT_PX', '_px_ px between lines').replace('_px_', Math.round(style.size * style.line))} className='odc-tc-line-px'>
           {`= ${Math.round(style.size * style.line)} px`}
         </small>
       )}
       {fields.weight && (
-        <SelectControl aria-label={fieldLabel('weight')} value={weight} style={{ maxWidth: 180 }} onChange={(e) => change('weight', Number(e.target.value))}>
-          {weightOptions.map(option => <option key={option.value} value={option.value}>{`${optionText(ctx, option)} ${option.value}`}</option>)}
-        </SelectControl>
+        <span className='odc-tc-weight'>
+          <Select label={fieldLabel('weight')} value={weight} options={weightOptions.map(option => ({ value: option.value, label: `${optionText(ctx, option)} ${option.value}` }))} onValueChange={(next) => change('weight', Number(next))} />
+        </span>
       )}
       {extras && number('letter_spacing')}
       {extras && fields.transform && (
-        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span className='odc-tc-switch'>
           <Toggle label={fieldLabel('transform')} checked={style.transform === 'uppercase'} onChange={(next) => change('transform', next ? 'uppercase' : 'none')} />
           <span aria-hidden='true'>{formatText(t, fields.transform.label, { fallback: 'transform' })}</span>
         </span>
@@ -623,20 +585,21 @@ export const TextStyleLevelControl = ({ ctx, path, label, value, fallback, onCha
   const shown = alias && !levels.some(level => level.value === value) ? [...levels, { value, label: null }] : levels
   const fields = editorOf(schema?.tokens?.typography).fields || {}
   return (
-    <span style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0 }}>
-      <SelectControl
-        aria-label={label}
+    <span className='odc-tc-stack'>
+      <Select
+        label={label}
         invalid={invalid && !custom}
         aria-describedby={describedBy}
         value={custom ? 'custom' : encode(value)}
-        onChange={(e) => {
-          if (e.target.value !== 'custom') return onChange(decode(e.target.value))
+        options={[
+          ...shown.map(level => ({ value: encode(level.value), label: level.label ? formatText(t, level.label) : humanize(parseAlias(level.value)?.[1] ?? level.value) })),
+          { value: 'custom', label: t('BUILDER_THEME_CUSTOM', 'Custom') }
+        ]}
+        onValueChange={(next) => {
+          if (next !== 'custom') return onChange(decode(next))
           onChange(withoutFamily(resolveValue(ctx, value ?? fallback)))
         }}
-      >
-        {shown.map(level => <option key={encode(level.value)} value={encode(level.value)}>{level.label ? formatText(t, level.label) : humanize(parseAlias(level.value)?.[1] ?? level.value)}</option>)}
-        <option value='custom'>{t('BUILDER_THEME_CUSTOM', 'Custom')}</option>
-      </SelectControl>
+      />
       {custom && <TypographyControl ctx={ctx} path={path} label={label} value={value} fields={fields} defaults={withoutFamily(resolveValue(ctx, fallback))} invalid={invalid} onChange={(next) => onChange(withoutFamily(next))} />}
     </span>
   )
@@ -652,9 +615,15 @@ export const FontControl = ({ ctx, path, label, value, onChange, invalid }) => {
   // A font the catalog no longer has still shows while the theme has it
   const shown = value && !fonts.includes(value) ? [...fonts, value] : fonts
   return (
-    <SelectControl aria-label={label} invalid={invalid} value={value || ''} style={{ fontFamily: value ? `'${family(value)}', sans-serif` : undefined }} onChange={(e) => onChange(e.target.value)}>
-      {shown.map(font => <option key={font} value={font}>{family(font)}</option>)}
-    </SelectControl>
+    <Select
+      label={label}
+      invalid={invalid}
+      value={value || ''}
+      // The chosen font shows in itself
+      style={value ? { fontFamily: `'${family(value)}', sans-serif` } : undefined}
+      options={shown.map(font => ({ value: font, label: family(font) }))}
+      onValueChange={(next) => onChange(next)}
+    />
   )
 }
 
@@ -778,45 +747,48 @@ export const ImageControl = ({ ctx, path, label, value, onChange }) => {
     setError(null)
   }
   return (
-    <span style={{ display: 'flex', flexDirection: 'column', gap: 8, minWidth: 0 }}>
-      <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-        {value && <img src={value} alt='' style={{ width: 64, height: 40, objectFit: 'contain', borderRadius: 6, background: '#F1F3F5' }} />}
+    <span className='odc-tc-stack'>
+      <span className='odc-tc-image-row'>
+        {value && <img src={value} alt='' className='odc-tc-thumb' />}
         <input ref={fileInput} type='file' hidden accept={formats.map(format => `.${format}`).join(',')} aria-label={`${t('BUILDER_THEME_IMAGE_FILE', 'Image file')}: ${label}`} aria-describedby={hintsId} onChange={(e) => { choose(e.target.files?.[0]); e.target.value = '' }} />
-        <Button ref={uploadButton} type='button' color='primary' outline borderRadius='8px' disabled={uploading} aria-describedby={hintsId} onClick={() => fileInput.current?.click()}>
+        <Button ref={uploadButton} disabled={uploading} aria-describedby={hintsId} onClick={() => fileInput.current?.click()}>
           {uploading ? t('BUILDER_THEME_UPLOADING', 'Uploading…') : value ? t('BUILDER_THEME_IMAGE_REPLACE', 'Replace') : t('BUILDER_THEME_IMAGE_UPLOAD', 'Upload')}
         </Button>
-        {link === null && <Button type='button' color='secundary' borderRadius='8px' onClick={() => setLink('')}>{t('BUILDER_THEME_IMAGE_USE_LINK', 'Use a link')}</Button>}
+        {link === null && <Button variant='ghost' onClick={() => setLink('')}>{t('BUILDER_THEME_IMAGE_USE_LINK', 'Use a link')}</Button>}
       </span>
       {link !== null && (
-        <span style={{ display: 'flex', gap: 8 }}>
-          <NumberControl type='url' value={link} placeholder='https://' aria-label={`${t('BUILDER_THEME_IMAGE_LINK', 'Image link')}: ${label}`} onChange={(e) => { setLink(e.target.value); setError(null) }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyLink() } }} />
-          <Button type='button' color='primary' borderRadius='8px' onClick={applyLink}>{t('BUILDER_THEME_IMAGE_USE', 'Use')}</Button>
+        <span className='odc-tc-link'>
+          <TextField type='url' value={link} placeholder='https://' fieldClassName='odc-tc-link-field' aria-label={`${t('BUILDER_THEME_IMAGE_LINK', 'Image link')}: ${label}`} onChange={(text) => { setLink(text); setError(null) }} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyLink() } }} />
+          <Button variant='primary' onClick={applyLink}>{t('BUILDER_THEME_IMAGE_USE', 'Use')}</Button>
         </span>
       )}
-      <small id={hintsId} style={{ fontSize: 12, color: '#5E6B7D' }}>{imageHints(t, formats, engine.hints)}</small>
-      {error && <FieldError role='alert' style={{ gridColumn: 'auto' }}>{error}</FieldError>}
+      <small id={hintsId} className='odc-tc-hint'>{imageHints(t, formats, engine.hints)}</small>
+      {error && <span role='alert' className='odc-tc-error'>{error}</span>}
       {small && (
-        <Confirm
+        <ConfirmDialog
           open
-          width='min(440px, calc(100vw - 72px))'
+          tone='primary'
           title={t('BUILDER_THEME_IMAGE_SMALL_TITLE', 'This image is smaller than recommended')}
-          acceptText={t('BUILDER_THEME_CROP_AS_IS_CONFIRM', 'Upload anyway')}
-          cancelText={t('CANCEL', 'Cancel')}
-          onAccept={() => closeSmall(true)}
+          confirmLabel={t('BUILDER_THEME_CROP_AS_IS_CONFIRM', 'Upload anyway')}
+          cancelLabel={t('CANCEL', 'Cancel')}
+          closeLabel={t('CLOSE', 'Close')}
+          // The upload button takes the focus back once it is enabled again (the effect above), not the dialog
+          finalFocus={false}
+          onConfirm={() => closeSmall(true)}
           onCancel={() => closeSmall(false)}
-          onClose={() => closeSmall(false)}
         >
-          <p>
+          <p className='odc-tc-text'>
             {t('BUILDER_THEME_IMAGE_SMALL_TEXT', 'Yours is _yours_ and the recommended size is _size_, so it may look blurry on large screens.')
               .replace('_yours_', `${small.width} × ${small.height} px`)
               .replace('_size_', `${small.recommended.width} × ${small.recommended.height} px`)}
           </p>
-        </Confirm>
+        </ConfirmDialog>
       )}
       {crop && (
         <Suspense fallback={null}>
           <ImageCropDialog
             t={t}
+            kind={ctx.kind}
             label={label}
             url={crop.url}
             width={crop.width}
@@ -856,33 +828,26 @@ export const TextControl = ({ ctx, path, label, value, onChange, invalid, descri
   const maxLength = typeof engine.max_length === 'number' ? engine.max_length : undefined
   const [draft, setDraft] = useState(value ?? '')
   useEffect(() => { setDraft(value ?? '') }, [value])
-  const errorId = useId()
   const wrong = draft !== '' && !!pattern && !pattern.test(draft)
-  const placeholder = meta.placeholder ? formatText(ctx.t, meta.placeholder) : undefined
+  const Field = meta.multiline ? TextArea : TextField
   return (
-    <span style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
-      <NumberControl
-        as={meta.multiline ? 'textarea' : undefined}
-        rows={meta.multiline ? 3 : undefined}
-        type={meta.multiline ? undefined : 'text'}
+    <span className='odc-tc-stack'>
+      <Field
         aria-label={label}
-        aria-invalid={wrong || invalid ? 'true' : undefined}
-        aria-describedby={[wrong ? errorId : null, describedBy].filter(Boolean).join(' ') || undefined}
-        invalid={wrong || invalid}
+        aria-describedby={describedBy}
+        invalid={wrong || !!invalid}
+        error={wrong ? ctx.t('BUILDER_THEME_TEXT_PATTERN', 'This doesn’t look right, so it isn’t saved. Check it against the example.') : undefined}
         value={draft}
-        placeholder={placeholder}
+        placeholder={meta.placeholder ? formatText(ctx.t, meta.placeholder) : undefined}
         maxLength={maxLength}
-        style={meta.multiline ? { height: 'auto' } : undefined}
-        onChange={(e) => {
-          const text = e.target.value
+        onChange={(text) => {
           setDraft(text)
           if (text === '') return onChange(null)
           if (!pattern || pattern.test(text)) onChange(text)
         }}
         onBlur={() => wrong && setDraft(value ?? '')}
       />
-      {maxLength !== undefined && <small aria-hidden='true' style={{ alignSelf: 'flex-end', fontSize: 12, color: '#5E6B7D' }}>{`${draft.length}/${maxLength}`}</small>}
-      {wrong && <FieldError id={errorId} role='alert' style={{ gridColumn: 'auto' }}>{ctx.t('BUILDER_THEME_TEXT_PATTERN', 'This doesn’t look right, so it isn’t saved. Check it against the example.')}</FieldError>}
+      {maxLength !== undefined && <small aria-hidden='true' className='odc-tc-counter odc-figure'>{`${draft.length}/${maxLength}`}</small>}
     </span>
   )
 }
@@ -891,7 +856,7 @@ const RichHtmlEditor = lazy(() => import('../../Shared/RichHtmlEditor'))
 
 export const HtmlControl = ({ label, value, onChange, invalid, describedBy }) => (
   <Suspense fallback={null}>
-    <RichHtmlEditor label={label} value={value} onChange={onChange} invalid={invalid} describedBy={describedBy} />
+    <RichHtmlEditor codeTabs label={label} value={value} onChange={onChange} invalid={invalid} describedBy={describedBy} />
   </Suspense>
 )
 

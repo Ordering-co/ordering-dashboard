@@ -31,6 +31,7 @@ import {
   Field,
   FieldGrid,
   FieldHeading,
+  FieldLabelRow,
   Hint,
   InlineRow,
   Notice,
@@ -41,11 +42,20 @@ import {
   SectionHeader,
   StatusRow,
   TextDanger,
+  TextLink,
   Warning
 } from './styles'
 
 const PIN_MASK = '••••••'
 const TOKEN_MASK = '•'.repeat(40)
+
+const tokenAfterMaskEdit = (raw) => {
+  const value = String(raw ?? '')
+  if (!value || value === TOKEN_MASK || TOKEN_MASK.startsWith(value)) return ''
+  if (value.startsWith(TOKEN_MASK)) return value.slice(TOKEN_MASK.length)
+  if (value.endsWith(TOKEN_MASK)) return value.slice(0, -TOKEN_MASK.length)
+  return value.replaceAll(TOKEN_MASK, '')
+}
 
 const reasonMessages = (t) => ({
   pending_oauth: t('WHATSAPP_ERROR_PENDING_OAUTH', 'Waiting for the WhatsApp connection.'),
@@ -173,6 +183,7 @@ export const WhatsAppBotConnection = (props) => {
   const [draft, setDraft] = useState(draftFrom(connection))
   const [pin, setPin] = useState('')
   const [confirm, setConfirm] = useState(null)
+  const [tokenCleared, setTokenCleared] = useState(false)
   const savedAuthRef = useRef(connection?.authType)
 
   useEffect(() => {
@@ -180,6 +191,7 @@ export const WhatsAppBotConnection = (props) => {
     const authChanged = savedAuthRef.current !== savedAuth
     savedAuthRef.current = savedAuth
     setDraft(draftFrom(connection))
+    setTokenCleared(false)
     setPin('')
     if (authChanged) setMode(savedAuth || AUTH_BUSINESS_LOGIN)
   }, [connection])
@@ -210,7 +222,7 @@ export const WhatsAppBotConnection = (props) => {
 
   const manualPayload = connection ? manualCredentialsPayload(connection, draft) : null
   const manualMissing = connection ? missingManualFields(connection, draft) : []
-  const savedTokenVisible = connection?.authType === AUTH_MANUAL && connection?.hasAccessToken && !draft.accessToken
+  const savedTokenVisible = connection?.authType === AUTH_MANUAL && connection?.hasAccessToken && !draft.accessToken && !tokenCleared
   const canSaveManual = !busy && Boolean(manualPayload) && manualMissing.length === 0
   const copyPayload = savedAsBusinessLogin ? chatbotMessagePayload(connection, draft) : null
   const canSaveCopy = !busy && Boolean(copyPayload)
@@ -482,21 +494,36 @@ export const WhatsAppBotConnection = (props) => {
                     onChange={(event) => updateDraft('phoneNumber', digitsOnly(event.target.value))}
                   />
                 </Field>
-                <Field className='half'>
-                  {t('WHATSAPP_ACCESS_TOKEN', 'Access token')}
+                <Field as='div' className='half'>
+                  <FieldLabelRow>
+                    <span>{t('WHATSAPP_ACCESS_TOKEN', 'Access token')}</span>
+                    {(savedTokenVisible || draft.accessToken) && (
+                      <TextLink
+                        type='button'
+                        disabled={busy}
+                        onClick={() => {
+                          setTokenCleared(true)
+                          updateDraft('accessToken', '')
+                        }}
+                      >
+                        {t('CLEAR', 'Clear')}
+                      </TextLink>
+                    )}
+                  </FieldLabelRow>
                   <Input
                     type='password'
                     autoComplete='new-password'
                     spellCheck={false}
                     maxLength={512}
+                    aria-label={t('WHATSAPP_ACCESS_TOKEN', 'Access token')}
                     value={savedTokenVisible ? TOKEN_MASK : draft.accessToken}
                     disabled={busy}
                     onFocus={(event) => {
                       if (savedTokenVisible) event.target.select()
                     }}
                     onChange={(event) => {
-                      const raw = event.target.value
-                      const next = raw === TOKEN_MASK ? '' : raw.replaceAll(TOKEN_MASK, '')
+                      const next = tokenAfterMaskEdit(event.target.value)
+                      setTokenCleared(next === '')
                       updateDraft('accessToken', next)
                     }}
                   />

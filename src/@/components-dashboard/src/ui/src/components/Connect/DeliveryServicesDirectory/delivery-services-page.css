@@ -1,0 +1,81 @@
+/*
+ * redesign DS-B4 (decision 1 | M-DS7) · Delivery services page: the frame of the list beside the provider panel (split view), its header
+ * and its foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The table and the panel have their own files (providers-table.css, provider-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders, /delivery/drivers-list and /delivery/drivers-groups). */
+.odc-split.odc-dsl-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header and search, table and foot, one under the other. */
+.odc-dsl-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-dsl-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-dsl-frame {
+    display: none;
+  }
+}
+
+/* ── Header: the page header and the search, one under the other ── */
+.odc-dsl-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* : the open-menu button (sidebar collapsed) is PageHeader's `leading`. */
+
+/* ── Search ── */
+.odc-dsl-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dsl-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-dsl-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* ── Foot: the pagination ── */
+.odc-dsl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dsl-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

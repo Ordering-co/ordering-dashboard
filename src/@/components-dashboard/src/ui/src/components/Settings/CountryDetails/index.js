@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useLanguage } from '../../../../../index'
 import { Button, Input, Switch } from '../../../styles'
 import { Alert } from '../../Shared'
+import { useHubFormReport } from '../SettingsHubForm/useHubFormReport'
 
 import {
   Container,
@@ -19,8 +20,23 @@ export const CountryDetails = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const { handleSubmit, register, errors, control, reset } = useForm()
+  const { handleSubmit, register, errors, control, reset, watch } = useForm()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const titleRef = useRef(null)
+
+  // (owner decision 17): tell the Settings hub when the form holds a value other than the saved one, so its
+  // «Discard your changes?» guard covers this panel too. `watch` is undefined until a field is registered: that is not a change.
+  // After a save the list hands this panel the country with its new values, so the form is clean again.
+  const typedName = watch('name')
+  const typedCode = watch('code')
+  const isDirty = (typeof typedName === 'string' && typedName !== (country?.name ?? '')) ||
+    (typeof typedCode === 'string' && typedCode !== (country?.code ?? ''))
+  useHubFormReport('places:country', { dirty: isDirty, saving: false })
+
+  // the panel opens with the focus on its title (the list gives the focus back to what opened it on close)
+  useEffect(() => {
+    titleRef.current?.focus({ preventScroll: true })
+  }, [country?.id])
 
   const onSubmit = (values) => {
     if (country) {
@@ -46,7 +62,7 @@ export const CountryDetails = (props) => {
   return (
     <Container>
       <Header>
-        <h1>{country ? t('COUNTRY_SETTINGS', 'Country settings') : t('ADD_NEW_COUNTRY ', 'Add new country')}</h1>
+        <h1 ref={titleRef} tabIndex={-1}>{country ? t('COUNTRY_SETTINGS', 'Country settings') : t('ADD_NEW_COUNTRY ', 'Add new country')}</h1>
         {country && (
           <Switch
             defaultChecked={!!country?.enabled}

@@ -1,0 +1,1532 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b3-loyalty-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l5-b3-loyalty-giftcarddetail-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/GiftCardDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "giftCardDetailProps /* binding-sha256:8f3eda2f02129f6dd658dbe1051dba510cdf08e213d89ac869e31b628f2262fd */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-giftcards-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/GiftCards/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "giftCardsProps /* binding-sha256:13717b8d4c2b8aa179ca374ba1a49891d8daa7a2c85b9f23926f7f020e2d3b0f */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-loyaltyleveldetail-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "loyaltyLevelDetailProps /* binding-sha256:6afe34fa5917d378b33c5fa70f7a70ebca8a4e978bb6b79fc2966309ab4703ba */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-loyaltyleveldetail-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/LoyaltyLevelDetail/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "ActionSelectorWrapper button > svg: the three-dots action glyph."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 35px;\n    padding-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "CheckBoxWrapper svg: the RecordCircleFill/Circle radio glyph."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 13px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LevelName",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "OptionInputWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+            "evidence": "Same pattern as GiftCardDetail: UploadImageIcon renders only the icon component, with no span child."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.04, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.1, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".show > >div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 35px;\n    padding-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "#E63757",
+            "context": "> div > > div > .dropdown-item:last-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 13px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormController",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelName",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelName",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionInputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "border",
+            "match": "1px dashed #fff",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color",
+            "match": "#FFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "rgba(0,0,0,0.2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletbusinessdetail-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "pointsWalletBusinessDetailProps /* binding-sha256:dfb4c9f8c19f3e4bade9ed466b635cf04f6a7ae94c5b71d4d3d987fffc5c0406 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletbusinessdetail-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessDetail/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AccumulationInputWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": ".price",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+            "evidence": "The selector targets .price and no node in PointsWalletBusinessDetail/index.js carries that class."
+          },
+          {
+            "component": "AccumulationInputWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 14px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "CheckBoxWrapper svg: the radio glyph."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 13px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ isBusiness }) => isBusiness && css`\n    padding: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 35px;\n    padding-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "OptionInputWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PaymentRulesWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "h2",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+            "evidence": "PaymentRulesWrapper is imported as a comment in index.js and its whole JSX block is commented out, so neither the h2 nor the p below it renders."
+          },
+          {
+            "component": "PaymentRulesWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+            "evidence": "The p of that same commented-out PaymentRulesWrapper block."
+          },
+          {
+            "component": "PointsInputWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 14px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ToggleWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin: 0px 0px 0px 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AccumulationInputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 14px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 13px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ isBusiness }) => isBusiness && css`\n    padding: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 35px;\n    padding-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionInputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    padding-left: 0px;\n    padding-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PointsInputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 14px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ToggleWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin: 0px 0px 0px 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletbusinesslist-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "pointsWalletBusinessListProps /* binding-sha256:de2de90f8ddc14772228a4fe8cb62e235018693406c68f9eb23ffeb57f34094d */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletbusinesslist-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletBusinessList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BusinessInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 12px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessSelectOption",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 16px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckBoxInnerWrapper",
+            "property": "font",
+            "match": "({ noClick }) => noClick && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "font-size",
+            "match": "17px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "ModifiedWrapper svg: the chevron glyph of the row."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    > span {\n      font-size: var(--od-type-secondary-size);\n      padding: 2px 8px;\n      background: #F5F9FF;\n      border-radius: 50px;\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TBoday",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background: #F5F9FF;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    background: #F8F9FA;\n  `\n: css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BusinessInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 12px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessSelectOption",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 16px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxInnerWrapper",
+            "property": "color-block",
+            "match": "({ noClick }) => noClick && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "background",
+            "match": "#F5F9FF",
+            "context": "> span",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    > span {\n      font-size: var(--od-type-secondary-size);\n      padding: 2px 8px;\n      background: #F5F9FF;\n      border-radius: 50px;\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ModifiedWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "background",
+            "match": "#F5F9FF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TBoday",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background: #F5F9FF;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    background: #F8F9FA;\n  `\n: css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletlevels-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "pointsWalletLevelsProps /* binding-sha256:40580f18cd6a1551280b31f76429b2fa0a02e51efb3979ef57da2dbaa0626eb0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-pointswalletlevels-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/PointsWalletLevels/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "LevelItemContainer",
+            "property": "font-size",
+            "match": "18px",
+            "context": "> svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "LevelItemContainer > svg: the chevron glyph of the level row."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LevelName",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 1px;\n  `\n: css`\n    margin-left: 1px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AddNewLevelButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelContainer",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelItemContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LevelName",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 1px;\n  `\n: css`\n    margin-left: 1px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-rewardsprograms-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-rewardsprograms-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/RewardsPrograms/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "IconWrapper svg: the programme icon (Cash, BarChartSteps)."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 13px;\n  `\n: css`\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 13px;\n  `\n: css`\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-wallet-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/Wallet/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "walletProps /* binding-sha256:ec1d885421a0d1143c0ebb80b152bf7384393489fcd26f0719156be89222017f */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-wallet-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/Wallet/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-loyalty: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: #909BA9;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tabs",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-loyalty semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-b3-loyalty-loyalty-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Loyalty/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

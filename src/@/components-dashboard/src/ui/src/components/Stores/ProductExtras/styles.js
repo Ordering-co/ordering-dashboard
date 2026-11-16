@@ -24,7 +24,7 @@ export const Header = styled.div`
   width: 100%;
   h1 {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }
@@ -89,7 +89,7 @@ export const OptionNameWrapper = styled.div`
   display: flex;
   align-items: center;
   > span.name {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     padding: 0 10px;
   }
   button {
@@ -108,7 +108,7 @@ export const ExtraOptionEditContainer = styled.div`
   flex-direction: column;
 
   > h2 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 30px;
   }
@@ -128,7 +128,7 @@ export const ExtraOptionEditContainer = styled.div`
 
 export const FormControl = styled.div`
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   input {
@@ -138,7 +138,7 @@ export const FormControl = styled.div`
 `
 
 export const Details = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme.colors.primary};
 
   svg {
@@ -176,6 +176,12 @@ export const ExtraAddForm = styled.form`
       background-color: #F8F9FA;
       cursor: not-allowed;
     }
+  }
+
+  /* bugs E: «Add» keeps its width next to the full-width field */
+  > button {
+    flex-shrink: 0;
+    margin-inline-start: 8px;
   }
 `
 export const DragImageWrapper = styled.div`

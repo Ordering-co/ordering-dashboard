@@ -1,0 +1,9 @@
+.od-ui:where(.od-purchased-products) { min-width: 0; color: var(--od-entity-selector-text); background: var(--od-entity-selector-surface); font-family: var(--od-entity-selector-font); }
+.od-ui:where(.od-purchased-products) .purchased-product-row { position: relative; }
+.od-ui:where(.od-purchased-products) .od-download-product-detail-action { justify-content: flex-start; width: 100%; min-height: 44px; padding: 0; color: var(--od-entity-selector-text); background: transparent; border: 0; font-size: 16px; font-weight: 500; text-align: start; }
+.od-ui:where(.od-purchased-products) button,
+.od-ui:where(.od-download-product-details) button { min-height: 44px; }
+.od-ui:where(.od-download-product-details) { color: var(--od-entity-selector-text); font-family: var(--od-entity-selector-font); }
+.od-ui:where(.od-download-product-details) button:focus-visible { outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus); outline-offset: var(--od-entity-selector-focus-offset); }
+.od-ui:where(.od-purchased-products) img { max-width: 100%; }
+@media (prefers-reduced-motion: reduce) { .od-ui:where(.od-purchased-products) * { transition-duration: 0s !important; } }

@@ -1,12 +1,23 @@
 import React from 'react'
 import { useLanguage, useSession } from '../../../../../../index'
 import { useFormContext } from 'react-hook-form'
-import { Input, SecondSelect as DefaultSelect } from '../../../../styles'
+import { SecondSelect as DefaultSelect } from '../../../../styles'
+import { TextField } from '../../../Shared/Product'
 import { DriversGroupDrivers } from '../../DriversGroupDrivers'
 import { DriversGroupCompanies } from '../../DriversGroupCompanies'
+import { FieldError } from '../FieldError'
+import { MissingResourceNotice } from '../MissingResourceNotice'
+import {
+  DRIVERS_PATH,
+  DRIVER_MANAGERS_PATH,
+  DRIVER_COMPANIES_PATH,
+  getMissingResources,
+  getMissingResourceMessages
+} from '../missingResources'
 
 import {
   Container,
+  FieldSpacer,
   InputWrapper
 } from './styles'
 
@@ -15,12 +26,17 @@ export const GeneralForm = (props) => {
     driversManagers,
     changesState,
     handleChangesState,
-    handleChangeType
+    handleChangeType,
+    fieldErrors
   } = props
 
   const [, t] = useLanguage()
-  const { register } = useFormContext()
+  const { register, errors } = useFormContext()
   const [{ user }] = useSession()
+
+  const missingResources = getMissingResources(props)
+  const missingMessages = getMissingResourceMessages(t)
+  const isInHouse = changesState?.type === 0
 
   const typeOptions = [
     { value: 0, content: t('IN_HOUSE_DRIVERS', 'In house drivers') },
@@ -41,15 +57,40 @@ export const GeneralForm = (props) => {
     { value: 2, content: t('URGENT', 'Urgent') }
   ]
 
+  // (P-2 of batch R): the name's message sits under the input, which points at it
+  // (tanda AK): the Product text field, as in the group editor (DriversGroupGeneralForm): its frame draws the label, the
+  // required mark, the message and the 44 px area on a phone; react-hook-form keeps the same check and focus through the ref
+  const nameError = errors?.name?.message
+  const managerError = fieldErrors?.manager
+
+  const membersNotice = isInHouse
+    ? missingResources.drivers && {
+      label: t('DRIVERS', 'Drivers'),
+      message: missingMessages.drivers,
+      path: DRIVERS_PATH,
+      linkText: t('ADD_DRIVER', 'Add driver'),
+      error: fieldErrors?.drivers
+    }
+    : missingResources.companies && {
+      label: t('DRIVER_COMPANIES', 'Driver companies'),
+      message: missingMessages.companies,
+      path: DRIVER_COMPANIES_PATH,
+      linkText: t('ADD_DRIVER_COMPANY', 'Add driver company'),
+      error: fieldErrors?.companies
+    }
+
   return (
     <Container>
       <h2>{t('GENERAL', 'General')}</h2>
-      <InputWrapper>
-        <label>{t('NAME', 'Name')}</label>
-        <Input
+      <FieldSpacer>
+        <TextField
+          id='new-drivers-group-name'
+          label={t('NAME', 'Name')}
+          required
+          requiredLabel={t('REQUIRED', 'Required')}
           name='name'
           defaultValue={changesState?.name ?? ''}
-          onChange={e => handleChangesState({ name: e.target.value })}
+          onChange={value => handleChangesState({ name: value })}
           placeholder={t('NAME', 'Name')}
           ref={register({
             required: t(
@@ -57,20 +98,38 @@ export const GeneralForm = (props) => {
               'Project is required'
             ).replace('_attribute_', t('NAME', 'Name'))
           })}
+          error={nameError || undefined}
           autoComplete='off'
         />
-      </InputWrapper>
+      </FieldSpacer>
       {user?.level !== 5 && (
         <InputWrapper>
-          <label>{t('DRIVER_MANAGER', 'Driver manager')}</label>
-          <DefaultSelect
-            isSecondIcon
-            placeholder={t('SELECT_MANAGER', 'Select driver manager')}
-            options={driversManagersOptions}
-            defaultValue={changesState?.administrator_id}
-            optionInnerMaxHeight='60vh'
-            onChange={val => handleChangesState({ administrator_id: val })}
-          />
+          <label id='new-drivers-group-manager-label'>
+            {t('DRIVER_MANAGER', 'Driver manager')}{' '}
+            <span className='odc-field-required' aria-hidden='true' title={t('REQUIRED', 'Required')}>*</span>
+            <span className='odc-sr-only'>{t('REQUIRED', 'Required')}</span>
+          </label>
+          <div role='group' aria-labelledby='new-drivers-group-manager-label' aria-describedby={managerError?.id}>
+            {missingResources.driversManagers
+              ? (
+                <MissingResourceNotice
+                  message={missingMessages.driversManagers}
+                  path={DRIVER_MANAGERS_PATH}
+                  linkText={t('ADD_DRIVER_MANAGER', 'Add driver manager')}
+                />
+                )
+              : (
+                <DefaultSelect
+                  isSecondIcon
+                  placeholder={t('SELECT_MANAGER', 'Select driver manager')}
+                  options={driversManagersOptions}
+                  defaultValue={changesState?.administrator_id}
+                  optionInnerMaxHeight='60vh'
+                  onChange={val => handleChangesState({ administrator_id: val })}
+                />
+                )}
+          </div>
+          {managerError && <FieldError id={managerError.id}>{managerError.message}</FieldError>}
         </InputWrapper>
       )}
       <InputWrapper>
@@ -84,11 +143,21 @@ export const GeneralForm = (props) => {
         />
       </InputWrapper>
 
-      {
-        (changesState?.type === 0)
-          ? <DriversGroupDrivers {...props} />
-          : <DriversGroupCompanies {...props} />
-      }
+      {/* (main #490): with no drivers (or no driver companies) loaded, a notice with the way to add them replaces the empty list */}
+      {membersNotice && (
+        <InputWrapper>
+          <label>{membersNotice.label}</label>
+          <MissingResourceNotice
+            message={membersNotice.message}
+            path={membersNotice.path}
+            linkText={membersNotice.linkText}
+          />
+          {/* after Save, the check of the missing list is said under its notice too (role="alert") */}
+          {membersNotice.error && <FieldError id={membersNotice.error.id}>{membersNotice.error.message}</FieldError>}
+        </InputWrapper>
+      )}
+      {!membersNotice && isInHouse && <DriversGroupDrivers {...props} selectionError={fieldErrors?.drivers} />}
+      {!membersNotice && !isInHouse && <DriversGroupCompanies {...props} selectionError={fieldErrors?.companies} />}
 
       <InputWrapper>
         <label>{t('PRIORITY', 'Priority')}</label>

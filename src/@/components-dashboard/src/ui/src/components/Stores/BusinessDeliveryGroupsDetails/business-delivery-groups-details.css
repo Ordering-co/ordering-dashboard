@@ -1,0 +1,87 @@
+/*
+ * redesign stores 5.7 (G3-27) · The driver groups a store is in: a read-only table (cards under 768px). Product's DataTable and
+ * RecordCard own the structure; this adds what the Group cell is made of (the name and «#id · manager») and keeps the cards
+ * from looking like links. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set.
+ */
+
+/* J2 row 19: the description and «Manage driver groups» share a line; under it when there is no room */
+.odc-sdg-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--od-space-4);
+  row-gap: var(--od-space-1);
+  margin-block-end: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-sdg-description {
+  margin: 0;
+  font-size: var(--od-type-secondary-size);
+}
+
+/* The anchor of the tour (tour_delivery_completed) wraps the list, whatever state it is in */
+.odc-sdg-list { min-inline-size: 0; }
+
+.odc-sdg-foot {
+  margin-block-start: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── The Group cell ── */
+.odc-sdg-who {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sdg-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-sdg-sub {
+  display: block;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  overflow-wrap: anywhere;
+}
+
+.odc-sdg-type { white-space: nowrap; }
+
+/* ── Phone: the cards ── */
+/* Read-only: no arrow to point at, no link look, no hover as if it opened something */
+.odc-sdg-cards .odc-order-card-arrow { display: none; }
+
+.odc-sdg-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  cursor: default;
+}
+
+.odc-sdg-cards .odc-order-card-link::after { content: none; }
+
+.odc-sdg-cards .odc-order-card:not([data-skeleton]):hover { background: transparent; }
+
+.odc-sdg-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sdg-card-meta {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}

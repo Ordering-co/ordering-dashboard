@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-import { SpinnerLoader } from '~ui'
+import { SpinnerLoader } from '~ui/src/components/Shared/SpinnerLoader'
+import { fetchProjectCode } from '../../utils/resolveProjectCode'
 
 export const AutoLoginParamsContext = createContext()
 
@@ -36,12 +37,14 @@ export const AutologinParamsProvider = ({ children, settings }) => {
           Authorization: `Bearer ${queryToken}`
         }
       }
-      const response = await fetch(`${settings.api.url}/${settings.api.version}/${settings.api.language}/${queryProject}/users/me`, requestOptions)
+      const apiRoot = `${settings.api.url}/${settings.api.version}/${settings.api.language}/${queryProject}`
+      const response = await fetch(`${apiRoot}/users/me`, requestOptions)
       const { error, result } = await response.json()
       if (!error && allowedLevels.includes(result.level)) {
+        const project = (await fetchProjectCode(apiRoot)) || queryProject
         window.localStorage.setItem('token', queryToken)
         window.localStorage.setItem('user', JSON.stringify(result))
-        window.localStorage.setItem('project', queryProject)
+        window.localStorage.setItem('project', project)
       }
       setUserState({
         ...userState,

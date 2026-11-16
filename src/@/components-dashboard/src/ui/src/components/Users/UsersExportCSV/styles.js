@@ -21,7 +21,7 @@ export const PopoverContainer = styled.div`
   padding: 5px 0;
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
   box-shadow: 0 6px 12px rgba(0,0,0,.175);
-  z-index: 200;
+  z-index: calc(var(--od-x-layer-sticky) + 100);
 
   ${props => props.theme?.rtl
 ? css`

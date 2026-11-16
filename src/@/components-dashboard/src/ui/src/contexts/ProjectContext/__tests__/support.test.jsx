@@ -39,6 +39,33 @@ beforeEach(() => Object.assign(session, { token: 'token-a', root: 'https://api.t
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
 describe('project support authority independent of billing permissions', () => {
+  it('resolves the upgrade rule without billing access and clears it on project change', async () => {
+    let finishOld
+    routes(async () => response({ error: false, result: { intercom_allowed: false, dashboard_upgrade_required: true } }))
+    const view = renderProject()
+    await waitFor(() => expect(readState().dashboardUpgradeRequired).toBe(true))
+    expect(readState().planResolved).toBe(false)
+
+    routes(() => new Promise(resolve => { finishOld = resolve }))
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh project' }))
+    Object.assign(session, { root: 'https://api.test/beta', project: 'beta' })
+    routes(async () => response({ error: false, result: { intercom_allowed: false, dashboard_upgrade_required: false } }))
+    view.rerender(<ProjectProvider><Probe /></ProjectProvider>)
+    expect(readState().dashboardUpgradeRequired).toBeNull()
+    await waitFor(() => expect(readState().dashboardUpgradeRequired).toBe(false))
+    await act(async () => finishOld(response({ error: false, result: { intercom_allowed: false, dashboard_upgrade_required: true } })))
+    expect(readState().dashboardUpgradeRequired).toBe(false)
+  })
+
+  it('rechecks the current plan when returning to the Dashboard tab', async () => {
+    routes(async () => response({ error: false, result: { intercom_allowed: false, dashboard_upgrade_required: true } }))
+    renderProject()
+    await waitFor(() => expect(readState().dashboardUpgradeRequired).toBe(true))
+    routes(async () => response({ error: false, result: { intercom_allowed: false, dashboard_upgrade_required: false } }))
+    fireEvent(document, new Event('visibilitychange'))
+    await waitFor(() => expect(readState().dashboardUpgradeRequired).toBe(false))
+  })
+
   it('permits a project-local Supportadmin when billing returns HTTP 400', async () => {
     routes(async () => support(true))
     renderProject()

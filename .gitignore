@@ -13,6 +13,9 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/blob-report
 /.vitest-reports
 
 # production
@@ -51,3 +54,8 @@ i18n/batches/
 !.env.example
 !**/.env.example
 .husky/_/
+
+# Local reports and development credentials
+/.brand-system-preview/
+/.local/
+l4-*-preview*.json

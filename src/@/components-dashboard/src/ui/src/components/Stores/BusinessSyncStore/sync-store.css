@@ -1,0 +1,130 @@
+/*
+ * redesign stores 3.D, D5: the store picker of the integration-sync panel, with its detail inside the panel. Values
+ * come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical
+ * properties only (C17). Component classes use the `bss-` prefix; the wrappers keep `odc-`.
+ * The 1100px at which the detail goes beside the list is decided in the component (`data-split`), not in an @media: the panel is
+ * narrower than the window (the docked assistant takes room), and `useWindowSize` already subtracts it.
+ */
+
+.bss {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* Side by side: the list and the store that is open, each in its own column */
+.bss[data-split] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.bss-pane {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.bss-search { inline-size: 100%; }
+
+.bss-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.bss-item {
+  min-inline-size: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* A store is one native button: logo, name, chevron. 44px high, so it is a target on a phone and on a mouse alike */
+.bss-store {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-row-comfortable);
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.bss-store:hover { background: var(--od-x-hover); }
+
+/* The open store: soft fill, a 2px indicator and a heavier name. aria-current says it; it is never colour alone */
+.bss-store[aria-current] {
+  background: var(--od-x-selected);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.bss-store[aria-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action-content);
+}
+
+/* Inside a row the ring is inset so the list never clips it */
+.bss-store:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.bss-name {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.bss-chevron {
+  flex: none;
+  color: var(--od-text-muted);
+}
+
+.bss-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-inline: var(--od-space-2);
+}
+
+/* The foot: the range and the pages, at the end of the list */
+.bss-pagination { inline-size: 100%; }
+
+/* ── The detail, inside the panel ── */
+.bss-detail-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-block-size: var(--od-x-control-height);
+}
+
+/* Below the split «Back» opens the bar at the start, where the eye and the thumb expect to return */
+.bss-detail-bar:has(.bss-back) { justify-content: flex-start; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bss-store { transition: none; }
+}

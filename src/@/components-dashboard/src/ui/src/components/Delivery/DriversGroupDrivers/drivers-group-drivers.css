@@ -1,0 +1,7 @@
+/*
+ * tanda AG (, A3-3) · the temporary schedule dialog of a delivery group. The legacy Modal title capitalizes every word
+ * (Shared/UI/modal.css, shared by every legacy modal); this dialog keeps its sentence-case title as written.
+ */
+.odc-dgd-schedule-dialog .od-modal-title {
+  text-transform: none;
+}

@@ -4,7 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import { useLanguage } from '../../contexts/LanguageContext'
-
+// Used only as the parity oracle in src/@/components-dashboard/src/utils/__tests__/invoiceMath.test.js; no production consumer.
 /**
  * Component to manage InvoiceBusunessManager behavior without UI component
  */

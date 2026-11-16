@@ -28,7 +28,8 @@ export const BannerImageDetails = (props) => {
   const [imageState, setImageState] = useState({ image: props.image, loading: false, error: null })
   const [changesState, setChangesState] = useState({ changes: {}, loading: false, error: null })
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
-  const [selectedLinkType, setSelectedLinkType] = useState(props.image?.action?.type || null)
+  // P13: 'none' is «No link» (no action key is sent); an existing image without a link opens on it
+  const [selectedLinkType, setSelectedLinkType] = useState(props.image?.action?.type || (props.image ? 'none' : null))
   const [selectedBusinessId, setSelectedBusinessId] = useState(null)
   const [selectedBusiness, setSelectedBusiness] = useState(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState(null)
@@ -197,36 +198,39 @@ export const BannerImageDetails = (props) => {
           product_id: selectedProductId
         }
       }
+      // redesign AB-B1 (M-AB03): a link type created elsewhere (neither business nor product) that is still
+      // the stored one is kept: the payload carries no action key instead of the string "null"
+      const keepStoredLink = selectedLinkType === 'none' || (Boolean(selectedLinkType) &&
+        selectedLinkType !== 'business' &&
+        selectedLinkType !== 'product' &&
+        selectedLinkType === props.image?.action?.type)
       let payload = {}
-      payload.action = JSON.stringify(action)
+      if (!keepStoredLink) {
+        payload.action = JSON.stringify(action)
+      }
       if (changesState.changes) {
         payload = { ...payload, ...changesState.changes }
       }
 
-      if (!selectedLinkType) {
+      // redesign AB-B1 (M-AB13): validation failures resolve { ok: false, error } with today's error arrays
+      const fail = (error) => {
         setImageState({
           ...imageState,
           loading: false,
-          error: [t('VALIDATION_ERROR_REQUIRED', 'The link type is required').replace('_attribute_', t('LINK_TYPE', 'Link type'))]
+          error
         })
-        return
+        return { ok: false, error }
+      }
+
+      if (!selectedLinkType) {
+        return fail([t('VALIDATION_ERROR_REQUIRED', 'The link type is required').replace('_attribute_', t('LINK_TYPE', 'Link type'))])
       }
 
       if (selectedLinkType === 'business' && !selectedBusinessId) {
-        setImageState({
-          ...imageState,
-          loading: false,
-          error: [t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('BUSINESS', 'Business'))]
-        })
-        return
+        return fail([t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('BUSINESS', 'Business'))])
       }
       if (selectedLinkType === 'product' && !selectedProductId) {
-        setImageState({
-          ...imageState,
-          loading: false,
-          error: [t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('PRODUCT', 'Product'))]
-        })
-        return
+        return fail([t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('PRODUCT', 'Product'))])
       }
 
       let content
@@ -234,34 +238,27 @@ export const BannerImageDetails = (props) => {
         content = await handleUpdateBannerItem(payload, imageState.image?.id, true)
       } else {
         if (!changesState.changes?.image) {
-          setImageState({
-            ...imageState,
-            loading: false,
-            error: [t('VALIDATION_ERROR_REQUIRED', 'The image is required').replace('_attribute_', t('IMAGE', ''))]
-          })
-          return
+          return fail([t('VALIDATION_ERROR_REQUIRED', 'The image is required').replace('_attribute_', t('IMAGE', ''))])
         }
         content = await handleAddBannerItem(payload, true)
       }
       if (content.error) {
-        setImageState({
-          ...imageState,
-          loading: false,
-          error: content.result
-        })
-      } else {
-        setImageState({
-          loading: false,
-          image: content.result,
-          error: null
-        })
+        return fail(content.result)
       }
+      setImageState({
+        loading: false,
+        image: content.result,
+        error: null
+      })
+      return { ok: true, error: null, result: content.result }
     } catch (error) {
+      // redesign AB-B1 (M-AB08): loading is released so the button does not stay locked and the error shows
       setImageState({
         ...imageState,
-        loading: true,
+        loading: false,
         error: [error.message]
       })
+      return { ok: false, error: [error.message] }
     }
   }
 

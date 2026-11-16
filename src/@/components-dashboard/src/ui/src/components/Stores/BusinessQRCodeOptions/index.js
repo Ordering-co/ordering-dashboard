@@ -1,88 +1,60 @@
 import React, { useState } from 'react'
-import { useTheme } from 'styled-components'
 import { useLanguage, BusinessQRCodeOptions as BusinessQRCodeOptionsController } from '../../../../../index'
-import BsChevronRight from '@meronex/icons/bs/BsChevronRight'
-import { Modal } from '../../Shared'
-import { useWindowSize } from '../../../hooks/useWindowSize'
+import { SectionSplit } from '../../Shared/Product'
+import { ChevronRight } from '../../Shared/Icon'
+import { EDITOR_PANEL_WIDE_FROM } from '../../../../../utils/editorPanel'
 import { BusinessQRCodeOption } from '../BusinessQRCodeOption'
 import { publishingItemsValues } from './utils'
+import './qr-codes.css'
 
-import {
-  MainContainer,
-  PublishingContainer,
-  PublishingListWrapper,
-  PublishingOptionContainer,
-  PublishingOption,
-  PublishingName
-} from './styles'
-
+// redesign stores 5.15a (; decision 5, G5-07, G5-08): the QR codes of a store (level 0) as a list and its detail on
+// P/SectionSplit. The detail sits beside the list from 1000px of window (`EDITOR_PANEL_WIDE_FROM`, where main opened its column)
+// and replaces it below that, with «‹ Back» (main opened an 80% modal). No `document.getElementById` width animation.
+// The five order types and what each QR opens are main's (`utils.js`); the title says «QR Codes», as the menu does.
 const BusinessQRCodeOptionsUI = (props) => {
-  const {
-    setIsExtendExtraOpen,
-    siteState
-  } = props
+  const { business, setIsExtendExtraOpen } = props
 
   const [, t] = useLanguage()
-  const theme = useTheme()
-  const { width } = useWindowSize()
-  const [isOpen, setIsOpen] = useState(false)
-  const [itemSelected, setItemSelected] = useState(null)
+  const [selectedKey, setSelectedKey] = useState(null)
 
-  const publishingItems = publishingItemsValues({ t })
+  const items = publishingItemsValues({ t })
+  const selected = items.find(item => item.key === selectedKey) || null
 
-  const handleAction = (value, item = null) => {
-    setItemSelected(item)
-    setIsExtendExtraOpen(value)
-    setIsOpen(value)
-  }
+  const list = (
+    <div className='odc-qr-pane'>
+      <h1 className='odc-qr-title'>{t('QR_CODES', 'QR Codes')}</h1>
+      <ul className='odc-qr-rows' aria-label={t('QR_CODES', 'QR Codes')}>
+        {items.map(item => {
+          const active = item.key === selectedKey
+          return (
+            <li key={item.key} className='odc-qr-row' data-section-split-key={item.key} aria-current={active ? 'true' : undefined}>
+              <button type='button' className='odc-qr-name' onClick={() => setSelectedKey(item.key)}>
+                <span className='odc-qr-name-text'>{item.title}</span>
+              </button>
+              <ChevronRight className='odc-icon odc-icon-flip odc-qr-chevron' aria-hidden='true' />
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
 
   return (
-    <MainContainer>
-      <PublishingContainer>
-        <h1>{t('PUBLISHING', 'Publishing')}</h1>
-
-        <PublishingListWrapper>
-          {publishingItems.map((item, i) => (
-            <PublishingOptionContainer key={i} onClick={() => handleAction(true, item)} active={item.key === itemSelected?.key}>
-              <PublishingOption>
-                <PublishingName>{item?.title}</PublishingName>
-              </PublishingOption>
-              <BsChevronRight style={{ color: theme.colors.lightGray }} />
-            </PublishingOptionContainer>
-          ))}
-        </PublishingListWrapper>
-      </PublishingContainer>
-
-      {width >= 1000
-        ? (
-            isOpen && (
-          <BusinessQRCodeOption
-            business={props.business}
-            siteState={siteState}
-            open={isOpen}
-            item={itemSelected}
-            onClose={() => handleAction(false)}
-          />
-            )
-          )
-        : (
-            isOpen && (
-          <Modal
-            width='80%'
-            open={isOpen}
-            onClose={() => handleAction(false)}
-          >
-            <BusinessQRCodeOption
-              business={props.business}
-              siteState={siteState}
-              open={isOpen}
-              item={itemSelected}
-              onClose={() => handleAction(false)}
-            />
-          </Modal>
-            )
-          )}
-    </MainContainer>
+    <div className='odc-root odc-qr'>
+      <SectionSplit
+        revealDetail // redesign bugs F row 6 (D5 of 5.18): stacked, the detail opens at its header
+        splitFrom={EDITOR_PANEL_WIDE_FROM}
+        open={!!selected}
+        detailKey={selected?.key}
+        onClose={() => setSelectedKey(null)}
+        onExtendChange={value => setIsExtendExtraOpen?.(value)}
+        detailTitle={selected?.title ?? ''}
+        closeLabel={t('CLOSE', 'Close')}
+        backLabel={t('BACK', 'Back')}
+        list={list}
+        detail={selected ? <BusinessQRCodeOption key={selected.key} item={selected} business={business} /> : null}
+      />
+    </div>
   )
 }
 

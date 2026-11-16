@@ -1,0 +1,2032 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b3-invoices-pdf-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-b3-invoices-pdf-businesspaymentinvoicedetail-index-js-32ff12",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "color",
+            "match": "ORDER_DETAIL_FEE_COLOR",
+            "context": "JSXAttribute:ObjectExpression",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'green'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'red'",
+            "context": "JSXAttribute",
+            "count": 5,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-businesspaymentinvoicedetail-styles-js-3a85ff",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CountLabel",
+            "property": "font-size",
+            "match": "10px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "DataTable",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "DataTable",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`text-align: right;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DayTitle",
+            "property": "font-size",
+            "match": "12px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "DetailContainer",
+            "property": "font-size",
+            "match": "12px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "DetailHeader",
+            "property": "font-size",
+            "match": "20px",
+            "context": "h1",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "DetailHeader",
+            "property": "font-size",
+            "match": "12px",
+            "context": "p",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "font",
+            "match": "({ color }) => color === 'green' && css`\n    color: #2e7d32;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "font",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FeeGroup",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "FeeName",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "FeeSection",
+            "property": "font",
+            "match": "() => FeeRow",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InvoiceFooter",
+            "property": "font-size",
+            "match": "10px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "PeriodLabel",
+            "property": "font-size",
+            "match": "10px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "PeriodValue",
+            "property": "font-size",
+            "match": "13px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "SectionTitle",
+            "property": "font-size",
+            "match": "14px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'left' && css`\n    background: #f8f9fb;\n    border-radius: 4px 0 0 4px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'mid' && css`\n    background: #f8f9fb;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'quad-left' && css`\n    background: #f8f9fb;\n    border-radius: 4px 0 0 4px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'quad-mid' && css`\n    background: #f8f9fb;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'quad-right' && css`\n    background: #e8f5e9;\n    border-radius: 0 4px 4px 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "font",
+            "match": "({ variant }) => variant === 'right' && css`\n    background: #e8f5e9;\n    border-radius: 0 4px 4px 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryLabel",
+            "property": "font-size",
+            "match": "10px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "font-size",
+            "match": "16px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "font",
+            "match": "({ color }) => !color && css`\n    color: #333;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "font",
+            "match": "({ color }) => color === 'green' && css`\n    color: #2e7d32;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "font",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TotalsLabel",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "font-size",
+            "match": "11px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "font",
+            "match": "({ bold }) => bold && css`\n    font-weight: 700;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "font",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TransferRow",
+            "property": "font-size",
+            "match": "13px",
+            "context": "span",
+            "count": 1,
+            "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+            "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CountLabel",
+            "property": "color",
+            "match": "#999",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DataTable",
+            "property": "background",
+            "match": "#f8f9fb",
+            "context": "th",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DataTable",
+            "property": "border-bottom",
+            "match": "1px solid #f0f0f0",
+            "context": "td",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DataTable",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`text-align: right;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DataTable",
+            "property": "color",
+            "match": "#333",
+            "context": "td",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DataTable",
+            "property": "color",
+            "match": "#555",
+            "context": "th",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DayTitle",
+            "property": "color",
+            "match": "#555",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DetailContainer",
+            "property": "background",
+            "match": "#fff",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DetailContainer",
+            "property": "color",
+            "match": "#333",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DetailHeader",
+            "property": "border-bottom",
+            "match": "2px solid #eee",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DetailHeader",
+            "property": "color",
+            "match": "#1a1a2e",
+            "context": "h1",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DetailHeader",
+            "property": "color",
+            "match": "#555",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DownloadButton",
+            "property": "background",
+            "match": "props => props.theme?.colors?.primary || '#1a1a2e'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DownloadButton",
+            "property": "color",
+            "match": "#fff",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorWrapper",
+            "property": "color",
+            "match": "#C62828",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "color-block",
+            "match": "({ color }) => color === 'green' && css`\n    color: #2e7d32;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "color-block",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "color",
+            "match": "#2e7d32",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeAmount",
+            "property": "color",
+            "match": "#c0392b",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeGroup",
+            "property": "border-bottom",
+            "match": "1px solid #ddd",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeGroup",
+            "property": "color",
+            "match": "#1a1a2e",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeName",
+            "property": "color",
+            "match": "#333",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeRow",
+            "property": "border-bottom",
+            "match": "1px solid #f0f0f0",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FeeSection",
+            "property": "color-block",
+            "match": "() => FeeRow",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InvoiceFooter",
+            "property": "color",
+            "match": "#999",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderDetailsTableScroll",
+            "property": "outline",
+            "match": "var(--od-focus-ring-width) solid var(--od-focus-ring-color)",
+            "context": "&:focus-visible",
+            "count": 1,
+            "reason": "The keyboard focus ring of the scrollable table container, which takes a tab stop only when it scrolls: Ordering.co focus-ring tokens only.",
+            "evidence": "Tanda U: the container gained &:focus-visible with var(--od-focus-ring-width) and var(--od-focus-ring-color), the same ring as the CountryWrapper row in Settings places and Billing/PaymentMethodPicker; no literal colour, nothing else in this file changed."
+          },
+          {
+            "component": "PeriodBar",
+            "property": "background",
+            "match": "#f8f9fb",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodLabel",
+            "property": "color",
+            "match": "#888",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodValue",
+            "property": "color",
+            "match": "#333",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SectionTitle",
+            "property": "border-bottom",
+            "match": "2px solid #eee",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SectionTitle",
+            "property": "color",
+            "match": "#1a1a2e",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "background",
+            "match": "#e8f5e9",
+            "context": "<root>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "background",
+            "match": "#f8f9fb",
+            "context": "<root>",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'left' && css`\n    background: #f8f9fb;\n    border-radius: 4px 0 0 4px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'mid' && css`\n    background: #f8f9fb;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'quad-left' && css`\n    background: #f8f9fb;\n    border-radius: 4px 0 0 4px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'quad-mid' && css`\n    background: #f8f9fb;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'quad-right' && css`\n    background: #e8f5e9;\n    border-radius: 0 4px 4px 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryCell",
+            "property": "color-block",
+            "match": "({ variant }) => variant === 'right' && css`\n    background: #e8f5e9;\n    border-radius: 0 4px 4px 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryLabel",
+            "property": "color",
+            "match": "({ green }) => green ? '#2e7d32' : '#888'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color-block",
+            "match": "({ color }) => !color && css`\n    color: #333;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color-block",
+            "match": "({ color }) => color === 'green' && css`\n    color: #2e7d32;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color-block",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color",
+            "match": "#2e7d32",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color",
+            "match": "#333",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SummaryValue",
+            "property": "color",
+            "match": "#c0392b",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalRow",
+            "property": "background",
+            "match": "#f8f9fb",
+            "context": "td",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalRow",
+            "property": "color",
+            "match": "#1a1a2e",
+            "context": "td",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalsBlock",
+            "property": "border-top",
+            "match": "2px solid #eee",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalsLabel",
+            "property": "color",
+            "match": "({ bold }) => bold ? '#1a1a2e' : '#555'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "color-block",
+            "match": "({ bold }) => bold && css`\n    font-weight: 700;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "color-block",
+            "match": "({ color }) => color === 'red' && css`\n    color: #c0392b;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TotalsValue",
+            "property": "color",
+            "match": "#c0392b",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TransferRow",
+            "property": "background",
+            "match": "#e8f5e9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TransferRow",
+            "property": "color",
+            "match": "#2e7d32",
+            "context": "span",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-businesspaymentreports-index-js-3ebf99",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-businesspaymentreports-styles-js-54cfc6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BusinessNameWrapper",
+            "property": "font-size",
+            "match": "0.7em",
+            "context": "h1 > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "BusinessNameWrapper h1 > svg: el glifo de flecha del selector de negocio, a 0.7em del h1."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MonthCard",
+            "property": "font",
+            "match": "props => !props.disabled && !props.active && css`\n    &:hover {\n      border-color: ${props.theme.colors?.primary || '#E63757'};\n      background: ${props.theme.colors?.primaryContrast || '#FFF2F4'};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TabButton",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors?.primary || '#E63757'};\n    border-bottom-color: ${props => props.theme.colors?.primary || '#E63757'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b3-invoices-pdf: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent receives from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made.",
+            "evidence": "Introducida por la conversion de este lote, declarada en `_newSites`, y el re-indexado falla si no aparece en el inventario fresco o si ya estaba en la instantanea. Solo DOS de los seis componentes convertidos la necesitan: los otros cuatro ya declaran su propio font-size."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BusinessNameWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarHint",
+            "property": "color",
+            "match": "props => props.theme.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarSection",
+            "property": "background",
+            "match": "props => `${props.theme.colors?.primary || '#E63757'}26`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarSection",
+            "property": "background",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarSection",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarSection",
+            "property": "color",
+            "match": "#fff",
+            "context": ".rdrDayNumber span.pr-cutoff",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarSection",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DownloadButton",
+            "property": "background",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DownloadButton",
+            "property": "color",
+            "match": "#fff",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "props => props.theme?.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InvoiceRow",
+            "property": "background",
+            "match": "props => props.theme?.colors?.lightPrimary || '#F5F9FF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MethodSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MethodSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "background",
+            "match": "props => props.active\n    ? (props.theme.colors?.primary || '#E63757')\n    : 'transparent'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "background",
+            "match": "props.theme.colors?.primaryContrast || '#FFF2F4'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "border-color",
+            "match": "props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "border",
+            "match": "props => props.active\n    ? (props.theme.colors?.primary || '#E63757')\n    : (props.theme.colors?.borderColor || '#E9ECEF')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "color-block",
+            "match": "props => !props.disabled && !props.active && css`\n    &:hover {\n      border-color: ${props.theme.colors?.primary || '#E63757'};\n      background: ${props.theme.colors?.primaryContrast || '#FFF2F4'};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthCard",
+            "property": "color",
+            "match": "props => props.active\n    ? '#fff'\n    : props.disabled\n      ? (props.theme.colors?.disabled || '#B1BCCC')\n      : (props.theme.colors?.headingColor || '#344054')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthGridWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#fff'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MonthGridWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaginationWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#F8F9FA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaginationWrapper",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaginationWrapper",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaginationWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaginationWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaymentHistorySection",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaymentHistorySection",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaymentHistorySection",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodInfoBox",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#F8F9FA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodInfoBox",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodInfoText",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PeriodInfoText",
+            "property": "color",
+            "match": "props => props.theme.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabButton",
+            "property": "border-bottom-color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabButton",
+            "property": "border-bottom",
+            "match": "2px solid transparent",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabButton",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors?.primary || '#E63757'};\n    border-bottom-color: ${props => props.theme.colors?.primary || '#E63757'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabButton",
+            "property": "color",
+            "match": "props => props.theme.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabButton",
+            "property": "color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "background",
+            "match": "props => props.theme?.colors?.backgroundPage || '#F8F9FA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "border-bottom",
+            "match": "props => props.theme?.colors?.borderColor || '#DEE2E6'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "color",
+            "match": "props => props.theme?.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Table",
+            "property": "color",
+            "match": "props => props.theme?.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabsContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "background",
+            "match": "props => props.active\n    ? (props.theme.colors?.primaryContrast || '#FFF2F4')\n    : 'transparent'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "border",
+            "match": "props => props.active\n    ? (props.theme.colors?.primary || '#E63757')\n    : (props.theme.colors?.borderColor || '#E9ECEF')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewModeCard",
+            "property": "color",
+            "match": "props => props.theme.colors?.lightGray || '#909BA9'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "YearSelector",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#F8F9FA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "YearSelector",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "YearSelector",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "YearSelector",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "YearSelector",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#344054'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-eatstreetreportdetail-index-js-c19414",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/EatStreetReportDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-eatstreetreportdetail-styles-js-a2bf5b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/EatStreetReportDetail/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBar",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionButton",
+            "property": "background",
+            "match": "props => props.theme.colors?.primaryContrast || '#FFF2F4'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionButton",
+            "property": "border",
+            "match": "props => props.theme.colors?.borderColor || '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionButton",
+            "property": "color",
+            "match": "props => props.theme.colors?.primary || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-invoicebusinesspdf-index-js-3cbdbb",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/InvoiceBusinessPdf/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.imageWrapper /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.notes /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.root /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tbody.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 9,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tbody.tr.tdNumber /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 8,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot.tr /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 5,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.th /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 7,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.trFirst /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.trLast /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.imageWrapper /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.notes /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.root /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tbody.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 9,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tbody.tr.tdNumber /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 8,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot.tr /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 5,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.th /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 7,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.trFirst /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.trLast /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b3-invoices-pdf-invoicedriverpdf-index-js-96138c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/InvoiceDriverPdf/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.imageWrapper /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.notes /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.root /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tbody.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tbody.tr.tdNumber /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 9,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot.tr /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 5,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.tfoot.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.th /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 7,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.trFirst /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "styles.table.thead.trLast /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of b3-invoices-pdf: this one declares no literal font-size."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.imageWrapper /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.notes /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.root /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tbody.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tbody.tr.tdNumber /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 9,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot.tr /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 5,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.tfoot.tr.td /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 10,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.th /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 7,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.trFirst /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "styles.table.thead.trLast /* binding-sha256:d1f234e60a62aa150c541c11ccca659d2e254db0165e6f2cd37ec50b9f90d1cd */",
+            "context": "JSXAttribute:reference",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b3-invoices-pdf semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

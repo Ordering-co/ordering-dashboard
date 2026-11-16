@@ -144,8 +144,8 @@ src/
         ├── hooks/       # UI hooks (useWindowSize, useOnlineStatus, useProjectState, …)
         ├── styles/      # shared styled primitives (Button, Input, Select, Tabs, …)
         ├── utils/       # URL query helpers, formatting, feature-flag helpers
-        ├── config/      # currency, constants
-        └── themes/origin/   # legacy/alternate theme fragments — prefer `src/components/` for dashboard work
+        └── config/      # currency, constants
+        # (the legacy `themes/origin/` tree and `layouts/AdminLayout` were removed: dead code, never mounted by the app)
 ```
 
 ### Typical component folder layout
@@ -217,7 +217,7 @@ Parent `src/App.js` imports layout, auth, and shell components from `~ui` (`Side
 
 **Do not** add dashboard routes here — routing lives in the parent's `src/App.js`. The only Settings page is parent `src/pages/Settings`.
 
-**Do not** edit `src/themes/origin/` for new dashboard features unless explicitly porting legacy theme code.
+`src/themes/origin/` (the legacy theme) was removed. Do not recreate it; build dashboard features under `src/components/`.
 
 ## Settings hub
 
@@ -248,6 +248,7 @@ Full playbook (groups, hidden keys, exceptions, i18n): `docs/SETTINGS.md` at the
 - PropTypes still used in many controllers (optional for new code; parent ESLint has `react/prop-types` off).
 - ESLint: `standard` + `plugin:react/recommended` + `plugin:cypress/recommended` (Cypress present but not actively CI-gated).
 - Translations: always provide a default English string as the second `t()` argument: `t('KEY', 'Human readable default')`.
+- HTML fields: use `Shared/RichHtmlEditor` (Tiptap, with its insert-link/image/video dialogs under `Shared/UI/HtmlEditor/`). Summernote, jQuery and the old `HtmlEditor` wrapper are gone; the `HtmlEditor` controller (`src/components/HtmlEditor`) stays for its image-gallery calls.
 - URL state: use `addQueryToUrl` / `removeQueryToUrl` from `src/ui/src/utils` for lateral panels and deep links.
 - Feature flags: `getFeatureFlags('flagName')` from UI utils — sidebar/module visibility (Connect, billing). **Do not use plan flags to hide Settings.** Settings unlock and IA live in `src/utils/settingsAccess.js` and `src/utils/settingsIa.js`. Full rules: `docs/SETTINGS.md` at the repo root.
 - User roles: `getUserType('admin')`, `getUserType('businessOwner')`, etc. Settings routes are admin (`allowedLevels={[0]}`).

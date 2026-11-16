@@ -36,7 +36,7 @@ export const DownloadButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   cursor: pointer;
 
@@ -172,6 +172,8 @@ export const SummaryValue = styled.span`
   font-weight: 700;
   margin-top: 2px;
   display: block;
+  /* redesign  (row 55): an amount never wraps («$ 3.25» on two lines in the 440px panel at 1280) */
+  white-space: nowrap;
 
   ${({ color }) => color === 'red' && css`
     color: #c0392b;
@@ -212,6 +214,12 @@ export const OrderDetailsTableScroll = styled.div`
     margin-bottom: 0;
     min-width: max-content;
   }
+
+  /* redesign : the container takes a tab stop only when it scrolls (see ScrollableTable), so it shows the focus ring */
+  &:focus-visible {
+    outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+    outline-offset: var(--od-x-focus-inset);
+  }
 `
 
 export const DataTable = styled.table`
@@ -231,6 +239,8 @@ export const DataTable = styled.table`
 
   th.right, td.right {
     text-align: right;
+    /* redesign  (row 55): see SummaryValue */
+    white-space: nowrap;
   }
 
   th.center, td.center {
@@ -286,6 +296,8 @@ export const FeeAmount = styled.span`
   padding: 4px 8px;
   text-align: right;
   font-size: 11px;
+  /* redesign  (row 55): see SummaryValue */
+  white-space: nowrap;
 
   ${({ color }) => color === 'red' && css`
     color: #c0392b;
@@ -371,5 +383,5 @@ export const ErrorWrapper = styled.div`
   padding: 20px;
   text-align: center;
   color: #C62828;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `

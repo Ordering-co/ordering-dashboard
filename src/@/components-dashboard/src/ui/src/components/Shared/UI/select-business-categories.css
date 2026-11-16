@@ -1,0 +1,118 @@
+/* Scoped category selection tree. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-select-business-categories) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-selection-tree-section) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.od-ui:where(.od-selection-tree-header) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border-radius: var(--od-entity-selector-radius);
+  cursor: pointer;
+  transition: background-color 600ms ease;
+}
+
+.od-ui:where(.od-selection-tree-header):hover,
+.od-ui:where(.od-selection-tree-header):focus-within {
+  background: var(--od-entity-selector-subtle);
+}
+
+.od-ui:where(.od-selection-tree-row) {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  width: calc(100% - var(--od-selection-tree-offset));
+  min-width: 0;
+  min-height: var(--od-entity-selector-touch-target);
+  margin-inline-start: var(--od-selection-tree-offset);
+  color: var(--od-entity-selector-text);
+}
+
+.od-ui:where(.od-selection-tree-row) > .od-selection-tree-disclosure {
+  flex: 0 0 var(--od-entity-selector-touch-target);
+  width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  color: var(--od-entity-selector-muted);
+}
+
+.od-ui:where(.od-selection-tree-row) > .od-selection-tree-disclosure .accordion__icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 600ms ease;
+}
+
+.od-ui:where(.od-selection-tree-row) > .od-selection-tree-disclosure[aria-expanded='true'] .accordion__icon {
+  transform: rotate(180deg);
+}
+
+.od-ui:where(.od-selection-tree-row) > .od-selection-tree-selection {
+  @apply od-flex od-items-center;
+  min-width: 0;
+}
+
+.od-ui:where(.od-selection-tree-row) > .od-selection-tree-selection > span {
+  min-width: 0;
+  margin-inline: 12px;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.od-ui:where(.od-selection-tree-content) {
+  display: grid;
+  grid-template-rows: 1fr;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  visibility: inherit;
+  transition:
+    grid-template-rows 600ms ease,
+    visibility 0s linear 0s;
+}
+
+.od-ui:where(.od-selection-tree-content)[data-state='closed'] {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition-delay: 0s, 600ms;
+}
+
+.od-ui:where(.od-selection-tree-content) > .od-selection-tree-content-inner {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.od-ui:where(.od-selection-tree-skeleton) {
+  @apply od-flex od-items-center;
+  min-height: var(--od-entity-selector-touch-target);
+  margin-bottom: 16px;
+}
+
+.od-ui:where(.od-selection-tree-skeleton) > :not(:first-child) {
+  margin-inline: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-selection-tree-header),
+  .od-ui:where(.od-selection-tree-content),
+  .od-ui:where(.od-selection-tree-row) > .od-selection-tree-disclosure .accordion__icon {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+
+  .od-ui:where(.od-selection-tree-content)[data-state='closed'] {
+    transition-delay: 0s;
+  }
+}

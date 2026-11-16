@@ -61,7 +61,9 @@ export const InfoHelpBox = (props) => {
                 )
               : (
                   <>
-                    <MdcPlayCircle onClick={playVideo} />
+                    <button type='button' className='od-glyph-overlay' aria-label={t('PLAY_VIDEO', 'Play video')} onClick={playVideo}>
+                      <MdcPlayCircle />
+                    </button>
                     <video muted id='dataVideo' className='w-100 custom-video' playsInline controls>
                       <source src={data?.video} type='video/mp4' />
                       <source src={data?.video} type='video/webm' />
@@ -76,7 +78,7 @@ export const InfoHelpBox = (props) => {
               style={{ marginRight: 10 }}
               color='primary'
               borderRadius='8px'
-              onClick={() => window.open(data?.more_info ?? 'https://docs.ordering.co/docs/products/dashboard/settings-overview/', '_blank')}
+              onClick={() => window.open(data?.more_info ?? 'https://docs.ordering.co/docs/products/dashboard/settings-overview/', '_blank', 'noopener,noreferrer')}
             >
               {t('MORE_INFO', 'More info')}
             </Button>
@@ -85,7 +87,7 @@ export const InfoHelpBox = (props) => {
                 style={{ marginLeft: 10 }}
                 color='secundary'
                 borderRadius='8px'
-                onClick={() => window.open(data?.support_url, '_blank')}
+                onClick={() => window.open(data?.support_url, '_blank', 'noopener,noreferrer')}
               >
                 {t('SUPPORT_URL', 'Tech support')}
               </Button>

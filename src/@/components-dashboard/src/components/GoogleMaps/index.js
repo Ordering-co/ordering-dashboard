@@ -5,6 +5,11 @@ import { GoogleMapsHeatmapLayer } from '../GoogleMapsHeatmapLayer'
 import { useEvent } from '../../contexts/EventContext'
 import { useUtils } from '../../contexts/UtilsContext'
 
+// redesign fix-qa E9: the box is inline, so no stylesheet can resize it. By default it is what it always was;
+// `fillContainer` makes it take the box its parent gives it (width and height of the parent, in flow, never wider).
+const DEFAULT_BOX_STYLE = { width: '70%', height: '50%', position: 'absolute' }
+const FILL_CONTAINER_STYLE = { width: '100%', height: '100%', position: 'relative' }
+
 export const GoogleMaps = (props) => {
   const {
     googleReady,
@@ -22,7 +27,8 @@ export const GoogleMaps = (props) => {
     markerIcon,
     isFitCenter,
     handleChangeCenter,
-    onlyMarkerChangeCenter
+    onlyMarkerChangeCenter,
+    fillContainer
   } = props
 
   const [{ optimizeImage }] = useUtils()
@@ -414,7 +420,7 @@ export const GoogleMaps = (props) => {
       <div
         id='map'
         ref={divRef}
-        style={{ width: '70%', height: '50%', position: 'absolute' }}
+        style={fillContainer ? FILL_CONTAINER_STYLE : DEFAULT_BOX_STYLE}
       />
     )
   )
@@ -425,6 +431,10 @@ GoogleMaps.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
+  /**
+   * fillContainer, the map takes the width and height of its parent instead of its own absolute 70% x 50% box
+   */
+  fillContainer: PropTypes.bool,
   /**
    * maxLimitLocation, max value to set position
    */

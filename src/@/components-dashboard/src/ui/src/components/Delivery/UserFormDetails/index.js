@@ -1,29 +1,85 @@
-import React, { useEffect, useState, useRef } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+
+import settings from '~/config'
 import { useLanguage, useCustomer, useApi } from '../../../../../index'
-import { useForm } from 'react-hook-form'
-import parsePhoneNumber from 'libphonenumber-js'
-import { Input, Button, Switch, DefaultSelect } from '../../../styles'
-import { Alert, InputPhoneNumber } from '../../Shared'
-import { sortInputFields } from '../../../utils'
-import { Eye, EyeSlash } from 'react-bootstrap-icons'
+import { Field, PasswordField, SaveBar, Skeleton, Switch, TextField, useFieldFrame } from '../../Shared/Product'
+import { PhoneField } from '../../Shared/Product/PhoneField'
+import { FirstSelect } from '../../Shared/UI/FirstSelect'
+import { SelectSurfaceContext } from '../../Shared/UI/selectPlacement'
+import { useLabelFocusesTrigger } from '../../Settings/SettingsHubForm/useLabelFocusesTrigger'
+import { userTypeLabel, userTypesValues } from '../../Users/UserTypeSelector/utils'
+import { useConfirmStep } from '../../../hooks/useConfirmStep'
+import { ConfirmAdmin } from '../../Shared/ConfirmAdmin'
 import { timezones } from '../../../config/constants'
-import { useDriverPlate } from './useDriverPlate'
-import { UserTypeSelector } from '../../Users/UserTypeSelector'
-
+import { toAlertContent } from '../../../../../utils/alertContent'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { userFullName } from '../../../../../utils/userContact'
 import {
-  FormInput,
-  ActionsForm,
-  SkeletonForm,
-  DriverZoneRestrictionWrapper,
-  WrapperPassword,
-  TogglePassword,
-  InputWrapper,
-  WrapperUserTypeSelector
-} from './styles'
+  cellphoneStartZero,
+  changedFieldNames,
+  checkoutFields,
+  fieldLabel,
+  phoneToChanges,
+  sanitizeEmail,
+  userPhoneText,
+  validateUserForm
+} from '../../../../../utils/userForm'
+import { useDriverPlate } from './useDriverPlate'
+import './user-form-details.css'
 
-const driverPlateProjects = ['rokys', 'luisv4plus']
+// redesign UF-B3 (decisions 1-3): the Delivery copy of the profile form in Product, with the composition of the
+// Users copy (B2): labels over every field, the groups Details / Account / Driver, errors under their field, and the save bar
+// of Settings promoted to `P/SaveBar`, inside the form at its foot. The trees are not unified on purpose (will).
+
+// The select is the Product anatomy (C18): trigger as wide as the field, brand rows.
+const FIT_TRIGGER = { fitTrigger: true }
+
+const SKELETON_ROWS = 6
+// «Saved» stays this long, then the bar goes away
+const SAVED_MILLISECONDS = 4000
+
+const withCount = (text, count) => text.replace('_count_', String(count))
+
+const hasErrors = errors => Object.keys(errors).length > 0
+
+/**
+ * The text of an API error for the bar (or the photo): a string stays the string, a list is joined, anything else
+ * (an object, an Error, a `User` the SDK cast from a 200 with `error: true`, an empty list) is the generic sentence.
+ * Never empty (M-UF5).
+ * @param {Function} t translator
+ * @param {*} result `formState.result.result`
+ */
+export const userFormErrorText = (t, result) => {
+  const fallback = t('USER_SAVE_ERROR', 'We couldn\'t save the changes. Try again.')
+  return toAlertContent(result, fallback).map(line => translateApiMessage(t, line, fallback)).join(' ') || fallback
+}
+
+/** A dropdown tied to the label of its Field (the C18 trigger names itself «label + value»). */
+const FramedSelect = ({ label, placeholder, options, defaultValue, onChange, isDisabled, searchable, searchValue, handleChangeSearch }) => {
+  const frame = useFieldFrame()
+  const rootRef = useRef(null)
+  useLabelFocusesTrigger(rootRef, frame?.labelId)
+  return (
+    <span ref={rootRef} className='odc-uf-select'>
+      <SelectSurfaceContext.Provider value={FIT_TRIGGER}>
+        <FirstSelect
+          ariaLabelledBy={frame?.labelId || undefined}
+          ariaLabel={label}
+          placeholder={placeholder}
+          options={options}
+          defaultValue={defaultValue}
+          onChange={onChange}
+          isDisabled={isDisabled}
+          isShowSearchBar={searchable}
+          searchBarIsCustomLayout={searchable}
+          searchBarIsNotLazyLoad={searchable}
+          searchValue={searchValue}
+          handleChangeSearch={handleChangeSearch}
+        />
+      </SelectSurfaceContext.Provider>
+    </span>
+  )
+}
 
 export const UserFormDetailsUI = (props) => {
   const {
@@ -39,97 +95,103 @@ export const UserFormDetailsUI = (props) => {
     isDriversPage,
     handleChangeSwtich,
     handleChangeUserType,
-    setCellphoneStartZero
+    setCellphoneStartZero,
+    defaultUserTypesSelected,
+    onDirtyChange
   } = props
 
-  const formMethods = useForm()
   const [, t] = useLanguage()
+  const [, { setUserCustomer }] = useCustomer()
+  const [ordering] = useApi()
+  const baseId = useId()
+  const { ask, dialog } = useConfirmStep()
+  // Owner decision 24 B: the question asked before giving level 0 (password or code), with the C8 words
+  const [adminLevelCopy, setAdminLevelCopy] = useState(null)
+  const formRef = useRef(null)
+  const externalIdRef = useRef(null)
+  const caretRef = useRef(null)
+
+  const user = userData
+  const changes = formState?.changes ?? {}
+  const loadingFields = !!validationFields?.loading
+
+  const driverPlateProjects = settings.dashboard_project_allowlists?.driver_plate
+  const project = ordering?.project
+  const showDriverPlate = isDriversPage && typeof project === 'string' && project !== '' &&
+    Array.isArray(driverPlateProjects) && driverPlateProjects.includes(project)
+  const { plate, setPlate, savePlate, resetPlate, isPlateDirty, plateState } = useDriverPlate(showDriverPlate ? userData?.id : null)
 
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(null)
   const [userPhoneNumber, setUserPhoneNumber] = useState(null)
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [, { setUserCustomer }] = useCustomer()
-  const emailInput = useRef(null)
-
-  const [user, setUser] = useState(userData)
-  const [passwordSee, setPasswordSee] = useState(false)
-  const [ordering] = useApi()
-  const showDriverPlate = isDriversPage && driverPlateProjects.includes(ordering?.project)
-  const { plate, setPlate, savePlate, isPlateDirty, plateState } = useDriverPlate(showDriverPlate ? userData?.id : null)
-  const [timezonesOptions, setTimezonesOptions] = useState([])
   const [timezoneSearchValue, setTimezoneSearchValue] = useState('')
+  const [errors, setErrors] = useState({})
+  const [focusRequest, setFocusRequest] = useState(0)
+  const [plateSaved, setPlateSaved] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [flowDone, setFlowDone] = useState(0)
 
-  useEffect(() => {
-    setUser(userData)
-  }, [userData])
+  const fields = checkoutFields(validationFields, showField)
+  const cellphoneRule = validationFields?.fields?.checkout?.cellphone
+  const showInputPhoneNumber = cellphoneRule?.enabled ?? false
 
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-    cleanFormState && cleanFormState({ result: { error: false } })
+  // what the form shows: the change if any, else the user's value (the API may send a number, e.g. an external id)
+  const valueOf = (code) => {
+    const value = changes[code] ?? user?.[code] ?? ''
+    return typeof value === 'number' ? String(value) : value
   }
 
-  const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
-
-  const setUserCellPhone = (isEdit = false) => {
-    // if (userPhoneNumber && !userPhoneNumber.includes('null') && !isEdit) {
-    //   setUserPhoneNumber(userPhoneNumber)
-    //   return
-    // }
-    if (user?.cellphone) {
-      let phone = null
-      if (formState.result.error && formState.changes?.cellphone && formState.changes?.country_phone_code) {
-        phone = `+${formState.changes?.country_phone_code} ${formState.changes?.cellphone}`
-        setUserPhoneNumber(phone)
-        return
-      }
-      if (user?.country_phone_code) {
-        phone = `+${user?.country_phone_code} ${user?.cellphone}`
-      } else {
-        phone = user?.cellphone
-      }
-      setUserPhoneNumber(phone)
-      return
-    }
-    setUserPhoneNumber(user?.cellphone || '')
+  // redesign UF-B3 (M-UF1): the placeholder of main is the label now; the names a change can carry, for the bar
+  const labelOfKey = (key) => {
+    const field = fields.find(item => item.code === key) ?? Object.values(validationFields?.fields?.checkout ?? {}).find(item => item?.code === key)
+    if (field && key !== 'cellphone') return fieldLabel(t, field)
+    return ({
+      cellphone: t('PHONE_NUMBER', 'Phone number'),
+      level: t('USER_TYPE', 'User type'),
+      timezone: t('TIMEZONE', 'Timezone'),
+      password: t('NEW_PASSWORD', 'New password'),
+      external_id: t('EXTERNAL_ID', 'External ID'),
+      driver_zone_restriction: t('DRIVER_ZONE_RESTRICTION', 'Driver zone restriction'),
+      mono_session: t('MONO_SESSION', 'Mono session')
+    })[key] ?? key
   }
 
-  const onSubmit = async () => {
-    const isPhoneNumberValid = userPhoneNumber ? isValidPhoneNumber : true
-    if (!userPhoneNumber &&
-      validationFields?.fields?.checkout?.cellphone?.enabled &&
-      validationFields?.fields?.checkout?.cellphone?.required
-    ) {
-      setAlertState({
-        open: true,
-        content: [t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')]
-      })
-      return
+  // The photo is saved the moment it is chosen (decision 3), so it is never an unsaved change of the bar.
+  const { photo: _photo, ...formChanges } = changes
+  const names = changedFieldNames(formChanges, labelOfKey)
+  if (isPlateDirty) names.push(t('DRIVER_LICENSE_PLATE', 'License plate'))
+  const count = names.length
+
+  const setUserCellPhone = () => setUserPhoneNumber(userPhoneText(user, formState))
+
+  const validate = () => validateUserForm({
+    t,
+    fields,
+    values: Object.fromEntries(fields.map(field => [field.code, valueOf(field.code)])),
+    isRequiredField: code => !!isRequiredField?.(code),
+    password: { value: changes.password ?? '', show: true, required: !!isRequiredField?.('password') },
+    phone: {
+      number: userPhoneNumber,
+      isValid: userPhoneNumber ? isValidPhoneNumber : true,
+      enabled: showInputPhoneNumber,
+      required: cellphoneRule?.required,
+      hasCountryCode: !!user?.country_phone_code
     }
-    if (!isPhoneNumberValid && userPhoneNumber) {
-      if (user?.country_phone_code) {
-        setAlertState({
-          open: true,
-          content: [t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')]
-        })
-        return
-      }
-      setAlertState({
-        open: true,
-        content: [t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid')]
-      })
-      return
-    }
+  })
+
+  const onSubmit = async (confirmationToken) => {
+    setPlateSaved(false)
     if (isPlateDirty) {
-      const saved = await savePlate()
-      if (!saved) return
+      const done = await savePlate()
+      if (!done) {
+        setFlowDone(count => count + 1)
+        return
+      }
+      setPlateSaved(true)
     }
-    if (Object.keys(formState.changes).length > 0 && isPhoneNumberValid) {
-      let changes = null
+    if (Object.keys(changes).length > 0) {
+      let phoneChanges = null
       if (user?.cellphone && !userPhoneNumber) {
-        changes = {
+        phoneChanges = {
           country_phone_code: '',
           cellphone: ''
         }
@@ -137,87 +199,90 @@ export const UserFormDetailsUI = (props) => {
       if (isCustomerMode) {
         setUserCustomer(formState.result.result, true)
       }
-      handleButtonUpdateClick(changes)
+      if (confirmationToken) await handleButtonUpdateClick(phoneChanges, undefined, undefined, confirmationToken)
+      else await handleButtonUpdateClick(phoneChanges)
     }
+    setFlowDone(count => count + 1)
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const found = validate()
+    setErrors(found)
+    if (hasErrors(found)) {
+      setFocusRequest(request => request + 1)
+      return
+    }
+    // redesign D-11 (owner, 2026-10-19, C8): a change of user type changes what the person can see and do, so the save
+    // asks first, BEFORE `onSubmit` (which writes the plate ahead of the user): on Cancel nothing is written and the form keeps its
+    // changes. The photo upload (`handleButtonUpdateClick(null, true)`) never comes here.
+    const levelChanged = changes.level !== undefined && changes.level !== null && Number(changes.level) !== Number(user?.level)
+    if (levelChanged) {
+      const copy = {
+        title: t('USER_TYPE_CHANGE_CONFIRM_TITLE', 'Change _name_ to _type_?')
+          .replace('_name_', () => userFullName(user) || user?.email || '')
+          .replace('_type_', () => userTypeLabel(t, changes.level)),
+        body: t('USER_TYPE_CHANGE_CONFIRM_BODY', 'What they can see and do changes as soon as you save.'),
+        confirmLabel: t('USER_TYPE_CHANGE_CONFIRM', 'Change user type')
+      }
+      // Owner decision 24 B (2026-10-21, ): giving level 0 asks the password or a code (ConfirmAdmin) instead of C8, as in
+      // Users/UserFormDetails: never two confirmations in a row (D-1). Nothing is written (the plate included) until it passes.
+      // the API checks the confirmation both ways (action `user_admin_level`), giving level 0 to someone who was not
+      // an admin, or taking it from someone who was; either way the row being edited is the ConfirmAdmin target.
+      if (Number(changes.level) === 0 || Number(user?.level) === 0) {
+        setAdminLevelCopy(copy)
+        return
+      }
+      const confirmed = await ask({ ...copy, tone: 'danger' })
+      if (!confirmed) return
+    }
+    onSubmit()
+  }
+
+  const handleDiscard = () => {
+    cleanFormState && cleanFormState({ changes: {}, result: { error: false } })
+    setUserPhoneNumber(userPhoneText(user, { result: { error: false } }))
+    setCellphoneStartZero && setCellphoneStartZero(null)
+    resetPlate()
+    setErrors({})
+    setPlateSaved(false)
+    setSaved(false)
+    setTimezoneSearchValue('')
   }
 
   const handleChangePhoneNumber = (number, isValid, rawNumber) => {
     setUserPhoneNumber(number)
-
-    let phoneNumberParser = null
-    let phoneNumber = {
-      country_phone_code: {
-        name: 'country_phone_code',
-        value: ''
-      },
-      cellphone: {
-        name: 'cellphone',
-        value: ''
-      }
-    }
-    if (isValid) {
-      phoneNumberParser = parsePhoneNumber(number)
-    }
-    if (phoneNumberParser) {
-      phoneNumber = {
-        country_phone_code: {
-          name: 'country_phone_code',
-          value: phoneNumberParser.countryCallingCode
-        },
-        cellphone: {
-          name: 'cellphone',
-          value: phoneNumberParser.nationalNumber
-        }
-      }
-    }
-    setCellphoneStartZero && setCellphoneStartZero(rawNumber?.number && rawNumber?.countryCallingCode ? rawNumber?.number : null)
-    handleChangeInput(phoneNumber, true)
+    setCellphoneStartZero && setCellphoneStartZero(cellphoneStartZero(rawNumber))
+    // Delivery never had the `validation_phone_number_lib` branch: it always reads the number as the library parses it
+    handleChangeInput(phoneToChanges(number, isValid, { validationPhoneNumberLib: 1 }), true)
   }
 
-  const handleChangeInputEmail = (e) => {
-    handleChangeInput({ target: { name: 'email', value: e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '') } })
-    formMethods.setValue('email', e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
-    emailInput.current.value = e.target.value?.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '')
-  }
+  const changeInput = (name, value) => handleChangeInput({ target: { name, value } })
+
+  const handleChangeEmail = (value) => changeInput('email', sanitizeEmail(value))
+
+  // redesign UF-B3 (M-UF12): typing keeps the digits; a paste inserts the digits of the text at the caret (replacing the
+  // selection) and what is stored is what the field shows. No `execCommand`.
+  const handleExternalId = (value) => changeInput('external_id', value.replace(/\D/g, ''))
 
   const handleExternalIdPaste = (event) => {
     event.preventDefault()
-    const pastedData = event.clipboardData.getData('text/plain')
-    const sanitizedData = pastedData.replace(/\s/g, '').replace(/[^\d]/g, '')
-    document.execCommand('insertText', false, sanitizedData)
-    handleChangeSwtich('external_id', sanitizedData)
+    const digits = (event.clipboardData?.getData('text/plain') ?? '').replace(/\D/g, '')
+    if (!digits) return
+    const input = event.currentTarget
+    const start = input.selectionStart ?? input.value.length
+    const end = input.selectionEnd ?? start
+    caretRef.current = start + digits.length
+    changeInput('external_id', input.value.slice(0, start) + digits + input.value.slice(end))
   }
 
-  useEffect(() => {
-    if (Object.keys(formMethods.errors).length > 0) {
-      const content = Object.values(formMethods.errors).map(error => error.message)
-      if (!isValidPhoneNumber && userPhoneNumber) {
-        content.push(t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid.'))
-      }
-      setAlertState({
-        open: true,
-        content
-      })
-    }
-  }, [formMethods.errors])
-
-  useEffect(() => {
-    if ((!formState?.loading && formState?.result?.error)) {
-      setAlertState({
-        open: true,
-        content: formState.result?.result || [t('ERROR', 'Error')]
-      })
-    }
-  }, [formState?.loading])
-
-  useEffect(() => {
-    if (plateState.error) {
-      setAlertState({
-        open: true,
-        content: [plateState.error]
-      })
-    }
-  }, [plateState.error])
+  // The controlled value comes back a render later: the caret goes right after what was pasted.
+  useLayoutEffect(() => {
+    if (caretRef.current == null) return
+    const caret = caretRef.current
+    caretRef.current = null
+    externalIdRef.current?.setSelectionRange?.(caret, caret)
+  })
 
   useEffect(() => {
     if (user && !formState?.loading) {
@@ -225,220 +290,251 @@ export const UserFormDetailsUI = (props) => {
     }
   }, [user])
 
-  useEffect(() => {
-    if (!validationFields.loading && emailInput.current) {
-      formMethods.setValue('email', formState?.result?.result
-        ? formState?.result?.result?.email
-        : formState?.changes?.email ?? (user && user?.email) ?? '')
-    }
-  }, [validationFields, emailInput.current])
-
-  useEffect(() => {
-    formMethods.register('email', {
-      required: isRequiredField('email')
-        ? t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email'))
-        : null,
-      pattern: {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-      }
-    })
-  }, [formMethods])
-
+  // main reset the changes when another user opened
   useEffect(() => {
     if (user?.id) {
       cleanFormState && cleanFormState({ changes: {} })
     }
   }, [user?.id])
 
+  // Once a save failed validation the messages follow what the user types, as they would in a field that checks as it goes.
   useEffect(() => {
-    const _timezonesOptions = timezones
-      .filter(timezone => timezone.toLocaleLowerCase().includes(timezoneSearchValue.toLocaleLowerCase()))
-      .map(timezone => {
-        return {
-          value: timezone,
-          content: timezone
-        }
-      })
-    setTimezonesOptions(_timezonesOptions)
-  }, [timezoneSearchValue])
+    if (hasErrors(errors)) setErrors(validate())
+  }, [formState?.changes, userPhoneNumber, isValidPhoneNumber])
+
+  // redesign UF-R1 (F1): `block: 'nearest'` honors the `scroll-margin-block-end` of the controls (user-form-details.css), so the sticky
+  // save bar does not sit over the field that has the focus or over its error.
+  useEffect(() => {
+    if (!focusRequest) return
+    const invalid = formRef.current?.querySelector('[aria-invalid="true"]')
+    invalid?.focus()
+    invalid?.scrollIntoView?.({ block: 'nearest' })
+  }, [focusRequest])
+
+  // redesign UF-R1 (F1): the bar appears with the first unsaved change, over the field being edited; bring that field into view once.
+  const hasChanges = count > 0
+  // redesign DL-B5 (decision 1; as Users/UserFormDetails, UC-B6 auditor #16): opt-in. The page asks to hear whether the form has
+  // unsaved changes. It is what the bar counts: a changed field or a changed plate (the photo is saved when chosen).
+  useEffect(() => {
+    if (onDirtyChange) onDirtyChange(hasChanges)
+  }, [hasChanges])
+  const hadChanges = useRef(false)
+  useEffect(() => {
+    const appeared = hasChanges && !hadChanges.current
+    hadChanges.current = hasChanges
+    if (!appeared) return
+    const active = document.activeElement
+    if (active && formRef.current?.contains(active)) active.scrollIntoView?.({ block: 'nearest' })
+  }, [hasChanges])
+
+  // «Saved» for a few seconds after a save that ended well (the plate and the user, or either)
+  useEffect(() => {
+    if (!flowDone || formState?.result?.error || plateState.error) return undefined
+    setSaved(true)
+    const timer = setTimeout(() => setSaved(false), SAVED_MILLISECONDS)
+    return () => clearTimeout(timer)
+  }, [flowDone])
+
+  const timezonesOptions = useMemo(() => timezones
+    .filter(timezone => timezone.toLocaleLowerCase().includes(timezoneSearchValue.toLocaleLowerCase()))
+    .map(timezone => ({ value: timezone, content: timezone })), [timezoneSearchValue])
+
+  const requiredLabel = t('REQUIRED', 'Required')
+  const saving = !!formState?.loading || plateState.loading
+
+  // redesign UF-B3 (decision 2, M-UF5, M-UF18): what the bar says when something went wrong, most urgent first.
+  let errorText = null
+  if (hasErrors(errors)) {
+    const invalid = Object.keys(errors).length
+    errorText = withCount(invalid === 1
+      ? t('SETTINGS_FIX_FIELDS_ONE', 'Fix _count_ field to save.')
+      : t('SETTINGS_FIX_FIELDS_OTHER', 'Fix _count_ fields to save.'), invalid)
+  } else if (plateState.error) {
+    errorText = translateApiMessage(t, plateState.error, t('USER_SAVE_ERROR', 'We couldn\'t save the changes. Try again.'))
+  } else if (formState?.result?.error && !changes.photo) {
+    // a photo that failed to upload (its `changes.photo` stays) is shown under the avatar, not here
+    errorText = userFormErrorText(t, formState.result.result)
+    if (plateSaved) {
+      errorText = t('USER_FORM_PLATE_SAVED_USER_FAILED', 'The license plate was saved, but the other changes were not. _message_').replace('_message_', errorText)
+    }
+  }
+
+  const detailsId = `${baseId}-details`
+  const accountId = `${baseId}-account`
+  const driverId = `${baseId}-driver`
+
+  const userTypeOptions = userTypesValues({
+    t,
+    isPrimary: true,
+    defaultUserType: changes.level ?? user?.level,
+    defaultUserTypesSelected
+  })
 
   return (
-    <>
-      <FormInput onSubmit={formMethods.handleSubmit(onSubmit)}>
-        {!validationFields?.loading
-          ? (
+    <form
+      ref={formRef}
+      className='odc-uf-form'
+      noValidate
+      tabIndex={-1}
+      aria-busy={loadingFields ? 'true' : undefined}
+      onSubmit={handleSubmit}
+    >
+      {loadingFields
+        ? (
+          <div className='odc-uf-skeleton' aria-hidden='true'>
+            {[...Array(SKELETON_ROWS)].map((_, index) => (
+              <Skeleton key={index} block='var(--od-x-control-height)' />
+            ))}
+          </div>
+          )
+        : (
           <>
-            {sortInputFields({ values: validationFields?.fields?.checkout }).map(field =>
-              showField && showField(field.code) && (
-                <React.Fragment key={field.id}>
-                  {field.code === 'email'
-                    ? (
-                    <Input
-                      key={field.id}
-                      type={field.type}
-                      name={field.code}
-                      className='form'
-                      placeholder={t(field.code.toUpperCase(), field?.name)}
-                      value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                      onChange={handleChangeInputEmail}
-                      ref={(e) => {
-                        emailInput.current = e
-                      }}
-                      autoComplete='off'
-                    />
-                      )
-                    : (
-                    <Input
-                      key={field.id}
-                      type={field.type}
-                      name={field.code}
-                      className='form'
-                      placeholder={t(field.code.toUpperCase(), field?.name)}
-                      value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                      onChange={handleChangeInput}
-                      ref={formMethods.register({
-                        required: isRequiredField(field.code)
-                          ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
-                          : null
-                      })}
-                      autoComplete='off'
-                    />
-                      )}
-
-                </React.Fragment>
-              )
-            )}
-            {isDriversPage && (
-              <>
-                <Input
-                  name='external_id'
-                  className='form'
-                  placeholder={t('EXTERNAL_ID', 'External Id')}
-                  defaultValue={
-                    formState?.changes?.external_id ?? (user && user?.external_id) ?? ''
-                  }
-                  onChange={handleChangeInput}
+            <section className='odc-uf-group' aria-labelledby={detailsId}>
+              <h3 id={detailsId} className='odc-uf-heading'>{t('DETAILS', 'Details')}</h3>
+              {fields.map(field => (
+                <TextField
+                  key={field.id ?? field.code}
+                  type={field.type}
+                  name={field.code}
+                  label={fieldLabel(t, field)}
+                  required={!!isRequiredField?.(field.code)}
+                  requiredLabel={requiredLabel}
+                  error={errors[field.code]}
+                  value={valueOf(field.code)}
+                  onChange={field.code === 'email' ? handleChangeEmail : value => changeInput(field.code, value)}
                   autoComplete='off'
-                  onKeyPress={(e) => {
-                    if (!/^[0-9]$/.test(e.key)) {
-                      e.preventDefault()
-                    }
-                  }}
+                />
+              ))}
+              {!!showInputPhoneNumber && (
+                <PhoneField
+                  label={t('PHONE_NUMBER', 'Phone number')}
+                  countryLabel={t('USER_FORM_PHONE_COUNTRY', 'Phone number country')}
+                  // the piece paints its own message for a number that is not valid; only «required» comes from here
+                  error={userPhoneNumber ? undefined : errors.cellphone}
+                  user={user}
+                  value={userPhoneNumber}
+                  setValue={handleChangePhoneNumber}
+                  handleIsValid={setIsValidPhoneNumber}
+                />
+              )}
+            </section>
+
+            <section className='odc-uf-group' aria-labelledby={accountId}>
+              <h3 id={accountId} className='odc-uf-heading'>{t('USER_FORM_ACCOUNT', 'Account')}</h3>
+              <Field label={t('USER_TYPE', 'User type')}>
+                <FramedSelect
+                  label={t('USER_TYPE', 'User type')}
+                  placeholder={t('TYPE', 'Type')}
+                  options={userTypeOptions}
+                  defaultValue={changes.level ?? user?.level}
+                  onChange={handleChangeUserType}
+                  isDisabled={Array.isArray(defaultUserTypesSelected)}
+                />
+              </Field>
+              <PasswordField
+                name='password'
+                label={t('NEW_PASSWORD', 'New password')}
+                hint={t('USER_FORM_PASSWORD_KEEP_HINT', 'Leave empty to keep the current password.')}
+                showLabel={t('SHOW_PASSWORD', 'Show password')}
+                hideLabel={t('HIDE_PASSWORD', 'Hide password')}
+                required={!!isRequiredField?.('password')}
+                requiredLabel={requiredLabel}
+                error={errors.password}
+                value={changes.password ?? ''}
+                onChange={value => changeInput('password', value)}
+                autoComplete='new-password'
+              />
+            </section>
+
+            {isDriversPage && (
+              <section className='odc-uf-group' aria-labelledby={driverId}>
+                <h3 id={driverId} className='odc-uf-heading'>{t('DRIVER', 'Driver')}</h3>
+                <TextField
+                  ref={externalIdRef}
+                  name='external_id'
+                  label={t('EXTERNAL_ID', 'External ID')}
+                  inputMode='numeric'
+                  autoComplete='off'
+                  value={valueOf('external_id')}
+                  onChange={handleExternalId}
                   onPaste={handleExternalIdPaste}
                 />
                 {showDriverPlate && (
-                  <Input
+                  <TextField
                     name='plate'
-                    className='form'
-                    placeholder={t('DRIVER_LICENSE_PLATE', 'License plate')}
+                    label={t('DRIVER_LICENSE_PLATE', 'License plate')}
                     value={plate}
-                    onChange={(e) => setPlate(e.target.value)}
+                    onChange={setPlate}
                     disabled={plateState.loading}
                     autoComplete='off'
                     maxLength={255}
                   />
                 )}
-                <InputWrapper isTimezone>
-                  <DefaultSelect
+                <Field label={t('TIMEZONE', 'Timezone')}>
+                  <FramedSelect
+                    label={t('TIMEZONE', 'Timezone')}
                     placeholder={t('SELECT_TIMEZONE', 'Select a timezone')}
-                    defaultValue={formState?.changes?.timezone ?? user?.timezone ?? ''}
                     options={timezonesOptions}
-                    onChange={val => handleChangeSwtich('timezone', val)}
-                    optionInnerMaxHeight='300px'
-                    isShowSearchBar
-                    searchBarIsCustomLayout
-                    searchBarIsNotLazyLoad
+                    defaultValue={changes.timezone ?? user?.timezone ?? ''}
+                    onChange={value => handleChangeSwtich('timezone', value)}
+                    searchable
                     searchValue={timezoneSearchValue}
                     handleChangeSearch={setTimezoneSearchValue}
                   />
-                </InputWrapper>
-              </>
+                </Field>
+                <div className='odc-uf-switch-row'>
+                  <Switch
+                    checked={!!(changes.driver_zone_restriction ?? user?.driver_zone_restriction ?? false)}
+                    onCheckedChange={value => handleChangeSwtich('driver_zone_restriction', value)}
+                  >
+                    {t('DRIVER_ZONE_RESTRICTION', 'Driver zone restriction')}
+                  </Switch>
+                </div>
+                <div className='odc-uf-switch-row'>
+                  <Switch
+                    checked={!!(changes.mono_session ?? user?.mono_session ?? false)}
+                    onCheckedChange={value => handleChangeSwtich('mono_session', value)}
+                  >
+                    {t('MONO_SESSION', 'Mono session')}
+                  </Switch>
+                </div>
+              </section>
             )}
-            {!!showInputPhoneNumber && (
-              <InputPhoneNumber
-                user={user}
-                value={userPhoneNumber}
-                setValue={handleChangePhoneNumber}
-                handleIsValid={setIsValidPhoneNumber}
-              />
-            )}
-            <WrapperPassword>
-              <Input
-                type={!passwordSee ? 'password' : 'text'}
-                name='password'
-                className='form'
-                placeholder={t('FRONT_VISUALS_PASSWORD', 'Password')}
-                onChange={handleChangeInput}
-                ref={formMethods.register({
-                  required: isRequiredField('password')
-                    ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password'))
-                    : null,
-                  minLength: {
-                    value: 8,
-                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                  }
-                })}
-              />
-              <TogglePassword onClick={() => setPasswordSee(!passwordSee)}>
-                {!passwordSee ? <Eye /> : <EyeSlash />}
-              </TogglePassword>
-            </WrapperPassword>
-            {isDriversPage && (
-              <DriverZoneRestrictionWrapper>
-                <span>{('DRIVER_ZONE_RESTRICTION', 'Driver Zone Restriccion')}</span>
-                <Switch
-                  defaultChecked={formState?.changes?.driver_zone_restriction ?? user?.driver_zone_restriction ?? false}
-                  onChange={(val) => handleChangeSwtich('driver_zone_restriction', val)}
-                />
-              </DriverZoneRestrictionWrapper>
-            )}
-            {isDriversPage && (
-              <DriverZoneRestrictionWrapper>
-                <span>{('MONO_SESSION', 'Mono session')}</span>
-                <Switch
-                  defaultChecked={formState?.changes?.mono_session ?? user?.mono_session ?? false}
-                  onChange={(val) => handleChangeSwtich('mono_session', val)}
-                />
-              </DriverZoneRestrictionWrapper>
-            )}
-            <WrapperUserTypeSelector>
-              <UserTypeSelector
-                isPrimary
-                defaultUserType={formState?.changes?.level ?? user?.level}
-                handleChangeUserType={handleChangeUserType}
-              />
-            </WrapperUserTypeSelector>
-            <ActionsForm>
-              <Button
-                id='form-btn'
-                color='primary'
-                borderRadius='5px'
-                type='submit'
-                disabled={formState.loading || plateState.loading || (Object.keys(formState?.changes).length === 0 && !isPlateDirty)}
-              >
-                {formState.loading || plateState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-              </Button>
-            </ActionsForm>
           </>
-            )
-          : (
-          <SkeletonForm>
-            {[...Array(6)].map((item, i) => (
-              <Skeleton key={i} />
-            ))}
-          </SkeletonForm>
-            )}
-      </FormInput>
-      <Alert
-        title={t('PROFILE', 'Profile')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+          )}
+
+      <SaveBar
+        label={t('SAVE_CHANGES', 'Save changes')}
+        count={count}
+        countText={withCount(count === 1
+          ? t('SETTINGS_UNSAVED_CHANGES_ONE', '_count_ unsaved change')
+          : t('SETTINGS_UNSAVED_CHANGES_OTHER', '_count_ unsaved changes'), count)}
+        names={names}
+        moreText={more => withCount(t('SETTINGS_UNSAVED_MORE', '+_count_'), more)}
+        saving={saving}
+        errorText={errorText}
+        saved={saved}
+        savedText={t('SAVED', 'Saved')}
+        discardLabel={t('DISCARD', 'Discard')}
+        saveLabel={t('SAVE_CHANGES', 'Save changes')}
+        saveType='submit'
+        onDiscard={handleDiscard}
       />
-    </>
+      {dialog}
+      <ConfirmAdmin
+        open={!!adminLevelCopy}
+        action='user_admin_level'
+        targetId={user?.id}
+        title={adminLevelCopy?.title}
+        description={adminLevelCopy?.body}
+        otpDescription={adminLevelCopy?.body}
+        confirmLabel={adminLevelCopy?.confirmLabel}
+        onClose={() => setAdminLevelCopy(null)}
+        onConfirm={(token) => {
+          setAdminLevelCopy(null)
+          onSubmit(token)
+        }}
+      />
+    </form>
   )
 }

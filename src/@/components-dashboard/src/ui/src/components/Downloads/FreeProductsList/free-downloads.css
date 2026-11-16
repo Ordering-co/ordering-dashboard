@@ -1,0 +1,67 @@
+/*
+ * redesign FD-A (, decisions D1-D5): /free-downloads. The frame (header with the menu button), the sign-in note with the
+ * project code, and a grid of three product cards; the card is P/CatalogCard ( F1) and the note P/ProjectCode (F2), so this file keeps only the
+ * frame and the grid. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical
+ * properties, so right-to-left needs no second set of rules.
+ */
+
+/* The frame scrolls like the old container did: header, note and cards one under the other, inside the page height. It is also a
+   size container: the grid reads the width of the CONTENT (which the sidebar shrinks), never the viewport. */
+.odc-fd-frame {
+  container: odc-fd / inline-size;
+  /* the shell is a flex row: a size container takes no width from its content, so it takes the free space (as main's container) */
+  flex: 1;
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with it) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-block-size: calc(var(--vh, 1vh) * 100);
+  overflow: auto;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-fd-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── Grid: one column; three when the CONTENT is wide enough (audit F1: the viewport lies when the sidebar is open) ── */
+.odc-fd-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@container odc-fd (min-width: 720px) {
+  .odc-fd-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* redesign J5 row 46 (free-downloads P-1, ): a link and its «Copy link» wrap as one, so the copy never lands alone on the
+   next row. The pair takes the foot's rules for a long label: the link wraps inside the card instead of running out of it. */
+.odc-fd-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-fd-link > .odc-btn {
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+  block-size: auto;
+  padding-block: var(--od-space-1);
+  white-space: normal;
+  text-align: start;
+}

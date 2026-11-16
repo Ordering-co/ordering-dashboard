@@ -22,7 +22,7 @@ export const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
@@ -99,7 +99,7 @@ export const Tab = styled.div`
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
 
   ${({ active }) => active && css`
     border-bottom: 3px solid;
@@ -107,7 +107,7 @@ export const Tab = styled.div`
   `}
 
   ${({ active }) => !active && css`
-    color: ${props => props.theme.colors.lightGray};
+    color: var(--od-x-text-subtle);
   `}
 `
 
@@ -145,7 +145,7 @@ export const CityWrapper = styled.div`
 `
 
 export const CityName = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   width: 30%;
   display: flex;
   align-items: center;
@@ -188,7 +188,7 @@ export const CityAdministrator = styled.div`
 `
 
 export const CountryName = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   width: 30%;
   box-sizing: border-box;
   div {
@@ -223,7 +223,7 @@ export const CountryName = styled.div`
 `
 
 export const ActionsContainer = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   flex: 1;
   display: flex;
   align-items: center;
@@ -257,7 +257,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -312,7 +312,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {

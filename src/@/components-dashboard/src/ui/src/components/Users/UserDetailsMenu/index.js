@@ -66,6 +66,9 @@ export const UserDetailsMenu = (props) => {
           menu.enabled && (
             <Tab
               key={menu.key}
+              as='button'
+              type='button'
+              aria-pressed={menu.key === currentMenuSelected}
               active={menu.key === currentMenuSelected}
               onClick={() => handleChangeMenu(menu.key)}
             >

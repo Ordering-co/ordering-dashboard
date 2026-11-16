@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
@@ -28,6 +28,9 @@ export const BusinessWhiteLabel = (props) => {
     error: null
   })
   const [confirmCreate, setConfirmCreate] = useState(!!business?.id && !business?.site_id)
+  // redesign bugs F row 41 (M-05): `<id>:<site id>` already loaded, so that giving the business the site_id it just loaded
+  // (confirm create) does not make the effect below ask GET sites/current a second time
+  const loadedSiteRef = useRef(null)
 
   const baseHeaders = {
     'Content-Type': 'application/json',
@@ -50,6 +53,7 @@ export const BusinessWhiteLabel = (props) => {
       const site = result?.site || result
       const theme = result?.theme || (Array.isArray(result?.themes) ? result.themes[0] : null)
       setSiteCurrentState({ loading: false, site, theme, error: null })
+      if (site?.id) loadedSiteRef.current = `${business.id}:${site.id}`
       if (!business?.site_id && site?.id && handleUpdateBusinessState) {
         handleUpdateBusinessState({ ...business, site_id: site.id })
       }
@@ -67,8 +71,10 @@ export const BusinessWhiteLabel = (props) => {
     if (!business?.id) return
     if (business?.site_id) {
       setConfirmCreate(false)
+      if (loadedSiteRef.current === `${business.id}:${business.site_id}`) return
       loadCurrentSite()
     } else {
+      loadedSiteRef.current = null
       setConfirmCreate(true)
       setSiteCurrentState({ loading: false, site: null, theme: null, error: null })
     }

@@ -1,0 +1,945 @@
+{
+  "mode": "dark",
+  "rows": [
+    {
+      "name": "button-default-solid",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "108.391px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "108.391px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "108.391px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-default-outline",
+      "rest": {
+        "color": "rgb(196, 198, 202)",
+        "background-color": "rgb(23, 24, 26)",
+        "border-color": "rgb(91, 94, 100)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "121.062px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(91, 94, 100)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "121.062px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(91, 94, 100)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "121.062px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-primary-solid",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(38, 109, 240)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-primary-outline",
+      "rest": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgb(23, 24, 26)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "125.656px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "125.656px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "125.656px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-lightPrimary-solid",
+      "rest": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgb(23, 40, 74)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "140.156px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgb(18, 32, 58)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "140.156px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgb(18, 32, 58)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "140.156px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-lightPrimary-outline",
+      "rest": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgb(23, 40, 74)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "152.828px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(18, 32, 58)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "152.828px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(18, 32, 58)",
+        "border-color": "rgb(23, 40, 74)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "152.828px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-lightGreen-solid",
+      "rest": {
+        "color": "rgb(0, 209, 126)",
+        "background-color": "rgb(15, 56, 40)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.344px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(0, 209, 126)",
+        "background-color": "rgb(11, 40, 29)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.344px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(0, 209, 126)",
+        "background-color": "rgb(4, 16, 11)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.344px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-lightGreen-outline",
+      "rest": {
+        "color": "rgb(0, 209, 126)",
+        "background-color": "rgb(15, 56, 40)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "142.016px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(11, 40, 29)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "142.016px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(4, 16, 11)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "142.016px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-green-solid",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(0, 209, 126)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "100.828px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(0, 189, 114)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "100.828px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(0, 158, 95)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "100.828px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-green-outline",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(0, 209, 126)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.5px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(0, 189, 114)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.5px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(0, 158, 95)",
+        "border-color": "rgb(0, 209, 126)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.5px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "button-warning-solid",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(245, 163, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "115.219px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(225, 149, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "115.219px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(194, 129, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "115.219px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-warning-outline",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(245, 163, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "127.891px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(225, 149, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "127.891px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(194, 129, 0)",
+        "border-color": "rgb(245, 163, 0)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "127.891px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-secundaryDark-solid",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(52, 54, 58)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "160.141px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(42, 44, 47)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "160.141px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(28, 29, 31)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "160.141px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-secundaryDark-outline",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(52, 54, 58)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "172.812px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(42, 44, 47)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "172.812px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(28, 29, 31)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "172.812px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-secundary-solid",
+      "rest": {
+        "color": "rgb(196, 198, 202)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "130.828px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(196, 198, 202)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "130.828px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(196, 198, 202)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "130.828px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-secundary-outline",
+      "rest": {
+        "color": "rgb(196, 198, 202)",
+        "background-color": "rgb(23, 24, 26)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "143.484px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "143.484px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "143.484px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-black-solid",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(255, 255, 255)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "98.375px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(245, 245, 245)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "98.375px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(230, 230, 230)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "98.375px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "button-black-outline",
+      "rest": {
+        "color": "rgb(11, 12, 13)",
+        "background-color": "rgb(255, 255, 255)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "111.047px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(245, 245, 245)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "111.047px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(230, 230, 230)",
+        "border-color": "rgb(255, 255, 255)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "111.047px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "comment-selected",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(44, 123, 229)",
+        "border-color": "rgb(44, 123, 229)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.266px",
+        "height": "28px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(44, 123, 229)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.266px",
+        "height": "28px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(44, 123, 229)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "129.266px",
+        "height": "28px"
+      }
+    },
+    {
+      "name": "comment-unselected",
+      "rest": {
+        "color": "rgb(65, 73, 84)",
+        "background-color": "rgb(52, 54, 58)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "144.078px",
+        "height": "28px"
+      },
+      "hover": {
+        "color": "rgb(65, 73, 84)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "144.078px",
+        "height": "28px"
+      },
+      "active": {
+        "color": "rgb(65, 73, 84)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "50px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "144.078px",
+        "height": "28px"
+      }
+    },
+    {
+      "name": "icon-text",
+      "rest": {
+        "color": "rgb(0, 0, 0)",
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-color": "rgb(0, 0, 0)",
+        "border-radius": "6px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.609px",
+        "height": "32px"
+      },
+      "hover": {
+        "color": "rgb(0, 0, 0)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(0, 0, 0)",
+        "border-radius": "6px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.609px",
+        "height": "32px"
+      },
+      "active": {
+        "color": "rgb(0, 0, 0)",
+        "background-color": "rgb(23, 40, 74)",
+        "border-color": "rgb(0, 0, 0)",
+        "border-radius": "6px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "113.609px",
+        "height": "32px"
+      }
+    },
+    {
+      "name": "link-text",
+      "rest": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-color": "rgb(146, 181, 255)",
+        "border-radius": "0px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "left",
+        "width": "98.7969px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-color": "rgb(146, 181, 255)",
+        "border-radius": "0px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "left",
+        "width": "98.7969px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(146, 181, 255)",
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-color": "rgb(146, 181, 255)",
+        "border-radius": "0px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "left",
+        "width": "98.7969px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "final-theme",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(38, 109, 240)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "monospace",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "117.828px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "monospace",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "117.828px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(31, 95, 209)",
+        "border-color": "rgb(38, 109, 240)",
+        "border-radius": "4px",
+        "font-family": "monospace",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "117.828px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "caller-svg",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "150.641px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "150.641px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "150.641px",
+        "height": "46px"
+      }
+    },
+    {
+      "name": "circle-initial",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "999px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "34px",
+        "height": "34px"
+      },
+      "hover": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "999px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "34px",
+        "height": "34px"
+      },
+      "active": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "999px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "34px",
+        "height": "34px"
+      }
+    },
+    {
+      "name": "link-initial",
+      "rest": {
+        "color": "rgb(255, 255, 255)",
+        "background-color": "rgb(33, 34, 36)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "90.0938px",
+        "height": "46px"
+      },
+      "hover": {
+        "color": "rgb(0, 86, 179)",
+        "background-color": "rgb(23, 24, 25)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "90.0938px",
+        "height": "46px"
+      },
+      "active": {
+        "color": "rgb(0, 86, 179)",
+        "background-color": "rgb(9, 9, 9)",
+        "border-color": "rgb(52, 54, 58)",
+        "border-radius": "4px",
+        "font-family": "\"Ordering Inter Local\", \"Inter Variable\", Inter, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "font-weight": "500",
+        "text-align": "center",
+        "width": "90.0938px",
+        "height": "46px"
+      }
+    }
+  ],
+  "focus": {
+    "width": "7px",
+    "offset": "9px"
+  }
+}

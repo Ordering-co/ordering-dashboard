@@ -1,6 +1,6 @@
 import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/react'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
 import SCHEMA from './themeNodesFixture.json'
@@ -13,10 +13,6 @@ vi.mock('../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback],
   useToast: () => [{}, { showToast: state.showToast }]
 }))
-vi.mock('../../../styles', async () => {
-  const ReactActual = await vi.importActual('react')
-  return { Button: ReactActual.forwardRef(({ color, borderRadius, outline, ...props }, ref) => <button ref={ref} {...props} />) }
-})
 
 import { BuilderWebSiteSettings } from '../BuilderWebSite'
 
@@ -52,6 +48,9 @@ describe('Settings of a website', () => {
     expect(screen.getByRole('textbox', { name: 'Website name' })).toHaveValue('Burger Town')
     fireEvent.change(screen.getByRole('textbox', { name: 'Website name' }), { target: { value: 'Burger Town Online' } })
     expect(state.site.setValue).toHaveBeenCalledWith(['site', 'name'], 'Burger Town Online')
+    // redesign B3a: Discard and Save are Product buttons in the notice
+    expect(screen.getByRole('button', { name: 'Discard' })).toHaveClass('odc-btn')
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('odc-btn')
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save' })) })
     expect(state.site.save).toHaveBeenCalled()
     expect(state.showToast).toHaveBeenCalledWith('SUCCESS', 'Website settings saved')
@@ -59,6 +58,12 @@ describe('Settings of a website', () => {
 
   it('offers to try again when the schema doesn’t load', () => {
     renderSettings({ schemaState: { loading: false, error: true, schema: null } })
+    // redesign B3a: a Product error state, announced, with its retry
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveClass('odc-state')
+    expect(within(alert).getByRole('heading', { level: 2, name: 'We couldn’t load the website settings' })).toBeInTheDocument()
+    expect(within(alert).getByText('Check your connection and try again.')).toBeInTheDocument()
+    expect(within(alert).getByRole('button', { name: 'Try again' })).toHaveClass('odc-btn')
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }))
     expect(state.site.reloadSchema).toHaveBeenCalled()
   })
@@ -80,5 +85,32 @@ describe('Settings of a website', () => {
   it('says when the website’s schema isn’t in the new format yet', () => {
     renderSettings({ schemaState: { loading: false, error: false, schema: { site: {} } } })
     expect(screen.getByText('The editor for this website isn’t ready yet')).toBeTruthy()
+    // redesign B3a: a Product empty state, not an alert
+    expect(screen.getByRole('heading', { level: 2, name: 'The editor for this website isn’t ready yet' }).closest('.odc-state')).not.toBeNull()
+    expect(screen.getByText('Its theme schema hasn’t moved to the new format. Try again later.')).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  // redesign B3a: Product skeletons while the schema loads the first time
+  it('shows the shape of the settings while their schema loads', () => {
+    renderSettings({ schemaState: { loading: true, error: false, schema: null } })
+    const busy = document.querySelector('[aria-busy="true"]')
+    expect(busy).not.toBeNull()
+    expect(busy.querySelectorAll('.odc-skeleton').length).toBeGreaterThan(0)
+    expect(within(busy).getByText('Loading')).toBeInTheDocument()
+  })
+
+  it('warns before leaving the page only while there are edits', () => {
+    const add = vi.spyOn(window, 'addEventListener')
+    renderSettings({ hasEdits: false })
+    expect(add.mock.calls.some(([type]) => type === 'beforeunload')).toBe(false)
+    cleanup()
+    renderSettings({ hasEdits: true })
+    const warn = add.mock.calls.find(([type]) => type === 'beforeunload')?.[1]
+    const event = { preventDefault: vi.fn(), returnValue: 'x' }
+    warn(event)
+    expect(event.preventDefault).toHaveBeenCalled()
+    expect(event.returnValue).toBe('')
+    add.mockRestore()
   })
 })

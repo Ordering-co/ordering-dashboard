@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import HubspotForm from 'react-hubspot-form'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -34,11 +34,33 @@ import {
   SettingList,
   SpecialPartnerWrapper,
   CloseButtonWrapper,
+  PanelContent,
   HubspotFormWrapper,
   TabWrapper,
   Tabs,
   Tab
 } from './styles'
+
+// The id the SideBar of each panel gets, to move the focus into it.
+const PANEL_IDS = {
+  plugins: 'plugins-integrations',
+  webhooks: 'webhooks-integrations',
+  apiKeys: 'apikeys-integrations',
+  mcpTokens: 'mcp-tokens-integrations'
+}
+
+// The title of the panel, or its first control. The title gets a tabindex only to take the focus, not to join the tab order.
+const focusPanel = (panelId) => {
+  const panel = document.getElementById(panelId)
+  if (!panel) return
+  const heading = panel.querySelector('h1, h2')
+  if (heading) {
+    heading.setAttribute('tabindex', '-1')
+    heading.focus({ preventScroll: true })
+    return
+  }
+  panel.querySelector('button, a[href], input, select, textarea')?.focus()
+}
 
 export const IntegrationListing = (props) => {
   const {
@@ -51,12 +73,17 @@ export const IntegrationListing = (props) => {
   const query = new URLSearchParams(search)
   const theme = useTheme()
   const { width } = useWindowSize()
+  // the room the panels keep for the SideBar's buttons (the expand button is drawn from 577px)
+  const panelReserve = width > 576 ? 'expand' : 'close'
   const history = useHistory()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [showOption, setShowOption] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [selectedTab, setSelectedTab] = useState(2)
+  const cardRefs = useRef({})
+  const openedFromCard = useRef(false)
+  const previousOption = useRef(null)
 
   const deliveryPlatformList = [
     { key: 'doordash', title: t('CONNECT_WITH_DOORDASH', 'Connect with Doordash'), icon: <img src={theme.images.general.doordash} />, description: t('CONNECT_DOORDASH_DESCRIPTION', 'Send orders directly to your driver in Doordash and keep customers happy with their deliveries.') },
@@ -107,6 +134,7 @@ export const IntegrationListing = (props) => {
   }
 
   const handleOpenSetting = (id) => {
+    openedFromCard.current = true
     onBasicSettingsRedirect({ id })
     setShowOption(id)
   }
@@ -119,6 +147,18 @@ export const IntegrationListing = (props) => {
   useEffect(() => {
     setShowOption(settingId || null)
   }, [settingId])
+
+  // a panel opened from its card takes the focus, and closing it (Escape or the close button) gives it back to the card.
+  useEffect(() => {
+    const previous = previousOption.current
+    previousOption.current = showOption
+    if (showOption) {
+      if (openedFromCard.current && PANEL_IDS[showOption]) focusPanel(PANEL_IDS[showOption])
+      openedFromCard.current = false
+    } else if (previous) {
+      cardRefs.current[previous]?.focus()
+    }
+  }, [showOption])
 
   const FormLoading = () => {
     return (
@@ -146,8 +186,16 @@ export const IntegrationListing = (props) => {
         {item?.icon}
       </IconWrapper>
       <SettingItemContent $stack={avoidExpand}>
-        <h5>{item?.title}</h5>
-        <p>{item?.description}</p>
+        <h5>
+          <button
+            type='button'
+            ref={node => { cardRefs.current[item.key] = node }}
+            aria-describedby={`integration-description-${item.key}`}
+          >
+            {item?.title}
+          </button>
+        </h5>
+        <p id={`integration-description-${item.key}`}>{item?.description}</p>
       </SettingItemContent>
       {avoidExpand && <ChevronRight />}
     </SettingItemContainer>
@@ -160,6 +208,7 @@ export const IntegrationListing = (props) => {
           <Header>
             {isCollapse && (
               <IconButton
+                aria-label={t('MENU', 'Menu')}
                 color='black'
                 onClick={() => handleMenuCollapse(false)}
               >
@@ -255,7 +304,9 @@ export const IntegrationListing = (props) => {
           onClose={() => handleCloseSettings()}
           showExpandIcon
         >
-          <PluginList />
+          <PanelContent $reserve={panelReserve}>
+            <PluginList />
+          </PanelContent>
         </SideBar>
       )}
 
@@ -267,7 +318,9 @@ export const IntegrationListing = (props) => {
           onClose={() => handleCloseSettings()}
           showExpandIcon
         >
-          <WebhookList />
+          <PanelContent $reserve={panelReserve}>
+            <WebhookList />
+          </PanelContent>
         </SideBar>
       )}
 
@@ -279,7 +332,9 @@ export const IntegrationListing = (props) => {
           onClose={() => handleCloseSettings()}
           showExpandIcon
         >
-          <ApiKeysList />
+          <PanelContent $reserve={panelReserve}>
+            <ApiKeysList />
+          </PanelContent>
         </SideBar>
       )}
 
@@ -291,7 +346,10 @@ export const IntegrationListing = (props) => {
           onClose={() => handleCloseSettings()}
           showExpandIcon
         >
-          <McpTokens />
+          {/* its header already keeps 65px for the close button, so only the expand button needs room */}
+          <PanelContent $reserve={panelReserve === 'expand' ? 'expand' : undefined}>
+            <McpTokens />
+          </PanelContent>
         </SideBar>
       )}
 

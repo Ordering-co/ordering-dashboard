@@ -51,6 +51,22 @@ describe('logMenuImportSync', () => {
     global.fetch = vi.fn().mockResolvedValue({ ok: true })
   })
 
+  // an import into several stores records the source of each one
+  it('posts one upsert per store', () => {
+    logMenuImportSync({
+      token: 'ordering-jwt',
+      source: 'doordash',
+      params: {
+        businessIds: [1, 3],
+        project: 'demo',
+        orderingApiBaseUrl: 'https://api.example.com',
+        doordashUrl: 'https://www.doordash.com/store/a'
+      }
+    })
+
+    expect(global.fetch.mock.calls.map(([, init]) => JSON.parse(init.body).business_id)).toEqual([1, 3])
+  })
+
   it('posts gloriafood restaurant + master keys as upsert without source_url', () => {
     expect(getMenuImportSyncLogUrl()).toBe(
       'https://supabase.test/functions/v1/menu-import-sync-log'
@@ -129,7 +145,7 @@ describe('fetchMenuImportSync', () => {
     const event = await fetchMenuImportSync({
       token: 'ordering-jwt',
       businessId: 2806,
-      project: 'luisv4plus',
+      project: 'exampletenant',
       source: 'ubereats',
       orderingApiBaseUrl: 'https://api.example.com'
     })
@@ -138,7 +154,7 @@ describe('fetchMenuImportSync', () => {
     expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({
       action: 'get',
       business_id: 2806,
-      project: 'luisv4plus',
+      project: 'exampletenant',
       source: 'ubereats',
       ordering_api_base_url: 'https://api.example.com'
     })

@@ -414,10 +414,10 @@ const ProductDetailsAdvancedUI = (props) => {
       </TypeSelectWrapper>
       <FieldRow fullWidth>
         <InputContainer>
-          <LabelCustom htmlFor='external_id'>{t('EXTERNAL_ID', 'External Id')}</LabelCustom>
+          <LabelCustom htmlFor='external_id'>{t('EXTERNAL_ID', 'External ID')}</LabelCustom>
           <Input
             name='external_id'
-            placeholder={t('EXTERNAL_ID', 'External Id')}
+            placeholder={t('EXTERNAL_ID', 'External ID')}
             defaultValue={productState?.external_id}
             onChange={(e) => handleClickProperty('external_id', e.target.value ?? null)}
             disabled={formState.loading}

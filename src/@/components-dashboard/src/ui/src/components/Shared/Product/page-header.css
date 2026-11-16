@@ -1,0 +1,193 @@
+/*
+ * W0-7 (T0-24) · Page header: title, count, live status, then Learn, «More» and the primary action, on one row.
+ * Generalizes the pilot's .odc-page-head (content-header.css, F6b D-18 and 5.6-B), which stays as it is.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+
+.odc-pagehead {
+  /* the header's own width (not the viewport) decides when it narrows */
+  container-type: inline-size;
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding-block-end: var(--od-space-3);
+}
+
+/* redesign tramo B r4 (W0-QB3-01, -02): the row wraps at any width, but only its two children can move: the lead block and the
+ * actions. The lead block (back, title, count, status) has a flex-basis that is its MINIMUM (not its text), so the line breaks on
+ * that minimum: the actions drop to their own line, at the end, only when the block would go under it; while they fit beside it
+ * the block takes the rest of the line (flex-grow) and a long title truncates inside it. The count is inside the block, so it can
+ * never be separated from the title. */
+.odc-pagehead-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: var(--od-space-1);
+  column-gap: var(--od-space-3);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+/* The block: arrow, title, count, status. 10 sizes of the title token (220px) is the readable minimum of the whole block. */
+.odc-pagehead-lead {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  flex: 1 1 calc(var(--od-x-type-title-size) * 10);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+/* : with the page's «Open menu» button in `leading`, the minimum grows by the button and its gap, so the title keeps the
+ * 10 title sizes it had when the button sat outside the header, and the actions drop at the same width as before. */
+.odc-pagehead-lead[data-leading] {
+  flex-basis: calc(var(--od-x-type-title-size) * 10 + var(--od-x-control-height) + var(--od-space-3));
+}
+
+/* Everything in the block keeps its size but the title, the one item that gives (it wraps to two lines, then cuts).  PH-1:
+ * the block centres its children (align-items: center), so with a two-line title the arrow, the count and the status sit at its
+ * middle, level with the pair of lines; with one line the block is as tall as before (min-block-size: a control). */
+.odc-pagehead-lead > * { flex: none; }
+
+.odc-pagehead-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  /*  PH-1: the title wraps by words to TWO lines and only the third is cut with «…» (line clamp), at any width: long
+   * languages (es, it, el, bg) and a wide panel no longer cut «Administrador de tarjetas de re…». A word longer than the line breaks
+   * (overflow-wrap) instead of overflowing. It is still a flex item of the block, so display: -webkit-box does not change its place;
+   * the clamp needs overflow: hidden. The full text stays in the h1's title attribute, for what the third line cuts. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  /* never wider than its text (a short title does not widen: its count stays against it), and it shrinks, wrapping, only inside the
+   * block (tramo B r3 W0-QB2-05 stays: no min-inline-size here; the block holds the minimum). */
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  /* inert with the clamp (the clamp draws its own «…»); kept so a one-line cut still ends in an ellipsis where the clamp is ignored */
+  text-overflow: ellipsis;
+}
+
+/* The title is the page's start: focusPageStart gives it tabindex -1 and focuses it on arrival, so the browser drew its own default
+ * ring. It gets the brand ring when the focus comes from the keyboard (:focus-visible), and none for a plain programmatic focus
+ * (a click or a route change from the mouse), the same pair the dialog uses. */
+.odc-pagehead-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-pagehead-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* The live-status slot: always on the row, with the height of a control, so the header is as tall with the status
+ * as without it. Empty it has no width; it is not hidden and not removed. */
+.odc-pagehead-status {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+/* Learn, «More» and the primary action: one group that ends the row. */
+.odc-pagehead-actions {
+  display: flex;
+  align-items: center;
+  /* redesign tramo B cierre (W0-QB4-02): the group never overflows its row. It keeps its natural width (flex: none) up to the row's own
+   * width; past that the buttons wrap onto more lines, the last (the primary action) at the end, instead of leaving the container. The
+   * moment the group drops to its own line stays the lead block's (W0-D-10); this only changes what happens when it does not fit even alone. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+  flex: none;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-pagehead-actions > * { flex: none; }
+
+.odc-pagehead-description {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Narrow header (under 600px of its own width: a phone, or a list beside a wide panel). The title takes what is
+ * left at the section size and wraps to two lines ( PH-1: the same rule as wide, only the size changes); the count and the primary action keep their size and place; whatever the
+ * page marks `data-collapse-label` (the text of Learn, of the live button) keeps only its icon or mark: the text is
+ * clipped, not removed, so the accessible name stays. */
+@container (max-width: 599px) {
+  .odc-pagehead-row { gap: var(--od-space-1); }
+
+  .odc-pagehead-lead { gap: var(--od-space-1); }
+
+  /* : the block's minimum follows its title down. 10 title sizes (220px) stayed here although the title is at the section
+   * size, so on a 375-414px phone the actions dropped to their own line when they fitted. Measured with the gallery's «Orders»
+   * (title 15.75px): the block is 124.2px wide with a mouse and 132.7px with 44px touch buttons (the live-status button is in it),
+   * and the actions group is 196px. The minimum is 8.4 section sizes (132.3px), just under the widest of those: lower, the block would
+   * be squeezed under its own width before the actions drop and «Orders» would break mid-word in the band between (322-333px
+   * measured with 7.75, 122px). At 132.3px the actions stay beside the block from 332px up (344, 358, 375 and 414 do, 320 wraps).
+   * A long title still wraps inside the block (flex-grow and the title's own shrink), and the block never goes to 0 (W0-QB1-03).
+   * With the leading button the narrow gap is the small one, so it adds a control and that gap. */
+  .odc-pagehead-lead { flex-basis: calc(var(--od-x-type-section-size) * 8.4); }
+
+  .odc-pagehead-lead[data-leading] {
+    flex-basis: calc(var(--od-x-type-section-size) * 8.4 + var(--od-x-control-height) + var(--od-space-1));
+  }
+
+  /*  (owner decision 28 B): opt-in `wideTitle` (the report header). The block takes the whole row, so the actions drop
+   * to the next line and the two-line title has the row's width: at 390 a report title was squeezed to ~122px beside «Switch
+   * report» and cut. Placed after both minimums so it wins over them, with or without the leading button. */
+  .odc-pagehead-lead[data-wide-title] { flex-basis: 100%; }
+
+  /* still `flex: 0 1 auto`: short, it stays next to its count; long, it wraps (two lines, then «…») inside the block */
+  .odc-pagehead-title {
+    font-size: var(--od-x-type-section-size);
+  }
+
+  .odc-pagehead-actions { gap: var(--od-space-1); }
+
+  /*  (DD-09): an action the page marks `data-fill` (its search) spans the whole line. The group takes a line of its own,
+   * as wide as the row, and the marked action a line of its own inside it, so it starts at the content edge instead of after the
+   * width the group did not use; the other actions stay at the end of the line above. Wide, nothing changes. */
+  .odc-pagehead-actions:has(> [data-fill]) { flex: 1 1 100%; }
+
+  /* only a direct child of the actions: `data-fill` means other things elsewhere (skeletons, white-label cards) */
+  .odc-pagehead-actions > [data-fill] { flex: 1 1 100%; }
+
+  .odc-pagehead [data-collapse-label] {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Touch (C3, E8): on a phone-width viewport or with a coarse pointer every button of the row is 44px visible
+ * (product.css), neighbours 4px apart, so the row and the status slot reserve that height and the line does
+ * not grow when a 44px button is drawn. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-pagehead-row,
+  .odc-pagehead-status {
+    min-block-size: var(--od-x-target-coarse);
+  }
+  /* redesign W0-7 (T0-29, decision 12): the buttons of the row are 4px apart (--od-space-1), closer than two 44px areas need
+     (12px), so on a phone they stay 44px visible instead of using the area pattern. Listed for the owner. */
+  /* redesign tramo B r2 (W0-QB1-09): also 44px wide, so the collapsed Learn and status buttons (label clipped, icon only) keep it */
+  .odc-pagehead-row .odc-btn {
+    min-block-size: var(--od-x-target-coarse);
+    min-inline-size: var(--od-x-target-coarse);
+  }
+}

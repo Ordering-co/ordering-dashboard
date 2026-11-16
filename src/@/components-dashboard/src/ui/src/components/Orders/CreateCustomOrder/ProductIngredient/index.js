@@ -15,8 +15,14 @@ const ProductIngredientUI = (props) => {
 
   return (
     <>
-      <Container isSoldOut={isSoldOut} onClick={() => toggleSelect()}>
-        <span>
+      <Container
+        as='button'
+        type='button'
+        isSoldOut={isSoldOut}
+        aria-pressed={Boolean(state?.selected && !isSoldOut)}
+        onClick={() => toggleSelect()}
+      >
+        <span aria-hidden='true'>
           {state?.selected && !isSoldOut
             ? (
             <MdCheckBox />

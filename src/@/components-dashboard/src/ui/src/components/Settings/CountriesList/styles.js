@@ -1,11 +1,15 @@
 import styled, { css } from 'styled-components'
+import { LinkButton } from '../../../styles'
 
 export const CountriesContainer = styled.div`
   overflow: auto;
 `
 
+// inside the Settings hub the table gets ~400px at a 1024 window. At 700px the Enable switch and the menu sat
+// 300px past the card (reachable only by an unseen horizontal scroll). The row now fits there; the container still scrolls
+// below its floor (a phone).
 export const CountryWrapper = styled.div`
-  min-width: 700px;
+  min-width: 320px;
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
   width: 100%;
   display: flex;
@@ -23,6 +27,11 @@ export const CountryWrapper = styled.div`
     cursor: pointer;
     &:hover {
       background-color: ${props => props.theme.colors.borderColor};
+    }
+    /* the row takes the focus back when the country panel closes (tabIndex -1): the inset ring tells where */
+    &:focus-visible {
+      outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+      outline-offset: calc(var(--od-focus-ring-width) * -1);
     }
   `}
 
@@ -58,14 +67,16 @@ export const CheckboxWrapper = styled.div`
 
 export const CountryName = styled.div`
   flex: 1;
-  font-size: 12px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--od-type-content-size);
   display: flex;
   align-items: center;
 `
 
 export const ActionsContainer = styled.div`
-  min-width: 30%;
-  font-size: 12px;
+  flex: 0 0 max(12rem, 30%);
+  font-size: var(--od-type-content-size);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -98,7 +109,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -153,7 +164,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
@@ -161,6 +172,13 @@ export const ActionSelectorWrapper = styled.div`
       }
     }
   }
+`
+
+// «Add new country» is a native button (it was an anchor with no href: no focus, no keyboard) drawn as the link it was.
+export const AddCountryButton = styled(LinkButton)`
+  background: transparent;
+  border: 0;
+  padding: 0;
 `
 
 export const PagesBottomContainer = styled.div`

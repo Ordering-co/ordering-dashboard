@@ -1,0 +1,505 @@
+/*
+ * redesign  B2 · /builder/:productId: the frame of the detail (breadcrumb, header with the rename and the status
+ * actions, tabs), the website's General tab (online card, General card, Domains card) and the two refusal dialogs of Activate.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-bd-*.
+ */
+
+/* ── Page ── */
+.odc-root.odc-bd-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  /* main : clip, not hidden, so the page is no scroll container and the website settings' bar can stick */
+  overflow: clip;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (max-width: 767px) {
+  .odc-root.odc-bd-page {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+.odc-bd-page .odc-notice {
+  margin: 0;
+}
+
+.odc-bd-crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bd-breadcrumb a {
+  color: var(--od-action-content);
+  text-decoration: none;
+}
+
+.odc-bd-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.odc-bd-breadcrumb [aria-current] {
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* main capped every tab at 1100px so forms and cards don't spread across a wide window; the closest token is the width of a record
+   opened as a page (--od-x-page-content, 960px) */
+.odc-bd-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-page-content);
+}
+
+.odc-bd-busy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+}
+
+/* ── Header ── */
+.odc-bd-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-4);
+}
+
+.odc-bd-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-title h1 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+/* A name left empty */
+.odc-bd-title h1 em {
+  color: var(--od-text-muted);
+}
+
+.odc-bd-meta {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bd-rename {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.odc-bd-rename > .odc-field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-panel-narrow);
+}
+
+.odc-bd-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--od-space-2);
+  max-inline-size: var(--od-x-panel-narrow);
+}
+
+.odc-bd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+@media (max-width: 575px) {
+  .odc-bd-status {
+    align-items: flex-start;
+  }
+}
+
+/* ── Tabs ── */
+.odc-bd-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  padding-block-start: var(--od-space-4);
+}
+
+/* ── Cards ── */
+.odc-bd-card {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+}
+
+.odc-bd-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  padding: var(--od-space-5) var(--od-space-5) var(--od-space-2);
+}
+
+.odc-bd-card-head h2 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bd-card-head h2:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-bd-card-head p {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-bd-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  padding: var(--od-space-4) var(--od-space-5) var(--od-space-5);
+}
+
+.odc-bd-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--od-x-search-min)), 1fr));
+  gap: var(--od-space-5);
+  margin: 0;
+  padding: var(--od-space-3) var(--od-space-5) var(--od-space-5);
+}
+
+.odc-bd-details dt {
+  margin-block-end: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-bd-details dd {
+  margin: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+/* ── «Your website is online» ── */
+.odc-bd-online {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-4);
+  padding: var(--od-space-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-action-soft);
+  color: var(--od-text);
+}
+
+.odc-bd-online-icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-space-7);
+  block-size: var(--od-space-7);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  color: var(--od-action-content);
+}
+
+.odc-bd-online-icon .odc-icon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+}
+
+.odc-bd-online-text {
+  display: flex;
+  flex: 1 1 var(--od-x-search);
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-online-text h2 {
+  margin: 0;
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bd-online-text p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A domain as a link that opens the website in a new tab */
+.odc-bd-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  max-inline-size: 100%;
+  color: var(--od-action-content);
+  overflow-wrap: anywhere;
+}
+
+.odc-bd-link .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* ── Domains ── */
+.odc-bd-own {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  margin: 0;
+  padding: var(--od-space-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odc-bd-own[data-tone='empty'] {
+  border-style: dashed;
+}
+
+.odc-bd-own[data-tone='editing'] {
+  border-color: var(--od-action);
+}
+
+.odc-bd-own[data-tone='error'] {
+  border-color: var(--od-danger-signal);
+}
+
+.odc-bd-own h3 {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bd-own p {
+  margin: 0;
+}
+
+.odc-bd-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bd-stack > .odc-field,
+.odc-bd-stack > .odc-notice {
+  align-self: stretch;
+}
+
+.odc-bd-own-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-bd-own-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bd-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-bd-row[data-end] {
+  justify-content: flex-end;
+}
+
+.odc-bd-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-bd-steps > li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+}
+
+.odc-bd-step-number {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-control-height-sm);
+  block-size: var(--od-x-control-height-sm);
+  border-radius: var(--od-radius-round);
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bd-step-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bd-step-text strong {
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-bd-cname-help {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-warning-soft);
+}
+
+.odc-bd-cname-help h4 {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bd-cname-help p {
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-bd-temporary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bd-temporary > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-bd-temporary a {
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-bd-muted {
+  color: var(--od-text-muted);
+}
+
+.odc-bd-small {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── Refusal dialogs ── */
+.odc-bd-dialog-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-bd-dialog-text p {
+  margin: 0;
+}
+
+.odc-bd-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  margin-block-start: var(--od-space-3);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-bd-problems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A problem (BuildDialogs › ProblemItem): who fixes it, what, and the way to the tab */
+.odc-bd-problems > li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.odc-bd-problems > li > span:nth-child(2) {
+  flex: 1;
+  min-inline-size: 0;
+}

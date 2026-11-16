@@ -1,0 +1,68 @@
+/*
+ * redesign UF-B3 (, decision 1) · The profile form of Delivery (drivers and drivers managers).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * One column: the real hosts are side panels of 480-560px (decision 1, C descartada). Three groups with a heading,
+ * the fields as P/Field with their own label, and the save bar of P/SaveBar at the foot of the form, sticky inside
+ * whatever scrolls the form.
+ */
+
+.odc-uf-form {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is the focus target when the bar goes away with the focus inside it (after Discard or a save). */
+.odc-uf-form:focus { outline: none; }
+
+.odc-uf-group {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-uf-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-content-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The dropdown fills its field: the trigger is as wide as the control it sits in. */
+.odc-uf-select {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* A switch is the whole row: label and track, one control. */
+.odc-uf-switch-row {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--od-x-control-height);
+  min-inline-size: 0;
+}
+
+/* Same room as the fields, so nothing jumps when they arrive. */
+.odc-uf-skeleton {
+  display: grid;
+  gap: var(--od-space-4);
+}
+
+/* redesign UF-R1 (review r1 F1): the browser scrolls a focused field into view without counting the sticky bar, so at 390 the bar
+   (about 96px, taller with an error or three lines of names) covered the field being edited and its error. Every control keeps a
+   margin at its foot that clears the bar and a gap: 2 x --od-space-8 (128px) + --od-space-4 (16px). The scripts that bring the field
+   into view (`scrollIntoView({ block: 'nearest' })` in index.js) honor it. Not measured in a browser in this batch. */
+.odc-uf-form :is(input, select, textarea, button, [role='button'], [role='combobox'], [role='switch'], [tabindex]) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* The bar belongs to the end of the form: the grid gap already separates it from the last group. */
+.odc-uf-form > .odc-savebar { margin-block-start: 0; }

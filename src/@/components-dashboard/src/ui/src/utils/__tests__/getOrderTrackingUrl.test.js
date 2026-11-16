@@ -12,7 +12,7 @@ import {
 
 const base = {
   configurations: { subdomain: 'orderingplus' },
-  ordering: { project: 'rokys' }
+  ordering: { project: 'examplerestaurant' }
 }
 
 describe('normalizeTrackingDomain', () => {
@@ -39,17 +39,17 @@ describe('getDefaultTrackingDomain', () => {
   it('uses the custom domain when its SSL is ready', () => {
     const domain = getDefaultTrackingDomain({
       ...base,
-      sites: [{ type: 'web_marketplace_26', domain: 'shop.rokys.com', temporal_domain: 'v26-rokys.tryordering.com', ssl_process_status: 'ended' }]
+      sites: [{ type: 'web_marketplace_26', domain: 'shop.examplerestaurant.com', temporal_domain: 'v26-examplerestaurant.tryordering.com', ssl_process_status: 'ended' }]
     })
-    expect(domain).toBe('https://shop.rokys.com')
+    expect(domain).toBe('https://shop.examplerestaurant.com')
   })
 
   it('skips the custom domain while its SSL is pending', () => {
     const domain = getDefaultTrackingDomain({
       ...base,
-      sites: [{ type: 'web_marketplace_26', domain: 'shop.rokys.com', temporal_domain: 'v26-rokys.tryordering.com', ssl_process_status: 'pending' }]
+      sites: [{ type: 'web_marketplace_26', domain: 'shop.examplerestaurant.com', temporal_domain: 'v26-examplerestaurant.tryordering.com', ssl_process_status: 'pending' }]
     })
-    expect(domain).toBe('https://v26-rokys.orderingplus.com')
+    expect(domain).toBe('https://v26-examplerestaurant.orderingplus.com')
   })
 
   it('builds the v26 host when the preferred site is the marketplace v26', () => {
@@ -57,15 +57,15 @@ describe('getDefaultTrackingDomain', () => {
       ...base,
       sites: [{ type: 'web_marketplace_26', ssl_process_status: 'pending' }]
     })
-    expect(domain).toBe('https://v26-rokys.orderingplus.com')
+    expect(domain).toBe('https://v26-examplerestaurant.orderingplus.com')
   })
 
   it('uses the temporal domain of the preferred site when present', () => {
     const domain = getDefaultTrackingDomain({
       ...base,
-      sites: [{ type: 'web_marketplace_26', temporal_domain: 'v26-rokys.tryordering.com/' }]
+      sites: [{ type: 'web_marketplace_26', temporal_domain: 'v26-examplerestaurant.tryordering.com/' }]
     })
-    expect(domain).toBe('https://v26-rokys.orderingplus.com')
+    expect(domain).toBe('https://v26-examplerestaurant.orderingplus.com')
   })
 
   it('builds the franchise host for franchise sites', () => {
@@ -74,12 +74,12 @@ describe('getDefaultTrackingDomain', () => {
       websiteProduct: 'web_franchises_x',
       sites: [{ type: 'franchiseweb' }]
     })
-    expect(domain).toBe('https://rokys.franchises.orderingplus.com')
+    expect(domain).toBe('https://examplerestaurant.franchises.orderingplus.com')
   })
 
   it('builds the v26 host when there are no marketplace sites', () => {
-    expect(getDefaultTrackingDomain({ ...base, sites: [] })).toBe('https://v26-rokys.orderingplus.com')
-    expect(getDefaultTrackingDomain({ ...base })).toBe('https://v26-rokys.orderingplus.com')
+    expect(getDefaultTrackingDomain({ ...base, sites: [] })).toBe('https://v26-examplerestaurant.orderingplus.com')
+    expect(getDefaultTrackingDomain({ ...base })).toBe('https://v26-examplerestaurant.orderingplus.com')
   })
 
   it('returns null without project or subdomain', () => {
@@ -95,16 +95,16 @@ describe('getDefaultTrackingDomain', () => {
 describe('getTrackingDomainOptions', () => {
   it('lists the default first and then every site domain without duplicates', () => {
     const sites = [
-      { id: 1, name: 'Marketplace', type: 'web_marketplace_26', domain: 'shop.rokys.com', temporal_domain: 'v26-rokys.tryordering.com', ssl_process_status: 'ended' },
-      { id: 2, name: 'Old website', code: 'website', domain: 'shop.rokys.com', temporal_domain: 'rokys.tryordering.com' },
+      { id: 1, name: 'Marketplace', type: 'web_marketplace_26', domain: 'shop.examplerestaurant.com', temporal_domain: 'v26-examplerestaurant.tryordering.com', ssl_process_status: 'ended' },
+      { id: 2, name: 'Old website', code: 'website', domain: 'shop.examplerestaurant.com', temporal_domain: 'examplerestaurant.tryordering.com' },
       { id: 3, name: 'No domains', type: 'app' }
     ]
     const options = getTrackingDomainOptions({ ...base, sites })
     expect(options.map(option => option.key)).toEqual(['default', 'site-1-temporal', 'site-2-temporal'])
     expect(options.map(option => option.url)).toEqual([
-      'https://shop.rokys.com',
-      'https://v26-rokys.orderingplus.com',
-      'https://rokys.orderingplus.com'
+      'https://shop.examplerestaurant.com',
+      'https://v26-examplerestaurant.orderingplus.com',
+      'https://examplerestaurant.orderingplus.com'
     ])
     expect(options[0].site).toBeNull()
     expect(options[1].site.name).toBe('Marketplace')
@@ -112,7 +112,7 @@ describe('getTrackingDomainOptions', () => {
 
   it('only offers the default when there are no sites', () => {
     const options = getTrackingDomainOptions({ ...base, sites: [] })
-    expect(options).toEqual([{ key: 'default', url: 'https://v26-rokys.orderingplus.com', site: null }])
+    expect(options).toEqual([{ key: 'default', url: 'https://v26-examplerestaurant.orderingplus.com', site: null }])
   })
 
   it('keeps explicit domains from both site families when the product is unresolved', () => {
@@ -121,15 +121,15 @@ describe('getTrackingDomainOptions', () => {
         id: 1,
         name: 'Marketplace',
         type: 'web_marketplace_26',
-        domain: 'shop.rokys.com',
-        temporal_domain: 'legacy-marketplace.rokys.com'
+        domain: 'shop.examplerestaurant.com',
+        temporal_domain: 'legacy-marketplace.examplerestaurant.com'
       },
       {
         id: 2,
         name: 'Franchise',
         type: 'franchiseweb',
-        domain: 'shop.franchise.rokys.com',
-        temporal_domain: 'legacy-franchise.rokys.com'
+        domain: 'shop.franchise.examplerestaurant.com',
+        temporal_domain: 'legacy-franchise.examplerestaurant.com'
       }
     ]
     const options = getTrackingDomainOptions({ ...base, sites, websiteProduct: null })
@@ -141,10 +141,10 @@ describe('getTrackingDomainOptions', () => {
       'site-2-temporal'
     ])
     expect(options.map(option => option.url)).toEqual([
-      'https://shop.rokys.com',
-      'https://legacy-marketplace.rokys.com',
-      'https://shop.franchise.rokys.com',
-      'https://legacy-franchise.rokys.com'
+      'https://shop.examplerestaurant.com',
+      'https://legacy-marketplace.examplerestaurant.com',
+      'https://shop.franchise.examplerestaurant.com',
+      'https://legacy-franchise.examplerestaurant.com'
     ])
   })
 })
@@ -152,12 +152,12 @@ describe('getTrackingDomainOptions', () => {
 describe('findTrackingDomainOption', () => {
   const options = getTrackingDomainOptions({
     ...base,
-    sites: [{ id: 1, name: 'Marketplace', type: 'web_marketplace_26', domain: 'shop.rokys.com' }]
+    sites: [{ id: 1, name: 'Marketplace', type: 'web_marketplace_26', domain: 'shop.examplerestaurant.com' }]
   })
 
   it('matches by host ignoring protocol and trailing slash', () => {
-    expect(findTrackingDomainOption(options, 'http://shop.rokys.com/').key).toBe('site-1-domain')
-    expect(findTrackingDomainOption(options, 'https://v26-rokys.orderingplus.com').key).toBe('default')
+    expect(findTrackingDomainOption(options, 'http://shop.examplerestaurant.com/').key).toBe('site-1-domain')
+    expect(findTrackingDomainOption(options, 'https://v26-examplerestaurant.orderingplus.com').key).toBe('default')
   })
 
   it('returns null for unknown or empty urls', () => {
@@ -168,7 +168,7 @@ describe('findTrackingDomainOption', () => {
 
 describe('getTrackingDomainStorageKey', () => {
   it('namespaces the key by project', () => {
-    expect(getTrackingDomainStorageKey('rokys')).toBe('tracking_domain:rokys')
+    expect(getTrackingDomainStorageKey('examplerestaurant')).toBe('tracking_domain:examplerestaurant')
     expect(getTrackingDomainStorageKey()).toBe('tracking_domain:default')
   })
 })
@@ -192,23 +192,23 @@ describe('readStoredTrackingDomain', () => {
   const storageWith = (values) => ({ getItem: (key) => values[key] ?? null })
 
   it('prefers the per-project value over the legacy global one', () => {
-    const storage = storageWith({ 'tracking_domain:rokys': 'https://new.rokys.com', tracking_domain: 'https://old.example.com' })
-    expect(readStoredTrackingDomain(storage, 'rokys')).toBe('https://new.rokys.com')
+    const storage = storageWith({ 'tracking_domain:examplerestaurant': 'https://new.examplerestaurant.com', tracking_domain: 'https://old.example.com' })
+    expect(readStoredTrackingDomain(storage, 'examplerestaurant')).toBe('https://new.examplerestaurant.com')
   })
 
   it('falls back to the legacy global value saved by the previous version', () => {
     const storage = storageWith({ tracking_domain: 'https://old.example.com' })
-    expect(readStoredTrackingDomain(storage, 'rokys')).toBe('https://old.example.com')
+    expect(readStoredTrackingDomain(storage, 'examplerestaurant')).toBe('https://old.example.com')
   })
 
   it('ignores the legacy value once the project explicitly chose the default', () => {
-    const storage = storageWith({ 'tracking_domain:rokys': 'default', tracking_domain: 'https://old.example.com' })
-    expect(readStoredTrackingDomain(storage, 'rokys')).toBe('')
+    const storage = storageWith({ 'tracking_domain:examplerestaurant': 'default', tracking_domain: 'https://old.example.com' })
+    expect(readStoredTrackingDomain(storage, 'examplerestaurant')).toBe('')
   })
 
   it('returns an empty string when nothing is stored or storage fails', () => {
-    expect(readStoredTrackingDomain(storageWith({}), 'rokys')).toBe('')
-    expect(readStoredTrackingDomain({ getItem: () => { throw new Error('blocked') } }, 'rokys')).toBe('')
-    expect(readStoredTrackingDomain(undefined, 'rokys')).toBe('')
+    expect(readStoredTrackingDomain(storageWith({}), 'examplerestaurant')).toBe('')
+    expect(readStoredTrackingDomain({ getItem: () => { throw new Error('blocked') } }, 'examplerestaurant')).toBe('')
+    expect(readStoredTrackingDomain(undefined, 'examplerestaurant')).toBe('')
   })
 })

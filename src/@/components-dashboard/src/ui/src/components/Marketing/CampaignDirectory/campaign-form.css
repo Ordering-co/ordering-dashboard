@@ -1,0 +1,228 @@
+/*
+ * redesign CA-B5 (decisions 3, 5, 6, 7) · The create form of a campaign: the sections, the rules, the reach line, the delivery and the foot.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-campaign-.
+ * The form sits in a RecordPanel: its footer is pinned by the panel (`.odc-record-foot`), this file only lays out what goes inside it.
+ */
+
+.odc-campaign-form {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The notices belong to the section, not to a page bar: no page gutter around them */
+.odc-campaign-form .odc-notice {
+  margin-inline: 0;
+  margin-block: var(--od-space-2) 0;
+}
+
+/* ── Sections: a hairline on top and one rhythm; the first one has none ── */
+.odc-campaign-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-campaign-section:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odc-campaign-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* «Go to setup» moves the focus here: it is a landing point, not a control, so it draws no ring of its own */
+.odc-campaign-section-title:focus {
+  outline: none;
+}
+
+.odc-campaign-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Rules ── */
+.odc-campaign-rules {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-campaign-rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-campaign-rule-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-campaign-rule-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+}
+
+.odc-campaign-rule-name {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* What a row lacks: a plain line, muted (it is not an error yet); the same-day range IS one */
+.odc-campaign-rule-note,
+.odc-campaign-rules-refusal {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-rule-note[data-tone='error'],
+.odc-campaign-rules-refusal {
+  color: var(--od-danger-functional);
+}
+
+/* ── The reach: «Reaches N customers». It keeps its line while it counts, so the section does not jump ── */
+/* redesign CA-R1 (live check: «Reaches1240customers»): a block, not a flex row; a flex item drops the spaces at its edges */
+.odc-campaign-reach {
+  display: block;
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-reach .odc-figure {
+  color: var(--od-text);
+}
+
+/* ── Delivery ── */
+.odc-campaign-delivery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The day and the time side by side; when the panel is narrow they wrap, so nothing is squeezed */
+.odc-campaign-when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* A native <select> in a Product field frame, as the time selects of the schedule editor (schedule-editor.css) */
+.odc-campaign-time {
+  display: inline-block;
+  min-inline-size: 0;
+}
+
+.odc-campaign-select {
+  display: block;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-campaign-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Foot: the reason the button waits, then «Cancel» and the one button ── */
+/* redesign CA-R2 (P1): was `.odc-campaign-foot`, which campaigns-table.css also defines (the pagination foot). Two rules on one class made the
+   form's foot inherit the table's page gutter and end alignment; the form's own class keeps them apart. */
+.odc-campaign-form-foot {
+  display: grid;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+}
+
+.odc-campaign-form-foot-reason {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: end;
+}
+
+.odc-campaign-form-foot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+/* Touch (decision 12): the select keeps its 32px, its frame owns a 44px area, and the text is 16px so iOS does not zoom */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-campaign-select { font-size: var(--od-x-type-lead-size); }
+
+  .odc-campaign-time {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .odc-campaign-time::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+}
+
+/* On a phone the foot follows the Product rule of the record panel's foot (record-panel.css `.odc-record-foot > .odc-btn`): the reason
+   at the start, then every button takes the full row, 44px tall. */
+@media (max-width: 767px) {
+  .odc-campaign-form-foot-reason { text-align: start; }
+
+  .odc-campaign-form-foot-actions > .odc-btn {
+    flex: 1 1 100%;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

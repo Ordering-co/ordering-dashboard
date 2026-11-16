@@ -29,6 +29,27 @@ describe('buildNavigationEntries', () => {
     expect(rankCommandEntries(entries, 'codigo fuente')[0].id).toBe('nav:open_source_code')
   })
 
+  // owner decision 33: the menu entry is Promotions; the old name still finds it, in English and Spanish
+  it('titles the promotions page Promotions and still finds it as Advanced offers', () => {
+    const entries = buildNavigationEntries({ user: { level: 0, user_system_id: 1 }, configs: {} })
+    const promotions = entries.find(entry => entry.id === 'nav:enterprise_promotions')
+    expect(promotions).toMatchObject({ title: 'Promotions', path: '/marketing/promotions-enterprise' })
+    for (const query of ['Advanced offers', 'advanced offers', 'ofertas avanzadas', 'Promotions']) {
+      const found = rankCommandEntries(entries, query).find(entry => entry.id === 'nav:enterprise_promotions')
+      expect(found?.path, query).toBe('/marketing/promotions-enterprise')
+    }
+  })
+
+  // redesign (support P-1, n.º 18): /support has no sidebar link, but the palette finds it (admins only, as its route)
+  it('finds /support for admins only', () => {
+    const admin = buildNavigationEntries({ user: { level: 0 }, configs: {} })
+    const support = admin.find(entry => entry.id === 'nav:support')
+    expect(support).toMatchObject({ path: '/support', title: 'Support' })
+    expect(rankCommandEntries(admin, 'soporte')[0].id).toBe('nav:support')
+    expect(rankCommandEntries(admin, 'contact sales')[0].id).toBe('nav:support')
+    expect(ids(buildNavigationEntries({ user: { level: 2 }, configs: {} }))).not.toContain('nav:support')
+  })
+
   it('drops destinations that the route guard would reject', () => {
     const entries = buildNavigationEntries({ user: { level: 2 }, configs: {} })
     expect(ids(entries)).toEqual(expect.arrayContaining(['nav:orders', 'nav:businesses', 'nav:store']))

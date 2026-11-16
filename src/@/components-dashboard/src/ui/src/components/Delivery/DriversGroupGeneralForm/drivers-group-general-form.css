@@ -1,0 +1,28 @@
+/*
+ * redesign  (AD-1, AD-2, AD-7): the General section of a delivery group. Values come from --od-* (release) and --od-x-*
+ * (src/brand/candidates.css) only; logical properties only. Component classes use the `gpg-` prefix.
+ */
+
+.gpg-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.gpg-check { justify-self: start; }
+
+/* review AD-R3: read only (actionDisabled) looks it, as main's form did and as Businesses and Payment methods do */
+.gpg-form[aria-disabled='true'] {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.gpg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.gpg-form .odc-notice { margin: 0; }

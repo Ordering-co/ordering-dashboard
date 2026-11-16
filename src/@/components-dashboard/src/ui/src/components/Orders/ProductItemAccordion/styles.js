@@ -1,46 +1,50 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
+import { IconButton } from '../../../styles'
 
 export const AccordionSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 10px 0px;
-  color: #191919;
+  min-width: 0;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor ?? '#191919'};
 `
 
 const AccordionStyled = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
-  transition: background-color 0.6s ease;
+  transition: background-color ${props => props.theme?.ordering?.motion?.duration?.base ?? '0.6s'} ${props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'};
+  min-width: 0;
 
   .rotate {
     transform: rotate(180deg);
   }
 
   .accordion__icon {
-    margin-left: auto;
-    transition: transform 0.6s ease;
-    ${props => props.theme?.rtl && css`
-      margin-right: auto;
-      margin-left: initial;
-    `}
+    margin-inline-start: auto;
+    transition: transform ${props => props.theme?.ordering?.motion?.duration?.base ?? '0.6s'} ${props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'};
   }
 
   @media (min-width: 411px){
     flex-direction: row;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    .accordion__icon {
+      transition: none;
+    }
+  }
+
 `
 
 export const Accordion = (props) => {
-  const style = {}
-  if (!props.isValid) {
-    style.opacity = '0.5'
-  }
+  const style = props.isValid ? undefined : { opacity: '0.5' }
   return (
     <AccordionStyled
       {...props}
@@ -56,7 +60,8 @@ export const WrapperProductImage = styled.div`
   max-height: 55px;
   height: 55px;
   width: 55px;
-  border-radius: 7.6px;
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '7.6px'};
+  flex: 0 0 auto;
 
   @media (min-width: 768px) {
     max-width: 62px;
@@ -76,7 +81,7 @@ const ProductImageStyled = styled.div`
   background-size: contain;
   object-fit: cover;
   background-position: center;
-  border-radius: 10px;
+  border-radius: ${props => props.theme?.ordering?.radius?.panel ?? '10px'};
 `
 
 export const ProductImage = (props) => {
@@ -95,103 +100,88 @@ export const ContentInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   text-transform: capitalize;
-  margin-left: 10px;
+  margin-inline-start: 10px;
+  min-width: 0;
   width: 100%;
 
   @media (min-width: 411px) {
     width: 80%;
   }
 
-  ${props => props.theme?.rtl && css`
-    margin-right: 10px;
-    margin-left: 0px;
-  `}
-
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 0px;
     font-weight: 400;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
+    overflow-wrap: anywhere;
   }
 
-  span {
+  > .mobile-product-summary {
     display: flex;
     justify-content: space-between;
     margin: 0px;
 
     p {
       margin: 0px;
-      font-size: 14px;
+      font-size: var(--od-type-identifier-size);
+      font-family: var(--od-type-identifier-font);
+      font-variant-ligatures: var(--od-type-identifier-ligatures);
+      direction: ltr;
+      unicode-bidi: isolate;
     }
 
-    div {
+    > div {
       display: flex;
-
-      span {
-        height: 20px;
-        svg {
-          font-size: 20px;
-          &:nth-child(1) {
-            margin-right: 3px;
-            ${props => props.theme?.rtl && css`
-              margin-left: 3px;
-              margin-right: 0px;
-            `}
-          }
-        }
-      }
     }
   }
 
-  @media (min-width: 577px) {
-    h3 {
-      font-size: 18px;
-    }
-  }
 `
 
 export const AccordionContent = styled.div`
   overflow: hidden;
-  transition: max-height 0.6s ease;
+  transition: max-height ${props => props.theme?.ordering?.motion?.duration?.base ?? '0.6s'} ${props => props.theme?.ordering?.motion?.easing?.standard ?? 'ease'};
   width: 100%;
   margin: auto;
+  min-width: 0;
 
   @media (min-width: 481px) {
     width: 80%;
   }
 
   @media print {
-    margin-top: 20px;
+    margin-block-start: 20px;
+    max-height: none !important;
+    overflow: visible;
+    break-inside: avoid;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 `
 
 export const AccordionText = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   padding: 18px;
 `
 
 export const ProductComment = styled.div`
-  padding-left: 40px;
-  ${props => props.theme?.rtl && css`
-    padding-right: 40px;
-    padding-left: 0px;
-  `}
+  padding-inline-start: 40px;
   p {
     font-weight: bold;
     margin: 0px;
   }
 
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: normal;
     text-transform: capitalize;
-    margin: 0px 20px 0px 40px;
+    margin-block: 0px;
+    margin-inline: 40px 20px;
     display: -webkit-box;
     line-height: 1.5;
-    ${props => props.theme?.rtl && css`
-      margin: 0px 40px 0px 20px;
-    `}
+    overflow-wrap: anywhere;
   }
 `
 
@@ -199,14 +189,19 @@ export const ProductInfo = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+  min-width: 0;
 
   h1,
   h3 {
-    font-size: 15px;
+    font-size: var(--od-type-content-size);
   }
 
   p {
-    font-size: 20px;
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
+    direction: ltr;
+    unicode-bidi: isolate;
     margin: 0px 5px;
   }
 
@@ -226,7 +221,7 @@ export const ProductError = styled.div`
   justify-content: center;
 
   span {
-    font-size: 18px;
+    font-size: var(--od-type-content-size);
     text-align: center;
   }
 
@@ -234,7 +229,7 @@ export const ProductError = styled.div`
     width: 35%;
 
     span{
-      text-align: right;
+      text-align: end;
     }
   }
 `
@@ -242,28 +237,24 @@ export const ProductError = styled.div`
 export const ProductActions = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
 `
 
-export const ProductActionsEdit = styled.span`
+export const ProductActionsEdit = styled(IconButton)`
+  min-width: 44px;
+  min-height: 44px;
+
   svg {
     font-size: 20px;
-    margin-right: 5px;
-    cursor: pointer;
-    ${props => props.theme?.rtl && css`
-      margin-left: 5px;
-      margin-right: 0px;
-    `}
+    color: ${props => props.theme?.ordering?.semantic?.state?.warning?.functional ?? '#F2BB40'};
   }
 `
 
 export const ProductActionsDelete = styled(ProductActionsEdit)`
-  display: none;
   svg {
-    margin-right: 0px;
-  }
-
-  @media (min-width: 411px){
-    display: block;
+    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors?.danger ?? '#D81212'};
   }
 `
 
@@ -271,6 +262,7 @@ export const ProductPriceSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  min-width: 0;
 `
 
 export const ProductPrice = styled.div`
@@ -278,22 +270,28 @@ export const ProductPrice = styled.div`
   display: flex;
   justify-content: flex-end;
 
-  p,
   span {
-    font-size: 14px;
-    color: ${props => props.theme.colors.headingColor};
-  }
-
-  span {
+    font-size: var(--od-type-identifier-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     font-weight: 500;
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
+    direction: ltr;
+    unicode-bidi: isolate;
   }
+`
 
-  p {
-    margin: 0px 5px;
+export const ProductAccordionToggle = styled(IconButton)`
+  min-width: 44px;
+  min-height: 44px;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
   }
 
   svg {
-    cursor: pointer;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
   }
 `
 
@@ -302,29 +300,26 @@ export const ProductSelect = styled.select`
   height: 50px;
   border: 0;
   background-color: transparent;
-  font-size: 17px;
+  font-size: var(--od-type-control-value-size);
   outline: none;
-  margin-left: 5px;
+  margin-inline-start: 5px;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
 
-  ${props => props.theme?.rtl && css`
-    margin-right: 5px;
-    margin-left: 0px;
-  `}
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+  }
 `
 
 export const ProductNotAvailable = styled.span`
-  color: #D81212;
+  color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors?.danger ?? '#D81212'};
 `
 
 export const ProductOptionsList = styled.ul`
   list-style-type: none;
 
   .suboption {
-    margin-left: -25px;
-    ${props => props.theme?.rtl && css`
-      margin-right: -25px;
-      margin-left: 0px;
-  `}
+    margin-inline-start: -25px;
   }
 
   p:nth-child(1) {
@@ -334,57 +329,55 @@ export const ProductOptionsList = styled.ul`
   p {
     font-weight: 400;
     margin: 0px;
-    color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
+    font-size: var(--od-type-secondary-size);
   }
 
   li span {
-    color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
+    font-size: var(--od-type-secondary-size);
+    overflow-wrap: anywhere;
   }
 
   li.ingredient {
-    padding-left: 15px;
-    ${props => props.theme?.rtl && css`
-      padding-right: 15px;
-      padding-left: 0px;
-    `}
+    padding-inline-start: 15px;
   }
 `
 
 export const ProductQuantity = styled.span`
   display: flex;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
+  direction: ltr;
+  unicode-bidi: isolate;
   p {
     margin: 0px 5px;
   }
-  margin: 0 10px 0 20px;
-
-  ${props => props.theme?.rtl && css`
-    margin: 0 20px 0 10px;
-  `}
+  margin-block: 0;
+  margin-inline: 20px 10px;
 `
 export const ScheduleInfoWrapper = styled.div`
   width: calc(100% - 65px);
   box-sizing: border-box;
   h3 {
     margin: 0px;
-    font-size: 14px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: ${props => props.theme.colors.headingColor};
+    font-size: var(--od-type-content-size);
+    overflow-wrap: anywhere;
+    white-space: normal;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   }
-  padding-left: 10px;
-  ${props => props.theme.rtl && css`
-    padding-left: 0px;
-    padding-right: 10px;
-  `}
+  padding-inline-start: 10px;
 `
 
 export const ScheduleInfo = styled.div`
   span {
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
+    direction: ltr;
+    unicode-bidi: isolate;
     line-height: 15px;
   }
 `

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-all-in-one-appointments-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "all-in-one-selection-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/AllInOne/styles.js",
+      "component": "WrapperIndicator",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "24px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "appointments-calendar-day-heading",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/styles.js",
+      "component": "CalendarWrapper",
+      "property": "font-size",
+      "context": ".rbc-calendar > .rbc-header > span",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "appointments-calendar-range-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/styles.js",
+      "component": "CalendarLabelContainer",
+      "property": "font-size",
+      "context": "span.label",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "appointments-event-professional-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/styles.js",
+      "component": "EventContainer",
+      "property": "font-size",
+      "context": "> div.info > p.name",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "appointments-event-time-range",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/styles.js",
+      "component": "EventContainer",
+      "property": "font-size",
+      "context": "> div.info > p.date",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    }
+  ]
+}

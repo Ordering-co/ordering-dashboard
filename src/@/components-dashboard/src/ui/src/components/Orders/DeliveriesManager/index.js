@@ -3,9 +3,11 @@ import { useLocation } from 'react-router-dom'
 import { useLanguage, useConfig, OrdersManage as OrdersManageController } from '../../../../../index'
 import { OrdersContentHeader } from '../OrdersContentHeader'
 import { OrderDetails } from '../OrderDetails'
-import { OrderNotification } from '../OrderNotification'
+import { OrderNotificationSlot } from '../OrderNotification'
 import { DeliveryDashboard } from '../DeliveryDashboard'
-import { learnOptionsValues } from '../../../utils'
+import { SplitView } from '../../Shared/Product/SplitView'
+import { learnOptionsValues, getUserType } from '../../../utils'
+import '../DeliveryDashboard/delivery-board.css'
 
 import {
   DeliveriesContainer,
@@ -45,6 +47,8 @@ const DeliveriesManagerUI = (props) => {
 
   const query = new URLSearchParams(useLocation().search)
   const [isOpenOrderDetail, setIsOpenOrderDetail] = useState(false)
+  // redesign deliveries F2-B3 (decision 6): «expand» of the order panel, as /orders (OrdersManager)
+  const [isPanelExpanded, setIsPanelExpanded] = useState(false)
   const [orderDetailId, setOrderDetailId] = useState(null)
   const [filterModalOpen, setFilterModalOpen] = useState(false)
   const [slaSettingTime, setSlaSettingTime] = useState(60000)
@@ -56,9 +60,12 @@ const DeliveriesManagerUI = (props) => {
   })
   const learnOptions = learnOptionsValues(['delivery_dashboard'], t)
   const googleMapsApiKey = configs?.google_maps_api_key?.value
+  // redesign deliveries F2-B3 (decision 3): who may assign from the board is the rule of the order panel (OrderContactInformation:71, :228)
+  const readOnlyBusinessOwner = !getUserType('viewOnlyBusinessOwner') && getUserType('readOnlyBusinessOwner')
 
   const handleBackRedirect = () => {
     setIsOpenOrderDetail(false)
+    setIsPanelExpanded(false) // redesign deliveries F2-B3
     onOrderRedirect()
   }
 
@@ -78,74 +85,92 @@ const DeliveriesManagerUI = (props) => {
     }
   }, [])
 
-  return (
-    <>
-      <DeliveriesContainer id='deliveryDashboard'>
-        <OrdersContentHeader
-          isDisableControl
-          title={t('DELIVERY_DASHBOARD', 'Delivery dashboard')}
-          isShowMapsKeySettingButton={!googleMapsApiKey}
-          searchValue={searchValue}
-          driverGroupList={driverGroupList}
-          driversList={driversList}
-          paymethodsList={paymethodsList}
-          businessesList={businessesList}
-          filterValues={filterValues}
-          handleChangeSearch={handleChangeSearch}
-          handleChangeFilterValues={handleChangeFilterValues}
-          filterModalOpen={filterModalOpen}
-          setFilterModalOpen={setFilterModalOpen}
-          setTimeStatus={setTimeStatus}
-          setSlaSettingTime={setSlaSettingTime}
-          adminsList={adminsList}
-          assignableDriverGroupList={assignableDriverGroupList}
-          learnOptions={learnOptions}
-          hideTour
-        />
-        <OrdersContent>
-          <WrapItemView>
-            <DeliveryDashboard
-              searchValue={searchValue}
-              filterValues={filterValues}
-              driversList={driversList}
-              deletedOrderId={deletedOrderId}
-              ordersStatusGroup={ordersStatusGroup}
-              selectedSubOrderStatus={selectedSubOrderStatus}
-              handleSelectedOrderIds={handleSelectedOrderIds}
-              handleOpenOrderDetail={handleOpenOrderDetail}
-              handleOrdersStatusGroupFilter={handleOrdersStatusGroupFilter}
-              handleSelectedSubOrderStatus={handleSelectedSubOrderStatus}
-              isOnlyDelivery
-              setFilterModalOpen={setFilterModalOpen}
-              slaSettingTime={slaSettingTime}
-              timeStatus={timeStatus}
-              ordersAmountByStatus={ordersAmountByStatus}
-              setOrdersAmountByStatus={setOrdersAmountByStatus}
-              numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
-              isUseQuery={isUseQuery}
-              franchisesList={props.franchisesList}
-              driverGroupList={driverGroupList}
-              handleChangeFilterValues={handleChangeFilterValues}
-              handleChangeSearch={handleChangeSearch}
-            />
-          </WrapItemView>
-        </OrdersContent>
-      </DeliveriesContainer>
-
-      {isOpenOrderDetail && (
-        <OrderDetails
-          open={isOpenOrderDetail}
-          order={detailsOrder}
-          orderId={orderDetailId}
-          drivers={driversList.drivers}
-          handleOpenOrderDetail={handleOpenOrderDetail}
-          onClose={() => handleBackRedirect()}
-        />
-      )}
-      <OrderNotification
-        isOnlyDelivery
+  // redesign deliveries F2-B3 (decision 6, DV-07): the page is the SplitView's list, so the board is never remounted when the order panel
+  // opens or closes (no new `GET orders`).
+  const listView = (
+    <DeliveriesContainer id='deliveryDashboard'>
+      <OrdersContentHeader
+        isDisableControl
+        title={t('DELIVERY_DASHBOARD', 'Delivery dashboard')}
+        isShowMapsKeySettingButton={!googleMapsApiKey}
+        searchValue={searchValue}
+        driverGroupList={driverGroupList}
+        driversList={driversList}
+        paymethodsList={paymethodsList}
+        businessesList={businessesList}
+        filterValues={filterValues}
+        handleChangeSearch={handleChangeSearch}
+        handleChangeFilterValues={handleChangeFilterValues}
+        filterModalOpen={filterModalOpen}
+        setFilterModalOpen={setFilterModalOpen}
+        setTimeStatus={setTimeStatus}
+        setSlaSettingTime={setSlaSettingTime}
+        adminsList={adminsList}
+        assignableDriverGroupList={assignableDriverGroupList}
+        learnOptions={learnOptions}
+        hideTour
       />
-    </>
+      {/* redesign W0-12 (W0-A0-01): the sound notice holds a one-line slot inside the page, under the head, not a flex column of the shell */}
+      <OrderNotificationSlot isOnlyDelivery />
+      <OrdersContent>
+        <WrapItemView>
+          <DeliveryDashboard
+            searchValue={searchValue}
+            filterValues={filterValues}
+            driversList={driversList}
+            deletedOrderId={deletedOrderId}
+            ordersStatusGroup={ordersStatusGroup}
+            selectedSubOrderStatus={selectedSubOrderStatus}
+            handleSelectedOrderIds={handleSelectedOrderIds}
+            handleOpenOrderDetail={handleOpenOrderDetail}
+            handleOrdersStatusGroupFilter={handleOrdersStatusGroupFilter}
+            handleSelectedSubOrderStatus={handleSelectedSubOrderStatus}
+            isOnlyDelivery
+            setFilterModalOpen={setFilterModalOpen}
+            slaSettingTime={slaSettingTime}
+            timeStatus={timeStatus}
+            setTimeStatus={setTimeStatus}
+            readOnlyBusinessOwner={readOnlyBusinessOwner}
+            ordersAmountByStatus={ordersAmountByStatus}
+            setOrdersAmountByStatus={setOrdersAmountByStatus}
+            numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
+            isUseQuery={isUseQuery}
+            franchisesList={props.franchisesList}
+            driverGroupList={driverGroupList}
+            handleChangeFilterValues={handleChangeFilterValues}
+            handleChangeSearch={handleChangeSearch}
+          />
+        </WrapItemView>
+      </OrdersContent>
+    </DeliveriesContainer>
+  )
+
+  const orderDetails = isOpenOrderDetail && (
+    <OrderDetails
+      layout='split'
+      expanded={isPanelExpanded}
+      onExpandedChange={setIsPanelExpanded}
+      open={isOpenOrderDetail}
+      order={detailsOrder}
+      orderId={orderDetailId}
+      drivers={driversList.drivers}
+      handleOpenOrderDetail={handleOpenOrderDetail}
+      onClose={() => handleBackRedirect()}
+    />
+  )
+
+  return (
+    <SplitView
+      className='odb-split'
+      list={listView}
+      panel={orderDetails}
+      open={isOpenOrderDetail}
+      expanded={isPanelExpanded}
+      panelLabel={t('ORDER_NUMBER_TITLE', 'Order _id_').replace('_id_', orderDetailId ?? '')}
+      resizeLabel={t('RESIZE_ORDER_PANEL', 'Resize the order panel')}
+      storageKey='od.deliveries.panel'
+      onClose={() => handleBackRedirect()}
+    />
   )
 }
 

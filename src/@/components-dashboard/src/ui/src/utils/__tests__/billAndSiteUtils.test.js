@@ -346,7 +346,7 @@ describe('connectAccess helpers', () => {
     expect(POS_SETUP_CALL_URL).toContain('calendly.com/mauricio-ordering')
   })
 
-  it('opens POS & Menu Sync to admins and business owners', () => {
+  it('opens POS & menu sync to admins and business owners', () => {
     expect(CONNECT_BUSINESS_OWNER_PAGES).toEqual(['pos_menu'])
     expect(getConnectAllowedLevels('pos_menu')).toEqual([0, 2])
   })

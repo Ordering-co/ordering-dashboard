@@ -4,7 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useUtils } from '../../contexts/UtilsContext'
-import { capitalize, fallbackLogisticEventsText as fallbackText } from '~ui'
+import { capitalize, fallbackLogisticEventsText as fallbackText } from '~ui/src/utils'
 import { parseLog as buildParseLog } from './parseLog'
 
 export const Logistics = (props) => {

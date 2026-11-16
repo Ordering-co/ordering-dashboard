@@ -1,0 +1,132 @@
+/* C14 · Status tabs: graphite underline (one primary per view), counts as badges, never wrapped. */
+
+.odc-tabs-list {
+  /* containing block for .odc-sr-only counters, so they never overflow the page */
+  position: relative;
+  display: flex;
+  gap: var(--od-space-5);
+  /* redesign F6d-4b (Q3-10): room for the focus ring of the first and the last tab, which have 4px of padding that a negative
+     margin gives back (below). The list takes the same room from its sides, so nothing moves. Its hairline is drawn as a
+     background that is those 4px shorter on each side, so it still spans only the content (the border stays, transparent,
+     for the room it takes and for forced-colors mode, where it shows). */
+  padding-inline: var(--od-space-1);
+  margin-inline: calc(var(--od-space-1) * -1);
+  border-block-end: var(--od-x-hairline) solid transparent;
+  background: linear-gradient(var(--od-border), var(--od-border)) no-repeat center bottom / calc(100% - 2 * var(--od-space-1)) var(--od-x-hairline);
+  background-origin: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.odc-tabs-list::-webkit-scrollbar { display: none; }
+.odc-tabs-list[data-size='sm'] { gap: var(--od-space-4); }
+
+.odc-tab {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+  block-size: var(--od-x-tab-height);
+  /* redesign F6d-4b (Q3-10): 4px of padding keep the ring (inset, C3) off the label; the negative margin gives the room back,
+     so labels, gaps and height stay where they were. */
+  margin: 0 calc(var(--od-space-1) * -1);
+  padding: 0 var(--od-space-1);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--od-duration-fast) var(--od-ease-standard);
+}
+.odc-tabs-list[data-size='sm'] .odc-tab { block-size: var(--od-x-tab-height-sm); }
+
+.odc-tab:hover { color: var(--od-text); }
+
+.odc-tab[data-selected],
+.odc-tab[aria-selected='true'] {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* The underline sits over the list's hairline, like the prototype. */
+.odc-tab[data-selected]::after,
+.odc-tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  /* under the label, not under its padding */
+  inset-inline: var(--od-space-1);
+  inset-block-end: calc(var(--od-x-hairline) * -1);
+  block-size: var(--od-x-indicator);
+  border-start-start-radius: var(--od-x-indicator);
+  border-start-end-radius: var(--od-x-indicator);
+  background: var(--od-text);
+}
+
+/* redesign reviews FA1 (D2, coordinador: opción c): `wrap` (data-wrap='true' on the root). When the tabs do not fit they break
+   into lines instead of scrolling: no scroller, so nothing to fade. The list keeps the hairline under its last line (its
+   border and background are the base ones) and a gap between the lines, so the reach of a tab (44px on a phone) never meets
+   the one of the line below, and the bar of the selected tab, which is its own, is plainly under its text. */
+.odc-tabs[data-wrap='true'] .odc-tabs-list {
+  flex-wrap: wrap;
+  row-gap: var(--od-space-3);
+  overflow: visible;
+}
+
+/* The bar is the tab's own (the base ::after, not a sliding one), so it is under its text on whichever line the tab falls. In a
+   scroller the base bar is cut at the list's edge, which leaves it its top pixel above the hairline; without the scroller nothing
+   cuts it, so each tab makes the same cut at its own foot (a clip of the tab, which does not touch its own focus ring), on
+   every line, and the bar looks as it does today. */
+.odc-tabs[data-wrap='true'] .odc-tab {
+  overflow: clip;
+}
+
+.odc-tab:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-tab:disabled,
+.odc-tab[aria-disabled='true'],
+.odc-tab[data-disabled] {
+  color: var(--od-x-text-subtle);
+  cursor: not-allowed;
+}
+
+/* redesign F6d-4b (Q3-04), F6e-3 (Q4-04): the count fits its digits, start-aligned and tabular (a «Chat 1» takes the room of one digit).
+   A list whose counts arrive later (Tabs sets data-reserve once one was a placeholder) keeps the room of two digits for each, so
+   their arrival does not move the tabs; a third digit grows the tab (rare). */
+.odc-tab-count-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: var(--od-x-type-caption-size);
+  /* the same weight as the chip, whatever the tab: a selected tab is semibold and its `ch` would be wider */
+  font-weight: var(--od-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+.odc-tab-count-slot[data-reserve] { min-inline-size: var(--od-x-tab-count-reserve); }
+
+.odc-tab-panel:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* Touch (C3): every tab reaches 44px with a coarse pointer, and below 768px with a mouse (E10). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-tab,
+  .odc-tabs-list[data-size='sm'] .odc-tab {
+    block-size: var(--od-x-target-coarse);
+    min-inline-size: var(--od-x-target-coarse);
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-tab { transition: none; }
+}

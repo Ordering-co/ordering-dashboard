@@ -1,0 +1,102 @@
+/* C5 · Status: indicator + text. Quiet in tables, filled where it is the subject or asks for action. */
+
+.odc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-status[data-wrap] { white-space: normal; align-items: baseline; }
+
+.odc-dot {
+  inline-size: var(--od-x-dot);
+  block-size: var(--od-x-dot);
+  border-radius: var(--od-radius-round);
+  flex: none;
+  background: var(--od-x-info-signal);
+}
+
+.odc-status[data-wrap] .odc-dot { translate: 0 calc(var(--od-x-space-half) * -1); }
+
+[data-family='pending'] > .odc-dot,
+[data-family='review'] > .odc-dot { background: var(--od-warning-signal); }
+[data-family='progress'] > .odc-dot { background: var(--od-x-info-signal); }
+[data-family='done'] > .odc-dot { background: var(--od-success-signal); }
+[data-family='cancel'] > .odc-dot { background: var(--od-danger-signal); }
+
+.odc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  background: var(--od-x-info-soft);
+}
+
+.odc-badge .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-badge[data-family='pending'],
+.odc-badge[data-family='review'] { background: var(--od-warning-soft); }
+.odc-badge[data-family='progress'] { background: var(--od-x-info-soft); }
+.odc-badge[data-family='done'] { background: var(--od-success-soft); }
+.odc-badge[data-family='cancel'] { background: var(--od-danger-soft); }
+
+/* SLA (C5): on time stays quiet; at risk and delayed ask for action. */
+.odc-sla {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+.odc-sla > .odc-dot { background: var(--od-success-signal); }
+
+.odc-badge[data-level='risk'] {
+  background: var(--od-warning-soft);
+  font-weight: var(--od-font-weight-semibold);
+}
+.odc-badge[data-level='late'] {
+  background: var(--od-danger-soft);
+  color: var(--od-danger-functional);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* Count badge (tabs, nav): the counter is a badge, never a glued parenthesis (C14). */
+.odc-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--od-x-count-height);
+  block-size: var(--od-x-count-height);
+  padding-inline: var(--od-x-space-1-5);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-count[data-attention] {
+  background: var(--od-warning-soft);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}

@@ -1,0 +1,1116 @@
+{
+  "schemaVersion": 1,
+  "id": "t1-reviewed-consumer-imports",
+  "categories": [
+    "imports"
+  ],
+  "rules": [
+    {
+      "id": "c4-color-chevron",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColorPicker.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "CaretDownFill",
+      "local": "CaretDownFill",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronDown",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-columns-layout",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColumnAllowSettingPopover.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "LayoutThreeColumns",
+      "local": "LayoutThreeColumns",
+      "targetSource": "../Icon",
+      "targetImported": "Columns3",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-columns-empty",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColumnAllowSettingPopover.jsx",
+      "source": "@meronex/icons/ri/RiCheckboxBlankLine",
+      "imported": "default",
+      "local": "RiCheckboxBlankLine",
+      "targetSource": "../Icon",
+      "targetImported": "Square",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-columns-checked",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColumnAllowSettingPopover.jsx",
+      "source": "@meronex/icons/ri/RiCheckboxFill",
+      "imported": "default",
+      "local": "RiCheckboxFill",
+      "targetSource": "../Icon",
+      "targetImported": "SquareCheck",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-learn-book",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LearnDropDown.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "Book",
+      "local": "Book",
+      "targetSource": "../Icon",
+      "targetImported": "BookOpen",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-range-calendar",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/RangeCalendar.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "Calendar4",
+      "local": "Calendar4",
+      "targetSource": "../Icon",
+      "targetImported": "CalendarDays",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-columns-legacy-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ColumnAllowSettingPopover.jsx",
+      "source": "../../../styles",
+      "imported": "IconButton",
+      "local": "IconButton",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "IconButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c4-range-legacy-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/RangeCalendar.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c5-disabled-info",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/DisabledFeatureAlert.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "InfoCircle",
+      "local": "InfoCircle",
+      "targetSource": "../Icon",
+      "targetImported": "Info",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c5-notfoundsource-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/NotFoundSource.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectbusinesses-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinesses.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectbusinesses-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinesses.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectloyaltylevels-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectLoyaltyLevels.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectloyaltylevels-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectLoyaltyLevels.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectsites-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectSites.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectsites-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectSites.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectusers-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectUsers.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c6-selectusers-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectUsers.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c7-selectbusinesscategories-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessCategories.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c7-selectbusinesscategories-chevron",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessCategories.jsx",
+      "source": "@meronex/icons/go/GoTriangleDown",
+      "imported": "default",
+      "local": "GoTriangleDown",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronDown",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c7-selectbusinessproducts-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessProducts.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c7-selectbusinessproducts-chevron",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SelectBusinessProducts.jsx",
+      "source": "@meronex/icons/go/GoTriangleDown",
+      "imported": "default",
+      "local": "GoTriangleDown",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronDown",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-defaultselect",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "../../../styles",
+      "imported": "SecondSelect",
+      "local": "DefaultSelect",
+      "targetSource": "../../../styles/Select",
+      "targetImported": "Select",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedulecopytimes-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ScheduleCopyTimes.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-plussquare",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "PlusSquare",
+      "local": "PlusSquare",
+      "targetSource": "../Icon",
+      "targetImported": "SquarePlus",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-pluscirclefill",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "PlusCircleFill",
+      "local": "PlusCircleFill",
+      "targetSource": "../Icon",
+      "targetImported": "CirclePlus",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-dashcirclefill",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "DashCircleFill",
+      "local": "DashCircleFill",
+      "targetSource": "../Icon",
+      "targetImported": "CircleMinus",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedule-trash",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "Trash",
+      "local": "Trash",
+      "targetSource": "../Icon",
+      "targetImported": "Trash2",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedulecopytimes-richeckboxblankline",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ScheduleCopyTimes.jsx",
+      "source": "@meronex/icons/ri/RiCheckboxBlankLine",
+      "imported": "default",
+      "local": "RiCheckboxBlankLine",
+      "targetSource": "../Icon",
+      "targetImported": "Square",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedulecopytimes-richeckboxfill",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ScheduleCopyTimes.jsx",
+      "source": "@meronex/icons/ri/RiCheckboxFill",
+      "imported": "default",
+      "local": "RiCheckboxFill",
+      "targetSource": "../Icon",
+      "targetImported": "SquareCheck",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c8-schedulecopytimes-mdccontentcopy",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ScheduleCopyTimes.jsx",
+      "source": "@meronex/icons/mdc/MdcContentCopy",
+      "imported": "default",
+      "local": "MdcContentCopy",
+      "targetSource": "../Icon",
+      "targetImported": "Copy",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c9-autoscroll-chevronleft",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/AutoScroll.jsx",
+      "source": "@meronex/icons/md/MdKeyboardArrowLeft",
+      "imported": "default",
+      "local": "MdKeyboardArrowLeft",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronLeft",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c9-autoscroll-chevronright",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/AutoScroll.jsx",
+      "source": "@meronex/icons/md/MdKeyboardArrowRight",
+      "imported": "default",
+      "local": "MdKeyboardArrowRight",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronRight",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c9-dragscroll-chevronleft",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/DragScroll.jsx",
+      "source": "@meronex/icons/md/MdKeyboardArrowLeft",
+      "imported": "default",
+      "local": "MdKeyboardArrowLeft",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronLeft",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c9-dragscroll-chevronright",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/DragScroll.jsx",
+      "source": "@meronex/icons/md/MdKeyboardArrowRight",
+      "imported": "default",
+      "local": "MdKeyboardArrowRight",
+      "targetSource": "../Icon",
+      "targetImported": "ChevronRight",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertlink-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertLink.jsx",
+      "source": "../../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertvideo-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertVideo.jsx",
+      "source": "../../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertvideo-input",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertVideo.jsx",
+      "source": "../../../../styles",
+      "imported": "Input",
+      "local": "Input",
+      "targetSource": "../../../../styles/Inputs",
+      "targetImported": "Input",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "../../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-input",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "../../../../styles",
+      "imported": "Input",
+      "local": "Input",
+      "targetSource": "../../../../styles/Inputs",
+      "targetImported": "Input",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-bytesconverter",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "../../../../utils",
+      "imported": "bytesConverter",
+      "local": "bytesConverter",
+      "targetSource": "../../../../utils/bytesConverter",
+      "targetImported": "bytesConverter",
+      "consumerUsage": {
+        "allowed": [
+          "call-argument"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertvideo-formaturlvideo",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertVideo.jsx",
+      "source": "../../../../utils",
+      "imported": "formatUrlVideo",
+      "local": "formatUrlVideo",
+      "targetSource": "../../../../utils/formatUrlVideo",
+      "targetImported": "formatUrlVideo",
+      "consumerUsage": {
+        "allowed": [
+          "call-argument"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-alert",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "../../../Shared",
+      "imported": "Alert",
+      "local": "Alert",
+      "targetSource": "../../Confirm",
+      "targetImported": "Alert",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-confirm",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "../../../Shared",
+      "imported": "Confirm",
+      "local": "Confirm",
+      "targetSource": "../../Confirm",
+      "targetImported": "Confirm",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-xlg",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "XLg",
+      "local": "XLg",
+      "targetSource": "../../Icon",
+      "targetImported": "X",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertimage-biimage",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertImage.jsx",
+      "source": "@meronex/icons/bi/BiImage",
+      "imported": "default",
+      "local": "BiImage",
+      "targetSource": "../../Icon",
+      "targetImported": "Image",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertlink-checkbox",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertLink.jsx",
+      "source": "../../../../styles",
+      "imported": "Checkbox",
+      "local": "Checkbox",
+      "targetSource": "../../../../styles/Checkbox",
+      "targetImported": "Checkbox",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c10-insertlink-input",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/HtmlEditor/InsertLink.jsx",
+      "source": "../../../../styles",
+      "imported": "Input",
+      "local": "Input",
+      "targetSource": "../../../../styles/Inputs",
+      "targetImported": "Input",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1
+      }
+    },
+    {
+      "id": "c11-button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ImageCrop.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c11-iconbutton",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ImageCrop.jsx",
+      "source": "../../../styles",
+      "imported": "IconButton",
+      "local": "IconButton",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "IconButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c11-rotate",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ImageCrop.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "ArrowClockwise",
+      "local": "ArrowClockwise",
+      "targetSource": "../Icon",
+      "targetImported": "RotateCw",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    },
+    {
+      "id": "c12-spreadsheetcontainer",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SpreadSheetEditor.jsx",
+      "source": "./styles",
+      "imported": "SpreadSheetContainer",
+      "local": "SpreadSheetContainer",
+      "targetSource": "./spreadsheet-styles",
+      "targetImported": "SpreadSheetContainer",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c12-spreadsheetviewport",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/SpreadSheetEditor.jsx",
+      "source": "./styles",
+      "imported": "SpreadSheetViewport",
+      "local": "SpreadSheetViewport",
+      "targetSource": "./spreadsheet-styles",
+      "targetImported": "SpreadSheetViewport",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c13-verify-decimals",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/TaxBillRows.jsx",
+      "source": "../../../utils",
+      "imported": "verifyDecimals",
+      "local": "verifyDecimals",
+      "targetSource": "../../../utils/billFormatting",
+      "targetImported": "verifyDecimals",
+      "consumerUsage": {
+        "allowed": [
+          "call-argument"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    },
+    {
+      "id": "c14-push-container",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PushTokens.jsx",
+      "source": "./styles",
+      "imported": "Container",
+      "local": "Container",
+      "targetSource": "./push-token-styles",
+      "targetImported": "Container",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c14-push-tablewrapper",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PushTokens.jsx",
+      "source": "./styles",
+      "imported": "TableWrapper",
+      "local": "TableWrapper",
+      "targetSource": "./push-token-styles",
+      "targetImported": "TableWrapper",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c14-push-table",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PushTokens.jsx",
+      "source": "./styles",
+      "imported": "Table",
+      "local": "Table",
+      "targetSource": "./push-token-styles",
+      "targetImported": "Table",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c14-push-wrapperpagination",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PushTokens.jsx",
+      "source": "./styles",
+      "imported": "WrapperPagination",
+      "local": "WrapperPagination",
+      "targetSource": "./push-token-styles",
+      "targetImported": "WrapperPagination",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c15-container",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Personalization.jsx",
+      "source": "./styles",
+      "imported": "Container",
+      "local": "Container",
+      "targetSource": "./outbound-link-styles",
+      "targetImported": "Container",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c15-wrapperbutton",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Personalization.jsx",
+      "source": "./styles",
+      "imported": "WrapperButton",
+      "local": "WrapperButton",
+      "targetSource": "./outbound-link-styles",
+      "targetImported": "WrapperButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "c15-contactbutton",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Personalization.jsx",
+      "source": "./styles",
+      "imported": "ContactButton",
+      "local": "ContactButton",
+      "targetSource": "./outbound-link-styles",
+      "targetImported": "ContactButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "e1-languageselector-globe",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LanguageSelector.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "Globe2",
+      "local": "Globe",
+      "targetSource": "../Icon",
+      "targetImported": "Globe",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 3,
+        "max": 3
+      }
+    },
+    {
+      "id": "e1-logoutbutton-logout",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/LogoutButton.jsx",
+      "source": "react-bootstrap-icons",
+      "imported": "BoxArrowRight",
+      "local": "LogOut",
+      "targetSource": "../Icon",
+      "targetImported": "LogOut",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    },
+    {
+      "id": "l2-download-PurchasedProductsList-IconButton",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PurchasedProductsList.jsx",
+      "source": "../../../styles",
+      "imported": "IconButton",
+      "local": "IconButton",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "IconButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "l2-download-PurchasedProductsList-SideBar",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PurchasedProductsList.jsx",
+      "source": "../../Shared",
+      "imported": "SideBar",
+      "local": "SideBar",
+      "targetSource": "../SideBar",
+      "targetImported": "SideBar",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 2,
+        "max": 2
+      }
+    },
+    {
+      "id": "l2-download-PurchasedProductsList-Button",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/PurchasedProductsList.jsx",
+      "source": "../../../styles",
+      "imported": "Button",
+      "local": "Button",
+      "targetSource": "../../../styles/Buttons",
+      "targetImported": "Button",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 6,
+        "max": 6
+      }
+    },
+    {
+      "id": "l2-messages-PaginationButton",
+      "kind": "import-specifier",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ChatBusinessesList.jsx",
+      "source": "../../Shared",
+      "imported": "PaginationButton",
+      "local": "PaginationButton",
+      "targetSource": "../PaginationButton",
+      "targetImported": "PaginationButton",
+      "consumerUsage": {
+        "allowed": [
+          "jsx-element"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    }
+  ]
+}

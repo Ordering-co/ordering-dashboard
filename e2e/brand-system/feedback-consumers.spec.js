@@ -1,0 +1,33 @@
+import { test, expect, fixtureUrl } from './fixtures'
+
+test('real payment card keeps its small tenant-colored spinner and blocks selection only while loading', async ({ page }) => {
+  await page.goto(fixtureUrl('surface=feedback-consumers&tenant=%237B245A'))
+  const section = page.getByTestId('payment-card-consumer')
+  const spinner = section.locator('#loading')
+  await expect(spinner).toBeVisible()
+  await expect(spinner).toHaveCSS('width', '15px')
+  await expect(spinner).toHaveCSS('height', '15px')
+  await expect(spinner).toHaveCSS('border-top-color', 'rgb(123, 36, 90)')
+  await section.getByText('visa 4242', { exact: true }).click()
+  await expect(page.getByTestId('card-events')).toHaveText('[]')
+  await section.getByRole('button', { name: 'Toggle card loading' }).click()
+  await expect(spinner).toHaveCount(0)
+  await section.getByText('visa 4242', { exact: true }).click()
+  await expect(page.getByTestId('card-events')).toHaveText(JSON.stringify([{ id: 501, default: false, data: { brand: 'visa', last4: '4242' } }]))
+})
+
+test('real CSV export keeps its boolean request and full-screen loading lifecycle without a download', async ({ page }) => {
+  await page.clock.install()
+  await page.goto(fixtureUrl('surface=feedback-consumers'))
+  const section = page.getByTestId('export-consumer')
+  const button = section.getByRole('button', { name: 'CSV' })
+  await button.click()
+  await expect(page.getByTestId('export-events')).toHaveText('[[true]]')
+  await expect(button).toBeDisabled()
+  await expect(section.getByRole('status').filter({ hasText: 'Loading' })).toBeVisible()
+  const loader = section.locator('.spinner').first()
+  await expect(loader).toBeVisible()
+  await page.clock.fastForward(1600)
+  await expect(loader).toHaveCount(0)
+  await expect(button).toBeEnabled()
+})

@@ -22,7 +22,7 @@ export const BusinessGprsPrinters = (props) => {
   const getPrinters = async () => {
     if (loading) return
     try {
-      setPrintersListState({ ...printersListState, loading: true })
+      setPrintersListState(prev => ({ ...prev, loading: true, error: null }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -35,24 +35,25 @@ export const BusinessGprsPrinters = (props) => {
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setPrintersListState({
-          ...printersListState,
+        setPrintersListState(prev => ({
+          ...prev,
           loading: false,
+          error: null,
           printers: result
-        })
+        }))
       } else {
-        setPrintersListState({
-          ...printersListState,
+        setPrintersListState(prev => ({
+          ...prev,
           loading: false,
           error: result
-        })
+        }))
       }
     } catch (err) {
-      setPrintersListState({
-        ...printersListState,
+      setPrintersListState(prev => ({
+        ...prev,
         loading: false,
-        error: err
-      })
+        error: [err.message]
+      }))
     }
   }
 
@@ -66,6 +67,7 @@ export const BusinessGprsPrinters = (props) => {
         <UIComponent
           {...props}
           printersListState={printersListState}
+          getPrinters={getPrinters}
         />
       )}
     </>

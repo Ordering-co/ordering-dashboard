@@ -1,0 +1,90 @@
+/*
+ * fix-qa E5 · Clone order content on the Product Dialog (C8): two radio options and the actions. Values
+ * come from --od-* (release) and --od-x-* (src/brand/candidates.css) only. Logical properties only (C17).
+ * The dark mode is the tokens' own.
+ */
+
+.odc-clone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-clone-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* One option is the whole row: the native input covers it, the label draws it. */
+.odc-clone-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-control-height-lg);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  cursor: pointer;
+}
+
+.odc-clone-option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.odc-clone-option:hover {
+  background: var(--od-x-hover);
+}
+
+/* The mark is a ring that fills with a dot when chosen; the border and fill say it too, never only color. */
+.odc-clone-mark {
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--od-space-4);
+  block-size: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+}
+
+.odc-clone-option:has(input:checked) {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+}
+
+.odc-clone-option:has(input:checked) .odc-clone-mark {
+  border-color: var(--od-action);
+  border-width: var(--od-space-1);
+}
+
+.odc-clone-option:has(input:focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-clone-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+@media (pointer: coarse) {
+  .odc-clone-option {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-clone-actions > .odc-btn {
+    flex: 1;
+  }
+}

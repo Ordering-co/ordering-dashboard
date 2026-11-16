@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { List as MenuIcon } from 'react-bootstrap-icons'
 import { SourceCodeDownloads as SourceCodeDownloadsController } from '../../../../../components/SourceCodeDownloads'
 import { useLanguage } from '../../../../../contexts/LanguageContext'
@@ -7,12 +7,28 @@ import { useSourceCodeTranslator } from '../../../../../components/SourceCodeDow
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { Page, Content, Header, MenuButton, Product, Quickstart, Action, Actions, State, RepositoryGrid, RepositorySection, Platform, CopyBlock } from './styles'
 
-const ExternalLink = ({ href, children, ...props }) => <a href={href} target='_blank' rel='noopener noreferrer' {...props}>{children}</a>
+// README, Setup instructions, View repository and Create a fork were bare anchors of about 22px. The touch area is 44px
+// (inline-flex keeps the text and its underline as they were; only the height of the area changes).
+const LINK_TOUCH_TARGET = { display: 'inline-flex', alignItems: 'center', minHeight: 44 }
+const ExternalLink = ({ href, children, style, ...props }) => <a href={href} target='_blank' rel='noopener noreferrer' {...props} style={{ ...LINK_TOUCH_TARGET, ...style }}>{children}</a>
 
 const CopyText = ({ text, label, buttonLabel, t, collapsible = false, primary = false, children }) => {
   const [copyStatus, setCopyStatus] = useState('')
   const [expanded, setExpanded] = useState(false)
-  const copy = async () => {
+  // the button is disabled while the copy is pending and a browser drops the focus of a control that becomes disabled
+  // (activeElement goes back to BODY). When the copy settles, the button gets the focus back if it had it and nobody took it since,
+  // so the keyboard person can read the result and retry (docs/public-source-code.md).
+  const buttonRef = useRef(null)
+  const restoreFocus = useRef(false)
+  useEffect(() => {
+    if (copyStatus === 'pending' || !restoreFocus.current) return
+    restoreFocus.current = false
+    const button = buttonRef.current
+    if (button?.isConnected && !button.disabled && (!document.activeElement || document.activeElement === document.body)) button.focus()
+  }, [copyStatus])
+  const copy = async (event) => {
+    buttonRef.current = event.currentTarget
+    restoreFocus.current = document.activeElement === event.currentTarget
     setCopyStatus('pending')
     try {
       await navigator.clipboard.writeText(text)
@@ -91,7 +107,7 @@ export const SourceCodeDownloadsUI = ({ catalogStatus, products = [], tools = []
       <Content>
         <Header>
           {isCollapse && <MenuButton type='button' color='black' aria-label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)}><MenuIcon aria-hidden='true' /></MenuButton>}
-          <h1 id='source-code-title'>{t('SOURCE_CODE_TITLE', 'Open Source Code')}</h1>
+          <h1 id='source-code-title'>{t('SOURCE_CODE_PAGE_TITLE', 'Open source code')}</h1>
         </Header>
         <p>{t('SOURCE_CODE_START_INTRO', 'Copy a setup prompt to open a product locally with your agent and make your first visible change.')}</p>
         {catalogStatus !== 'ready' && (

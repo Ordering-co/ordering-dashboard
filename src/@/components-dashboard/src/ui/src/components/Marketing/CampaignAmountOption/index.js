@@ -99,10 +99,14 @@ const CampaignAmountOptionUI = (props) => {
         {ruleList.map((item, i) => (
           <React.Fragment key={i}>
             <RadioCheckWrapper>
-              <div onClick={() => handleChangeValue('condition', item.key)}>
+              <button
+                type='button'
+                aria-pressed={ruleFormState.changes?.condition === item.key}
+                onClick={() => handleChangeValue('condition', item.key)}
+              >
                 {ruleFormState.changes?.condition === item.key ? <CheckIcon className='fill' /> : <UnCheckIcon />}
                 <span>{item.name}</span>
-              </div>
+              </button>
             </RadioCheckWrapper>
             {ruleFormState.changes?.condition === item.key && (
               <DaysContent>

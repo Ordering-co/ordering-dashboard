@@ -7,7 +7,7 @@ export const Title = styled.div`
 
   h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     line-height: 30px;
     margin: 0px;
     > span {
@@ -29,7 +29,7 @@ export const Table = styled.table`
   td {
     padding: 15px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
 
     &:first-child {
       padding-left: 0px;
@@ -45,11 +45,11 @@ export const THead = styled.thead`
     th {
       color: ${props => props.theme.colors?.headingColor};
       white-space: nowrap;
-      z-index: 100;
+      z-index: var(--od-x-layer-sticky);
       background: ${props => props.theme.colors.backgroundPage};
       padding-top: 0px;
       font-weight: 700;
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       padding: 5px 15px;
     }
   }

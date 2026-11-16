@@ -15,7 +15,7 @@ export const DetailsHeader = styled.div`
 
 export const LevelName = styled.h1`
   color: ${props => props.theme.colors.headingColor};
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   margin-top: 0px;
   margin-bottom: 24px;
   font-weight: 700;
@@ -89,7 +89,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         padding: 6px 20px;
         color: ${props => props.theme.colors.headingColor};
         &:active {
@@ -113,7 +113,7 @@ export const FormController = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     position: relative;
   }
 
@@ -128,7 +128,7 @@ export const ExPirationWrapper = styled.div`
 
   > h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 23px;
@@ -180,7 +180,7 @@ export const CheckBoxWrapper = styled.div`
     `}
   }
   p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin: 0px;
   }

@@ -151,7 +151,7 @@ const UploadAudioUI = (props) => {
         </ButtonGroup>
       </Container>
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

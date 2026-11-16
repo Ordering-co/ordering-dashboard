@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import BisDownArrow from '@meronex/icons/bi/BisDownArrow'
 import { useWindowSize } from '../../../hooks/useWindowSize'
-import RiImageAddFill from '@meronex/icons/ri/RiImageAddFill'
+import { useIsPhone } from '../../Shared/Product/useIsPhone'
 import {
   useLanguage,
   useApi,
@@ -13,46 +10,25 @@ import {
   BusinessProductsListing as BusinessProductsListingController
 } from '../../../../../index'
 import { BusinessProductsCategoyDetails } from '../BusinessProductsCategoyDetails'
-import BsViewList from '@meronex/icons/bs/BsViewList'
-import BsTable from '@meronex/icons/bs/BsTable'
-import { List as MenuIcon, ChevronRight, ArrowRepeat } from 'react-bootstrap-icons'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
-import { Button, IconButton } from '../../../styles'
-import { Modal, SearchBar, SideBar, ColumnAllowSettingPopover, LearnDropDown } from '../../Shared'
+import { Modal, SideBar } from '../../Shared'
+import { Button, EmptyState, InlineNotice } from '../../Shared/Product'
+import { TriangleAlert } from '../../Shared/Icon'
 import { BusinessProductList } from '../BusinessProductList'
-import { BusinessProductsCategories } from '../BusinessProductsCategories'
+import { CatalogCategories } from '../CatalogCategories'
 import { ProductDetails } from '../ProductDetails'
 import { SingleBusinessCategoryEdit } from '../SingleBusinessCategoryEdit'
 import { BusinessSelectHeader } from '../BusinessSelectHeader'
 import { BatchImageForm } from '../BatchImageForm'
 import { BusinessDetails } from '../BusinessDetails'
-import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { ImportersButton } from '../ImportersButton'
-import { AddBusinessForm } from '../AddBusinessForm'
 import { ProductStartGuide } from '../ProductStartGuide'
 import { BusinessImporters } from '../../Connect/BusinessImporters'
-import { BusinessAddStore } from '../BusinessAddStore'
-import { addQueryToUrl, removeQueryToUrl, learnOptionsValues, stringToSlug } from '../../../utils'
+import { addQueryToUrl, removeQueryToUrl, stringToSlug } from '../../../utils'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
 import { useStoreWebsiteUrl } from '../../../hooks/useWebsiteUrl'
+import { CatalogHeader, CatalogSearch } from './CatalogHeader'
 
-import {
-  CategoryProductsContainer,
-  HeaderContainer,
-  HeaderTitleContainer,
-  CategoryProductsContent,
-  CategoryListContainer,
-  ProductListContainer,
-  ProductHeader,
-  ActionIconList,
-  ViewMethodButton,
-  ActionsGroup,
-  BusinessNameWrapper,
-  BusinessSelector,
-  Breadcrumb,
-  ColumnsAllowWrapper,
-  ButtonWrapper,
-  CatalogError
-} from './styles'
+import './catalog.css'
 
 const BusinessProductsListingUI = (props) => {
   const {
@@ -60,7 +36,7 @@ const BusinessProductsListingUI = (props) => {
     searchValue,
     handleChangeCategory,
     handleChangeSearch,
-    featuredProducts,
+    errors,
     businessState,
     onProductRedirect,
     handleStoresRedirect,
@@ -92,6 +68,7 @@ const BusinessProductsListingUI = (props) => {
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
   const { width } = useWindowSize()
+  const isPhone = useIsPhone()
   const [ordering] = useApi()
   const [, { showToast }] = useToast()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
@@ -138,28 +115,14 @@ const BusinessProductsListingUI = (props) => {
   const [showSelectHeader, setShowSelectHeader] = useState(false)
   const [selectedBusiness, setSelectedBusiness] = useState(null)
   const [productsPerPage, setProductsPerPage] = useState(10)
-  const categoryListRef = useRef()
   const [batchImageFormOpen, setBatchImageFormOpen] = useState(false)
   const [openSidebar, setOpenSidebar] = useState(null)
   const [showPopup, setShowPopup] = useState(false)
-  const [isAdd, setIsAdd] = useState(false)
 
   const handleCloseImporters = () => {
     setOpenSidebar(null)
     getBusiness()
   }
-  const learnOptions = learnOptionsValues(
-    [
-      'categories_products_general_view',
-      'new_category',
-      'product_details_general_view',
-      'ingredients_properties',
-      'product_options',
-      'product_images',
-      'product_video'
-    ],
-    t
-  )
   const [allowSpreadColumns, setAllowSpreadColumns] = useState({
     id: true,
     name: true,
@@ -226,16 +189,29 @@ const BusinessProductsListingUI = (props) => {
     removeQueryToUrl(['category'])
   }
 
+  // J2 row 13 (stores-products P-14, D-56 f): the product editor holds its unsaved edits; opening another product or «Add product»
+  // asks it first (`leaveGuardRef`, as the store list asks the store editor). With no edits it goes at once.
+  const productEditorLeaveRef = useRef(null)
+  const leaveProductEditor = (go) => {
+    const editor = openSidebar === 'product_details' ? productEditorLeaveRef.current : null
+    if (editor?.requestLeave) editor.requestLeave(go)
+    else go()
+  }
+
   const handleOpenProductDetails = (product, isInitialRender) => {
-    setSelectedProduct(product)
-    setOpenSidebar('product_details')
-    if (!isInitialRender) {
-      onProductRedirect({
-        slug: businessState?.business?.slug,
-        product: product.id,
-        category: product.category_id
-      })
+    const go = () => {
+      setSelectedProduct(product)
+      setOpenSidebar('product_details')
+      if (!isInitialRender) {
+        onProductRedirect({
+          slug: businessState?.business?.slug,
+          product: product.id,
+          category: product.category_id
+        })
+      }
     }
+    if (openSidebar === 'product_details' && String(selectedProduct?.id) === String(product?.id)) return go()
+    leaveProductEditor(go)
   }
 
   const handleCloseProductDetails = () => {
@@ -247,17 +223,17 @@ const BusinessProductsListingUI = (props) => {
     })
   }
 
+  // redesign SP-F1 SP-10: Add product also works on the spreadsheet view (the form is not drawn inside the list branch)
   const handleProductAdd = (status) => {
-    if (viewMethod !== 'list') return
     if (status) {
-      setOpenSidebar('add_product')
+      leaveProductEditor(() => setOpenSidebar('add_product'))
     } else {
       setOpenSidebar(null)
     }
   }
 
-  const handleSelectHeader = () => {
-    setShowSelectHeader(!showSelectHeader)
+  const handleSelectHeader = (open) => {
+    setShowSelectHeader(typeof open === 'boolean' ? open : !showSelectHeader)
   }
 
   const handleClose = () => {
@@ -295,12 +271,7 @@ const BusinessProductsListingUI = (props) => {
 
   const handleOpenSite = () => {
     if (!storeUrl || businessState?.loading) return
-    window.open(storeUrl, '_blank')
-  }
-
-  const handleOpenAddBusiness = () => {
-    setIsAdd(true)
-    handleClose()
+    window.open(storeUrl, '_blank', 'noopener,noreferrer')
   }
 
   // Close the panels when the user switches store. Only on a real change of
@@ -328,11 +299,32 @@ const BusinessProductsListingUI = (props) => {
     }
   }, [slug])
 
+  // bugs E D25: the guide opened on every new object of the business (each getBusiness, each handleUpdateBusinessState), so
+  // closing it was undone by the next reload. It opens once per store (by id) while the store has no categories: another empty store opens
+  // it again, and a store whose guide the person closed (or used) does not get it back.
+  const guideOpenedForRef = useRef(new Set())
   useEffect(() => {
-    if (businessState?.business && businessState?.business?.categories?.length === 0) {
+    // redesign SP-F1 SP-06: a store that failed to load is not a store without categories
+    if (businessState?.business && businessState?.business?.categories?.length === 0 && !businessState?.error) {
+      const storeKey = String(businessState.business.id ?? businessState.business.slug ?? '')
+      if (guideOpenedForRef.current.has(storeKey)) return
+      guideOpenedForRef.current.add(storeKey)
       setShowPopup(true)
     }
   }, [businessState?.business])
+
+  // bugs E SP-19 / D7: the store (by id) whose first category this page already chose. Refresh is `getBusiness`, and the
+  // effect below ran on every end of a load: it put the person back on the first category. Once a store has had its first category chosen,
+  // a reload keeps what the person has (a category, or «All products») unless the category is gone.
+  const categoryChosenForRef = useRef(null)
+  const findCategory = (categories, id) => {
+    for (const category of categories || []) {
+      if (category?.id === id) return category
+      const nested = findCategory(category?.subcategories, id)
+      if (nested) return nested
+    }
+    return null
+  }
 
   useEffect(() => {
     if (businessState.loading) return
@@ -341,7 +333,10 @@ const BusinessProductsListingUI = (props) => {
     if (categoryId && productId) {
       const initCategory = businessState.business?.categories?.find(category => category.id === Number(categoryId))
       const initProduct = initCategory?.products?.find(product => product.id === Number(productId))
-      if (initCategory) handleChangeCategory(null, initCategory)
+      if (initCategory) {
+        handleChangeCategory(null, initCategory)
+        categoryChosenForRef.current = businessState.business?.id
+      }
       if (initProduct) {
         handleOpenProductDetails(initProduct, true)
       }
@@ -350,167 +345,117 @@ const BusinessProductsListingUI = (props) => {
       if (initCategory) {
         handleChangeCategory(null, initCategory)
         handleOpenCategoryDetails(initCategory, true)
+        categoryChosenForRef.current = businessState.business?.id
       }
     } else {
-      businessState?.business?.categories && setCategorySelected(businessState?.business?.categories[0])
+      // redesign SP-F1 SP-03 (SP-19): the first category is the one with the lowest `rank`, the one the tree draws first
+      const categories = businessState?.business?.categories
+      if (!categories) return
+      const alreadyChosen = categories.length > 0 && businessState.business?.id != null && categoryChosenForRef.current === businessState.business.id
+      if (alreadyChosen) {
+        // «All products» (no category): keep it, and reload its list (the controller only reloads the list of a chosen category)
+        if (!categorySelected) {
+          getPageProducts(true, 1)
+          return
+        }
+        // the category still exists: keep it (the controller reloads its products)
+        if (findCategory(categories, categorySelected.id)) return
+      }
+      setCategorySelected([...categories].sort((a, b) => a.rank - b.rank)[0])
+      if (categories.length > 0) categoryChosenForRef.current = businessState.business?.id
     }
   }, [businessState.loading])
 
+  const storeName = selectedBusiness?.name || businessState?.business?.name
+  const productsErrorMessage = Array.isArray(errors) ? errors[0] : errors
+  const showStoreError = Boolean(businessState?.error) && !businessState?.loading
+  const showProductsError = Boolean(errors) && !categoryState?.loading
+
+  // redesign SP-FA: the head, then two columns (categories | products), or the error in their place
   return (
     <>
-      <CategoryProductsContainer>
-        <HeaderContainer>
-          <HeaderTitleContainer>
-            {isCollapse && (
-              <IconButton
-                color='black'
-                onClick={() => handleMenuCollapse(false)}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <div>
-              {!selectedBusiness && !businessState.business
-                ? (
-                <h1><Skeleton width={200} height={30} /></h1>
-                  )
-                : (
-                <>
-                  <BusinessSelector>
-                    <BusinessNameWrapper>
-                      <h1 onClick={() => handleSelectHeader()} >{selectedBusiness?.name || businessState?.business?.name || t('SELECT_BUSINESS', 'Select a business')} &nbsp; <BisDownArrow className={showSelectHeader ? 'rotate-arrow' : ''} /></h1>
-                      <LearnDropDown
-                        learnOptions={learnOptions}
-                      />
-                    </BusinessNameWrapper>
-                    {showSelectHeader && (
-                      <BusinessSelectHeader
-                        close={handleClose}
-                        isOpen={showSelectHeader}
-                        changeBusinessState={changeBusinessState}
-                        noActiveStatusCondition
-                        handleOpenAddBusiness={handleOpenAddBusiness}
-                      />
-                    )}
-                  </BusinessSelector>
-                  {slug && (
-                    <Breadcrumb>
-                      <span
-                        className='business'
-                        onClick={() => {
-                          addQueryToUrl({ id: businessState?.business?.id })
-                          setOpenSidebar('business_details')
-                        }}
-                      >
-                        {selectedBusiness?.name || businessState?.business?.name}
-                      </span>
-                      <ChevronRight />
-                      <span>{categorySelected?.name}</span>
-                    </Breadcrumb>
-                  )}
-                </>
-                  )}
-            </div>
-          </HeaderTitleContainer>
-          {slug && (
-            <ActionsGroup>
-              <Button
-                color='lightPrimary'
-                borderRadius='8px'
-                onClick={() => getBusiness()}
-                className={businessState.loading ? 'loading' : ''}
-              >
-                {t('REFRESH', 'Refresh')}
-                <ArrowRepeat size={16} style={{ marginLeft: 5 }} />
-              </Button>
-              <ImportersButton customClass='importerGroup' setOpenSidebar={setOpenSidebar} onImportSuccess={getBusiness} />
-              <Button
-                borderRadius='8px'
-                color='lightPrimary'
-                onClick={() => handleOpenCategoryDetails()}
-              >
-                {t('ADD_CATEGORY', 'Add category')}
-              </Button>
-              {businessState?.business?.vertical === 'school' && businessState?.business?.categories?.length === 0 && (
-                <Button
-                  borderRadius='8px'
-                  color='lightPrimary'
-                  onClick={handleUseSchoolTemplate}
-                  disabled={templateLoading}
-                >
-                  {templateLoading ? t('LOADING', 'Loading') : t('SCHOOL_USE_TEMPLATE', 'Use weekly template')}
-                </Button>
-              )}
-              {categorySelected && (
-                <Button
-                  borderRadius='8px'
-                  color='lightPrimary'
-                onClick={() => handleProductAdd(true)}
-                disabled={businessState?.business?.categories?.length === 0}
-              >
-                  {t('ADD_PRODUCT', 'Add product')}
-                </Button>
-              )}
-              <SearchBar
-                isCustomLayout
-                lazyLoad
-                search={searchValue}
-                onSearch={handleChangeSearch}
-                placeholder={t('SEARCH', 'Search')}
-                customClass='searchBar'
-              />
-            </ActionsGroup>
+      <div className='odc-root odc-cat-page'>
+        <CatalogHeader
+          storeName={storeName}
+          loadingStore={Boolean(slug) && !storeName && Boolean(businessState?.loading)}
+          hasStore={Boolean(slug)}
+          selectorOpen={showSelectHeader}
+          onToggleSelector={handleSelectHeader}
+          selector={showSelectHeader && (
+            <BusinessSelectHeader
+              close={handleClose}
+              isOpen={showSelectHeader}
+              changeBusinessState={changeBusinessState}
+              noActiveStatusCondition
+            />
           )}
-        </HeaderContainer>
+          onOpenMenu={isCollapse ? () => handleMenuCollapse(false) : undefined}
+          canAddProduct={Boolean(categorySelected)}
+          addProductDisabled={businessState?.business?.categories?.length === 0}
+          onAddProduct={() => handleProductAdd(true)}
+          onAddCategory={() => handleOpenCategoryDetails()}
+          showWeeklyTemplate={businessState?.business?.vertical === 'school' && businessState?.business?.categories?.length === 0}
+          templateLoading={templateLoading}
+          onUseTemplate={handleUseSchoolTemplate}
+          setOpenSidebar={setOpenSidebar}
+          onImportSuccess={getBusiness}
+          business={businessState?.business}
+          businessLoading={Boolean(businessState?.loading)}
+          onRefresh={() => getBusiness()}
+          refreshing={Boolean(businessState?.loading)}
+          siteDisabled={!storeUrl || Boolean(businessState?.loading)}
+          onOpenSite={handleOpenSite}
+          onOpenStore={() => {
+            addQueryToUrl({ id: businessState?.business?.id })
+            setOpenSidebar('business_details')
+          }}
+          categoryName={categorySelected?.name}
+          isPhone={isPhone}
+        />
+        {slug && showStoreError && (
+          <div className='odc-cat-error'>
+            <EmptyState
+              tone='error'
+              icon={TriangleAlert}
+              title={t('CATALOG_STORE_LOAD_ERROR', "We couldn't load this store.")}
+              description={translateApiMessage(t, Array.isArray(businessState.error) ? businessState.error[0] : businessState.error, null)}
+              action={<Button onClick={() => getBusiness()}>{t('RETRY', 'Retry')}</Button>}
+            />
+          </div>
+        )}
+        {/* main: the taxes or fees catalog failed to load; the products still edit, and Retry asks only for the failed ones */}
         {catalogError && (
-          <CatalogError role='alert'>
-            {catalogErrorMessage}
-            <Button
-              type='button'
-              color='primary'
-              outline
-              borderRadius='8px'
-              onClick={retryCatalogs}
-              disabled={catalogState.taxes.loading && catalogState.fees.loading}
+          <div className='odc-cat-error' role='alert'>
+            <InlineNotice
+              tone='danger'
+              icon={TriangleAlert}
+              live={false}
+              action={(
+                <Button size='sm' onClick={retryCatalogs} disabled={catalogState.taxes.loading && catalogState.fees.loading}>
+                  {t('RETRY', 'Retry')}
+                </Button>
+              )}
             >
-              {t('RETRY', 'Retry')}
-            </Button>
-          </CatalogError>
+              {catalogErrorMessage}
+            </InlineNotice>
+          </div>
         )}
-        {slug && (
-          <ButtonWrapper>
-            <Button
-              color='primary'
-              outline
-              borderRadius='8px'
-              onClick={handleOpenSite}
-              disabled={!storeUrl || businessState?.loading}
-            >
-              {t('STORE_WEBSITE', 'Store website')}
-            </Button>
-          </ButtonWrapper>
-        )}
-        {slug && (
-          <CategoryProductsContent>
-            <CategoryListContainer ref={categoryListRef}>
-              {
-                <BusinessProductsCategories
-                  {...props}
-                  businessState={businessState}
-                  categorySelected={categorySelected}
-                  onClickCategory={handleChangeCategory}
-                  featured={featuredProducts}
-                  handleOpenCategoryDetails={handleOpenCategoryDetails}
-                  openCategories={openCategories}
-                  handleUpdateBusinessState={handleUpdateBusinessState}
-                  setCategorySelected={setCategorySelected}
-                  categoryListRef={categoryListRef?.current}
-                  setCurrentCategory={setCurrentCategory}
-                />
-              }
-            </CategoryListContainer>
-            <ProductListContainer>
-              <ProductHeader>
+        {slug && !showStoreError && (
+          <div className='odc-cat-body'>
+            <div className='odc-cat-side'>
+              <CatalogCategories
+                businessState={businessState}
+                categorySelected={categorySelected}
+                onClickCategory={handleChangeCategory}
+                handleOpenCategoryDetails={handleOpenCategoryDetails}
+                openCategories={openCategories}
+                handleUpdateBusinessState={handleUpdateBusinessState}
+                setCategorySelected={setCategorySelected}
+                setCurrentCategory={setCurrentCategory}
+              />
+            </div>
+            <div className='odc-cat-main'>
+              <div className='odc-cat-subhead'>
                 <SingleBusinessCategoryEdit
                   {...props}
                   category={categorySelected}
@@ -518,76 +463,51 @@ const BusinessProductsListingUI = (props) => {
                   handleChangeCategory={handleChangeCategory}
                   business={businessState?.business}
                   handleOpenCategoryDetails={handleOpenCategoryDetails}
-                />
-                <ActionIconList>
-                  {viewMethod === 'spreedsheet' && (
-                    <>
-                      {width > 767
-                        ? (
-                        <Button
-                          outline
-                          borderRadius='5px'
-                          className='batch-image-upload'
-                          color='lightPrimary'
-                          onClick={() => openBatchImageUploader()}
-                        >
-                          {t('UPLOAD_IMAGES_BATCH', 'Upload images in batch')}
-                        </Button>
-                          )
-                        : (
-                        <ViewMethodButton className='batch' onClick={() => openBatchImageUploader()}>
-                          <RiImageAddFill />
-                        </ViewMethodButton>
-                          )}
-                      <ColumnsAllowWrapper>
-                        <ColumnAllowSettingPopover
-                          allowColumns={allowSpreadColumns}
-                          optionsDefault={spreadColumnOptions}
-                          handleChangeAllowColumns={handleChangeAllowSpreadColumns}
-                        />
-                      </ColumnsAllowWrapper>
-                    </>
+                  viewMethod={viewMethod}
+                  onViewMethodChange={setViewMethod}
+                  searchSlot={(
+                    <CatalogSearch
+                      value={searchValue}
+                      onSearch={handleChangeSearch}
+                      inCategory={Boolean(categorySelected)}
+                    />
                   )}
-                  <IconButton
-                    color={viewMethod === 'list' ? 'primary' : 'black'}
-                    onClick={() => setViewMethod('list')}
-                  >
-                    <BsViewList />
-                  </IconButton>
-                  <OverlayTrigger
-                    placement='top'
-                    overlay={
-                      <Tooltip>
-                        {t('SPREADSHEET', 'Spreadsheet')}
-                      </Tooltip>
-                    }
-                  >
-                    <IconButton
-                      color={viewMethod === 'spreedsheet' ? 'primary' : 'black'}
-                      className='tour_btn'
-                      onClick={() => setViewMethod('spreedsheet')}
-                    >
-                      <BsTable />
-                    </IconButton>
-                  </OverlayTrigger>
-                </ActionIconList>
-              </ProductHeader>
-              <BusinessProductList
-                {...props}
-                categorySelected={categorySelected}
-                productDetailsId={selectedProduct?.id}
-                viewMethod={viewMethod}
-                handleOpenProductDetails={handleOpenProductDetails}
-                handleParentProductAdd={handleProductAdd}
-                isParentProductAdd={openSidebar === 'add_product'}
-                allowSpreadColumns={allowSpreadColumns}
-                productsPerPage={productsPerPage}
-                setProductsPerPage={setProductsPerPage}
-              />
-            </ProductListContainer>
-          </CategoryProductsContent>
+                  onOpenBatchImages={openBatchImageUploader}
+                  allowSpreadColumns={allowSpreadColumns}
+                  spreadColumnOptions={spreadColumnOptions}
+                  handleChangeAllowSpreadColumns={handleChangeAllowSpreadColumns}
+                />
+              </div>
+              <div className='odc-cat-list'>
+                {showProductsError
+                  ? (
+                    <EmptyState
+                      tone='error'
+                      icon={TriangleAlert}
+                      title={t('CATALOG_PRODUCTS_LOAD_ERROR', "We couldn't load the products.")}
+                      description={translateApiMessage(t, productsErrorMessage, null)}
+                      action={<Button onClick={() => getPageProducts(true, 1)}>{t('RETRY', 'Retry')}</Button>}
+                    />
+                    )
+                  : (
+                    <BusinessProductList
+                      {...props}
+                      categorySelected={categorySelected}
+                      productDetailsId={selectedProduct?.id}
+                      viewMethod={viewMethod}
+                      handleOpenProductDetails={handleOpenProductDetails}
+                      handleParentProductAdd={handleProductAdd}
+                      isParentProductAdd={openSidebar === 'add_product'}
+                      allowSpreadColumns={allowSpreadColumns}
+                      productsPerPage={productsPerPage}
+                      setProductsPerPage={setProductsPerPage}
+                    />
+                    )}
+              </div>
+            </div>
+          </div>
         )}
-      </CategoryProductsContainer>
+      </div>
       {
         openSidebar === 'category_details' && (
           <SideBar
@@ -610,6 +530,7 @@ const BusinessProductsListingUI = (props) => {
         <ProductDetails
           open={openSidebar === 'product_details'}
           onClose={handleCloseProductDetails}
+          leaveGuardRef={productEditorLeaveRef}
           product={selectedProduct}
           productId={productId}
           categoryId={categoryId}
@@ -642,16 +563,6 @@ const BusinessProductsListingUI = (props) => {
           setBusinessTypes={setBusinessTypes}
         />
       )}
-      {openSidebar === 'add_business' && (
-        <SideBar
-          open={openSidebar === 'add_business'}
-          onClose={() => setOpenSidebar(null)}
-        >
-          <AddBusinessForm
-            handleSucessAddBusiness={() => setOpenSidebar(false)}
-          />
-        </SideBar>
-      )}
       {batchImageFormOpen && (
         <Modal
           width={width > 1440 ? '40%' : '60%'}
@@ -665,7 +576,7 @@ const BusinessProductsListingUI = (props) => {
           />
         </Modal>
       )}
-      {showPopup && (
+      {showPopup && !businessState?.error && (
         <Modal
           width='769px'
           padding='25px'
@@ -689,16 +600,6 @@ const BusinessProductsListingUI = (props) => {
           onClose={handleCloseImporters}
           onGoToProducts={handleCloseImporters}
         />
-      )}
-      {isAdd && (
-        <Modal
-          width='769px'
-          padding='30px'
-          open={isAdd}
-          onClose={() => setIsAdd(false)}
-        >
-          <BusinessAddStore />
-        </Modal>
       )}
     </>
   )

@@ -35,7 +35,7 @@ export const TitleContainer = styled.div`
 
 export const Title = styled.h3`
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   line-height: 24px;
   display: flex;
   flex-direction: column;
@@ -44,22 +44,18 @@ export const Title = styled.h3`
   span {
     &:not(:first-child) {
       color: ${props => props.theme.colors.grayTextColor};
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       font-weight: 400;
     }
   }
 `
 
 export const Flag = styled.span`
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   margin: 0px;
   text-transform: capitalize;
   color: ${props => props.required ? '#E63757' : props.theme.colors.grayTextColor};
   font-weight: 500;
-
-  @media (min-width: 381px) {
-    font-size: 14px;
-  }
 `
 export const OptionThumbnail = styled.div`
   display: inline-block;

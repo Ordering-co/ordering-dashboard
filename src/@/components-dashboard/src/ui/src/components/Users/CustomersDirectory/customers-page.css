@@ -1,0 +1,110 @@
+/*
+ * redesign UC-B7 · Customers page: the frame of the list beside the customer panel (split view), the header with the menu
+ * button, and the foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The table, the filters and the panel have their own files (customers-table.css, customers-filters.css, customer-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-cpg-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, tabs, filters, selection bar, table and foot, one under the other. */
+.odc-cpg-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-cpg-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-cpg-frame {
+    display: none;
+  }
+}
+
+/* ── Head: `.odc-cpg-head` is the page header's own class (: the opener is PageHeader's `leading`) ── */
+
+/* redesign UC-R1 (I-01): the header stays on ONE line when the list is narrow (beside the panel: ~620px at 1440, ~540px at 1280;
+   on a phone). Under 768px of the header's own width (the page header is its container) Learn and Export CSV keep only their
+   icon; «Add customer» does under 600px by the page header's own rule (its label is marked `data-collapse-label`). The words are
+   clipped, not removed (the accessible name stays) and each button has its `title`. */
+@container (max-width: 767px) {
+  /* Learn: the span LearnDropDown draws is clipped like a `data-collapse-label`; the margins of its trigger go, the icon and the arrow stay */
+  .odc-cpg-head .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-cpg-head .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+
+  /* Export CSV: the button takes the control's square; its words are the node marked data-collapse-label (UsersExport), clipped like the
+     Learn label (redesign , row 92: they were hidden with `font-size: 0`). Only the export: «Add customer» collapses under 600px
+     by the page header's own rule. The icon (16px by its own attribute) stays centred. */
+  .odc-cpg-export > .odc-btn {
+    gap: 0;
+    inline-size: var(--od-x-control-height);
+    padding-inline: 0;
+  }
+
+  .odc-cpg-export [data-collapse-label] {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Beside the panel at 1280 the header is under 600px and the page header drops its title to the section size: the h1 would sit 2.4px lower
+   than without the panel (its line is shorter). On a screen that has a panel (768px and up) the title keeps its size, so opening
+   or closing the detail moves nothing; on a phone the page header's own narrow size stays. */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-cpg-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* The holder of the page's Export node takes no box of its own: the button is a child of the group of actions */
+.odc-cpg-export {
+  display: contents;
+}
+
+/* ── Foot: «Add customer» (the old «Add new user» of the foot) at the start, the pagination at the end ── */
+.odc-cpg-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-cpg-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

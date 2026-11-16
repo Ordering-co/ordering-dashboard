@@ -1,302 +1,69 @@
-import React, { useEffect } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import moment from 'moment'
+import React from 'react'
 
-import { useLanguage, useUtils, DriversGroupLogs as DriversGroupLogsController, useConfig } from '../../../../../index'
+import { useLanguage, useUtils, DriversGroupLogs as DriversGroupLogsController } from '../../../../../index'
+import { ChangeLogView, sideOf } from '../../Shared/ChangeLog'
 
-import { Modal, Pagination } from '../../Shared'
-import { getAttributeName } from '../../../utils'
-import { parseLogData } from '../../../../../utils/safeJsonParse'
-
-import {
-  DriversGroupLogsContainer,
-  TableWrapper,
-  Table,
-  UserInfoContainer,
-  DateTimeWrapper,
-  NoData,
-  WrapperPagination,
-  DataListTable,
-  EventTypeContainer,
-  SeeChanges,
-  SchedulesWrapper,
-  Schedules,
-  ScheduleDay,
-  ScheduleLapses,
-  ScheduleTitle
-} from './styles'
+// (row 85 a of batch D): the logs of a driver group and the logs of a driver (the driver panel and the driver details
+// Logs tab; they only change the controller) are drawn by Shared/ChangeLog, the view of the store's and the settings' logs, in place
+// of the legacy table, Modal and Pagination. Same controllers, same request. What the legacy table showed and the view does not do on
+// its own is passed through its props:
+// - the Date: `formatDates` (opt-in, DG-B2b) writes created_at through parseDate as UTC; without it the raw value stays;
+// - `last_available_at` reads as a date in UTC, on both sides of the change (the legacy New / Old columns);
+// - the event is the view's (the upper-case key in the dictionary, else its words: ), and so are the attribute names,
+//   the «See changes» dialog of a schedule and the pages (the view's foot also asks for the last page when the current one is past
+//   the end, which was this file's effect).
+// The Details / New / Old columns are the view's «Changes» (one line per change, «Name: old → new»): the table fits its panel, so
+// the Date no longer waits behind a horizontal scroll (L-2 of bugs D). The empty state keeps «No data» and says whose changes they are.
 
 export const DriversGroupLogsUI = (props) => {
   const {
     logsList,
     paginationProps,
     getDriversGroupLogs,
-    actionDisabled
+    actionDisabled,
+    formatDates,
+    userId
   } = props
 
   const [, t] = useLanguage()
   const [{ parseDate }] = useUtils()
-  const [open, setOpen] = React.useState(false)
-  const [schedules, setSchedules] = React.useState({
-    newSchedule: [],
-    oldSchedule: []
+
+  const listLabel = t('LOGS', 'Logs')
+  const isDriver = userId != null
+
+  // opt-in: the same piece is shared by the panels, and a caller that does not ask keeps the value as the API sends it
+  const formatDate = formatDates
+    ? (stamp) => parseDate(stamp, { utc: true })
+    : (stamp) => stamp
+
+  const sideText = (item, side) => {
+    const direct = item?.[side]
+    return item?.attribute === 'last_available_at' && direct != null ? parseDate(direct, { utc: true }) : sideOf(item, side, t)
+  }
+
+  const getChanges = (log, { defaultChanges }) => defaultChanges(log).map(line => {
+    if (line.schedule || line.attribute !== 'last_available_at') return line
+    return { ...line, text: `${line.name}: ${sideText(line.raw, 'old')} → ${sideText(line.raw, 'new')}` }
   })
-  const [{ configs }] = useConfig()
-  const formatTime = configs?.general_hour_format?.value
-
-  const handleChangePage = (page) => {
-    getDriversGroupLogs(page, 10)
-  }
-
-  const handleChangePageSize = (pageSize) => {
-    const expectedPage = Math.ceil(paginationProps.from / pageSize)
-    getDriversGroupLogs(expectedPage, pageSize)
-  }
-
-  const getValidLogData = (data) => parseLogData(data)
-
-  const handleSchedules = (_schedules) => {
-    setSchedules({
-      newSchedule: _schedules?.new,
-      oldSchedule: _schedules?.old
-    })
-  }
-
-  const scheduleModalData = (_schedules) => {
-    setOpen(true)
-    handleSchedules(_schedules)
-  }
-
-  useEffect(() => {
-    if (logsList.loading || logsList.logs.length > 0 || paginationProps.totalPages <= 1) return
-    if (paginationProps.currentPage !== paginationProps.totalPages) {
-      handleChangePage(paginationProps.currentPage)
-    } else {
-      handleChangePage(paginationProps.currentPage - 1)
-    }
-  }, [logsList.logs, paginationProps])
-
-  const daysOptions = [
-    t('DAY7', 'Sunday'),
-    t('DAY1', 'Monday'),
-    t('DAY2', 'Tuesday'),
-    t('DAY3', 'Wednesday'),
-    t('DAY4', 'Thursday'),
-    t('DAY5', 'Friday'),
-    t('DAY6', 'Saturday')
-  ]
-
-  const checkTime = (val) => (val < 10 ? `0${val}` : val)
-  const timeFormated = (time) => {
-    return moment(`1900-01-01 ${checkTime(time.hour)}:${checkTime(time.minute)}`).format(formatTime)
-  }
-
-  const getSchedule = (_schedules) => {
-    return ((!_schedules?.length && _schedules?.length < 1)
-      ? <p>{t('NONE', 'None')}</p>
-      : _schedules?.map((schedule, i) => {
-        return (
-        <ScheduleDay key={i}>
-          <span>{daysOptions[i]}</span>
-          <ScheduleLapses>
-            {schedule?.lapses?.map((item, i) => {
-              return <p key={i}>{`${timeFormated(item?.open)} - ${timeFormated(item?.close)}`}</p>
-            })}
-          </ScheduleLapses>
-        </ScheduleDay>
-        )
-      })
-    )
-  }
 
   return (
-    <>
-      <DriversGroupLogsContainer
-        disabled={actionDisabled}
-      >
-        <TableWrapper>
-          {(logsList.loading || logsList.logs.length > 0)
-            ? (
-            <Table>
-              <thead>
-                <tr>
-                  <th>{t('CONTROL_PANEL_USERS', 'Users')}</th>
-                  <th>{t('EVENTS_TYPE', 'Events type')}</th>
-                  <th>{t('DETAILS', 'Details')}</th>
-                  <th>{t('NEW', 'New')}</th>
-                  <th>{t('OLD', 'Old')}</th>
-                  <th>{t('EXPORT_DATE', 'Date')}</th>
-                  <th>{t('USER_AGENT', 'User agent')}</th>
-                </tr>
-              </thead>
-              {logsList.loading
-                ? (
-                    [...Array(10).keys()].map(i => (
-                  <tbody key={i}>
-                    <tr>
-                      <td>
-                        <UserInfoContainer>
-                          <p><Skeleton width={100} /></p>
-                          <p><Skeleton width={120} /></p>
-                        </UserInfoContainer>
-                      </td>
-                      <td>
-                        <DataListTable>
-                          <tbody>
-                            <tr>
-                              <td><Skeleton width={100} /></td>
-                              <td><Skeleton width={20} /></td>
-                              <td><Skeleton width={20} /></td>
-                            </tr>
-                          </tbody>
-                        </DataListTable>
-                      </td>
-                      <td>
-                        <DateTimeWrapper>
-                          <Skeleton />
-                        </DateTimeWrapper>
-                      </td>
-                      <td>
-                        <Skeleton />
-                      </td>
-                    </tr>
-                  </tbody>
-                    ))
-                  )
-                : (
-                    !logsList.error && logsList.logs?.map(log => (
-                  <tbody key={log.id}>
-                    <tr>
-                      <td>
-                        <UserInfoContainer>
-                          <p>{log?.author?.name || log?.user?.name} {log?.author?.lastname || log?.user?.lastname}</p>
-                          <p>{log?.author?.email || log?.user?.email}</p>
-                        </UserInfoContainer>
-                      </td>
-                      <td>
-                        <EventTypeContainer>
-                          <p>{t((log?.event || '').toUpperCase())}</p>
-                        </EventTypeContainer>
-                      </td>
-                      <td>
-                        <DataListTable>
-                          {log?.data && getValidLogData(log?.data).map((item, i) => (
-                            <tbody key={i}>
-                              <tr>
-                                <td>{getAttributeName(item?.attribute)}</td>
-                              </tr>
-                            </tbody>
-                          ))}
-                        </DataListTable>
-                      </td>
-                      <td>
-                        <DataListTable>
-                          {log?.data && getValidLogData(log?.data).map((item, i) => (
-                            <tbody key={i}>
-                              <tr>
-                                {item?.attribute !== 'schedule'
-                                  ? (
-                                    <td>
-                                      {
-                                        (typeof item?.new !== 'undefined' && item?.new !== null)
-                                          ? item?.attribute === 'last_available_at' ? parseDate(item?.new, { utc: true }) : `${item?.new}`
-                                          : item?.added?.length > 0 ? item?.added?.toString() : t('NONE', 'None')
-                                      }
-                                    </td>
-                                    )
-                                  : (
-                                    <td>
-                                      <SeeChanges onClick={() => scheduleModalData(item, 'new')}>{t('SEE_CHANGES', 'See changes')}</SeeChanges>
-                                    </td>
-                                    )}
-                              </tr>
-                            </tbody>
-                          ))}
-                        </DataListTable>
-                      </td>
-                      <td>
-                        <DataListTable>
-                          {log?.data && getValidLogData(log?.data).map((item, i) => (
-                            <tbody key={i}>
-                              <tr>
-                                {item?.attribute !== 'schedule'
-                                  ? (
-                                    <td>
-                                      {
-                                        (typeof item?.old !== 'undefined' && item?.old !== null)
-                                          ? item?.attribute === 'last_available_at' ? parseDate(item?.old, { utc: true }) : `${item?.old}`
-                                          : item?.removed?.length > 0 ? item?.removed?.toString() : t('NONE', 'None')
-                                      }
-                                    </td>
-                                    )
-                                  : (
-                                    <td>
-                                      <SeeChanges onClick={() => scheduleModalData(item, 'old')}>{t('SEE_CHANGES', 'See changes')}</SeeChanges>
-                                    </td>
-                                    )}
-                              </tr>
-                            </tbody>
-                          ))}
-                        </DataListTable>
-                      </td>
-                      <td>
-                        <DateTimeWrapper>
-                          {log.created_at}
-                        </DateTimeWrapper>
-                      </td>
-                      <td>
-                        {log?.user_agent}
-                      </td>
-                    </tr>
-                  </tbody>
-                    ))
-                  )}
-            </Table>
-              )
-            : (
-            <NoData>{t('NO_DATA', 'No Data')}</NoData>
-              )}
-        </TableWrapper>
-        {logsList?.logs.length > 0 && (
-          <WrapperPagination>
-            <Pagination
-              isHidePagecontrol
-              currentPage={paginationProps.currentPage}
-              totalPages={paginationProps.totalPages}
-              handleChangePage={handleChangePage}
-              handleChangePageSize={handleChangePageSize}
-            />
-          </WrapperPagination>
-        )}
-      </DriversGroupLogsContainer>
-      {open && (
-        <Modal
-          width='40%'
-          height='60vh'
-          style={{ overflowY: 'auto' }}
-          padding='30px'
-          title={t('SCHEDULE_CHANGES', 'Schedule changes')}
-          open={open}
-          onClose={() => setOpen(false)}
-        >
-          <SchedulesWrapper border={!!schedules?.oldSchedule}>
-            {schedules?.newSchedule && (
-              <Schedules>
-                <ScheduleTitle>{t('NEW', 'New')}</ScheduleTitle>
-                {getSchedule(schedules?.newSchedule)}
-              </Schedules>
-            )}
-            {schedules?.oldSchedule && (
-              <Schedules>
-                <ScheduleTitle>{t('OLD', 'Old')}</ScheduleTitle>
-                {getSchedule(schedules?.oldSchedule)}
-              </Schedules>
-            )}
-          </SchedulesWrapper>
-        </Modal>
-      )}
-    </>
+    <div inert={actionDisabled ? '' : undefined} aria-disabled={actionDisabled ? 'true' : undefined}>
+      <ChangeLogView
+        frame='section'
+        logsList={logsList}
+        paginationProps={paginationProps}
+        onPageChange={(page, size) => getDriversGroupLogs?.(page, size)}
+        listLabel={listLabel}
+        scrollLabel={t('LOGS_TABLE_SCROLL_REGION', 'Logs table, scrolls sideways')}
+        emptyTitle={t('NO_DATA', 'No data')}
+        emptyDescription={isDriver
+          ? t('DRIVER_LOGS_EMPTY_DESCRIPTION', 'Changes made to this driver will appear here.')
+          : t('DRIVERS_GROUP_LOGS_EMPTY_DESCRIPTION', 'Changes made to this driver group will appear here.')}
+        loadFailedLabel={t('LOGS_LOAD_FAILED', 'The changes could not be loaded.')}
+        getChanges={getChanges}
+        formatDate={formatDate}
+      />
+    </div>
   )
 }
 

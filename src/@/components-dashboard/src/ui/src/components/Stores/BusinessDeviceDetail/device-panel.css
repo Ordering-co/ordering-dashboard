@@ -1,0 +1,71 @@
+/*
+ * redesign stores devices (, D3-D7 | G5-34, G5-35, G5-37, DV-01, DV-04, DV-09, DV-10) · the panel of a device (RecordPanel
+ * with a form). Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17).
+ * Prefix: odc-dp-*.
+ */
+
+.odc-dp-body {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── A label over a control that is still loading (the skeleton of the stores and owners), laid out like a Product field; the code row below shares it ── */
+.odc-dp-select,
+.odc-dp-code-field {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-dp-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── An option of the store and owner lists: the avatar and the name ── */
+.odc-dp-option {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-dp-option-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── The device code (DV-01): text in mono that can be selected, and the button that copies it ── */
+.odc-dp-code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dp-code {
+  min-inline-size: 0;
+  padding: var(--od-space-2) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+/* ── Loading the stores ── */
+.odc-dp-skeleton {
+  display: block;
+  min-inline-size: 0;
+}

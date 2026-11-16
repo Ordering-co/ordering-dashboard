@@ -8,7 +8,7 @@ export const OpenCartBillContainer = styled.div`
   flex-direction: column;
   table {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     tr td:nth-child(2) {
       text-align: right;
       ${props => props.theme?.rtl && css`
@@ -21,7 +21,7 @@ export const OpenCartBillContainer = styled.div`
     border-top: 1px solid ${props => props.theme.colors.borderColor};
     margin-top: 15px;
     tr {
-      font-size: 16px;
+      font-size: var(--od-type-content-size);
       td {
         font-weight: bold;
         padding-top: 10px;
@@ -33,7 +33,7 @@ export const OpenCartBillContainer = styled.div`
     thead {
       th {
         font-weight: 600;
-        font-size: 16px;
+        font-size: var(--od-type-section-title-size);
         padding-bottom: 5px;
       }
     }

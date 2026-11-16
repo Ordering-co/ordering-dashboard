@@ -1,0 +1,179 @@
+/*
+ * redesign  (lot C, decisions 3, 4, 5, 6 | OP-05, OP-06, OP-10): the General tab of an ordering product and its image field.
+ * The Fields, the InlineNotice, the Buttons and the SaveBar own their look; this lays the three groups out (Basics · Images ·
+ * URL templates) and draws the image zone. Tokens only (--od-*, --od-x-*); logical properties only. The panel is the size container
+ * `odc-record` (RecordPanel), so the pairs of fields follow its width, not the window's. Prefix: odc-op-*.
+ */
+
+.odc-op-general {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-op-notice { min-inline-size: 0; }
+
+/* A flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as the markup detail) */
+.odc-op-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-6);
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-op-form:focus { outline: none; }
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as the markup detail). */
+.odc-op-form :is(input, textarea, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* ── A group: its title (and what acts on it) over its fields ── */
+.odc-op-section {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-op-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-op-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-op-fields {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The formats of a template are a visible hint: they can be long, so they break anywhere instead of widening the panel */
+.odc-op-general .odc-field-hint { overflow-wrap: anywhere; }
+
+/* Name and Code (and Logo and Social share) side by side when the panel has the room, one over the other when it does not */
+.odc-op-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@container odc-record (min-width: 520px) {
+  .odc-op-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+/* ── One image: its name, the zone (preview and the button) and the line under it ── */
+.odc-op-image {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-op-image-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-op-image-zone {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) dashed var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+}
+
+/* A file over the zone */
+.odc-op-image-zone[data-dragging] {
+  border-color: var(--od-action);
+  background: var(--od-surface-subtle);
+}
+
+.odc-op-image[data-invalid] .odc-op-image-zone {
+  border-color: var(--od-danger-functional);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-op-image[data-disabled] .odc-op-image-zone {
+  border-color: var(--od-border);
+  opacity: 0.55;
+}
+
+.odc-op-image-preview {
+  display: grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-x-text-subtle);
+}
+
+.odc-op-image[data-aspect='square'] .odc-op-image-preview {
+  inline-size: calc(var(--od-x-control-height) * 3);
+  block-size: calc(var(--od-x-control-height) * 3);
+}
+
+.odc-op-image[data-aspect='wide'] .odc-op-image-preview {
+  inline-size: calc(var(--od-x-control-height) * 6);
+  block-size: calc(var(--od-x-control-height) * 2);
+}
+
+.odc-op-image-img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.odc-op-image-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The reason a file was refused: an icon and words, never colour alone */
+.odc-op-image-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-op-image-error .odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* redesign : P/InlineNotice brings the page gutter as its inline margin; inside the panel it lines up with the fields. */
+.odc-op-general .odc-notice { margin-inline: 0; }

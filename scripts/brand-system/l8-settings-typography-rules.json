@@ -1,0 +1,652 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-settings-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "settings-apiusagelimits-searchwrapper-input-13px-5509d4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "SearchWrapper",
+      "property": "font-size",
+      "context": "input",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-refreshbutton-root-13px-e8f737",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "RefreshButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-notice-root-13px-1a90fd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "Notice",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-emptystate-h3-15px-867e38",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "h3",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-emptystate-p-13px-fd5074",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-cardtitle-root-14px-9a18e7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "CardTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-cardmeta-root-12px-981368",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "CardMeta",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-statusbadge-root-11px-3f2195",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "StatusBadge",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-cardfooter-root-13px-7c936b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "CardFooter",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-apiusagelimits-footermeta-root-12px-eba33d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "component": "FooterMeta",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-header-h1-20px-e4ecc9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "settings-mcptokens-header-p-14px-946343",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-section-h2-16px-6e8654",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Section",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-mcptokens-section-p-13px-d34b41",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Section",
+      "property": "font-size",
+      "context": "> p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-sectionheader-h2-16px-e03641",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "SectionHeader",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-mcptokens-sectionheader-button-13px-b7d5e7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "SectionHeader",
+      "property": "font-size",
+      "context": "button",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-notice-root-13px-77741e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Notice",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-notice-button-13px-fc93b5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Notice",
+      "property": "font-size",
+      "context": "button",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-comingsoon-span-11px-e3151b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ComingSoon",
+      "property": "font-size",
+      "context": "> span",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-comingsoon-h3-15px-e38637",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ComingSoon",
+      "property": "font-size",
+      "context": "h3",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-mcptokens-comingsoon-p-li-13px-7d0c3f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ComingSoon",
+      "property": "font-size",
+      "context": "p, li",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-copyrow-code-13px-f18396",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "CopyRow",
+      "property": "font-size",
+      "context": "code",
+      "match": "13px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "settings-mcptokens-codeblock-pre-12-5px-6dfa6c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "CodeBlock",
+      "property": "font-size",
+      "context": "pre",
+      "match": "12.5px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "settings-mcptokens-tokentitle-h3-14px-5145e7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "TokenTitle",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-scopepill-root-11px-2fc56a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ScopePill",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-tokenfacts-root-12-5px-d74e75",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "TokenFacts",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12.5px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-tokenfacts-code-12px-b3a659",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "TokenFacts",
+      "property": "font-size",
+      "context": "code",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "settings-mcptokens-inactivetoggle-root-13px-0b5a6e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "InactiveToggle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-statusbadge-root-11px-1f829a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "StatusBadge",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-linkaction-root-13px-a8b6c2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "LinkAction",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-emptystate-h3-15px-2e52bb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "h3",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-mcptokens-emptystate-p-13px-282ec8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-emptystate-button-13px-46c6f0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "button",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-guidetab-root-13px-9a1228",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "GuideTab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-steps-li-before-12px-051870",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Steps",
+      "property": "font-size",
+      "context": "> li > &::before",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-steps-li-h3-14px-baf868",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Steps",
+      "property": "font-size",
+      "context": "> li > h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-steps-li-p-13px-9780b6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Steps",
+      "property": "font-size",
+      "context": "> li > p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-optionlabel-12px-e6764d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "OptionLabel",
+      "property": "font-size",
+      "context": "&&",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-field-label-span-14px-534f6c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Field",
+      "property": "font-size",
+      "context": "> label, > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-fieldhelp-root-12px-d6219c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "FieldHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-chip-root-13px-632d52",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Chip",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-scopeoption-strong-14px-14cbe4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ScopeOption",
+      "property": "font-size",
+      "context": "strong",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-mcptokens-scopeoption-span-12px-d61d4a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "ScopeOption",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-mcptokens-datanotice-root-13px-8dabf9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "DataNotice",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-datanotice-h3-14px-a1054f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "DataNotice",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-secretview-p-13px-b172f6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "SecretView",
+      "property": "font-size",
+      "context": "> p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-mcptokens-secretview-code-13-5px-44a631",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "SecretView",
+      "property": "font-size",
+      "context": "code",
+      "match": "13.5px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-blocktitle-root-15px-c17cce",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "BlockTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-blockhelp-root-13px-1da101",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "BlockHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-fieldlabel-root-14px-628e54",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "FieldLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-fieldhelp-root-13px-efb9d5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "FieldHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-fieldcontrol-root-14px-c5e79d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "FieldControl",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-fielderror-root-12px-0774f9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "FieldError",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-fieldselect-root-14px-fca87b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "FieldSelect",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-previewitem-root-13px-4aec67",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "PreviewItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-togglerow-root-14px-b6abd1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "ToggleRow",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-table-root-13px-1cdae8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-table-th-12px-d78da9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "settings-settingscustomblocks-table-input-type-text-input-type-number-in-dba4a6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "input[type='text'],\n  input[type='number'],\n  input[type='password'],\n  select",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "settings-settingsloyaltystores-loyaltycardtitle-root-16px-a27cdb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/styles.js",
+      "component": "LoyaltyCardTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "settings-settingsloyaltystores-loyaltycardhelp-root-13px-4b24ab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/styles.js",
+      "component": "LoyaltyCardHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "settings-settingsloyaltystores-loyaltytab-root-14px-c51ee6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/styles.js",
+      "component": "LoyaltyTab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "settings-settingsloyaltystores-loyaltyblockhelp-root-13px-4bfe60",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/styles.js",
+      "component": "LoyaltyBlockHelp",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "settings-pres-mcptokens-steps-li-code-12-5px-f4bf18",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "component": "Steps",
+      "property": "font-size",
+      "context": "> li > code",
+      "match": "12.5px",
+      "reason": "This selector matches no node in the component's current markup: it lives in a component the product does render, but nothing it renders is reached by it, so the declaration can never apply. Asserting a role over it would be asserting something unprovable.",
+      "evidence": "Steps > li > code: ningun <li> de Steps tiene un <code> hijo directo. McpSetupGuide.js (unico consumidor de Steps) monta en cada li solo h3, p, Code (que pinta CodeBlock > pre), OptionLabel (p) y Notice (div)."
+    }
+  ]
+}

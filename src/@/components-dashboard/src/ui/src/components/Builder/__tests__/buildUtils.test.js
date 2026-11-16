@@ -7,12 +7,17 @@ import {
   getBuildKind,
   getBuildModeLabel,
   getBuildStatusLabel,
+  getBuildTypeTabs,
+  getBuildTypeValue,
   getCheckProblems,
   getDefaultBuildOption,
   getReplacedBuildIds,
   getRequesterLabel,
+  getTimeLeftLabel,
   isBuildCancellable,
+  isBuildInstallable,
   isBuildRunning,
+  toApiUtcDateTime,
   toPlatformChecks
 } from '../utils'
 
@@ -48,6 +53,15 @@ describe('Builder build helpers', () => {
     expect(getDefaultBuildOption('ios', null, 'draft')).toBe('ad-hoc')
     expect(getDefaultBuildOption('android', null, 'active')).toBe('bundle')
     expect(getDefaultBuildOption('android', { platform: 'android', mode: 'debug', type: 'assemble' }, 'draft')).toBe('assemble')
+    // the file type of the tab Build was pressed on wins over the latest attempt's, when the dialog offers it
+    expect(getDefaultBuildOption('ios', { platform: 'ios', mode: 'ad-hoc' }, 'active', { initial: 'app-store' })).toBe('app-store')
+    expect(getDefaultBuildOption('android', { platform: 'android', mode: 'release', type: 'bundle' }, 'draft', { initial: 'assemble' })).toBe('assemble')
+    expect(getDefaultBuildOption('android', { platform: 'android', mode: 'release', type: 'bundle' }, 'draft', { initial: 'debug' })).toBe('bundle')
+    expect(getDefaultBuildOption('android', null, 'draft', { initial: null })).toBe('assemble')
+    // another list of options (My Products'), with a type the section does not build
+    const options = [{ value: 'assemble' }, { value: 'debug' }]
+    expect(getDefaultBuildOption('android', null, 'active', { options, initial: 'debug' })).toBe('debug')
+    expect(getDefaultBuildOption('android', null, 'active', { options })).toBe('assemble')
   })
 
   it('says who asked for a build', () => {
@@ -76,6 +90,40 @@ describe('Builder build helpers', () => {
     expect([...getReplacedBuildIds(builds)]).toEqual([6])
   })
 
+  it('tells the file type of an attempt', () => {
+    expect(getBuildTypeValue({ platform: 'ios', mode: 'ad-hoc' })).toBe('ad-hoc')
+    expect(getBuildTypeValue({ platform: 'ios', mode: 'app-store' })).toBe('app-store')
+    expect(getBuildTypeValue({ platform: 'android', mode: 'release', type: 'bundle' })).toBe('bundle')
+    expect(getBuildTypeValue({ platform: 'android', mode: 'release', type: 'assemble' })).toBe('assemble')
+    expect(getBuildTypeValue({ platform: 'android', mode: 'release', type: null })).toBe('assemble')
+    expect(getBuildTypeValue({ platform: 'android', mode: 'debug', type: 'assemble' })).toBe('debug')
+    expect(getBuildTypeValue(null)).toBeNull()
+  })
+
+  it('groups the attempts of a platform by file type, newest first (app 1413)', () => {
+    const apk = { id: 572, platform: 'android', mode: 'release', type: 'assemble', status: 'successful' }
+    const aab = { id: 573, platform: 'android', mode: 'release', type: 'bundle', status: 'successful' }
+    const failedApk = { id: 574, platform: 'android', mode: 'release', type: 'assemble', status: 'failed' }
+    const ios = { id: 575, platform: 'ios', mode: 'ad-hoc', status: 'successful' }
+    // `/latest`'s copy of the latest attempt wins over the history's
+    const live = { ...failedApk, status: 'building' }
+    const { tabs, current } = getBuildTypeTabs('android', { latest: live, successful: aab }, [ios, failedApk, aab, apk])
+    expect(current).toBe('assemble')
+    expect(tabs.map(tab => [tab.value, tab.label, tab.latest?.id, tab.latest?.status, tab.successful?.id])).toEqual([
+      ['assemble', 'APK', 574, 'building', 572],
+      ['bundle', 'AAB', 573, 'successful', 573]
+    ])
+  })
+
+  it('adds the debug tab only with a debug attempt, and opens on the first tab without attempts', () => {
+    expect(getBuildTypeTabs('ios', null, []).tabs.map(tab => tab.label)).toEqual(['Ad hoc', 'App Store'])
+    expect(getBuildTypeTabs('ios', null, []).current).toBe('ad-hoc')
+    const debug = { id: 3, platform: 'android', mode: 'debug', type: 'assemble', status: 'failed' }
+    const { tabs, current } = getBuildTypeTabs('android', { latest: debug, successful: null }, [])
+    expect(tabs.map(tab => tab.label)).toEqual(['APK', 'AAB', 'APK debug'])
+    expect(current).toBe('debug')
+  })
+
   it('reads the checks of a refused build like those of the panel', () => {
     const checks = toPlatformChecks([
       { code: 'missing_file', level: 'warning', platform: 'android', subject: { name: 'Notification icon', group: 'resources_notifications' } },
@@ -100,8 +148,35 @@ describe('Builder build helpers', () => {
     ['log', ['build.no_log'], {}, 'There’s no log yet. It appears once the build starts.'],
     ['log', ['build.log_unavailable'], {}, 'The build service isn’t responding. Try again in a few minutes.'],
     ['download', ['build.artifact_replaced'], { mode: 'AAB' }, 'A newer AAB build replaced this file. Download that one instead.'],
-    ['download', [], {}, 'We couldn’t download the file. Try again.']
+    ['download', [], {}, 'We couldn’t download the file. Try again.'],
+    ['install', ['build.artifact_replaced'], {}, 'A newer build replaced this file. Install that one instead.'],
+    ['install', ['build.not_installable'], {}, 'This file can’t be installed on a phone.'],
+    ['install', ['build.artifact_missing'], {}, 'This build’s file is no longer available. Build again to get a new one.'],
+    ['install', [], {}, 'We couldn’t create the install link. Try again.']
   ])('explains a refused %s (%s)', (action, codes, vars, text) => {
     expect(getBuildActionError(action, codes, vars)).toBe(text)
+  })
+
+  it('installs on a phone only an ad hoc IPA or an APK', () => {
+    expect(isBuildInstallable({ platform: 'ios', mode: 'ad-hoc' })).toBe(true)
+    expect(isBuildInstallable({ platform: 'ios', mode: 'app-store' })).toBe(false)
+    expect(isBuildInstallable({ platform: 'android', mode: 'release', type: 'assemble' })).toBe(true)
+    expect(isBuildInstallable({ platform: 'android', mode: 'debug', type: 'assemble' })).toBe(true)
+    expect(isBuildInstallable({ platform: 'android', mode: 'release', type: 'bundle' })).toBe(false)
+    expect(isBuildInstallable(null)).toBe(false)
+  })
+
+  it('says how long is left, in minutes rounded up', () => {
+    expect(getTimeLeftLabel(24 * 3600000)).toBe('24 h 0 min')
+    expect(getTimeLeftLabel(3600000 + 61000)).toBe('1 h 2 min')
+    expect(getTimeLeftLabel(59 * 60000)).toBe('59 min')
+    expect(getTimeLeftLabel(1000)).toBe('1 min')
+    expect(getTimeLeftLabel(0)).toBe('less than a minute')
+  })
+
+  it('reads an ISO moment as the API’s UTC date time', () => {
+    expect(toApiUtcDateTime('2026-10-09T12:00:00Z')).toBe('2026-10-09 12:00:00')
+    expect(toApiUtcDateTime('2026-10-09T14:00:00+02:00')).toBe('2026-10-09 12:00:00')
+    expect(toApiUtcDateTime('nope')).toBeNull()
   })
 })

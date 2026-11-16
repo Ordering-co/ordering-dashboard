@@ -1,0 +1,45 @@
+/*
+ * redesign all-in-one B1 (decisions 2 and 7, AIO-04, AIO-05) · The drivers block of /all-in-one: one panel of the family (hairline,
+ * panel radius, surface) that is a column: the filter on top, the rows in the middle (they scroll inside) and the pager at the foot.
+ * The rows, the filter and the state are the ones of /drivers-dashboard (.odd-row, .odd-filter, .odd-state… from drivers-board.css,
+ * which DriverRow and DriverLoadFilter import); this file only lays the block out and does not redefine their rules.
+ * Values: --od-* and --od-x-* only. Logical properties only, so it mirrors in RTL.
+ */
+
+/* A column with a frame. Alone (a parent that is not flex, or the phone) it grows with its rows. */
+.aio-drivers {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* the frame (1px) is inside the size the parent gives */
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+/* From 1024px the parent of the board is a flex column with a height of its own: the block takes the height it is given. Below that
+   the page flows (List view of the phone) and the block takes what its rows need: a flex-basis of 0 would collapse it there. */
+@media (min-width: 1024px) {
+  .aio-drivers {
+    flex: 1 1 0;
+  }
+}
+
+/* The Google Maps key button, above the filter, only when there is no key */
+.aio-drivers-key {
+  display: flex;
+  flex: none;
+  padding: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The rows take what the head and the foot leave and scroll inside; with no height from the parent they grow with their content.
+   Two classes: stronger than the .odd-rows rule of /drivers-dashboard (flex-basis 0 from 1024px), which would collapse an unconstrained block. */
+.aio-drivers > .aio-drivers-rows {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+}

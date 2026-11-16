@@ -1,0 +1,305 @@
+/*
+ * redesign SL-F1 (A2) · /stores/list: the table, the cards of a phone, the card view and the row switches.
+ * Product's DataTable, RecordCard, SelectionBar, Switch and Pagination own the structure; this adds what a store cell is made of.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── Phone: «Select all» above the cards, at the page's own edge ──
+   redesign stores 3.B: on a wide screen this row held only the column manager, which is a tool of the filter bar now. */
+.odc-sl-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-inline: 0;
+}
+
+/* redesign SL-Q2 (decision 12): the row of «Select all» is 32px seen and 44px reached (the area below). 8px above and below keep that
+   area from reaching the filters above and the first card's link under it. */
+.odc-sl-tools[data-cards] { padding-block: var(--od-space-2); }
+
+.odc-sl-notice { padding-block-end: var(--od-space-2); padding-inline: var(--od-x-page-gutter); }
+.odc-sl-cards .odc-sl-notice { padding-inline: 0; }
+
+/* ── The cells ── */
+.odc-sl-store {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-sl-store-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-sl-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sl-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside a table cell the name and the city wrap (two lines at most) so a long name never widens the column */
+td .odc-sl-name,
+th .odc-sl-name,
+td .odc-sl-sub,
+th .odc-sl-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.odc-sl-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-sl-rating .odc-sl-star {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  color: var(--od-text-muted);
+}
+
+/* redesign stores 3.B, P-2: open now. Open is a quiet P/Status (a green dot and the words); closed is muted text, no dot,
+   because a store closed at night is not an alarm. */
+.odc-sl-hours[data-closed] {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-sl-card-body .odc-sl-hours { font-size: var(--od-x-type-caption-size); }
+
+.odc-sl-reason {
+  display: block;
+  max-inline-size: var(--od-x-search);
+  overflow-wrap: anywhere;
+}
+
+/* The controls of a row (the switches and the menu): the click is theirs, and the row keeps its own padding around them */
+.odc-sl-control,
+.odc-sl-menu {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* ── The foot: «Add new store» at the start, the pages at the end ── */
+.odc-sl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-4);
+  min-inline-size: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-sl-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-sl-cards .odc-sl-foot { padding-inline: 0; }
+
+/* «Add your first store», in the place of the rows (tutorial mode) */
+.odc-sl-first {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-5);
+}
+
+.odc-sl-first img {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* ── Phone: RecordCard draws the store (RecordCardList, under 768px) ── */
+/* a store has one side, not «from → to»: the arrow of the card has nothing to point at */
+.odc-sl-cards .odc-order-card-arrow { display: none; }
+
+/* the link holds the name, in the text face of the page (the card gave the id its mono face) */
+.odc-sl-cards .odc-order-card-link { font-family: var(--od-font-sans); }
+
+.odc-sl-cards .odc-order-card-link .odc-sl-name { font-weight: var(--od-font-weight-semibold); }
+
+.odc-sl-cards .odc-sl-card-sub {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The controls sit above the link's overlay (it covers the whole card), so they take their own clicks */
+.odc-sl-card-actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-4);
+  padding-block-start: var(--od-space-1);
+}
+
+.odc-sl-card-actions .odc-sl-menu { margin-inline-start: auto; }
+
+/* redesign SL-Q2 (decision 12): under 768px P/Checkbox only reaches 44px with a coarse pointer (checkbox.css), so with a narrow
+   window and a mouse the 24px box of a card and the 32px row of «Select all» had no area, and the link's overlay (the whole card)
+   was what answered around them. Both take the house area as a pseudo-element of the button: never smaller than the control,
+   so a coarse pointer (which already gives 44px) adds nothing. The area of a card's box is above the card link (it comes later
+   in the markup, both positioned) and 16px from the Featured switch, more than the 10px it adds. Candidate for checkbox.css. */
+@media (max-width: 767px) {
+  .odc-sl-card-actions .odc-checkbox::after,
+  .odc-sl-tools[data-cards] .odc-checkbox::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* ── Card view: the cards of today (header image, logo, name, city, ID and Enable) ── */
+.odc-sl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--od-x-popover), 1fr));
+  gap: var(--od-space-4);
+  margin: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-x-page-gutter);
+  list-style: none;
+}
+
+@media (max-width: 767px) {
+  .odc-sl-grid { padding-inline: var(--od-x-page-gutter-mobile); }
+}
+
+.odc-sl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-sl-card[data-skeleton] { cursor: default; }
+
+@media (hover: hover) {
+  .odc-sl-card:not([data-skeleton]):hover { background: var(--od-x-hover); }
+}
+
+.odc-sl-card-header {
+  block-size: calc(var(--od-x-avatar-lg) * 2);
+  background: var(--od-surface-subtle);
+}
+
+.odc-sl-card-header img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-sl-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+}
+
+/* the logo hangs over the lower edge of the header image */
+.odc-sl-card-logo {
+  position: relative;
+  align-self: flex-start;
+  margin-block-start: calc(var(--od-x-avatar-lg) * -1);
+}
+
+.odc-sl-card-link {
+  display: block;
+  min-inline-size: 0;
+  color: var(--od-text);
+  text-decoration: none;
+}
+
+.odc-sl-card-link:hover {
+  color: var(--od-text);
+  text-decoration: none;
+}
+
+/* the whole card is the link's target; the focus ring goes around the card, not around the name */
+.odc-sl-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.odc-sl-card-link:focus-visible { outline: 0; }
+
+.odc-sl-card-link:focus-visible::after {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-sl-card-name {
+  display: block;
+  overflow: hidden;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sl-card-city,
+.odc-sl-card-id {
+  display: block;
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sl-card-foot {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding-block-start: var(--od-space-2);
+}
+
+/* redesign SL-Q1 (R-02): the table takes the height of its rows (the page frame is a stretched flex item, so 100% was the window) */
+.odc-sl-table { min-inline-size: 0; }

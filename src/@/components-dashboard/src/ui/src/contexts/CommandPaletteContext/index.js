@@ -27,6 +27,8 @@ export const CommandPaletteProvider = ({ enabled = false, children }) => {
     })
   }, [])
 
+  const getReturnFocus = useCallback(() => returnFocusRef.current, [])
+
   const discardReturnFocus = useCallback(() => {
     returnFocusRef.current = null
   }, [])
@@ -79,8 +81,9 @@ export const CommandPaletteProvider = ({ enabled = false, children }) => {
     routeKey,
     remountRoute,
     restoreFocus,
+    getReturnFocus,
     discardReturnFocus
-  }), [enabled, isOpen, initialRequest, open, close, setOpen, shortcut, routeKey, remountRoute, restoreFocus, discardReturnFocus])
+  }), [enabled, isOpen, initialRequest, open, close, setOpen, shortcut, routeKey, remountRoute, restoreFocus, getReturnFocus, discardReturnFocus])
 
   return (
     <CommandPaletteContext.Provider value={value}>
@@ -99,6 +102,7 @@ const unavailable = {
   routeKey: 0,
   remountRoute: () => {},
   restoreFocus: () => false,
+  getReturnFocus: () => null,
   discardReturnFocus: () => {}
 }
 

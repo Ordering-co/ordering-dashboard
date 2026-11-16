@@ -1,0 +1,695 @@
+/*
+ * Create custom order steps (batch 5.5-B): what goes inside each step of the wizard.
+ * SelectCustomer, OrderTypeSelector, SelectBusinesses, SelectProducts and Checkout draw with these
+ * classes instead of their legacy styled-components (those styles.js files stay, the harness
+ * imports them by name). Values come from --od-* and --od-x-* only (guard:
+ * src/__tests__/tools/productLiteralGuard.test.js). Logical properties only (C17).
+ * Targets: 32px with a fine pointer, 44px with a coarse one (C3, decision 5.2).
+ */
+
+/* ── Frame of a step piece ── */
+.odc-steps {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* Pieces that stack inside one step breathe the same way. */
+.odc-steps + .odc-steps {
+  margin-block-start: var(--od-space-5);
+}
+
+.odc-steps-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-steps-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-steps-lead,
+.odc-steps-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-steps-hint {
+  font-size: var(--od-x-type-ui-size);
+}
+
+/* ── Field (the phone search) ── */
+.odc-steps-input {
+  inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  appearance: none;
+}
+
+.odc-steps-input::placeholder {
+  color: var(--od-x-text-subtle);
+  opacity: 1;
+}
+
+.odc-steps-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-steps-search-field {
+  position: relative;
+  min-inline-size: 0;
+}
+
+.odc-steps-search-field .odc-steps-input {
+  padding-inline-end: var(--od-space-6);
+}
+
+.odc-steps-search-loading {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--od-space-2);
+  display: flex;
+  align-items: center;
+  color: var(--od-text-muted);
+  pointer-events: none;
+}
+
+/* odc-spin is the keyframes of Shared/Product/product.css */
+.odc-steps-search-loading .odc-icon {
+  animation: odc-spin var(--od-duration-slow) linear infinite;
+}
+
+/* The Product search field takes the whole row inside a step (its default is a filter-bar width). */
+.odc-steps .odc-search {
+  flex: 1 1 auto;
+  inline-size: 100%;
+}
+
+/* ── Customer: field + «New user» on one row ── */
+.odc-steps-customer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--od-space-2);
+}
+
+.odc-steps-customer-row > .odc-btn {
+  white-space: nowrap;
+}
+
+/* ── Suggestions under the phone field ── */
+.odc-steps-suggestions {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline: 0;
+  z-index: calc(var(--od-x-layer-raised) + 1);
+  max-block-size: calc(var(--od-x-row-comfortable) * 6);
+  margin-block-start: var(--od-x-space-half);
+  overflow: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-x-dialog-bg);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+.odc-steps-suggestions-note {
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Rows: one pressable row with an avatar, a name and a second line ── */
+.odc-steps-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-steps-list[data-scroll] {
+  max-block-size: calc(var(--od-x-row-comfortable) * 6);
+  overflow: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-steps-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-row-comfortable);
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-steps-row:hover {
+  background: var(--od-x-hover);
+}
+
+/* The option the arrows reached in the phone field's suggestions: the focus stays in the field, so the row wears
+ * the hover fill and the focus ring itself (not color alone). */
+.odc-steps-suggestions [role='option'][aria-selected='true'] {
+  background: var(--od-x-hover);
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-steps-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-steps-row:disabled {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+}
+
+.odc-steps-list > li + li > .odc-steps-row {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The chosen row: selected fill and a mark, never color alone. */
+.odc-steps-row[data-selected='true'] {
+  background: var(--od-x-selected);
+  box-shadow: inset var(--od-x-indicator) 0 0 var(--od-action);
+}
+
+.odc-steps-row[data-selected='true']:hover {
+  background: var(--od-x-selected);
+}
+
+.odc-steps-row-main {
+  display: grid;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-steps-row-name {
+  overflow: hidden;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-steps-row-meta {
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-steps-row-mark {
+  flex: none;
+  color: var(--od-action-content);
+}
+
+.odc-steps-row-end {
+  flex: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-steps-row-price {
+  flex: none;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* Loading rows keep the shape of the rows that come (F6b, D-17): the avatar, then the name and the address, with
+ * the row's own padding, gap and hairline and a line box as tall as the text line each ghost stands for, so the
+ * list does not change height when the businesses arrive. */
+.odc-steps-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+}
+
+/* The list is a grid with a height cap: a row with an explicit min-block-size may be squeezed down to it, and the
+ * ghost rows would be 44px while the real ones (their height is their content's) are 52px. The two-line row
+ * leaves the floor to its content, so it keeps its height. */
+.odc-steps-skeleton-row[data-rich] {
+  min-block-size: auto;
+}
+
+.odc-steps-list > .odc-steps-skeleton-row + .odc-steps-skeleton-row {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-steps-skeleton-name,
+.odc-steps-skeleton-meta {
+  display: flex;
+  align-items: center;
+}
+
+.odc-steps-skeleton-name {
+  min-block-size: calc(var(--od-x-type-body-size) * var(--od-x-leading-ui));
+}
+
+.odc-steps-skeleton-meta {
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+}
+
+/* Ghost rows fill the box and are clipped by it: no scrollbar for something that is not there yet. */
+.odc-steps-list[data-scroll][aria-busy='true'] {
+  overflow: hidden;
+}
+
+/* ── Picked customer: the row that changes it + the button that removes it ── */
+.odc-steps-picked {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding-inline-end: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-steps-picked .odc-steps-row {
+  border-radius: var(--od-radius-component);
+}
+
+/* ── Address of the picked customer ── */
+.odc-steps-address-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-steps-address-row > .odc-icon {
+  color: var(--od-text-muted);
+}
+
+.odc-steps-address-text {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ── One panel level (C8): the sub views stand where the stacked sidebars did ── */
+.odc-steps-subview {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-steps-subview-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  flex-wrap: wrap;
+}
+
+.odc-steps-subview-body {
+  min-inline-size: 0;
+}
+
+/* The legacy address form is a fixed 500px panel of its own; inside the sub view it is the sub view. */
+.odc-steps-subview-body > :not(#address_control) {
+  position: static;
+  inset: auto;
+  inline-size: auto;
+  block-size: auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
+/* While the form is open it stands in for the list. */
+.odc-steps-subview[data-form-open='true'] #address_control {
+  display: none;
+}
+
+/* ── Order type: label over a segmented control or a select ── */
+.odc-steps-select {
+  inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-steps-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Products in the cart: row with a quantity stepper and the line actions ── */
+.odc-steps-cart-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-steps-cart-line .odc-steps-row-main {
+  flex: 1 1 var(--od-x-search-min);
+}
+
+.odc-steps-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-steps-qty {
+  min-inline-size: var(--od-x-control-height);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  text-align: center;
+}
+
+.odc-steps-line-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+/* ProductForm lives in a Product dialog now: it brings its own padding, so the body adds none. */
+.odc-steps-product-dialog .odc-overlay-body {
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+/* ── Checkout ── */
+.odc-steps-checkout {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-steps-checkout .odc-notice {
+  margin-inline: 0;
+  margin-block: 0;
+}
+
+.odc-steps-payments {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.odc-steps-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.odc-steps-flag {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-steps-place {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Address list and address form, embedded mode (redesign fix-qa E3) ──
+   The same list and form of Users / Delivery drawn with the brand when the customer step asks for it (isEmbedded). */
+.odc-steps-heading:focus-visible,
+.odc-steps-subview:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-addr,
+.odc-addr-form,
+.odc-addr-form-body {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-addr-add {
+  display: flex;
+}
+
+.odc-addr-list {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-addr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--od-space-1);
+  padding-inline-end: var(--od-space-2);
+}
+
+.odc-addr-row + .odc-addr-row {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-addr-row:has(.odc-addr-radio:checked) {
+  background: var(--od-x-selected);
+}
+
+/* The label is the row: pressing anywhere on it chooses the address. */
+.odc-addr-main {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  cursor: pointer;
+}
+
+.odc-addr-main:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-addr-radio {
+  flex: none;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  margin: 0;
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: 50%;
+  background: var(--od-bg);
+  appearance: none;
+  cursor: pointer;
+}
+
+.odc-addr-radio:checked {
+  border-color: var(--od-action);
+  background: var(--od-action);
+  box-shadow: inset 0 0 0 var(--od-space-1) var(--od-bg);
+}
+
+.odc-addr-radio:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-addr-radio:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.odc-addr-tag {
+  flex: none;
+  color: var(--od-text-muted);
+}
+
+.odc-addr-name {
+  overflow-wrap: anywhere;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* ── Form ── */
+.odc-addr-field {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-addr-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-addr-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-addr-notes {
+  block-size: auto;
+  min-block-size: calc(var(--od-x-row-comfortable) * 2);
+  padding-block: var(--od-space-2);
+  resize: vertical;
+}
+
+/* redesign fix-qa E9: the map fills this box (fillContainer) and the box never gets wider than the form */
+.odc-addr-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--od-x-wizard-map);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-addr-autocomplete {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-addr-autocomplete .odc-steps-input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* GoogleGpsButton draws its own round, absolutely placed button: here it is a control of the row. */
+.odc-addr-autocomplete .gps-button {
+  position: static;
+  flex: none;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+}
+
+.odc-addr-autocomplete .gps-button:hover:not(:disabled) {
+  background: var(--od-x-hover);
+}
+
+.odc-addr-autocomplete .gps-button:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-addr-autocomplete .gps-button svg {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-addr-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+/* ── Touch (C3): everything pressable reaches 44px; 16px text in fields so the browser does not zoom ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-steps-input,
+  .odc-steps-select {
+    block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .odc-steps-qty {
+    min-inline-size: var(--od-x-target-coarse);
+  }
+
+  .odc-addr-autocomplete .gps-button {
+    inline-size: var(--od-x-target-coarse);
+    block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-addr-main {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-addr-notes {
+    block-size: auto;
+  }
+}
+
+@media (max-width: 599px) {
+  /* The «New user» button goes under the field when the row is too narrow for both. */
+  .odc-steps-customer-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* redesign F6g-1: and the suggestions stop floating over that row: they are part of the column, so «New user» is pushed
+     down and stays visible while the field has the focus. Three rows at most, then they scroll. */
+  .odc-steps-suggestions {
+    position: static;
+    max-block-size: calc(var(--od-x-row-comfortable) * 3);
+    margin-block-start: var(--od-space-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-steps-search-loading .odc-icon {
+    animation: none;
+  }
+}

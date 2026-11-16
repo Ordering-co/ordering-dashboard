@@ -1,0 +1,937 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c1-connect-businesses-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-c1-connect-businesses-businesssummary-index-js-09668d",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'lightPrimary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "integration?.plugin_id ? 'green' : 'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-businesssummary-styles-js-cbf184",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionSelectorWrapper button > svg: el glifo de tres puntos de la cabecera del panel."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "BusinessConfigItem span: misma rama inalcanzable."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "BusinessConfigItem svg: misma rama inalcanzable."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessConfigsContainer",
+            "property": "font",
+            "match": "({ isLoading }) => isLoading && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "font",
+            "match": "({ fromSalesChannels }) => fromSalesChannels && css`\n      padding-bottom: 20px;\n      margin-bottom: 0px;\n      border-bottom: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "font",
+            "match": "({ fromSalesChannels }) => fromSalesChannels && css`\n    margin-top: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "font",
+            "match": "({ hasIntegration }) => hasIntegration && css`\n      cursor: pointer;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "BusinessName",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MenuStatusWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "MenuStatusWrapper > span: misma rama permanentemente inalcanzable."
+          },
+          {
+            "component": "MenuStatusWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RadioButton",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "RadioButton svg: misma rama inalcanzable. De renderizarse seria un glifo, pero no se renderiza."
+          },
+          {
+            "component": "RadioButton",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SyncMenuWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "SyncMenuWrapper: solo vive bajo `{!isHideSetupForm && ...}`, y isHideSetupForm es `const = true` en la linea 64, sin setter en todo el fichero."
+          },
+          {
+            "component": "SyncMenuWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.04, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => darken(0.1, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".show > >div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "#E63757",
+            "context": "> div > > div > .dropdown-item:last-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigItem",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigsContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessConfigsContainer",
+            "property": "color-block",
+            "match": "({ isLoading }) => isLoading && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 3,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "color-block",
+            "match": "({ fromSalesChannels }) => fromSalesChannels && css`\n      padding-bottom: 20px;\n      margin-bottom: 0px;\n      border-bottom: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "color-block",
+            "match": "({ fromSalesChannels }) => fromSalesChannels && css`\n    margin-top: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessDetailsContent",
+            "property": "color-block",
+            "match": "({ hasIntegration }) => hasIntegration && css`\n      cursor: pointer;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessName",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessName",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MenuStatusWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioButton",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SyncMenuWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SyncMenuWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SyncMenuWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-connectoverview-index-js-a6aa26",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/ConnectOverview/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-infohelpbox-index-js-1c83fa",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/InfoHelpBox/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-infohelpbox-styles-js-934c30",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/InfoHelpBox/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "DataName",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font-size",
+            "match": "34px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "VideoContainer svg: el glifo de reproducir sobre el video."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "DataName",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "video",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color",
+            "match": "#748194",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-posmenu-index-js-27bce8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/PosMenu/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "businessListingProps /* binding-sha256:797cf173730da31f7ea84f335103e62e955fff1b07c7030d2aebc92aada88fc7 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch.  re-pinned the digest: the bundle takes integrationType from connectKind(props.kind) (pos by default); it adds no colour.  re-pinned it again: integrationType is `?? undefined` (the importer kind has none, as main sent none); it adds no colour.  (bugs D row 57) re-pinned it again: the bundle adds skipIntegrations for the importer kind; it adds no colour."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-posmenu-styles-js-c1b780",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/PosMenu/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BusinessListingContainer",
+            "property": "font",
+            "match": "({ isAdd }) => isAdd && css`\n    max-height: 100vh;\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "font",
+            "match": "({ isSelect }) => isSelect && css`\n      > div {\n        width: calc(100% - 100px);\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 0px;\n        margin-right: 5px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ViewContainer",
+            "property": "font",
+            "match": "({ flexEnd }) => flexEnd && css`\n    justify-content: flex-end;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "font-size",
+            "match": "24px",
+            "context": "&:hover > svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "ViewMethodButton &:hover > svg: estado hover de un selector que no tiene nodo."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "ViewMethodButton svg: el componente no se importa en PosMenu/index.js, y nada fuera del directorio importa su styles.js."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperView",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c1-connect-businesses: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BoxColor",
+            "property": "background-color",
+            "match": "({ color }) => color",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "BusinessListingContainer",
+            "property": "color-block",
+            "match": "({ isAdd }) => isAdd && css`\n    max-height: 100vh;\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "color-block",
+            "match": "({ isSelect }) => isSelect && css`\n      > div {\n        width: calc(100% - 100px);\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ButtonGroup",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-left: 0px;\n        margin-right: 5px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewContainer",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewContainer",
+            "property": "color-block",
+            "match": "({ flexEnd }) => flexEnd && css`\n    justify-content: flex-end;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ViewMethodButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperView",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c1-connect-businesses semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-saleschannels-index-js-1c311a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/SalesChannels/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX spread forwards the component function parameters without adding a local color; any additional or changed spread reopens review.",
+            "evidence": ": SalesChannels is now <PosMenu {...props} kind='sales_channel' />; the page parameters are forwarded as-is and PosMenu/index.js pins its own businessListingProps bundle."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c1-connect-businesses-connect-index-js-fc67e0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

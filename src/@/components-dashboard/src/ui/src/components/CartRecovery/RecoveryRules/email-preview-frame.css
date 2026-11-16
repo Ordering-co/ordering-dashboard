@@ -1,0 +1,8 @@
+/* : the iframe of an email preview. The wrapper that used to hold the HTML keeps its border, background, padding, zoom and
+   maximum height; the frame fills its width with no border of its own (its height is set from the content on load). */
+.odc-email-preview-frame {
+  display: block;
+  inline-size: 100%;
+  border: 0;
+  background: transparent;
+}

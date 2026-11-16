@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c3-importers-myproducts-core-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "c3-importers-myproducts-core-driversgroupslogisticsservice-logisticscont-2b44fa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "component": "LogisticsContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-driversgroupslogisticsservice-orderstatuswr-a4f822",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "component": "OrderStatusWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-boxlayout-h1-h2-16px-c8e436",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "BoxLayout",
+      "property": "font-size",
+      "context": "h1, h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-boxlayout-h3-14px-0de8aa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "BoxLayout",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-hidecheckwrapper-span-14px-ca588f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "HideCheckWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-formcontrol-label-14px-e4f932",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FormControl",
+      "property": "font-size",
+      "context": "> label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-selectwrapper-div-div-firs-eb33c0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> div > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-option-root-14px-f6a72f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-fontweightitem-span-14px-d018c5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FontWeightItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-uploadimageicon-span-14px-8badbd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "UploadImageIcon",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-imginfowrapper-h4-14px-130c6f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ImgInfoWrapper",
+      "property": "font-size",
+      "context": "h4",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-imginfowrapper-p-12px-aa703d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ImgInfoWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-faviconhint-root-14px-faa4d5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FaviconHint",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-advancedsettings-faviconpreviewhint-root-12-ab9175",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FaviconPreviewHint",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-basicappsettings-inputfilecontainer-file-de-86951b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/BasicAppSettings/styles.js",
+      "component": "InputFileContainer",
+      "property": "font-size",
+      "context": ".file-details > p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-basicappsettings-inputfilecontainer-drop-ti-4c0b4b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/BasicAppSettings/styles.js",
+      "component": "InputFileContainer",
+      "property": "font-size",
+      "context": ".drop-title",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "c3-importers-myproducts-core-contentform-header-h1-20px-6fb8d5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ContentForm/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "c3-importers-myproducts-core-pres-driversgroupslogisticsservice-radiobutton-s-ab417e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "component": "RadioButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-driversgroupslogisticsservice-logisticsconf-105fbf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "component": "LogisticsConfigItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-driversgroupslogisticsservice-logisticsconf-7a6d21",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupsLogisticsService/styles.js",
+      "component": "LogisticsConfigItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-formcontrolwithcheck-p-14p-1ba53a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FormControlWithCheck",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-hidecheckwrapper-root-inhe-cdd12b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "HideCheckWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: es lo que impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+      "evidence": "Z3 esta abierta contra todas las conversiones de L5 justo por no haberlo puesto. Dos sitios en c3: HideCheckWrapper y FontWeightItem, los dos convertidos a button y ninguno de los dos declaraba tamano propio en su raiz. La tercera conversion del lote, AppUI Tab, SI lo declaraba, asi que no lo necesita y no aparece aqui."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-hidecheckwrapper-svg-16px-c8e2e8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "HideCheckWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-shadowinfowrapper-svg-16px-f73d0a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ShadowInfoWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-shadowinfowrapper-span-12p-bc7c0a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ShadowInfoWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-shadowinputcontrol-span-12-f54ab3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ShadowInputControl",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-shadowinputcontrol-input-1-0b32cc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "ShadowInputControl",
+      "property": "font-size",
+      "context": "input",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-fontweightitem-root-inheri-346ad1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FontWeightItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: es lo que impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+      "evidence": "Z3 esta abierta contra todas las conversiones de L5 justo por no haberlo puesto. Dos sitios en c3: HideCheckWrapper y FontWeightItem, los dos convertidos a button y ninguno de los dos declaraba tamano propio en su raiz. La tercera conversion del lote, AppUI Tab, SI lo declaraba, asi que no lo necesita y no aparece aqui."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-fontweightitem-svg-16px-e67702",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "FontWeightItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "Sobre los rulesets cerrados de L3+L4+L5 el contexto `svg` tomo PRESERVED 207 de 207 veces, y la Ola A y los lotes b1 a c2 lo repitieron sin excepcion. En c3 se extiende a dos nodos que no son `svg` y funcionan igual: `BackButton`, cuyo contenido entero es el caracter `&larr;` con el nombre accesible en aria-label, y `ImporterLogo`, un mosaico de 40px con dos letras y aria-hidden=\"true\" en sus dos usos."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-homeimagefullscreenwrapper-711707",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "HomeImageFullScreenWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-advancedsettings-homeimagefullscreenwrapper-dd2dc0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedSettings/styles.js",
+      "component": "HomeImageFullScreenWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Barrido de alcanzabilidad desde src/index.js y src/App.js, validado contra 18 casos conocidos con 0 desacuerdos, mas la lectura de la fuente de las dos pasadas. Cubre las dos formas: export que nadie importa, y export importado solo desde un modulo huerfano."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-contentform-wrappereditor-note-editor-note--b5d5f4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ContentForm/styles.js",
+      "component": "WrapperEditor",
+      "property": "font-size",
+      "context": ".note-editor > .note-dropdown-menu > h1",
+      "match": "36px",
+      "reason": "Ningun rol de texto describe este nodo.",
+      "evidence": "Tres sitios. `ContentForm WrapperEditor .note-editor > .note-dropdown-menu > h1` a 36px es la vista previa de \"Heading 1\" del desplegable de Summernote: tipografia del CONTENIDO que el admin redacta, no del panel, y 36px no tiene un solo precedente en L3, L4 ni L5. `ImportersPanel LogsEmptySteps li > &::before` a 10px es un numeral generado con `content: attr(data-step)` dentro de un circulo de 18x18 fijo; llevarlo al rol mas pequeno (12px) lo agranda dentro de un contenedor que no crece. `ProductsBuilderList Container` a 16px solo se renderiza envolviendo `SkeletonCard`, cuyos hijos son todos placeholders: no gobierna ningun texto."
+    },
+    {
+      "id": "c3-importers-myproducts-core-pres-productsbuilderlist-container-root-16px-7516c2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/ProductsBuilderList/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "Ningun rol de texto describe este nodo.",
+      "evidence": "Tres sitios. `ContentForm WrapperEditor .note-editor > .note-dropdown-menu > h1` a 36px es la vista previa de \"Heading 1\" del desplegable de Summernote: tipografia del CONTENIDO que el admin redacta, no del panel, y 36px no tiene un solo precedente en L3, L4 ni L5. `ImportersPanel LogsEmptySteps li > &::before` a 10px es un numeral generado con `content: attr(data-step)` dentro de un circulo de 18x18 fijo; llevarlo al rol mas pequeno (12px) lo agranda dentro de un contenedor que no crece. `ProductsBuilderList Container` a 16px solo se renderiza envolviendo `SkeletonCard`, cuyos hijos son todos placeholders: no gobierna ningun texto."
+    }
+  ]
+}

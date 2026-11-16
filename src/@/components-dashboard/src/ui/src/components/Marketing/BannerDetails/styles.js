@@ -22,7 +22,7 @@ export const HeaderContainer = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0;
     font-weight: 700;
     ${props => props.theme?.rtl
@@ -54,8 +54,20 @@ export const Tab = styled.div`
   padding: 10px 0px;
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
+  background: none;
+  border: none;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
   ${props => props.theme?.rtl
 ? css`
     margin-left: 30px;
@@ -124,7 +136,7 @@ export const UploadImageIconContainer = styled.div`
   p {
     margin: 0px;
     padding-top: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.lightGray};
     text-align: center;
   }
@@ -141,7 +153,7 @@ export const FormController = styled.div`
   flex-direction: column;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 8px;
   }
 `
@@ -186,7 +198,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         &:active {
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
@@ -201,7 +213,7 @@ export const ActionSelectorWrapper = styled.div`
 export const BusinessesWrapper = styled.div`
   margin-top: 30px;
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-bottom: 0px;
   }
 `

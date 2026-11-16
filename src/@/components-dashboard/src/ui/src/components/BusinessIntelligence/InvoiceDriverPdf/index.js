@@ -1,6 +1,8 @@
 import { useLanguage, useUtils } from '../../../../../index'
-import React from 'react'
-import { getOrderStatus } from '../../../utils'
+import React, { useContext } from 'react'
+// redesign invoice FB (D19 of main, D8): getOrderStatusPrefix (translated) instead of getOrderStatus(...).value (English)
+import { ConfigFileContext } from '../../../contexts/ConfigFileContext'
+import { getOrderStatusPrefix as getOrderStatus } from '../../../utils'
 export const InvoiceDriverPdf = (props) => {
   const {
     exportInvoiceList,
@@ -9,8 +11,11 @@ export const InvoiceDriverPdf = (props) => {
     logoSrc
   } = props
 
-  const [, t] = useLanguage()
+  const [{ dictionary }, t] = useLanguage()
+  const forReference = t('INVOICE_MANAGER_FOR_REFERENCE', 'for reference, not added')
   const [{ parseDate, parsePrice }] = useUtils()
+  const [configFile] = useContext(ConfigFileContext)
+  const prefixForVariable = configFile.app_internal_name.toUpperCase()
 
   const styles = {
     root: {
@@ -99,7 +104,8 @@ export const InvoiceDriverPdf = (props) => {
       {
         exportInvoiceList?.invoice?.from && exportInvoiceList?.invoice?.to && (
           <>
-            <span>{t('FROM', 'From')} <b>{exportInvoiceList?.invoice?.from}</b> {t('TO', 'To')} <b>{exportInvoiceList?.invoice?.to}</b></span><br />
+            {/* redesign invoice FB (D10, IV-09): the days of the period with the date format of the project, not the ISO string */}
+            <span>{t('FROM', 'From')} <b>{parseDate(exportInvoiceList?.invoice?.from, { utc: false, dateOnly: true, inputFormat: 'YYYY-MM-DD' })}</b> {t('TO', 'To')} <b>{parseDate(exportInvoiceList?.invoice?.to, { utc: false, dateOnly: true, inputFormat: 'YYYY-MM-DD' })}</b></span><br />
           </>
         )
       }
@@ -123,7 +129,8 @@ export const InvoiceDriverPdf = (props) => {
               <tr key={i}>
                 <td style={styles.table.tbody.tr.td}>{order.id}</td>
                 <td style={styles.table.tbody.tr.td}>{parseDate(order.delivery_datetime, { utc: false })}</td>
-                <td style={styles.table.tbody.tr.td}>{getOrderStatus(order.status)?.value}</td>
+                {/* redesign invoice FB (D19 of main, D8): the status translated like the business PDF, not the English value */}
+                <td style={styles.table.tbody.tr.td}>{getOrderStatus(order.status, dictionary, prefixForVariable)}</td>
                 <td style={styles.table.tbody.tr.tdNumber}>{parsePrice(getSubtotal(order))}</td>
                 <td style={styles.table.tbody.tr.tdNumber}>{parsePrice(getTotal(order))}</td>
               </tr>
@@ -149,11 +156,12 @@ export const InvoiceDriverPdf = (props) => {
         </thead>
         <tbody>
           <tr>
-            <td style={styles.table.tbody.tr.td}>{t('ORDERS', 'Orders')} ({t('SUBTOTAL', 'Subtotal')})</td>
+            {/* these two rows are printed for reference; the subtotal adds only the fees, misc, delivery and tip (D20) */}
+            <td style={styles.table.tbody.tr.td}>{t('ORDERS', 'Orders')} ({t('SUBTOTAL', 'Subtotal')}) <small>({forReference})</small></td>
             <td style={styles.table.tbody.tr.tdNumber}>{parsePrice(exportInvoiceList?.invoice?.orders_subtotal)}</td>
           </tr>
           <tr>
-            <td style={styles.table.tbody.tr.td}>{t('DISCOUNT', 'Discount')}</td>
+            <td style={styles.table.tbody.tr.td}>{t('DISCOUNT', 'Discount')} <small>({forReference})</small></td>
             <td style={styles.table.tbody.tr.tdNumber}>{parsePrice(exportInvoiceList?.invoice?.discounts)}</td>
           </tr>
           <tr>

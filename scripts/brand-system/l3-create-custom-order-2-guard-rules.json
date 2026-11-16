@@ -1,0 +1,3187 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-create-custom-order-2-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-create-custom-order-2-paymentoptionstripe-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "theme.colors.lightGray",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "paymentOptionStripeProps /* binding-sha256:3041fddc0808a722e5a94a27e7e395cff93949915786078b4ffc53597caceecf */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-paymentoptionstripe-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionStripe/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "WarningMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItem",
+            "property": "font",
+            "match": "({ isCursor }) => isCursor && css`\n    cursor: pointer;\n\n    &:hover {\n      background-color: #F8F9FA;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItem",
+            "property": "font",
+            "match": "({ invalid }) => invalid && css`\n    opacity: 0.7;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font-size",
+            "match": "22px",
+            "context": ".checks svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 13px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 20px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "AddNewCard",
+            "property": "font",
+            "match": "inherit",
+            "context": "button, span",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 0;\n  `\n: css`\n    right: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WarningMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WarningMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItem",
+            "property": "border-bottom",
+            "match": "1px solid #EAEAEA",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItem",
+            "property": "color-block",
+            "match": "({ isCursor }) => isCursor && css`\n    cursor: pointer;\n\n    &:hover {\n      background-color: #F8F9FA;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItem",
+            "property": "background-color",
+            "match": "#F8F9FA",
+            "context": "&:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItem",
+            "property": "color-block",
+            "match": "({ invalid }) => invalid && css`\n    opacity: 0.7;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 13px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color",
+            "match": "({ theme }) => theme?.colors?.danger500",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 20px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "AddNewCard",
+            "property": "color",
+            "match": "props => props.theme?.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "color",
+            "match": "#212121",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "button > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "background",
+            "match": "({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? '#FFFFFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "border",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 0;\n  `\n: css`\n    right: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "background",
+            "match": "#f8f9fa",
+            "context": "div > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color",
+            "match": "#E63757",
+            "context": "div > &.delete",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-paymentoptionwallet-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionWallet/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "inline-style",
+            "property": "color",
+            "match": "(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0\n                          ? theme?.ordering?.semantic?.text?.muted ?? theme.colors.darkGray\n                          : theme?.ordering?.semantic?.text?.default ?? 'black'",
+            "context": "JSXAttribute:ObjectExpression",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "inline-style",
+            "property": "color",
+            "match": "theme?.ordering?.semantic?.action?.default ?? theme.colors.primary",
+            "context": "JSXAttribute:ObjectExpression",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "paymentWalletProps /* binding-sha256:4c5d2e33f76f6105584c1bb49681bbfc3600eb1e5ab48fd090536cdc2d293f1c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-paymentoptionwallet-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptionWallet/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "(props) => props.isBottomBorder && css`\n    border-bottom: 1px solid ${(props) => props.theme.colors.gray200};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "border-top",
+            "match": "(props) => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "(props) => props.isBottomBorder && css`\n    border-bottom: 1px solid ${(props) => props.theme.colors.gray200};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "border-bottom",
+            "match": "(props) => props.theme.colors.gray200",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-paymentoptions-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "fill",
+            "match": "'#DEE2E6'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "paymentOptions /* binding-sha256:6696e5f65437baaf7be06059c8ae49fc91713bd6fb8991563a6f724eb547ef95 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-paymentoptions-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/PaymentOptions/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PayCard",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PayCard",
+            "property": "font",
+            "match": "props => props.isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PayCard",
+            "property": "font-size",
+            "match": "25px",
+            "context": "> span.brand > > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font-size",
+            "match": "22px",
+            "context": ".checks svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font-size",
+            "match": "26px",
+            "context": ".brand svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "PayCard",
+            "property": "color-block",
+            "match": "props => props.isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "border",
+            "match": "1px solid #DEE2E6",
+            "context": "> span.brand",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "fill",
+            "match": "#DEE2E6",
+            "context": "> span.brand > > svg > path",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "color",
+            "match": "#DEE2E6",
+            "context": "span.name",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "fill",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PayCard",
+            "property": "border",
+            "match": "({ isSkeleton }) => isSkeleton ? '0' : '1px solid #EAEAEA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productOptionsProps /* binding-sha256:00e71ff6372a0cf6b5e4a82ca1ba40e4e4a301e3deaa1b66c689fe11c2ef1c66 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ProductContainer",
+            "property": "font",
+            "match": "props => !props.useKioskApp && css`\n      max-height: 70vh;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": ".favorite > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "font",
+            "match": "props => props.isSoldOut && css`\n        filter: grayscale(1);\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "ProductActions",
+            "property": "font",
+            "match": "({ isColumn }) => isColumn && css`\n      flex-direction: column;\n      div.price-amount-block {\n        margin-bottom: 15px;\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapperIngredients",
+            "property": "font",
+            "match": "({ isProductSoldout }) => isProductSoldout && css`\n    border-radius: 10px;\n    pointer-events: none;\n    background: hsl(0, 0%, 72%);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "ProductTabContainer",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 0px;\n        margin-left: 25px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "ProductTagWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin: 0 10px 0 20px;\n    `\n: css`\n      margin: 0 20px 0 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WeightUnitSwitch",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0;\n `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WeightUnitItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.primary}15;\n    border-radius: 3px;\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "VideoGalleryWrapper",
+            "property": "font-size",
+            "match": "28px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ProductContainer",
+            "property": "color-block",
+            "match": "props => !props.useKioskApp && css`\n      max-height: 70vh;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "color-block",
+            "match": "props => props.isSoldOut && css`\n        filter: grayscale(1);\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "background-color",
+            "match": "#d1d0d04d",
+            "context": ".swiper-button-next",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "box-shadow",
+            "match": "rgb(0 0 0 / 7%) 0px 4px 10px",
+            "context": ".swiper-button-next",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "background-color",
+            "match": "#d1d0d04d",
+            "context": ".swiper-button-prev",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SwiperWrapper",
+            "property": "box-shadow",
+            "match": "rgb(0 0 0 / 7%) 0px 4px 10px",
+            "context": ".swiper-button-prev",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SectionTitle",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "background-color",
+            "match": "({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color",
+            "match": "props => props.theme?.colors.darkTextColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color",
+            "match": "#D83520",
+            "context": "div.price > span",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color",
+            "match": "#CED4DA",
+            "context": "svg.disabled",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "button:disabled,\n  button.disabled",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "border",
+            "match": "1px solid #E9ECEF",
+            "context": "button:disabled,\n  button.disabled",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color",
+            "match": "#B1BCCC",
+            "context": "button:disabled,\n  button.disabled",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "border-top",
+            "match": "1px solid #E9ECEF",
+            "context": "@media (min-width: 1200px)",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductActions",
+            "property": "color-block",
+            "match": "({ isColumn }) => isColumn && css`\n      flex-direction: column;\n      div.price-amount-block {\n        margin-bottom: 15px;\n      }\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperSubOption",
+            "property": "background-color",
+            "match": "hsl(0, 0%, 72%)",
+            "context": "&.soldout",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperIngredients",
+            "property": "color-block",
+            "match": "({ isProductSoldout }) => isProductSoldout && css`\n    border-radius: 10px;\n    pointer-events: none;\n    background: hsl(0, 0%, 72%);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperIngredients",
+            "property": "background",
+            "match": "hsl(0, 0%, 72%)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductTabContainer",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductTabContainer",
+            "property": "background",
+            "match": "({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? 'white'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductTabContainer",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 0px;\n        margin-left: 25px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Divider",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductName",
+            "property": "color",
+            "match": "#344050",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductName",
+            "property": "color",
+            "match": "#909BA9",
+            "context": ".calories",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductDescription",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceContent",
+            "property": "color",
+            "match": "#344050",
+            "context": "> p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceContent",
+            "property": "color",
+            "match": "#909BA9",
+            "context": ".offer-price",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductMeta",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "span",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductTagWrapper",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductTagWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin: 0 10px 0 20px;\n    `\n: css`\n      margin: 0 20px 0 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WeightUnitSwitch",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 10px;\n    margin-left: 0;\n `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WeightUnitItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.primary}15;\n    border-radius: 3px;\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WeightUnitItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WeightUnitItem",
+            "property": "background-color",
+            "match": "15",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WeightUnitItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "VideoGalleryWrapper",
+            "property": "fill",
+            "match": "#fff",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productingredient-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductIngredient/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productIngredientProps /* binding-sha256:e336565115ed5aca5e3fdcebbd0c410e410916e84a9055525e5ee4675fa9f262 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productingredient-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductIngredient/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Container",
+            "property": "font-size",
+            "match": "24px",
+            "context": "span:nth-child(1) > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "color",
+            "match": "props => props.theme.colors.darkGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color",
+            "match": "props => props.isSoldOut ? props.theme.colors.lightGray : props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productoption-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOption/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productOptionProps /* binding-sha256:dca7e4015ae34932c1fa1f4281eb153c17166ac192f6f43aa623606f1eb8ddae */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productoption-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOption/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "background-color",
+            "match": "orange",
+            "context": "&.error",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapHeader",
+            "property": "background-color",
+            "match": "#FFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Title",
+            "property": "color",
+            "match": "props => props.theme.colors.grayTextColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Flag",
+            "property": "color",
+            "match": "props => props.required ? '#E63757' : props.theme.colors.grayTextColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productoptionsuboption-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productOptionSubOptionProps /* binding-sha256:b1088d1943256707643b49da35be248952f8a6f34c6ab2ceff387cdb08b23be0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-productoptionsuboption-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/ProductOptionSubOption/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "IconControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-left: 5px;\n    margin-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "IconControl",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Text",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n      margin-right: 10px;    \n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Text",
+            "property": "font",
+            "match": "({ noMargin }) => noMargin && css`\n    span {\n      margin: 0;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 6px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 6px;\n      margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 3px;\n        margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PositionControl",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PositionControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PositionControl",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SuboptionPrice",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "LeftOptionContainer",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "IconControl",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "IconControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-left: 5px;\n    margin-right: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "IconControl",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color",
+            "match": "#555",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color",
+            "match": "props => props.theme.colors.darkGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n      margin-right: 10px;    \n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color-block",
+            "match": "({ noMargin }) => noMargin && css`\n    span {\n      margin: 0;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color",
+            "match": "props => props.theme.colors.darkGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 6px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color",
+            "match": "#CBCBCB",
+            "context": "svg[disabled]",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 6px;\n      margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "QuantityControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 3px;\n        margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PositionControl",
+            "property": "color",
+            "match": "#CBCBCB",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PositionControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 3px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PositionControl",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PositionControl",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SuboptionPrice",
+            "property": "color",
+            "match": "props => props.theme.colors.darkGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SuboptionPrice",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectbusinesses-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectBusinesses/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectbusinesses-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectBusinesses/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "SelectWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "box-shadow",
+            "match": "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectcustomer-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectcustomer-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectCustomer/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "SearchBarWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 13px;\n  `\n: css`\n    margin-right: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SearchBarWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 40px;\n    `\n: css`\n      padding-right: 40px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SearchBarWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 10px;\n    `\n: css`\n      right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "OptionsToSelectContainer",
+            "property": "font",
+            "match": "inherit",
+            "context": "> p > > button.new",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SelectOption",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SelectedUserWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 13px;\n  `\n: css`\n    margin-right: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> div > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 15px;\n      `\n: css`\n        margin-left: 15px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 30px;\n    `\n: css`\n      margin-left: 30px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SavedPlaces",
+            "property": "font",
+            "match": "({ openExtraAdddress }) => openExtraAdddress && css`\n    z-index: 10;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SavedPlaces",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 40px;\n    `\n: css`\n      margin-right: 40px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "AddressListWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "SearchBarWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 13px;\n  `\n: css`\n    margin-right: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SearchBarWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 40px;\n    `\n: css`\n      padding-right: 40px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SearchBarWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 10px;\n    `\n: css`\n      right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SearchBarWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OptionsToSelectContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OptionsToSelectContainer",
+            "property": "background-color",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OptionsToSelectContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SelectOption",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SelectedUserWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SelectedUserWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 13px;\n  `\n: css`\n    margin-right: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 15px;\n      `\n: css`\n        margin-left: 15px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerAddressWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 30px;\n    `\n: css`\n      margin-left: 30px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SavedPlaces",
+            "property": "color-block",
+            "match": "({ openExtraAdddress }) => openExtraAdddress && css`\n    z-index: 10;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SavedPlaces",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 40px;\n    `\n: css`\n      margin-right: 40px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "AddressListWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectproducts-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectProducts/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-selectproducts-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SelectProducts/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "ProductQuantityActionsContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 16px;\n  `\n: css`\n    margin-right: 16px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "SelectOption",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CartProductsWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CartProductsWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ProductQuantityActionsContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 16px;\n  `\n: css`\n    margin-right: 16px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "box-shadow",
+            "match": "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-singleproductcard-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "singleProductCardProps /* binding-sha256:cfe8ca19b4338734d6fed9c69cbb78ea89855b4f9098de23edbf120431aff18d */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-singleproductcard-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/SingleProductCard/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CardContainer",
+            "property": "font",
+            "match": "({ isShowAddButt }) => css`\n    min-height: ${isShowAddButt ? '162px' : '110px'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardContainer",
+            "property": "font",
+            "match": "({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'\n    ? css`\n      flex-direction: row-reverse;\n    `\n    : css`\n      flex-direction: row;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardContainer",
+            "property": "font",
+            "match": "({ productsRows }) => productsRows\n? css`\n    width: ${() => productsRows === 3 ? 'calc(33% - 20px)' : 'calc(50% - 20px)'};\n    margin: 10px 0;\n\n  `\n: css`\n    width: 100%;\n    margin: 10px 0;\n    @media (min-width: 576px) {\n      margin: 10px;\n      width: calc(100% - 20px);\n    }\n\n  ${({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(49% - 20px);\n    }\n\n    @media (min-width: 1440px) {\n      width: calc(33% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `}\n  \n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardContainer",
+            "property": "font",
+            "match": "({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(49% - 20px);\n    }\n\n    @media (min-width: 1440px) {\n      width: calc(33% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SoldOut",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "SoldOut",
+            "property": "font",
+            "match": "({ isBottom }) => isBottom && css`\n    bottom: 7px;\n    top: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardInfo",
+            "property": "font",
+            "match": "({ isBgimage }) => css`\n    width: ${isBgimage ? 'calc(100% - 90px)' : '100%'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardInfo",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardInfo",
+            "property": "font",
+            "match": "({ oneLine }) => oneLine && css`\n    p {\n      -webkit-line-clamp: 1;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "font",
+            "match": "({ isBgimage }) => isBgimage && css`\n    width: 86px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "font",
+            "match": "({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'\n    ? css`\n    margin-left: 5px;\n  `\n    : css`\n    margin-right: 5px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapTags",
+            "property": "font",
+            "match": "({ isBgimage }) => isBgimage && css`\n    width: 50px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapTags",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardLogoStyled",
+            "property": "font",
+            "match": "({ bgimage }) => bgimage && css`\n    background-image: url(${bgimage});\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CardLogoStyled",
+            "property": "font",
+            "match": "({ soldOut }) => soldOut && css`\n    filter: brightness(70%);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "font",
+            "match": "({ isOffPrice }) => isOffPrice && css`\n      min-width: 46px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "font",
+            "match": "({ isOffPrice }) => isOffPrice && css`\n        min-width: 64px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: -3px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "font",
+            "match": "({ bgColor }) => bgColor && css`\n    background-color: ${bgColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "font",
+            "match": "({ isRoundRect }) => isRoundRect && css`\n    border-radius: 7.6px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "font",
+            "match": "({ isCapsule }) => isCapsule && css`\n    border-radius: 50px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "> span > svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CardContainer",
+            "property": "color-block",
+            "match": "({ isShowAddButt }) => css`\n    min-height: ${isShowAddButt ? '162px' : '110px'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "background",
+            "match": "({ soldOut, theme }) => soldOut ? '#6c757d33' : theme?.colors?.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "border",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "color-block",
+            "match": "({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'\n    ? css`\n      flex-direction: row-reverse;\n    `\n    : css`\n      flex-direction: row;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "color-block",
+            "match": "({ productsRows }) => productsRows\n? css`\n    width: ${() => productsRows === 3 ? 'calc(33% - 20px)' : 'calc(50% - 20px)'};\n    margin: 10px 0;\n\n  `\n: css`\n    width: 100%;\n    margin: 10px 0;\n    @media (min-width: 576px) {\n      margin: 10px;\n      width: calc(100% - 20px);\n    }\n\n  ${({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(49% - 20px);\n    }\n\n    @media (min-width: 1440px) {\n      width: calc(33% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `}\n  \n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "color-block",
+            "match": "({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(49% - 20px);\n    }\n\n    @media (min-width: 1440px) {\n      width: calc(33% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SoldOut",
+            "property": "background",
+            "match": "#495057 0% 0% no-repeat padding-box",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SoldOut",
+            "property": "color",
+            "match": "white",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SoldOut",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SoldOut",
+            "property": "color-block",
+            "match": "({ isBottom }) => isBottom && css`\n    bottom: 7px;\n    top: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardInfo",
+            "property": "color-block",
+            "match": "({ isBgimage }) => css`\n    width: ${isBgimage ? 'calc(100% - 90px)' : '100%'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardInfo",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardInfo",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardInfo",
+            "property": "color",
+            "match": "props => props.theme.colors.darkTextColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardInfo",
+            "property": "color-block",
+            "match": "({ oneLine }) => oneLine && css`\n    p {\n      -webkit-line-clamp: 1;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "color-block",
+            "match": "({ isBgimage }) => isBgimage && css`\n    width: 86px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "color-block",
+            "match": "({ theme }) => theme?.business_view?.components?.products?.components?.product?.components?.image?.position === 'right'\n    ? css`\n    margin-left: 5px;\n  `\n    : css`\n    margin-right: 5px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapLogo",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapTags",
+            "property": "color-block",
+            "match": "({ isBgimage }) => isBgimage && css`\n    width: 50px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapTags",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardLogoStyled",
+            "property": "color-block",
+            "match": "({ bgimage }) => bgimage && css`\n    background-image: url(${bgimage});\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CardLogoStyled",
+            "property": "color-block",
+            "match": "({ soldOut }) => soldOut && css`\n    filter: brightness(70%);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "color",
+            "match": "#909BA9",
+            "context": ".off-price",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "color-block",
+            "match": "({ isOffPrice }) => isOffPrice && css`\n      min-width: 46px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PriceWrapper",
+            "property": "color-block",
+            "match": "({ isOffPrice }) => isOffPrice && css`\n        min-width: 64px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "color",
+            "match": "props => props.theme.colors.colorTextSignForm",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "background-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: -3px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "color-block",
+            "match": "({ bgColor }) => bgColor && css`\n    background-color: ${bgColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "background-color",
+            "match": "bgColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "color-block",
+            "match": "({ isRoundRect }) => isRoundRect && css`\n    border-radius: 7.6px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RibbonBox",
+            "property": "color-block",
+            "match": "({ isCapsule }) => isCapsule && css`\n    border-radius: 50px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.danger500",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-stripeelementsform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeElementsForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "stripeElementsFormProps /* binding-sha256:54404c2e3dd3cb9bdd933fc0d12fa51cde8fa3c7050a4fb94192d328847d7c21 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-stripeelementsform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeElementsForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-stripemethodform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeMethodForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "propsController /* binding-sha256:4b08ca0acc92c576d12cd183267dde8be58289299e0129cee5203c41119b96f4 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-stripemethodform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeMethodForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-striperedirectform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeRedirectForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "stripeRedirectFormProps /* binding-sha256:8d1ab800015ec933b060c8189266df88cc40a661e5244141ca528d91847739b0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-striperedirectform-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/StripeRedirectForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "FormRedirect",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The create-custom-order-2 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "FormRedirect",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormRedirect",
+            "property": "box-shadow",
+            "match": "rgba(50, 50, 93, 0.14902) 0px 1px 3px,\n      rgba(0, 0, 0, 0.0196078) 0px 1px 0px",
+            "context": ".StripeElement,\n  .StripeElementIdeal",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormRedirect",
+            "property": "background",
+            "match": "white",
+            "context": ".StripeElement,\n  .StripeElementIdeal",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormRedirect",
+            "property": "box-shadow",
+            "match": "rgba(50, 50, 93, 0.109804) 0px 4px 6px,\n      rgba(0, 0, 0, 0.0784314) 0px 1px 3px",
+            "context": ".StripeElement--focus,\n  .StripeElementIdeal--focus",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormGroup",
+            "property": "border",
+            "match": "1px solid #DBDCDB",
+            "context": "select",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-taxinformation-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/TaxInformation/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-create-custom-order-2-taxinformation-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CreateCustomOrder/TaxInformation/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ProductContainer",
+            "property": "border",
+            "match": "1px solid #E9ECEF",
+            "context": "> div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The create-custom-order-2 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -13,7 +13,7 @@ const { buildSourceCodeTranslations, SOURCE_CODE_TRANSLATIONS_PATH } = require('
 const { scanKeys } = require(path.resolve('i18n/scanKeys.cjs'))
 const config = JSON.parse(fs.readFileSync('i18n/config.json', 'utf8'))
 const canonical = JSON.parse(fs.readFileSync('i18n/translations.json', 'utf8'))
-const titleKey = 'SOURCE_CODE_TITLE'
+const titleKey = 'SOURCE_CODE_PAGE_TITLE'
 
 // Same namespace and nullish fallback behavior as the existing provider.
 const provider = (dictionary = {}) => vi.fn((key, fallback = null) => {
@@ -61,15 +61,15 @@ describe('scoped source code label fallback', () => {
   })
 
   it('preserves nonempty API priority and the caller namespace/key', () => {
-    const api = provider({ DASHBOARD_SOURCE_CODE_TITLE: 'Controlled API label' })
+    const api = provider({ DASHBOARD_SOURCE_CODE_PAGE_TITLE: 'Controlled API label' })
     const translate = createSourceCodeTranslator(api, 'ar')
-    expect(translate('DASHBOARD_SOURCE_CODE_TITLE', canonical[titleKey].en)).toBe('Controlled API label')
-    expect(api).toHaveBeenCalledWith('DASHBOARD_SOURCE_CODE_TITLE', canonical[titleKey].ar)
-    expect(createSourceCodeTranslator(provider({ SOURCE_CODE_TITLE: 'Plain API label' }), 'es')(titleKey)).toBe('Plain API label')
+    expect(translate('DASHBOARD_SOURCE_CODE_PAGE_TITLE', canonical[titleKey].en)).toBe('Controlled API label')
+    expect(api).toHaveBeenCalledWith('DASHBOARD_SOURCE_CODE_PAGE_TITLE', canonical[titleKey].ar)
+    expect(createSourceCodeTranslator(provider({ SOURCE_CODE_PAGE_TITLE: 'Plain API label' }), 'es')(titleKey)).toBe('Plain API label')
   })
 
   it.each(['', '   '])('rejects the API empty label %j only for owned source keys', value => {
-    const translate = createSourceCodeTranslator(provider({ DASHBOARD_SOURCE_CODE_TITLE: value, DASHBOARD_UNRELATED: value }), 'es')
+    const translate = createSourceCodeTranslator(provider({ DASHBOARD_SOURCE_CODE_PAGE_TITLE: value, DASHBOARD_UNRELATED: value }), 'es')
     expect(translate(titleKey, canonical[titleKey].en)).toBe(canonical[titleKey].es)
     expect(translate('UNRELATED', 'Unrelated fallback')).toBe(value)
   })
@@ -89,7 +89,7 @@ describe('scoped source code label fallback', () => {
     expect(result.current(titleKey)).toBe(canonical[titleKey].es)
     rerender({ language: { code: 'ar' }, api: provider() })
     expect(result.current(titleKey)).toBe(canonical[titleKey].ar)
-    rerender({ language: { code: 'ar' }, api: provider({ DASHBOARD_SOURCE_CODE_TITLE: 'Loaded API label' }) })
+    rerender({ language: { code: 'ar' }, api: provider({ DASHBOARD_SOURCE_CODE_PAGE_TITLE: 'Loaded API label' }) })
     expect(result.current(titleKey)).toBe('Loaded API label')
   })
 })

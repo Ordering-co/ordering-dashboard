@@ -1,0 +1,82 @@
+[
+  {
+    "id": "legacy-button",
+    "match": "@/components-dashboard/src/ui/src/styles/Buttons/index.js",
+    "reason": "Button, IconButton, LinkButton y ButtonLink heredados (puente compatibility='legacy'); el reemplazo es Shared/Product/Button"
+  },
+  {
+    "id": "legacy-inputs",
+    "match": "@/components-dashboard/src/ui/src/styles/Inputs/index.js",
+    "reason": "Input, TextArea e InputGroup* heredados (puente compatibility='legacy'); el reemplazo son los campos de Shared/Product"
+  },
+  {
+    "id": "legacy-modal",
+    "match": [
+      "@/components-dashboard/src/ui/src/components/Shared/Modal",
+      "@/components-dashboard/src/ui/src/components/Shared/UI/Modal.jsx"
+    ],
+    "reason": "Modal heredado sobre Popup; el reemplazo es Shared/Product/Dialog o Sheet"
+  },
+  {
+    "id": "legacy-confirm",
+    "match": [
+      "@/components-dashboard/src/ui/src/components/Shared/Confirm",
+      "@/components-dashboard/src/ui/src/components/Shared/UI/Confirm.jsx"
+    ],
+    "reason": "Confirm y Alert heredados (LegacyConfirm); el reemplazo es Shared/Product/AlertDialog"
+  },
+  {
+    "id": "legacy-sidebar-panel",
+    "match": [
+      "@/components-dashboard/src/ui/src/components/Shared/SideBar/index.js",
+      "@/components-dashboard/src/ui/src/components/Shared/UI/SideBar.jsx"
+    ],
+    "reason": "Panel lateral heredado (SideBar); no incluye SidebarNav.jsx ni AccountMenu.jsx, que son la navegación de la carcasa"
+  },
+  {
+    "id": "legacy-pagination",
+    "match": [
+      "@/components-dashboard/src/ui/src/components/Shared/Pagination",
+      "@/components-dashboard/src/ui/src/components/Shared/UI/Pagination.jsx"
+    ],
+    "reason": "Paginación heredada; el reemplazo es la paginación de Shared/Product/DataTable"
+  },
+  {
+    "id": "legacy-searchbar",
+    "match": [
+      "@/components-dashboard/src/ui/src/components/Shared/SearchBar",
+      "@/components-dashboard/src/ui/src/components/Shared/UI/SearchBar.jsx"
+    ],
+    "reason": "SearchBar heredada; el reemplazo es la búsqueda de Shared/Product/FilterBar"
+  },
+  {
+    "id": "pkg-react-bootstrap",
+    "match": "react-bootstrap",
+    "reason": "Bootstrap 4 / react-bootstrap: componentes y estilos de terceros fuera del sistema de marca"
+  },
+  {
+    "id": "pkg-react-datepicker",
+    "match": "react-datepicker",
+    "reason": "Selector de fechas de terceros; el reemplazo es Shared/Product/DateRangePopover"
+  },
+  {
+    "id": "pkg-react-date-range",
+    "match": "react-date-range",
+    "reason": "Calendario de rangos de terceros; el reemplazo es Shared/Product/DateRangePopover"
+  },
+  {
+    "id": "pkg-react-bootstrap-icons",
+    "match": "react-bootstrap-icons",
+    "reason": "Iconos de terceros; el reemplazo es Shared/Icon"
+  },
+  {
+    "id": "pkg-meronex-icons",
+    "match": "@meronex/icons",
+    "reason": "Iconos de terceros; el reemplazo es Shared/Icon"
+  },
+  {
+    "id": "pkg-react-loading-skeleton",
+    "match": "react-loading-skeleton",
+    "reason": "Esqueletos de carga de terceros con su propio color; el reemplazo son los estados de Shared/Product"
+  }
+]

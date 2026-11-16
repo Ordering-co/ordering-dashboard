@@ -15,16 +15,16 @@ export const SelectWrapper = styled.div`
 export const Option = styled.div`
   display: flex;
   align-items: center;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   padding: ${({ padding }) => padding || '5px 10px'};
   white-space: nowrap;
   ${({ isPhoneView }) => isPhoneView && css`
     width: 100%;
   `}
   ${({ isRemove }) => isRemove && css`
-    color: ${props => props.theme.colors.danger};
+    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};
     padding: 3px 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   `}
 
   img {
@@ -40,11 +40,11 @@ export const Option = styled.div`
   `}
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 350px;
+    max-width: min(350px, calc(100vw - 72px));
   }
 
   @media (max-width: 576px) {
@@ -58,13 +58,7 @@ export const Option = styled.div`
 export const OptionInnerContainer = styled.div`
   display: flex;
   align-items: center;
-  ${props => props.theme?.rtl
-? css`
-    padding-right: 20px;
-  `
-: css`
-    padding-left: 20px;
-  `}
+  padding-inline-start: 20px;
 `
 
 export const OptionContent = styled.div`
@@ -76,14 +70,15 @@ export const OptionContent = styled.div`
 
 export const DriverNameContainer = styled.div`
   line-height: 1.3;
-  color: #263238;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#263238'};
+  min-width: 0;
 `
 
 export const DriverName = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   font-weight: 600;
   line-height: 1.3;
-  color: ${props => props.theme.colors.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -102,8 +97,8 @@ export const DriverName = styled.p`
 export const WrapperDriverImage = styled.div`
   width: 45px;
   height: 45px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '8px'};
   display: flex;
 
   svg {
@@ -123,13 +118,7 @@ export const WrapperDriverImage = styled.div`
     }
   `}
 
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 8px;
-  `
-: css`
-    margin-right: 8px;
-  `}
+  margin-inline-end: 8px;
 `
 const DriverImageStyled = styled.div`
   display: flex;
@@ -141,7 +130,7 @@ const DriverImageStyled = styled.div`
   background-size: cover;
   object-fit: cover;
   background-position: center;
-  border-radius: 8px;
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '8px'};
 `
 export const DriverImage = (props) => {
   return (

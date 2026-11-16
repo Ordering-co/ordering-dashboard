@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useLanguage } from '../../../../../index'
-import { Button, Input } from '../../../styles'
-import { Alert } from '../../Shared'
+import { useConfig, useLanguage } from '../../../../../index'
+import { TabPanel, Tabs } from '../../Shared/Product'
 import { addQueryToUrl } from '../../../utils'
-
-import {
-  BusinessOrderingChannelsContainer,
-  Title,
-  BusinessCustomSlugContainer,
-  FormControl,
-  Label,
-  Tabs,
-  Tab
-} from './styles'
+import { useStoreWebsiteUrl } from '../../../hooks/useWebsiteUrl'
 import { BusinessWidgets } from '../BusinessWidgets'
+import { StoreSlugField } from '../StoreSlugField'
+import './ordering-channels.css'
 
+// redesign stores 5.15a: Ordering channels (the «Extensions» of a store) on P/.
+// - Two tabs on P/Tabs, Custom slug | Widgets, with the same `?tab=` as main (read on mount when it is valid for the user, else the
+//   default tab is opened and written; written on every change). Every level has both tabs (main dropped the EatStreet rule).
+// - Custom slug is the one slug editor, `S/StoreSlugField` (5.1b), as the Overview has it: its own «Save» sends the slug alone
+//   (`keepPendingChanges`), the API's error is said under the field and «Saved» after it. One Save is one request (1.A, G5-01).
+//   While typed and not saved the slug sits in the shared form, so leaving the editor asks (2.A).
 export const BusinessOrderingChannels = (props) => {
   const {
     formState,
@@ -26,105 +24,60 @@ export const BusinessOrderingChannels = (props) => {
 
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
-  const [slug, setSlug] = useState('')
-  const [selectedOption, setSelectedOption] = useState('custom_slug')
-  const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
+  const [{ configs }] = useConfig()
+  const storeUrl = useStoreWebsiteUrl(business?.slug)
+  const isWhiteLabelModule = !!configs?.white_label_module?.value
 
   const optionList = [
-    { key: 'custom_slug', name: t('CUSTOM_SLUG', 'Custom slug') },
-    { key: 'widgets', name: t('WIDGETS', 'Widgets') }
+    { value: 'custom_slug', label: t('CUSTOM_SLUG', 'Custom slug') },
+    { value: 'widgets', label: t('WIDGETS', 'Widgets') }
   ]
+  const fallback = 'custom_slug'
+  const [selectedOption, setSelectedOption] = useState(() => {
+    const tab = query.get('tab')
+    return optionList.some(option => option.value === tab) ? tab : fallback
+  })
 
-  const changeCustomslug = () => {
-    if (slug === '') {
-      setAlertState({
-        ...alertState,
-        open: true,
-        content: [t('SLUG_REQUIRED', 'Slug is required')]
-      })
-      return
-    }
-    setFormState({
-      ...formState,
-      changes: { slug }
-    })
-  }
-
-  const closeAlert = () => {
-    setAlertState({
-      ...alertState,
-      open: false,
-      content: []
-    })
-  }
-
-  const handleChangeOption = (tab, isInitialRender) => {
+  const handleChangeOption = (tab) => {
     setSelectedOption(tab)
-    if (!isInitialRender) {
-      addQueryToUrl({ tab })
-    }
+    addQueryToUrl({ tab })
   }
 
-  useEffect(() => {
-    if (formState.loading || Object.keys(formState?.changes).length === 0) return
-    handleUpdateBusinessClick()
-  }, [formState])
-
-  useEffect(() => {
-    if (business) setSlug(business?.slug)
-  }, [business])
-
+  // As main: a valid `?tab=` is read as it is; a missing or invalid one opens the default tab and
+  // writes it to the URL.
   useEffect(() => {
     const tab = query.get('tab')
-    const includeTab = optionList.some(_tab => _tab?.key === tab)
-    handleChangeOption(tab && includeTab ? tab : 'custom_slug', !!(tab && includeTab))
+    if (!optionList.some(option => option.value === tab)) handleChangeOption(fallback)
   }, [])
 
+  const saveSlug = (slug) => handleUpdateBusinessClick({ slug }, { keepPendingChanges: true })
+
   return (
-    <>
-      <BusinessOrderingChannelsContainer>
-        <Title>{t('EXTENSIONS', 'Extensions')}</Title>
-        <Tabs>
-          {optionList.map(option => (
-            <Tab
-              key={option.key}
-              active={selectedOption === option.key}
-              onClick={() => handleChangeOption(option.key)}
-            >
-              {option.name}
-            </Tab>
-          ))}
-        </Tabs>
-        {selectedOption === 'custom_slug' && (
-          <BusinessCustomSlugContainer>
-            <FormControl>
-              <Label>{t('SLUG', 'Slug')}</Label>
-              <Input
-                type='text'
-                value={slug}
-                placeholder={t('SLUG', 'Slug')}
-                onChange={(e) => setSlug(e.target.value)}
-                onKeyPress={(e) => {
-                  if (!/^[0-9a-zA-Z]$/.test(e.key)) {
-                    e.preventDefault()
-                  }
-                }}
+    <div className='odc-channels'>
+      <h1 className='odc-channels-title'>{t('EXTENSIONS', 'Extensions')}</h1>
+      <Tabs
+        className='odc-channels-tabs'
+        value={selectedOption}
+        onValueChange={handleChangeOption}
+        label={t('EXTENSIONS', 'Extensions')}
+        items={optionList}
+      >
+        <TabPanel value={selectedOption} className='odc-channels-panel'>
+          {selectedOption === 'custom_slug' && (
+            <div className='odc-channels-slug'>
+              <StoreSlugField
+                fieldClassName='odc-channels-slug-field'
+                savedSlug={business?.slug}
+                formState={formState}
+                setFormState={setFormState}
+                onSave={saveSlug}
+                hint={storeUrl && !isWhiteLabelModule ? storeUrl.replace(/^https?:\/\//, '') : undefined}
               />
-            </FormControl>
-            <Button color='primary' onClick={changeCustomslug}>{t('SAVE', 'Save')}</Button>
-          </BusinessCustomSlugContainer>
-        )}
-        {selectedOption === 'widgets' && <BusinessWidgets business={business} />}
-      </BusinessOrderingChannelsContainer>
-      <Alert
-        title={t('EXTENSION', 'Extension')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
-    </>
+            </div>
+          )}
+          {selectedOption === 'widgets' && <BusinessWidgets business={business} />}
+        </TabPanel>
+      </Tabs>
+    </div>
   )
 }

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "ordering-brand-system",
+  "skillVersion": "1.3.0",
+  "guidelinesVersion": "1.3.0",
+  "releasedAt": "2026-09-05",
+  "canonicalOrigin": "https://brand.ordering.co",
+  "downloadUrl": "https://brand.ordering.co/skills/ordering-brand-system-v1.3.0.zip",
+  "latestAliasUrl": "https://brand.ordering.co/skills/ordering-brand-system-latest.zip",
+  "sha256": "dc804f60938a346cb975c06fb6d11b02e624c0fe26557d003adb68f68a572e5a",
+  "files": [
+    {
+      "path": "ordering-brand-system/SKILL.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/SKILL.md",
+      "bytes": 8423,
+      "sha256": "e5b48a6653b204abf9b71b7fdf781efaff5292b3017017e664b26ff977247c23"
+    },
+    {
+      "path": "ordering-brand-system/agents/openai.yaml",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/agents/openai.yaml",
+      "bytes": 324,
+      "sha256": "15dc13d1248c26e9ab96c3d89a660befb304163db5f461305fe5a84ba801d1f8"
+    },
+    {
+      "path": "ordering-brand-system/references/adoption.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/adoption.md",
+      "bytes": 4780,
+      "sha256": "4b1c6ac0a16865c3f2177c9d5b541552dd48e154900cb51297a01c4b12a6866b"
+    },
+    {
+      "path": "ordering-brand-system/references/channels-source-map.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/channels-source-map.md",
+      "bytes": 3250,
+      "sha256": "0ca08781b3529cb4049d4c819cd54bbb73c926621483f8aedd72964e42ee2eef"
+    },
+    {
+      "path": "ordering-brand-system/references/claims.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/claims.md",
+      "bytes": 2925,
+      "sha256": "935bb4cce4b99c3b2aa84b6c2157a6d4b23bf718e9f074cbeb875bea3a9f4638"
+    },
+    {
+      "path": "ordering-brand-system/references/identity.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/identity.md",
+      "bytes": 3641,
+      "sha256": "ce28475ad2014183c6301c1202a1c660c65c7de3eecee2fd6b45af9c065bf732"
+    },
+    {
+      "path": "ordering-brand-system/references/guideline-authoring.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/guideline-authoring.md",
+      "bytes": 1530,
+      "sha256": "1d996996348a40e5fe4d0d7996755f8abf80346b710112532add63ca9d3dce46"
+    },
+    {
+      "path": "ordering-brand-system/references/learning-loop.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/learning-loop.md",
+      "bytes": 2298,
+      "sha256": "f135d6c343c944064179dbbecc2838eb1ee3006136aab925e8e0437a811ea0c3"
+    },
+    {
+      "path": "ordering-brand-system/references/tokens.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/tokens.md",
+      "bytes": 5939,
+      "sha256": "5a3369d8835ad535676337b791c144989797812653da66559cc83dcc95630e1a"
+    },
+    {
+      "path": "ordering-brand-system/references/visual.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/visual.md",
+      "bytes": 2663,
+      "sha256": "c9b99ec3d81978d87458ef36f6a3085f2edb6a2a1da0b1f23bb434607f964b29"
+    },
+    {
+      "path": "ordering-brand-system/references/voice.md",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/references/voice.md",
+      "bytes": 3225,
+      "sha256": "2b83c2cc5bb14c6248699a7d158d138592b8be456c1ecff7462c35f2cb6c161c"
+    },
+    {
+      "path": "ordering-brand-system/scripts/review_copy.py",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/scripts/review_copy.py",
+      "bytes": 16609,
+      "sha256": "4caa4e188bd899d9477f607814be080b8a72c956da2f26dcff4ac94f008e19ac"
+    },
+    {
+      "path": "ordering-brand-system/tests/fixtures/review_copy_cases.json",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/tests/fixtures/review_copy_cases.json",
+      "bytes": 3780,
+      "sha256": "3af15ae7fb4106fe9af328326864d7411dcdf2870ae3359efaf35b15f97dfa8f"
+    },
+    {
+      "path": "ordering-brand-system/tests/test_review_copy.py",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/tests/test_review_copy.py",
+      "bytes": 1853,
+      "sha256": "395f477d2b55bd5bbbe8ca1d093f6af2ad5c030ef683f8bcefb4fd023ce951e3"
+    },
+    {
+      "path": "ordering-brand-system/machine/design-system.json",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/machine/design-system.json",
+      "bytes": 12597,
+      "sha256": "b33d9568d60e1e14086dcb4634a84987923df0770d6cfed030be2112e1479fec"
+    },
+    {
+      "path": "ordering-brand-system/machine/ordering.tokens.json",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/machine/ordering.tokens.json",
+      "bytes": 40700,
+      "sha256": "4a31e2f09c7549893360675f87ba471df298b7e16e3d03c426fa55ad915016ec"
+    },
+    {
+      "path": "ordering-brand-system/machine/asset-manifest.json",
+      "url": "https://brand.ordering.co/skills/ordering-brand-system/1.3.0/machine/asset-manifest.json",
+      "bytes": 32041,
+      "sha256": "2fabfca991718fe4e82e577b1717e8d0aa42f62adb44662ad7d39a817375eece"
+    }
+  ]
+}

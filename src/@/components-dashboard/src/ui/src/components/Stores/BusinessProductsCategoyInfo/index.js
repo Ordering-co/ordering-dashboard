@@ -9,7 +9,10 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { bytesConverter, shape, ribbonValues } from '../../../utils'
 import { RecordCircleFill, Circle } from 'react-bootstrap-icons'
-import { Alert, Confirm, Modal, ImageCrop, ColorPicker } from '../../Shared'
+import { Alert, Confirm } from '../../Shared/Confirm'
+import { Modal } from '../../Shared/Modal'
+import { ImageCrop } from '../../Shared/ImageCrop'
+import { ColorPicker } from '../../Shared/ColorPicker'
 import { Button, DefaultSelect, Input, Switch, TextArea } from '../../../styles'
 import { SCHOOL_WEEKDAYS, SCHOOL_VERTICAL } from '../../../../../constants/school'
 import { useDraftImageRead } from '../../../hooks/useDraftImageRead'
@@ -55,7 +58,9 @@ export const BusinessProductsCategoyInfo = (props) => {
     handleTutorialSkip,
     handleChangeRibbon,
     vertical,
-    onboardingMode = false
+    onboardingMode = false,
+    // bugs E (D18): the category editor shows the API error itself; alone (store onboarding) this form shows it
+    resultErrorShownByHost = false
   } = props
 
   const imageRead = useDraftImageRead(onboardingMode)
@@ -184,13 +189,13 @@ export const BusinessProductsCategoyInfo = (props) => {
   }
 
   useEffect(() => {
-    if (formState?.result?.error) {
+    if (formState?.result?.error && !resultErrorShownByHost) {
       setAlertState({
         open: true,
         content: formState?.result?.result
       })
     }
-  }, [formState?.result])
+  }, [formState?.result, resultErrorShownByHost])
 
   useEffect(() => {
     const _parentCategoriesOptions = parentCategories.map(category => {
@@ -324,9 +329,9 @@ export const BusinessProductsCategoyInfo = (props) => {
       )}
       {!isAddMode && (
         <CategoryNameWrapper>
-          <label>{t('EXTERNAL_ID', 'External Id')}</label>
+          <label>{t('EXTERNAL_ID', 'External ID')}</label>
           <Input
-            placeholder={t('EXTERNAL_ID', 'External Id')}
+            placeholder={t('EXTERNAL_ID', 'External ID')}
             name='external_id'
             value={formState?.changes?.external_id || ''}
             onChange={handleChangeInput}
@@ -429,6 +434,8 @@ export const BusinessProductsCategoyInfo = (props) => {
           ? (
           <>
             <SkipButton
+              as='button'
+              type='button'
               onClick={() => handleTutorialSkip()}
             >
               {t('TUTORIAL_SKIP', 'Skip')}
@@ -455,7 +462,7 @@ export const BusinessProductsCategoyInfo = (props) => {
             )}
       </BtnWrapper>
       <Alert
-        title={t('BUSINESS_TYPE', 'Business type')}
+        title={t('CATEGORY', 'Category')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

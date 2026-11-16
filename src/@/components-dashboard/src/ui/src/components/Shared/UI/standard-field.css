@@ -1,0 +1,13 @@
+/* Scoped compatibility hooks. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-standard-field) :where(.select, .multi-select) {
+  @apply od-box-border;
+}
+
+.od-ui:where(.od-standard-field) .select > div:first-child,
+.od-ui:where(.od-standard-field) .multi-select > div:first-child {
+  @apply od-justify-between;
+}
+
+.od-ui:where(.od-standard-field) .multi-select > div:first-child {
+  @apply od-flex od-items-center;
+}

@@ -22,6 +22,14 @@ export const FormStripe = styled.form`
     transition: all 150ms ease;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .StripeElement--focus,
+    .StripeElementIdeal--focus {
+      -webkit-transition: none;
+      transition: none;
+    }
+  }
+
   .StripeElement.loading {
     height: 41.6px;
     opacity: 0.6;
@@ -33,20 +41,20 @@ export const FormStripe = styled.form`
 `
 
 export const CardExpiryField = styled.div`
-  color: #ADB2B9;
+  color: var(--od-text-subtle);
 `
 
 export const CardCvcField = styled.div`
-  color: #ADB2B9;
+  color: var(--od-text-subtle);
 `
 
 export const CardZipcodeField = styled.div`
-  color: #ADB2B9;
+  color: var(--od-text-subtle);
 `
 
 export const CardNumberField = styled.div`
   width: 100%;
-  color: #ADB2B9;
+  color: var(--od-text-subtle);
 `
 export const CardExpiryCvcField = styled.div`
   display: grid;
@@ -58,7 +66,7 @@ export const FormRow = styled.div`
   input {
     display: block;
     border: none;
-    font-size: 18px;
+    font-size: var(--od-type-control-value-size);
     margin: 10px 0 20px 0;
     max-width: 100%;
     padding: 10px 14px;
@@ -68,7 +76,7 @@ export const FormRow = styled.div`
     background: white;
     color: #424770;
     letter-spacing: 0.025em;
-    width: 500px;
+    width: 100%;
   }
 
   input::placeholder {
@@ -77,11 +85,11 @@ export const FormRow = styled.div`
 `
 
 export const ErrorMessage = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-content-size);
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;
-  color: #D81212;
+  color: var(--od-danger-functional);
   margin: 10px 0px 0px 10px;
   ${props => props.theme?.rtl && css`
     margin: 10px 10px 0px 0px
@@ -105,7 +113,7 @@ export const FormActions = styled.div`
 
 export const ZipcodeField = styled.input`
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--od-type-control-value-size);
   box-sizing: border-box;
   width: 100% !important;
   &:-webkit-autofill {
@@ -114,11 +122,20 @@ export const ZipcodeField = styled.input`
   &::placeholder {
     font-weight: 500
   }
-  &:focus(){
+  &:focus-visible {
+    outline: 2px solid var(--od-focus-ring-color);
+    outline-offset: 2px;
     box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px,
       rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
     -webkit-transition: all 150ms ease;
     transition: all 150ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:focus-visible {
+      -webkit-transition: none;
+      transition: none;
+    }
   }
 
   &::-webkit-outer-spin-button,

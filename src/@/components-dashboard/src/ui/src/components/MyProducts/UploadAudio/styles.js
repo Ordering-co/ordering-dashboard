@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const Container = styled.div`
   > h2 {
     font-weight: 600;
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     line-height: 36px;
     text-align: center;
     margin-top: 0;
@@ -12,7 +12,7 @@ export const Container = styled.div`
   > p {
     width: 100%;
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     text-align: center;
     margin: 0 auto;
@@ -59,7 +59,7 @@ export const UploadIconBox = styled.div`
     }
     p {
       font-weight: 400;
-      font-size: 12px;
+      font-size: var(--od-type-control-size);
       line-height: 18px;
       margin-bottom: 0;
       margin-top: 8px;
@@ -70,7 +70,7 @@ export const UploadIconBox = styled.div`
 export const Or = styled.h6`
   text-align: center;
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   line-height: 24px;
   margin: 27px 0;
 `
@@ -78,7 +78,7 @@ export const Or = styled.h6`
 export const FormControl = styled.div`
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 13px;
   }

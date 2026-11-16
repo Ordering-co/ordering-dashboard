@@ -1,0 +1,38 @@
+/*
+ * redesign DC-B4 (decision 5): the add panel of a driver company. General, Schedule and Webhooks are stacked in one form, each
+ * under its own heading; the fields and the schedule editor own their look (company-panel.css lays the fields out). Tokens only
+ * (--od-*, --od-x-*); logical properties only.
+ */
+
+.odc-dc-add-form {
+  display: grid;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-dc-add-section {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dc-add-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* The footer: Cancel and Save at the end of the line */
+.odc-dc-add-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}

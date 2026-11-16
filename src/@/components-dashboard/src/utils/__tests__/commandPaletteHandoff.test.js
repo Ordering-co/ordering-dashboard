@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildOrdersSearchPath,
   buildRecordHandoffEntries,
+  buildStoresSearchPath,
   buildUsersSearchPath,
   buildUserTypeHandoffEntries,
   classifyUserSearchQuery,
@@ -13,6 +14,11 @@ describe('listing search paths', () => {
     expect(buildOrdersSearchPath('Pizza & co')).toBe('/orders?q=Pizza+%26+co')
     expect(buildUsersSearchPath('  ana  ')).toBe('/users/customers?q=ana')
     expect(buildOrdersSearchPath('')).toBe('/orders')
+  })
+
+  it('carries the Stores query with ?q=', () => {
+    expect(buildStoresSearchPath('  tim  cafe ')).toBe('/stores/list?q=tim+cafe')
+    expect(buildStoresSearchPath('')).toBe('/stores/list')
   })
 
   it('sanitizes and caps the query', () => {
@@ -41,8 +47,8 @@ describe('classifyUserSearchQuery', () => {
 describe('buildRecordHandoffEntries', () => {
   it('offers both listings to admins and never as records', () => {
     const entries = buildRecordHandoffEntries({ query: 'ana', user: { level: 0 } })
-    expect(entries.map(entry => entry.id)).toEqual(['handoff:orders', 'handoff:users', 'handoff:settings'])
-    expect(entries[2].path).toBe('/settings?q=ana')
+    expect(entries.map(entry => entry.id)).toEqual(['handoff:orders', 'handoff:users', 'handoff:stores', 'handoff:settings'])
+    expect(entries[3].path).toBe('/settings?q=ana')
     expect(entries[0].title).toBe('Search “ana” in Orders')
     expect(entries[1].path).toBe('/users/customers?q=ana')
     expect(entries.every(entry => entry.group === 'records')).toBe(true)
@@ -55,6 +61,7 @@ describe('buildRecordHandoffEntries', () => {
       ['handoff:users:4', '/delivery/drivers-list?q=ana'],
       ['handoff:users:3', '/users/customers?q=ana'],
       ['handoff:users:0', '/users/admins?q=ana'],
+      ['handoff:stores', '/stores/list?q=ana'],
       ['handoff:settings', '/settings?q=ana']
     ])
     expect(entries[1].title).toBe('Search “ana” in Drivers')
@@ -65,8 +72,35 @@ describe('buildRecordHandoffEntries', () => {
     expect(buildRecordHandoffEntries({ query: 'ana', user: { level: 0 }, userLevels: [] }).map(entry => entry.id)).toContain('handoff:users')
   })
 
-  it('offers only Orders to business owners and nothing for an empty query', () => {
-    expect(buildRecordHandoffEntries({ query: 'ana', user: { level: 2 } }).map(entry => entry.id)).toEqual(['handoff:orders'])
+  it('offers Orders and Stores to business owners and nothing for an empty query', () => {
+    expect(buildRecordHandoffEntries({ query: 'ana', user: { level: 2 } }).map(entry => entry.id)).toEqual(['handoff:orders', 'handoff:stores'])
     expect(buildRecordHandoffEntries({ query: ' ', user: { level: 0 } })).toEqual([])
+  })
+
+  describe('Stores hand-off', () => {
+    const storesEntry = (user, query = 'tim') =>
+      buildRecordHandoffEntries({ query, user }).find(entry => entry.id === 'handoff:stores')
+
+    it.each([[0, 'admin'], [2, 'business owner']])('is offered to a level %i (%s) with ?q=', (level) => {
+      expect(storesEntry({ level })).toMatchObject({
+        id: 'handoff:stores',
+        group: 'records',
+        title: 'Search “tim” in Stores',
+        path: '/stores/list?q=tim',
+        handoff: 'stores'
+      })
+    })
+
+    it('carries the sanitized query', () => {
+      expect(storesEntry({ level: 0 }, '  tim  cafe ').path).toBe('/stores/list?q=tim+cafe')
+    })
+
+    it.each([[4, 'driver'], [5, 'driver manager']])('is not offered to a level %i (%s)', (level) => {
+      expect(storesEntry({ level })).toBeUndefined()
+    })
+
+    it('is not offered for an empty query', () => {
+      expect(storesEntry({ level: 0 }, '   ')).toBeUndefined()
+    })
   })
 })

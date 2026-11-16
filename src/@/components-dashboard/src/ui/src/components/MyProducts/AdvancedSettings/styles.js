@@ -13,7 +13,7 @@ export const BoxLayout = styled.div`
   }
   h1, h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0;
     margin-bottom: 20px;
@@ -23,7 +23,7 @@ export const BoxLayout = styled.div`
   }
   h3 {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
     margin-top: 0px;
     margin-bottom: 20px;
@@ -43,7 +43,13 @@ export const FormControlWithCheck = styled.div`
   }
 `
 
-export const HideCheckWrapper = styled.div`
+export const HideCheckWrapper = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -62,7 +68,7 @@ export const HideCheckWrapper = styled.div`
   }
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     user-select: none;
   }
@@ -174,7 +180,7 @@ export const FormControl = styled.div`
   margin-bottom: 25px;
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 10px;
   }
@@ -195,7 +201,7 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
       color: ${props => props.theme.colors.secundaryContrast};
     }
@@ -217,7 +223,7 @@ export const SelectWrapper = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
   color: ${props => props.theme.colors.secundaryContrast};
 `
@@ -228,7 +234,13 @@ export const FontWeightListWrapper = styled.div`
   }
 `
 
-export const FontWeightItem = styled.div`
+export const FontWeightItem = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 12px 0;
@@ -249,7 +261,7 @@ export const FontWeightItem = styled.div`
   }
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
 `
@@ -307,10 +319,10 @@ export const UploadImageIcon = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color: ${props => props.theme.colors.disabled};
+  color: var(--od-text-muted);
   span {
     margin-top: 14px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {
@@ -323,17 +335,17 @@ export const ImgInfoWrapper = styled.div`
   margin-top: 15px;
   margin-bottom: 25px;
   h4 {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     font-weight: 400;
     margin: 0px;
   }
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     margin-top: 2px;
     margin-bottom: 0px;
-    color: ${props => props.theme.colors.secundaryContrast};
+    color: var(--od-text-muted);
   }
 `
 
@@ -384,7 +396,7 @@ export const ButtonWrapper = styled.div`
 
 export const FaviconHint = styled.p`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   line-height: 24px;
   margin-top: 0;
   margin-bottom: 16px;
@@ -409,6 +421,6 @@ export const FaviconPreviewImage = styled.img`
 
 export const FaviconPreviewHint = styled.span`
   font-weight: 400;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
 `

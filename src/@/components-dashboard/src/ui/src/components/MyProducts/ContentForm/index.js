@@ -2,18 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useLanguage, ContentForm as ContentFormController } from '../../../../../index'
 import { Button } from '../../../styles'
 
-import $ from 'jquery'
-import ReactSummernote from 'react-summernote'
-import 'react-summernote/dist/react-summernote.css'
-import 'bootstrap/js/dist/modal'
-import 'bootstrap/js/dist/dropdown'
-import 'bootstrap/js/dist/tooltip'
-import 'bootstrap/dist/css/bootstrap.css'
-
-import { Alert, Modal } from '../../Shared'
-import { InsertLink } from '../../Settings/InsertLink'
-import { InsertVideo } from '../../Settings/InsertVideo'
-import { InsertImage } from '../../Settings/InsertImage'
+import { Alert } from '../../Shared'
+import { RichHtmlEditor } from '../../Shared/RichHtmlEditor'
 
 import {
   PageContainer,
@@ -25,86 +15,25 @@ import {
 const ContentFormUI = (props) => {
   const {
     formState,
-    imageListState,
-    insertImageState,
-    handleInsertImage,
-    handleDeleteImage,
     handleChangeFormState,
     handleSave,
-    selectedImageUrl,
-    setSelectedImageUrl,
     handleDelete,
     title,
-    content
+    content,
+    hideTitle
   } = props
 
   const [, t] = useLanguage()
-  const [openModal, setOpenModal] = useState(null)
-  const [editorContext, setEditorContext] = useState(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [pageContent, setPageContent] = useState(null)
+  // The editor is controlled by this value: the saved content (HTML or the plain text of before) and what is typed, code view included.
+  const [body, setBody] = useState(content ?? '')
 
-  const insertLink = (context) => {
-    const ui = $.summernote.ui
-    const button = ui.button({
-      contents: '<i class="note-icon-link"/>',
-      tooltip: 'link',
-      class: 'note-btn',
-      click: () => {
-        setEditorContext(context)
-        context.invoke('editor.saveRange')
-        setOpenModal('link')
-      }
-    })
-    return button.render()
+  const handleChangeBody = (html) => {
+    setBody(html)
+    handleChangeFormState('body', html)
   }
 
-  const handleRestoreEditor = () => editorContext.invoke('restoreRange')
-
-  const insertImage = (context) => {
-    const ui = $.summernote.ui
-    const button = ui.button({
-      contents: '<i class="note-icon-picture"/>',
-      tooltip: 'picture',
-      class: 'note-btn',
-      click: () => {
-        setEditorContext(context)
-        context.invoke('editor.saveRange')
-        setOpenModal('image')
-      }
-    })
-    return button.render()
-  }
-
-  const insertVideo = (context) => {
-    const ui = $.summernote.ui
-    const button = ui.button({
-      contents: '<i class="note-icon-video"/>',
-      tooltip: 'video',
-      class: 'note-btn',
-      click: () => {
-        setEditorContext(context)
-        context.invoke('editor.saveRange')
-        setOpenModal('video')
-      }
-    })
-    return button.render()
-  }
-
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    setEditorContext(null)
-  }
-
-  const handleSubmit = () => {
-    const element = document.querySelector('.note-codeview-keep')
-    if (element && element.classList.contains('active')) {
-      const editValue = document.querySelector('.note-codable').value
-      handleSave(editValue)
-      return
-    }
-    handleSave()
-  }
+  const handleSubmit = () => handleSave(body)
 
   useEffect(() => {
     if (!formState?.error) return
@@ -115,58 +44,25 @@ const ContentFormUI = (props) => {
   }, [formState?.error])
 
   useEffect(() => {
-    if (!pageContent) return
-    handleChangeFormState('body', pageContent)
-  }, [pageContent])
-
-  const onInit = (note) => {
-    note.reset()
-    if (!content) {
-      note.insertText('')
-      return
-    }
-    const regex = /(\<\w*)((\s\/\>)|(.*\<\/\w*\>))/i
-    if (content?.match(regex) !== null) {
-      note.replace(content)
-    } else {
-      note.insertText(content)
-    }
-  }
-
-  useEffect(() => {
-    setPageContent(content)
+    setBody(content ?? '')
   }, [content])
 
   return (
     <>
       <PageContainer>
-        <Header>
-          <h1>{title}</h1>
-        </Header>
+        {/* redesign ordering-website B3b (D7): opt-in `hideTitle`, for a host that already names the form (a dialog) */}
+        {!hideTitle && (
+          <Header>
+            <h1>{title}</h1>
+          </Header>
+        )}
         <WrapperEditor>
-          <ReactSummernote
-            onInit={onInit}
-            placeholder={t('START_NEW_PAGE')}
-            options={{
-              height: 350,
-              fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
-              toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontsize', ['fontsize']],
-                ['color', ['color']],
-                ['para', ['ul', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['insertLink', 'insertImage', 'insertVideo']],
-                ['codeview', ['codeview']]
-              ],
-              buttons: {
-                insertLink,
-                insertImage,
-                insertVideo
-              }
-            }}
-            onChange={content => setPageContent(content)}
+          <RichHtmlEditor
+            label={title || t('CONTENT', 'Content')}
+            placeholder={t('START_NEW_PAGE', 'Start writing your page…')}
+            codeTabs
+            value={body}
+            onChange={handleChangeBody}
           />
         </WrapperEditor>
         <ButtonGroupWrapper>
@@ -186,51 +82,6 @@ const ContentFormUI = (props) => {
           </Button>
         </ButtonGroupWrapper>
       </PageContainer>
-      {openModal === 'link' && (
-        <Modal
-          width='60%'
-          open={openModal === 'link'}
-          onClose={() => setOpenModal(null)}
-        >
-          <InsertLink
-            editorContext={editorContext}
-            handleRestoreEditor={handleRestoreEditor}
-            onClose={() => handleCloseModal()}
-          />
-        </Modal>
-      )}
-      {openModal === 'video' && (
-        <Modal
-          width='60%'
-          open={openModal === 'video'}
-          onClose={() => setOpenModal(null)}
-        >
-          <InsertVideo
-            editorContext={editorContext}
-            handleRestoreEditor={handleRestoreEditor}
-            onClose={() => handleCloseModal()}
-          />
-        </Modal>
-      )}
-      {openModal === 'image' && (
-        <Modal
-          width='60%'
-          open={openModal === 'image'}
-          onClose={() => setOpenModal(null)}
-        >
-          <InsertImage
-            imageListState={imageListState}
-            editorContext={editorContext}
-            handleRestoreEditor={handleRestoreEditor}
-            onClose={() => handleCloseModal()}
-            insertImageState={insertImageState}
-            handleInsertImage={handleInsertImage}
-            handleDeleteImage={handleDeleteImage}
-            selectedImageUrl={selectedImageUrl}
-            setSelectedImageUrl={setSelectedImageUrl}
-          />
-        </Modal>
-      )}
       <Alert
         title={t('BUSINESS', 'Business')}
         content={alertState.content}

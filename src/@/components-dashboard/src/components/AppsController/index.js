@@ -25,7 +25,10 @@ export const AppsController = (props) => {
   const [themesList, setThemesList] = useState({ loading: true, themes: [], error: null })
   const [site, setSite] = useState(null)
   const [formState] = useState({ loading: false, changes: {}, error: null })
-  const [singleAppState, setSingleAppState] = useState({ loading: false, app: app ?? null, error: null })
+  // Loading from the first render when there is an app to load (`productId`): otherwise the UI drew the app it was given, the load
+  // then started and took it away, and it was drawn again once loaded. Whatever the editor asks for when it is mounted (the install
+  // link of each QR of the Builds section) was asked for twice.
+  const [singleAppState, setSingleAppState] = useState({ loading: !!productId, app: app ?? null, error: null })
 
   const requestGETOptions = {
     method: 'GET',

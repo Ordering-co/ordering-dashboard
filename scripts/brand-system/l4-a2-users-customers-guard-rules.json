@@ -1,0 +1,1086 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-a2-users-customers-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-a2-users-customercashwallet-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWallet/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "customerWalletProps /* binding-sha256:24d76dfbe22284f72ca12cf6e65105edf7c8389ae37b2d5086bfbe9b02edeff9 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customercashwallet-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWallet/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    &:after {\n      content: \"\";\n      background: ${props => props.theme.colors.headingColor};\n      height: 2px;\n      width: 100%;\n      position: absolute;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "Tabs",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 32px;\n      `\n: css`\n        margin-right: 32px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Tab",
+      "property": "background",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    &:after {\n      content: \"\";\n      background: ${props => props.theme.colors.headingColor};\n      height: 2px;\n      width: 100%;\n      position: absolute;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a2-users-customers turned five div-with-onClick surfaces into native buttons: the CustomerCashWallet tabs, the CustomerPointsWallet tabs and the CustomerDetails OptionMenu items. Each gained type=button, aria-pressed, this 2px focus-visible ring and a 44x44 minimum under a coarse pointer."
+     },
+     {
+      "component": "Tabs",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tabs",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 32px;\n      `\n: css`\n        margin-right: 32px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customercashwalletdetails-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'black'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customercashwalletdetails-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerCashWalletDetails/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-a2-users-customerdetails-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'black'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "customerDetailsProps /* binding-sha256:e457b517b6c27459e79bb4850ceae4d2a87144711b022ae0d5c8d02da19c4d0e */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerdetails-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerDetails/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 40px;\n  `\n: css`\n    margin-right: 40px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "context": "button > svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a2-users-customers typography inventory pins this declaration to an icon-only selector. The 26 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "MenusContainer",
+      "property": "font",
+      "match": "({ isLoading }) => isLoading && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a2-users-customers typography inventory pins this declaration to an icon-only selector. The 26 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "UserName",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 10px;\n      margin-left: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 3px;\n    `\n: css`\n      margin-right: 3px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "font-size",
+      "match": "12px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a2-users-customers typography inventory pins this declaration to an icon-only selector. The 26 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.04, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.1, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+      "context": ".show > >div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "#E63757",
+      "context": "> div > > div > .dropdown-item:last-child",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 40px;\n  `\n: css`\n    margin-right: 40px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MenusContainer",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "MenusContainer",
+      "property": "color-block",
+      "match": "({ isLoading }) => isLoading && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "border-top",
+      "match": "1px solid transparent",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary} !important;\n    background-color: ${props => props.theme.colors.lightPrimary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "OptionMenu",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a2-users-customers turned five div-with-onClick surfaces into native buttons: the CustomerCashWallet tabs, the CustomerPointsWallet tabs and the CustomerDetails OptionMenu items. Each gained type=button, aria-pressed, this 2px focus-visible ring and a 44x44 minimum under a coarse pointer."
+     },
+     {
+      "component": "PhotoWrapper",
+      "property": "box-shadow",
+      "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UserName",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 10px;\n      margin-left: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightGreen",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "color",
+      "match": "props => props.theme.colors.green",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 3px;\n    `\n: css`\n      margin-right: 3px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerpointswallet-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'black'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "customerPointsWalletProps /* binding-sha256:c3a45b783ee863d8fea6db7675d92e9fd90b4d8f2aff936be6749b70db03de81 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerpointswallet-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerPointsWallet/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    &:after {\n      content: \"\";\n      background: ${props => props.theme.colors.headingColor};\n      height: 2px;\n      width: 100%;\n      position: absolute;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "Tabs",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 32px;\n      `\n: css`\n        margin-right: 32px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "LoyaltyLevelContent",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "background",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    &:after {\n      content: \"\";\n      background: ${props => props.theme.colors.headingColor};\n      height: 2px;\n      width: 100%;\n      position: absolute;\n      bottom: -1px;\n      ${props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 0px;\n      `\n: css`\n        left: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tab",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a2-users-customers turned five div-with-onClick surfaces into native buttons: the CustomerCashWallet tabs, the CustomerPointsWallet tabs and the CustomerDetails OptionMenu items. Each gained type=button, aria-pressed, this 2px focus-visible ring and a 44x44 minimum under a coarse pointer."
+     },
+     {
+      "component": "Tabs",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Tabs",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 32px;\n      `\n: css`\n        margin-right: 32px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerwalletevents-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-a2-users-customerwalletevents-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomerWalletEvents/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Amount",
+      "property": "font",
+      "match": "({ negative }) => !negative && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "HistoriesWrapper",
+      "property": "font",
+      "match": "({ isLoading }) => !isLoading && css`\n    &:before {\n      content: \"\";\n      background: ${props => props.theme.colors.borderColor};\n      position: absolute;\n      width: 2px;\n      top: 7px;\n      height: calc(100% - 10px);\n      ${props => props.theme?.rtl\n? css`\n        right: 2px;\n      `\n: css`\n        left: 2px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "HistoriesWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 2px;\n      `\n: css`\n        left: 2px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "Transaction",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "TransactionCode",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "TransactionDescription",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "TransactionHeader",
+      "property": "font-size",
+      "match": "6px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a2-users-customers typography inventory pins this declaration to an icon-only selector. The 26 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Amount",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Amount",
+      "property": "color-block",
+      "match": "({ negative }) => !negative && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HistoriesWrapper",
+      "property": "background",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HistoriesWrapper",
+      "property": "color-block",
+      "match": "({ isLoading }) => !isLoading && css`\n    &:before {\n      content: \"\";\n      background: ${props => props.theme.colors.borderColor};\n      position: absolute;\n      width: 2px;\n      top: 7px;\n      height: calc(100% - 10px);\n      ${props => props.theme?.rtl\n? css`\n        right: 2px;\n      `\n: css`\n        left: 2px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "HistoriesWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        right: 2px;\n      `\n: css`\n        left: 2px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Transaction",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TransactionCode",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TransactionCode",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TransactionDescription",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TransactionDescription",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 15px;\n  `\n: css`\n    margin-left: 15px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "TransactionHeader",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerslisting-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomersListing/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "customersProps /* binding-sha256:d936bc388c4e6e9196f595d1ff165b43ae06e8cd3c3f5f329d4b1d2f733604e5 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "Cierre 2026-10 (Parte 1, ola 1.4; evidencia corregida tras la auditoría de la 1.5, P2-3). Binding re-pinned to the current source after the coordinator read it: main changed the props object (804768e2: searchSeed / filterSeed for the command palette); grep of the binding shows no colour, font or size key (only pageSize). Redesign UC-B7 (, 2026-10-09): the page now composes CustomersDirectory; the three color props of the old buttons are gone (exceptions removed) and the binding is re-pinned after reading it: paginationSettings with a validated pageSize and the four search flags, no colour, font or size key.  (n.º 14, D-55, 2026-10-20): re-pinned after reading it: the binding gains clearSelectionOnQueryChange: true (a boolean for the controller), no colour, font or size key."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a2-users-customerslisting-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomersListing/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "ActionButtonsGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 15px;\n      `\n: css`\n        margin-right: 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "VerifiedStatusFilterContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "VerifiedStatusFilterContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 12px;\n    `\n: css`\n      margin-right: 12px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over the 20 font interpolations of the batch: none contains a literal font-size declaration. They carry RTL direction, active state and layout composition only."
+     },
+     {
+      "component": "VerifiedStatusFilterContainer",
+      "property": "font-size",
+      "match": "20px",
+      "context": "button > svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a2-users-customers typography inventory pins this declaration to an icon-only selector. The 26 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "ActionButtonsGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 15px;\n      `\n: css`\n        margin-right: 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "VerifiedStatusFilterContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "VerifiedStatusFilterContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 12px;\n    `\n: css`\n      margin-right: 12px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a2-users-customers semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  }
+ ]
+}

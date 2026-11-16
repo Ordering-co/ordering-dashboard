@@ -1,0 +1,119 @@
+/* redesign W0-7 (T0-22) · Switch: the button is the target, the 32x18 track is drawn inside. */
+
+.odc-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: var(--od-space-2);
+  min-inline-size: var(--od-x-target-fine);
+  min-block-size: var(--od-x-target-fine);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.odc-switch:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-switch-track {
+  position: relative;
+  flex: none;
+  inline-size: var(--od-x-switch-width);
+  block-size: var(--od-x-switch-height);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+/* The thumb is the shape cue: it sits at the start when off and slides to the end when on (mirrored in RTL). */
+.odc-switch-thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--od-x-space-half);
+  inline-size: var(--od-x-switch-thumb);
+  block-size: var(--od-x-switch-thumb);
+  margin-block-start: calc(var(--od-x-switch-thumb) / -2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-x-control-border);
+  transition:
+    inset-inline-start var(--od-duration-fast) var(--od-ease-standard),
+    background-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-switch[data-checked] .odc-switch-track {
+  border-color: var(--od-action);
+  background: var(--od-action);
+}
+
+.odc-switch[data-checked] .odc-switch-thumb {
+  inset-inline-start: calc(100% - var(--od-x-switch-thumb) - var(--od-x-space-half));
+  background: var(--od-action-foreground);
+}
+
+.odc-switch-text { min-inline-size: 0; }
+
+.odc-switch-labelled:hover .odc-switch-track { border-color: var(--od-text); }
+.odc-switch-labelled[data-checked]:hover .odc-switch-track { border-color: var(--od-action-hover); background: var(--od-action-hover); }
+
+/* redesign stores 3.B: tone='neutral' is for a second switch in the same row (Featured beside Enabled). On, its track is
+   muted ink, not the action blue (solid ink weighed more than the blue it was meant to defer to), so it does not compete with the
+   primary one; the thumb keeps the page colour, so the state still reads by shape. Off, busy and disabled are unchanged. */
+.odc-switch[data-tone='neutral'][data-checked] .odc-switch-track {
+  border-color: var(--od-text-muted);
+  background: var(--od-text-muted);
+}
+
+.odc-switch[data-tone='neutral'][data-checked] .odc-switch-thumb { background: var(--od-bg); }
+
+.odc-switch-labelled[data-tone='neutral'][data-checked]:hover .odc-switch-track { border-color: var(--od-text); background: var(--od-text); }
+
+/* Saving: still focusable, presses are ignored, the pointer says wait. */
+.odc-switch[data-busy] { cursor: progress; }
+.odc-switch[data-busy] .odc-switch-track { opacity: 0.55; }
+
+.odc-switch[data-disabled] { cursor: not-allowed; }
+.odc-switch[data-disabled] .odc-switch-track { opacity: 0.55; }
+.odc-switch-labelled[data-disabled] .odc-switch-text { color: var(--od-x-text-subtle); }
+
+/* Touch (C3, decision 12): a centred 44px hit area comes from a pseudo-element; the track is drawn taller (, O-10, below). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-switch::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset); /* redesign W0-7 (T0-29): the house token, same box */
+  }
+  /* A labelled switch is as wide as its text already: only the height is added. */
+  .odc-switch-labelled::after { inset-inline: 0; }
+
+  /*  (W0-E-13, decision 12): the box is SEEN at 32 on a phone (24 with a mouse).
+      (O-10): and the drawn track is taller there, 40×24 with a 20px thumb (32×18 and 14 with a mouse, the proportion of the
+     original), so it reads as a switch under a thumb. The three --od-x-switch-* tokens are overridden on the switch itself, never in
+     the page root, from the release space scale (rem, like the rest of the page). The thumb offsets are relative to the track and to the
+     thumb token, so the checked position still lands on the end. */
+  .odc-switch {
+    min-block-size: var(--od-x-control-height);
+    --od-x-switch-height: var(--od-space-5);
+    --od-x-switch-width: calc(var(--od-space-6) + var(--od-space-2));
+    --od-x-switch-thumb: calc(var(--od-space-4) + var(--od-space-1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-switch-track,
+  .odc-switch-thumb { transition: none; }
+}

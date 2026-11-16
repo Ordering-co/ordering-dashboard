@@ -1,0 +1,815 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a4-settings-integrations-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a4-settings-integrations-apikeyslist-header-h1-20px-ab92b0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiKeysList/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-apikeyslist-apikeyslisttable-tr-th-td-12px-a45de2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiKeysList/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-apikeyslist-dropdownbuttonwrapper-div-div-dropd-ed4d24",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiKeysList/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-doordashconnectcontainer-button-a-490d65",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "DoordashConnectContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-header-h1-20px-d7b956",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-apikeyslisttable-tr-th-td-12px-4b059d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-dropdownbuttonwrapper-div-div-dro-71655b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-addnewbutton-root-12px-2c59cd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-allsetting-span-14px-9f9995",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "AllSetting",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-description-root-14px-2bf728",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-tab-root-14px-cfc710",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-paragraph-h3-16px-6505cc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "h3",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-paragraph-p-12px-22ac49",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-paragraph-span-12px-de5988",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-baccredomatic-paragraph-a-12px-99609d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/BacCredomatic/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-deliverectcontainer-button-all-setti-22bebe",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "DeliverectContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-header-h1-20px-d56538",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-header-button-10px-2f85aa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "button",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-apikeyslisttable-tr-th-td-12px-3c3759",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-dropdownbuttonwrapper-div-div-dropdo-b60b10",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-addnewbutton-root-12px-86e712",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-allsetting-span-14px-0b3bb1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "AllSetting",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-description-root-14px-beb68b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-tab-root-14px-482b23",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-getstarted-h2-14px-6a7574",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "GetStarted",
+      "property": "font-size",
+      "context": "h2",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-deliverect-getstarted-p-14px-2422a6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Deliverect/styles.js",
+      "component": "GetStarted",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-doordashconnectcontainer-button-1a125d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "DoordashConnectContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-header-h1-20px-342bfd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-apikeyslisttable-tr-th-td-12px-d5fe38",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-dropdownbuttonwrapper-div-div-d-2aa818",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-addnewbutton-root-12px-ec22d1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-allsetting-span-14px-f320d1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "AllSetting",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-description-root-14px-7097a8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-tab-root-14px-794959",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-paragraph-h2-16px-cd217f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-paragraph-p-12px-2d2d3f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-paragraph-span-12px-58b67d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-doordashconnect-paragraph-a-12px-841396",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/DoordashConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-integrationlisting-header-h1-20px-e79126",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-integrationlisting-categorysection-h2-16px-70456f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "CategorySection",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-integrationlisting-settingitemcontent-h5-14px-2dbbc5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "SettingItemContent",
+      "property": "font-size",
+      "context": "h5",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-integrationlisting-settingitemcontent-p-12px-995a9c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "SettingItemContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-integrationlisting-tab-root-14px-f15082",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-itsacheckmatecontainer-button-all-8c0925",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "ItsaCheckmateContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-header-h1-20px-153e5a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-header-button-10px-e14224",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "button",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-apikeyslisttable-tr-th-td-12px-1c0493",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-dropdownbuttonwrapper-div-div-dro-88ccf6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-addnewbutton-root-12px-a0b75d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-description-root-14px-11daad",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-description-div-sub-header-14px-8b7d9f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "div.sub-header",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-description-div-menu-item-p-14px-b777f4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "div.menu-item > > p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-tab-root-14px-ab553a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-getstarted-h2-14px-7ef44d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "GetStarted",
+      "property": "font-size",
+      "context": "h2",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-itsacheckmate-getstarted-p-14px-f67568",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ItsaCheckmate/styles.js",
+      "component": "GetStarted",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-lalamoveconnectcontainer-button-1294bf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "LalaMoveConnectContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-header-h1-20px-6c635d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-header-button-10px-d743d4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "button",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-apikeyslisttable-tr-th-td-12px-f9d985",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-dropdownbuttonwrapper-div-div-d-f6be0b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-addnewbutton-root-12px-e2aebc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-allsetting-span-14px-844bb5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "AllSetting",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-description-root-14px-908359",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-tab-root-14px-b93343",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-paragraph-h2-16px-1a87bd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-paragraph-p-12px-1a00cb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-paragraph-span-12px-8bf0b2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-lalamoveconnect-paragraph-a-12px-a99719",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LalaMoveConnect/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-pluginlist-header-h1-20px-367cdd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PluginList/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-pluginlist-pluginstable-thead-th-12px-c84f75",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PluginList/styles.js",
+      "component": "PluginsTable",
+      "property": "font-size",
+      "context": "thead > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a4-settings-integrations-pluginlist-plugintbody-td-12px-8611b5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PluginList/styles.js",
+      "component": "PluginTbody",
+      "property": "font-size",
+      "context": "td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-pluginlist-enablewrapper-span-12px-891d3a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PluginList/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-pluginlist-actionselectorwrapper-div-div-dropdo-4d91c6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PluginList/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a4-settings-integrations-webhooklist-header-h1-20px-bc092b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/WebhookList/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a4-settings-integrations-webhooklist-webhooklisttable-th-td-12px-b8574a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/WebhookList/styles.js",
+      "component": "WebhookListTable",
+      "property": "font-size",
+      "context": "th,\n  td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a4-settings-integrations-webhooklist-dropdownbuttonwrapper-div-div-dropd-454d88",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/WebhookList/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a4-settings-integrations-pres-integrationlisting-iconwrapper-svg-24px-654b8f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible.",
+      "evidence": "IconWrapper svg: el glifo del icono de la tarjeta de integracion."
+    },
+    {
+      "id": "a4-settings-integrations-pres-integrationlisting-settingitemcontainer-svg-18px-e6aeab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "SettingItemContainer",
+      "property": "font-size",
+      "context": "> svg",
+      "match": "18px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible.",
+      "evidence": "SettingItemContainer > svg: the chevron glyph of the stacked integration row (new in main e6aeabd9)."
+    },
+    {
+      "id": "a4-settings-integrations-pres-integrationlisting-iconwrapper-svg-16px-e6aeab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible.",
+      "evidence": "IconWrapper svg: the compact integration icon glyph (new in main e6aeabd9)."
+    },
+    {
+      "id": "a4-settings-integrations-pres-integrationlisting-settingitemcontent-h5-button-font-inherit",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/IntegrationListing/styles.js",
+      "component": "SettingItemContent",
+      "property": "font",
+      "context": "h5 button",
+      "match": "inherit",
+      "reason": "Este font resetea la fuente del navegador del boton nativo (font: inherit), no declara un tamano de texto propio.",
+      "evidence": "SettingItemContent h5 button: el titulo de la tarjeta de integracion es un boton nativo que hereda la tipografia del h5, que ya usa var(--od-type-control-size)."
+    }
+  ]
+}

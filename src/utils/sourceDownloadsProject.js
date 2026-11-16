@@ -2,6 +2,7 @@ const SHARED_DASHBOARD_HOSTS = new Set([
   'dashboard.orderingplus.com',
   'dashboard.tryordering.com',
   'dashboard.ordering.co',
+  'dashboard-beta.ordering.co',
   'dashboardcf.orderingplus.com'
 ])
 

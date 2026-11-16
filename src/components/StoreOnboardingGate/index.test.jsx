@@ -6,7 +6,7 @@ import { StoreOnboardingGate } from './index'
 import { createDraft, draftKey } from '../../@/components-dashboard/src/utils/storeOnboarding'
 const state = vi.hoisted(() => ({ session: {}, root: 'https://test/project', discover: vi.fn(), clearMedia: vi.fn() }))
 vi.mock('../../@/components-dashboard/src/utils/storeOnboardingDraftMedia', () => ({ deleteDraftMedia: (...args) => state.clearMedia(...args) }))
-vi.mock('~ui', () => ({ Button: props => <button {...props} /> }))
+vi.mock('~ui/src/styles/Buttons', () => ({ Button: props => <button {...props} /> }))
 vi.mock('~components', () => ({
   useApi: () => [{ root: state.root }],
   useSession: () => [state.session, { logout: vi.fn() }],

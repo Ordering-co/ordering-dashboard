@@ -1,0 +1,7 @@
+{
+  "name": "residue-fixture",
+  "private": true,
+  "dependencies": {
+    "legacy-pkg": "1.0.0"
+  }
+}

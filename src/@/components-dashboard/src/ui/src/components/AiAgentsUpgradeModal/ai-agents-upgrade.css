@@ -1,0 +1,29 @@
+/*  (main), : the AI Agents upgrade form in a Product Dialog */
+.odc-ai-upgrade-text {
+  margin: 0 0 var(--od-space-3);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  color: var(--od-text);
+}
+
+.odc-ai-upgrade-frame {
+  display: block;
+  inline-size: 100%;
+  block-size: min(640px, 65dvh);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-ai-upgrade-status {
+  margin: var(--od-space-2) 0 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+  text-align: center;
+}
+
+.odc-ai-upgrade-link {
+  margin-block-start: var(--od-space-2);
+  gap: var(--od-space-1);
+}

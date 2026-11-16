@@ -11,52 +11,54 @@ export const DriversGroupLogsContainer = styled.div`
 export const TableWrapper = styled.div`
   overflow: auto;
   height: 100%;
+  max-width: 100%;
 `
 
-export const SeeChanges = styled.span`
-  color: ${props => props.theme.colors.primary};
+export const SeeChanges = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--od-type-content-size);
+  color: ${props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
   cursor: pointer;
+  min-height: 44px;
+  text-align: start;
+
   &:hover {
     text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+    outline-offset: 2px;
   }
 `
 
 export const Table = styled.table`
   width: 100%;
   min-width: 1000px;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 
   thead {
     tr {
-      border-bottom: solid 1px ${props => props.theme.colors.disabled};
+      border-bottom: solid 1px ${props => props.theme?.ordering?.semantic?.border?.strong ?? props.theme.colors.disabled};
       th {
         padding: 13px 0;
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
+        text-align: start;
         &:first-child {
           width: 10%;
-          ${props => props.theme?.rtl
-? css`
-            padding-left: 15px;
-          `
-: css`
-            padding-right: 15px;
-          `}
+          padding-inline-end: 15px;
           box-sizing: border-box;
         }
         &:nth-child(3) {
           width: 35%;
-          padding-left: 15px;
-          padding-right: 15px;
+          padding-inline: 15px;
           box-sizing: border-box;
         }
         &:nth-child(4) {
-          ${props => props.theme?.rtl
-? css`
-            padding-right: 15px;
-          `
-: css`
-            padding-left: 15px;
-          `}
+          padding-inline-start: 15px;
           box-sizing: border-box;
         }
       }
@@ -64,32 +66,25 @@ export const Table = styled.table`
   }
 
   > tbody {
-    border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-    td {
+    tr {
+      border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+    }
+    td,
+    th[scope='row'] {
       padding: 13px 0;
-      font-size: 12px;
+      font-size: var(--od-type-content-size);
+      font-weight: normal;
+      text-align: start;
       &:first-child {
         width: 10%;
-        ${props => props.theme?.rtl
-? css`
-          padding-left: 15px;
-        `
-: css`
-          padding-right: 15px;
-        `}
+        padding-inline-end: 15px;
         box-sizing: border-box;
       }
       &:nth-child(3) {
         width: 35%;
       }
       &:nth-child(4) {
-        ${props => props.theme?.rtl
-? css`
-          padding-right: 15px;
-        `
-: css`
-          padding-left: 15px;
-        `}
+        padding-inline-start: 15px;
         box-sizing: border-box;
       }
     }
@@ -98,11 +93,11 @@ export const Table = styled.table`
 
 export const UserInfoContainer = styled.div`
   p {
-    color: ${props => props.theme.colors.lightGray};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
     margin: 0px;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
     &:first-child {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
       font-weight: 500;
     }
   }
@@ -110,28 +105,21 @@ export const UserInfoContainer = styled.div`
 
 export const DateTimeWrapper = styled.div`
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
+  direction: ltr;
+  unicode-bidi: isolate;
   min-height: 36px;
   display: flex;
   align-items: center;
-
-  ${props => props.theme?.rtl
-? css`
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-left: 15px;
-    border-left: 1px solid ${props => props.theme.colors.borderColor};
-  `
-: css`
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-right: 15px;
-    border-right: 1px solid ${props => props.theme.colors.borderColor};
-  `}
+  padding-inline: 15px;
+  margin-inline-end: 15px;
+  border-inline-end: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 `
 
 export const NoData = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
 `
 export const WrapperPagination = styled.div`
   display: flex;
@@ -141,47 +129,28 @@ export const WrapperPagination = styled.div`
 
 export const DataListTable = styled.table`
   width: 100%;
-  border-right: 1px solid ${props => props.theme.colors.borderColor};
+  border-inline-end: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-  tbody {
-    border-bottom: none;
-    td {
-      box-sizing: border-box;
-      &:first-child {
-        width: 50% !important;
-        padding-left: 15px;
-        padding-right: 15px;
-        box-sizing: border-box;
-      }
-      &:not(:first-child) {
-        width: initial !important;
-      }
-      white-space: nowrap;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      ${props => props.theme?.rtl
-? css`
-        padding-left: 15px;
-      `
-: css`
-        padding-right: 15px;
-      `}
-    }
+  li {
+    box-sizing: border-box;
+    white-space: nowrap;
+    padding: 10px 15px;
   }
 `
 
 export const EventTypeContainer = styled.div`
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
   min-height: 36px;
   display: flex;
   align-items: center;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-left: 15px;
-  margin-right: 10px;
-  border-right: 1px solid ${props => props.theme.colors.borderColor};
-  border-left: 1px solid ${props => props.theme.colors.borderColor};
+  padding-inline: 15px;
+  margin-inline-start: 15px;
+  margin-inline-end: 10px;
+  border-inline: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   p{
     margin-bottom: 0px;
   }
@@ -195,10 +164,10 @@ export const SchedulesWrapper = styled.div`
 
   ${props => props?.border && css`
     div:first-child {
-    border-right: 1px solid #E9ECEF;
-    padding-right: 30px;
-    `
-  }
+      border-inline-end: 1px solid ${props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'};
+      padding-inline-end: 30px;
+    }
+  `}
 `
 
 export const Schedules = styled.div`
@@ -217,8 +186,8 @@ export const ScheduleDay = styled.div`
 export const ScheduleLapses = styled.div`
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #E9ECEF;
-  padding-left: 10px;
+  border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'};
+  padding-inline-start: 10px;
 
   p  {
     margin: 0px;

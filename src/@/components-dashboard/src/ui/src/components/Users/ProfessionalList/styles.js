@@ -16,7 +16,7 @@ export const UsersTable = styled.table`
 
   td, th {
     padding: 10px 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     &:first-child {
       width: 40%;
     }
@@ -127,6 +127,14 @@ export const UserMainInfo = styled.div`
 `
 
 export const CheckBoxWrapper = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
   cursor: pointer;
   ${props => props.theme?.rtl
 ? css`
@@ -144,18 +152,29 @@ export const CheckBoxWrapper = styled.div`
     svg {
       color: ${props => props.theme.colors?.primary};
     }
-`}
+  `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
 `
 
 export const InfoBlock = styled.div`
   p {
     margin: 5px 0 0 0;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.lightGray};
   }
   p.bold {
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};
   }
@@ -172,7 +191,7 @@ export const UserTypeWrapper = styled.div`
   `}
   > p {
     margin: 5px 0 0 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 500;
   }
 `
@@ -183,7 +202,7 @@ export const UserEnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
 
     ${props => props.theme?.rtl
 ? css`
@@ -209,7 +228,7 @@ export const UsersBottomContainer = styled.div`
 `
 
 export const VerifiedItem = styled.span`
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   background-color: ${props => props.theme.colors.lightGreen};
   padding: 3px 10px;
   border-radius: 50px;

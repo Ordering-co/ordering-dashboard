@@ -1,0 +1,32 @@
+import { test, expect, fixtureUrl } from './fixtures'
+
+test('wired log controller preserves query filters, selected detail request and related group reads', async ({ page }) => {
+  await page.goto(fixtureUrl('surface=technical-table-consumers&mode=light'))
+  await page.getByRole('button', { name: 'Open business logs' }).click()
+  const outer = page.getByRole('dialog', { name: 'Business integration logs', exact: true })
+  await expect(outer.getByText('fixture.updated', { exact: true })).toBeVisible()
+  const first = await page.evaluate(() => globalThis.__OD_TECHNICAL_REQUESTS__[0])
+  expect(first.query.orderBy).toBe('-id')
+  expect(first.query.page_size).toBe('10')
+  expect(JSON.parse(first.query.where)).toEqual({ conditions: [{ attribute: 'model', value: 'Business' }, { attribute: 'model_id', value: 51 }, { attribute: 'plugin_id', value: 9 }], conector: 'AND' })
+  await outer.getByText('fixture.updated', { exact: true }).click()
+  const detail = page.getByRole('dialog', { name: 'Log', exact: true })
+  await expect(detail).toBeVisible()
+  await expect.poll(() => page.evaluate(() => globalThis.__OD_TECHNICAL_REQUESTS__.some(request => request.path.endsWith('/logs/81')))).toBe(true)
+  await detail.getByText('View group related events', { exact: true }).click()
+  await expect(detail).toHaveCount(0)
+  await expect.poll(() => page.evaluate(() => globalThis.__OD_TECHNICAL_REQUESTS__.filter(request => request.query.where?.includes('group_key')).length)).toBe(1)
+  const group = await page.evaluate(() => globalThis.__OD_TECHNICAL_REQUESTS__.find(request => request.query.where?.includes('group_key')))
+  expect(JSON.parse(group.query.where).conditions).toContainEqual({ attribute: 'group_key', value: 'fixture-group' })
+  await expect(outer).toBeVisible()
+})
+
+test('actual user details token tab retains sorted records and paginates raw synthetic tokens', async ({ page }) => {
+  await page.goto(fixtureUrl('surface=technical-table-consumers&mode=light'))
+  const scope = page.getByTestId('user-token-consumer')
+  await expect(scope.locator('tbody tr').first()).toContainText('fixture-only-token-12')
+  await expect(scope.locator('tbody tr')).toHaveCount(10)
+  await scope.getByRole('button', { name: 'Page 2', exact: true }).click()
+  await expect(scope.locator('tbody tr')).toHaveCount(2)
+  await expect(scope.locator('tbody tr').last()).toContainText('fixture-only-token-1')
+})

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusRing } from '../../../styles/touchTarget'
 
 export const LoyaltyStack = styled.div`
   display: flex;
@@ -24,7 +25,7 @@ export const LoyaltyCardHeader = styled.div`
 
 export const LoyaltyCardTitle = styled.h3`
   margin: 0;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   line-height: 22px;
   color: ${props => props.theme.colors.headingColor};
@@ -32,9 +33,9 @@ export const LoyaltyCardTitle = styled.h3`
 
 export const LoyaltyCardHelp = styled.p`
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 18px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
 `
 
 export const LoyaltyTabs = styled.div`
@@ -50,9 +51,9 @@ export const LoyaltyTab = styled.button`
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   padding: 10px 0;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   line-height: 20px;
-  color: ${props => props.theme.colors.lightGray};
+  color: var(--od-x-text-subtle);
   cursor: pointer;
 
   ${({ active }) => active && css`
@@ -60,6 +61,8 @@ export const LoyaltyTab = styled.button`
     font-weight: 600;
     border-bottom-color: ${props => props.theme.colors.headingColor};
   `}
+
+  ${brandFocusRing}
 `
 
 export const LoyaltyBlock = styled.div`
@@ -70,9 +73,9 @@ export const LoyaltyBlock = styled.div`
 
 export const LoyaltyBlockHelp = styled.p`
   margin: 0;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 18px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
 `
 
 export const EmbeddedWalletForm = styled.div`

@@ -48,9 +48,16 @@ const SingleBusinessSubCateogriesUI = (props) => {
     )
   }
 
+  // (D-9 c): the section closes and ?category= is written only when the API took the move. A refused move (`{ ok: false }`)
+  // ticks the category the product still has and stays open; the section above it shows the error. Still one click, no confirmation.
   const handleChangeCategoryProduct = async (category) => {
-    await setProductCategorySelected(category)
-    await handleUpdateClickProduct({ category_id: category?.id }, { refreshProducts: true })
+    const previous = productCategorySelected
+    setProductCategorySelected(category)
+    const response = await handleUpdateClickProduct({ category_id: category?.id }, { refreshProducts: true })
+    if (response?.ok === false) {
+      setProductCategorySelected(previous)
+      return
+    }
     addQueryToUrl({ category: category?.id, product: product?.id })
     handleCloseExtraOpen && handleCloseExtraOpen()
   }
@@ -113,10 +120,25 @@ const SingleBusinessSubCateogriesUI = (props) => {
                       name='preselected'
                       className={category?.id === productCategorySelected?.id ? 'checked default' : 'default'}
                     >
-                      <span className='radio' onClick={(e) => {
-                        e.stopPropagation()
-                        handleChangeCategoryProduct(category)
-                      }}>
+                      {/* bugs E D21: a span with onClick was out of the tab order and had no name; it is a named radio now
+                          (same span, same look) that Enter or Space activate like the click: one step, no confirmation. */}
+                      <span
+                        className='radio'
+                        role='radio'
+                        aria-checked={category?.id === productCategorySelected?.id}
+                        aria-label={category?.name}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key !== 'Enter' && e.key !== ' ') return
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleChangeCategoryProduct(category)
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleChangeCategoryProduct(category)
+                        }}
+                      >
                         {category?.id === productCategorySelected?.id ? <CheckIcon /> : <UnCheckIcon />}
                       </span>
                     </div>

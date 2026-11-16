@@ -44,6 +44,8 @@ export const MetaFields = (props) => {
 
   /**
    * Method to delete meta fields from API
+   * redesign W0-12 (T0-47, M-05): it answers `{ error, result }` to the caller (the confirmation shows the failure
+   * in place and keeps the field). Before, a refusal of the API left `loading` on forever and said nothing.
    */
   const handleDeleteMetaField = async (metaFieldId) => {
     try {
@@ -67,15 +69,15 @@ export const MetaFields = (props) => {
             error: false
           }
         })
+        return { error: false }
       }
+      const body = await response.json().catch(() => ({}))
+      // redesign tramo A r2 (W0-PA1-05): a refused delete only stops loading; it keeps the result of the add form
+      setActionState(current => ({ ...current, loading: false }))
+      return { error: true, result: [].concat(body?.result ?? []).join('. ') }
     } catch (error) {
-      setActionState({
-        result: {
-          error: true,
-          result: error.message
-        },
-        loading: false
-      })
+      setActionState(current => ({ ...current, loading: false })) // redesign tramo A r2 (W0-PA1-05)
+      return { error: true, result: error.message }
     }
   }
 

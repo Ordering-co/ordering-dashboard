@@ -1,0 +1,94 @@
+/*
+ * redesign stores 5.6 (, G3-04) · Product of a shared menu, the detail of a P/SectionSplit: price and quantity, three switches,
+ * the tree of extras, options and suboptions, and the save bar. Product's NumberField, AsyncSwitch, SearchField and SaveBar own their
+ * structure; this adds the column and the indentation. Values: --od-* and --od-x-* only, logical properties only.
+ *
+ * No `overflow`, `container-type` or `contain` here (SectionSplit decisions, points 3 and 3b): the piece is the scroller.
+ */
+
+.odc-smpd {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-smpd:focus { outline: none; }
+
+.odc-smpd-fields,
+.odc-smpd-switches {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* A switch fills the line, so a long name wraps inside it instead of widening the detail. */
+.odc-smpd .odc-async-switch {
+  display: flex;
+  align-items: flex-start;
+  min-inline-size: 0;
+}
+
+.odc-smpd .odc-switch {
+  max-inline-size: 100%;
+  text-align: start;
+}
+
+.odc-smpd-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+/* ── Product options ── */
+.odc-smpd-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-smpd-subtitle {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The search field of Product has a flex basis for a filter bar row; in this column it would be that tall. */
+.odc-smpd-options > .odc-smpd-search {
+  flex: none;
+}
+
+.odc-smpd-tree {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each level is indented from the start edge (so it mirrors in RTL). */
+.odc-smpd-tree .odc-smpd-tree {
+  padding-inline-start: var(--od-space-5);
+}
+
+.odc-smpd-node {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+}

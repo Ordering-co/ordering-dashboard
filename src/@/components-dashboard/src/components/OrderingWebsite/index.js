@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
@@ -8,6 +8,22 @@ import { useWebsocket, useSocketInstance } from '../../contexts/WebsocketContext
 import { applySiteLogoHeaderSync } from '../../utils'
 import { findLegacySiteOfType } from '../../utils/websiteMigration'
 
+// redesign ordering-website B2 (OW-01/OW-02/OW-12): small helpers for the saves that do not lose data.
+const clone = (value) => (value === undefined ? undefined : JSON.parse(JSON.stringify(value)))
+const pick = (source, keys) => {
+  const out = {}
+  keys.forEach((key) => {
+    if (source && Object.prototype.hasOwnProperty.call(source, key)) out[key] = source[key]
+  })
+  return out
+}
+const omit = (source, keys) => {
+  const out = { ...source }
+  keys.forEach((key) => { delete out[key] })
+  return out
+}
+const isPlainObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value)
+
 export const OrderingWebsite = (props) => {
   const {
     UIComponent,
@@ -16,8 +32,11 @@ export const OrderingWebsite = (props) => {
     type,
     name,
     disableReplaceCode,
-    disableSiteCreation,
-    forcedSiteId
+    forcedSiteId,
+    fallbackAppId,
+    setAppIdState,
+    // main: websites are made in Builder; with it the page never creates a site and says there is none
+    disableSiteCreation
   } = props
 
   const [ordering, { configurations }] = useApi()
@@ -38,6 +57,40 @@ export const OrderingWebsite = (props) => {
   const [businessesList, setBusinessesList] = useState({ businesses: [], loading: false, error: null })
   const [franchisesList, setFranchisesList] = useState({ loading: false, franchises: [], error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
+  // redesign ordering-website B2 (OW-01): what is saved on the server, apart from the drafts being edited.
+  const [savedValues, setSavedValues] = useState(null)
+  const [savedSite, setSavedSite] = useState(null)
+  const [saving, setSaving] = useState(false)
+  // (K-4): with a `type` and no `disableReplaceCode` (/my-products/ordering-website-2) opening the page only reads. What main
+  // wrote on load (create the site, or fix the code or type of the one found) waits in `pendingSiteRef`, `{ create }` or `{ repair }`,
+  // and the first save writes it through `ensureSite`, like /my-products/dashboard. The other routes keep writing on load.
+  const deferWrites = !!type && !disableReplaceCode
+  const pendingSiteRef = useRef(null)
+  // `create` pending: there is no site or theme yet, so the editor starts from the theme defaults (see the effect below)
+  const [pendingCreate, setPendingCreate] = useState(false)
+  // the write in flight, so a second save at the same time (a double click, Save + the domain dialog) waits for it, not repeats it
+  const ensuringRef = useRef(null)
+  // the default theme assigned on the first save of a created site, until the load can show it (a retry must not assign it twice)
+  const assignedThemeRef = useRef(null)
+  // the draft was just saved and shown as the theme: the load effect must not overwrite what is being edited
+  const skipThemeSyncRef = useRef(false)
+  const changesRef = useRef(formState.changes)
+  const siteRef = useRef(site)
+  const savedValuesRef = useRef(savedValues)
+  changesRef.current = formState.changes
+  siteRef.current = site
+  savedValuesRef.current = savedValues
+
+  const commitSavedValues = (values) => {
+    savedValuesRef.current = values
+    setSavedValues(values)
+  }
+
+  // A site that comes from the server (load, add, update): it is what is shown and what is saved.
+  const applyServerSite = (serverSite) => {
+    setSite(serverSite)
+    setSavedSite(serverSite)
+  }
 
   const requestBase = {
     method: 'POST',
@@ -65,14 +118,26 @@ export const OrderingWebsite = (props) => {
     })
   }
 
+  // a site found with another code or type is shown as it is and its theme is loaded; the rename waits in
+  // `pendingSiteRef` for the first save. The id does not change with the rename, so the theme is the same one.
+  const deferRepair = async (current, repair) => {
+    pendingSiteRef.current = { repair }
+    applyServerSite(current)
+    await getSiteTheme(current.id)
+  }
+
   /**
  * Method to get the themes from API
  */
   const getSites = async () => {
     try {
+      // a stale error from a failed load is cleared when it is asked again (Retry)
+      // review: so is main's «no site»: the same page instance moves between ordering-website and -2
+      setSiteMissing(false)
       setOrderingTheme({
         ...orderingTheme,
-        loading: true
+        loading: true,
+        error: null
       })
       const requestOptions = {
         ...requestBase,
@@ -82,38 +147,64 @@ export const OrderingWebsite = (props) => {
       const response = await fetch(`${ordering.root}/sites`, requestOptions)
       const { error, result } = await response.json()
 
-      // A migrated site or a Builder product shares the type but is edited in Builder: never re-coded
+      // a refused list is a failed load, not an empty site: the UI shows it (with Retry) instead of the form
+      if (error || !Array.isArray(result)) {
+        setOrderingTheme((prevState) => ({
+          ...prevState,
+          loading: false,
+          themes: [],
+          error: Array.isArray(result) && result.length ? result : ['Could not load the site']
+        }))
+        return
+      }
+
+      // main: a migrated site or a Builder product shares the type but is edited in Builder: never re-coded
       const findByType = findLegacySiteOfType(result, type)
       const found = result.find(site => site.code === appId)
 
-      if (error) return
+      pendingSiteRef.current = null
+      assignedThemeRef.current = null
+      setPendingCreate(false)
+
+      // with `fallbackAppId` (the franchises page, whose appId can come from ?appId=) only an existing site of this type
+      // opens; any other code switches to the default one. main opened the marketplace website (?appId=website) or created a site
+      // for a typo. The default code itself keeps main's load (it is created when missing).
+      if (fallbackAppId && appId !== fallbackAppId && !result.some(site => site.code === appId && site.type === type)) {
+        setAppIdState && setAppIdState(fallbackAppId)
+        return
+      }
 
       if (type) {
         if (findByType && !disableReplaceCode) {
           if (findByType.code !== appId) {
-            const siteFound = { ...findByType, code: appId }
-            handleUpdateSite(siteFound)
+            await deferRepair(findByType, { id: findByType.id, type, code: appId })
           } else {
-            setSite(found)
+            applyServerSite(found)
             await getSiteTheme(found.id)
           }
         } else if (found) {
-          const siteFound = { ...found, type }
           if (!disableReplaceCode) {
-            handleUpdateSite(siteFound)
+            await deferRepair(found, { id: found.id, type, code: found.code })
           } else {
-            setSite(siteFound)
+            const siteFound = { ...found, type }
+            applyServerSite(siteFound)
             await getSiteTheme(siteFound.id)
           }
         } else if (disableSiteCreation) {
+          // main goes first: these pages create no site at all, not even on the first save
           setSiteMissing(true)
+        } else if (deferWrites) {
+          // no site yet. Nothing is created until the first save; meanwhile the editor shows the theme defaults.
+          pendingSiteRef.current = { create: { code: appId, name: name || configurations?.subdomain, type } }
+          applyServerSite(null)
+          setPendingCreate(true)
         } else {
           await handleAddSite(type)
         }
       } else {
         if (found) {
           await getSiteTheme(found.id)
-          setSite(found)
+          applyServerSite(found)
         } else if (disableSiteCreation) {
           setSiteMissing(true)
         } else {
@@ -234,11 +325,11 @@ export const OrderingWebsite = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         if (type) {
-          setSite(result)
+          applyServerSite(result)
           getSites()
         } else {
           await getSiteTheme(result.id)
-          setSite(result)
+          applyServerSite(result)
         }
       } else {
         setOrderingTheme((prevState) => ({
@@ -257,18 +348,57 @@ export const OrderingWebsite = (props) => {
     }
   }
 
+  /**
+   * writes what the load left pending (create the site, or fix its code and type) and gives back the site to write on.
+   * Nothing pending: the site as it is. A second call while the write is in flight waits for it. It throws the API answer when the
+   * write fails.
+   */
+  const ensureSite = () => {
+    if (ensuringRef.current) return ensuringRef.current
+    if (!pendingSiteRef.current) return Promise.resolve(siteRef.current)
+    ensuringRef.current = writePendingSite().finally(() => { ensuringRef.current = null })
+    return ensuringRef.current
+  }
+
+  const writePendingSite = async () => {
+    const pending = pendingSiteRef.current
+    const url = pending.create ? `${ordering.root}/sites` : `${ordering.root}/sites/${pending.repair.id}`
+    const body = pending.create ?? { type: pending.repair.type, code: pending.repair.code }
+    const response = await fetch(url, { ...requestBase, body: JSON.stringify(body) })
+    const { error, result } = await response.json()
+    if (error) throw result
+    pendingSiteRef.current = null
+    setPendingCreate(false)
+    // the fields being edited stay as typed (same rule as setSiteFromServer)
+    const dirtyKeys = Object.keys(changesRef.current || {})
+    setSavedSite((prev) => ({ ...prev, ...result }))
+    const next = { ...siteRef.current, ...omit(result, dirtyKeys) }
+    siteRef.current = next
+    setSite(next)
+    return next
+  }
+
   const handleUpdateSite = async (payload) => {
-    const isSiteRecordUpdate = payload?.id != null && payload?.type !== undefined
-    const changes = isSiteRecordUpdate
-      ? { type: payload.type, code: payload.code }
-      : applySiteLogoHeaderSync(payload ?? formState.changes, site)
-    const siteId = isSiteRecordUpdate ? payload.id : site?.id
+    const changes = applySiteLogoHeaderSync(payload ?? formState.changes, site)
 
-    if (!siteId || !changes || Object.keys(changes).length === 0) return
+    if (!changes || Object.keys(changes).length === 0) return
+    if (!site?.id && !pendingSiteRef.current?.create) return
 
+    // redesign ordering-website B2 (OW-12): an explicit payload
+    // (e.g. "Remove custom domain" = { domain: null }) only clears what it sent; unsaved fields stay.
+    const isExplicitPayload = payload != null
     try {
       setFormState((prev) => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
+      // the site is created or fixed first when the load left that pending
+      let siteId
+      try {
+        siteId = (await ensureSite())?.id
+      } catch (result) {
+        setFormState((prev) => ({ ...prev, loading: false }))
+        showToast(ToastType.Error, result instanceof Error ? result.message : result)
+        return false
+      }
       const seoOptions = {
         ...requestBase,
         body: JSON.stringify(changes)
@@ -277,21 +407,32 @@ export const OrderingWebsite = (props) => {
       const response = await fetch(`${ordering.root}/sites/${siteId}`, seoOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setSite(result)
-        setFormState({ loading: false, changes: {}, error: null })
+        if (isExplicitPayload) {
+          const sent = Object.keys(payload)
+          const remaining = Object.keys(changesRef.current || {}).filter((key) => !sent.includes(key))
+          setSite((prev) => ({ ...result, ...pick(prev, remaining) }))
+          setFormState((prev) => ({ loading: false, error: null, changes: omit(prev.changes, sent) }))
+        } else {
+          setSite(result)
+          setFormState({ loading: false, changes: {}, error: null })
+        }
+        setSavedSite(result)
         showToast(
           ToastType.Success,
           changes?.domain === null
             ? t('CUSTOM_DOMAIN_REMOVED_SUCCESSFULLY', 'Custom domain removed successfully')
             : t('UPDATED_SUCCESSFULLY', 'Updated successfully')
         )
+        return true
       } else {
         setFormState((prev) => ({ ...prev, loading: false }))
         showToast(ToastType.Error, result)
+        return false
       }
     } catch (err) {
       setFormState((prev) => ({ ...prev, loading: false }))
       showToast(ToastType.Error, err.message)
+      return false
     } finally {
       setOrderingTheme((prevState) => ({
         ...prevState,
@@ -323,6 +464,39 @@ export const OrderingWebsite = (props) => {
         loading: false,
         error: [err.message]
       })
+    }
+  }
+
+  // The values a site gets with its first theme: the default theme's own, with this project's default domain.
+  const buildDefaultThemeValues = () => {
+    const valuesDefault = clone(themesList.themes[0]?.values_default)
+    if (valuesDefault?.my_products?.components?.website_settings?.components?.values) {
+      valuesDefault.my_products.components.website_settings.components.values.default_domain = `https://${ordering.project}.${configurations.subdomain}.com`
+    }
+    return valuesDefault
+  }
+
+  // assigns the default theme to a site created by the first save. Unlike handleAssignTheme it does not replace the
+  // theme state (that would reset the drafts being saved). `{ row }` when it worked, `{ error }` when the API refused it.
+  const assignDefaultTheme = async (siteId, defaultTheme) => {
+    try {
+      const response = await fetch(`${ordering.root}/sites/${siteId}/themes`, {
+        ...requestBase,
+        body: JSON.stringify({
+          theme_id: defaultTheme.id,
+          values: JSON.stringify(buildDefaultThemeValues())
+        })
+      })
+      const { error, result } = await response.json()
+      if (error) {
+        showToast(ToastType.Error, result)
+        return { error: result }
+      }
+      showToast(ToastType.Success, t('THEME_ADDED', 'Theme added'))
+      return { row: result }
+    } catch (err) {
+      showToast(ToastType.Error, err.message)
+      return { error: err.message }
     }
   }
 
@@ -386,33 +560,123 @@ export const OrderingWebsite = (props) => {
   /**
  * Method to update the site theme from API
  */
-  const handleUpdateSiteTheme = async (advancedTheme) => {
+  // redesign ordering-website B2 (OW-01): the last saved values; before the first load, the theme as it came.
+  const getBaseValues = () => clone(savedValuesRef.current ?? orderingTheme.themes[0]?.values ?? {})
+
+  // redesign ordering-website B2 (OW-01): in the store white label the store is the forced one,
+  // never one from the draft (same values Basic keeps forcing in its own draft).
+  const forceStoreWebsiteTheme = (values) => {
+    const slug = props.business?.slug
+    if (!forcedSiteId || !slug) return
+    if (!isPlainObject(values.my_products)) values.my_products = {}
+    if (!isPlainObject(values.my_products.components)) values.my_products.components = {}
+    const components = values.my_products.components
+    if (!isPlainObject(components.website_theme)) components.website_theme = {}
+    if (!isPlainObject(components.website_theme.components)) components.website_theme.components = {}
+    components.website_theme.components.type = 'single_store'
+    components.website_theme.components.business_slug = slug
+  }
+
+  // What Basic sends: its own my_products.components over the saved values.
+  const buildBasicValues = () => {
+    const base = getBaseValues()
+    const values = clone(base)
+    values.my_products = { ...base.my_products, components: clone(themeValues) }
+    return values
+  }
+
+  // What Advanced sends: its draft, with the saved my_products plus the one path Advanced edits there.
+  const buildAdvancedValues = (advancedTheme) => {
+    const base = getBaseValues()
+    const values = clone(advancedTheme)
+    const fullscreen = advancedTheme?.my_products?.components?.images?.components?.homepage_image_fullscreen
+    values.my_products = clone(base.my_products)
+    if (fullscreen !== undefined) {
+      if (!isPlainObject(values.my_products)) values.my_products = {}
+      if (!isPlainObject(values.my_products.components)) values.my_products.components = {}
+      if (!isPlainObject(values.my_products.components.images)) values.my_products.components.images = {}
+      if (!isPlainObject(values.my_products.components.images.components)) values.my_products.components.images.components = {}
+      values.my_products.components.images.components.homepage_image_fullscreen = clone(fullscreen)
+    }
+    return values
+  }
+
+  // What "save all" sends: both drafts mixed; themeValues is the only source of homepage_image_fullscreen.
+  const buildAllValues = () => {
+    const base = getBaseValues()
+    const values = { ...base, ...clone(advancedValues) }
+    values.my_products = {
+      ...clone(advancedValues?.my_products ?? base.my_products),
+      components: clone(themeValues)
+    }
+    return values
+  }
+
+  /**
+   * Saves the site changes (if any) and then the theme. Same requests as before; the site POST is now read:
+   * if it fails nothing else is posted and no success is shown.
+   * @param {string} mode 'basic' | 'advanced' | 'all'
+   * @param {object} advancedTheme Advanced draft (mode 'advanced')
+   * @returns {Promise<{ok: boolean, error?: any}>}
+   */
+  const saveSiteAndTheme = async (mode, advancedTheme) => {
+    setSaving(true)
     try {
+      const themeRow = orderingTheme.themes[0]
+      let themeId = themeRow?.theme_id ?? assignedThemeRef.current?.themeId
+      let siteId = themeRow?.site_id ?? assignedThemeRef.current?.siteId
+      // a site created by this save (or whose theme request failed) gets the default theme first, like the load does for
+      // a site with none; it only applies where the load writes are deferred.
+      const defaultTheme = themesList.themes?.[0]
+      const needsDefaultTheme = themeId == null && deferWrites && defaultTheme?.id != null
+      // redesign ordering-website-2 (OW2-04): with no theme loaded and none to assign nothing is posted (not even the
+      // pending site write), like main, where this Save threw before any request; it used to go to /sites/undefined.
+      if (!needsDefaultTheme && (themeId == null || siteId == null)) return { ok: false, error: null }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const themeId = orderingTheme.themes[0]?.theme_id
-      const siteId = orderingTheme.themes[0]?.site_id
-      const myProductvalues = {
-        ...orderingTheme.themes[0].values,
-        ...advancedValues,
-        my_products: {
-          ...orderingTheme.themes[0].values?.my_products,
-          components: { ...themeValues }
-        }
+      let currentSite
+      try {
+        currentSite = (await ensureSite()) ?? site
+      } catch (result) {
+        const message = result instanceof Error ? result.message : result
+        showToast(ToastType.Error, message)
+        return { ok: false, error: message }
+      }
+      if (needsDefaultTheme) {
+        if (currentSite?.id == null) return { ok: false, error: null }
+        const assigned = await assignDefaultTheme(currentSite.id, defaultTheme)
+        if ('error' in assigned) return { ok: false, error: assigned.error }
+        themeId = assigned.row?.theme_id ?? defaultTheme.id
+        siteId = assigned.row?.site_id ?? currentSite.id
+        assignedThemeRef.current = { themeId, siteId, id: assigned.row?.id }
+        // the server now has the defaults: they are the base of this save
+        commitSavedValues(isPlainObject(assigned.row?.values) ? clone(assigned.row.values) : buildDefaultThemeValues())
       }
       const siteChanges = applySiteLogoHeaderSync(formState.changes, site)
-      const seoOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(siteChanges)
-      }
       if (Object.keys(siteChanges).length > 0) {
-        await fetch(`${ordering.root}/sites/${site.id}`, seoOptions)
+        const seoOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(siteChanges)
+        }
+        const siteResponse = await fetch(`${ordering.root}/sites/${currentSite.id}`, seoOptions)
+        const { error: siteError, result: siteResult } = await siteResponse.json()
+        if (siteError) {
+          showToast(ToastType.Error, siteResult)
+          return { ok: false, error: siteResult }
+        }
+        // a partial answer never blanks fields of the site on screen (review r1: the synthetic API echoes only what was sent)
+        setSite((prev) => ({ ...prev, ...siteResult }))
+        setSavedSite((prev) => ({ ...prev, ...siteResult }))
+        setFormState({ loading: false, changes: {}, error: null })
       }
 
-      const values = advancedTheme ? JSON.parse(JSON.stringify(advancedTheme)) : JSON.parse(JSON.stringify(myProductvalues))
+      const values = mode === 'advanced'
+        ? buildAdvancedValues(advancedTheme)
+        : mode === 'all' ? buildAllValues() : buildBasicValues()
+      forceStoreWebsiteTheme(values)
       if (forcedSiteId && values?.general?.components?.buttons) {
         values.general.components.buttons.color = ''
         values.general.components.buttons.borderRadius = ''
@@ -426,15 +690,73 @@ export const OrderingWebsite = (props) => {
       }
       const response = await fetch(`${ordering.root}/sites/${siteId}/themes/${themeId}`, requestOptions)
       const { error, result } = await response.json()
-      if (!error) {
-        showToast(ToastType.Success, t('THEME_UPDATED', 'Theme updated'))
-        setAdvancedValues({ ...advancedValues, ...result?.values })
-      } else {
+      if (error) {
         showToast(ToastType.Error, result)
+        return { ok: false, error: result }
       }
+      showToast(ToastType.Success, t('THEME_UPDATED', 'Theme updated'))
+      const previousFullscreen = getBaseValues()?.my_products?.components?.images?.components?.homepage_image_fullscreen
+      // redesign ordering-website integration: what is now stored, as an object. An answer whose `values` is the JSON
+      // text that was sent (not an object) used to be spread into advancedValues character by character.
+      const storedValues = isPlainObject(result?.values) ? clone(result.values) : clone(values)
+      commitSavedValues(storedValues)
+      if (!themeRow) {
+        // the theme was assigned by this save: the editor now has one (the drafts are what was just saved, so the load effect skips it)
+        skipThemeSyncRef.current = true
+        setOrderingTheme({
+          loading: false,
+          themes: [{
+            id: assignedThemeRef.current?.id,
+            theme_id: themeId,
+            site_id: siteId,
+            values: clone(storedValues),
+            theme: { values_default: clone(defaultTheme?.values_default) }
+          }],
+          error: null,
+          siteId
+        })
+      }
+      if (mode === 'basic') {
+        // the Advanced draft is not stepped on: only its my_products follows what Basic saved
+        setAdvancedValues((prev) => ({ ...prev, my_products: clone(values.my_products) }))
+      } else {
+        setAdvancedValues({ ...advancedValues, ...storedValues })
+      }
+      if (mode === 'advanced') {
+        // Basic keeps its own copy of homepage_image_fullscreen: when Basic did not touch it, it follows what Advanced
+        // saved, so a later Basic save does not put the old value back.
+        const savedFullscreen = values?.my_products?.components?.images?.components?.homepage_image_fullscreen
+        setThemeValues((prev) => {
+          if (prev?.images?.components?.homepage_image_fullscreen !== previousFullscreen) return prev
+          const next = clone(prev)
+          if (!isPlainObject(next.images)) next.images = {}
+          if (!isPlainObject(next.images.components)) next.images.components = {}
+          next.images.components.homepage_image_fullscreen = savedFullscreen
+          return next
+        })
+      }
+      return { ok: true }
     } catch (err) {
       showToast(ToastType.Error, err.message)
+      return { ok: false, error: err.message }
+    } finally {
+      setSaving(false)
     }
+  }
+
+  const handleUpdateSiteTheme = (advancedTheme) => saveSiteAndTheme(advancedTheme ? 'advanced' : 'basic', advancedTheme)
+
+  // redesign ordering-website B2 (OW-01): one draft (sectioned editor) saved in a single request.
+  const handleSaveAll = () => saveSiteAndTheme('all')
+
+  // redesign ordering-website B2: back to what is saved.
+  const discardChanges = () => {
+    // with the site still to be created, what is "saved" is the theme defaults the editor started from
+    const base = savedValues ?? (pendingSiteRef.current?.create ? buildDefaultThemeValues() : null)
+    setThemeValues(clone(base?.my_products?.components ?? {}))
+    setAdvancedValues(clone(base ?? {}))
+    setSite(clone(savedSite ?? null))
+    setFormState({ loading: false, changes: {}, error: null })
   }
 
   const loadForcedSite = async () => {
@@ -446,7 +768,7 @@ export const OrderingWebsite = (props) => {
       })
       const { error, result } = await response.json()
       if (!error && result && !Array.isArray(result)) {
-        setSite(result)
+        applyServerSite(result)
         await getSiteTheme(result.id)
       } else {
         setOrderingTheme((prev) => ({ ...prev, loading: false, error: result || ['Site not found'] }))
@@ -454,6 +776,17 @@ export const OrderingWebsite = (props) => {
     } catch (err) {
       setOrderingTheme((prev) => ({ ...prev, loading: false, error: [err.message] }))
     }
+  }
+
+  // «Retry» of the editor when the site did not load: the same requests the page makes when it opens
+  const reloadSite = () => {
+    if (forcedSiteId) {
+      loadForcedSite()
+      return
+    }
+    if (!appId) return
+    if (themesList.error) getThemes()
+    getSites()
   }
 
   useEffect(() => {
@@ -473,16 +806,27 @@ export const OrderingWebsite = (props) => {
   useEffect(() => {
     if (forcedSiteId) return
     if (orderingTheme?.siteId && themesList.themes?.length && !orderingTheme?.themes?.length) {
-      const valuesDefault = JSON.parse(JSON.stringify(themesList.themes[0]?.values_default))
-      if (valuesDefault?.my_products?.components?.website_settings?.components?.values) {
-        valuesDefault.my_products.components.website_settings.components.values.default_domain = `https://${ordering.project}.${configurations.subdomain}.com`
-      }
-      handleAssignTheme(valuesDefault, themesList.themes[0]?.id, orderingTheme?.siteId)
+      handleAssignTheme(buildDefaultThemeValues(), themesList.themes[0]?.id, orderingTheme?.siteId)
     }
   }, [JSON.stringify(themesList.themes), orderingTheme?.siteId])
 
+  // a site still to be created shows the theme defaults. They are also its saved base (`savedValues`), so any change to
+  // the theme counts as one (the SaveBar and the leave warning depend on it) and Discard goes back to them.
+  useEffect(() => {
+    if (!pendingCreate || !themesList.themes?.length) return
+    const valuesDefault = buildDefaultThemeValues()
+    if (!valuesDefault) return
+    commitSavedValues(clone(valuesDefault))
+    setAdvancedValues(valuesDefault)
+    setThemeValues(clone(valuesDefault.my_products?.components ?? {}))
+  }, [pendingCreate, themesList.themes])
+
   useEffect(() => {
     if (!orderingTheme.themes[0]?.values) return
+    if (skipThemeSyncRef.current) {
+      skipThemeSyncRef.current = false
+      return
+    }
     if (
       orderingTheme.themes[0]?.values?.business_view?.components?.products?.components?.product?.components?.favorite?.hidden === undefined &&
       orderingTheme.themes[0]?.values?.business_view?.components?.products?.components?.product?.components
@@ -536,7 +880,10 @@ export const OrderingWebsite = (props) => {
         }
       }
     }
-    setAdvancedValues(JSON.parse(JSON.stringify(orderingTheme.themes[0]?.values)))
+    const normalizedValues = JSON.parse(JSON.stringify(orderingTheme.themes[0]?.values))
+    setAdvancedValues(normalizedValues)
+    // redesign ordering-website B2 (OW-01): same clone, so the load normalizations do not count as a change
+    commitSavedValues(clone(normalizedValues))
     const _themeValues = orderingTheme.themes[0]?.values?.my_products?.components
     if (!_themeValues) return
     setThemeValues(JSON.parse(JSON.stringify(_themeValues)))
@@ -547,7 +894,21 @@ export const OrderingWebsite = (props) => {
    */
   const handleSitesUpdate = (siteUpdate) => {
     if (!site || siteUpdate?.id !== site?.id) return
-    setSite(prev => ({ ...prev, ...siteUpdate }))
+    // redesign ordering-website B2 (OW-12): only the clean fields follow the server
+    const dirtyKeys = Object.keys(changesRef.current || {})
+    setSavedSite(prev => ({ ...prev, ...siteUpdate }))
+    setSite(prev => ({ ...prev, ...omit(siteUpdate, dirtyKeys) }))
+  }
+
+  // redesign ordering-website B2 (OW-12): the `setSite` the UI receives (domain dialog, white label)
+  // is only called after writing on the server, so it must not step on fields with unsaved changes.
+  // Accepts an object or a function, like setState.
+  const setSiteFromServer = (update) => {
+    const dirtyKeys = Object.keys(changesRef.current || {})
+    const prev = siteRef.current
+    const next = typeof update === 'function' ? update(prev) : update
+    setSite({ ...next, ...pick(prev, dirtyKeys) })
+    setSavedSite((saved) => ({ ...saved, ...omit(next, dirtyKeys) }))
   }
 
   useEffect(() => {
@@ -588,12 +949,19 @@ export const OrderingWebsite = (props) => {
           themesList={themesList}
           site={site}
           siteMissing={siteMissing}
-          setSite={setSite}
+          setSite={setSiteFromServer}
           businessesList={businessesList}
           franchisesList={franchisesList}
           handleChangeInput={handleChangeInput}
           formState={formState}
           handleUpdateSite={handleUpdateSite}
+          ensureSite={ensureSite}
+          saving={saving}
+          savedValues={savedValues}
+          savedSite={savedSite}
+          handleSaveAll={handleSaveAll}
+          discardChanges={discardChanges}
+          reloadSite={reloadSite}
         />
       )}
     </>

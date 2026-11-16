@@ -27,7 +27,7 @@ export const ActionButton = styled.button`
   border-radius: 8px;
   background: transparent;
   color: ${props => props.theme.colors?.primary || '#E63757'};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;

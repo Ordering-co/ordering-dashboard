@@ -111,7 +111,7 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
     })
 
     if (productComment) {
-      array.push(`${t('COMMENT', 'Comment')}${productComment}`)
+      array.push(`${t('COMMENT', 'Comment')}: ${productComment}`)
     }
 
     return array
@@ -127,14 +127,14 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
   const isReservationPreorder = parseInt(order?.delivery_type, 10) === 9 && parseInt(order?.status, 10) === 13
 
   return (
-    <PrintContainer ref={ref}>
+    <PrintContainer ref={ref} role='document'>
       {showSection('orderNumber') && (
         <>
       <h1>{t('ORDER_NO', 'Order No.')} {order.id}</h1>
       <PrintTextContainer>
         {isReservationPreorder ? t('RESERVATION', 'Reservation') : getOrderStatus(order?.status)?.value}
         <br />
-        {t('DELIVERY_TYPE', 'Delivery Type')}: {deliveryStatus[order?.delivery_type]}
+        {t('DELIVERY_TYPE', 'Delivery type')}: {deliveryStatus[order?.delivery_type]}
         <br />
         {t('DELIVERY_DATE', 'Delivery Date')}: {order?.delivery_datetime_utc
           ? parseDate(order?.delivery_datetime_utc)
@@ -156,10 +156,16 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
         {t('MOBILE_PHONE', 'Mobile Phone')}: {order?.customer?.cellphone}
         <br />
         {!!order?.customer?.phone && (
-          `${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone}`)}
+          <>
+            {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.phone}`}
+            <br />
+          </>)}
         {t('FULL_ADDRESS', 'Full Addres')}: {order?.customer?.address}
         {!!order?.customer?.internal_number && (
-          `${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}`)}
+          <>
+            <br />
+            {`${t('INTERNAL_NUMBER', 'Internal Number')}: ${order?.customer?.internal_number}`}
+          </>)}
         <br />
         {!!order?.customer?.zipcode && (
         `${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}`
@@ -201,7 +207,7 @@ export const OrderToPrintTicket = forwardRef((props, ref) => {
       )}
       {showSection('orderDetails') && (
         <>
-      <h1>{t('ORDER_DETAILS', 'Order Details')}</h1>
+      <h1>{t('ORDER_DETAILS', 'Order details')}</h1>
       <br />
       <PrintProductsContainer>
         {order?.products?.length &&

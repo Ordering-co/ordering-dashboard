@@ -1,0 +1,525 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-c1-product-core-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "c1-productdetailsadvanced-propertyoption-label-first-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "PropertyOption",
+   "property": "font-size",
+   "context": "label:first-child",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-optioncenter-root-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "OptionCenter",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "16px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-labelcustom-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "LabelCustom",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-weightwrapper-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "WeightWrapper",
+   "property": "font-size",
+   "context": ".select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-priceperunit-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "PricePerUnit",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetailsadvanced-priceperunit-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsAdvanced/styles.js",
+   "component": "PricePerUnit",
+   "property": "font-size",
+   "context": ".select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productdetailscategories-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsCategories/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c1-productdetailscategories-headertitlecontainer-h2-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsCategories/styles.js",
+   "component": "HeaderTitleContainer",
+   "property": "font-size",
+   "context": "h2",
+   "match": "18px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "c1-productdetailscategories-infowrapper-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetailsCategories/styles.js",
+   "component": "InfoWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-uploadimageicon-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-inventorywrapper-span-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "InventoryWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "16px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-wrapper-span-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "Wrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "16px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-regularwrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "RegularWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-colorwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "ColorWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productdetatilsinformation-shapewrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "ShapeWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productmaindetails-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMainDetails/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c1-productmaindetails-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMainDetails/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c1-productmetafields-metatitle-root-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "MetaTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c1-productmetafields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c1-productmetafields-metaaddcontainer-input-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "16px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productmetafields-metaaddcontainer-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c1-productmetafields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c1-productmetafields-nometafield-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "NoMetaField",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "c1-pres-productdetatilsinformation-shapeboxwrapper-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDetatilsInformation/styles.js",
+   "component": "ShapeBoxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "Verified: RecordCircleFill/Circle inside each shape box, icon-only node."
+  },
+  {
+   "id": "c1-pres-productmetafields-metacontainer-meta-value---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "Verified: the node is a single BsTrash icon with no text."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-modalheader-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ModalHeader",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:76. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productinfo-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductInfo",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:166. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productinfo-price-wrapper---span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductInfo",
+   "property": "font-size",
+   "context": ".price-wrapper > span",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:176. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productinfo-price-discount-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductInfo",
+   "property": "font-size",
+   "context": ".price-wrapper > .price-discount",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:185. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productinfo-p-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductInfo",
+   "property": "font-size",
+   "context": "p",
+   "match": "13px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:190. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-skucontent-h2-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "SkuContent",
+   "property": "font-size",
+   "context": "h2",
+   "match": "16px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:209. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-skucontent-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "SkuContent",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:215. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-sectiontitle-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "SectionTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:238. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-tab-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:266. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-ingredientcontainer-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "IngredientContainer",
+   "property": "font-size",
+   "context": "> span",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:294. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-optiontitle-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "OptionTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:330. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-optiontitle-span-----not--first-child-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "OptionTitle",
+   "property": "font-size",
+   "context": "span > &:not(:first-child)",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:338. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-optionflag-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "OptionFlag",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:344. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-iconcontrol-svg-25px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "IconControl",
+   "property": "font-size",
+   "context": "svg",
+   "match": "25px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:397. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-suoptiontext-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "SuoptionText",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:426. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-quantitycontrol-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "QuantityControl",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:456. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-quantitycontrol-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "QuantityControl",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:461. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-positioncontrol-root-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "PositionControl",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "18px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:488. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-positioncontrol-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "PositionControl",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:492. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-suboptionprice-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "SuboptionPrice",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:518. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productactions-div-price-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductActions",
+   "property": "font-size",
+   "context": "div.price",
+   "match": "14px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:555. One of the 22 declarations of the storefront simulation, preserved whole."
+  },
+  {
+   "id": "c1-pres-productdesktoppreview-productactions-button-add-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductDesktopPreview/styles.js",
+   "component": "ProductActions",
+   "property": "font-size",
+   "context": "button.add",
+   "match": "12px",
+   "reason": "This declaration belongs to a MINIATURE SIMULATION of the customer-facing product modal, not to a dashboard surface. Verified by the coordinator: ProductDesktopPreview is mounted inside a Modal titled 'Preview' from ProductSummary/index.js, with a desktop/mobile toggle, a 325x650 phone frame driven by mask-image, and zero onChange handlers against three defaultChecked/defaultValue, i.e. a read-only mock. Applying dashboard roles would destroy the very fidelity the component exists to provide. Same treatment as Stores/BusinessPreview in batch b2.",
+   "evidence": "ProductDesktopPreview/styles.js:590. One of the 22 declarations of the storefront simulation, preserved whole."
+  }
+ ]
+}

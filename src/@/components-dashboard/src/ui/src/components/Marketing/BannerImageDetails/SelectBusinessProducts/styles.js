@@ -56,7 +56,7 @@ export const AccordionItem = styled.div`
     align-items: center;
 
     span {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       font-weight: 600;
       margin: 0 12px;
     }

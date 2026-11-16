@@ -1,0 +1,90 @@
+.od-ui:where(.od-modal-dialog) {
+  @apply od-relative od-box-border;
+  width: var(--od-modal-width);
+  height: var(--od-modal-height);
+  background-color: var(--od-modal-dialog-surface);
+  border-radius: var(--od-modal-radius-panel);
+  margin-top: auto;
+  margin-bottom: auto;
+  overflow: auto;
+  max-height: calc(var(--vh, 1vh) * 90);
+}
+
+.od-ui:where(.od-modal-inner) {
+  @apply od-relative od-h-full od-w-full;
+  padding: var(--od-modal-padding);
+  overflow: var(--od-modal-overflow);
+  background-color: var(--od-modal-inner-surface);
+}
+
+.od-ui:where(.od-modal-actions) {
+  @apply od-flex od-justify-around;
+  margin: 30px 0 0;
+}
+
+.od-ui:where(.od-modal-actions) button {
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  margin-top: 10px;
+  border-radius: 32px;
+  opacity: 1;
+}
+
+.od-ui:where(.od-modal-header) {
+  @apply od-flex;
+}
+
+.od-ui:where(.od-modal-title) {
+  @apply od-flex-1;
+  margin: 0 0 20px;
+  color: var(--od-modal-text);
+  font-family: var(--od-modal-font);
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: capitalize;
+  opacity: 1;
+}
+
+.od-ui:where(.od-modal-order-types) {
+  margin-right: 15px;
+}
+
+.od-ui:where(.od-modal-icon) {
+  @apply od-absolute;
+  right: 20px;
+  top: 20px;
+  z-index: var(--od-x-layer-raised);
+  color: var(--od-modal-text);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-modal-icon) > button {
+  min-width: var(--od-modal-touch-target);
+  min-height: var(--od-modal-touch-target);
+  width: var(--od-modal-touch-target);
+  height: var(--od-modal-touch-target);
+}
+
+.od-ui:where(.od-modal-icon) svg {
+  width: var(--od-modal-icon-size);
+  height: var(--od-modal-icon-size);
+}
+
+@media (max-width: 860px) {
+  .od-ui:where(.od-modal-dialog) {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .od-ui:where(.od-modal-dialog) {
+    width: 100vw;
+    height: calc(var(--vh, 1vh) * 100);
+    max-height: calc(var(--vh, 1vh) * 100);
+    border-radius: 0;
+  }
+}

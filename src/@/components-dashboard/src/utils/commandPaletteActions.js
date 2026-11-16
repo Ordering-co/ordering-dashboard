@@ -3,6 +3,9 @@ import { BUSINESS_PALETTE_SECTIONS, getPaletteBusinessSections } from './busines
 import { buildSettingsPath } from './settingsRedirects'
 import { buildPageActionEntries } from './commandPalettePageActions'
 import { buildCreateActionEntries } from './commandPaletteCreateActions'
+import { ADVANCED_REPORTS, REPORT_TEXTS } from './advancedReports'
+import { getEcommerceLegacyAliases } from './ecommerceReports'
+import { canRegisterStores } from './storeAdd'
 
 /**
  * "Open" actions of the command palette. Pure, no React.
@@ -37,29 +40,9 @@ const AD_BANNER_POSITIONS = [
   { key: 'app_business_page', labelKey: 'APP_BUSINESS_PAGE', label: 'App business page', aliases: ['banner pagina de tienda app'] }
 ]
 
-const ADVANCED_REPORTS = [
-  { id: 1, labelKey: 'DISTANCE', label: 'Distance', aliases: ['distancia'] },
-  { id: 2, labelKey: 'DISTANCE_STORE_CUSTOMER', label: 'Distance in KM from the store to customer', aliases: ['distancia tienda cliente'] },
-  { id: 3, labelKey: 'DISTANCE_STORE_CUSTOMER_RANGE_KM', label: 'Distance in KM from the store to customer (Range KM)', aliases: ['rango km'] },
-  { id: 4, labelKey: 'SERVICE_TIMES', label: 'Service Times', aliases: ['tiempos de servicio'] },
-  { id: 5, labelKey: 'DETAIL_COMPLETED_ORDERS', label: 'Detail of the completed orders of each delivery agency', aliases: ['ordenes completadas por agencia'] },
-  { id: 6, labelKey: 'NUMBER_ORDERS_SPECIFIC_RANGE', label: 'Number of orders within a specific range', aliases: ['cantidad de ordenes por rango'] },
-  { id: 7, labelKey: 'DRIVER_SCHEDULE', label: 'Driver schedule', aliases: ['horario de repartidores'] },
-  { id: 8, labelKey: 'ORDER_STATUS_TEXT', label: 'Order status', aliases: ['estado de ordenes'] },
-  { id: 9, labelKey: 'HEAT_MAP_WITH', label: 'Heat map with', aliases: ['mapa de calor', 'heatmap'] },
-  { id: 10, labelKey: 'DRIVER_DISTANCE', label: 'Driver distance', aliases: ['distancia de repartidores'] },
-  { id: 11, labelKey: 'DRIVER_TIME', label: 'Driver Time', aliases: ['tiempo de repartidores'] },
-  { id: 12, labelKey: 'TOP_DRIVERS', label: 'Top drivers', aliases: ['mejores repartidores'] },
-  { id: 13, labelKey: 'ORDERS', label: 'Orders', aliases: ['reporte de ordenes', 'orders report'] },
-  { id: 14, labelKey: 'SALES', label: 'Sales', aliases: ['ventas', 'reporte de ventas', 'sales report'] },
-  { id: 15, labelKey: 'REGISTER_USERS', label: 'Register users', aliases: ['usuarios registrados', 'registros'] },
-  { id: 16, labelKey: 'CUSTOMER_SATISFACTION', label: 'Customer safisfaction', aliases: ['satisfaccion', 'customer satisfaction'] },
-  { id: 17, labelKey: 'PAYMETHOD_SALES', label: 'Paymethod sales', aliases: ['ventas por metodo de pago'] },
-  { id: 18, labelKey: 'AVERAGE_SALES', label: 'Average sales', aliases: ['ticket promedio', 'ventas promedio'] },
-  { id: 19, labelKey: 'GENERAL_SALES', label: 'General sales', aliases: ['ventas generales'] },
-  { id: 20, labelKey: 'TOP_SELLING_AND_CATEOGRY', label: 'Top selling and category', aliases: ['mas vendidos', 'top productos', 'best sellers'] },
-  { id: 21, labelKey: 'SLA_ORDERS', label: 'SLA orders', aliases: ['sla', 'ordenes sla'] }
-]
+// redesign reports FA1 (D2, RP-02, RP-17): the 21 reports come from the single registry (C/utils/advancedReports.js),
+// in id order 1…21 as before. The palette's own list is gone.
+const ADVANCED_REPORTS_BY_ID = [...ADVANCED_REPORTS].sort((a, b) => a.id - b.id)
 
 const INVOICE_TYPES = [
   { key: 'business', labelKey: 'COMMAND_PALETTE_INVOICE_BUSINESS', label: 'Store invoices', aliases: ['facturas de tiendas', 'facturas de negocios'] },
@@ -73,18 +56,15 @@ const REVIEW_TABS = [
   { key: 'products', labelKey: 'COMMAND_PALETTE_REVIEWS_PRODUCTS', label: 'Product reviews', aliases: ['resenas de productos'] }
 ]
 
-const isOn = (config) => config?.value === true || config?.value === 1 || config?.value === '1'
-
-/** Same rule as the Add store button (BusinessesListing `allowBusinessRegister`) */
-const canRegisterStores = ({ user, configs }) =>
-  !configs?.allow_business_owner_register_business || user?.level !== 2 || isOn(configs.allow_business_owner_register_business)
+/** Same rule as the Add store button (bugs E, the shared `canRegisterStores` of utils/storeAdd) */
+const canRegisterStoresHere = ({ user, configs }) => canRegisterStores(user, configs)
 
 const STORES_LIST_ACTIONS = [
   { key: 'inactive', labelKey: 'COMMAND_PALETTE_INACTIVE_STORES', label: 'Inactive stores', path: '/stores/list?active=false', aliases: ['tiendas inactivas', 'negocios desactivados', 'disabled stores'] },
   { key: 'importers', labelKey: 'IMPORTERS', label: 'Importers', path: '/stores/list?header=importers', aliases: ['importar csv', 'importar tiendas', 'importar productos', 'csv'] },
   { key: 'sync-deliverect', labelKey: 'COMMAND_PALETTE_SYNC_DELIVERECT', label: 'Sync with Deliverect', path: '/stores/list?header=sync&tab=deliverect', aliases: ['deliverect', 'sincronizar', 'sync'] },
   { key: 'sync-itsacheckmate', labelKey: 'COMMAND_PALETTE_SYNC_ITSACHECKMATE', label: 'Sync with ItsaCheckmate', path: '/stores/list?header=sync&tab=itsacheckmate', aliases: ['itsacheckmate', 'checkmate', 'sincronizar', 'sync'] },
-  { key: 'add', labelKey: 'ADD_NEW_STORE', label: 'Add new store', path: '/stores/add', aliases: ['crear tienda', 'nueva tienda', 'agregar negocio', 'create store'], when: canRegisterStores }
+  { key: 'add', labelKey: 'ADD_NEW_STORE', label: 'Add new store', path: '/stores/add', aliases: ['crear tienda', 'nueva tienda', 'agregar negocio', 'create store'], when: canRegisterStoresHere }
 ]
 
 const findNavItem = (sections, url) => {
@@ -106,9 +86,9 @@ const withQuery = (path, params) => `${path}?${new URLSearchParams(params).toStr
  * Every open action the user can reach. `requires: 'business'` actions carry
  * `section` and are completed with `buildBusinessDetailPath`.
  */
-export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [], project } = {}) => {
+export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user, configs = {}, sites = [], project, googleActionsVisible = false } = {}) => {
   const { level, isReadOnly } = getDashboardRoleFlags(user)
-  const sections = getDashboardNavSections({ t, user, configs, sites })
+  const sections = getDashboardNavSections({ t, user, configs, sites, googleActionsVisible })
   const can = (url) => canOpenNavDestination({ sections, url, level })
   const entries = []
   const add = (entry) => entries.push({ group: 'actions', ...entry })
@@ -131,7 +111,7 @@ export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user,
     const sectionLabels = Object.fromEntries(BUSINESS_PALETTE_SECTIONS
       .filter(section => !section.tab)
       .map(section => [section.key, t(section.labelKey, section.label)]))
-    getPaletteBusinessSections({ user, configs, project })
+    getPaletteBusinessSections({ user, configs, project, googleActionsVisible })
       .filter(section => !section.navUrl || can(section.navUrl))
       .forEach(section => {
         const label = t(section.labelKey, section.label)
@@ -187,15 +167,22 @@ export const buildOpenActionEntries = ({ t = (_key, fallback) => fallback, user,
 
   if (can('/intelligence/reports')) {
     const reportsLabel = t('ENTERPRISE_REPORTS', 'Enterprise reports')
-    ADVANCED_REPORTS.forEach(report => add({
-      id: `action:report-${report.id}`,
-      title: t(report.labelKey, report.label),
-      subtitle: reportsLabel,
-      path: withQuery('/intelligence/reports', { id: report.id }),
-      aliases: [...report.aliases, 'reporte', 'informe', 'report'],
-      icon: 'intelligence',
-      boost: -1
-    }))
+    // redesign (n.º 21, ecommerce P2): the retired Ecommerce reports page left its search terms on reports 1-3 and 22
+    const ecommerceAliases = getEcommerceLegacyAliases(t)
+    ADVANCED_REPORTS_BY_ID.forEach(report => {
+      // redesign reports FA1 (D2, auditor 15): new title; the aliases keep today's ones plus the (translated) name of main,
+      // so the old search still finds each report
+      const texts = REPORT_TEXTS[report.id](t)
+      add({
+        id: `action:report-${report.id}`,
+        title: texts.name,
+        subtitle: reportsLabel,
+        path: withQuery('/intelligence/reports', { id: report.id }),
+        aliases: [...report.aliases, 'reporte', 'informe', 'report', texts.legacyName, ...(ecommerceAliases[report.id] || [])],
+        icon: 'intelligence',
+        boost: -1
+      })
+    })
   }
 
   if (can('/intelligence/invoice')) {

@@ -88,9 +88,13 @@ export const BatchImageForm = (props) => {
         }
         showToast(ToastType.Success, t('PRODUCT_UPDATE', 'Products updated'))
       } else {
+        // bugs E D16c: `formState` here is the one from when the save started, with API: true. Without `API: false` the
+        // failure put the flag back to true, the effect on it saved the same photo again, and it failed again, in a loop. Now a
+        // failure stops and shows its error (the UI puts it in the Alert).
         setFormState({
           ...formState,
           loading: false,
+          API: false,
           result: {
             error: true,
             result
@@ -101,6 +105,7 @@ export const BatchImageForm = (props) => {
       setFormState({
         ...formState,
         loading: false,
+        API: false,
         result: {
           error: true,
           result: err

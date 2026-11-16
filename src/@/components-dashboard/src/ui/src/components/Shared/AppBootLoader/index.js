@@ -34,7 +34,15 @@ import {
   WelcomeCopy,
   WelcomeIllustration,
   WelcomeLine,
-  WelcomeTitle
+  WelcomeTitle,
+  WhatsAppRouteActions,
+  WhatsAppRouteCopy,
+  WhatsAppRouteHeader,
+  WhatsAppRouteHeading,
+  WhatsAppRouteIdentity,
+  WhatsAppRouteRow,
+  WhatsAppRouteSkeleton,
+  WhatsAppRouteTable
 } from './styles'
 
 const HOME_VARIANT = 'home'
@@ -61,6 +69,32 @@ export const resolveBootDensity = (auth, persistedToken = readPersistedSessionTo
  */
 export const resolveBootVariant = (auth, persistedToken = readPersistedSessionToken()) =>
   resolveBootDensity(auth, persistedToken) === FULL_DENSITY ? HOME_VARIANT : AUTH_VARIANT
+
+const HOME_SCREEN = 'home'
+const SHELL_SCREEN = 'shell'
+const WHATSAPP_BOTS_SCREEN = 'whatsapp-bots'
+const HOME_PATH = /^\/?(home)?\/?$/
+const WHATSAPP_BOTS_PATH = /^\/connect\/whatsapp-bots\/?$/
+
+const readPathname = () => {
+  try {
+    return window.location.pathname
+  } catch {
+    return '/'
+  }
+}
+
+/**
+ * redesign F6c-5 (Q2-09): which screen the skeleton stands for. Only Home (`/`, `/home`) has Home's welcome block, chart
+ * and service cards; every other route gets the shell alone (sidebar and a title place), so a reload of /orders
+ * no longer flashes Home's content before the list's own skeleton. A path under a base path reads as «shell», which
+ * is never wrong, only emptier.
+ */
+export const resolveBootScreen = (pathname = readPathname()) => {
+  if (HOME_PATH.test(pathname)) return HOME_SCREEN
+  if (WHATSAPP_BOTS_PATH.test(pathname)) return WHATSAPP_BOTS_SCREEN
+  return SHELL_SCREEN
+}
 
 const OFFICIAL_HOST = /^(dashboard|dashboardcf)\.(ordering\.co|orderingplus\.com|tryordering\.com)$/
 
@@ -103,8 +137,46 @@ const FULL_TILE_COUNT = 2
 
 const isFullDensity = (density) => density === FULL_DENSITY
 
-const HomeBootSkeleton = ({ density }) => {
+const WhatsAppBotsBootSkeleton = () => (
+  <WhatsAppRouteSkeleton>
+    <WhatsAppRouteHeader data-testid='boot-whatsapp-header'>
+      <WhatsAppRouteHeading>
+        <Bone $height='24px' $width='190px' />
+        <Bone $height='14px' $width='320px' />
+      </WhatsAppRouteHeading>
+      <WhatsAppRouteActions>
+        <Bone $height='41px' $width='148px' $radius='8px' />
+        <Bone $height='41px' $width='104px' $radius='8px' />
+      </WhatsAppRouteActions>
+    </WhatsAppRouteHeader>
+    <WhatsAppRouteTable data-testid='boot-whatsapp-table'>
+      <WhatsAppRouteRow aria-hidden='true'>
+        <Bone $height='12px' $width='48px' />
+        <Bone $height='12px' $width='112px' />
+        <span />
+        <Bone $height='12px' $width='46px' />
+      </WhatsAppRouteRow>
+      {Array.from({ length: 4 }, (_, index) => (
+        <WhatsAppRouteRow key={index} data-testid='boot-whatsapp-row'>
+          <WhatsAppRouteIdentity>
+            <Bone $height='40px' $width='40px' $radius='8px' />
+            <WhatsAppRouteCopy>
+              <Bone $height='14px' $width={index % 2 === 0 ? '136px' : '112px'} />
+              <Bone $height='11px' $width='72px' />
+            </WhatsAppRouteCopy>
+          </WhatsAppRouteIdentity>
+          <Bone $height='14px' $width='126px' />
+          <Bone $height='36px' $width='148px' $radius='8px' />
+          <Bone $height='24px' $width='94px' $radius='8px' />
+        </WhatsAppRouteRow>
+      ))}
+    </WhatsAppRouteTable>
+  </WhatsAppRouteSkeleton>
+)
+
+const HomeBootSkeleton = ({ density, screen, shell }) => {
   const isFull = isFullDensity(density)
+  const isHome = screen === HOME_SCREEN
 
   return (
     <Shell
@@ -112,8 +184,10 @@ const HomeBootSkeleton = ({ density }) => {
       aria-busy='true'
       aria-live='polite'
       data-testid='boot-home'
+      data-screen={screen}
     >
       <SrOnly>Loading dashboard</SrOnly>
+      {shell && (
       <Sidebar data-testid='boot-sidebar'>
         <SidebarLogo>
           <Bone $height='28px' />
@@ -141,59 +215,34 @@ const HomeBootSkeleton = ({ density }) => {
           </SidebarFooterRow>
         </SidebarFooter>
       </Sidebar>
-      <Main>
+      )}
+      {/* bugs H #76a: inside the shell the route already sits in its <main id='main-content'>; no nested landmark */}
+      <Main as={shell ? 'main' : 'div'} data-testid='boot-content'>
         <BreadcrumbRow>
           <Bone $height='22px' />
         </BreadcrumbRow>
-        <WelcomeBlock data-testid='boot-welcome'>
-          <WelcomeCopy>
-            <WelcomeTitle>
-              <Bone $height='36px' />
-            </WelcomeTitle>
-            <WelcomeLine>
-              <Bone $height='16px' />
-            </WelcomeLine>
-            <WelcomeActions>
-              <Bone $height='40px' $width='120px' $radius='8px' />
-              <Bone $height='44px' $width='148px' $radius='8px' />
-            </WelcomeActions>
-          </WelcomeCopy>
-          <WelcomeIllustration>
-            <Bone $height='148px' $radius='8px' />
-          </WelcomeIllustration>
-        </WelcomeBlock>
-        {!isFull && (
-          <MetricsRow data-testid='boot-metrics'>
-            {Array.from({ length: LIGHT_METRIC_COUNT }, (_, index) => (
-              <MetricCard key={index}>
-                <MetricCopy>
-                  <MetricLabel>
-                    <Bone $height='14px' />
-                  </MetricLabel>
-                  <MetricValue>
-                    <Bone $height='28px' />
-                  </MetricValue>
-                </MetricCopy>
-                <MetricIcon>
-                  <Bone $height='63px' $radius='7.6px' />
-                </MetricIcon>
-              </MetricCard>
-            ))}
-          </MetricsRow>
-        )}
-        {isFull && (
+        {isHome && (
           <>
-            <ReportsRow>
-              <ChartPanel data-testid='boot-chart'>
-                <ChartHeader>
-                  <Bone $height='14px' />
-                </ChartHeader>
-                <ChartBody>
-                  <Bone $height='300px' />
-                </ChartBody>
-              </ChartPanel>
-              <TilesColumn data-testid='boot-tiles'>
-                {Array.from({ length: FULL_TILE_COUNT }, (_, index) => (
+            <WelcomeBlock data-testid='boot-welcome'>
+              <WelcomeCopy>
+                <WelcomeTitle>
+                  <Bone $height='36px' />
+                </WelcomeTitle>
+                <WelcomeLine>
+                  <Bone $height='16px' />
+                </WelcomeLine>
+                <WelcomeActions>
+                  <Bone $height='40px' $width='120px' $radius='8px' />
+                  <Bone $height='44px' $width='148px' $radius='8px' />
+                </WelcomeActions>
+              </WelcomeCopy>
+              <WelcomeIllustration>
+                <Bone $height='148px' $radius='8px' />
+              </WelcomeIllustration>
+            </WelcomeBlock>
+            {!isFull && (
+              <MetricsRow data-testid='boot-metrics'>
+                {Array.from({ length: LIGHT_METRIC_COUNT }, (_, index) => (
                   <MetricCard key={index}>
                     <MetricCopy>
                       <MetricLabel>
@@ -208,39 +257,75 @@ const HomeBootSkeleton = ({ density }) => {
                     </MetricIcon>
                   </MetricCard>
                 ))}
-              </TilesColumn>
-            </ReportsRow>
-            <LowerRow data-testid='boot-lower'>
-              {Array.from({ length: FULL_TILE_COUNT }, (_, index) => (
-                <ServiceCard key={index}>
-                  <ServiceCardBody>
-                    <ServiceIcon>
-                      <Bone $height='72px' $radius='10px' />
-                    </ServiceIcon>
-                    <ServiceCopy>
-                      <Bone $height='14px' $width='70%' />
-                      <Bone $height='12px' $width='92%' />
-                      <Bone $height='12px' $width='58%' />
-                    </ServiceCopy>
-                  </ServiceCardBody>
-                  <ServiceCardFooter>
-                    <Bone $height='44px' $width='120px' $radius='8px' />
-                  </ServiceCardFooter>
-                </ServiceCard>
-              ))}
-            </LowerRow>
+              </MetricsRow>
+            )}
+            {isFull && (
+              <>
+                <ReportsRow>
+                  <ChartPanel data-testid='boot-chart'>
+                    <ChartHeader>
+                      <Bone $height='14px' />
+                    </ChartHeader>
+                    <ChartBody>
+                      <Bone $height='300px' />
+                    </ChartBody>
+                  </ChartPanel>
+                  <TilesColumn data-testid='boot-tiles'>
+                    {Array.from({ length: FULL_TILE_COUNT }, (_, index) => (
+                      <MetricCard key={index}>
+                        <MetricCopy>
+                          <MetricLabel>
+                            <Bone $height='14px' />
+                          </MetricLabel>
+                          <MetricValue>
+                            <Bone $height='28px' />
+                          </MetricValue>
+                        </MetricCopy>
+                        <MetricIcon>
+                          <Bone $height='63px' $radius='7.6px' />
+                        </MetricIcon>
+                      </MetricCard>
+                    ))}
+                  </TilesColumn>
+                </ReportsRow>
+                <LowerRow data-testid='boot-lower'>
+                  {Array.from({ length: FULL_TILE_COUNT }, (_, index) => (
+                    <ServiceCard key={index}>
+                      <ServiceCardBody>
+                        <ServiceIcon>
+                          <Bone $height='72px' $radius='10px' />
+                        </ServiceIcon>
+                        <ServiceCopy>
+                          <Bone $height='14px' $width='70%' />
+                          <Bone $height='12px' $width='92%' />
+                          <Bone $height='12px' $width='58%' />
+                        </ServiceCopy>
+                      </ServiceCardBody>
+                      <ServiceCardFooter>
+                        <Bone $height='44px' $width='120px' $radius='8px' />
+                      </ServiceCardFooter>
+                    </ServiceCard>
+                  ))}
+                </LowerRow>
+              </>
+            )}
           </>
         )}
+        {screen === WHATSAPP_BOTS_SCREEN && <WhatsAppBotsBootSkeleton />}
       </Main>
     </Shell>
   )
 }
 
+/**
+ * `shell` (default true): the skeleton draws its own sidebar column. redesign W0-10b (T0-41): a route that loads inside the
+ * already rendered shell passes `shell={false}`: no sidebar column, the content takes the whole width.
+ */
 export const AppBootLoader = (props) => {
-  const { variant, density, ...spinnerProps } = props
+  const { variant, density, route, shell = true, ...spinnerProps } = props
 
   if (variant === HOME_VARIANT) {
-    return <HomeBootSkeleton density={density} />
+    return <HomeBootSkeleton density={density} screen={resolveBootScreen(route)} shell={shell} />
   }
 
   if (variant === AUTH_VARIANT) {

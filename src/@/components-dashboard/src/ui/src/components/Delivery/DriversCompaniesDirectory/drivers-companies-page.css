@@ -1,0 +1,63 @@
+/*
+ * redesign DC-B5 (decision 1 | M-DC6, M-DC8) · Delivery companies page: the frame of the list beside the company panel (split view),
+ * its header and its foot, as the other redesigned lists of Delivery. Tokens only (--od-*, --od-x-*); logical properties only.
+ * The table and the panel have their own files (companies-table.css, company-panel.css).
+ */
+
+/* The page height, shared by the list and the panel */
+.odc-split.odc-dcp-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header and search, selection bar, table and foot, one under the other */
+.odc-dcp-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+@media (max-width: 767px) {
+  .odc-dcp-frame { padding-inline: var(--od-x-page-gutter-mobile); }
+}
+
+@media print {
+  .odc-dcp-frame { display: none; }
+}
+
+/* ── Header: the page header, then the search (: the opener is PageHeader's `leading`) ── */
+.odc-dcp-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dcp-search {
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-dcp-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* ── Foot: the pagination ── */
+.odc-dcp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dcp-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

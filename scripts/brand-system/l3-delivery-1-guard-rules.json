@@ -1,0 +1,796 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-delivery-1-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-delivery-1-delivery-addressform-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/AddressForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "addressFormProps /* binding-sha256:48297639d7fa2346af46699ea203c9840688a73134e10622bf024b3fe3a81df1 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-addresslist-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/AddressList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "addressListProps /* binding-sha256:75c547966c7109937fc3dc62dda3ad0c190bc93a426ae397c9d871ef3248b987 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-deliveryuserslisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DeliveryUsersListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-drivergroupsetting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverGroupSetting/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundaryDark'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversGroupSettingProps /* binding-sha256:424d580697e9a5dacbcb8d6dc4a2233672310d64ebc95ce75d62c07f728bd43e */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-drivergroupsetting-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverGroupSetting/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ButtonGroup",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n  ? css`\n      margin-left: 7px;\n    `\n  : css`\n      margin-right: 7px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    cursor: not-allowed;\n    opacity: 0.6;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ButtonGroup",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n  ? css`\n      margin-left: 7px;\n    `\n  : css`\n      margin-right: 7px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    cursor: not-allowed;\n    opacity: 0.6;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverGroupItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 15px;\n    `\n: css`\n      margin-left: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-filters-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/Filters.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-kpicards-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/KpiCards.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-storestable-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/StoresTable.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-storecards-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/StoreCards.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-aggregate-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/aggregate.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverstorestatus-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverStoreStatus/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-drivertemporalschedule-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverTemporalSchedule/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-drivertemporalschedule-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverTemporalSchedule/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "DateContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n  ? css`\n    span {\n      margin-left: 10px;\n    }\n  `\n  : css`\n    span {\n      margin-right: 10px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "DateContainer",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#F2F2F2'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DateContainer",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DateContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n  ? css`\n    span {\n      margin-left: 10px;\n    }\n  `\n  : css`\n    span {\n      margin-right: 10px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driversadvancedlogs-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversGroupLogsProps /* binding-sha256:cc5c70c9fd0fc636e330d774f9f24ca764754a867c032d69cb18a4ee471db6a7 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driversadvancedlogs-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "DriversAdvacedLogsContainer",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n            padding-left: 15px;\n          `\n: css`\n            padding-right: 15px;\n          `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n            padding-right: 15px;\n          `\n: css`\n            padding-left: 15px;\n          `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n          padding-left: 15px;\n        `\n: css`\n          padding-right: 15px;\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n          padding-right: 15px;\n        `\n: css`\n          padding-left: 15px;\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The Delivery-1 typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "DriversAdvacedLogsContainer",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    opacity: 0.7;\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SeeChanges",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.strong ?? props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n            padding-left: 15px;\n          `\n: css`\n            padding-right: 15px;\n          `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n            padding-right: 15px;\n          `\n: css`\n            padding-left: 15px;\n          `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n          padding-left: 15px;\n        `\n: css`\n          padding-right: 15px;\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n          padding-right: 15px;\n        `\n: css`\n          padding-left: 15px;\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UserInfoContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UserInfoContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DateTimeWrapper",
+            "property": "border-inline-end",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DataListTable",
+            "property": "border-inline-end",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "EventTypeContainer",
+            "property": "border-inline",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-driverscompanieslisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversCompaniesListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversCompaniesProps /* binding-sha256:db6518925519b6dca0c761b95aac56b83b3154d3406626acf47097fb029937db */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The Delivery-1 semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-delivery-1-delivery-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

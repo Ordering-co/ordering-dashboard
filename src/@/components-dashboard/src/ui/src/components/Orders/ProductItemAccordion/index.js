@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useId, useState, useRef } from 'react'
 import TiPencil from '@meronex/icons/ti/TiPencil'
 import IosArrowUp from '@meronex/icons/ios/IosArrowUp'
 import VscTrash from '@meronex/icons/vsc/VscTrash'
 import { useUtils, useLanguage, useOrder, useConfig } from '../../../../../index'
 import { useWindowSize } from '../../../hooks/useWindowSize'
+import '../OrderDetails/details-tab.css'
 
 import {
   AccordionSection,
@@ -18,6 +19,7 @@ import {
   ProductActions,
   ProductActionsEdit,
   ProductActionsDelete,
+  ProductAccordionToggle,
   ProductPriceSection,
   ProductPrice,
   ProductNotAvailable,
@@ -39,7 +41,10 @@ export const ProductItemAccordion = (props) => {
     onEditProduct,
     currency,
     toppingsRemoved,
-    returnSuboptions
+    returnSuboptions,
+    // 'compact' is the line of the order detail panel (quantity, name, options folded in one
+    // secondary line, price). The default keeps the accordion every other consumer uses.
+    variant = 'default'
   } = props
   const [, t] = useLanguage()
   const [orderState] = useOrder()
@@ -47,14 +52,10 @@ export const ProductItemAccordion = (props) => {
   const [{ configs }] = useConfig()
   const windowSize = useWindowSize()
 
-  const [setActive, setActiveState] = useState('active')
-  const [setHeight, setHeightState] = useState('0px')
-  const [setRotate, setRotateState] = useState('accordion__icon rotate')
+  const [isExpanded, setIsExpanded] = useState(false)
+  const accordionContentId = useId()
 
   const content = useRef(null)
-  const productSelect = useRef(null)
-  const productActionsEdit = useRef(null)
-  const productActionsDelete = useRef(null)
 
   const productInfo = () => {
     let options = JSON.parse(JSON.stringify(Object.values(product.options ?? {})))
@@ -80,7 +81,7 @@ export const ProductItemAccordion = (props) => {
         return option
       })
       return {
-        ...productInfo,
+        ...product,
         ingredients,
         options
       }
@@ -88,16 +89,9 @@ export const ProductItemAccordion = (props) => {
     return { ...product, options }
   }
 
-  const toggleAccordion = (e) => {
-    const isActionsClick = productSelect.current?.contains(e.target) || productActionsEdit.current?.contains(e.target) || productActionsDelete.current?.contains(e.target)
-    if ((!product?.valid_menu && isCartProduct) || isActionsClick) return
-    setActiveState(setActive === '' ? 'active' : '')
-    setHeightState(
-      setActive === 'active' ? `${content.current.scrollHeight}px` : '0px'
-    )
-    setRotateState(
-      setActive === 'active' ? 'accordion__icon' : 'accordion__icon rotate'
-    )
+  const toggleAccordion = () => {
+    if (!product?.valid_menu && isCartProduct) return
+    setIsExpanded(expanded => !expanded)
   }
 
   const handleChangeQuantity = (value) => {
@@ -133,17 +127,59 @@ export const ProductItemAccordion = (props) => {
     return parseFloat(price.toFixed(2))
   }
 
+  const productDetails = productInfo()
+  const hasProductDetails = productDetails?.ingredients?.some(ingredient => !ingredient.selected) || productDetails?.options?.length > 0 || product.comment
+  const canExpand = Boolean(hasProductDetails && (product?.valid_menu || !isCartProduct))
+  const toggleLabel = `${isExpanded ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')} ${product?.name ?? ''}`.trim()
+  if (variant === 'compact') {
+    const timeFormat = (configs?.format_time?.value === '12') ? 'hh:mm a' : 'HH:mm'
+    const suboptionsOf = option => Object.values(option?.suboptions ?? {})
+    const removedIngredients = Object.values(product?.ingredients ?? {}).filter(ingredient => !ingredient.selected)
+    const details = [
+      product?.calendar_event && `${parseDate(product.calendar_event.start, { outputFormat: timeFormat })} - ${parseDate(product.calendar_event.end, { outputFormat: timeFormat })}`,
+      removedIngredients.length > 0 && removedIngredients.map(ingredient => `${t('NO', 'No')} ${ingredient.name}`).join(', '),
+      ...(productDetails?.options ?? []).map(option => `${option.name}: ${suboptionsOf(option).map(suboption => getFormattedSubOptionName({
+        quantity: suboption.quantity,
+        name: suboption.name,
+        position: (suboption?.position && suboption.position !== 'whole') ? t(suboption.position.toUpperCase(), suboption.position) : '',
+        price: (['left', 'right'].includes(suboption.position)) ? (suboption.half_price ?? suboption.price) : suboption.price
+      })).join(', ')}`),
+      toppingsRemoved?.removed?.length > 0 && `${t('TOPPINGS_REMOVED', 'Toppings removed')}: ${toppingsRemoved.removed.map(topping => topping.name).join(', ')}`,
+      // redesign fix-qa E6: main labelled it (ProductItemAccordion: t('COMMENT', 'Comment')); mixed in it read as one more option
+      product.comment && `${t('COMMENT', 'Comment')}: ${product.comment}`
+    ].filter(Boolean)
+    return (
+      <li className='odt-item'>
+        <span className='odt-item-q odc-figure'>{`${product?.quantity}×`}</span>
+        {/* redesign fix-qa E6: main showed the product image; the name next to it already names it */}
+        {product?.images && (
+          <img className='odt-item-img' src={optimizeImage(product.images, 'h_100,c_limit')} alt='' loading='lazy' />
+        )}
+        <span className='odt-item-name'>
+          <span className='odt-item-title'>{product?.name}</span>
+          {details.length > 0 && <span className='odt-item-opt'>{details.join(' · ')}</span>}
+        </span>
+        <span className='odt-item-price odc-figure'>{parsePrice(getProductPrice(product), { currency })}</span>
+      </li>
+    )
+  }
+
+  const handleAccordionClick = event => {
+    if (!canExpand || event.target.closest('button, select, input, a')) return
+    toggleAccordion()
+  }
+
   return (
     <AccordionSection>
       <Accordion
         isValid={product?.valid ?? true}
-        className={`product accordion ${setActive}`}
-        onClick={(e) => toggleAccordion(e)}
+        className={`product accordion ${isExpanded ? 'active' : ''}`}
+        onClick={handleAccordionClick}
       >
         <ProductInfo>
           {product?.images && (
             <WrapperProductImage>
-              <ProductImage bgimage={optimizeImage(product?.images, 'h_100,c_limit')} />
+              <ProductImage role='img' aria-label={product?.name} bgimage={optimizeImage(product?.images, 'h_100,c_limit')} />
             </WrapperProductImage>
           )}
           {product?.calendar_event
@@ -151,7 +187,7 @@ export const ProductItemAccordion = (props) => {
             <ScheduleInfoWrapper>
               <h3>{product.name}</h3>
               <ScheduleInfo>
-                <span>
+                <span className='odc-figure'>
                   {parseDate(product?.calendar_event?.start, { outputFormat: (configs?.format_time?.value === '12') ? 'hh:mm a' : 'HH:mm' })}
                   {' '}-{' '}
                   {parseDate(product?.calendar_event?.end, { outputFormat: (configs?.format_time?.value === '12') ? 'hh:mm a' : 'HH:mm' })}
@@ -164,7 +200,7 @@ export const ProductItemAccordion = (props) => {
               {isCartProduct
                 ? (
                 <ProductSelect
-                  ref={productSelect}
+                  aria-label={`${t('QTY', 'Qty')} ${product?.name ?? ''}`.trim()}
                   value={product.quantity}
                   onChange={(e) => handleChangeQuantity(Number(e.target.value))}
                 >
@@ -187,56 +223,102 @@ export const ProductItemAccordion = (props) => {
               <ContentInfo>
                 <h3>{product.name}</h3>
                 {windowSize.width <= 410 && (
-                  <span>
-                    <p>{parsePrice(getProductPrice(product), { currency })}</p>
-                    {isCartProduct && (
-                      <div>
+                  <div className='mobile-product-summary'>
+                    <p className='odc-figure'>{parsePrice(getProductPrice(product), { currency })}</p>
+                    <div>
+                      {isCartProduct && (
+                        <>
                         {onEditProduct && (
-                          <span ref={productActionsEdit}>
-                            <TiPencil color='#F2BB40' onClick={() => onEditProduct(product)} />
-                          </span>
+                          <ProductActionsEdit
+                            type='button'
+                            aria-label={`${t('EDIT', 'Edit')} ${product?.name ?? ''}`.trim()}
+                            onClick={() => onEditProduct(product)}
+                            disabled={orderState.loading}
+                          >
+                            <TiPencil />
+                          </ProductActionsEdit>
                         )}
                         {onDeleteProduct && (
-                          <span ref={productActionsDelete}>
-                            <VscTrash color='#D81212' onClick={() => onDeleteProduct(product)} />
-                          </span>
+                          <ProductActionsDelete
+                            type='button'
+                            aria-label={`${t('DELETE', 'Delete')} ${product?.name ?? ''}`.trim()}
+                            onClick={() => onDeleteProduct(product)}
+                            disabled={orderState.loading}
+                          >
+                            <VscTrash />
+                          </ProductActionsDelete>
                         )}
-                      </div>
-                    )}
-                  </span>
+                        </>
+                      )}
+                      {canExpand && (
+                        <ProductAccordionToggle
+                          type='button'
+                          aria-label={toggleLabel}
+                          aria-expanded={isExpanded}
+                          aria-controls={accordionContentId}
+                          onClick={toggleAccordion}
+                        >
+                          <IosArrowUp className={`accordion__icon ${isExpanded ? '' : 'rotate'}`} />
+                        </ProductAccordionToggle>
+                      )}
+                    </div>
+                  </div>
                 )}
               </ContentInfo>
             </>
               )}
         </ProductInfo>
+        {product?.calendar_event && windowSize.width <= 410 && canExpand && (
+          <ProductAccordionToggle
+            type='button'
+            aria-label={toggleLabel}
+            aria-expanded={isExpanded}
+            aria-controls={accordionContentId}
+            onClick={toggleAccordion}
+          >
+            <IosArrowUp className={`accordion__icon ${isExpanded ? '' : 'rotate'}`} />
+          </ProductAccordionToggle>
+        )}
         {(product?.valid || !isCartProduct) && windowSize.width > 410 && (
           <ProductPriceSection>
             <ProductPrice>
-              <span>
+              <span className='odc-figure'>
                 {parsePrice(getProductPrice(product), { currency })}
               </span>
-              {(productInfo()?.ingredients?.length > 0 || productInfo()?.options?.length > 0 || product.comment) && (
-                <p>
-                  <IosArrowUp className={`${setRotate}`} />
-                </p>
+              {canExpand && (
+                <ProductAccordionToggle
+                  type='button'
+                  aria-label={toggleLabel}
+                  aria-expanded={isExpanded}
+                  aria-controls={accordionContentId}
+                  onClick={toggleAccordion}
+                >
+                  <IosArrowUp className={`accordion__icon ${isExpanded ? '' : 'rotate'}`} />
+                </ProductAccordionToggle>
               )}
             </ProductPrice>
             {isCartProduct && (
               <ProductActions>
+                {onEditProduct && (
                 <ProductActionsEdit
-                  ref={productActionsEdit}
+                  type='button'
+                  aria-label={`${t('EDIT', 'Edit')} ${product?.name ?? ''}`.trim()}
                   onClick={() => onEditProduct(product)}
                   disabled={orderState.loading}
                 >
-                  <TiPencil color='#F2BB40' />
+                  <TiPencil />
                 </ProductActionsEdit>
+                )}
+                {onDeleteProduct && (
                 <ProductActionsDelete
-                  ref={productActionsDelete}
+                  type='button'
+                  aria-label={`${t('DELETE', 'Delete')} ${product?.name ?? ''}`.trim()}
                   onClick={() => onDeleteProduct(product)}
                   disabled={orderState.loading}
                 >
-                  <VscTrash color='#D81212' />
+                  <VscTrash />
                 </ProductActionsDelete>
+                )}
               </ProductActions>
             )}
           </ProductPriceSection>
@@ -245,20 +327,26 @@ export const ProductItemAccordion = (props) => {
         {isCartProduct && product?.valid_menu && !product?.valid_quantity && (
           <ProductError>
             <ProductActions>
+              {onEditProduct && (
               <ProductActionsEdit
-                ref={productActionsEdit}
+                type='button'
+                aria-label={`${t('EDIT', 'Edit')} ${product?.name ?? ''}`.trim()}
                 onClick={() => onEditProduct(product)}
                 disabled={orderState.loading}
               >
-                <TiPencil color='#F2BB40' />
+                <TiPencil />
               </ProductActionsEdit>
+              )}
+              {onDeleteProduct && (
               <ProductActionsDelete
-                ref={productActionsDelete}
+                type='button'
+                aria-label={`${t('DELETE', 'Delete')} ${product?.name ?? ''}`.trim()}
                 onClick={() => onDeleteProduct(product)}
                 disabled={orderState.loading}
               >
-                <VscTrash color='#D81212' />
+                <VscTrash />
               </ProductActionsDelete>
+              )}
             </ProductActions>
             <ProductNotAvailable>
               {t('PRODUCT_QUANTITY_ERROR', 'Not available')}
@@ -269,13 +357,16 @@ export const ProductItemAccordion = (props) => {
         {!product?.valid_menu && isCartProduct && (
           <ProductError>
             <ProductActions>
+              {onDeleteProduct && (
               <ProductActionsDelete
-                ref={productActionsDelete}
+                type='button'
+                aria-label={`${t('DELETE', 'Delete')} ${product?.name ?? ''}`.trim()}
                 onClick={() => onDeleteProduct(product)}
                 disabled={orderState.loading}
               >
-                <VscTrash color='#D81212' />
+                <VscTrash />
               </ProductActionsDelete>
+              )}
             </ProductActions>
             <ProductNotAvailable>
               {t('PRODUCT_QUANTITY_ERROR', 'Not available')}
@@ -285,22 +376,24 @@ export const ProductItemAccordion = (props) => {
       </Accordion>
 
       <AccordionContent
+        id={accordionContentId}
         ref={content}
-        style={{ maxHeight: `${setHeight}` }}
+        aria-hidden={!isExpanded}
+        style={{ maxHeight: isExpanded ? `${content.current?.scrollHeight ?? 0}px` : '0px' }}
       >
-        {productInfo()?.ingredients?.length > 0 && productInfo()?.ingredients.some(ingredient => !ingredient.selected) && (
+        {productDetails?.ingredients?.length > 0 && productDetails.ingredients.some(ingredient => !ingredient.selected) && (
           <ProductOptionsList>
-            <p>{t('INGREDIENTS', 'Ingredients')}</p>
-            {productInfo()?.ingredients.map((ingredient) => !ingredient.selected && (
+            <li className='options-heading'><p>{t('INGREDIENTS', 'Ingredients')}</p></li>
+            {productDetails.ingredients.map((ingredient) => !ingredient.selected && (
               <li className='ingredient' key={ingredient.id}>
                 <span>{t('NO', 'No')} {ingredient.name}</span>
               </li>
             ))}
           </ProductOptionsList>
         )}
-        {Array.isArray(productInfo()?.options) && productInfo()?.options?.length > 0 && (
+        {Array.isArray(productDetails?.options) && productDetails.options.length > 0 && (
           <ProductOptionsList>
-            {productInfo()?.options.map((option, i) => (
+            {productDetails.options.map((option, i) => (
               <li key={i}>
                 <p>{option.name}</p>
                 <ProductOptionsList className='suboption'>

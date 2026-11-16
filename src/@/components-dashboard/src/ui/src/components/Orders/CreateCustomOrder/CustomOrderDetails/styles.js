@@ -6,7 +6,7 @@ export const DetailsContainer = styled.div`
   overflow: auto;
 
   > h2 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 20px;
@@ -21,7 +21,7 @@ export const DetailsContainer = styled.div`
   }
 
   h3 {
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 600;
     line-height: 24px;
     margin-top: 0;
@@ -35,10 +35,10 @@ export const FormControl = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
     span {
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       color: ${props => props.theme.colors.primary};
     }
   }
@@ -51,11 +51,24 @@ export const ToggleOptions = styled.div`
   margin-top: 30px;
 `
 
-export const RaidoButton = styled.div`
+export const RaidoButton = styled.button`
   display: flex;
   align-items: center;
+  width: 100%;
+  min-height: var(--od-touch-target-minimum);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: start;
   margin-bottom: 15px;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-focus-ring-color);
+    outline-offset: 2px;
+  }
 
   svg {
     color: ${props => props.theme.colors.secundaryLight};
@@ -71,7 +84,7 @@ export const RaidoButton = styled.div`
     `}
   }
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin: 0px;
   }

@@ -1,0 +1,277 @@
+/*
+ * redesign stores 5.13 (, E3b) · The markups of a store on Product: the search and «Add markup», the note of the global
+ * markups, the table (cards under 768px) and the detail form inside a P/SectionSplit.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller. Prefix: odc-bm-*.
+ */
+
+.odc-bm {
+  display: grid;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-5); /* the section gutter, as Tax & fees (odc-tf) */
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-bm-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── Tools: the search and «Add markup» ── */
+.odc-bm-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bm-search {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+/* «Add markup» breaks at its spaces instead of leaving a narrow panel */
+.odc-bm-tools > .odc-btn,
+.odc-bm-empty > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+}
+
+.odc-bm-notice { min-inline-size: 0; }
+
+/* The link inside the note of the global markups: it is a link, so it is underlined and takes the action colour of the Button's link
+   variant. On a phone or with a coarse pointer it keeps a 44px touch area by a pseudo-element, as every Product control (the inset
+   is the token of the buttons: it never shrinks an area that is already larger). */
+.odc-bm-link {
+  position: relative;
+  display: inline-block;
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-bm-link:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-bm-link::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+.odc-bm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bm-empty-text {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-bm-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-bm-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The cells (the table and the cards draw the same ones) ── */
+.odc-bm-namecell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The name: a native button, so Enter and Space open the markup. A click on the row opens it too (the table owns that). */
+.odc-bm-name {
+  display: block;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: inherit;
+  font-weight: var(--od-font-weight-medium);
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bm-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* A global markup: the name is text and «Global» sits beside it */
+.odc-bm-name-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-bm-name-text {
+  display: block;
+  /* the card's title link carries odc-mono (a figure); the name is text */
+  font-family: var(--od-font-sans);
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td .odc-bm-name-text,
+th .odc-bm-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.odc-bm-tag {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-bm-applies {
+  display: block;
+  min-inline-size: 0;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+.odc-bm-rule {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-bm-sub {
+  display: block;
+  max-inline-size: 100%;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-bm-none { color: var(--od-text-muted); }
+
+/* The switch of a row: a click on it is its own, and the row keeps its padding around it */
+.odc-bm-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-bm-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* A global row opens nothing: it does not look like it does (the table paints a pointer and a hover on every interactive row) */
+.odc-bm .odc-table tbody tr[data-odc-bm-global] { cursor: default; }
+.odc-bm .odc-table tbody tr[data-odc-bm-global]:hover td,
+.odc-bm .odc-table tbody tr[data-odc-bm-global]:hover th[scope='row'] { background: transparent; }
+
+/* ── The detail form ──
+   A flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as SEO, 5.1b). */
+.odc-bm-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-bm-form:focus { outline: none; }
+
+.odc-bm-enabled {
+  display: flex;
+  min-inline-size: 0;
+}
+
+/* redesign AH: in a record body the bar gives the end padding back, as record-panel.css does for P/SaveBar (this rule,
+   older, had set it to 0: the bar stopped 32px above the foot and the checks showed under it). 0 outside a record body. */
+.odc-bm-form > .odc-bm-savebar {
+  inset-block-end: calc(var(--odc-record-pad-end, 0) * -1);
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as SEO). */
+.odc-bm-form :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* the section title, as Business fees (odc-bf-title) */
+.odc-bm-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* review 5.13 (, F3 locales): a long markup name wraps to two lines (the link shrinks to the card since stores 5.18,
+   : P/RecordCard). */
+.odc-bm .odc-order-card-link .odc-bm-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

@@ -1,0 +1,178 @@
+/*
+ * /intelligence/reports (redesign reports FC1): the page, its catalog and the frame of a report.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-rp-*. Breakpoints are the numbers of C/utils/breakpoints.js as literals in @media: phone < 768, two columns from 768.
+ * The header, the pills, the menu, the search and the cards are the Product / kit pieces and bring their own sheets.
+ */
+
+/* redesign reports FC1 (D1): the page takes the width of the shell, with the padding and the rhythm of /intelligence/business */
+.odc-rp-page {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  padding: var(--od-space-6);
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media print {
+  .odc-rp-page {
+    display: none;
+  }
+}
+
+/* : the open-menu button is PageHeader's `leading`; the pair no longer needs a row of its own */
+
+/* ── Catalog (D2) ── */
+/* the search is one field of a fixed measure, not a toolbar that grows (its own rule gives it a flex basis for a row) */
+.odc-rp-page > .odc-rp-search {
+  flex: none;
+  inline-size: 100%;
+  max-inline-size: calc(var(--od-x-search) * 1.5);
+}
+
+.odc-rp-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-rp-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+/* one column on a phone, two from 768 */
+.odc-rp-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+@media (min-width: 768px) {
+  .odc-rp-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* a report is a native button the width of its cell; at least 44 high (decision 12) */
+.odc-rp-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-rp-item:hover {
+  background: var(--od-surface-subtle);
+  border-color: var(--od-x-field-border);
+}
+
+.odc-rp-item:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* a small decorative icon, level with the first line of the name */
+.odc-rp-item-icon {
+  flex: none;
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-text-muted);
+}
+
+.odc-rp-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-rp-item-name {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-rp-item-description {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* ── A report (D1, D3, D4) ── */
+/* the bar of filters and, under it, the dates of the period */
+.odc-rp-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-rp-period-line {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* the day of report 7 is a one-day picker dressed as the pills next to it (one more class than the field-like trigger it comes with) */
+button.odc-rp-day {
+  inline-size: auto;
+  flex: none;
+  justify-content: flex-start;
+  gap: var(--od-x-space-1-5);
+  border-color: var(--od-border);
+  background: var(--od-surface-subtle);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* the body of lot C2 (cards, tables, charts) stacks with the rhythm of the page */
+.odc-rp-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* ── Phone (D9): one column, a tighter page; the controls keep their 44 px areas from the Product pieces ── */
+@media (max-width: 767px) {
+  .odc-rp-page {
+    padding: var(--od-space-4);
+    gap: var(--od-space-4);
+  }
+}

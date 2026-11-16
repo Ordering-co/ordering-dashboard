@@ -11,7 +11,7 @@ export const OrdersAcceptSpendHeader = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme?.colors.headingColor};
     text-transform: uppercase;
   }
@@ -24,7 +24,7 @@ export const ReviewContentWrapper = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.lightGray};
     text-align: center;
   }
@@ -39,7 +39,7 @@ export const TimeContentWrapper = styled.div`
     font-weight: 500;
     font-size: 52px;
     margin: 0;
-    color: ${props => props.theme?.colors.headingColor}
+    color: ${props => props.theme?.colors.headingColor};
   }
   p {
     margin: 0;

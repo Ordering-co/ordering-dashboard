@@ -1,39 +1,58 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import moment from 'moment'
+import React, { useId, useRef, useState } from 'react'
 import {
+  useConfig,
   useLanguage,
+  useUtils,
   DragAndDrop,
   ExamineClick
 } from '../../../../../index'
-import { Input, TextArea, Button, Switch } from '../../../styles'
-import { Select } from '../../../styles/Select/FirstSelect'
-
-import {
-  Image as ImageIcon,
-  Calendar4
-} from 'react-bootstrap-icons'
+import { DEFAULT_VISIBLE_DATE_FORMAT } from '../../../../../contexts/UtilsContext'
+import { dayOf } from '../../../../../utils/dateRange'
+import { getDateTimeFormats } from '../../../../../utils/settingsCustomSections'
 import { bytesConverter } from '../../../utils'
-import { Alert, Modal, ImageCrop } from '../../Shared'
-import { DateRange } from 'react-date-range'
-
+import { Image as ImageIcon } from '../../Shared/Icon'
+import { ImageCrop } from '../../Shared/UI/ImageCrop'
 import {
-  DetailsContainer,
-  PromotionImage,
-  Image,
-  UploadImageIconContainer,
-  UploadImageIcon,
-  FormInput,
-  FormInnerContainer,
-  InputWrapper,
-  DateRangeWrapper,
-  CalendarContainer,
-  CalendarWrapper,
-  SelectGroup,
-  LabelWrapper,
-  OrderPriorityContainer,
-  StackableContainer
-} from './styles'
+  AlertDialog,
+  Button,
+  DatePicker,
+  Dialog,
+  Field,
+  RadioGroup,
+  Switch,
+  TextArea,
+  TextField
+} from '../../Shared/Product'
+import { createSummaryDateFormatter, formatDescriptionStamps } from '../PromotionJourneysListing/journeyUtils'
+import '../EnterprisePromotionDetails/promotion-panel.css'
+
+// redesign PE-B3 (decisions 5 and 7; PE-02, PE-18; defects D33, D37, D40, D41, D42, D44): the General form of the advanced editor with the
+// fields of Product. Same fields, same handlers and the same submit rule as main (`Add` in add mode, `Save` otherwise, off while nothing is
+// staged or it saves). What changes: the name is refused INLINE (it was a modal titled «Profile»), the dates are two day pickers in the
+// project's format (a range popover of `react-date-range` before; ISO and 1970 for an offer with no end), the priority is a named radio
+// group, the switch is named by its own text and the image area is a real button with a name and a decorative preview.
+
+const has = (changes, key) => Object.prototype.hasOwnProperty.call(changes, key)
+
+// The project's date format for what people read: dates_general_format, or the readable default when none is configured (decision 13), never ISO
+const projectDateFormat = (configs) => {
+  const generalFormat = configs?.dates_general_format?.value
+  const configured = typeof generalFormat === 'string' && generalFormat.trim() !== ''
+  return getDateTimeFormats(configured ? generalFormat : `${DEFAULT_VISIBLE_DATE_FORMAT} HH:mm`).dateFormat
+}
+
+// The words of P/DatePicker. `clearable` adds «Clear» (the end can be emptied)
+const pickerLabels = (t, { clearable = false } = {}) => ({
+  title: t('SELECT_DATE', 'Select a date'),
+  close: t('CLOSE', 'Close'),
+  today: t('TODAY', 'Today'),
+  goToToday: t('DATE_RANGE_GO_TO_TODAY', 'Go to today'),
+  previousMonth: t('PREVIOUS_MONTH', 'Previous month'),
+  nextMonth: t('NEXT_MONTH', 'Next month'),
+  invalidDate: (format) => t('DATE_RANGE_INVALID', 'Enter a real date as _format_.').replace('_format_', () => format),
+  outOfRange: t('CAMPAIGNS_DATE_UNAVAILABLE', 'That date is not available.'),
+  ...(clearable ? { clear: t('CLEAR', 'Clear') } : {})
+})
 
 export const EnterprisePromotionGeneralDetails = (props) => {
   const {
@@ -48,33 +67,35 @@ export const EnterprisePromotionGeneralDetails = (props) => {
     handleChangeItem
   } = props
 
-  const [, t] = useLanguage()
-  const formMethods = useForm()
+  const [languageState, t] = useLanguage()
+  const [{ configs } = {}] = useConfig() || []
+  const dateFormat = projectDateFormat(configs)
+  const locale = languageState?.language?.code
 
+  const changes = formState.changes || {}
+  const promotion = promotionState?.promotion || {}
+  // a staged value wins, `null` included (an end that was emptied is empty, not the saved one)
+  const valueOf = (key) => (has(changes, key) ? changes[key] : promotion[key])
+  // (tanda Y review, as 693 on Quick offers): a description saved by an older version carries raw stamps; the field shows them as
+  // dates. Presentation only: nothing is staged until the person types, and then what is staged is what they see.
+  const [{ parseDate }] = useUtils()
+  const descriptionShown = has(changes, 'description')
+    ? changes.description
+    : formatDescriptionStamps(promotion.description, createSummaryDateFormatter(parseDate))
+
+  const ids = useId()
   const inputRef = useRef(null)
-  const buttonOpenCalendarRef = useRef()
-  const calendarRef = useRef()
-  const [dateRange, setDateRange] = useState([
-    {
-      startDate: null,
-      endDate: null,
-      key: 'selection'
-    }
-  ])
+  const nameRef = useRef(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [isShowCalendar, setIsShowCalendar] = useState(false)
   const [cropState, setCropState] = useState({ name: null, data: null, open: false })
+  const [nameError, setNameError] = useState(null)
 
-  const OrderPriorityOptions = [
-    { value: 2, content: t('URGENT', 'Urgent') },
-    { value: 1, content: t('HIGH', 'High') },
-    { value: 0, content: t('NORMAL', 'Normal') },
-    { value: -1, content: t('LOW', 'Low') }
+  const orderPriorityOptions = [
+    { value: 2, label: t('URGENT', 'Urgent') },
+    { value: 1, label: t('HIGH', 'High') },
+    { value: 0, label: t('NORMAL', 'Normal') },
+    { value: -1, label: t('LOW', 'Low') }
   ]
-
-  const handleClickImage = () => {
-    inputRef.current.click()
-  }
 
   const handleFiles = (files) => {
     if (files.length === 1) {
@@ -105,16 +126,25 @@ export const EnterprisePromotionGeneralDetails = (props) => {
     }
   }
 
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-    // cleanFormState && cleanFormState({ result: { error: false } })
+  const closeAlert = () => setAlertState({ open: false, content: [] })
+  const closeCrop = () => setCropState(current => ({ ...current, open: false }))
+
+  const handleChangePhoto = (croppedImg) => {
+    handleChangeItem({ [cropState?.name]: croppedImg })
+    setCropState({ name: null, data: null, open: false })
   }
 
-  const onSubmit = () => {
-    if (Object.keys(formState.changes).length > 0) {
+  const name = valueOf('name') ?? ''
+
+  // redesign PE-B3 (D40): the required name is checked here and its message sits under the field
+  const onSubmit = (event) => {
+    event.preventDefault()
+    if (name === '') {
+      setNameError(t('NAME_REQUIRED', 'The name is required.'))
+      nameRef.current?.focus()
+      return
+    }
+    if (Object.keys(changes).length > 0) {
       if (isAddMode) {
         handleAddPromotion()
       } else {
@@ -123,230 +153,165 @@ export const EnterprisePromotionGeneralDetails = (props) => {
     }
   }
 
-  const handleChangeDates = (item) => {
-    handleChangeItem({
-      start: moment(item.selection.startDate).format('YYYY-MM-DD 00:00:00'),
-      end: item.selection.endDate ? moment(item.selection.endDate).format('YYYY-MM-DD 23:59:59') : null
-    })
-    setDateRange([item.selection])
-  }
+  // redesign PE-B3 (PE-02, PE-18): the day part of the stamp; an empty or invalid value is null (never 1970)
+  const startDay = dayOf(valueOf('start'))
+  const endDay = dayOf(valueOf('end'))
 
-  const handleChangePhoto = (croppedImg) => {
-    handleChangeItem({ [cropState?.name]: croppedImg })
-    setCropState({ name: null, data: null, open: false })
-  }
+  const priorityRaw = valueOf('order_priority')
+  const priority = priorityRaw === null || priorityRaw === undefined || priorityRaw === '' ? null : Number(priorityRaw)
 
-  const handleClickOutside = (e) => {
-    const outsideCalendar = !calendarRef.current?.contains(e.target) && !buttonOpenCalendarRef.current?.contains(e.target)
-    if (outsideCalendar) {
-      setIsShowCalendar(false)
-    }
-  }
+  const stackable = typeof changes.stackable !== 'undefined' ? changes.stackable : promotion.stackable ?? false
+  const imageSrc = changes.image || promotion.image
 
-  useEffect(() => {
-    if (Object.keys(formMethods.errors).length > 0) {
-      const content = Object.values(formMethods.errors).map(error => error.message)
-      setAlertState({
-        open: true,
-        content
-      })
-    }
-  }, [formMethods.errors])
-
-  useEffect(() => {
-    window.addEventListener('mouseup', handleClickOutside)
-    return () => window.removeEventListener('mouseup', handleClickOutside)
-  }, [])
-
-  useEffect(() => {
-    if (promotionState.loading) return
-    if (promotionState?.promotion && Object.keys(promotionState?.promotion).length) {
-      setDateRange([
-        {
-          startDate: new Date(promotionState?.promotion?.start),
-          endDate: new Date(promotionState?.promotion?.end),
-          key: 'selection'
-        }
-      ])
-    } else {
-      setDateRange([
-        {
-          startDate: null,
-          endDate: null,
-          key: 'selection'
-        }
-      ])
-    }
-  }, [promotionState])
+  const imageLabelId = `${ids}-image`
+  const imageHintId = `${ids}-image-hint`
 
   return (
     <>
-      <DetailsContainer>
-        <FormInput onSubmit={formMethods.handleSubmit(onSubmit)}>
-          <FormInnerContainer>
-            <PromotionImage className='promotion_image'>
-              <Image onClick={() => handleClickImage()}>
-                <ExamineClick
-                  onFiles={handleFiles}
-                  childRef={(e) => { inputRef.current = e }}
-                  accept='image/png, image/jpeg, image/jpg'
-                  disabled={actionState.loading}
-                >
-                  <DragAndDrop
-                    onDrop={dataTransfer => handleFiles(dataTransfer.files)}
-                    accept='image/png, image/jpeg, image/jpg'
-                    disabled={actionState.loading}
-                  >
-                    {
-                      formState?.changes?.image
-                        ? <img src={formState?.changes?.image} alt='user image' loading='lazy' />
-                        : promotionState?.promotion?.image && <img src={promotionState?.promotion?.image} alt='user image' loading='lazy' />
-                    }
-                    <UploadImageIconContainer>
-                      <UploadImageIcon>
-                        <ImageIcon />
-                        <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-                      </UploadImageIcon>
-                    </UploadImageIconContainer>
-                  </DragAndDrop>
-                </ExamineClick>
-              </Image>
-            </PromotionImage>
-            <InputWrapper>
-              <label>{t('NAME', 'Name')}</label>
-              <Input
-                name='name'
-                type='text'
-                placeholder={t('NAME', 'name')}
-                value={
-                  formState?.changes?.name ?? promotionState?.promotion?.name ?? ''
-                }
-                onChange={handleChangeInput}
-                ref={formMethods.register({
-                  required: t('NAME_REQUIRED', 'The name is required.')
-                })}
-                disabled={formState.loading}
-                autoComplete='off'
-              />
-            </InputWrapper>
-            <InputWrapper>
-              <label>{t('Description_V2', 'Description')}</label>
-              <TextArea
-                rows={4}
-                name='description'
-                placeholder={t('SHORT_PROMOTION_ABOUT', 'Write a little description')}
-                value={
-                  formState?.changes?.description ?? promotionState?.promotion?.description ?? ''
-                }
-                onChange={handleChangeInput}
-                disabled={formState.loading}
-                autoComplete='off'
-              />
-            </InputWrapper>
+      <form className='odc-promo-form' onSubmit={onSubmit} noValidate>
+        <div className='odc-promo-field'>
+          <span id={imageLabelId} className='odc-promo-label'>{t('IMAGE', 'Image')}</span>
+          <ExamineClick
+            onFiles={handleFiles}
+            childRef={(e) => { inputRef.current = e }}
+            accept='image/png, image/jpeg, image/jpg'
+            disabled={actionState.loading}
+          >
+            <DragAndDrop
+              className='odc-promo-drop'
+              onDrop={dataTransfer => handleFiles(dataTransfer.files)}
+              disabled={actionState.loading}
+            >
+              <button
+                type='button'
+                className='odc-promo-upload'
+                aria-labelledby={`${imageLabelId} ${imageHintId}`}
+                data-has-image={imageSrc ? '' : undefined}
+                disabled={actionState.loading}
+                onClick={() => inputRef.current?.click()}
+              >
+                {imageSrc && <img className='odc-promo-upload-img' src={imageSrc} alt='' loading='lazy' />}
+                <span id={imageHintId} className='odc-promo-upload-hint'>
+                  <ImageIcon className='odc-icon' aria-hidden='true' />
+                  <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+                </span>
+              </button>
+            </DragAndDrop>
+          </ExamineClick>
+        </div>
 
-            <SelectGroup>
-              <DateRangeWrapper>
-                <label>{t('DATES_RANGE', 'Date range')}</label>
-                <CalendarContainer>
-                  <Button
-                    color='secundary'
-                    borderRadius='8px'
-                    type='button'
-                    ref={buttonOpenCalendarRef}
-                    onClick={() => setIsShowCalendar(!isShowCalendar)}
-                  >
-                    <Calendar4 />
-                    <span>
-                      {
-                        dateRange[0].startDate
-                          ? `${moment(dateRange[0].startDate).format('YYYY/MM/DD')} - ${moment(dateRange[0].endDate).format('YYYY/MM/DD')}`
-                          : t('SELECT_DATE_RANGE', 'Select Date Range')
-                      }
-                    </span>
-                  </Button>
-                  {
-                    isShowCalendar && (
-                      <CalendarWrapper ref={calendarRef} notSelected={!dateRange[0].startDate}>
-                        <DateRange
-                          editableDateInputs
-                          onChange={item => handleChangeDates(item)}
-                          moveRangeOnFirstSelection={false}
-                          ranges={dateRange}
-                        />
-                      </CalendarWrapper>
-                    )
-                  }
-                </CalendarContainer>
-              </DateRangeWrapper>
-              <LabelWrapper>
-                <label>{t('LABEL', 'Label')}</label>
-                <Input
-                  name='label'
-                  placeholder={t('LABEL', 'Label')}
-                  value={
-                    formState?.changes?.label ?? promotionState?.promotion?.label ?? ''
-                  }
-                  onChange={handleChangeInput}
-                />
-              </LabelWrapper>
-            </SelectGroup>
+        <TextField
+          ref={nameRef}
+          label={t('NAME', 'Name')}
+          required
+          requiredLabel={t('REQUIRED', 'Required')}
+          name='name'
+          value={name}
+          error={nameError || undefined}
+          onChange={(value) => {
+            setNameError(null)
+            handleChangeInput({ target: { name: 'name', value } })
+          }}
+          disabled={formState.loading}
+          autoComplete='off'
+        />
 
-            <OrderPriorityContainer>
-              <label>{t('ORDER_PRIORITY', 'Order priority')}</label>
-              <Select
-                placeholder={t('SELECT_ORDER_PRIORITY', 'Select order priority')}
-                defaultValue={formState?.changes?.order_priority ?? promotionState.promotion?.order_priority}
-                options={OrderPriorityOptions}
-                onChange={val => handleChangeItem({ order_priority: val })}
-              />
-            </OrderPriorityContainer>
+        <TextArea
+          label={t('DESCRIPTION', 'Description')}
+          rows={4}
+          name='description'
+          placeholder={t('SHORT_PROMOTION_ABOUT', 'Write a little description')}
+          value={descriptionShown ?? ''}
+          onChange={(value) => handleChangeInput({ target: { name: 'description', value } })}
+          disabled={formState.loading}
+          autoComplete='off'
+        />
 
-            <StackableContainer>
-              <span>{t('ALLOW_COMBINE_OFFER', 'Allow to combine offer (discount/coupon) with others?')}</span>
-              <Switch
-                defaultChecked={
-                  typeof formState.changes?.stackable !== 'undefined'
-                    ? formState.changes?.stackable
-                    : promotionState.promotion?.stackable ?? false
-                }
-                onChange={val => handleChangeItem({ stackable: val })}
-              />
-            </StackableContainer>
-          </FormInnerContainer>
+        {/* (tanda Y review): its own keys, as Quick offers (a live dictionary had «Start Date» beside «End date») */}
+        <div className='odc-promo-panel-dates'>
+          <Field label={t('PROMOTION_START_DATE', 'Start date')}>
+            <DatePicker
+              label={t('PROMOTION_START_DATE', 'Start date')}
+              labels={pickerLabels(t)}
+              dateFormat={dateFormat}
+              locale={locale}
+              value={startDay}
+              max={endDay || undefined}
+              disabled={formState.loading}
+              onChange={(day) => { if (day) handleChangeItem({ start: `${day} 00:00:00` }) }}
+            />
+          </Field>
+          <Field label={t('PROMOTION_END_DATE', 'End date')}>
+            <DatePicker
+              label={t('PROMOTION_END_DATE', 'End date')}
+              labels={pickerLabels(t, { clearable: true })}
+              dateFormat={dateFormat}
+              locale={locale}
+              value={endDay}
+              min={startDay || undefined}
+              disabled={formState.loading}
+              onChange={(day) => handleChangeItem({ end: day ? `${day} 23:59:59` : null })}
+            />
+          </Field>
+        </div>
+
+        <TextField
+          label={t('LABEL', 'Label')}
+          name='label'
+          value={valueOf('label') ?? ''}
+          onChange={(value) => handleChangeInput({ target: { name: 'label', value } })}
+        />
+
+        <RadioGroup
+          label={t('ORDER_PRIORITY', 'Order priority')}
+          orientation='horizontal'
+          className='odc-promo-priority'
+          options={orderPriorityOptions}
+          value={priority}
+          onValueChange={(next) => handleChangeItem({ order_priority: Number(next) })}
+        />
+
+        <Switch
+          checked={!!stackable}
+          onCheckedChange={(next) => handleChangeItem({ stackable: next })}
+        >
+          {t('ALLOW_COMBINE_OFFER', 'Allow to combine offer (discount/coupon) with others?')}
+        </Switch>
+
+        <div className='odc-promo-panel-actions'>
           <Button
-            borderRadius='8px'
-            color='primary'
+            variant='primary'
             type='submit'
-            disabled={Object.keys(formState.changes).length === 0 || actionState.loading}
+            disabled={Object.keys(changes).length === 0 || actionState.loading}
           >
             {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
           </Button>
-        </FormInput>
-      </DetailsContainer>
-      <Alert
-        title={t('PROFILE', 'Profile')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
+        </div>
+      </form>
+
+      <AlertDialog
         open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+        title={t('IMAGE', 'Image')}
+        content={alertState.content}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
+        onClose={closeAlert}
       />
-      {cropState?.open && (
-        <Modal
-          width='700px'
-          height='80vh'
-          padding='30px'
-          title={t('IMAGE_CROP', 'Image crop')}
-          open={cropState?.open}
-          onRemove={() => setCropState({ ...cropState, open: false })}
-        >
+      <Dialog
+        open={!!cropState.open}
+        onOpenChange={(next) => { if (!next) closeCrop() }}
+        title={t('IMAGE_CROP', 'Image crop')}
+        closeLabel={t('CLOSE', 'Close')}
+        size='lg'
+      >
+        {cropState.data && (
           <ImageCrop
-            photo={cropState?.data}
+            photo={cropState.data}
             handleChangePhoto={handleChangePhoto}
+            onClose={closeCrop}
           />
-        </Modal>
-      )}
+        )}
+      </Dialog>
     </>
   )
 }

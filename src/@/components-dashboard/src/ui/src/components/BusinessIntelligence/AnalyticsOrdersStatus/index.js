@@ -130,7 +130,9 @@ export const AnalyticsOrdersStatus = (props) => {
       <OrderStatusHeader>
         <p>{t('ORDERS_STATUS', 'ORDERS STATUS')}</p>
         <ActionBlock disabled={orderStatusList?.data.length === 0}>
-          <BsDownload onClick={downloadCSV} />
+          <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+            <BsDownload />
+          </button>
         </ActionBlock>
       </OrderStatusHeader>
       {
@@ -149,7 +151,7 @@ export const AnalyticsOrdersStatus = (props) => {
             </BarChartWrapper>
                   )
                 : (
-            <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+            <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                   )
             )
       }

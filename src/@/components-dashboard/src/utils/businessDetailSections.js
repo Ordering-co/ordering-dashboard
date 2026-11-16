@@ -1,3 +1,4 @@
+import settings from '~/config'
 import { PAYMENT_PLUGIN_CATALOG } from './paymentPluginCatalog'
 
 /**
@@ -29,10 +30,175 @@ export const isBusinessSectionEnabled = (key, {
   return !itemsExcluded.includes(key)
 }
 
-const isConfigOn = (config) => {
-  const value = config?.value
-  return value === true || value === 1 || value === '1' || value === 'true'
+// redesign stores 4.A (decisions 2 and 11): the one source of the store editor's sections. The menu
+// (`Stores/BusinessDetails/storeSections.js`), the body (`StoreSectionBody` and the shell's deep link) and the palette read
+// it, so a section is offered and opened by the same rules.
+//
+// Three rules:
+// - the menu's level and role rules (`isSectionInRoleMenu`), as BusinessSummary had them in main;
+// - plus whether the project or the store has the section on (`isStoreSectionInMenu`): the menu and the palette;
+// - who may open it by address (`canAccessBusinessSection`, `canOpenStoreSection`): the level rules decision 11 names and,
+//   since bug batch C, every role rule of the menu (the selected access role). A
+//   `?section=` or `?tab=` outside them lands on the Overview with a notice. The config rules stay in the menu only: a
+//   section the project or the store has off still opens by address, as in main.
+
+/** A project config read as on/off: `'1'` or `true` is on; `'0'`, `false`, empty or missing is off. */
+const isConfigOn = (config) => config?.value === '1' || config?.value === true || config?.value === 1
+/** A project config turned off on purpose: `'0'`, `false` or `0` (not a missing or unset one). */
+const isConfigOff = (config) => config?.value === '0' || config?.value === false || config?.value === 0
+
+/** Sections only level 0 opens */
+export const ADMIN_SECTION_KEYS = ['publishing', 'configs', 'markups', 'business_fees', 'white_label']
+/**
+ * Keys with no level or role rule: the menu gates them by config alone, and `places` stays reachable by URL as today
+ * (decision 8; `places` comes back with lot 5.17). `support` and `personalization` were deleted (decision 8,
+ * n.º 22); a link with one of them opens the Overview (`isStoreSectionKey`).
+ */
+const CONFIG_ONLY_SECTION_KEYS = ['reservations', 'spoonity_key', 'places']
+
+/** Groups of the editor's navigation, in order (decision 2). Their titles are translated in `storeSections.js`. */
+export const STORE_SECTION_GROUPS = ['store', 'orders', 'payments', 'channels', 'integrations']
+
+/**
+ * The editor's sections in navigation order, each with its group (decision 2). Same keys and labels as the flat list of
+ * BusinessSummary; only the order changes (Notifications goes with orders, Custom fields with the store).
+ */
+export const STORE_SECTION_DEFS = [
+  { key: 'overview', group: 'store', labelKey: 'STORE_OVERVIEW', label: 'Overview' },
+  { key: 'store_details', group: 'store', labelKey: 'STORE_DETAILS', label: 'Store details' },
+  { key: 'schedule', group: 'store', labelKey: 'SCHEDULE', label: 'Schedule' },
+  { key: 'custom_fields', group: 'store', labelKey: 'CUSTOM_FIELDS', label: 'Custom fields' },
+  { key: 'menu', group: 'orders', labelKey: 'MENU_V21', label: 'Menu' },
+  { key: 'delivery_pickup_more', group: 'orders', labelKey: 'DELIVERY_PICKUP_MORE', label: 'Delivery, pickup & more' },
+  { key: 'preorder', group: 'orders', labelKey: 'PREORDERS_SETTING', label: 'Preorders and lead times' },
+  { key: 'reservations', group: 'orders', labelKey: 'RESERVATIONS', label: 'Reservations' },
+  { key: 'notifications', group: 'orders', labelKey: 'NOTIFICATIONS', label: 'Notifications' },
+  { key: 'places', group: 'orders', labelKey: 'PLACES', label: 'Places' },
+  { key: 'payment_methods', group: 'payments', labelKey: 'PAYMENTS_METHODS', label: 'Payment methods' },
+  { key: 'tax_fees', group: 'payments', labelKey: 'TAX_AND_FEES', label: 'Tax & fees' },
+  { key: 'promotions', group: 'payments', labelKey: 'PROMOTIONS', label: 'Promotions' },
+  { key: 'markups', group: 'payments', labelKey: 'MARKUPS', label: 'Markups' },
+  { key: 'business_fees', group: 'payments', labelKey: 'BUSINESS_FEES_TITLE', label: 'Business fees' },
+  { key: 'business_payment_account', group: 'payments', labelKey: 'BUSINESS_PAYMENT_ACCOUNT_TITLE', label: 'Business payment account' },
+  { key: 'ordering_channels', group: 'channels', labelKey: 'ORDERING_CHANNELS', label: 'Ordering channels' },
+  { key: 'publishing', group: 'channels', labelKey: 'QR_CODES', label: 'QR Codes' },
+  { key: 'sales_channels', group: 'channels', labelKey: 'SALES_CHANNELS_TITLE', label: 'Sales channels' },
+  { key: 'google_actions', group: 'channels', labelKey: 'ORDER_WITH_GOOGLE', label: 'Order with Google' },
+  { key: 'layout', group: 'channels', labelKey: 'LAYOUT', label: 'Layout' },
+  { key: 'white_label', group: 'channels', labelKey: 'WHITE_LABEL', label: 'White Label' },
+  { key: 'webhooks', group: 'integrations', labelKey: 'WEBHOOKS', label: 'Webhooks' },
+  { key: 'configs', group: 'integrations', labelKey: 'INTEGRATIONS_SETTINGS', label: 'Integrations settings' },
+  { key: 'spoonity_key', group: 'integrations', labelKey: 'SPOONITY_KEY', label: 'Spoonity key' },
+  { key: 'logs', group: 'integrations', labelKey: 'LOGS', label: 'Logs' }
+]
+
+/**
+ * Whether the editor has the section: a key of `STORE_SECTION_DEFS`. Any other `?section=` opens the Overview. White
+ * Label too while main hides it for every project (WHITE_LABEL_SITES_ENABLED): an old link is not this account's missing access.
+ */
+export const isStoreSectionKey = (key) => (key !== 'white_label' || WHITE_LABEL_SITES_ENABLED) && STORE_SECTION_DEFS.some(def => def.key === key)
+
+/**
+ * Who is looking, as the rules read it. `user` is the session user; `project` is `ordering.project`.
+ */
+export const getSectionAccess = ({ user, project } = {}) => ({
+  isAdmin: user?.level === 0,
+  level: user?.level,
+  isSelectedAccessRole: isSelectedAccessUser(user),
+  project
+})
+
+/**
+ * Who may open the section by address (decision 11): level 0 for business fees, markups and the three sections the body
+ * already kept for it (QR codes, integrations settings, white label); not the selected access role for the business
+ * payment account. redesign bugs C: and, for every other key, the menu's role rules (`isSectionInRoleMenu`),
+ * so a copied link opens what the menu gives that person and nothing else. No level gains or loses a menu entry.
+ */
+export const canAccessBusinessSection = (key, access = {}) => {
+  const { isAdmin = false, isSelectedAccessRole = false } = access
+  // main, while White Label sites are hidden, a link to the section does not open it either (main left its body empty)
+  if (key === 'white_label' && !WHITE_LABEL_SITES_ENABLED) return false
+  if (ADMIN_SECTION_KEYS.includes(key)) return isAdmin
+  if (key === 'business_payment_account') return !isSelectedAccessRole
+  return isSectionInRoleMenu(key, access)
 }
+
+/**
+ * The menu's level and role rules: same result as `isEnabled` plus the role checks of BusinessSummary in main (except QR
+ * Codes, see `isStoreSectionInMenu`). Config is not looked at.
+ */
+export const isSectionInRoleMenu = (key, { isAdmin = false, isSelectedAccessRole = false } = {}) => {
+  if (key === 'overview') return true
+  // Same order as the menu of main: these three never looked at the role
+  if (key === 'business_fees' || key === 'white_label') return isAdmin
+  if (key === 'business_payment_account') return !isSelectedAccessRole
+  if (CONFIG_ONLY_SECTION_KEYS.includes(key)) return true
+  if (isSelectedAccessRole) return SELECTED_ACCESS_SECTION_KEYS.includes(key)
+  if (ADMIN_SECTION_KEYS.includes(key)) return isAdmin
+  return true
+}
+
+/**
+ * Tabs with their own rule inside a section (`?section=&tab=`), as the section's strip hides them (and the palette with
+ * it). Any other tab follows its section.
+ */
+// main: the EatStreet owner restriction is gone, so agents, driver delivery group and custom slug follow their section.
+export const canAccessBusinessSectionTab = (section, tab, { level } = {}) => {
+  if (!tab) return true
+  if (section === 'store_details' && tab === 'owner') return level !== 2
+  return true
+}
+
+// tanda P: sections reachable by URL only (decision 8 of Stores; places waits for ). The menu never lists them,
+// not even while one is open by its address.
+export const URL_ONLY_SECTION_KEYS = ['places']
+
+/**
+ * Whether the editor's menu lists the section: who may open it, and whether the project or the store has it on. Same
+ * result as the flat list of BusinessSummary in main, except QR Codes, which the body only ever drew for level 0 (it
+ * used to show up for every level with `white_label_module` and open an empty body, G1-26).
+ *
+ * `menu`: `configs` (project configs map), `hasSpoonity` (the store has `spoonity_integration_api_key`) and
+ * `hasBusinessConfigSections` (the store has integration settings) and `googleActionsVisible` (the project shows Order
+ * with Google: `useGoogleActionsVisibility`, ).
+ */
+export const isStoreSectionInMenu = (key, access = {}, { configs = {}, hasSpoonity = false, hasBusinessConfigSections = false, googleActionsVisible = false } = {}) => {
+  if (!isSectionInRoleMenu(key, access) || !canAccessBusinessSection(key, access)) return false
+  switch (key) {
+    // redesign bugs C: on/off. BusinessSummary read it as truthy, so a project with `'0'` still listed it
+    case 'custom_fields': return isConfigOn(configs?.show_metafields)
+    case 'sales_channels': return !configs?.white_label_module?.value
+    case 'reservations': return configs?.reservation_enabled?.value === '1' && !!configs?.web_marketplace_26?.value
+    case 'spoonity_key': return !!hasSpoonity
+    case 'configs': return !!hasBusinessConfigSections
+    // only while the project can activate stores on Google or still has some there
+    case 'google_actions': return !!googleActionsVisible
+    // main, White Label sites are hidden while WHITE_LABEL_SITES_ENABLED is false
+    case 'white_label': return WHITE_LABEL_SITES_ENABLED && isWhiteLabelSiteConfigured(access.project, configs?.whitelabel_stores_sites)
+    case 'places':
+      return false
+    default: return true
+  }
+}
+
+/**
+ * redesign bugs C (): whether the editor's «⋯» offers «Custom fields». Not to a role whose menu has no
+ * Custom fields, and not on a project that turned `show_metafields` off (`'0'`, `false`). A project with no such config, or one
+ * whose value is unset (null, empty), keeps the shortcut, as main had it (its menu entry needs the config on).
+ */
+export const isCustomFieldsShortcutOffered = (access = {}, configs = {}) =>
+  canAccessBusinessSection('custom_fields', access) && !isConfigOff(configs?.show_metafields)
+
+/** The tabs whose rule the deep link follows (decision 11). `custom_slug` is not one: its section already opens on Widgets. */
+const DEEP_LINK_GUARDED_TABS = ['store_details:owner', 'store_details:agents', 'delivery_pickup_more:driver_delivery_group']
+
+/**
+ * Whether the deep link `?section=&tab=` opens for this person. The editor's shell asks it before it opens a section;
+ * when it says no, it shows the Overview with a notice instead.
+ */
+export const canOpenStoreSection = ({ section, tab } = {}, access = {}) =>
+  canAccessBusinessSection(section, access) &&
+  (!DEEP_LINK_GUARDED_TABS.includes(`${section}:${tab}`) || canAccessBusinessSectionTab(section, tab, access))
 
 /**
  * Per-store and per-brand White Label sites (`/business/{id}/sites/current`,
@@ -58,22 +224,24 @@ export const BUSINESS_PALETTE_SECTIONS = [
   { key: 'promotions', labelKey: 'PROMOTIONS', label: 'Promotions', aliases: ['promociones', 'ofertas', 'descuentos'] },
   { key: 'ordering_channels', labelKey: 'ORDERING_CHANNELS', label: 'Ordering channels', aliases: ['canales', 'slug', 'widgets', 'url de la tienda'] },
   { key: 'preorder', labelKey: 'PREORDERS_SETTING', label: 'Preorders and lead times', aliases: ['preordenes', 'anticipacion', 'lead time'] },
-  { key: 'custom_fields', labelKey: 'CUSTOM_FIELDS', label: 'Custom fields', aliases: ['campos personalizados', 'metafields'], when: ({ configs }) => isConfigOn(configs?.show_metafields) },
+  { key: 'custom_fields', labelKey: 'CUSTOM_FIELDS', label: 'Custom fields', aliases: ['campos personalizados', 'metafields'] },
   { key: 'webhooks', labelKey: 'WEBHOOKS', label: 'Webhooks', aliases: ['webhooks', 'integraciones'] },
   { key: 'logs', labelKey: 'LOGS', label: 'Logs', aliases: ['registros', 'historial', 'auditoria'] },
-  { key: 'publishing', labelKey: 'QR_CODES', label: 'QR Codes', aliases: ['codigos qr', 'qr', 'mesas'], adminOnly: true },
-  { key: 'business_fees', labelKey: 'BUSINESS_FEES', label: 'Business Fees', aliases: ['comisiones del negocio', 'cargos'], adminOnly: true },
-  { key: 'markups', labelKey: 'MARKUPS', label: 'Markups', aliases: ['recargos', 'margenes'], adminOnly: true },
+  { key: 'publishing', labelKey: 'QR_CODES', label: 'QR Codes', aliases: ['codigos qr', 'qr', 'mesas'] },
+  { key: 'business_fees', labelKey: 'BUSINESS_FEES_TITLE', label: 'Business fees', aliases: ['comisiones del negocio', 'cargos'] },
+  { key: 'markups', labelKey: 'MARKUPS', label: 'Markups', aliases: ['recargos', 'margenes'] },
   // A button on the store detail, not a section: the palette opens the detail
   // and the person presses it (it starts the Clover sign-in on another site)
   { key: 'connect_clover', labelKey: 'CONNECT_CLOVER', label: 'Connect clover', aliases: ['clover', 'conectar clover', 'clover pos', 'sincronizar clover'], adminOnly: true, detailOnly: true },
-  { key: 'sales_channels', labelKey: 'SALES_CHANNELS', label: 'Sales channels', aliases: ['canales de venta', 'facebook', 'instagram', 'tiktok', 'google my business', 'redes sociales'] },
+  { key: 'sales_channels', labelKey: 'SALES_CHANNELS_TITLE', label: 'Sales channels', aliases: ['canales de venta', 'facebook', 'instagram', 'tiktok', 'google my business', 'redes sociales'] },
+  // offered while the project shows Order with Google (`googleActionsVisible`)
+  { key: 'google_actions', labelKey: 'ORDER_WITH_GOOGLE', label: 'Order with Google', aliases: ['pedir con google', 'activar en google', 'google actions', 'actions center', 'boton pedir en linea', 'order online'] },
   { key: 'layout', labelKey: 'LAYOUT', label: 'Layout', aliases: ['diseno', 'plantilla', 'vista', 'food', 'groceries'] },
-  { key: 'business_payment_account', labelKey: 'BUSINESS_PAYMENT_ACCOUNT', label: 'Business Payment Account', aliases: ['cuenta de pago', 'cuenta bancaria', 'payouts', 'stripe connect'] },
-  { key: 'white_label', labelKey: 'WHITE_LABEL', label: 'White Label', aliases: ['marca blanca', 'sitio propio', 'white label'], adminOnly: true, when: ({ configs, project }) => WHITE_LABEL_SITES_ENABLED && (isConfigOn(configs?.whitelabel_stores_sites) || WHITE_LABEL_STORE_PROJECTS.includes(project)) },
-  { key: 'reservations', labelKey: 'RESERVATIONS', label: 'Reservations', aliases: ['reservas', 'reservaciones', 'mesas'], when: ({ configs }) => configs?.reservation_enabled?.value === '1' && !!configs?.web_marketplace_26?.value },
+  { key: 'business_payment_account', labelKey: 'BUSINESS_PAYMENT_ACCOUNT_TITLE', label: 'Business payment account', aliases: ['cuenta de pago', 'cuenta bancaria', 'payouts', 'stripe connect'] },
+  { key: 'white_label', labelKey: 'WHITE_LABEL', label: 'White Label', aliases: ['marca blanca', 'sitio propio', 'white label'] },
+  { key: 'reservations', labelKey: 'RESERVATIONS', label: 'Reservations', aliases: ['reservas', 'reservaciones', 'mesas'] },
   // Fixed tabs inside a section (`&tab=`): same gate as their section, plus the tab's own rule
-  { key: 'store_details:owner', section: 'store_details', tab: 'owner', labelKey: 'OWNER_ID', label: 'Owner', aliases: ['dueno', 'propietario', 'owner'], when: ({ user }) => user?.level !== 2 },
+  { key: 'store_details:owner', section: 'store_details', tab: 'owner', labelKey: 'OWNER_ID', label: 'Owner', aliases: ['dueno', 'propietario', 'owner'] },
   { key: 'store_details:categories', section: 'store_details', tab: 'categories', labelKey: 'CATEGORIES', label: 'Categories', aliases: ['categorias del negocio', 'tipo de negocio', 'business type'] },
   { key: 'store_details:location', section: 'store_details', tab: 'location', labelKey: 'LOCATION', label: 'Location', aliases: ['ubicacion', 'direccion', 'mapa', 'address'] },
   { key: 'store_details:agents', section: 'store_details', tab: 'agents', labelKey: 'AGENTS', label: 'Agents', aliases: ['agentes', 'call center'] },
@@ -94,21 +262,25 @@ export const BUSINESS_PALETTE_SECTIONS = [
   { key: 'products_page', target: 'products', labelKey: 'CATEGORIES_AND_PRODUCTS', label: 'Categories & products', aliases: ['productos de la tienda', 'menu de la tienda', 'categorias', 'catalogo'] }
 ]
 
-/** Projects where store White Label is on without the config (BusinessSummary) */
-export const WHITE_LABEL_STORE_PROJECTS = ['luisv4plus', 'eatstreetstaging']
+export const isWhiteLabelSiteConfigured = (project, config) => {
+  if (config?.value === '1' || config?.value === true) return true
+  const projects = settings.dashboard_project_allowlists?.white_label_sites
+  return typeof project === 'string' && project !== '' && Array.isArray(projects) && projects.includes(project)
+}
 
 /**
  * Palette business sections the user can open, with the menu rules applied.
  */
-export const getPaletteBusinessSections = ({ user, configs = {}, project } = {}) => {
-  const isAdmin = user?.level === 0
-  const isSelectedAccessRole = isSelectedAccessUser(user)
+export const getPaletteBusinessSections = ({ user, configs = {}, project, googleActionsVisible = false } = {}) => {
+  const access = getSectionAccess({ user, project })
   return BUSINESS_PALETTE_SECTIONS.filter(section => {
-    if (section.adminOnly && !isAdmin) return false
-    if (section.when && !section.when({ configs, user, project })) return false
     // Pages outside the detail follow their own menu (checked by the caller with navUrl)
-    if (section.target) return !isSelectedAccessRole
-    return isBusinessSectionEnabled(section.section || section.key, { isAdmin, isSelectedAccessRole, configs })
+    if (section.target) return !access.isSelectedAccessRole
+    // A button on the Overview, not a section
+    if (section.detailOnly) return !section.adminOnly || access.isAdmin
+    // redesign stores 4.A: the editor's menu rules, and the tab's own rule for a fixed tab
+    const key = section.section || section.key
+    return isStoreSectionInMenu(key, access, { configs, googleActionsVisible }) && canAccessBusinessSectionTab(key, section.tab, access)
   })
 }
 

@@ -1,77 +1,37 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { Input } from '../../../styles/Inputs'
-import { Alert } from '../../Shared'
+import { TextField } from '../../Shared/Product'
+import '../BusinessNotifications/notifications.css'
 
-import {
-  BusinessEmailContainer,
-  SectionTitle,
-  FormControl,
-  Label,
-  OrdersAppPushContainer
-} from './styles'
-
+// redesign stores 5.4: a controlled field of the Notifications form. It saves nothing by itself: the form keeps
+// the draft, checks the address when Save is pressed (an empty one is valid and clears it) and hands the error back as `emailError`.
 export const BusinessEmail = (props) => {
   const {
-    business,
-    setFormState,
-    formState
+    email,
+    emailError,
+    onChangeEmail
   } = props
 
   const [, t] = useLanguage()
-  const [alertState, setAlertState] = useState({ open: false, content: [], success: false })
-
-  let timeout1 = null
-
-  const saveEmailOrders = (email) => {
-    clearTimeout(timeout1)
-    timeout1 = setTimeout(() => {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (email.trim() === '' || !re.test(email)) return
-      setFormState({
-        ...formState,
-        changes: { email }
-      })
-    }, 500)
-  }
-
-  const closeAlert = () => {
-    setAlertState({
-      ...alertState,
-      open: false,
-      content: []
-    })
-  }
 
   return (
     <>
-      <BusinessEmailContainer>
-        <SectionTitle>{t('EMAILS_NOTIFICATIONS', 'Email notifications')}</SectionTitle>
-        <FormControl>
-          <Label>{t('EMAIL_RECEIVE_ORDERS', 'Email to receive orders')}</Label>
-          <Input
-            type='text'
-            defaultValue={business?.email ?? ''}
-            placeholder={t('EMAIL_RECEIVE_ORDERS', 'Email to receive orders')}
-            onChange={(e) => saveEmailOrders(e.target.value)}
-          />
-        </FormControl>
-      </BusinessEmailContainer>
+      <section className='odc-store-notif-block'>
+        <h2 className='odc-store-notif-section'>{t('EMAILS_NOTIFICATIONS', 'Email notifications')}</h2>
+        <TextField
+          type='email'
+          label={t('EMAIL_RECEIVE_ORDERS', 'Email to receive orders')}
+          value={email ?? ''}
+          error={emailError || undefined}
+          autoComplete='off'
+          onChange={(value) => onChangeEmail && onChangeEmail(value)}
+        />
+      </section>
 
-      <OrdersAppPushContainer>
-        <SectionTitle>{t('ORDERS_APP_PUSH', 'Orders app push')}</SectionTitle>
+      <section className='odc-store-notif-block odc-store-notif-push'>
+        <h2 className='odc-store-notif-section'>{t('ORDERS_APP_PUSH', 'Orders app push')}</h2>
         <p>{t('ORDERS_APP_PUSH_DESC', 'You can download our apps and receive push notifications directly in there, it is easy and free.')}</p>
-      </OrdersAppPushContainer>
-
-      <Alert
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
+      </section>
     </>
   )
 }

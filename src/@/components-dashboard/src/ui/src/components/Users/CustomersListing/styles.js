@@ -28,7 +28,7 @@ export const VerifiedStatusFilterContainer = styled.div`
   align-items: center;
   button {
     white-space: nowrap;
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     height: 32px;
     display: flex;
     align-items: center;

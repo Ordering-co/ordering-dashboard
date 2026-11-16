@@ -1,0 +1,185 @@
+/*
+ * redesign deliveries F2-B3 (decisions 1, 2, 6, 7; DV-01, DV-04, DV-05, DV-07) · The dispatch board of /deliveries: the page is a column
+ * (head, notice, board) and the board takes what is left, so nothing overflows #deliveryDashboard and there is no second scroll
+ * (DV-01). From 1024px the list and the map side by side (list 400 / 440 / 480px at 1024 / 1280 / 1440, the map the rest, DV-04);
+ * below, one column with a List | Map switch (DV-05). With the order panel beside the list (SplitView, from 1280px) the map column
+ * hides and the list takes the width that is left (DV-07).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so it mirrors in RTL.
+ */
+
+/* The page: SplitView's root takes the height of the window, as /orders (.odc-orders-split) and Open carts (.odc-oc-split). */
+.odc-split.odb-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* ── The board ── */
+.odb-board {
+  --odb-list-size: var(--od-x-board-list-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin-block-start: var(--od-space-3);
+}
+
+/* The width the list column takes: 400px from 1024 to 1279, 440px from 1280, 480px from 1440 (--od-x-board-list-*, candidates.css;
+   redesign deliveries-followups P4, ). */
+@media (min-width: 1280px) {
+  .odb-board { --odb-list-size: var(--od-x-board-list-md); }
+}
+
+@media (min-width: 1440px) {
+  .odb-board { --odb-list-size: var(--od-x-board-list-lg); }
+}
+
+.odb-board [hidden] {
+  display: none;
+}
+
+/* Below 1024px: the list first and the map behind the switch. «Map» gets most of the window (the board has no height of its own here). */
+.odb-view {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.odb-board[data-view='map'] {
+  min-block-size: 70vh;
+}
+
+.odb-board[data-view='map'] > .odb-map {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* From 1024px: two columns that share the height the page leaves. */
+@media (min-width: 1024px) {
+  .odb-board {
+    flex-direction: row;
+    flex: 1 1 0;
+    min-block-size: 0;
+  }
+
+  .odb-list {
+    flex: 0 0 var(--odb-list-size);
+    inline-size: var(--odb-list-size);
+    min-inline-size: 0;
+  }
+
+  .odb-map {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  /* The order panel is beside the list: the map column is hidden (kept mounted) and the list takes the width that is left. */
+  .odb-board[data-map-hidden] > .odb-list {
+    flex: 1 1 0;
+    inline-size: auto;
+  }
+}
+
+/* The list column: tabs and tools on top, the cards take the rest and scroll inside; a column of its own, never the page. */
+.odb-list {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* the frame (1px) is inside the 400 / 440 / 480px */
+  min-block-size: 0;
+}
+
+.odb-list > #cardOrders {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.odb-list > #cardOrders > * {
+  display: flex; /* redesign deliveries F2 integration: the cards scroll and the pager sits at the foot */
+  flex-direction: column;
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* redesign deliveries F2 integration (DV-01): the card list takes the height left above the pager, not the
+   legacy calc(100% - 200px) of OrdersListContainer (kept in styles.js because rulesets and harnesses pin it). */
+.odb-list > #cardOrders .odc-delivery-list {
+  block-size: auto;
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* The map column: the map and its drivers strip (DeliveriesLocation) fill it. */
+.odb-map {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}
+
+.odb-map > * {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+@media (max-width: 1023px) {
+  .odb-board:not([data-view='map']) > .odb-list > #cardOrders {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  .odb-board:not([data-view='map']) > .odb-list > #cardOrders > * {
+    flex: 0 0 auto;
+  }
+}
+
+/* ── The tools row under the tabs: the dispatch toggles, then the Status pill at the end ── */
+.odb-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odb-tools .odc-orders-substatus {
+  margin-inline-start: auto;
+  padding-block: 0;
+}
+
+.odb-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* A toggle that is on: a solid border, the subtle surface and the semibold weight of the other pressed pills, plus a check, so the
+   state is not carried by color alone. */
+.odc-btn.odb-toggle[aria-pressed='true'] {
+  border: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+@media print {
+  .odb-board {
+    display: none;
+  }
+}
+
+/* redesign deliveries F2 integration (DV-05): below 1024px the board has no height of its own, so the list keeps the height of its
+   cards and the page scrolls (the internal scroll of the columns starts at 1024px). */
+@media (max-width: 1023px) {
+  .odb-list > #cardOrders,
+  .odb-list > #cardOrders > *,
+  .odb-list > #cardOrders .odc-delivery-list {
+    flex: none;
+    block-size: auto;
+    overflow: visible;
+  }
+}

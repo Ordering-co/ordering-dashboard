@@ -1,29 +1,22 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const SubFilterContainer = styled.div`
   padding: 15px 0;
 
   button {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 10px;
-    `
-: css`
-      margin-right: 10px;
-    `}
-    font-size: 14px;
+    margin-inline-end: 10px;
+    font-size: var(--od-type-control-size);
     white-space: nowrap;
+
+    /* : a touch target, like the status Tab beside it (it measured 25.5px at 320 with a coarse pointer). */
+    @media (pointer: coarse) {
+      min-height: 44px;
+    }
 
     svg {
       font-size: 20px;
 
-      ${props => props.theme?.rtl
-? css`
-        margin-right: 5px;
-      `
-: css`
-        margin-left: 5px;
-      `}
+      margin-inline-start: 5px;
     }
   }
 `

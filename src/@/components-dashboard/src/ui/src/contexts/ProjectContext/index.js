@@ -16,7 +16,7 @@ export const ProjectProvider = ({ children }) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [{ configs, fetchedWithToken }] = useConfig()
-  const [state, setState] = useState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
+  const [state, setState] = useState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, dashboardUpgradeRequired: null, dashboardUpgradePending: !!token, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
   const identity = `${ordering.root}:${ordering.project}:${token}`
   const [sessionIdentity, setSessionIdentity] = useState(identity)
   const requestSeq = useRef(0)
@@ -25,7 +25,7 @@ export const ProjectProvider = ({ children }) => {
 
   if (identity !== sessionIdentity) {
     setSessionIdentity(identity)
-    setState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
+    setState({ loading: !!token, project: {}, plan: null, intercomAllowed: null, dashboardUpgradeRequired: null, dashboardUpgradePending: !!token, planResolved: false, trialSubscription: null, websiteProduct: null, billingUnavailable: false })
   }
 
   const websiteProduct = state.websiteProduct || (state.billingUnavailable && fetchedWithToken
@@ -35,13 +35,14 @@ export const ProjectProvider = ({ children }) => {
   const getProjectStatus = async () => {
     const seq = ++requestSeq.current
     captureDashboardOperation({ status: 'started', module: 'project', action: 'load_project' })
-    setState(prev => ({ ...prev, loading: true, intercomAllowed: null, planResolved: false }))
+    setState(prev => ({ ...prev, loading: true, intercomAllowed: null, dashboardUpgradePending: true, planResolved: false }))
 
     // Project support is available to project-local users without billing access.
     // Support settles independently: neither its loading nor billing can block the other.
-    const read = async (path, authenticated = false) => {
+    const read = async (path, authenticated = false, signal) => {
       const response = await fetch(`${ordering.root}${path}`, {
         method: 'GET',
+        ...(signal && { signal }),
         headers: {
           'Content-Type': 'application/json',
           ...(authenticated ? { Authorization: `Bearer ${token}` } : {})
@@ -50,14 +51,14 @@ export const ProjectProvider = ({ children }) => {
       return { response, data: await response.json() }
     }
     const isCurrentRequest = () => seq === requestSeq.current && identity === currentIdentity.current
-    read('/current/support', true).then(({ response, data }) => {
+    read('/current/support', true, AbortSignal.timeout(6000)).then(({ response, data }) => {
       if (!isCurrentRequest()) return
-      const intercomAllowed = response.ok === true && data?.error === false && typeof data?.result?.intercom_allowed === 'boolean'
-        ? data.result.intercom_allowed
-        : null
-      setState(prev => ({ ...prev, intercomAllowed }))
+      const support = response.ok === true && data?.error === false ? data.result : null
+      const intercomAllowed = typeof support?.intercom_allowed === 'boolean' ? support.intercom_allowed : null
+      const dashboardUpgradeRequired = typeof support?.dashboard_upgrade_required === 'boolean' ? support.dashboard_upgrade_required : null
+      setState(prev => ({ ...prev, intercomAllowed, dashboardUpgradeRequired, dashboardUpgradePending: false }))
     }, () => {
-      if (isCurrentRequest()) setState(prev => ({ ...prev, intercomAllowed: null }))
+      if (isCurrentRequest()) setState(prev => ({ ...prev, intercomAllowed: null, dashboardUpgradeRequired: null, dashboardUpgradePending: false }))
     })
     const [projectRequest, billingRequest] = await Promise.allSettled([
       read('/current'),
@@ -104,6 +105,17 @@ export const ProjectProvider = ({ children }) => {
     }
     return () => { requestSeq.current += 1 }
   }, [token, ordering.root, ordering.project])
+
+  // Recheck when returning from the upgrade flow in another tab. This uses
+  // the same tenant/session guard as the initial read.
+  useEffect(() => {
+    if (!token || state.dashboardUpgradeRequired == null) return undefined
+    const refreshOnReturn = () => {
+      if (document.visibilityState === 'visible') getProjectStatus()
+    }
+    document.addEventListener('visibilitychange', refreshOnReturn)
+    return () => document.removeEventListener('visibilitychange', refreshOnReturn)
+  }, [identity, state.dashboardUpgradeRequired])
 
   return (
     <ProjectContext.Provider value={[{ ...state, websiteProduct }, functions]}>

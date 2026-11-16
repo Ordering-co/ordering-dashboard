@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 export const Option = styled.div`
   display: flex;
   align-items: center;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   padding: ${({ padding }) => padding || '5px'};
   white-space: nowrap;
 
@@ -29,13 +29,7 @@ export const Option = styled.div`
 
   @media (max-width: 576px) {
     padding: ${({ padding }) => padding || '5px 0px'};
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 10px;
-    `
-: css`
-      margin-left: 10px;
-    `}
+    margin-inline-start: 10px;
     span {
       max-width: 280px;
     }
@@ -51,14 +45,14 @@ export const OptionContent = styled.div`
 
 export const DriverNameContainer = styled.div`
   line-height: 1.3;
-  color: #263238;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#263238'};
 `
 
 export const DriverName = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   font-weight: 600;
   line-height: 1.3;
-  color: ${props => props.theme.colors.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -74,8 +68,8 @@ export const DriverName = styled.p`
   }
 `
 export const DriverText = styled.span`
-  font-size: 12px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-secondary-size);
+  color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
   ${({ small }) => small && css`
     display: none;
   `}
@@ -84,7 +78,7 @@ export const DriverText = styled.span`
 export const WrapperDriverImage = styled.div`
   width: 45px;
   height: 45px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
   border-radius: 8px;
   display: flex;
 
@@ -105,13 +99,7 @@ export const WrapperDriverImage = styled.div`
     }
   `}
 
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 8px;
-  `
-: css`
-    margin-right: 8px;
-  `}
+  margin-inline-end: 8px;
 `
 const DriverImageStyled = styled.div`
   display: flex;
@@ -141,6 +129,6 @@ export const PlaceholderTitle = styled(Option)`
 
   ${({ isSingle }) => isSingle && css`
     padding: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   `}
 `

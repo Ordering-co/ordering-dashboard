@@ -1,0 +1,4 @@
+.od-ui:where(.od-chat-businesses) { color: var(--od-entity-selector-text); font-family: var(--od-entity-selector-font); }
+.od-ui:where(.od-chat-businesses) .od-chat-orders-action { min-height: 44px; padding-inline: 8px; color: var(--od-entity-selector-action-content); background: transparent; border: 0; }
+.od-chat-dot { margin-inline: 5px; color: var(--od-entity-selector-muted); }
+@media (prefers-reduced-motion: reduce) { .od-ui:where(.od-chat-businesses) * { transition-duration: 0s !important; } }

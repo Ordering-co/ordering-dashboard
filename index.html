@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Admin dashboard by Ordering.co" />
+    <!-- Admin pages should not be indexed. -->
+    <meta name="robots" content="noindex, nofollow" />
     <!-- PWA disabled -->
     <!-- <meta name="apple-mobile-web-app-capable" content="yes" /> -->
     <!-- <meta name="mobile-web-app-capable" content="yes" /> -->
@@ -37,7 +39,8 @@
       @keyframes od-boot-bar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
     </style>
 
-    <link rel="preconnect" href="https://apiv4.ordering.co" />
+    <link rel="preconnect" href="https://api.orderingplus.com" crossorigin />
+    <link rel="preconnect" href="https://apiv4.ordering.co" crossorigin />
     <link rel="preconnect" href="https://maps.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <!-- PWA disabled -->
@@ -187,7 +190,7 @@
 
     <style>
       .pac-container {
-        z-index: 10000 !important;
+        z-index: calc(var(--od-x-layer-notice) - 5) !important;
       }
     </style>
     <script>

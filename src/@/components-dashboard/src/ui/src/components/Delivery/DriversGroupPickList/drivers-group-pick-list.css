@@ -1,0 +1,118 @@
+/*
+ * redesign  (AD-4, AD-6): the lists the panel of a delivery group picks from. Values come from --od-* (release) and
+ * --od-x-* (src/brand/candidates.css) only; logical properties only (C17). Component classes use the `gpl-` prefix.
+ */
+
+.gpl-root {
+  /* review AD-R1: the containing block of what P/ positions inside (the pager's hidden page status), so it never escapes the
+     panel's scroll area and stretches the document */
+  position: relative;
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gpl-legend {
+  padding: 0;
+  margin-block-end: var(--od-space-2);
+}
+
+.gpl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.gpl-status {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.gpl-rows {
+  display: grid;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gpl-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.gpl-row:last-child { border-block-end: 0; }
+
+/* AD measure (390): the 44px touch areas of the checkboxes of two rows crossed; on a phone or a coarse pointer a row is as tall as
+   one touch target, so neighbours meet and never overlap */
+@media (pointer: coarse), (max-width: 767px) {
+  .gpl-row {
+    box-sizing: border-box;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+.gpl-row[data-disabled] { color: var(--od-text-muted); }
+
+.gpl-text {
+  display: grid;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.gpl-title {
+  margin: 0;
+  overflow: hidden;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.gpl-row[data-disabled] .gpl-title { cursor: default; }
+
+.gpl-meta {
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gpl-extra {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* : on a phone or a coarse pointer the extra's checkbox (Temporary driver) reaches its 44px area with a negative margin of
+   --od-x-space-3-5 (checkbox.css); a gap as wide as that overhang lets the area meet the link beside it instead of covering it */
+@media (pointer: coarse), (max-width: 767px) {
+  .gpl-extra { gap: var(--od-x-space-3-5); }
+}
+
+.gpl-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.gpl-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.gpl-footer { min-inline-size: 0; }

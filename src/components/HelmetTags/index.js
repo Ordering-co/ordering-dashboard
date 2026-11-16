@@ -3,7 +3,9 @@ import { Helmet } from 'react-helmet'
 import { useTheme } from 'styled-components'
 import helmetData from '../../helmetdata.json'
 import settings from '../../config'
-import { useConfig } from '~components'
+import { useConfig, useLanguage } from '~components'
+
+const NO_INDEX = 'noindex, nofollow'
 
 export const HelmetTags = (props) => {
   const { page } = props
@@ -12,10 +14,14 @@ export const HelmetTags = (props) => {
   /** react-helmet must not receive Fragment children — it stringifies element.type (Symbol for <>). */
 
   const [{ configs }] = useConfig()
+  const [, t] = useLanguage()
 
   const metaTag = (page && helmetData[page]) ? helmetData[page] : helmetData.app
 
-  const displayName = configs?.dashboard_title?.value || settings.app_name
+  // one brand on every route. Logged out (login, forgot password, 404) the project configs may not be loaded yet, so the
+  // `dashboard_title` the worker injected in `__FIRST_LOAD__` comes before the app name, the one reserve every route shares.
+  const firstLoadTitle = typeof window !== 'undefined' ? window.__FIRST_LOAD__?.configs?.dashboard_title?.value : null
+  const displayName = configs?.dashboard_title?.value || firstLoadTitle || settings.app_name
   const seoInjectedTitle =
     (typeof window !== 'undefined' && window.__SEO__?.title) || null
 
@@ -28,7 +34,8 @@ export const HelmetTags = (props) => {
     props.helmetTitle ??
     hmt.title ??
     effectiveSeoTitle ??
-    metaTag.title ??
+    // the page title is a catalog key; the English text of helmetdata.json is the reserve of t()
+    (metaTag.titleKey ? t(metaTag.titleKey, metaTag.title) : metaTag.title) ??
     ''
   ).trim()
   const canRenderTitle = !!page && !!displayName && !!titleBody
@@ -84,6 +91,7 @@ export const HelmetTags = (props) => {
     metaTag.description ??
     ''
   )
+  const keywordsBody = String(props.keywords ?? hmt.keywords ?? metaTag.keywords ?? '')
 
   return (
     <Helmet titleTemplate={!canRenderTitle ? '' : `${displayName} - %s`}>
@@ -92,21 +100,20 @@ export const HelmetTags = (props) => {
           {titleBody}
         </title>
       )}
-      <meta
-        name='description'
-        content={descriptionBody}
-      />
-      <meta
-        name='keywords'
-        content={String(props.keywords ?? hmt.keywords ?? metaTag.keywords ?? '')}
-      />
-      {props.robots
-        ? (
-        <meta name='robots' content={props.robots} />
-          )
-        : (
-            metaTag.robots && <meta name='robots' content={metaTag.robots} />
-          )}
+      {descriptionBody && (
+        <meta
+          name='description'
+          content={descriptionBody}
+        />
+      )}
+      {keywordsBody && (
+        <meta
+          name='keywords'
+          content={keywordsBody}
+        />
+      )}
+      {/* (D-64): an admin panel is never offered to search engines, whatever a page or its data says */}
+      <meta name='robots' content={NO_INDEX} />
       {props.canonicalUrl
         ? (
         <link rel='canonical' href={props.canonicalUrl} />

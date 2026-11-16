@@ -1,20 +1,24 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import {
   useLanguage,
   useConfig,
   BusinessPaymethods as BusinessPaymentMethodsController,
   useSession
 } from '../../../../../index'
-import { useWindowSize } from '../../../hooks/useWindowSize'
-import { Modal, SearchBar, Alert, Confirm } from '../../Shared'
-import { Button } from '../../../styles'
+import { Ellipsis, TriangleAlert } from '../../Shared/Icon'
+import {
+  Button,
+  ConfirmDialog,
+  InlineNotice,
+  Menu,
+  SearchField,
+  SectionSplit,
+  Skeleton
+} from '../../Shared/Product'
 import { PaymentOptionStripeDirect } from '../PaymentOptionStripeDirect'
 import { PaymentOptionStripeLink } from '../PaymentOptionStripeLink'
 import { PaymentOption } from '../PaymentOption'
-import { PaymethodOptionPaypalExpress } from '../PaymethodOptionPaypalExpress'
 import { PaymethodOptionStripeConnect } from '../PaymethodOptionStripeConnect'
 import { PaymentOptionStripeConnectV2 } from '../PaymentOptionStripeConnectV2'
 import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
@@ -26,25 +30,65 @@ import { PaymentOptionGlobal } from '../PaymentOptionGlobal'
 import { PaymentOptionMercadoPago } from '../PaymentOptionMercadoPago'
 import { PaymentOptionEpayco } from '../PaymentOptionEpayco'
 import { PaymentOptionConfig } from '../PaymentOptionConfig'
-import { addQueryToUrl, removeQueryToUrl, capitalize } from '../../../utils'
+import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
 import { useSelectedAccessRole } from '../../../hooks/useUserSelectedAccess'
-
-import {
-  MainContainer,
-  PaymentMethodsContainer,
-  PaymethodListWrapper,
-  PaymethodOptionContainer,
-  PaymethodOption,
-  PaymethodName,
-  SearchBarWrapper,
-  ButtonGroup,
-  Divider,
-  CreditCardPaymentsContainer
-} from './styles'
-import { getUtils } from './utils'
+import { EDITOR_PANEL_WIDE_FROM } from '../../../../../utils/editorPanel'
 import { consumePendingInstallOpen } from '../../../../../utils/paymentPluginCatalog'
+import { getUtils } from './utils'
 import { getDisplayPaymethods } from './getDisplayPaymethods'
 import { PaymethodRow } from './PaymethodRow'
+import {
+  BRAINTREE_GATEWAYS,
+  CREDIT_CARD_GATEWAYS,
+  GLOBAL_GATEWAYS,
+  METHODS_PAY_GATEWAYS,
+  NO_KEY_GATEWAYS,
+  getSelectAllPlan,
+  getToggleDecision,
+  hasMissingCredentials,
+  humanizeFieldKey,
+  isTemplated,
+  needsCredentials
+} from './paymethodModel'
+import './payment-methods.css'
+
+// redesign stores 5.9: the Payment methods section on P/SectionSplit. The list (a switch per gateway, search, Select all) and
+// the detail of the open gateway side by side from 1000px of window (`EDITOR_PANEL_WIDE_FROM`, as `main`'s editor) and stacked below it.
+// ONE branch for every width: the old `width >= 1000` / `Modal` pair is gone. Rows, groups, order, add-on rule and install flow are
+// today's; what changes is how a row is turned on or off (an `AsyncSwitch` that answers `{ ok, error }`, confirmations for the money
+// actions, guards under the switch instead of a modal Alert) and that the detail is a panel, not a SideBar.
+
+// redesign stores 5.10a / 5.10b (): paypal, stripe_checkout, stripe_link, checkout_pro_mercadopago, epayco, credomatic and
+// square are on ProviderPanel: they take the new props contract through `renderProviderForm`, like the four of 5.9
+// redesign stores 5.11: stripe_connect too, with `onConnect` (the OAuth window) and its own save (`handleSaveStripeConnect`)
+const PROVIDER_FORMS = {
+  paypal: PaymentOptionPaypal,
+  stripe_checkout: PaymentOptionStripeDirect,
+  stripe_link: PaymentOptionStripeLink,
+  checkout_pro_mercadopago: PaymentOptionMercadoPago,
+  epayco: PaymentOptionEpayco,
+  credomatic: PaymentOptionCredomatic,
+  square: PaymentOptionSquare,
+  stripe_connect: PaymethodOptionStripeConnect,
+  // main, the store's Stripe account, its platform fee and its payouts, as tabs of its own before the common ones
+  stripe_connect_v2: PaymentOptionStripeConnectV2
+}
+
+const GATEWAY_PROVIDER_LABELS = {
+  google_pay: 'Stripe',
+  apple_pay: 'Stripe',
+  google_pay_braintree: 'Braintree',
+  apple_pay_braintree: 'Braintree',
+  paypal_braintree: 'Braintree'
+}
+
+// the tab the URL asks for (`?paymethod_tab=`), or undefined when it does not
+const readUrlTab = () => {
+  const raw = new URLSearchParams(window.location.search).get('paymethod_tab')
+  if (raw === null || raw === '') return undefined
+  const value = Number(raw)
+  return Number.isFinite(value) ? value : undefined
+}
 
 const BusinessPaymentMethodsUI = (props) => {
   const {
@@ -53,84 +97,112 @@ const BusinessPaymentMethodsUI = (props) => {
     paymethodsList,
     handleClickPayment,
     handleSelectAllPaymethods,
-    // handleSelectNonePaymethods,
+    handleTogglePaymethod,
+    handleSavePaymethod,
     handleDeleteBusinessPaymethodOption,
     setIsExtendExtraOpen,
-    actionState,
-    changesState,
     sitesState,
     deviceState,
-    stripeConnectData,
-    handleChangeBusinessPaymentState,
-    handleChangeStripeConnectData,
     cleanChangesState,
-    handleChangeSandbox,
-    handleChangeInput,
-    handleSaveClick,
     handleStripeConnect,
-    handleChangeStripeInput,
-    handleStripeSave,
+    handleSaveStripeConnect,
+    getDraftBusinessPaymethod,
+    handleCreatePaymethodOnSave,
     isSuccessDeleted,
     setIsSuccessDeleted,
-    handleSuccessPaymethodUpdate,
     handleSuccessUpdate,
-    isTutorialMode,
-    handleTutorialContinue,
     pluginsState,
     installingPluginKey,
     handleInstallPaymentPlugin
   } = props
 
   const query = new URLSearchParams(useLocation().search)
+  const history = useHistory()
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ user }] = useSession()
   const isSelectedAccessRole = useSelectedAccessRole()
-  const { width } = useWindowSize()
   const { orderTypesValues, paymentsGlobalConfigs, checkBusinessPaymethodConfigs } = getUtils()
+  const groupId = useId()
+  const sectionSplitRef = useRef(null)
+  const selectedIdRef = useRef(null)
+  // redesign bugs F row 15: counts every open and close of the detail; a toggle that opens its gateway when the POST
+  // answers does it only if the count is still the one it saw when it started
+  const openTokenRef = useRef(0)
   const [isEdit, setIsEdit] = useState(false)
-  const [selectedBusinessPaymethod, setSelectedBusinessPaymethod] = useState(null)
-  const [selectedPaymethodGateway, setSelectedPaymethodGateway] = useState(null)
+  const [selectedPaymethodId, setSelectedPaymethodId] = useState(null)
+  const [createdRecord, setCreatedRecord] = useState(null) // the record a toggle just created, until the list state shows it
+  // redesign bugs C: the record a gateway the store does not have starts from, written by its first Save
+  const [draftRecord, setDraftRecord] = useState(null)
+  const [initialTab, setInitialTab] = useState(undefined)
+  const [emptyDataId, setEmptyDataId] = useState(null) // the gateway whose detail opened because its data is missing
+  const [listNotice, setListNotice] = useState(null)
   const [searchValue, setSearchValue] = useState('')
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [installConfirm, setInstallConfirm] = useState({ open: false, pluginKey: null, name: '' })
   const [pendingOpenPluginKey, setPendingOpenPluginKey] = useState(null)
-  const [isOpenWalletDetails, setIsOpenWalletDetails] = useState(false)
+  const [turnOff, setTurnOff] = useState({ open: false, busy: false, name: '', resolve: null })
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, busy: false, name: '', paymethodId: null })
+  const [selectAll, setSelectAll] = useState({ open: false, busy: false, ids: [], missing: 0 })
   const isWalletCashEnabled = configs?.wallet_enabled?.value === '1'
-  const [excludePaymethods, setExcludedPaymethods] = useState([])
-  const [creditCardPymethods, setCreditCardPaymethods] = useState([])
+  const isAdmin = user?.level === 0
+  // Mercado Pago is an add-on: `main` listed it when the config EXISTS, whatever its value ('0' is production). Decision S-8: kept.
   const isAddonMercadoPago = configs?.mercadopago_sandbox_mode
   const orderTypes = orderTypesValues()
+  const isLoading = !!(paymethodsList.loading || businessPaymethodsState.loading)
 
-  const braintreePaymethods = ['braintree', 'google_pay_braintree', 'apple_pay_braintree', 'paypal_braintree']
-  const methodsPay = ['google_pay', 'apple_pay']
-  const globalPayments = ['global_google_pay', 'global_apple_pay', 'stripe', 'computop']
-  const noKeyPayments = ['cash', 'card_delivery', 'izipay', 'physical_terminal', 'stripe_terminal', 'hyp', 'giftme', 'stripe_connect_v2']
-  const stripeDirectMethods = ['stripe_checkout']
-  const paymethodsWithDataTemplate = useMemo(() => paymethodsList?.paymethods?.filter(paymethod => paymethod?.data_template !== null).map(paymethod => paymethod?.gateway), [paymethodsList])
+  // redesign stores 1.B (G4-26): a host may mount this section without `setIsExtendExtraOpen`.
+  // The piece tells the shell to extend the section while a gateway is open. redesign stores 5.11 (B-3): the wallets are
+  // edited in line, so no other detail asks for the extension any more.
+  const extendExtraOpen = (value) => setIsExtendExtraOpen?.(value)
 
-  const gatewayProviderLabels = {
-    google_pay: 'Stripe',
-    apple_pay: 'Stripe',
-    google_pay_braintree: 'Braintree',
-    apple_pay_braintree: 'Braintree',
-    paypal_braintree: 'Braintree'
+  // redesign stores 1.B (G4-03, G4-20): opening another gateway mounts a fresh form (`key` of the detail) on clean
+  // changes, and does not carry the previous gateway's tab in the URL. The ref, not state, so a create callback that
+  // lands later compares with the gateway open now.
+  // The legacy forms read `paymethod_tab` from the router, which `removeQueryToUrl` (replaceState) does not reach: a tab that
+  // came in a deep link lives there, so it is dropped from the router too.
+  const dropUrlTab = (keys = ['paymethod_tab']) => {
+    removeQueryToUrl(keys)
+    if (query.get('paymethod_tab') !== null) history.replace(`${window.location.pathname}${window.location.search}`)
+  }
+
+  const findRecord = (paymethodId) => businessPaymethodsState?.paymethods?.find(item => item.paymethod_id === paymethodId)
+  const isCheckEnableState = (paymethodId) => !!findRecord(paymethodId)?.enabled
+  const findPaymethod = (paymethodId) => paymethodsList?.paymethods?.find(item => item.id === paymethodId) || null
+
+  const showPaymethodDetail = (paymethod, { missingData = false } = {}) => {
+    openTokenRef.current += 1
+    if (selectedIdRef.current !== null && selectedIdRef.current !== paymethod.id) {
+      cleanChangesState({})
+      dropUrlTab()
+    }
+    selectedIdRef.current = paymethod.id
+    setSelectedPaymethodId(paymethod.id)
+    setEmptyDataId(missingData ? paymethod.id : null)
+    setInitialTab(readUrlTab())
+    setIsEdit(true)
+  }
+
+  const leaveThen = (proceed) => {
+    if (sectionSplitRef.current) sectionSplitRef.current.requestLeave(proceed)
+    else proceed()
   }
 
   const getPaymethodDisplayName = (paymethod) => {
     const name = t(paymethod?.gateway?.toUpperCase(), paymethod?.name)
-    const provider = gatewayProviderLabels[paymethod?.gateway]
+    const provider = GATEWAY_PROVIDER_LABELS[paymethod?.gateway]
     return provider ? `${name} (with ${provider})` : name
   }
+
+  const excludedGateways = useMemo(() => (isAddonMercadoPago ? [] : ['checkout_pro_mercadopago']), [isAddonMercadoPago])
 
   const displayPaymethods = useMemo(() => {
     return getDisplayPaymethods({
       paymethods: paymethodsList?.paymethods,
       plugins: pluginsState?.plugins,
-      excludeGateways: excludePaymethods,
-      isTutorialMode
+      excludeGateways: excludedGateways,
+      canInstall: user?.level === 0
     })
-  }, [paymethodsList?.paymethods, pluginsState?.plugins, excludePaymethods, isTutorialMode])
+  }, [paymethodsList?.paymethods, pluginsState?.plugins, excludedGateways, user?.level])
 
   const matchesPaymethodSearch = (paymethod) => {
     const queryValue = searchValue?.toLowerCase() || ''
@@ -139,27 +211,36 @@ const BusinessPaymentMethodsUI = (props) => {
     return displayName.includes(queryValue) || paymethod?.name?.toLowerCase().includes(queryValue)
   }
 
-  const visiblePaymethods = displayPaymethods.filter(paymethod => (
-    !creditCardPymethods.includes(paymethod.gateway) &&
-    matchesPaymethodSearch(paymethod) &&
-    (!isSelectedAccessRole || braintreePaymethods.includes(paymethod.gateway))
+  // the rows the list can show, search aside: the main group (one Braintree-only list for the selected-access role) and the
+  // credit card group (hidden for that role)
+  const mainRows = displayPaymethods.filter(paymethod => (
+    !CREDIT_CARD_GATEWAYS.includes(paymethod.gateway) &&
+    (!isSelectedAccessRole || BRAINTREE_GATEWAYS.includes(paymethod.gateway))
   ))
+  const creditCardRows = isSelectedAccessRole
+    ? []
+    : displayPaymethods.filter(paymethod => CREDIT_CARD_GATEWAYS.includes(paymethod.gateway))
+  const visibleMain = mainRows.filter(matchesPaymethodSearch)
+  const visibleCreditCard = creditCardRows.filter(matchesPaymethodSearch)
 
-  const visibleCreditCardPaymethods = displayPaymethods.filter(paymethod => (
-    creditCardPymethods.includes(paymethod.gateway) &&
-    matchesPaymethodSearch(paymethod)
-  ))
+  // «Select all» works on what the list shows (the box is ignored, as it was), without the catalog rows. The model skips any row that
+  // carries an `installState`, and every API row gets 'ready' from the catalog merge: so it gets the rows as the API sent them.
+  const selectAllPlan = getSelectAllPlan({
+    paymethods: [...mainRows, ...creditCardRows]
+      .filter(paymethod => paymethod.source === 'api')
+      .map(({ pluginKey, installUrl, source, installState, ...paymethod }) => paymethod),
+    businessPaymethods: businessPaymethodsState?.paymethods,
+    isAdmin,
+    configs
+  })
 
-  const closeInstallConfirm = () => {
-    setInstallConfirm({ open: false, pluginKey: null, name: '' })
-  }
+  const enabledCount = (paymethodsList?.paymethods || []).filter(paymethod => isCheckEnableState(paymethod.id)).length
+
+  // ── Install ──
+  const closeInstallConfirm = () => setInstallConfirm(previous => ({ ...previous, open: false }))
 
   const handleRequestInstall = (paymethod) => {
-    setInstallConfirm({
-      open: true,
-      pluginKey: paymethod.pluginKey,
-      name: getPaymethodDisplayName(paymethod)
-    })
+    setInstallConfirm({ open: true, pluginKey: paymethod.pluginKey, name: getPaymethodDisplayName(paymethod) })
   }
 
   const handleAcceptInstall = async () => {
@@ -170,142 +251,66 @@ const BusinessPaymentMethodsUI = (props) => {
     if (result === pluginKey) setPendingOpenPluginKey(pluginKey)
   }
 
-  const specialPayments = ['paypal',
-    'paypal_express',
-    'stripe_connect',
-    'stripe_connect_v2',
-    'stripe_link',
-    'square',
-    'credomatic',
-    'checkout_pro_mercadopago',
-    'stripe_checkout',
-    'epayco',
-    ...paymethodsWithDataTemplate,
-    ...globalPayments,
-    ...methodsPay
-  ]
-
-  const paymethodSelected = useMemo(() => {
-    return paymethodsList?.paymethods?.find(paymethod => selectedPaymethodGateway === paymethod?.gateway) || null
-  }, [paymethodsList, selectedPaymethodGateway])
-
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
+  // ── Open and close the detail ──
+  // redesign bugs C (decision 4 of Stores): a gateway without a record opens on a draft and writes nothing (main created
+  // a disabled record on open, also from the address); its first Save creates it (no gateway is left out, PayPal Express was dead code).
+  const openPaymethod = (paymethod, { fromUrl } = {}) => {
+    const writeUrl = () => {
+      if (!fromUrl) addQueryToUrl({ paymethod: paymethod.id })
+    }
+    if (findRecord(paymethod.id)) {
+      showPaymethodDetail(paymethod)
+      writeUrl()
+      return
+    }
+    const decision = getToggleDecision({ paymethod, businessPaymethod: undefined, next: false, enabledCount, isAdmin, configs })
+    if (decision.type === 'block') {
+      setListNotice(t('VALIDATION_ERROR_STRIPE_PAYMENT', 'Please contact administrator'))
+      return
+    }
+    if (getDraftBusinessPaymethod) {
+      showPaymethodDetail(paymethod)
+      setDraftRecord(getDraftBusinessPaymethod(paymethod.id))
+      writeUrl()
+      return
+    }
+    handleClickPayment?.(paymethod.id, () => {
+      showPaymethodDetail(paymethod)
+      writeUrl()
     })
   }
 
-  const isCheckEnableState = (id) => {
-    const found = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === id)
-    let valid = false
-    if (found) {
-      valid = found.enabled
-    }
-    return valid
+  const handleOpenRow = (paymethod) => {
+    setListNotice(null)
+    if (isEdit && selectedIdRef.current === paymethod.id) return
+    leaveThen(() => openPaymethod(paymethod))
   }
 
-  const isCheckFoundBusinessPaymethod = (id) => {
-    const found = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === id)
-    return found
-  }
-
-  const handleOpenEdit = (e, paymethodId, paymethodGateway, isInitialRender) => {
-    const inValid = e?.target?.closest('.paymethod-checkbox')
-    if (inValid) return true
-    if (!isTutorialMode && isCheckFoundBusinessPaymethod(paymethodId)) {
-      setSelectedPaymethodGateway(paymethodGateway)
-      const businessPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId)
-      setSelectedBusinessPaymethod(businessPaymethod)
-      setIsEdit(true)
-      setIsExtendExtraOpen(true)
-    } else if (!isTutorialMode && !isCheckFoundBusinessPaymethod(paymethodId)) {
-      handleClickCheckBox(paymethodId, false)
-      setSelectedPaymethodGateway(paymethodGateway)
-      const businessPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId)
-      setSelectedBusinessPaymethod(businessPaymethod)
-      setIsEdit(true)
-      setIsExtendExtraOpen(true)
-    }
-    if (!isInitialRender) {
-      addQueryToUrl({ paymethod: paymethodId })
-    }
+  // the detail of a gateway whose data is missing: with the notice that says so
+  const openWithMissingData = (paymethod) => {
+    leaveThen(() => {
+      showPaymethodDetail(paymethod, { missingData: true })
+      addQueryToUrl({ paymethod: paymethod.id })
+    })
   }
 
   useEffect(() => {
     const next = consumePendingInstallOpen(pendingOpenPluginKey, paymethodsList?.paymethods)
     if (!next.paymethod) return
     setPendingOpenPluginKey(null)
-    handleOpenEdit(null, next.paymethod.id, next.paymethod.gateway)
+    const paymethod = findPaymethod(next.paymethod.id)
+    if (paymethod) leaveThen(() => openPaymethod(paymethod))
   }, [pendingOpenPluginKey, paymethodsList?.paymethods])
 
-  const handleClickCheckBox = (id, isCheckbox) => {
-    let i = 0
-    let currentPaymentData = null
-    paymethodsList.paymethods.forEach(paymethod => {
-      if (isCheckEnableState(paymethod.id)) {
-        i += 1
-      }
-      if (paymethod.id === id) {
-        currentPaymentData = paymethod
-      }
-    })
-
-    if (isCheckEnableState(id) && i < 2) {
-      setAlertState({
-        open: true,
-        content: t('VALIDATION_ERROR_MIN_ARRAY', 'The _attribute_ must have at least _min_ items.').replace('_attribute_', t('PAYMETHODS', 'Payment methods')).replace('_min_', t('ONE', 'one'))
-      })
-      return
-    }
-    const businessPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === id)
-
-    if (
-      globalPayments.includes(currentPaymentData?.gateway) &&
-      paymentsGlobalConfigs[currentPaymentData?.gateway] &&
-      user?.level !== 0
-    ) {
-      setAlertState({
-        open: true,
-        content: t('VALIDATION_ERROR_STRIPE_PAYMENT', 'Please contact administrator')
-      })
-      return
-    }
-    const isDataTemplateRequired = !currentPaymentData?.data_template || (currentPaymentData?.data_template?.length && currentPaymentData?.data_template?.some(item => item?.required))
-    if ((isDataTemplateRequired || !isCheckbox) && !noKeyPayments.includes(currentPaymentData?.gateway) && businessPaymethod &&
-      !isCheckEnableState(id) && ((!globalPayments.includes(currentPaymentData?.gateway) && checkBusinessPaymethodConfigs(businessPaymethod)) ||
-        (globalPayments.includes(currentPaymentData?.gateway) && paymentsGlobalConfigs[currentPaymentData?.gateway]))
-    ) {
-      setSelectedPaymethodGateway(currentPaymentData?.gateway)
-      setSelectedBusinessPaymethod(businessPaymethod)
-      setIsEdit(true)
-      setIsExtendExtraOpen(true)
-      addQueryToUrl({ paymethod: id })
-      setAlertState({
-        open: true,
-        content: t('VALIDATION_ERROR_EMPTY_DATA', 'Please fill all the data to activate the payment method (sandbox mode is opcional)')
-      })
-      return
-    }
-
-    const enablesWithoutConfig = isCheckbox && noKeyPayments.includes(currentPaymentData?.gateway)
-    handleClickPayment && handleClickPayment(id, enablesWithoutConfig
-      ? null
-      : (payment) => {
-          setSelectedPaymethodGateway(currentPaymentData?.gateway)
-          setSelectedBusinessPaymethod(payment)
-          setIsEdit(true)
-          setIsExtendExtraOpen(true)
-          addQueryToUrl({ paymethod: id })
-        })
-  }
-
   const handleCloseEdit = () => {
-    setIsExtendExtraOpen(false)
+    openTokenRef.current += 1
     setIsEdit(false)
-    setSelectedBusinessPaymethod(null)
-    setIsSuccessDeleted(false)
-    removeQueryToUrl(['paymethod'])
+    setSelectedPaymethodId(null)
+    setCreatedRecord(null)
+    setDraftRecord(null)
+    setEmptyDataId(null)
+    setIsSuccessDeleted?.(false)
+    dropUrlTab(['paymethod', 'paymethod_tab'])
   }
 
   useEffect(() => {
@@ -314,747 +319,354 @@ const BusinessPaymentMethodsUI = (props) => {
   }, [isSuccessDeleted])
 
   useEffect(() => {
-    if (!selectedBusinessPaymethod) return
-    const updatedPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === selectedBusinessPaymethod.paymethod_id)
-    setSelectedBusinessPaymethod(updatedPaymethod)
-  }, [businessPaymethodsState?.paymethods, selectedBusinessPaymethod])
-
-  useEffect(() => {
-    if (!selectedBusinessPaymethod) return
-    const updatedPaymethod = businessPaymethodsState?.paymethods?.find(paymethod => paymethod?.paymethod_id === selectedBusinessPaymethod?.paymethod_id)
-    let currentPaymentData = null
-    paymethodsList.paymethods.forEach(paymethod => {
-      if (paymethod.id === updatedPaymethod?.paymethod_id) {
-        currentPaymentData = paymethod
-      }
-    })
-
-    const isDataTemplateRequired = !currentPaymentData?.data_template || (currentPaymentData?.data_template?.length && currentPaymentData?.data_template?.some(item => item?.required))
-    if (isDataTemplateRequired && isEdit && updatedPaymethod && !noKeyPayments.includes(selectedPaymethodGateway) &&
-      isCheckEnableState(updatedPaymethod?.paymethod_id) && ((!globalPayments.includes(selectedPaymethodGateway) && checkBusinessPaymethodConfigs(updatedPaymethod)) ||
-        (globalPayments.includes(selectedPaymethodGateway) && paymentsGlobalConfigs[selectedPaymethodGateway]))
-    ) {
-      setAlertState({
-        open: true,
-        content: t('VALIDATION_ERROR_INCOMPLETE_PAYMENT_DATA', 'Payment method data is incomplete, make sure to configure correctly')
-      })
-    }
-  }, [
-    businessPaymethodsState?.paymethods,
-    configs?.stripe_publishable?.value,
-    configs?.stripe_publishable_sandbox?.value,
-    configs?.stripe_secret?.value,
-    configs?.stripe_secret_sandbox?.value,
-    configs?.global_apple_pay_publishable?.value,
-    configs?.global_apple_pay_publishable_sandbox?.value,
-    configs?.global_apple_pay_secret?.value,
-    configs?.global_apple_pay_secret_sandbox?.value,
-    configs?.global_google_pay_publishable?.value,
-    configs?.global_google_pay_publishable_sandbox?.value,
-    configs?.global_google_pay_secret?.value,
-    configs?.global_google_pay_secret_sandbox?.value,
-    configs?.computop_merchant_id?.value,
-    configs?.computop_blowfish_password?.value,
-    configs?.computop_hmac_password?.value
-  ])
-
-  useEffect(() => {
     if (paymethodsList.loading || businessPaymethodsState.loading) return
     const paymethodId = query.get('paymethod')
     if (paymethodId) {
-      const initPaymethod = paymethodsList.paymethods.find(paymethod => paymethod.id === Number(paymethodId))
-      if (initPaymethod) {
-        handleOpenEdit(null, initPaymethod.id, initPaymethod.gateway, true)
-      }
+      const initPaymethod = findPaymethod(Number(paymethodId))
+      if (initPaymethod) openPaymethod(initPaymethod, { fromUrl: true })
     }
   }, [paymethodsList.loading, businessPaymethodsState.loading])
 
-  useEffect(() => {
-    const paymethodsNotAllowed = []
-    const paymethodsCreditCard = []
-    const paymentsCreditCards = [...methodsPay, 'stripe', 'stripe_checkout', 'paypal', 'stripe_link']
-    paymethodsCreditCard.push(...paymentsCreditCards)
-    if (!isAddonMercadoPago) {
-      const paymentsToHide = ['checkout_pro_mercadopago']
-      paymethodsNotAllowed.push(...paymentsToHide)
+  // ── The switch of a row (decision 6 and S-5/S-6/S-7) ──
+  const onToggleRow = async (paymethod, next) => {
+    setListNotice(null)
+    const record = findRecord(paymethod.id)
+    const decision = getToggleDecision({ paymethod, businessPaymethod: record, next, enabledCount, isAdmin, configs })
+    switch (decision.type) {
+      case 'block':
+        return {
+          ok: false,
+          error: decision.reason === 'min'
+            ? t('VALIDATION_ERROR_MIN_ARRAY', 'The _attribute_ must have at least _min_ items.').replace('_attribute_', t('PAYMETHODS', 'Payment methods')).replace('_min_', t('ONE', 'one'))
+            : t('VALIDATION_ERROR_STRIPE_PAYMENT', 'Please contact administrator')
+        }
+      case 'confirm-off':
+        return new Promise(resolve => {
+          setTurnOff({ open: true, busy: false, name: getPaymethodDisplayName(paymethod), paymethodId: paymethod.id, resolve })
+        })
+      case 'open':
+        openWithMissingData(paymethod)
+        return { ok: true }
+      case 'create-open': {
+        const token = openTokenRef.current
+        const result = await handleTogglePaymethod(paymethod.id, false)
+        if (result?.ok) {
+          setCreatedRecord(result.created || null)
+          // redesign bugs F row 15: the person opened (or closed) a detail while the POST was pending: keep what they chose
+          if (token === openTokenRef.current) openWithMissingData(paymethod)
+        }
+        return result
+      }
+      case 'create':
+        return handleTogglePaymethod(paymethod.id, true)
+      default: {
+        const result = await handleTogglePaymethod(paymethod.id, next)
+        // owner decision 5 C (W1): it turned on (nothing blocks it); the notice only says which Sandbox fields are missing
+        if (result?.ok && decision.warnSandbox?.length) {
+          setListNotice(t('PAYMETHOD_SANDBOX_DATA_MISSING', 'Missing in Sandbox: _fields_').replace('_fields_', decision.warnSandbox.map(humanizeFieldKey).join(', ')))
+        }
+        return result
+      }
     }
-    setExcludedPaymethods(paymethodsNotAllowed)
-    setCreditCardPaymethods(paymethodsCreditCard)
-  }, [])
+  }
 
-  return (
-    <MainContainer>
-      <PaymentMethodsContainer isOpenWalletDetails={isOpenWalletDetails}>
-        <h1>{t('PAYMETHODS', 'Payment methods')}</h1>
-        <SearchBarWrapper>
-          <SearchBar
-            placeholder={t('SEARCH', 'Search')}
-            isCustomLayout
-            search={searchValue}
-            onSearch={val => setSearchValue(val)}
-          />
-        </SearchBarWrapper>
-        <ButtonGroup>
-          <Button
-            color='secundaryDark'
-            onClick={() => handleSelectAllPaymethods()}
-            disabled={(paymethodsList.loading || businessPaymethodsState.loading)}
-          >
-            {t('SELECT_ALL', 'Select all')}
-          </Button>
-          {/* <Button
-            color='secundaryDark'
-            onClick={() => handleSelectNonePaymethods()}
-            disabled={(paymethodsList.loading || businessPaymethodsState.loading)}
-          >
-            {t('SELECT_NONE', 'Select none')}
-          </Button> */}
-        </ButtonGroup>
+  const cancelTurnOff = () => {
+    if (turnOff.busy) return
+    turnOff.resolve?.({ ok: true })
+    setTurnOff(previous => ({ ...previous, open: false, resolve: null }))
+  }
 
-        {(paymethodsList.loading || businessPaymethodsState.loading)
-          ? (
-              [...Array(10).keys()].map(i => (
-              <PaymethodOptionContainer key={i}>
-                <PaymethodOption>
-                  <Skeleton width={15} height={15} />
-                  <PaymethodName>
-                    <Skeleton width={120} height={24} />
-                  </PaymethodName>
-                </PaymethodOption>
-              </PaymethodOptionContainer>
-              ))
-            )
-          : (
-            <PaymethodListWrapper>
-              {visiblePaymethods.map(paymethod => (
-                <PaymethodRow
-                  key={paymethod.id || paymethod.pluginKey || paymethod.gateway}
-                  paymethod={paymethod}
-                  displayName={getPaymethodDisplayName(paymethod)}
-                  isEnabled={isCheckEnableState(paymethod.id)}
-                  showChevron={!isTutorialMode && isCheckFoundBusinessPaymethod(paymethod.id)}
-                  installingPluginKey={installingPluginKey}
-                  onOpenEdit={handleOpenEdit}
-                  onToggle={handleClickCheckBox}
-                  onRequestInstall={handleRequestInstall}
-                  isTutorialMode={isTutorialMode}
-                  active={paymethod.id === selectedBusinessPaymethod?.paymethod_id}
-                />
-              ))}
-              {!isSelectedAccessRole && visibleCreditCardPaymethods.length > 0 && (
-                <>
-                  <Divider />
-                  <CreditCardPaymentsContainer>
-                    <h2>{t('CREDIT_CARD_PAYMENTS', 'Credit card payments')}</h2>
-                    <div>
-                      {visibleCreditCardPaymethods.map(paymethod => (
-                        <PaymethodRow
-                          key={paymethod.id || paymethod.pluginKey || paymethod.gateway}
-                          paymethod={paymethod}
-                          displayName={getPaymethodDisplayName(paymethod)}
-                          isEnabled={isCheckEnableState(paymethod.id)}
-                          showChevron={!isTutorialMode && isCheckFoundBusinessPaymethod(paymethod.id)}
-                          installingPluginKey={installingPluginKey}
-                          onOpenEdit={handleOpenEdit}
-                          onToggle={handleClickCheckBox}
-                          onRequestInstall={handleRequestInstall}
-                          isTutorialMode={isTutorialMode}
-                          active={paymethod.id === selectedBusinessPaymethod?.paymethod_id}
-                        />
-                      ))}
-                    </div>
-                  </CreditCardPaymentsContainer>
-                </>
-              )}
-              {isWalletCashEnabled && !isSelectedAccessRole && (
-                <BusinessWalletsList
-                  business={business}
-                  setIsOpenWalletDetails={setIsOpenWalletDetails}
-                  setIsExtendExtraOpen={setIsExtendExtraOpen}
-                  isClose={isEdit}
-                  handleClosePaymethodDetails={handleCloseEdit}
-                  handleSuccessUpdate={handleSuccessUpdate}
-                />
-              )}
-            </PaymethodListWrapper>
-            )}
+  const confirmTurnOff = async () => {
+    const { resolve, paymethodId } = turnOff
+    setTurnOff(previous => ({ ...previous, busy: true }))
+    let result
+    try {
+      result = await handleTogglePaymethod(paymethodId, false)
+    } catch (error) {
+      result = { ok: false, error: error?.message }
+    }
+    setTurnOff(previous => ({ ...previous, open: false, busy: false, resolve: null }))
+    resolve?.(result)
+  }
 
-        {isTutorialMode && (
-          <Button
-            borderRadius='8px'
-            color='primary'
-            onClick={() => handleTutorialContinue()}
-          >
-            {t('CONTINUE', 'Continue')}
-          </Button>
-        )}
-      </PaymentMethodsContainer>
-      {width >= 1000
+  // ── Select all ──
+  const openSelectAll = () => {
+    setSelectAll({ open: true, busy: false, ids: selectAllPlan.targets, missing: selectAllPlan.missingCredentials })
+  }
+
+  const confirmSelectAll = async () => {
+    setSelectAll(previous => ({ ...previous, busy: true }))
+    try {
+      await handleSelectAllPaymethods(selectAll.ids)
+    } finally {
+      setSelectAll(previous => ({ ...previous, open: false, busy: false }))
+    }
+  }
+
+  // ── Delete (the header menu of the detail) ──
+  const confirmDelete = async () => {
+    setDeleteDialog(previous => ({ ...previous, busy: true }))
+    try {
+      await handleDeleteBusinessPaymethodOption(deleteDialog.paymethodId)
+    } finally {
+      setDeleteDialog(previous => ({ ...previous, open: false, busy: false }))
+    }
+  }
+
+  // ── The detail ──
+  const selectedPaymethod = isEdit ? findPaymethod(selectedPaymethodId) : null
+  const selectedRecord = isEdit
+    ? (findRecord(selectedPaymethodId) ||
+      (createdRecord?.paymethod_id === selectedPaymethodId ? createdRecord : null) ||
+      (draftRecord?.paymethod_id === selectedPaymethodId ? draftRecord : null))
+    : null
+  const selectedName = selectedPaymethod ? getPaymethodDisplayName(selectedPaymethod) : ''
+
+  const templatedGateways = (paymethodsList?.paymethods || []).filter(isTemplated).map(paymethod => paymethod.gateway)
+  const specialGateways = [...Object.keys(PROVIDER_FORMS), ...templatedGateways, ...GLOBAL_GATEWAYS, ...METHODS_PAY_GATEWAYS]
+
+  // today's rule: an ENABLED gateway whose required data is incomplete. redesign bugs C: not a gateway with no fields
+  const isIncompleteEnabled = () => {
+    if (!isEdit || !selectedPaymethod || !selectedRecord || !selectedRecord.enabled) return false
+    if (!needsCredentials(selectedPaymethod)) return false
+    const gateway = selectedPaymethod.gateway
+    const template = selectedPaymethod.data_template
+    const isDataTemplateRequired = !template || (template.length && template.some(item => item?.required))
+    if (!isDataTemplateRequired || NO_KEY_GATEWAYS.includes(gateway)) return false
+    return GLOBAL_GATEWAYS.includes(gateway)
+      ? !!paymentsGlobalConfigs[gateway]
+      : checkBusinessPaymethodConfigs(selectedRecord)
+  }
+
+  let noticeText = null
+  if (isIncompleteEnabled()) {
+    noticeText = t('VALIDATION_ERROR_INCOMPLETE_PAYMENT_DATA', 'Payment method data is incomplete, make sure to configure correctly')
+  } else if (selectedRecord && emptyDataId === selectedPaymethodId && hasMissingCredentials(selectedPaymethod, selectedRecord, configs)) {
+    noticeText = t('VALIDATION_ERROR_EMPTY_DATA', 'Please fill all the data to activate the payment method (sandbox mode is opcional)')
+  }
+
+  const renderDetailForm = (paymethod, record) => {
+    const gateway = paymethod.gateway
+    const sites = Array.isArray(sitesState?.sites) ? sitesState.sites : []
+    const devices = Array.isArray(deviceState?.devices) ? deviceState.devices : []
+    // explicit props, no spreads: the brand guard reads each one (l4-b8)
+    const renderProviderForm = (Form) => (
+      <Form
+        paymethod={paymethod}
+        businessPaymethod={record}
+        gatewayName={selectedName}
+        storeName={business?.name}
+        sites={sites}
+        devices={devices}
+        orderTypes={orderTypes}
+        initialTab={initialTab}
+        // main, a tab of the gateway's own is never kept in the URL (the form sends null for it)
+        onTabChange={(index) => (index === null ? dropUrlTab() : addQueryToUrl({ paymethod_tab: index }))}
+        // redesign stores 5.11 (R2 of 5.9): the panel says how a save went in its bar, so the save is silent (no toast over
+        // Discard and Save). Stripe Connect saves the gateway and the business fees apart, and opens the OAuth window with `onConnect`.
+        // redesign bugs C: a draft's first Save creates the gateway with its changes
+        onSave={(changes) => (record.draft
+          ? handleCreatePaymethodOnSave(paymethod.id, changes, { stripeConnect: gateway === 'stripe_connect' })
+          : gateway === 'stripe_connect'
+            ? handleSaveStripeConnect(record.id, changes)
+            : handleSavePaymethod(record.id, changes, { silent: true }))}
+        onConnect={gateway === 'stripe_connect' ? handleStripeConnect : undefined}
+        business={business}
+        handleSuccessUpdate={gateway === 'stripe_link' ? handleSuccessUpdate : undefined}
+      />
+    )
+    if (!specialGateways.includes(gateway)) return renderProviderForm(PaymentOption)
+    if (METHODS_PAY_GATEWAYS.includes(gateway)) return renderProviderForm(PaymentOptionMethods)
+    if (GLOBAL_GATEWAYS.includes(gateway)) return renderProviderForm(PaymentOptionGlobal)
+    if (PROVIDER_FORMS[gateway]) return renderProviderForm(PROVIDER_FORMS[gateway])
+    if (isTemplated(paymethod)) return renderProviderForm(PaymentOptionConfig)
+    return null
+  }
+
+  const detail = selectedPaymethod && selectedRecord
+    ? (
+      <div key={selectedPaymethod.id} className='odc-pm-detail'>
+        {noticeText && <InlineNotice tone='warning' icon={TriangleAlert}>{noticeText}</InlineNotice>}
+        {renderDetailForm(selectedPaymethod, selectedRecord)}
+      </div>
+      )
+    : null
+
+  // a draft has nothing to delete yet
+  const headerActions = selectedRecord && !selectedRecord.draft
+    ? (
+      <Menu
+        icon={Ellipsis}
+        label={t('MORE_ACTIONS', 'More actions')}
+        items={[{
+          key: 'delete',
+          label: t('DELETE', 'Delete'),
+          tone: 'danger',
+          onSelect: () => setDeleteDialog({ open: true, busy: false, name: selectedName, paymethodId: selectedRecord.paymethod_id })
+        }]}
+      />
+      )
+    : null
+
+  // ── The list ──
+  const renderRow = (paymethod) => {
+    const record = paymethod.id ? findRecord(paymethod.id) : undefined
+    return (
+      <PaymethodRow
+        key={paymethod.id || paymethod.pluginKey || paymethod.gateway}
+        paymethod={paymethod}
+        displayName={getPaymethodDisplayName(paymethod)}
+        record={record}
+        isEnabled={!!record?.enabled}
+        configs={configs}
+        active={isEdit && paymethod.id === selectedPaymethodId}
+        installingPluginKey={installingPluginKey}
+        onToggle={onToggleRow}
+        onOpen={handleOpenRow}
+        onRequestInstall={handleRequestInstall}
+      />
+    )
+  }
+
+  const creditCardTitleId = `${groupId}-credit-card`
+
+  const list = (
+    <div className='odc-pm-list'>
+      {listNotice && <InlineNotice tone='warning' icon={TriangleAlert} className='odc-pm-notice'>{listNotice}</InlineNotice>}
+      {isLoading
         ? (
-          <>
-            {isEdit && (
-              <>
-                {
-                  !specialPayments.includes(selectedPaymethodGateway) && (
-                    <PaymentOption
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      deviceState={deviceState}
-                      selectedPaymethodGateway={selectedPaymethodGateway}
-                    />
-                  )
-                }
-                {selectedPaymethodGateway === 'stripe_connect_v2' && (
-                  <PaymentOptionStripeConnectV2
-                    business={business}
-                    title={paymethodSelected ? getPaymethodDisplayName(paymethodSelected) : undefined}
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    selectedPaymethodGateway={selectedPaymethodGateway}
-                  />
-                )}
-                {selectedPaymethodGateway === 'apple_pay' && (
-                  <PaymentOptionMethods
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    id={selectedPaymethodGateway}
-                    title='Apple pay'
-                  />
-                )}
-                {selectedPaymethodGateway === 'google_pay' && (
-                  <PaymentOptionMethods
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    id={selectedPaymethodGateway}
-                    title='Google pay'
-                  />
-                )}
-                {stripeDirectMethods.includes(selectedPaymethodGateway) && (
-                  <PaymentOptionStripeDirect
-                    paymethodTitle={selectedPaymethodGateway}
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {selectedPaymethodGateway === 'stripe_link' && (
-                  <PaymentOptionStripeLink
-                    business={business}
-                    paymethodTitle={selectedPaymethodGateway}
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    handleSuccessUpdate={handleSuccessUpdate}
-                  />
-                )}
-                {selectedPaymethodGateway === 'paypal' && (
-                  <PaymentOptionPaypal
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {selectedPaymethodGateway === 'paypal_express' && (
-                  <PaymethodOptionPaypalExpress
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {globalPayments?.includes(selectedPaymethodGateway) && (
-                  <PaymentOptionGlobal
-                    sitesState={sitesState}
-                    open={isEdit}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    selectedPaymethodGateway={selectedPaymethodGateway}
-                  />
-                )}
-                {selectedPaymethodGateway === 'stripe_connect' && (
-                  <PaymethodOptionStripeConnect
-                    open={isEdit}
-                    sitesState={sitesState}
-                    business={business}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={stripeConnectData}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeStripeConnectData}
-                    actionState={actionState}
-                    handleStripeConnect={handleStripeConnect}
-                    handleChangeStripeInput={handleChangeStripeInput}
-                    handleStripeSave={handleStripeSave}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {selectedPaymethodGateway === 'square' && (
-                  <PaymentOptionSquare
-                    open={isEdit}
-                    sitesState={sitesState}
-                    business={business}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    deviceState={deviceState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    businessPaymethods={businessPaymethodsState?.paymethods}
-                    handleSuccessPaymethodUpdate={handleSuccessPaymethodUpdate}
-                  />
-                )}
-                {selectedPaymethodGateway === 'credomatic' && (
-                  <PaymentOptionCredomatic
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {selectedPaymethodGateway === 'checkout_pro_mercadopago' && (
-                  <PaymentOptionMercadoPago
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                  />
-                )}
-                {selectedPaymethodGateway === 'epayco' && (
-                  <PaymentOptionEpayco
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    configs={business?.configs}
-                  />
-                )}
-                {paymethodSelected?.data_template !== null && (
-                  <PaymentOptionConfig
-                    business={business}
-                    paymethodTitle={paymethodSelected?.name}
-                    open={isEdit}
-                    sitesState={sitesState}
-                    onClose={() => handleCloseEdit()}
-                    businessPaymethod={selectedBusinessPaymethod}
-                    changesState={changesState}
-                    orderTypes={orderTypes}
-                    handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                    cleanChangesState={cleanChangesState}
-                    actionState={actionState}
-                    handleChangeSandbox={handleChangeSandbox}
-                    handleChangeInput={handleChangeInput}
-                    handleSaveClick={handleSaveClick}
-                    handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    defaultPaymethodState={paymethodSelected}
-                  />
-                )}
-              </>
-            )}
-          </>
+          <div className='odc-pm-rows' role='status' aria-busy='true' aria-label={t('LOADING', 'Loading')}>
+            {[...Array(10).keys()].map(index => (
+              <div key={index} className='odc-pm-skeleton-row'>
+                <Skeleton shape='round' size='var(--od-x-control-height)' block='var(--od-space-4)' />
+                <Skeleton size='40%' />
+              </div>
+            ))}
+          </div>
           )
         : (
           <>
-            {isEdit && (
-              <>
-                <Modal
-                  width='80%'
-                  open={isEdit}
-                  onClose={() => handleCloseEdit()}
-                >
-                  {
-                    !specialPayments.includes(selectedPaymethodGateway) && (
-                      <PaymentOption
-                        sitesState={sitesState}
-                        open={isEdit}
-                        onClose={() => handleCloseEdit()}
-                        businessPaymethod={selectedBusinessPaymethod}
-                        changesState={changesState}
-                        orderTypes={orderTypes}
-                        handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                        cleanChangesState={cleanChangesState}
-                        actionState={actionState}
-                        handleChangeSandbox={handleChangeSandbox}
-                        handleChangeInput={handleChangeInput}
-                        handleSaveClick={handleSaveClick}
-                        handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      />
-                    )
-                  }
-                  {selectedPaymethodGateway === 'stripe_connect_v2' && (
-                    <PaymentOptionStripeConnectV2
-                      business={business}
-                      title={paymethodSelected ? getPaymethodDisplayName(paymethodSelected) : undefined}
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      selectedPaymethodGateway={selectedPaymethodGateway}
-                    />
-                  )}
-                  {(methodsPay.includes(selectedPaymethodGateway)) && (
-                    <PaymentOptionMethods
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      id={selectedPaymethodGateway}
-                      title={capitalize(selectedPaymethodGateway).replace('_', ' ')}
-                    />
-                  )}
-                  {stripeDirectMethods.includes(selectedPaymethodGateway) && (
-                    <PaymentOptionStripeDirect
-                      paymethodTitle={selectedPaymethodGateway}
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'stripe_link' && (
-                    <PaymentOptionStripeLink
-                      business={business}
-                      paymethodTitle={selectedPaymethodGateway}
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      handleSuccessUpdate={handleSuccessUpdate}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'paypal' && (
-                    <PaymentOptionPaypal
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'paypal_express' && (
-                    <PaymethodOptionPaypalExpress
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {globalPayments?.includes(selectedPaymethodGateway) && (
-                    <PaymentOptionGlobal
-                      sitesState={sitesState}
-                      open={isEdit}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      selectedPaymethodGateway={selectedPaymethodGateway}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'stripe_connect' && (
-                    <PaymethodOptionStripeConnect
-                      open={isEdit}
-                      sitesState={sitesState}
-                      business={business}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleStripeConnect={handleStripeConnect}
-                      handleChangeStripeInput={handleChangeStripeInput}
-                      handleStripeSave={handleStripeSave}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'square' && (
-                    <PaymentOptionSquare
-                      open={isEdit}
-                      sitesState={sitesState}
-                      business={business}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      businessPaymethods={businessPaymethodsState?.paymethods}
-                      handleSuccessPaymethodUpdate={handleSuccessPaymethodUpdate}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'credomatic' && (
-                    <PaymentOptionCredomatic
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'checkout_pro_mercadopago' && (
-                    <PaymentOptionMercadoPago
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                    />
-                  )}
-                  {selectedPaymethodGateway === 'epayco' && (
-                    <PaymentOptionEpayco
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      configs={business?.configs}
-                    />
-                  )}
-                  {paymethodSelected?.data_template !== null && (
-                    <PaymentOptionConfig
-                      business={business}
-                      paymethodTitle={paymethodSelected?.name}
-                      open={isEdit}
-                      sitesState={sitesState}
-                      onClose={() => handleCloseEdit()}
-                      businessPaymethod={selectedBusinessPaymethod}
-                      changesState={changesState}
-                      orderTypes={orderTypes}
-                      handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
-                      cleanChangesState={cleanChangesState}
-                      actionState={actionState}
-                      handleChangeSandbox={handleChangeSandbox}
-                      handleChangeInput={handleChangeInput}
-                      handleSaveClick={handleSaveClick}
-                      handleDeletePaymethod={handleDeleteBusinessPaymethodOption}
-                      defaultPaymethodState={paymethodSelected}
-                    />
-                  )}
-                </Modal>
-              </>
+            {visibleMain.length > 0 && (
+              <ul className='odc-pm-rows' aria-label={t('PAYMETHODS', 'Payment methods')}>
+                {visibleMain.map(renderRow)}
+              </ul>
+            )}
+            {visibleCreditCard.length > 0 && (
+              <div className='odc-pm-group'>
+                <h4 id={creditCardTitleId} className='odc-pm-group-title'>{t('CREDIT_CARD_PAYMENTS', 'Credit card payments')}</h4>
+                <ul className='odc-pm-rows' aria-labelledby={creditCardTitleId}>
+                  {visibleCreditCard.map(renderRow)}
+                </ul>
+              </div>
+            )}
+            {visibleMain.length + visibleCreditCard.length === 0 && (
+              <p className='odc-pm-empty'>{t('NO_RESULTS', 'No results')}</p>
+            )}
+            {isWalletCashEnabled && !isSelectedAccessRole && (
+              // redesign stores 5.11 (B-3): each wallet is edited in its row; it no longer opens a detail of its own
+              <BusinessWalletsList
+                business={business}
+                handleSuccessUpdate={handleSuccessUpdate}
+              />
             )}
           </>
           )}
-      <Alert
-        title={t('PAYMETHODS', 'Payment methods')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+    </div>
+  )
+
+  // the search and Select all belong to the list: stacked, they go away with it while a gateway is open
+  const tools = (
+  <div className='odc-paym-tools'>
+    <SearchField
+      className='odc-paym-search'
+      value={searchValue}
+      onChange={setSearchValue}
+      label={t('SEARCH', 'Search')}
+      placeholder={t('SEARCH', 'Search')}
+      clearLabel={t('CLEAR', 'Clear')}
+    />
+    <Button
+      onClick={openSelectAll}
+      disabled={isLoading || selectAllPlan.targets.length === 0}
+    >
+      {t('SELECT_ALL', 'Select all')}
+    </Button>
+  </div>
+  )
+
+  const confirmCount = (template) => template.replace('_count_', String(selectAll.ids.length))
+
+  return (
+    <div className='odc-root odc-pm'>
+      <h3 className='odc-pm-title'>{t('PAYMETHODS', 'Payment methods')}</h3>
+      <SectionSplit
+        ref={sectionSplitRef}
+        splitFrom={EDITOR_PANEL_WIDE_FROM}
+        revealDetail // redesign stores 5.18 (R5.8-02): a gateway opened low in the list starts at its header on a phone
+        open={isEdit}
+        detailKey={selectedPaymethodId}
+        onClose={handleCloseEdit}
+        onExtendChange={extendExtraOpen}
+        detailTitle={selectedName}
+        closeLabel={t('CLOSE', 'Close')}
+        backLabel={t('BACK', 'Back')}
+        headerActions={headerActions}
+        list={<div className='odc-pm-pane'>{tools}{list}</div>}
+        detail={detail}
       />
-      <Confirm
-        title={t('INSTALL_PAYMENT_PLUGIN_TITLE', 'Install payment method')}
-        content={t('INSTALL_PAYMENT_PLUGIN_CONFIRM', 'This installs _name_ for the whole project. You can enable it for this store after that.').replace('_name_', installConfirm.name)}
-        acceptText={t('INSTALL', 'Install')}
+      <ConfirmDialog
+        open={selectAll.open}
+        tone='primary'
+        busy={selectAll.busy}
+        title={confirmCount(t('PAYMETHODS_SELECT_ALL_TITLE', 'Turn on _count_ payment methods?'))}
+        confirmLabel={confirmCount(t('PAYMETHODS_TURN_ON_COUNT', 'Turn on _count_'))}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onCancel={() => setSelectAll(previous => ({ ...previous, open: false }))}
+        onConfirm={confirmSelectAll}
+      >
+        {t('PAYMETHODS_SELECT_ALL_BODY', 'Customers will see them at checkout.')}
+        {selectAll.missing > 0 && ` ${t('PAYMETHODS_SELECT_ALL_MISSING', '_count_ of them have no credentials yet: orders paid with them can fail.').replace('_count_', String(selectAll.missing))}`}
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={turnOff.open}
+        tone='danger'
+        busy={turnOff.busy}
+        title={t('PAYMETHOD_TURN_OFF_TITLE', 'Turn off _name_?').replace('_name_', turnOff.name)}
+        confirmLabel={t('TURN_OFF', 'Turn off')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onCancel={cancelTurnOff}
+        onConfirm={confirmTurnOff}
+      >
+        {t('PAYMETHOD_TURN_OFF_BODY', 'Customers stop seeing _name_ at checkout. You can turn it on again later.').replace('_name_', turnOff.name)}
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={deleteDialog.open}
+        tone='danger'
+        busy={deleteDialog.busy}
+        title={t('PAYMETHOD_DELETE_TITLE', 'Delete _name_?').replace('_name_', deleteDialog.name)}
+        confirmLabel={t('PAYMETHOD_DELETE_CONFIRM', 'Delete payment method')} // redesign tanda AB (S-5): verb + object
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onCancel={() => setDeleteDialog(previous => ({ ...previous, open: false }))}
+        onConfirm={confirmDelete}
+      >
+        {t('QUESTION_DELETE_ITEM', 'Are you sure to delete this _item_?').replace('_item_', t('PAYMETHOD_ID', 'Paymethod'))}
+      </ConfirmDialog>
+      <ConfirmDialog
         open={installConfirm.open}
-        onClose={closeInstallConfirm}
+        tone='primary'
+        title={t('INSTALL_PAYMENT_PLUGIN_TITLE', 'Install payment method')}
+        confirmLabel={t('INSTALL', 'Install')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
         onCancel={closeInstallConfirm}
-        onAccept={handleAcceptInstall}
-        closeOnBackdrop={false}
-      />
-    </MainContainer>
+        onConfirm={handleAcceptInstall}
+      >
+        {t('INSTALL_PAYMENT_PLUGIN_CONFIRM', 'This installs _name_ for the whole project. You can enable it for this store after that.').replace('_name_', installConfirm.name)}
+      </ConfirmDialog>
+    </div>
   )
 }
 

@@ -1,0 +1,82 @@
+/*
+ * redesign stores  (lote 2.3-A) · Store add › Location on Product: the address, the map (P/MapFrame) with its drag hint,
+ * the address at the pin, and city and time zone side by side from 768px (main dropped the Google place ID line). The group's own frame
+ * (`.odc-sadd-group`, its title) belongs to the page. Values: --od-* and --od-x-* only. Logical properties.
+ */
+
+.odc-sadd-loc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-sadd-loc-address {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Google's suggestion list is appended to <body>; the input is a plain Product input. */
+.odc-sadd-loc-address-input { inline-size: 100%; }
+
+/* The map takes the frame's slot (GoogleMaps with fillContainer). */
+.odc-sadd-loc-map .odc-map-frame-map > div {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-sadd-loc-map-hint {
+  margin: calc(var(--od-space-5) * -1 + var(--od-space-2)) 0 0;
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text-muted);
+}
+
+.odc-sadd-loc-pin-address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  padding: var(--od-space-2) var(--od-space-3);
+  background: var(--od-surface-subtle);
+  border-radius: var(--od-radius-control);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sadd-loc-pin-address p {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-sadd-loc-pin-text {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-sadd-loc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5);
+}
+
+@media (min-width: 768px) {
+  .odc-sadd-loc-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* The native selects are Product inputs (`.odc-field-input`), as in Information and Store details › Location. */
+.odc-sadd-loc-select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  cursor: pointer;
+}
+
+/* A <select> matches `:read-only`, which paints Field inputs as read-only: an enabled one keeps the input's background. */
+.odc-sadd-loc .odc-sadd-loc-select:not(:disabled) { background: var(--od-bg); }
+.odc-sadd-loc-select:disabled { cursor: not-allowed; }

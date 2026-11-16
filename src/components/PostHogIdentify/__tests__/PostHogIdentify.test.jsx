@@ -25,15 +25,15 @@ vi.mock('~components', () => ({
   useSession: () => [mocks.session]
 }))
 
-vi.mock('~ui', async () => {
+vi.mock('~ui/src/contexts/ConfigFileContext', async () => {
   const React = await import('react')
-  return {
-    ConfigFileContext: React.createContext(),
-    useProjectState: () => [mocks.projectStatus]
-  }
+  return { ConfigFileContext: React.createContext() }
 })
+vi.mock('~ui/src/contexts/ProjectContext', () => ({
+  useProjectState: () => [mocks.projectStatus]
+}))
 
-import { ConfigFileContext } from '~ui'
+import { ConfigFileContext } from '~ui/src/contexts/ConfigFileContext'
 import { PostHogIdentify } from '..'
 
 const user = {

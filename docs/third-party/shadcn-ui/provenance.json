@@ -1,0 +1,168 @@
+{
+  "shadcnTag": "shadcn@4.21.0",
+  "shadcnCommit": "7c9eaba1c0a6404c990c144a654792e3313c650d",
+  "sourceFiles": [
+    {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/bases/base/ui/button.tsx",
+      "local": "docs/third-party/shadcn-ui/upstream/button.tsx",
+      "sha256": "74f982d7ad7a764e3c95a519fc063a671e66ad758ea31dc89d747838e20c2487"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/bases/base/ui/select.tsx",
+      "local": "docs/third-party/shadcn-ui/upstream/select.tsx",
+      "sha256": "6348d30035b68867d5efffe9b0b1611718226bef9fdeef9554349d6b98252110"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/bases/base/ui/alert-dialog.tsx",
+      "local": "docs/third-party/shadcn-ui/upstream/alert-dialog.tsx",
+      "sha256": "86a20c2cae7d8a686dded2ca61b84f8c0bb4c9e56cd5f423eddac87827469caf"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/7c9eaba1c0a6404c990c144a654792e3313c650d/apps/v4/registry/bases/base/ui/dialog.tsx",
+      "local": "docs/third-party/shadcn-ui/upstream/dialog.tsx",
+      "sha256": "aba6df6cbf51a1edcc22e415a3a46a666fc8cb66729e47b3ed2ecd97f166adff"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/7c9eaba1c0a6404c990c144a654792e3313c650d/LICENSE.md",
+      "local": "docs/third-party/shadcn-ui/upstream/LICENSE.md",
+      "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f"
+    }
+  ],
+  "packages": [
+    {
+      "name": "@base-ui/react",
+      "version": "1.8.0",
+      "license": "MIT",
+      "engines": {
+        "node": ">=14.0.0"
+      },
+      "peerDependencies": {
+        "@date-fns/tz": "^1.2.0",
+        "@types/react": "^17 || ^18 || ^19",
+        "date-fns": "^4.0.0",
+        "react": "^17 || ^18 || ^19",
+        "react-dom": "^17 || ^18 || ^19"
+      },
+      "peerDependenciesMeta": {
+        "@date-fns/tz": {
+          "optional": true
+        },
+        "@types/react": {
+          "optional": true
+        },
+        "date-fns": {
+          "optional": true
+        }
+      }
+    },
+    {
+      "name": "tailwindcss",
+      "version": "3.4.19",
+      "license": "MIT",
+      "engines": {
+        "node": ">=14.0.0"
+      }
+    },
+    {
+      "name": "autoprefixer",
+      "version": "10.6.0",
+      "license": "MIT",
+      "engines": {
+        "node": "^10 || ^12 || >=14"
+      },
+      "peerDependencies": {
+        "postcss": "^8.1.0"
+      }
+    },
+    {
+      "name": "postcss",
+      "version": "8.5.16",
+      "license": "MIT",
+      "engines": {
+        "node": "^10 || ^12 || >=14"
+      }
+    },
+    {
+      "name": "react",
+      "version": "18.3.1",
+      "license": "MIT",
+      "engines": {
+        "node": ">=0.10.0"
+      }
+    },
+    {
+      "name": "react-dom",
+      "version": "18.3.1",
+      "license": "MIT",
+      "peerDependencies": {
+        "react": "^18.3.1"
+      }
+    },
+    {
+      "name": "vite",
+      "version": "7.3.6",
+      "license": "MIT",
+      "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+      },
+      "peerDependencies": {
+        "@types/node": "^20.19.0 || >=22.12.0",
+        "jiti": ">=1.21.0",
+        "less": "^4.0.0",
+        "lightningcss": "^1.21.0",
+        "sass": "^1.70.0",
+        "sass-embedded": "^1.70.0",
+        "stylus": ">=0.54.8",
+        "sugarss": "^5.0.0",
+        "terser": "^5.16.0",
+        "tsx": "^4.8.1",
+        "yaml": "^2.4.2"
+      },
+      "peerDependenciesMeta": {
+        "@types/node": {
+          "optional": true
+        },
+        "jiti": {
+          "optional": true
+        },
+        "sass": {
+          "optional": true
+        },
+        "sass-embedded": {
+          "optional": true
+        },
+        "stylus": {
+          "optional": true
+        },
+        "less": {
+          "optional": true
+        },
+        "sugarss": {
+          "optional": true
+        },
+        "lightningcss": {
+          "optional": true
+        },
+        "terser": {
+          "optional": true
+        },
+        "tsx": {
+          "optional": true
+        },
+        "yaml": {
+          "optional": true
+        }
+      }
+    }
+  ],
+  "adaptations": [
+    "TypeScript to JSX without changing React/Vite",
+    "Static variant classes instead of cva/cn runtime dependencies",
+    "Tailwind3 scoped od- utilities replace shadcn defaults; no Preflight",
+    "Ordering.co semantic resolver including tenant/font overrides replaces shadcn palette",
+    "Shared/Icon replaces shadcn registry IconPlaceholder",
+    "Compatibility facade preserves implicit submit and styled identity",
+    "Select adapter preserves repeated selection and noSelected callbacks",
+    "Confirm adapter retains independent controlled callbacks and legacy dismissal behavior"
+  ]
+}

@@ -1,0 +1,144 @@
+/* redesign messages B3b (decisions 1A, 8A): the /messages inbox. Tokens only (the literal guard rejects the rest); logical
+   properties only, so it mirrors in RTL. The page container (Shared/UI/messages-listing-styles.js) gives it the height: from
+   1024px a column of the window's height, so every box below carries min-height 0 or its content would push the pager out. */
+
+.odi-inbox {
+  display: flex;
+  min-inline-size: 0;
+  block-size: 80vh;
+  margin-block-start: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .odi-inbox {
+    flex: 1 1 0;
+    block-size: auto;
+    min-block-size: 0;
+  }
+}
+
+/* The list pane (--od-x-inbox-list, candidates.css › messages B3b). */
+.odi-list {
+  display: flex;
+  flex: 0 0 var(--od-x-inbox-list);
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odi-list > * {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* The conversation pane: the header, then the chat filling the rest. */
+.odi-pane {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  background: var(--od-surface);
+}
+
+/*  (W1-D-38): on a short window the thread keeps its floor and this container scrolls, so nothing is clipped (in main the
+   container scrolled). The floor is --od-x-chat-min-block (candidates.css, C23). */
+.odi-inbox .odi-pane > [data-layout='standalone'] {
+  flex: 1 1 0;
+  block-size: auto;
+  min-block-size: 0;
+  overflow-y: auto;
+}
+
+.odi-inbox .odi-pane > [data-layout='standalone'] > .odt-chat-log {
+  min-block-size: var(--od-x-chat-min-block);
+}
+
+/* Below 768px the list is the page and the conversation a full-screen layer over it: above the page and the menu bar, under the
+   order panel and the app dialogs (--od-x-layer-chrome is under the panel's chrome + 1 and the overlay host). */
+@media (max-width: 767px) {
+  .odi-list {
+    flex: 1 1 auto;
+    border-inline-end: 0;
+  }
+
+  .odi-pane {
+    position: fixed;
+    inset: 0;
+    z-index: var(--od-x-layer-chrome);
+  }
+}
+
+/* The head of the conversation: who and which order on the first line, the order in brief on the second. It wraps, never overflows. */
+.odi-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+}
+
+.odi-head-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odi-name {
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odi-number {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odi-spacer {
+  flex: 1 1 0;
+}
+
+.odi-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1) var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odi-fact {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odi-value {
+  min-inline-size: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odi-back {
+  margin-inline-start: calc(var(--od-space-2) * -1);
+}

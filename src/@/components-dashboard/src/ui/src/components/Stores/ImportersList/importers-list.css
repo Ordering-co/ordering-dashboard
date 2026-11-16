@@ -1,0 +1,106 @@
+/*
+ * redesign stores 3.C · level 0 of the Importers panel: the head (Learn and «Add importer»), the table, the cards of a
+ * phone, the notices and the «Add new importer» link. P/DataTable, P/RecordCard, P/InlineNotice and P/ConfirmDialog own the structure;
+ * this adds what an importer row is made of and fits them to the panel's own gutter (importers.css: the pane pads 24px).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── The head: Learn at the start, «Add importer» at the end. It wraps rather than cutting either at 390px and in long locales ── */
+.odc-imp-list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-2);
+}
+
+.odc-imp-list-head > * { min-inline-size: 0; }
+
+/* ── The body under the head ── */
+.odc-imp-list-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The notice has the pane's own edge, not the page gutter of the filter bar it was made for */
+.odc-imp-list-notice .odc-notice { margin: 0; }
+
+/* ── The table: its rows run to the edges of the pane, and their text lines up with the rest of the pane (24px) ── */
+.odc-imp-list-table {
+  min-inline-size: 0;
+  margin-inline: calc(var(--od-space-5) * -1);
+}
+
+.odc-imp-list-table .odc-table th:first-child,
+.odc-imp-list-table .odc-table td:first-child { padding-inline-start: var(--od-space-5); }
+
+.odc-imp-list-table .odc-table th:last-child,
+.odc-imp-list-table .odc-table td:last-child { padding-inline-end: var(--od-space-5); }
+
+/* ── The cells ── */
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-imp-list-name,
+.odc-imp-list-type {
+  display: block;
+  min-inline-size: 0;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-list-name { font-weight: var(--od-font-weight-medium); }
+
+.odc-imp-list-type {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+/* The menu of a row: the click is its own, and it never opens the row */
+.odc-imp-list-menu {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* ── Phone: RecordCard draws the importer (RecordCardList, under 768px) ── */
+/* the cards bleed out of the pane's 24px, not out of the 16px gutter they were made for, and keep their text on the pane's edge */
+.odc-imp-list-body .odc-order-cards { margin-inline: calc(var(--od-space-5) * -1); }
+
+.odc-imp-list-body .odc-order-card {
+  padding-inline: calc(var(--od-space-5) - var(--od-x-indicator)) var(--od-space-5);
+}
+
+/* an importer has one side, not «from → to»: the arrow of the card has nothing to point at */
+.odc-imp-list-body .odc-order-card-arrow { display: none; }
+
+/* the link holds the name, in the text face of the page (the card gave the id its mono face) */
+.odc-imp-list-body .odc-order-card-link {
+  /* the card's link does not grow (record-card.css): a long importer name wraps inside the card instead of widening it */
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-imp-list-body .odc-order-card-link .odc-imp-list-name { font-weight: var(--od-font-weight-semibold); }
+
+/* The menu sits above the link's overlay (it covers the whole card), so it takes its own clicks */
+.odc-imp-list-card-actions {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* review (3.C): in the table the type stays on one line (the name column takes the rest); the cards wrap it */
+.odc-imp-list-table .odc-imp-list-type {
+  white-space: nowrap;
+}
+
+/*: the line above the CSV importers that says each file sets its own stores */
+.odc-imp-store-hint {
+  margin: var(--od-space-2) 0;
+  color: var(--od-text-muted);
+}

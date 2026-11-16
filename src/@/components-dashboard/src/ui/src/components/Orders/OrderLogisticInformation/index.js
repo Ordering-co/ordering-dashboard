@@ -23,15 +23,15 @@ const LogisticInformationUI = (props) => {
       { key: 1, value: t('COMPLETED_BY_ADMIN', 'Completed by admin') },
       { key: 2, value: t('REJECTED_BY_ADMIN', 'Rejected by admin') },
       { key: 3, value: t('ORDER_STATUS_IN_BUSINESS', 'Driver arrived to business') },
-      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed') },
+      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation completed') },
       { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
       { key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by driver') },
       { key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
       { key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver') },
       { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver') },
-      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver') },
+      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up failed by driver') },
       { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver') },
-      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') },
+      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery failed by driver') },
       { key: 13, value: t('PREORDER', 'Preorder') },
       { key: 14, value: t('ORDER_NOT_READY', 'Order not ready') },
       { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Pickup completed by customer') },
@@ -93,6 +93,7 @@ const LogisticInformationUI = (props) => {
               <Button
                 rectangle
                 color='primary'
+                type='button'
                 onClick={() => getLogistics()}
               >
                 {t('RELOAD', 'Reload')}
@@ -175,9 +176,9 @@ const LogisticInformationUI = (props) => {
             </WraaperLogs>
               )
             : (
-            <>
+            <div role='alert'>
               {logisticInformation.error}
-            </>
+            </div>
               )}
         </>
           )}

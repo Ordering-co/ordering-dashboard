@@ -9,11 +9,11 @@ export const WarningMessage = styled.div`
   height: fit-content;
   max-height: fit-content;
   min-height: 150px;
-  background-color: #F2BB40;
+  background-color: var(--od-warning-soft);
+  color: var(--od-text);
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.8;
   border-radius: 10px;
   position: relative;
 
@@ -29,21 +29,21 @@ export const WarningMessage = styled.div`
     `}
   }
 
-  h1 {
-    font-size: 20px;
+  p {
+    font-size: var(--od-type-title-size);
     margin: 0px 60px;
     text-align: center;
   }
 `
 export const Flag = styled.span`
-  font-size: 13px;
+  font-size: var(--od-type-secondary-size);
   margin: 0px;
   text-transform: capitalize;
-  color: #E63757;
+  color: var(--od-danger-functional);
   font-weight: 500;
 
   @media (min-width: 381px) {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 export const SectionTitleContainer = styled.div`
@@ -70,10 +70,10 @@ export const WrapperPlaceOrderButton = styled.div`
 
   span {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
 
     @media (min-width: 1200px) {
-      font-size: 18px;
+      font-size: var(--od-type-section-title-size);
       padding-left: 20px;
     }
   }

@@ -74,6 +74,10 @@ export const HoursEditor = ({ form, disabled, onChange }) => {
       if (!target || !root.contains(target)) return
       if (disabled || target.getAttribute('aria-disabled') === 'true') { event.preventDefault(); event.stopPropagation(); return }
       if (['Enter', ' '].includes(event.key)) {
+        // Merged into the redesign (2026-10-09): the redesign's selects (LegacySelect `.od-legacy-select-trigger`,
+        // FirstSelect `.od-first-select-root`) already open on Enter/Space; a dispatched click as well would open and close
+        // them in the same keystroke. Their own handler runs; the enhancer only names them.
+        if (target.matches('.od-legacy-select-trigger') || target.closest('.od-first-select-root')) return
         event.preventDefault()
         target.dispatchEvent(new MouseEvent('click', { bubbles: true }))
         if (target.classList.contains('select')) {

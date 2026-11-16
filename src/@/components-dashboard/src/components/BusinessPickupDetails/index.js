@@ -1,67 +1,44 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useToast, ToastType } from '../../contexts/ToastContext'
-import { useLanguage } from '../../contexts/LanguageContext'
+
+// redesign stores 5.7 · The pickup form saves from its own draft, so this controller holds no form state and shows no
+// toast: `savePickup(changes)` writes the changed keys and answers `{ ok, error }`, and the form draws the failure in its save bar.
+// `error` is the first text of the API message (never the boolean flag of the response), or the thrown message.
+
+// the first text of what the API answers (a string or a list of them), or null
+const firstMessage = (value) => {
+  const message = Array.isArray(value) ? value.find(item => typeof item === 'string' && item.trim()) : value
+  return typeof message === 'string' && message.trim() ? message : null
+}
 
 export const BusinessPickupDetails = (props) => {
   const {
-    business,
-    UIComponent,
-    handleUpdateBusinessState
+    UIComponent
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const [, { showToast }] = useToast()
-  const [, t] = useLanguage()
-  const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
+  // the latest props and session, so a save that ends after a render updates the business that is on screen now
+  const latest = useRef({})
+  latest.current = { ...props, ordering, session }
 
   /**
-   * Method to update the business from the API
+   * Writes the changed keys of the business. Answers `{ ok: true }` or `{ ok: false, error }`.
    */
-  const handlePickupStateSave = async () => {
+  const savePickup = async (changes) => {
     try {
-      setFormState({ ...formState, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const { content: { error, result } } = await ordering.businesses(business.id).save(formState.changes, {
+      const { business, ordering, session } = latest.current
+      const { content: { error, result } } = await ordering.businesses(business.id).save(changes, {
         accessToken: session.token
       })
-
-      if (!error) {
-        setFormState({
-          ...formState,
-          loading: false,
-          changes: {},
-          error: null
-        })
-        handleUpdateBusinessState(result)
-        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
-      } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error
-        })
-      }
+      if (error) return { ok: false, error: firstMessage(result) }
+      latest.current.handleUpdateBusinessState?.(result)
+      return { ok: true }
     } catch (err) {
-      setFormState({
-        ...formState,
-        loading: false,
-        error: [err.message]
-      })
+      return { ok: false, error: firstMessage(err?.message) }
     }
-  }
-
-  const handleChangeForm = (updateChange) => {
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        ...updateChange
-      }
-    })
   }
 
   return (
@@ -70,9 +47,7 @@ export const BusinessPickupDetails = (props) => {
         UIComponent && (
           <UIComponent
             {...props}
-            formState={formState}
-            handleChangeForm={handleChangeForm}
-            handlePickupStateSave={handlePickupStateSave}
+            savePickup={savePickup}
           />
         )
       }

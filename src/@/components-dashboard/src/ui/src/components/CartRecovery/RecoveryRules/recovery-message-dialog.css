@@ -1,0 +1,51 @@
+/*
+ * redesign RA-B4 (decision 5; M-RA9): the dialog of one message of a recovery rule. The Product Dialog owns the shell: the body
+ * scrolls and the footer stays in the viewport. Only tokens; logical properties.
+ */
+
+.odc-ra-msg {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-ra-msg-group {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-ra-msg-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-msg-required {
+  color: var(--od-danger-functional);
+}
+
+.odc-ra-msg-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The facsimile is the figure of RA-B3; the dialog only gives it room and keeps it from widening the body. */
+.odc-ra-msg-preview > .odc-ra-preview {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* The notice takes the whole first row of the footer; the buttons wrap under it. */
+.odc-ra-msg-dialog .odc-ra-msg-notice {
+  flex: 1 0 100%;
+  min-inline-size: 0;
+}
+
+/* «Delete message» sits at the start; Cancel and the primary action stay at the end. */
+.odc-ra-msg-dialog .odc-ra-msg-delete {
+  margin-inline-end: auto;
+}

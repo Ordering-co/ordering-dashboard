@@ -9,6 +9,8 @@ export const Container = styled.div`
   transition: all 0.5s;
   max-height: 100vh;
   overflow: auto;
+  /* : without it the editor takes Bootstrap's text-align:left of the body, and in RTL its labels sit on the left */
+  text-align: start;
 `
 
 export const SelectContainer = styled.div`
@@ -28,7 +30,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -104,7 +106,7 @@ export const InfoWrapper = styled.div`
   }
   p {
     font-weight: 400;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin: 0px;
   }
@@ -122,7 +124,7 @@ export const MoreSettingsHeader = styled.div`
   margin-bottom: 35px;
   h2 {
     font-weight: 700;
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     line-height: 36px;
     margin-top: 0px;
     margin-bottom: 8px;
@@ -133,7 +135,7 @@ export const MoreSettingsHeader = styled.div`
   }
   p {
     font-weight: 500;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     text-align: center;
     margin-bottom: 34px;
@@ -163,7 +165,7 @@ export const InputFormWrapper = styled.div`
   margin-bottom: 30px;
   h4 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin: 0px;
   }
@@ -187,7 +189,7 @@ export const FormGroup = styled.div`
     display: block;
     margin-bottom: 12px;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
   > input, textarea {
@@ -199,14 +201,35 @@ export const FormGroup = styled.div`
   button {
     height: 44px;
   }
+
+  /* tanda O (, row 19 b1): the Name / Title input is seen at 40px; at phone width it is 44 */
+  @media (max-width: 767px) {
+    > input {
+      min-height: var(--od-x-target-coarse);
+    }
+  }
 `
 
 export const TemporalDomail = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
   > a {
     color: ${props => props.theme.colors.primary};
+  }
+
+  /* tanda O (, row 19 b2): the «Visit: url» link is a 24px line; its hit area reaches 44 through a centered ::after
+     (the visible box and the line do not move; the pattern of .odc-ows-link::after) */
+  @media (pointer: coarse), (max-width: 767px) {
+    > a {
+      position: relative;
+    }
+
+    > a::after {
+      content: '';
+      position: absolute;
+      inset: var(--od-x-target-inset);
+    }
   }
 
   ${({ isDisabled }) => isDisabled && css`
@@ -288,7 +311,7 @@ export const UploadImageIcon = styled.div`
   color: ${props => props.theme.colors.disabled};
   span {
     margin-top: 14px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {
@@ -300,13 +323,13 @@ export const UploadImageIcon = styled.div`
 export const ImgInfoWrapper = styled.div`
   margin-top: 15px;
   h4 {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     font-weight: 400;
     margin: 0px;
   }
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     margin-top: 2px;
     margin-bottom: 0px;
@@ -314,7 +337,13 @@ export const ImgInfoWrapper = styled.div`
   }
 `
 
-export const CheckBoxWrapper = styled.div`
+export const CheckBoxWrapper = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
   margin-top: 30px;
   display: flex;
   align-items: center;
@@ -334,7 +363,7 @@ export const CheckBoxWrapper = styled.div`
   }
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     user-select: none;
   }
@@ -347,7 +376,7 @@ export const ColorPickerWrapper = styled.div`
   > div {
     > p {
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       line-height: 24px;
       margin-top: 0px;
       margin-bottom: 9px;
@@ -371,7 +400,7 @@ export const ContentWrapper = styled.div`
     align-items: center;
     > p {
       font-weight: 600;
-      font-size: 16px;
+      font-size: var(--od-type-section-title-size);
       line-height: 24px;
       margin-top: 0px;
       margin-bottom: 20px;
@@ -404,10 +433,14 @@ export const Tabs = styled.div`
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
   cursor: pointer;
   font-weight: 400;
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
   line-height: 18px;
   color: ${props => props.theme.colors.lightGray};
   padding-bottom: 14px;
@@ -417,7 +450,7 @@ export const Tab = styled.div`
   }
   ${({ active }) => active && css`
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 21px;
     padding-bottom: 13px;
     color: ${props => props.theme.colors.headingColor};
@@ -454,14 +487,14 @@ export const HeaderInfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;
@@ -492,7 +525,13 @@ export const InfoContent = styled.div`
     min-width: 535px;
   }
 `
-export const RadioItem = styled.div`
+export const RadioItem = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 12px 0;
@@ -512,7 +551,7 @@ export const RadioItem = styled.div`
   }
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
 `
@@ -521,7 +560,7 @@ export const CustomeDomainDesc = styled.p`
   margin-top: 5px;
   margin-bottom: 0px;
   font-weight: 400;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
 `
 
 export const TitleWrapper = styled.div`
@@ -543,7 +582,8 @@ export const CustomDomainInfo = styled.div`
       color: ${props => props.theme.colors.headingColor};
     }
   }
-  &:hover > div {
+  &:hover > div,
+  &:focus-within > div {
     visibility: visible;
     opacity: 1;
   }
@@ -552,22 +592,23 @@ export const CustomDomainInfo = styled.div`
 export const CustomDomainInfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;
   visibility: hidden;
   opacity: 0;
-  right: -100px;
+  inset-inline-end: 0;
+  max-inline-size: calc(100vw - 32px);
   ${props => props.theme.rtl && css`
-    left: 0px;s
+    left: 0px;
     right: initial;
   `}
 
@@ -578,6 +619,19 @@ export const CustomDomainInfoContent = styled.div`
   a {
     color: ${props => props.theme.colors.primary};
     padding-left: 5px;
+  }
+
+  /* tanda O (, row 19 d): the «customer support team» link reaches 44 on a phone through a centered ::after */
+  @media (pointer: coarse), (max-width: 767px) {
+    a {
+      position: relative;
+    }
+
+    a::after {
+      content: '';
+      position: absolute;
+      inset: var(--od-x-target-inset);
+    }
   }
 
   @media (min-width: 576px) {
@@ -614,7 +668,7 @@ export const Option = styled.div`
   }
   > span {
     max-width: 200px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -634,7 +688,7 @@ export const SelectWrapper = styled.div`
     width: 100%;
     background: ${props => props.theme.colors.secundary};
     border: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
 
     > div:first-child {
       padding-top: 4px;

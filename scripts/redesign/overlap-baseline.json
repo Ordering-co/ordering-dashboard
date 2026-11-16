@@ -1,0 +1,5 @@
+{
+ "_comment": "redesign AH. The overlap baseline: per «<url> @<width> <state>», the pairs of overlapProbe the sweep may still find (scripts/redesign/tools/overlap-baseline.mjs). A measurement with no entry must find 0. Every entry has a reason in `reasons`. Checked by pnpm redesign:overlaps (live) and validated by pnpm redesign:gates step 8.",
+ "entries": {},
+ "reasons": {}
+}

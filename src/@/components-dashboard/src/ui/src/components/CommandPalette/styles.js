@@ -1,6 +1,10 @@
 import styled, { css, keyframes } from 'styled-components'
 import * as Dialog from '@radix-ui/react-dialog'
 
+// redesign F6h-3 (A2-05): the text of the palette is a role of the brand, not a legacy theme grey: --od-x-text-subtle (5.11:1 on
+// white, 4.84:1 on the Kbd fill, 4.52:1 on the selected row) for what is secondary, --od-action-content for the context chip.
+// Nothing else of the old look changes.
+
 const fadeIn = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
@@ -19,7 +23,7 @@ export const Overlay = styled(Dialog.Overlay)`
   position: fixed;
   inset: 0;
   /* Above app modals (#app-modals .popup-backdrop is 3000) */
-  z-index: 3100;
+  z-index: calc(var(--od-x-layer-overlay) + 100); /* redesign W0-5 (T0-17): was 3100 */
   background: rgba(21, 24, 36, 0.32);
   animation: ${fadeIn} 120ms ease-out;
 
@@ -30,7 +34,7 @@ export const Overlay = styled(Dialog.Overlay)`
 
 export const Content = styled(Dialog.Content)`
   position: fixed;
-  z-index: 3101;
+  z-index: calc(var(--od-x-layer-overlay) + 101); /* redesign W0-5 (T0-17): was 3101 */
   top: 12vh;
   left: 50%;
   transform: translateX(-50%);
@@ -75,11 +79,11 @@ export const Content = styled(Dialog.Content)`
 
   [cmdk-group-heading] {
     padding: 10px 8px 4px;
-    font-size: 11px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: ${props => props.theme.colors.lightGray};
+    color: var(--od-x-text-subtle);
   }
 
   [cmdk-item] {
@@ -126,7 +130,7 @@ export const InputRow = styled.div`
 
   > svg {
     flex-shrink: 0;
-    color: ${props => props.theme.colors.lightGray};
+    color: var(--od-x-text-subtle);
   }
 
   [cmdk-input] {
@@ -140,7 +144,7 @@ export const InputRow = styled.div`
     color: ${props => props.theme.colors.headingColor};
 
     &::placeholder {
-      color: ${props => props.theme.colors.lightGray};
+      color: var(--od-x-text-subtle);
     }
   }
 `
@@ -156,8 +160,8 @@ export const ContextChip = styled.button`
   border: none;
   border-radius: 14px;
   background: ${props => props.theme.colors.lightPrimary};
-  color: ${props => props.theme.colors.primary};
-  font-size: 13px;
+  color: var(--od-action-content);
+  font-size: var(--od-type-control-value-size);
   font-weight: 500;
   cursor: pointer;
 
@@ -184,9 +188,9 @@ export const Kbd = styled.kbd`
   border-bottom-width: 2px;
   border-radius: 6px;
   background: ${props => props.theme.colors.secundary};
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
   font-family: inherit;
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 500;
   line-height: 1;
   box-shadow: none;
@@ -200,7 +204,7 @@ export const ItemIcon = styled.span`
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
   background: ${props => props.theme.colors.secundary};
   overflow: hidden;
 
@@ -219,7 +223,7 @@ export const ItemText = styled.span`
 `
 
 export const ItemTitle = styled.span`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   font-weight: 500;
   line-height: 1.3;
   overflow: hidden;
@@ -228,9 +232,9 @@ export const ItemTitle = styled.span`
 `
 
 export const ItemSubtitle = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 1.3;
-  color: ${props => props.theme.colors.lightGray};
+  color: var(--od-x-text-subtle);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -240,9 +244,9 @@ export const Badge = styled.span`
   flex-shrink: 0;
   padding: 2px 8px;
   border-radius: 10px;
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 500;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
   background: ${props => props.theme.colors.secundary};
   border: 1px solid ${props => props.theme.colors.borderColor};
 `
@@ -250,7 +254,7 @@ export const Badge = styled.span`
 export const ItemEnd = styled.span`
   display: inline-flex;
   flex-shrink: 0;
-  color: ${props => props.theme.colors.lightGray};
+  color: var(--od-x-text-subtle);
 `
 
 export const StatusRow = styled.div`
@@ -259,8 +263,8 @@ export const StatusRow = styled.div`
   gap: 10px;
   min-height: 40px;
   padding: 6px 10px;
-  font-size: 13px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-secondary-size);
+  color: var(--od-x-text-subtle);
 `
 
 export const Spinner = styled.span`
@@ -282,14 +286,14 @@ export const EmptyState = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.headingColor};
   }
 
   p + p {
     margin-top: 4px;
-    font-size: 13px;
-    color: ${props => props.theme.colors.lightGray};
+    font-size: var(--od-type-secondary-size);
+    color: var(--od-x-text-subtle);
   }
 `
 
@@ -299,8 +303,8 @@ export const Footer = styled.div`
   gap: 16px;
   padding: 8px 14px;
   border-top: 1px solid ${props => props.theme.colors.borderColor};
-  font-size: 12px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-secondary-size);
+  color: var(--od-x-text-subtle);
 
   span {
     display: inline-flex;
@@ -324,8 +328,8 @@ export const TriggerButton = styled.button`
   border: 1px solid ${props => props.theme.colors.borderColor};
   border-radius: 8px;
   background: ${props => props.theme.colors.secundary};
-  color: ${props => props.theme.colors.secundaryContrast};
-  font-size: 13px;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-type-control-size);
   text-align: start;
   cursor: pointer;
   transition: border-color 120ms ease, background-color 120ms ease;

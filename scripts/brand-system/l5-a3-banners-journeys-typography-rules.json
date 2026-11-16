@@ -1,0 +1,772 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-a3-banners-journeys-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a3-banners-journeys-postionitemui-title-root-13px-17d0c9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/AdBannersListing/PostionItemUI/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-postionitemui-description-root-12px-4d5409",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/AdBannersListing/PostionItemUI/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-adbannerslisting-headercontainer-h1-20px-f8e290",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/AdBannersListing/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-adbannerslisting-infocontent-root-12px-aa63bc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/AdBannersListing/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-businesses-businesswrapper-p-12px-24b48e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/Businesses/styles.js",
+      "component": "BusinessWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-headercontainer-h1-20px-55ca98",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-tab-root-14px-a175e6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-uploadimageiconcontainer-p-14px-587f59",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "UploadImageIconContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-formcontroller-label-14px-ef3d68",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "FormController",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-actionselectorwrapper-div-div-dropdown-c93070",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerdetails-businesseswrapper-p-14px-89bd73",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "BusinessesWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-selectbusinessproducts-accordionitem-div-span-14px-115193",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/SelectBusinessProducts/styles.js",
+      "component": "AccordionItem",
+      "property": "font-size",
+      "context": "> div > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-headercontainer-h1-20px-7abeab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-dropdownwrapper-div-div-dropdown--789ef0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "DropDownWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-uploadimageiconcontainer-p-12px-fd2f3e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "UploadImageIconContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-formcontroller-label-14px-deab73",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "FormController",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-selectwrapper-select-14px-994e1d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-businessname-root-12px-9060a3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "BusinessName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-option-span-12px-3b645a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-bannerimagedetails-option-span-b-14px-639f12",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span > b",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-headercontainer-div-h1-20px-234ff1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "> div > h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-bannersheader-root-12px-5d3f1e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "BannersHeader",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-bannertitleconatiner-root-14px-49b162",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "BannerTitleConatiner",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-enablewrapper-span-14px-e447f7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-addnewbanner-root-14px-23ccd0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "AddNewBanner",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-pagebanner-infocontent-root-12px-ce7c6c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PageBanner/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-hero-h2-20px-b0de1b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Hero",
+      "property": "font-size",
+      "context": "h2",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-hero-p-14px-20a48d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Hero",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-templatecontent-h3-15px-c0363f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "TemplateContent",
+      "property": "font-size",
+      "context": "h3",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-templatecontent-p-13px-a228c4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "TemplateContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-templatemeta-root-12px-5ac3a5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "TemplateMeta",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-section-h2-18px-43c7bf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Section",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-section-p-14px-6906a7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Section",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-promotioncard-h3-14px-7b3aed",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "PromotionCard",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-promotioncard-p-13px-026bc0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "PromotionCard",
+      "property": "font-size",
+      "context": "> p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-status-root-11px-d35080",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Status",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-promotionaction-root-13px-3f696b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "PromotionAction",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-promotionpagination-root-13-fde44b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "PromotionPagination",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-builderheader-h2-18px-f441e0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "BuilderHeader",
+      "property": "font-size",
+      "context": "h2",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-builderheader-p-13px-6e4a19",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "BuilderHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-field-root-13px-2bcc2c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Field",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-field-input-select-textarea-c4b506",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Field",
+      "property": "font-size",
+      "context": "input, select, textarea",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-fieldhint-root-12px-0f6329",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "FieldHint",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-errortext-root-12px-d991b9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-scopebox-h3-14px-92a59f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ScopeBox",
+      "property": "font-size",
+      "context": "> h3",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-scopebox-p-13px-1e2844",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ScopeBox",
+      "property": "font-size",
+      "context": "> p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-scopemodebutton-root-13px-3acefc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ScopeModeButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-businessoption-root-13px-f01fbb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "BusinessOption",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-choicegroup-root-13px-8271f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ChoiceGroup",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-scopehint-root-12px-ca029a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ScopeHint",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-checkgrid-label-13px-49054d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "CheckGrid",
+      "property": "font-size",
+      "context": "label",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productpickerheader-h4-13px-0a729b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerHeader",
+      "property": "font-size",
+      "context": "h4",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productpickerheader-p-12px-f3dc68",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productselectioncount-root--5a65a6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductSelectionCount",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productpickersearch-root-14-948d80",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerSearch",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productoption-root-13px-a7e941",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductOption",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productpickerempty-root-13p-5a8b58",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerEmpty",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productpickerloadmore-root--a9ce08",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerLoadMore",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-actionbutton-root-13px-7c0d3b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ActionButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-apierror-root-13px-dff701",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ApiError",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-emptystate-root-14px-f2ae2e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-unavailablenotice-root-13px-a1d4ca",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "UnavailableNotice",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productcategoryheader-root-13px-fdd5ae",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductCategoryHeader",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-banners-journeys-promotionjourneyslisting-productcategorymeta-root-11px-fa267e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductCategoryMeta",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a3-banners-journeys-pres-postionitemui-iconwrapper-svg-24px-99eb39",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/AdBannersListing/PostionItemUI/styles.js",
+      "component": "IconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "IconWrapper svg: the banner-position glyph, the only child of the wrapper."
+    },
+    {
+      "id": "a3-banners-journeys-pres-bannerdetails-uploadimageiconcontainer-svg-55px-ef24a9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "UploadImageIconContainer",
+      "property": "font-size",
+      "context": "svg",
+      "match": "55px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "UploadImageIconContainer svg: the large upload glyph of the image drop zone."
+    },
+    {
+      "id": "a3-banners-journeys-pres-bannerdetails-actionselectorwrapper-button-svg-20px-be92f4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "ActionSelectorWrapper button > svg: the kebab action-menu glyph."
+    },
+    {
+      "id": "a3-banners-journeys-pres-bannerimagedetails-dropdownwrapper-button-svg-20px-a3386b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "DropDownWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "DropDownWrapper button > svg: the three-dots menu glyph; the button wraps nothing but the icon."
+    },
+    {
+      "id": "a3-banners-journeys-pres-bannerimagedetails-uploadimageiconcontainer-svg-55px-d75061",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/BannerImageDetails/styles.js",
+      "component": "UploadImageIconContainer",
+      "property": "font-size",
+      "context": "svg",
+      "match": "55px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "UploadImageIconContainer svg: the large upload glyph of the image drop zone."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-promotionaction-root-inheri-003bf9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "PromotionAction",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "PromotionAction is a styled.button; its size is the declaration on line 203, which takes the control role."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-field-input-select-textarea-369f6f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "Field",
+      "property": "font",
+      "context": "input, select, textarea",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "Field's input, select and textarea reset; the size is the declaration on line 305, which takes the controlValue role."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-scopemodebutton-root-inheri-bbe1b1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ScopeModeButton",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "ScopeModeButton is a styled.button; its size is the declaration on line 361, which takes the control role."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-productpickersearch-root-in-d7c22b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerSearch",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "ProductPickerSearch is a field reset; the size is the declaration on line 439, which takes the controlValue role."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-productpickerloadmore-root--0744b0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ProductPickerLoadMore",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "ProductPickerLoadMore is a styled.button; its size is the declaration on line 496, which takes the control role."
+    },
+    {
+      "id": "a3-banners-journeys-pres-promotionjourneyslisting-actionbutton-root-inherit-515ba7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionJourneysListing/styles.js",
+      "component": "ActionButton",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native button or field reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+      "evidence": "ActionButton is a styled.button; its size is the declaration on line 527, which takes the control role."
+    }
+  ]
+}

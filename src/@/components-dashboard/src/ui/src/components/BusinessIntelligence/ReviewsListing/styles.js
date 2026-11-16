@@ -22,7 +22,7 @@ export const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
@@ -62,7 +62,11 @@ export const Tabs = styled.div`
   border-bottom: 1px solid ${props => props.theme.colors.borderColor};
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
   padding: 10px 0;
   ${props => props.theme?.rtl
 ? css`
@@ -74,7 +78,7 @@ export const Tab = styled.div`
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
 
   ${({ active }) => active && css`
     border-bottom: 3px solid;
@@ -129,7 +133,7 @@ export const FormField = styled.div`
   gap: 8px;
 
   > label {
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};
   }
@@ -157,7 +161,7 @@ export const FilterButton = styled.button`
   border: 1px solid ${props => props.theme.colors.borderColor};
   border-radius: 8px;
   padding: 8px 14px;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   white-space: nowrap;
 
   b {
@@ -235,15 +239,19 @@ export const CalendarWrapper = styled.div`
   }
 `
 
-export const ClearFilter = styled.span`
+export const ClearFilter = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
   cursor: pointer;
   color: ${props => props.theme.colors.primary};
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   margin: ${props => props.theme?.rtl ? '0 8px 0 0' : '0 0 0 8px'};
 `
 
 export const ErrorText = styled.p`
   color: ${props => props.theme.colors.danger || '#D81212'};
-  font-size: 13px;
+  font-size: var(--od-type-secondary-size);
   margin: 10px 0 0 0;
 `

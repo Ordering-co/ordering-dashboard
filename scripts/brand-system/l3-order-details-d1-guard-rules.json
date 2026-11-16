@@ -1,0 +1,902 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-order-details-d1-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-order-details-d1-cloneorder-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CloneOrder/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d1-cloneorder-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CloneOrder/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CloneOption",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CloneOption",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CloneOption",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CloneOption",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CloneOption",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Title",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdelete-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDelete/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact JSX color is a reviewed public Ordering wrapper variant, not a direct CSS value; any change reopens review.",
+            "evidence": "The D1 source inventory pins wrapper variant names while literal JSX colors remain fail-closed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdetails-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "orderDetailsProps /* binding-sha256:83e736eb032c4aa5ffa17c6ea223a01414d53078f43bcf694b4a78bcfbfcac07 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX prop bundle is bound to the complete reviewed local initializer and dependency graph; any source, dependency, write or cardinality change reopens review.",
+            "evidence": "The L3 guard now inspects JSX spreads; local bundles carry a recursive source digest and parameter forwarding remains an exact source-location contract."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdetailspanel-jsx",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/OrderDetailsPanel.jsx",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "tabProps /* binding-sha256:45fb3c0985df741014586cb1b966347318335ab9b131ffee3b437ce277ecb9c3 */",
+            "context": "JSXSpreadAttribute",
+            "count": 5,
+            "reason": "This exact JSX prop bundle is bound to the complete reviewed local initializer and dependency graph; any source, dependency, write or cardinality change reopens review.",
+            "evidence": "The L3 guard now inspects JSX spreads; local bundles carry a recursive source digest and parameter forwarding remains an exact source-location contract. Moved unchanged (same binding digest) from OrderDetails/index.js to OrderDetailsPanel.jsx when the panel became a lazy chunk (redesign N-05b, wave 6 JS budget)."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdetails-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ButtonLink",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D1 detail source scopes this declaration to an icon while adjacent readable text uses a central role."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ isSelectedOrders }) => isSelectedOrders && css`\n    box-shadow: none;\n    border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ noAnimation }) => !noAnimation && css`\n    transition: 0.3s;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "FormControl",
+            "property": "font",
+            "match": "({ isError }) => isError && css`\n    textarea {\n      border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};\n      &:focus {\n        border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "OrderDetailsContent",
+            "property": "font",
+            "match": "({ noScroll }) => noScroll && css`\n    overflow: hidden;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "OrderStatus",
+            "property": "font",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no local readable-text size; any change reopens classification.",
+            "evidence": "The D1 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AdvancedLogistic",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "AdvancedLogistic",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ButtonLink",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ButtonLink",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ButtonLink",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatContainer",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "border-inline-start",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 8px 35px rgba(0, 0, 0, 0.16)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ isSelectedOrders }) => isSelectedOrders && css`\n    box-shadow: none;\n    border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ noAnimation }) => !noAnimation && css`\n    transition: 0.3s;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormControl",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "FormControl",
+            "property": "color-block",
+            "match": "({ isError }) => isError && css`\n    textarea {\n      border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};\n      &:focus {\n        border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ForterDecisionContainer",
+            "property": "color",
+            "match": "({ status }) => getForterColor(status)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression preserves Forter provider decision-state colors as operational data.",
+            "evidence": "Forter valid, invalid and error statuses retain their existing provider meaning and exact mapping."
+          },
+          {
+            "component": "ForterDecisionContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX spread forwards the component function parameters without adding a local color; any additional or changed spread reopens review.",
+            "evidence": "The L3 guard now inspects JSX spreads; local bundles carry a recursive source digest and parameter forwarding remains an exact source-location contract."
+          },
+          {
+            "component": "OrderDetailsContent",
+            "property": "color-block",
+            "match": "({ noScroll }) => noScroll && css`\n    overflow: hidden;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailsExtraContent",
+            "property": "border-inline-start",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderProducts",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderProducts",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderStatus",
+            "property": "color-block",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderStatus",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderStatusSelectorWrapper",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderStatusSelectorWrapper",
+            "property": "border-color",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderStatusSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PlaceSpotContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RejectReasonWrapper",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.soft ?? lighten(0.4, props.theme.colors.danger)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RejectReasonWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StatusBarStyled",
+            "property": "background",
+            "match": "props => `linear-gradient(to ${props.theme?.rtl ? 'left' : 'right'}, ${props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary} ${props.percentage}%, ${props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor} ${props.percentage}%)`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdetailsheader-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetailsHeader/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderdetailsheader-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetailsHeader/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D1 detail source scopes this declaration to an icon while adjacent readable text uses a central role."
+          },
+          {
+            "component": "UreadMessageAlert",
+            "property": "font-size",
+            "match": "40px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D1 detail source scopes this declaration to an icon while adjacent readable text uses a central role."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 4,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.white",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionSelectorWrapper",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailsHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailsHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? '#f5f5f5'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.white",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0,0,0,0.12)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "PrinterSelect",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StripeLink",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StripeLink",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.hover ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UreadMessageAlert",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderstatusregressionmodal-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusRegressionModal/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d1-orderstatusregressionmodal-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusRegressionModal/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "RegressionContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "StatusTransition",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d1-ordertrackinglink-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderTrackingLink/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d1-ordertrackinglink-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderTrackingLink/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ErrorText",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TrackingModalContent",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility or layout color expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D1 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TrackingOption",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact color expression comes from main's TrackingOption (, 41497d0d); pinned as shipped and any change reopens review.",
+            "evidence": "Main (41497d0d, ) rewrote OrderTrackingLink with a Select of tracking domains; the guard pins main literals as shipped."
+          }
+        ]
+      }
+    }
+  ]
+}

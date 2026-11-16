@@ -1,0 +1,109 @@
+/* Scoped copy-times popover. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-schedule-copy-times) {
+  position: relative;
+  box-sizing: border-box;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui.od-icon-button.od-schedule-copy-trigger {
+  width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui.od-icon-button.od-schedule-copy-trigger > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--od-entity-selector-text);
+}
+
+.od-ui:where(.od-schedule-copy-popover) {
+  position: absolute;
+  inset-inline-end: 60px;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
+  box-sizing: border-box;
+  width: 250px;
+  max-width: 250px;
+  padding: 15px 0;
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: var(--od-entity-selector-radius-component);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.od-ui:where(.od-schedule-copy-title) {
+  padding-inline: 10px;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-schedule-copy-list) {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.od-ui.od-button.od-schedule-copy-day {
+  @apply od-flex od-w-full od-items-center od-justify-start;
+  box-sizing: border-box;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 7px 10px;
+  color: var(--od-entity-selector-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-weight: 400;
+  text-align: start;
+}
+
+.od-ui.od-button.od-schedule-copy-day:hover:not(:disabled),
+.od-ui.od-button.od-schedule-copy-day:focus-visible:not(:disabled) {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+}
+
+.od-ui.od-button.od-schedule-copy-day > svg {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--od-entity-selector-muted);
+}
+
+.od-ui.od-button.od-schedule-copy-day[data-copy-checked] > svg {
+  color: var(--od-entity-selector-action-content);
+}
+
+.od-ui.od-button.od-schedule-copy-day > span {
+  min-width: 0;
+  margin-inline-start: 10px;
+  overflow: hidden;
+  color: currentColor;
+  font-size: 14px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-ui.od-button.od-schedule-copy-day:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.od-ui:where(.od-schedule-copy-popover) > .od-button {
+  width: calc(100% - 20px);
+  min-height: var(--od-entity-selector-touch-target);
+  margin: 5px 10px 0;
+}
+
+@media (max-width: 480px), (pointer: coarse) {
+  .od-ui:where(.od-schedule-copy-popover) {
+    inset-inline-end: 0;
+    width: min(250px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+  }
+}

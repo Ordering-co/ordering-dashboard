@@ -1,0 +1,128 @@
+/* C13 · Segmented control: at most 4 options in one row; when they do not fit it becomes a select, never a second row. */
+
+.odc-seg {
+  position: relative;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.odc-seg-track {
+  display: inline-flex;
+  padding: var(--od-x-space-half);
+  gap: var(--od-x-space-half);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+/* Hidden twin of the track: its width is the natural width the options need. It takes no space and is never read.
+   redesign stores 5.18: the twin sits in a box of no size that clips it, so the width it needs never reaches the scroll
+   area of the parent (an absolute box that overflows still counts there: a 390 panel scrolled sideways in fr, de, nl, el and bg).
+   The box clips; the twin keeps its natural width, which is what the control reads. */
+.odc-seg-measure-box {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.odc-seg-measure {
+  inline-size: max-content;
+}
+
+.odc-seg-btn {
+  position: relative; /* the 44×44 area of the phone is placed against the option (below) */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: var(--od-x-control-height-sm);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-seg-measure .odc-seg-btn::after { content: attr(data-label); }
+
+button.odc-seg-btn:hover { color: var(--od-text); }
+
+button.odc-seg-btn[aria-pressed='true'] {
+  background: var(--od-bg);
+  color: var(--od-text);
+  box-shadow: var(--od-shadow-1);
+}
+
+button.odc-seg-btn:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+button.odc-seg-btn:disabled {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+}
+
+/* The fallback: a native select with the group's label. */
+.odc-seg-select {
+  inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-seg-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/*
+ * Touch (C3, decision 12). redesign deliveries-followups W1-D-25: with a coarse pointer, and below 768px with a mouse
+ * (E10), each option is SEEN at 32px and its 44×44 area is a centred pseudo-element, as P/Button (--od-x-target-inset). It used to be
+ * a 44px box with a coarse pointer and 28px with no area below 768px. Each option keeps at least 44 of width, so the pseudo never
+ * spills sideways onto its neighbour 2px away.
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-seg-btn {
+    block-size: var(--od-x-control-height);
+    min-inline-size: var(--od-x-target-coarse);
+  }
+
+  /* `button.`: the hidden twin's spans draw their label with ::after (above); they must keep their width */
+  button.odc-seg-btn::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  /* The fallback select cannot hold a pseudo-element: it keeps a 44px box.
+      M3-F3: below 768px with a mouse too (it was a coarse pointer only: a 390 panel measured 32px with no area). */
+  .odc-seg-select { block-size: var(--od-x-target-coarse); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-seg-btn { transition: none; }
+}

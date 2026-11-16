@@ -93,12 +93,18 @@ const CustomerPointsWalletUI = (props) => {
       <h1>{t('POINTS_WALLET', 'Points wallet')}</h1>
       <Tabs>
         <Tab
+          as='button'
+          type='button'
+          aria-pressed={showOption === 'points_wallet'}
           active={showOption === 'points_wallet'}
           onClick={() => handleTabClick('points_wallet')}
         >
           {t('POINTS_WALLET', 'Points wallet')}
         </Tab>
         <Tab
+          as='button'
+          type='button'
+          aria-pressed={showOption === 'history'}
           active={showOption === 'history'}
           onClick={() => handleTabClick('history')}
         >

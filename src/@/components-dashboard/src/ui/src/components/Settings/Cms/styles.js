@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusOutline } from '../../../styles/touchTarget'
 
 export const StaticPageListContainer = styled.div`
   flex: 1;
@@ -22,7 +23,7 @@ export const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
@@ -73,7 +74,7 @@ export const PageListTable = styled.table`
     border-bottom: 1px solid ${props => props.theme.colors.secundaryLight};
     th {
       padding: 10px 0;
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
     }
   }
 
@@ -107,7 +108,7 @@ export const PageTbody = styled.tbody`
 
   td {
     padding: 7px 0;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
     input {
       border: none;
       width: 100%;
@@ -151,8 +152,25 @@ export const EnableWrapper = styled.div`
   align-items: center;
   width: fit-content;
 
-  span {
-    font-size: 12px;
+  /* : the inherited Switch is 25x14; here its box grows to 44x44 with the same 25x14 track centred in it
+     (the coarse-pointer layout of the shared Switch, applied to this consumer only). */
+  [data-slot='switch'] {
+    width: var(--od-field-touch-target, 44px);
+    height: var(--od-field-touch-target, 44px);
+  }
+
+  [data-slot='switch-thumb'] {
+    width: 25px;
+    height: 14px;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  > span {
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -170,6 +188,13 @@ export const ActionSelectorWrapper = styled.div`
     background: transparent !important;
     border: none;
     padding: 0px;
+    /* : the three-dots button was 16x24; it keeps its icon and gains a 44px target */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    ${brandFocusOutline}
     &:active,
     &:focus {
       border-color: unset !important;
@@ -200,7 +225,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
@@ -217,4 +242,24 @@ export const PagesBottomContainer = styled.div`
   flex-wrap: wrap;
   row-gap: 10px;
   margin: 15px 0 38px 0;
+`
+
+export const EmptyMessage = styled.p`
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: var(--od-type-content-size);
+  color: ${props => props.theme.colors.headingColor};
+`
+
+// Text for assistive technology only (names the icon-only button); it takes no room.
+export const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `

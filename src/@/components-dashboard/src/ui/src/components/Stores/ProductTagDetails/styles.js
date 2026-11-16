@@ -13,7 +13,7 @@ export const Header = styled.div`
   margin-bottom: 52px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0;
   }
@@ -71,7 +71,7 @@ export const UploadImageIcon = styled.div`
   span {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {   
@@ -85,7 +85,7 @@ export const FormController = styled.div`
   margin: 38px 0;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 11px;
   }
 `
@@ -141,7 +141,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {

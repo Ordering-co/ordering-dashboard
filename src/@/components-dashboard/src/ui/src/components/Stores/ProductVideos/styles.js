@@ -9,7 +9,7 @@ export const ProdcutVideosContainer = styled.div`
   overflow-x: hidden;
   
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 20px;
     padding: 10px 0;
@@ -34,13 +34,13 @@ export const AddNewVideo = styled.div`
     border: 1px solid #DEE2E6;
     box-sizing: border-box;
     border-radius: 7.6px;
-    font-size: 13px;
+    font-size: var(--od-type-control-value-size);
     padding: 6px 12px;
   }
 
   button {
     border-radius: 7.6px;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     height: 34pxpx;
   }
 `
@@ -57,7 +57,7 @@ export const GalleryItem = styled.div`
     background: transparent !important;
     border: none;
     color: ${props => darken(0.1, props.theme.colors.danger)};
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
 
     &:hover {
       color: ${props => props.theme.colors.danger};
@@ -67,7 +67,9 @@ export const GalleryItem = styled.div`
 export const GalleryURL = styled.p`
   margin: 0;
   font-weight: 400;
-  font-size: 13px;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
   line-height: 20px;
   overflow: hidden;
   white-space: nowrap;

@@ -5,12 +5,14 @@ export const WraaperLogs = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.8em;
+  font-size: var(--od-type-content-size);
   border-radius: 97px;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
 
   > button {
     margin-bottom: 15px;
-    font-size: 14px;
+    min-height: 44px;
+    font-size: var(--od-type-control-size);
     padding: 0 25px;
   }
 `
@@ -31,11 +33,12 @@ export const SkeletonHitory = styled.div`
   }
 `
 export const BubbleConsole = styled.div`
-  border-radius: 5px;
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '5px'};
   padding: 5px 15px;
   max-width: 90%;
   margin-bottom: 15px;
-  background: #EFEFEF;
+  background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#EFEFEF'};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   text-align: center;
   height: auto;
   overflow: hidden;
@@ -51,7 +54,7 @@ export const UppercaseText = styled.span`
 
   ${({ title }) => title && css`
     font-weight: 500;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     opacity: 0.8;
   `}
 `

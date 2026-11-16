@@ -2,11 +2,13 @@ import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-vi.mock('~ui', () => ({
+vi.mock('~ui/src/components/Shared/SpinnerLoader', () => ({
   SpinnerLoader: () => {
     window.__autologinSpinnerMounted = true
     return <div data-testid='spinner' />
-  },
+  }
+}))
+vi.mock('~ui/src/components/Shared/AppBootLoader', () => ({
   AppBootLoader: () => {
     window.__autologinBootMounted = true
     return <div data-testid='boot-home' />
@@ -500,7 +502,8 @@ describe('unmarked historical configuration autologin', () => {
       </AutologinParams>
     )
     expect(await screen.findByTestId('dashboard')).toHaveAttribute('data-project', 'query-tenant')
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    // /users/me, then /current to resolve the internal project code.
+    expect(fetchMock).toHaveBeenCalledTimes(2)
     expect(localStorage.getItem('project')).toBe('query-tenant')
     expect(localStorage.getItem('token')).toBe('query-token')
     expect(localStorage.length).toBe(3)

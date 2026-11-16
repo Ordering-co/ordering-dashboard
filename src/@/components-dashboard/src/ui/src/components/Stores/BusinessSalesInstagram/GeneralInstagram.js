@@ -1,53 +1,26 @@
 import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { useTheme } from 'styled-components'
-import { Input } from '../../../styles'
-import {
-  InstagramGeneralContainer,
-  Step,
-  CopyInputWrapper
-} from './styles'
+import { GuideIntro, GuideStep, GuideSteps, StoreLink } from '../BusinessSalesChannel/GuideParts'
 
-export const GeneralInstagram = ({ storeUrl }) => {
+// redesign stores 5.15b (; G5-04, G5-10, G5-14): main's five steps and screenshots, as plain text (main injected the
+// translation as HTML, and its default left a strong tag open); the button names Instagram shows go in quotes.
+export const GeneralInstagram = ({ link }) => {
   const [, t] = useLanguage()
-  const theme = useTheme()
 
   return (
-    <InstagramGeneralContainer>
-      <p>{t('BUSINESS_INSTAGRAM_GENERAL_DESC', 'Lorem ipsum dolor sit amet consectetur. Vitae odio aliquam adipiscing vitae. Nulla sed integer congue gravida lobortis tristique condimentum fusce tincidunt.')}</p>
-      <Step>
-        <h3>{t('STEP', 'Step')} 1</h3>
-        <p
-          dangerouslySetInnerHTML={{ __html: t('BUSINESS_INSTAGRAM_GENERAL_STEP2_DESC', 'Open your Instagram profile and tap on <strong>Edit Profile.<strong>') }}
-        />
-        <img src={theme.images.salesChannels.instagramGeneralStep2} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 2</h3>
-        <p>{t('BUSINESS_INSTAGRAM_GENERAL_STEP3_DESC', 'On the Edit Profile screen, click on the Links option.')}</p>
-        <img src={theme.images.salesChannels.instagramGeneralStep3} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 3</h3>
-        <p>{t('BUSINESS_INSTAGRAM_GENERAL_STEP4_DESC', 'Add your business link, or if you already have a link, you can edit it; click on that option.')}</p>
-        <img src={theme.images.salesChannels.instagramGeneralStep4} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 4</h3>
-        <p>{t('BUSINESS_INSTAGRAM_GENERAL_STEP5_DESC', 'Just add this link to the website field:')}</p>
-        <CopyInputWrapper isBottom>
-          <Input
-            defaultValue={storeUrl || 'https://yourbusinessname.com/store/storename'}
-            disabled
-          />
-        </CopyInputWrapper>
-        <img src={theme.images.salesChannels.instagramGeneralStep5} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 5</h3>
-        <p>{t('BUSINESS_INSTAGRAM_GENERAL_STEP6_DESC', 'Done; it will appear this way on your Instagram account.')}</p>
-        <img src={theme.images.salesChannels.instagramGeneralStep6} alt='' />
-      </Step>
-    </InstagramGeneralContainer>
+    <>
+      <GuideIntro>
+        {t('SALES_INSTAGRAM_GENERAL_INTRO', 'Add the link to your Instagram profile so anyone who visits it can order.')}
+      </GuideIntro>
+      <GuideSteps>
+        <GuideStep number={1} text={t('SALES_INSTAGRAM_STEP_EDIT_PROFILE', 'Open your Instagram profile and tap “Edit profile”.')} />
+        <GuideStep number={2} text={t('SALES_INSTAGRAM_GENERAL_STEP_2', 'Tap “Links”.')} />
+        <GuideStep number={3} text={t('SALES_INSTAGRAM_GENERAL_STEP_3', 'Tap “Add external link”, or edit the link you already have.')} />
+        <GuideStep number={4} text={t('SALES_INSTAGRAM_GENERAL_STEP_4', 'Paste this link in the URL field and save.')}>
+          <StoreLink link={link} />
+        </GuideStep>
+        <GuideStep number={5} text={t('SALES_INSTAGRAM_GENERAL_STEP_5', 'Done: the link shows on your Instagram profile.')} />
+      </GuideSteps>
+    </>
   )
 }

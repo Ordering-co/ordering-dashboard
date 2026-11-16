@@ -1,0 +1,194 @@
+/*
+ * redesign stores 5.5a · Menu section: the list of menus (the list of a P/SectionSplit).
+ * Product's Button, Tabs, SearchField, InlineNotice, AsyncSwitch and Skeleton own their structure; this adds the pane, the head and
+ * what a row is made of. Values: --od-* and --od-x-* only, logical properties only.
+ *
+ * No `overflow`, `container-type` or `contain` on anything that wraps the detail (SectionSplit decisions, points 3 and 3b): the
+ * root of the piece is this tree's root, and the pane is only the list's content.
+ */
+
+.odc-menu-pane {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+@media (min-width: 576px) {
+  .odc-menu-pane {
+    padding: var(--od-space-5);
+  }
+}
+
+/* ── Head: the title and «Add menu» ── */
+.odc-menu-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-menu-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* A notice here fills the pane: the gutter and the gap under it belong to the filter bar. */
+.odc-menu-pane .odc-notice {
+  margin: 0;
+}
+
+/* ── The rows ── */
+.odc-menu-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* block, not the flex a list item gets from the shell: the row fills the line. : scoped to the tab's list, because P/Menu
+   (the ⋯ menus, Export of /orders…) also draws `.odc-menu-item`, and an unscoped rule here stripped every one of them. */
+.odc-menu-list > .odc-menu-item {
+  display: block;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* The search field of Product has a flex basis for a filter bar row; in this column it would be that tall. */
+.odc-menu-pane > .odc-menu-search {
+  flex: none;
+}
+
+/* [switch] [name] [chevron]. What a failed save says goes on its own line under the row (the switch cell dissolves into the grid). */
+.odc-menu-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  cursor: pointer;
+  user-select: none;
+}
+
+.odc-menu-row:hover { background: var(--od-x-hover); }
+
+/* The ring is inset: the pane sits in a scroller and a ring outside the row would be cut */
+.odc-menu-row:focus { outline: none; }
+.odc-menu-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The open menu: soft action fill, action text and a 2px indicator. aria-current says it, and the weight changes (never colour alone). */
+.odc-menu-row[data-current] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-menu-row[data-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action-content);
+}
+
+/* the editor is saving: the rows wait */
+.odc-menu-row[data-busy] { cursor: progress; }
+
+.odc-menu-switch { display: contents; }
+.odc-menu-switch .odc-async-switch { display: contents; }
+
+/* The cells are placed: the notice comes between the switch and the name in the DOM, and would push them to a third line. */
+.odc-menu-switch .odc-switch { grid-row: 1; grid-column: 1; }
+.odc-menu-name { grid-row: 1; grid-column: 2; }
+.odc-menu-chevron { grid-row: 1; grid-column: 3; }
+
+.odc-menu-switch .odc-async-switch-notice {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  max-inline-size: none;
+  margin-block-end: var(--od-space-1);
+}
+
+.odc-menu-name {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-sm);
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-1);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: start;
+  cursor: inherit;
+}
+
+.odc-menu-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* : P/Menu has its own `.odc-menu-label`; this one is the tab's row name only */
+.odc-menu-list .odc-menu-label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-menu-chevron {
+  color: var(--od-x-text-subtle);
+}
+
+/* ── Skeleton: the shape of a row (switch and name) ── */
+.odc-menu-row[data-skeleton] {
+  grid-template-columns: auto minmax(0, 1fr);
+  cursor: default;
+}
+
+.odc-menu-row[data-skeleton]:hover { background: transparent; }
+
+/* ── States and the foot ── */
+.odc-menu-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Touch: stacked rows touch each other, so on a coarse pointer or under 768px the rows themselves are 44px. ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-menu-row,
+  .odc-menu-name {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

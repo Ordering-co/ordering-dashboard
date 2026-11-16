@@ -1,0 +1,182 @@
+/*
+ * redesign SL-F3 (C) · ScheduleEditor: weekly opening hours, one row per day.
+ * The row is the day (switch + name), the lapses on one line (four native selects of 32px) and the row actions.
+ * Under 768px (or with a coarse pointer) the selects keep 32px and the frame around each reaches a 44px area (decision 12),
+ * with 16px text so iOS does not zoom. Logical properties only. Values come from --od-* and --od-x-* only.
+ */
+
+.odc-sched {
+  display: grid;
+  /* One shared first column (the widest day) so the hours line up across the rows. */
+  grid-template-columns: max-content minmax(0, 1fr);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-sched-day {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  align-items: start;
+  gap: var(--od-space-3) var(--od-space-4);
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-sched-day:last-child { border-block-end: 0; }
+
+.odc-sched-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-control-height);
+  min-inline-size: 0;
+}
+
+.odc-sched-name {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-sched-day-name {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-sched-date {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sched-day:not([data-enabled]) .odc-sched-day-name { color: var(--od-x-text-subtle); }
+
+.odc-sched-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sched-lapses {
+  display: grid;
+  flex: 1 1 auto;
+  /* The rows are at least 12px apart so the 44px areas of the selects on a phone do not cross. */
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sched-lapse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sched-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-sched-split {
+  inline-size: var(--od-space-3);
+  block-size: var(--od-x-hairline);
+  background: var(--od-x-control-border);
+}
+
+.odc-sched-off {
+  margin: 0;
+  min-block-size: var(--od-x-control-height);
+  display: flex;
+  align-items: center;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sched-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-sched-manual-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+/* ── Time select: 32px, the field border (>= 3:1), the house ring ── */
+.odc-sched-time {
+  display: inline-block;
+  min-inline-size: 0;
+}
+
+.odc-sched-select {
+  display: block;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-sched-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-sched-select:disabled {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+}
+
+/* ── Copy dialog ── */
+.odc-sched-copy {
+  display: grid;
+  gap: var(--od-space-2);
+}
+
+/* ── Phone and coarse pointer: 32px visible, 44px area, 16px text ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-sched-select { font-size: var(--od-x-type-lead-size); }
+  /* redesign : two 44px areas need 12px between their 32px frames (6px each), and the switch's spills 6px past the
+     32px head. --od-space-3 is 12px only on a 16px root: the dashboard's is 14px (10.5px), so the areas crossed. 0.875rem is
+     12.25px there; only the spacing grows, never a control. */
+  .odc-sched-day { row-gap: var(--od-x-space-3-5); }
+  .odc-sched-body,
+  .odc-sched-lapses { gap: var(--od-x-space-3-5); }
+  /* A lapse wraps on a 320px phone: its own rows too (the columns keep --od-space-2: the selects spill only above and below). */
+  .odc-sched-lapse { row-gap: var(--od-x-space-3-5); }
+  .odc-sched-time {
+    position: relative;
+    isolation: isolate;
+  }
+  .odc-sched-time::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset); /* a 32px frame -> 44px area, never smaller than the frame */
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+}
+
+/* One column under 768px: the day above its hours. */
+@media (max-width: 767px) {
+  .odc-sched { grid-template-columns: minmax(0, 1fr); }
+  .odc-sched-body { justify-content: flex-start; }
+}

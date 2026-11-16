@@ -12,9 +12,9 @@ import { BusinessProductsCategoyDetails as BusinessProductsCategoyDetailsControl
 import {
   Alert,
   Confirm,
-  Modal,
   Button
 } from '~ui'
+import { Dialog } from '../../Shared/Product'
 
 import { IconButton, Switch } from '../../../styles'
 import { SeoOptions } from '../SeoOptions'
@@ -226,6 +226,7 @@ const BusinessProductsCategoyDetailsUI = (props) => {
                     handleChangeRibbon={handleChangeRibbon}
                     handleTutorialSkip={handleTutorialSkip}
                     vertical={businessState?.business?.vertical}
+                    resultErrorShownByHost
                   />
                 )}
                 {selectedInfoItem === 'seo_options' && (
@@ -244,12 +245,13 @@ const BusinessProductsCategoyDetailsUI = (props) => {
           }
         </EditCategoryContent>
       </Container>
-      <Modal
-        width='85%'
-        maxWidth='1000px'
+      {/* redesign bugs F row 25 (S-4): the Product Dialog with a title, like the store's Snooze (it was an untitled legacy Modal) */}
+      <Dialog
         open={isCategorySnooze}
-        onClose={() => setIsCategorySnooze(false)}
-        closeOnBackdrop={false}
+        onOpenChange={setIsCategorySnooze}
+        size='lg'
+        title={t('SNOOZE', 'Snooze')}
+        closeLabel={t('CLOSE', 'Close')}
       >
         <SnoozeComponent
           dataState={categorySelected}
@@ -258,9 +260,9 @@ const BusinessProductsCategoyDetailsUI = (props) => {
           formState={formState}
           onClose={() => setIsCategorySnooze(false)}
         />
-      </Modal>
+      </Dialog>
       <Alert
-        title={t('BUSINESS_TYPE', 'Business type')}
+        title={t('CATEGORY', 'Category')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

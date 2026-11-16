@@ -1,0 +1,548 @@
+/*
+ * redesign SP-F3 (C) · /stores/products: the products of the category (table, cards of a phone) and the head of the category.
+ * Not Product's DataTable: the controller of each product wraps its row (one <tbody> per product), so the table is drawn here with the
+ * same anatomy as data-table.css (sticky 36px header, 44px rows, hairlines, the open row marked at its start).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── The block: tools above, the region that scrolls, the foot ── */
+.odc-cp {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  block-size: 100%;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-cp *,
+.odc-cp *::before,
+.odc-cp *::after { box-sizing: border-box; }
+
+.odc-cp-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-1);
+  /* redesign tanda AB (, C-4): the column manager sat on the edge of the viewport; it keeps the margin the content has at its start */
+  padding-inline-end: var(--od-x-page-gutter);
+}
+
+/* The region that holds the table: it scrolls sideways when the columns do not fit, and up and down when its parent is bounded
+   (a parent with a definite height and min-height: 0 makes the sticky header work and keeps the foot in view). */
+.odc-cp-scroll {
+  position: relative;
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  /* redesign SP-Q1 (R-1): the region is the box the M-12 notice measures, so it stays in view when the table is scrolled */
+  container-type: inline-size;
+}
+
+.odc-cp-scroll:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* ── The table ── */
+.odc-cp-table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.odc-cp-table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--od-x-layer-raised);
+  block-size: var(--od-x-header-row);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  background: var(--od-bg);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.odc-cp-table th:first-child,
+.odc-cp-table td:first-child { padding-inline-start: var(--od-x-page-gutter); }
+
+.odc-cp-table th:last-child,
+.odc-cp-table td:last-child { padding-inline-end: var(--od-x-page-gutter); }
+
+.odc-cp-table th[data-align='end'],
+.odc-cp-table td[data-align='end'] { text-align: end; }
+
+/* tanda AE (, owner decision 37): Products and then Enabled stay at the start while the rest scrolls under them. Enabled
+   pinned at the end covered whatever column ran under it at scroll 0 (Tax at 1440, Description at 912); pinned at the start nothing is
+   under it until the person scrolls. Enabled starts where Products ends: --odc-cp-pin is the width BusinessProductList measures. */
+.odc-cp-table [data-sticky='start'] {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-cp-table [data-sticky='status'] {
+  position: sticky;
+  inset-inline-start: var(--odc-cp-pin, 0);
+  z-index: var(--od-x-layer-raised);
+  /* redesign tanda AB (, C-4): a column of its own (opaque, with its inner edge always drawn), now on the scrolling side */
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* the column after the pinned ones keeps room from them, so its text does not start on the pinned edge (C-4, now on that side) */
+.odc-cp-table [data-sticky='status'] + :where(th, td) {
+  padding-inline-start: var(--od-x-page-gutter);
+}
+
+.odc-cp-table thead [data-sticky] { z-index: calc(var(--od-x-layer-raised) + 1); }
+
+/* redesign : where the table goes on past the visible part, an edge (the shadow the orders table uses) says so.
+   useOverflowEdges puts data-overflow-start on the region once it is scrolled and data-overflow-end while there is more past the end,
+   so the cue is also the hint that the region scrolls. At the start the last pinned cell (Enabled) draws it; at the end, where nothing
+   is pinned any more (decision 37), the frame of the region draws it over the edge. Neither takes a click. Logical sides: the start
+   edge is on the right in right-to-left. */
+.odc-cp-frame {
+  position: relative;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  --odc-cp-edge-after: to right;
+  --odc-cp-edge-before: to left;
+}
+
+.odc-cp-frame:dir(rtl) {
+  --odc-cp-edge-after: to left;
+  --odc-cp-edge-before: to right;
+}
+
+.odc-cp-scroll[data-overflow-start] [data-sticky='status']::after,
+.odc-cp-frame:has(> .odc-cp-scroll[data-overflow-end])::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inline-size: var(--od-x-fade-size);
+  pointer-events: none;
+}
+
+.odc-cp-scroll[data-overflow-start] [data-sticky='status']::after {
+  inset-inline-start: 100%;
+  background: linear-gradient(var(--odc-cp-edge-after), var(--od-x-edge-shadow), transparent);
+}
+
+.odc-cp-frame:has(> .odc-cp-scroll[data-overflow-end])::after {
+  /* over the content only: it stops at the region's scrollbars (sizes measured by BusinessProductList; 0 with overlay scrollbars) */
+  inset-inline-end: var(--odc-cp-bar-inline, 0);
+  inset-block-end: var(--odc-cp-bar-block, 0);
+  z-index: calc(var(--od-x-layer-raised) + 2);
+  background: linear-gradient(var(--odc-cp-edge-before), var(--od-x-edge-shadow), transparent);
+}
+
+/* ── A row (one <tbody> per product; the colour sits on the cells so the layers stack) ── */
+.odc-cp-row {
+  --odc-cp-row-bg: var(--od-bg);
+}
+
+.odc-cp-row > tr > :where(td, th[scope='row']) {
+  block-size: var(--od-x-row-comfortable);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  background: var(--odc-cp-row-bg);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: inherit;
+  font-weight: var(--od-font-weight-regular);
+  text-align: start;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* redesign : a plain cell (Tax, Fee, prices) that does not fit its room ends in «…» instead of running under the pinned
+   column. Not the notice row (its notice sticks, and overflow would make the cell its scroller) and not a cell that holds a control
+   (its focus ring goes outside the box). */
+.odc-cp-row > tr:not(.odc-cp-notice-row) > td:not([data-sticky]):not(:has(button, input, a)) {
+  max-inline-size: calc(var(--od-x-search) * 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-cp-row > tr > :first-child { padding-inline-start: var(--od-x-page-gutter); }
+.odc-cp-row > tr > :last-child { padding-inline-end: var(--od-x-page-gutter); }
+.odc-cp-row > tr > td[data-align='end'] { text-align: end; }
+
+.odc-cp-row[data-clickable] { cursor: pointer; }
+
+@media (hover: hover) {
+  .odc-cp-row:not([data-skeleton]):hover { --odc-cp-row-bg: var(--od-x-hover); }
+}
+
+.odc-cp-row[data-active] { --odc-cp-row-bg: var(--od-x-selected); }
+
+.odc-cp-row[data-active] > tr:first-child > :first-child { box-shadow: inset var(--od-x-indicator) 0 0 var(--od-action); }
+[dir='rtl'] .odc-cp-row[data-active] > tr:first-child > :first-child,
+.odc-rtl .odc-cp-row[data-active] > tr:first-child > :first-child {
+  box-shadow: inset calc(var(--od-x-indicator) * -1) 0 0 var(--od-action);
+}
+
+/* The drop target of a drag: a line over it (or under the last row) */
+.odc-cp-row[data-accept] > tr:first-child > * { box-shadow: inset 0 var(--od-x-indicator) 0 var(--od-action); }
+.odc-cp-row[data-border-bottom] > tr:first-child > * { box-shadow: inset 0 calc(var(--od-x-indicator) * -1) 0 var(--od-action); }
+
+/* Touch: every row is at least one 44px target tall */
+@media (pointer: coarse) {
+  .odc-cp-row > tr > :where(td, th[scope='row']) { block-size: var(--od-x-target-coarse); }
+}
+
+/* What M-12 says when a save fails: a row under the product, the full width of the table */
+.odc-cp-row > tr.odc-cp-notice-row > td {
+  block-size: auto;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  white-space: normal;
+}
+
+/* redesign SP-Q1 (R-1): pinned to the start of the visible part of the region and never wider than it (inside the scroll a
+ * notice of the full table width showed only a pink strip once the table was scrolled to Price) */
+.odc-cp-scroll .odc-cp-notice {
+  position: sticky;
+  inset-inline-start: var(--od-space-2);
+  max-inline-size: min(var(--od-x-dialog-md), calc(100cqi - var(--od-space-2) * 3));
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── The cells ── */
+.odc-cp-product {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The grip is the only thing that drags a product; a click on it never opens the product */
+.odc-cp-grip {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-target-fine);
+  color: var(--od-text-muted);
+  cursor: grab;
+}
+
+.odc-cp-grip:active { cursor: grabbing; }
+
+/* The thumbnail is a button: it opens the file chooser (png / jpg, up to 2 MB) */
+.odc-cp-thumb {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-avatar);
+  block-size: var(--od-x-avatar);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  cursor: pointer;
+}
+
+/* the button does not clip (its touch area and its focus ring go outside it): the image takes the corners */
+.odc-cp-thumb img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.odc-cp-thumb[aria-disabled='true'] { cursor: progress; }
+
+.odc-cp-thumb:focus-visible,
+.odc-cp-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-cp-name {
+  display: block;
+  min-inline-size: 0;
+  /* redesign SP (live check): name and description are capped so Price, Product cost and Tax stay in view at 1440 and 1280
+   * with a long description (an uncapped one pushed them past the region's edge) */
+  max-inline-size: calc(var(--od-x-search) * 0.85);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+  cursor: pointer;
+}
+
+.odc-cp-name { min-block-size: var(--od-x-target-fine); }
+
+@media (hover: hover) {
+  .odc-cp-name:hover { text-decoration: underline; }
+}
+
+/* One line, an ellipsis, the whole text in the title */
+.odc-cp-text {
+  display: block;
+  max-inline-size: calc(var(--od-x-search) * 0.6);
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+
+.odc-cp-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* Under 768px, or with a coarse pointer, the grip and the thumbnail reach 44px by an area of their own (never smaller than the control,
+   so a control that is already larger adds nothing); the name is as tall as the row. The 12px between them keeps the areas apart. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-cp-grip::after,
+  .odc-cp-thumb::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  .odc-cp-name { min-block-size: var(--od-x-target-coarse); }
+}
+
+/* ── States that are not rows, and the foot ── */
+.odc-cp-note {
+  margin: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-x-page-gutter);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-cp-foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-4);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-2);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-cp-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-cp-sheet { min-inline-size: 0; }
+
+/* ── Phone: one card per product (the same data as the row) ── */
+.odc-cp-cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-cp-card {
+  position: relative;
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  /* the open product draws its indicator in this border: the content does not move */
+  padding-inline: calc(var(--od-x-page-gutter-mobile) - var(--od-x-indicator)) var(--od-x-page-gutter-mobile);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  border-inline-start: var(--od-x-indicator) solid transparent;
+  cursor: pointer;
+}
+
+.odc-cp-card[data-skeleton] { cursor: default; }
+
+@media (hover: hover) {
+  .odc-cp-card:not([data-skeleton]):hover { background: var(--od-x-hover); }
+}
+
+.odc-cp-card[data-active] {
+  background: var(--od-x-selected);
+  border-inline-start-color: var(--od-action);
+}
+
+.odc-cp-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-cp-card-head .odc-cp-name { white-space: normal; overflow-wrap: anywhere; }
+
+.odc-cp-card-text {
+  margin: 0;
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+
+.odc-cp-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--od-x-popover), 1fr));
+  gap: var(--od-x-space-1-5) var(--od-space-4);
+  margin: 0;
+}
+
+.odc-cp-fact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--od-space-1) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-cp-fact dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-cp-fact dd {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-cp-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-4);
+}
+
+/* ── The head of the category: image, name, pencil; on the other side the bar of the list ── */
+.odc-ch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-ch-title {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-ch-image {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  overflow: hidden;
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.odc-ch-image img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-ch-name {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+
+.odc-ch-skeleton { flex: 0 1 calc(var(--od-x-search) * 0.75); min-inline-size: 0; }
+
+/* The bar: search, List / Spreadsheet and, on the sheet, the batch of images and its columns */
+/* redesign SP (live check): the bar takes the free room (SegmentedControl fills its parent and has no width of its own, so a bar
+ * that did not grow wrapped the switch under the search) */
+.odc-ch-bar {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-ch-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+/* SegmentedControl fills the width of its parent, so the parent gives it a definite one (it turns into a select if it does not fit).
+   The switch clips the hidden twin that measures the track; the padding and the negative margin keep the focus ring inside the clip. */
+.odc-ch-viewswitch {
+  flex: 0 1 calc(var(--od-x-type-title-size) * 10 + var(--od-x-space-1-5) * 2);
+  min-inline-size: 0;
+  overflow: clip;
+  padding: var(--od-x-space-1-5);
+  margin: calc(var(--od-x-space-1-5) * -1);
+}
+
+@media (max-width: 767px) {
+  .odc-ch-bar { flex: 1 1 100%; justify-content: flex-start; }
+  .odc-ch-viewswitch { flex-grow: 1; }
+}
+
+.odc-ch-sheet-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}

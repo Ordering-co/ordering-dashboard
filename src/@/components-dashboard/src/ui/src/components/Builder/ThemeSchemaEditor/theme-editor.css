@@ -1,0 +1,738 @@
+/*
+ * redesign  B3b · the theme editor drawn from the schema (ThemeSchemaEditor): the sections' nav, a section's heading,
+ * the list sections (search, groups, items) and the chosen one's detail, the group cards and their rows (label, source tags,
+ * pair with its contrast, matrix, reset, error), a page's sections (sortable_sections), a read-only value and a list of paths.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-te-*.
+ * 900/901 is main's breakpoint for the editor filling the window; 640 the rows', 560 the detail's (a container query now).
+ */
+
+/* ── Editor ── */
+
+/* The sections' nav and the section open. On computers it takes the height left: the nav and the section scroll on their own
+   (with data-fill, a list and its detail, each of those scrolls) */
+.odc-te-body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+@media (min-width: 901px) {
+  .odc-te-body {
+    flex: 1;
+    align-items: stretch;
+    min-block-size: 0;
+  }
+}
+
+/* The nav takes a row of its own, the section goes below */
+@media (max-width: 900px) {
+  .odc-te-body {
+    flex-wrap: wrap;
+  }
+}
+
+.odc-te-nav {
+  display: flex;
+  flex: 1 1 var(--od-x-record-nav);
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  max-inline-size: var(--od-x-menu-min);
+  min-inline-size: 0;
+}
+
+.odc-te-nav-group {
+  margin: var(--od-space-3) 0 var(--od-space-1);
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-nav-group:first-child {
+  margin-block-start: 0;
+}
+
+/* Stays put next to the section; a long nav scrolls on its own (a thin scrollbar with no track, so rounded boxes keep their
+   corners; positioned, so hidden labels scroll with it) */
+@media (min-width: 901px) {
+  .odc-te-nav {
+    position: relative;
+    min-block-size: 0;
+    margin: calc(var(--od-space-1) * -1);
+    padding: var(--od-space-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  .odc-te-nav > * {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .odc-te-nav {
+    flex-basis: 100%;
+    flex-flow: row wrap;
+    max-inline-size: none;
+  }
+
+  .odc-te-nav-group {
+    display: none;
+  }
+}
+
+/* An entry of a nav (a section, a component, a page): a link when it has an address, a button otherwise */
+.odc-te-entry {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height-lg);
+  padding: var(--od-x-space-half) var(--od-x-space-2-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.odc-te-entry:hover {
+  background: var(--od-x-hover);
+  color: var(--od-text);
+  text-decoration: none;
+}
+
+/* The one open: soft action fill, action text and the weight (never colour alone: aria-current says it) */
+.odc-te-entry[aria-current='true'] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-te-entry:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The section open, next to the nav. On computers it scrolls; filling, it hands its height to the list and the detail */
+.odc-te-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@media (min-width: 901px) {
+  .odc-te-main {
+    min-block-size: 0;
+  }
+
+  .odc-te-main > * {
+    flex-shrink: 0;
+  }
+
+  .odc-te-main[data-fill='true'] > :last-child {
+    flex: 1;
+    min-block-size: 0;
+  }
+
+  /* Room for the cards' focus rings, without moving them */
+  .odc-te-main:not([data-fill='true']) {
+    position: relative;
+    margin: calc(var(--od-space-1) * -1);
+    padding: var(--od-space-1);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+.odc-te-heading h2 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-te-heading p,
+.odc-te-help,
+.odc-te-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-heading p {
+  margin-block-start: var(--od-space-1);
+}
+
+/* ── A list section: the list to search, and the chosen one ── */
+.odc-te-split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@media (min-width: 901px) {
+  .odc-te-split {
+    flex: 1;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-block-size: 0;
+  }
+}
+
+/* The grey box keeps its corners: the list scrolls inside it, away from the edges */
+.odc-te-list {
+  display: flex;
+  flex: 1 1 var(--od-x-record-nav);
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  max-inline-size: var(--od-x-menu-min);
+  min-block-size: 0;
+  padding: var(--od-space-2) var(--od-space-1) var(--od-space-2) var(--od-space-2);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+.odc-te-list .odc-search {
+  flex: none;
+  margin-inline-end: var(--od-space-1);
+}
+
+.odc-te-list-items {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-block-size: 0;
+  padding-inline-end: var(--od-space-1);
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.odc-te-list-items > p {
+  margin: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  overflow-wrap: anywhere;
+}
+
+.odc-te-list-group {
+  margin: var(--od-space-3) var(--od-x-space-2-5) var(--od-space-1);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-list .odc-te-entry {
+  min-block-size: var(--od-x-control-height-lg);
+  padding-block: var(--od-x-space-1-5);
+  color: var(--od-text);
+}
+
+.odc-te-list .odc-te-entry:hover {
+  background: var(--od-bg);
+}
+
+.odc-te-list .odc-te-entry[aria-current='true'] {
+  background: var(--od-bg);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-action);
+  color: var(--od-action-content);
+}
+
+@media (max-width: 900px) {
+  .odc-te-list {
+    flex-basis: 100%;
+    max-inline-size: none;
+  }
+}
+
+/* The chosen one: below 560px of its own its rows put their name above their controls (container query on .odc-te-row) */
+.odc-te-detail {
+  display: flex;
+  flex: 999 1 var(--od-x-panel-narrow);
+  flex-direction: column;
+  gap: var(--od-x-space-3-5);
+  min-inline-size: 0;
+  container: odc-te-detail / inline-size;
+}
+
+@media (min-width: 901px) {
+  .odc-te-detail {
+    position: relative;
+    min-block-size: 0;
+    padding: 0 var(--od-space-2) var(--od-x-space-half) var(--od-x-space-half);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  /* The detail scrolls, its blocks keep their height (tabs scroll sideways) */
+  .odc-te-detail > * {
+    flex-shrink: 0;
+  }
+}
+
+.odc-te-detail-head h3 {
+  margin: 0 0 var(--od-space-1);
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-te-detail-head p {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Cards and rows ── */
+.odc-te-card {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+}
+
+/* A card with no header: its rows start and end the card */
+.odc-te-card[data-bare='true'] {
+  padding-block: var(--od-space-2);
+}
+
+.odc-te-card[data-bare='true'] > :first-child {
+  border-block-start: 0;
+}
+
+.odc-te-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding: var(--od-space-4) var(--od-space-5) var(--od-x-space-2-5);
+}
+
+.odc-te-card-head h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-te-card-head p {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-card-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* A card that folds: its header is the button; Changed and the chevron go at the end, the chevron turns while open */
+.odc-te-fold {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-lg);
+  padding: var(--od-space-2) var(--od-space-5);
+  border: 0;
+  border-radius: var(--od-radius-panel);
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-te-fold:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-te-fold-changed {
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-te-fold > svg {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  transition: rotate var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-te-fold-changed + svg {
+  margin-inline-start: 0;
+}
+
+.odc-te-fold[aria-expanded='true'] > svg {
+  rotate: 0.5turn;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-te-fold > svg {
+    transition: none;
+  }
+}
+
+/* A row of values: label, controls, and a reset */
+.odc-te-row {
+  display: grid;
+  grid-template-columns: minmax(calc(var(--od-space-10) * 0.85), calc(var(--od-space-10) * 1.25)) minmax(0, 1fr) var(--od-x-control-height);
+  align-items: center;
+  gap: var(--od-x-space-2-5) var(--od-space-3);
+  padding: var(--od-space-2) var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* What can't be changed while its condition holds (`disabled_if`): the whole row, as in main, but not its error */
+.odc-te-row[data-disabled='true'] > :not(.odc-te-error) {
+  opacity: 0.5;
+}
+
+.odc-te-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-te-info {
+  flex-basis: 100%;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-te-fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-te-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  min-inline-size: 0;
+}
+
+/* A value and the one on it, and their contrast */
+.odc-te-controls[data-layout='pair'] {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--od-space-10);
+}
+
+/* A matrix: a column per prop its rows share */
+.odc-te-controls[data-layout='matrix'] {
+  grid-template-columns: repeat(var(--odc-te-columns, 1), minmax(0, 1fr));
+}
+
+.odc-te-row-head {
+  padding-block: 0 var(--od-x-space-half);
+  border-block-start: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-te-error {
+  grid-column: 2 / -1;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-empty {
+  color: var(--od-x-text-subtle);
+  text-align: center;
+}
+
+.odc-te-note {
+  margin: 0;
+  padding: var(--od-space-1) var(--od-space-5) var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-subhead {
+  margin: var(--od-space-1) 0 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* Changed: a dot to see, a word to hear */
+.odc-te-changed {
+  display: inline-block;
+  flex: none;
+  inline-size: var(--od-x-dot-lg);
+  block-size: var(--od-x-dot-lg);
+  border-radius: var(--od-radius-round);
+  background: var(--od-action);
+}
+
+/* Where a value comes from: another component, Identity, or its own over it; always on their own line under the label */
+.odc-te-tags {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: var(--od-space-1);
+}
+
+.odc-te-tag {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  white-space: nowrap;
+}
+
+.odc-te-tag[data-custom='true'] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+}
+
+/* The contrast of a pair: its level in words, the tone backs them */
+.odc-te-contrast {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-success-soft);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  white-space: nowrap;
+}
+
+.odc-te-contrast[data-level='large'] {
+  background: var(--od-warning-soft);
+}
+
+.odc-te-contrast[data-level='low'] {
+  background: var(--od-danger-soft);
+  color: var(--od-danger-functional);
+}
+
+@media (max-width: 640px) {
+  .odc-te-row {
+    grid-template-columns: minmax(0, 1fr) var(--od-x-control-height);
+  }
+
+  .odc-te-row > :first-child,
+  .odc-te-row > .odc-te-error {
+    grid-column: 1 / -1;
+  }
+
+  .odc-te-controls,
+  .odc-te-controls[data-layout] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .odc-te-row-head {
+    display: none;
+  }
+}
+
+@container odc-te-detail (max-width: 559px) {
+  .odc-te-row {
+    grid-template-columns: minmax(0, 1fr) var(--od-x-control-height);
+  }
+
+  .odc-te-row > :first-child,
+  .odc-te-row > .odc-te-error {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── A read-only value ── */
+.odc-te-readonly {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-te-readonly-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A colour over a checkerboard, so a translucent one shows as one (--odc-te-swatch: the colour, from the value) */
+.odc-te-swatch {
+  flex: none;
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  border: var(--od-x-hairline) solid var(--od-border-strong);
+  border-radius: var(--od-radius-control);
+  background:
+    linear-gradient(var(--odc-te-swatch, transparent), var(--odc-te-swatch, transparent)),
+    repeating-conic-gradient(var(--od-border) 0% 25%, var(--od-white) 0% 50%) 50% / var(--od-x-space-2-5) var(--od-x-space-2-5);
+}
+
+/* ── A list of paths ── */
+.odc-te-paths {
+  margin: var(--od-x-space-1-5) 0 0;
+  padding-inline-start: var(--od-space-4);
+}
+
+/* ── A page's sections ── */
+.odc-te-own-order {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding-block-end: var(--od-space-3);
+}
+
+.odc-te-sections {
+  margin: 0;
+  padding: 0 0 var(--od-space-2);
+  list-style: none;
+}
+
+/* What phones show while they follow all screens: to read, not to change */
+.odc-te-sections[aria-disabled='true'] {
+  opacity: 0.6;
+}
+
+.odc-te-sections-group {
+  padding: var(--od-x-space-3-5) var(--od-space-5) var(--od-space-1);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-te-sections-group small {
+  display: block;
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-te-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-x-space-2-5);
+  min-block-size: var(--od-x-control-height-lg);
+  padding: var(--od-space-1) var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-te-section[data-dragging='true'] {
+  background: var(--od-x-hover);
+}
+
+/* The handle and the lock */
+.odc-te-section-handle {
+  display: inline-flex;
+  flex: 0 0 var(--od-x-avatar);
+  justify-content: center;
+  color: var(--od-x-text-subtle);
+}
+
+.odc-te-section[draggable='true'] .odc-te-section-handle {
+  cursor: grab;
+}
+
+.odc-te-section-name {
+  display: flex;
+  flex: 1 1 calc(var(--od-space-10) * 1.1);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-te-section[data-hidden='true'] .odc-te-section-name {
+  color: var(--od-text-muted);
+  text-decoration: line-through;
+}
+
+/* Up and down, and the switch: fixed widths, so they line up from row to row; when the name needs the room they go below it,
+   together, at the end */
+.odc-te-section-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  margin-inline-start: auto;
+}
+
+.odc-te-section-moves {
+  display: flex;
+  gap: var(--od-x-space-half);
+  inline-size: calc(var(--od-x-control-height) * 2 + var(--od-x-space-half));
+}
+
+.odc-te-section-show {
+  display: flex;
+  justify-content: flex-end;
+  inline-size: calc(var(--od-x-control-height) * 3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-align: end;
+}

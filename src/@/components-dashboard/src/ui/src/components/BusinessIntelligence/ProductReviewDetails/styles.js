@@ -12,7 +12,7 @@ export const ReviewDetailsContainer = styled.div`
 export const Header = styled.div`
   margin-bottom: 30px;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 0px;
     ${props => props.theme?.rtl
@@ -124,10 +124,10 @@ export const LikeSignWrapper = styled.div`
 `
 
 export const ReviewComment = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin: 15px 0;
 `
 
 export const NotReviewed = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `

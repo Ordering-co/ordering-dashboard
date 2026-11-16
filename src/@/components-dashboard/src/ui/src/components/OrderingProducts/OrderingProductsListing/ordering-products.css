@@ -1,0 +1,190 @@
+/*
+ * redesign  (lot B) · The /ordering-products page: the list (header, search, notice, table or cards, foot) beside the site's
+ * detail in a P/SplitView. The detail panel (lot C) and the theme (lot D) bring their own files.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only. Prefix: odc-op-*.
+ */
+
+/* The page height, shared by the list and the panel (as /stores/markups). */
+.odc-split.odc-op-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: one track that may shrink below its content (an auto track grows with the table). */
+.odc-op-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (max-width: 767px) {
+  .odc-op-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── Tools: the search ── */
+.odc-op-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-op-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+/* ── Empty list: the sentence and «Add product» ── */
+.odc-op-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-op-empty-text {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Foot: the pagination ── */
+.odc-op-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-op-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The cells (the table and the cards draw the same ones) ── */
+.odc-op-namecell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The name: a native button, so Enter and Space open the site. A click on the row opens it too (the table owns that). */
+.odc-op-name {
+  display: block;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: inherit;
+  font-weight: var(--od-font-weight-bold);
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-op-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-op-name-text {
+  display: block;
+  /* the card's title link carries odc-mono (a figure); the name is text */
+  font-family: var(--od-font-sans);
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td .odc-op-name-text,
+th .odc-op-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The description under the name: muted text that wraps (two lines at most) */
+.odc-op-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-inline-size: 100%;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* The code: a figure in mono, always left to right */
+.odc-op-code {
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+.odc-op-url {
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+.odc-op-none { color: var(--od-text-muted); }
+
+/* The line of a card («website · https://example.com») wraps instead of cutting. */
+.odc-op-sub {
+  display: block;
+  max-inline-size: 100%;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* A long name wraps to two lines in a card. */
+.odc-op-frame .odc-order-card-link .odc-op-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.odc-op-frame .odc-order-card-people > .odc-op-sub {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+@media print {
+  .odc-op-frame {
+    display: none;
+  }
+}

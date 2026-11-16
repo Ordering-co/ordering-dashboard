@@ -14,8 +14,9 @@ import {
 import { sanitizeRouterCacheKey } from './sanitizeRouterCacheKey.js'
 import { handleSourceDownloadsRequest, sourceRequestPreflight } from './sourceDownloads.js'
 import { isValidSourceProjectSlug, SOURCE_PROJECT_HEADER } from '../src/utils/sourceDownloadsProject.js'
+import { serveVersion } from './version.js'
 
-const ASSET_EXTENSIONS = /\.(js|css|map|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|eot|json|txt|xml|mp4|webm|avif)$/i
+const ASSET_EXTENSIONS = /\.(m?js|css|map|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|eot|json|txt|xml|mp4|webm|avif)$/i
 
 /** Prefix public assets with the persisted deployment base. */
 const defaultAssetPath = (env, path) => {
@@ -124,6 +125,15 @@ const isHtmlRequest = (request, url) => {
   const accept = request.headers.get('accept') || ''
   if (!accept.includes('text/html') && !accept.includes('*/*') && accept !== '') return false
   return true
+}
+
+const fetchAsset = async (request, env, url) => {
+  const response = await env.ASSETS.fetch(request)
+  if (response.status !== 404) return response
+  if (isHtmlRequest(request, url)) return env.ASSETS.fetch(new Request(new URL('/', url), { method: request.method, headers: request.headers }))
+  const missing = new Response(response.body, response)
+  missing.headers.set('cache-control', 'no-store')
+  return missing
 }
 
 const isSourceDownloadsPath = (pathname) =>
@@ -244,6 +254,10 @@ export default {
   async fetch (request, env, ctx) {
     const url = new URL(request.url)
 
+    // Agent-facing deploy check (docs/CLOUDFLARE.md › Verifying a deploy). Handled before
+    // the SPA/asset pipeline so it can't fall back to index.html.
+    if (request.method === 'GET' && url.pathname === '/version') return serveVersion(url, env)
+
     if (isSourceDownloadsPath(url.pathname)) {
       const preflight = sourceRequestPreflight(request)
       if (preflight) return preflight
@@ -259,17 +273,17 @@ export default {
     }
 
     if (!isHtmlRequest(request, url)) {
-      return env.ASSETS.fetch(request)
+      return fetchAsset(request, env, url)
     }
 
     const baseConfig = await loadBaseConfig(env, url.origin)
     if (!baseConfig) {
-      return env.ASSETS.fetch(request)
+      return fetchAsset(request, env, url)
     }
 
     const config = await resolveConfigForRequest(env, ctx, url.hostname, baseConfig, url.origin, request.url)
     if (!config) {
-      return env.ASSETS.fetch(request)
+      return fetchAsset(request, env, url)
     }
 
     const seoPath = mapSeoEndpoint(url.pathname, url.searchParams)
@@ -297,7 +311,7 @@ export default {
 
     const seoData = await fetchSeo(seoConfig, seoPath, env, ctx, url.hostname)
 
-    const response = await env.ASSETS.fetch(request)
+    const response = await fetchAsset(request, env, url)
 
     const contentType = response.headers.get('content-type') || ''
     if (!contentType.includes('text/html')) {

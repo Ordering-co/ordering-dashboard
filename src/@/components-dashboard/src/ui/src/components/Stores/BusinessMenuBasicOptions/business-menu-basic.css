@@ -1,0 +1,88 @@
+/*
+ * redesign stores 5.5b · The «Basic» tab of a menu: one column (name, order types, schedule, comments, products) and the
+ * save bar. Values: --od-* and --od-x-* only, logical properties only.
+ */
+
+.odc-bmb {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-bmb:focus { outline: none; }
+
+/* A group of the form: a heading and what it holds. The fieldset resets the browser's border, padding and min-width. */
+.odc-bmb-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-bmb-heading {
+  margin: 0;
+  padding: 0;
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  color: var(--od-text);
+}
+
+/* The legend of the fieldset: a gap before the first control (the group is a flex column, the legend is outside its flow). */
+legend.odc-bmb-heading { margin-block-end: var(--od-space-3); }
+
+/* The order types: one column, two from 480px of the width of the group (the container, not the viewport). */
+.odc-bmb-types-box {
+  container-type: inline-size;
+  inline-size: 100%;
+}
+
+.odc-bmb-types {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-1) var(--od-space-4);
+}
+
+@container (min-width: 480px) {
+  .odc-bmb-types { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.odc-bmb-schedule {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* Products: the search and Expand all on one row, the count under them, then the tree. */
+.odc-bmb-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+}
+
+.odc-bmb-search {
+  flex: 1 1 14rem;
+  min-inline-size: 0;
+}
+
+.odc-bmb-count {
+  margin: 0;
+  font-size: var(--od-type-secondary-size);
+  color: var(--od-text-muted);
+}
+
+.odc-bmb-tree {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* The notices under the tree: .odc-notice brings a page gutter on both sides, which here would indent them and push them past the column. */
+.odc-bmb .odc-notice {
+  margin-inline: 0;
+  inline-size: 100%;
+}

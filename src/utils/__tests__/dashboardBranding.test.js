@@ -4,6 +4,7 @@ import {
   ORDERING_FAVICON,
   getDashboardFaviconUrl,
   getDashboardLogoUrl,
+  getDashboardEnvironment,
   getDashboardNotificationIconUrl,
   isOfficialOrderingDashboardHost
 } from '../dashboardBranding'
@@ -15,6 +16,7 @@ const officialHosts = [
   'dashboard.orderingplus.com',
   'dashboard.tryordering.com',
   'dashboard.ordering.co',
+  'dashboard-beta.ordering.co',
   'dashboardcf.orderingplus.com'
 ]
 
@@ -29,8 +31,8 @@ const orderingLogo = '/assets/logotype.svg'
 const orderingIcon = '/assets/isotype.svg'
 
 const projectBranding = {
-  dashboard_logo: { value: 'https://cloud-assets.orderingplus.com/luisv4plus/logo.png' },
-  dashboard_favicon: { value: 'https://cloud-assets.orderingplus.com/luisv4plus/favicon.png' }
+  dashboard_logo: { value: 'https://cloud-assets.orderingplus.com/exampletenant/logo.png' },
+  dashboard_favicon: { value: 'https://cloud-assets.orderingplus.com/exampletenant/favicon.png' }
 }
 
 const noBranding = {
@@ -47,6 +49,17 @@ describe('host detection stays in sync with the worker', () => {
   it.each(nonOfficialHosts)('rejects non-official host %s', hostname => {
     expect(isOfficialOrderingDashboardHost(hostname)).toBe(false)
     expect(isOfficialOrderingDashboardWorkerHost(hostname)).toBe(false)
+  })
+})
+
+// the beta reports as «beta»; every other host keeps «production»
+describe('dashboard environment', () => {
+  it.each(['dashboard-beta.ordering.co', 'DASHBOARD-BETA.ordering.co'])('names %s beta', hostname => {
+    expect(getDashboardEnvironment(hostname)).toBe('beta')
+  })
+
+  it.each([...officialHosts.filter(hostname => hostname !== 'dashboard-beta.ordering.co'), ...nonOfficialHosts, 'localhost'])('keeps %j in production', hostname => {
+    expect(getDashboardEnvironment(hostname)).toBe('production')
   })
 })
 

@@ -1,0 +1,398 @@
+/* redesign AS-A (D1, D2, M-AS2): the proposal card, the message list, turn errors and the tool line of the assistant.
+   Only var(--od-*) / var(--od-x-*), logical properties, prefix odc-as-. The buttons and the notices are Product
+   wrappers; this file lays out their content. Figures (money, counts, countdown) carry .odc-figure from Product. */
+
+/* ── Message list ── */
+.odc-as-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  margin-block-start: auto;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-as-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* A turn error is not inside a card: it takes the width of the list. */
+.odc-as-messages > .odc-as-notice {
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+/* ── The user's message ── */
+.odc-as-user {
+  align-self: flex-end;
+  max-inline-size: 85%;
+  padding-block: var(--od-x-space-2-5);
+  padding-inline: var(--od-x-space-3-5);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ── The assistant's answer (Markdown) ── */
+.odc-as-text {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-line-body);
+  overflow-wrap: anywhere;
+}
+
+.odc-as-text p,
+.odc-as-text ul,
+.odc-as-text ol,
+.odc-as-text pre {
+  margin-block: 0 var(--od-space-2);
+  margin-inline: 0;
+}
+
+.odc-as-text > :last-child { margin-block-end: 0; }
+
+.odc-as-text ul,
+.odc-as-text ol { padding-inline-start: var(--od-space-5); }
+
+.odc-as-text code {
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-1);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-as-text pre {
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  overflow-x: auto;
+}
+
+.odc-as-text pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.odc-as-text a {
+  color: var(--od-action);
+  text-decoration: underline;
+}
+
+.odc-as-text a:hover { color: var(--od-action-hover); }
+
+.odc-as-text a:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* AssistantMarkdown paints a table in div.assistant-table (it scrolls sideways, never the panel). */
+.odc-as-text .assistant-table {
+  margin-block: 0 var(--od-space-2);
+  margin-inline: 0;
+  overflow-x: auto;
+}
+
+.odc-as-text table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-text th {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+  text-align: start;
+}
+
+.odc-as-text th,
+.odc-as-text td {
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: 0 var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  font-variant-numeric: tabular-nums;
+  vertical-align: top;
+}
+
+/* The streaming cursor */
+.odc-as-text[data-streaming='true'] > :last-child::after {
+  content: '';
+  display: inline-block;
+  inline-size: var(--od-x-space-1-5);
+  block-size: var(--od-x-icon-sm);
+  margin-inline-start: var(--od-x-space-half);
+  vertical-align: text-bottom;
+  background: var(--od-action);
+  animation: odc-as-blink calc(var(--od-duration-slow) * 2) step-end infinite;
+}
+
+@keyframes odc-as-blink {
+  50% { opacity: 0; }
+}
+
+.odc-as-note {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Tool line ── */
+.odc-as-tool {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-tool[data-state='done'] .odc-icon { color: var(--od-success-functional); }
+.odc-as-tool[data-state='error'] .odc-icon { color: var(--od-danger-functional); }
+
+/* Product only spins the loader inside a button (.odc-btn .odc-spin); the tool line spins the same icon with the same keyframes. */
+.odc-as-tool .odc-spin { animation: odc-spin var(--od-duration-slow) linear infinite; }
+
+/* ── Notices (context mismatch, send error, turn error) ── */
+.odc-as-card .odc-as-notice {
+  margin-block: var(--od-space-2);
+  margin-inline: var(--od-space-3);
+}
+
+.odc-as-notice[data-tone='warning'] .odc-icon { color: var(--od-warning-functional); }
+.odc-as-notice[data-tone='danger'] .odc-icon { color: var(--od-danger-functional); }
+
+/* ── The card ── */
+.odc-as-card {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-as-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-2-5);
+  padding-inline: var(--od-x-space-3-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-as-card-title {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-as-type {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-name {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-as-countdown {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odc-as-countdown .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* ── Changes: field · before → after ── */
+.odc-as-changes {
+  margin: 0;
+  padding: 0;
+}
+
+.odc-as-label {
+  margin-block: 0;
+  margin-inline: 0;
+  padding-block: var(--od-space-2) 0;
+  padding-inline: var(--od-x-space-3-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-change {
+  display: flex;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-x-space-3-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-as-change:last-child { border-block-end: 0; }
+
+.odc-as-change dt {
+  flex: 0 0 34%;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+  overflow-wrap: anywhere;
+}
+
+.odc-as-change dd {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Struck old value, bold new one: only where the change is (or may be) applied. */
+.odc-as-before {
+  color: var(--od-text-muted);
+  text-decoration: line-through;
+  white-space: pre-line;
+}
+
+.odc-as-after {
+  font-weight: var(--od-font-weight-semibold);
+  text-decoration: none;
+  white-space: pre-line;
+}
+
+/* What the record has now (unknown outcome) and the proposal that was not applied (failed, expired, cancelled). */
+.odc-as-now { white-space: pre-line; }
+
+.odc-as-dim {
+  color: var(--od-text-muted);
+  white-space: pre-line;
+}
+
+.odc-as-unknown {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+/* ── Footer with the decision ── */
+.odc-as-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-2-5);
+  padding-inline: var(--od-x-space-3-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* ── Footer with the result: always an icon and a text, the colour only reinforces ── */
+.odc-as-result {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-2-5);
+  padding-inline: var(--od-x-space-3-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  border-end-start-radius: var(--od-radius-panel);
+  border-end-end-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+.odc-as-result:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.odc-as-result-icon {
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-text-muted);
+}
+
+.odc-as-result-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-as-result-title {
+  margin: 0;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-as-result-text { margin: 0; }
+
+.odc-as-result .odc-as-changes { align-self: stretch; }
+
+.odc-as-result .odc-as-change { padding-inline: 0; }
+
+.odc-as-card[data-status='executed'] .odc-as-result { background: var(--od-success-soft); }
+.odc-as-card[data-status='executed'] .odc-as-result-icon { color: var(--od-success-functional); }
+
+.odc-as-card[data-status='failed'] .odc-as-result { background: var(--od-danger-soft); }
+.odc-as-card[data-status='failed'] .odc-as-result-icon { color: var(--od-danger-functional); }
+
+.odc-as-card[data-status='unknown'] .odc-as-result { background: var(--od-warning-soft); }
+.odc-as-card[data-status='unknown'] .odc-as-result-icon { color: var(--od-warning-functional); }
+
+/* ── Several proposals waiting ── */
+.odc-as-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-2-5);
+  padding-inline: var(--od-x-space-3-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+.odc-as-group-text {
+  flex: 1 1 0;
+  min-inline-size: 50%;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-as-tool .odc-spin { animation: none; }
+  .odc-as-text[data-streaming='true'] > :last-child::after { animation: none; }
+}

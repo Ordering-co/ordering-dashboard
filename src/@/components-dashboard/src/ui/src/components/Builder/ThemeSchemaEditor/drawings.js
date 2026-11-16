@@ -1,7 +1,11 @@
 import React from 'react'
 
+import './theme-controls.css'
+
 // The pictures an option names in the schema (`options[].drawing`, "Name:variant"
 // or "NAME.variant"). An unknown name draws nothing: the option still reads.
+// redesign B3b: the same pieces, painted by classes of theme-controls.css (odc-tc-drawing-*) in tokens; a variant
+// is a `data-variant` the CSS reads instead of a literal size or colour in an inline style.
 
 const svg = (children, { width = 20, height = 20, viewBox = '0 0 24 24' } = {}) => (
   <svg width={width} height={height} viewBox={viewBox} fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' aria-hidden='true'>{children}</svg>
@@ -22,28 +26,21 @@ const SHADOW_DIRECTIONS = {
   around: <><circle cx='12' cy='12' r='4' /><circle cx='12' cy='12' r='9' /></>
 }
 
-const LINE_LENGTHS = { full: 48, medium: 24, small: 12 }
-
-const NESTING = {
-  line: { width: 36, marginLeft: 6, borderLeft: '2px solid currentColor' },
-  indent: { width: 30, marginLeft: 12 },
-  none: { width: 42 }
-}
+const LINE_LENGTHS = ['full', 'medium', 'small']
+const NESTING = ['line', 'indent', 'none']
 
 const LayoutMode = ({ variant }) => (
-  <span aria-hidden='true' style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 120, color: '#5E6B7D' }}>
+  <span aria-hidden='true' className='odc-tc-drawing-layout'>
     {variant === 'appointments' && (
-      <span style={{ display: 'flex', gap: 4 }}>
-        {[28, 20, 24].map((width, index) => <span key={index} style={{ width, height: 8, borderRadius: 4, border: '1px solid currentColor', opacity: 0.5 }} />)}
+      <span className='odc-tc-drawing-layout-chips'>
+        {[0, 1, 2].map(index => <span key={index} className='odc-tc-drawing-layout-chip' />)}
       </span>
     )}
-    <span style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 5 }}>
+    <span className='odc-tc-drawing-layout-grid'>
       {[0, 1, 2].map(item => (
-        <span key={item} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-          {variant === 'appointments'
-            ? <span style={{ width: 24, height: 24, borderRadius: '50%', background: '#FFE2D1' }} />
-            : <span style={{ alignSelf: 'stretch', height: 22, borderRadius: 3, background: '#FFE2D1' }} />}
-          <span style={{ alignSelf: 'stretch', height: 4, borderRadius: 2, background: 'currentColor', opacity: 0.35 }} />
+        <span key={item} className='odc-tc-drawing-layout-item'>
+          <span className='odc-tc-drawing-layout-picture' data-variant={variant === 'appointments' ? 'round' : undefined} />
+          <span className='odc-tc-drawing-layout-line' />
         </span>
       ))}
     </span>
@@ -51,11 +48,11 @@ const LayoutMode = ({ variant }) => (
 )
 
 const TabsSample = ({ variant }) => (
-  <span aria-hidden='true' style={{ display: 'inline-flex', gap: variant === 'pill' ? 2 : 12, padding: variant === 'pill' ? 3 : 0, borderRadius: 8, background: variant === 'pill' ? '#F1F3F5' : 'transparent', fontSize: 13 }}>
+  <span aria-hidden='true' className='odc-tc-drawing-tabs' data-variant={variant}>
     {['A', 'B'].map((name, index) => (
-      <span key={name} style={{ position: 'relative', padding: '4px 12px', borderRadius: 6, background: variant === 'pill' && index === 0 ? '#FFFFFF' : 'transparent', fontWeight: variant === 'plain' && index === 0 ? 600 : 400, color: index === 0 ? '#2C7BE5' : '#5E6B7D' }}>
+      <span key={name} className='odc-tc-drawing-tab' data-active={index === 0 ? '' : undefined}>
         {name}
-        {variant === 'underline' && index === 0 && <span style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, background: 'currentColor' }} />}
+        {variant === 'underline' && index === 0 && <span className='odc-tc-drawing-tab-line' />}
       </span>
     ))}
   </span>
@@ -66,10 +63,10 @@ const DRAWINGS = {
     <svg width='44' height='30' viewBox='0 0 44 30' aria-hidden='true'><path d={EASING_CURVES[variant] || EASING_CURVES.linear} fill='none' stroke='currentColor' strokeWidth='2' /></svg>
   ),
   SHADOW_DIRECTION_ICONS: (variant) => SHADOW_DIRECTIONS[variant] ? svg(SHADOW_DIRECTIONS[variant]) : null,
-  LineLength: (variant) => <i aria-hidden='true' style={{ display: 'block', height: 2, background: 'currentColor', width: LINE_LENGTHS[variant] || 24 }} />,
-  ItemStyle: (variant) => <i aria-hidden='true' style={{ display: 'block', height: 8, background: 'currentColor', opacity: 0.4, ...(variant === 'inset' ? { width: 36, borderRadius: 3 } : { width: 56 }) }} />,
-  NESTING_DRAWINGS: (variant) => <i aria-hidden='true' style={{ display: 'block', height: 18, background: 'repeating-linear-gradient(currentColor 0 2px, transparent 2px 8px)', backgroundClip: 'content-box', paddingLeft: variant === 'line' ? 6 : 0, opacity: 0.6, ...(NESTING[variant] || {}) }} />,
-  LevelOption: () => <span aria-hidden='true' style={{ display: 'block', width: 22, height: 22, borderTop: '2px solid currentColor', borderLeft: '2px solid currentColor', borderTopLeftRadius: 8 }} />,
+  LineLength: (variant) => <i aria-hidden='true' className='odc-tc-drawing-line' data-variant={LINE_LENGTHS.includes(variant) ? variant : 'medium'} />,
+  ItemStyle: (variant) => <i aria-hidden='true' className='odc-tc-drawing-item' data-variant={variant === 'inset' ? 'inset' : undefined} />,
+  NESTING_DRAWINGS: (variant) => <i aria-hidden='true' className='odc-tc-drawing-nesting' data-variant={NESTING.includes(variant) ? variant : undefined} />,
+  LevelOption: () => <span aria-hidden='true' className='odc-tc-drawing-level' />,
   LayoutModeDrawing: (variant) => <LayoutMode variant={variant} />,
   TabsSample: (variant) => <TabsSample variant={variant} />
 }

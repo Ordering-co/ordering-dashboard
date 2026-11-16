@@ -1,30 +1,48 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { useLanguage, useConfig, useSession } from '../../../../../index'
+import React, { useState, useEffect, useId, useMemo, useRef } from 'react'
+import { useLanguage, useConfig, useSession, useUtils } from '../../../../../index'
 import { useForm, Controller } from 'react-hook-form'
 import { isItemsRefundAvailable, buildRefundItems, buildRefundRequest } from './refundRequest'
-import { Button, Input, TextArea } from '../../../styles'
-import { Alert, Modal } from '../../Shared'
-import { RecordCircleFill, Circle, ExclamationTriangleFill } from 'react-bootstrap-icons'
+import { Checkbox, Input, RadioButton, TextArea } from '../../../styles'
+import { Button as ProductButton, ConfirmDialog, Dialog } from '../../Shared/Product'
+import { AlertDialog } from '../../Shared/Product/AlertDialog'
+import { getCurrenySymbol } from '../../../utils'
+import { summarizeRefunds } from './refundSummary'
+import { ExclamationTriangleFill } from 'react-bootstrap-icons'
 import { Select } from '../../../styles/Select/FirstSelect'
+import './refund-dialogs.css'
 
 import {
-  RefundWalletButtonWrapper,
-  RefundContainer,
   RadioItemContainer,
   RefundAllDisabledNote,
   RefundAmountWrapper,
-  RefundReasonContainer,
   Option,
   SelectWrapper,
-  ErrorText
+  ErrorText,
+  RefundItemsPicker,
+  RefundProductRow,
+  RefundProductLabel,
+  RefundQuantityInput
 } from './styles'
 
-const itemsPickerStyles = {
-  wrapper: { border: '1px solid #e0e0e0', borderRadius: 8, padding: 12, marginTop: 8, maxHeight: 280, overflowY: 'auto' },
-  productRow: { display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0' },
-  productLabel: { flex: 1, fontSize: 14 },
-  qtyInput: { width: 60, padding: '4px 8px', borderRadius: 6, border: '1px solid #ccc' }
+const moveRefundMode = (event, modes, currentMode, onChange, disabledModes = []) => {
+  if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return
+  event.preventDefault()
+  const availableModes = modes.filter(mode => !disabledModes.includes(mode))
+  const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1
+  const currentIndex = availableModes.indexOf(currentMode)
+  const nextMode = availableModes[(Math.max(currentIndex, 0) + direction + availableModes.length) % availableModes.length]
+  onChange(nextMode)
+  const group = event.currentTarget.closest('[role="radiogroup"]')
+  window.requestAnimationFrame(() => {
+    Array.from(group?.querySelectorAll('[data-refund-mode]') ?? []).find(control => control.dataset.refundMode === nextMode)?.focus()
+  })
 }
+
+const getOrderTotal = (order) => order?.summary?.total ?? order?.total
+
+const getTotalRefundedAmount = (order) => (
+  order?.payment_events?.filter(item => item.event === 'refund').reduce((total, event) => total + (event?.amount || 0), 0) || 0
+)
 
 export const RefundToWallet = (props) => {
   const {
@@ -36,6 +54,15 @@ export const RefundToWallet = (props) => {
   } = props
 
   const [, t] = useLanguage()
+  const [{ parsePrice }] = useUtils()
+  const refundTypeLabelId = useId()
+  const refundModeLabelId = useId()
+  const refundDescriptionId = useId()
+  const refundTypeWrapperRef = useRef(null)
+  const refundFormId = useId()
+  const refundFormRef = useRef(null)
+  // The confirmation keeps its text while it fades out, after `pendingRefund` is cleared.
+  const lastPendingRefund = useRef(null)
   const [{ configs }] = useConfig()
   const isAllowCashWalletRefund = configs?.refund_cash_wallet_allow_when_order_cancelled?.value === '1'
   const isAllowCreditPointRefund = configs?.refund_credit_point_allow_when_order_cancelled?.value === '1'
@@ -46,10 +73,16 @@ export const RefundToWallet = (props) => {
   const { handleSubmit, errors, control } = useForm()
   const [openModal, setOpenModal] = useState(false)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [refundDisabled, setRefundDisabled] = useState(false)
+  // redesign F6c (Q2-28): why the button is disabled ('provider' | 'full'), so it can say so
+  const [refundDisabledReason, setRefundDisabledReason] = useState(null)
+  const refundDisabled = !!refundDisabledReason
+  const refundHintId = useId()
   const [refundAllDisabled, setRefundAllDisabled] = useState(false)
   const [selectedRefundOption, setSelectedRefundOption] = useState(null)
   const [refundOptions, setRefundOptions] = useState([])
+  const [pendingRefund, setPendingRefund] = useState(null)
+  if (pendingRefund) lastPendingRefund.current = pendingRefund
+  const shownRefund = pendingRefund ?? lastPendingRefund.current
 
   const [refundMode, setRefundMode] = useState('total')
   const [refundAmount, setRefundAmount] = useState('')
@@ -59,8 +92,35 @@ export const RefundToWallet = (props) => {
     () => refundOptions.find(o => o.value === selectedRefundOption),
     [refundOptions, selectedRefundOption]
   )
+
+  const formatRefundPrice = (amount) => parsePrice(Number(amount) || 0, { currency: getCurrenySymbol(order?.currency) })
+  const orderTotal = getOrderTotal(order)
+  const totalRefundedAmount = useMemo(() => getTotalRefundedAmount(order), [order?.payment_events])
+  // redesign fix-qa E9: an order is «charged» only once a payment event exists (cash not yet collected has none)
+  const hasPaidPayment = useMemo(
+    () => order?.payment_events?.some(item => item.event === 'payment') ?? false,
+    [order?.payment_events]
+  )
   const isItemsRefundAllowed = isItemsRefundAvailable(selectedOption, user?.level)
   const defaultRefundMode = refundAllDisabled ? 'amount' : 'total'
+  const refundModes = isItemsRefundAllowed ? ['total', 'amount', 'items'] : ['total', 'amount']
+
+  // What the pending refund will move, in words: "{n} items" or a formatted amount.
+  const getPendingRefundSubject = (data) => {
+    if (data?.mode === 'items') {
+      const count = data?.items?.length ?? 0
+      return count === 1
+        ? t('REFUND_ITEM_COUNT_ONE', '1 item')
+        : t('REFUND_ITEMS_COUNT', '_count_ items').replace('_count_', () => String(count))
+    }
+    return formatRefundPrice(data?.mode === 'total' ? orderTotal : data?.amount)
+  }
+
+  const handleConfirmRefund = () => {
+    const data = pendingRefund
+    setPendingRefund(null)
+    if (data) handleOrderRefund(data)
+  }
 
   const onSubmit = (formData) => {
     if (!selectedOption) {
@@ -89,12 +149,13 @@ export const RefundToWallet = (props) => {
       return
     }
 
-    handleOrderRefund(buildRefundRequest({
+    // Money moves only after the confirmation below is accepted.
+    setPendingRefund(buildRefundRequest({
       option: selectedOption,
       mode: refundMode,
       amount,
       items,
-      orderTotal: order?.summary?.total ?? order?.total,
+      orderTotal,
       description: formData.description
     }))
   }
@@ -110,19 +171,20 @@ export const RefundToWallet = (props) => {
 
   useEffect(() => {
     setSelectedRefundOption(null)
-    setRefundDisabled(false)
+    setRefundDisabledReason(null)
     setRefundAllDisabled(false)
     setRefundMode('total')
     setRefundAmount('')
     setSelectedItems({})
+    setPendingRefund(null)
 
     if (order?.refund_data && stripePaymethods.includes(order?.paymethod?.gateway)) {
-      setRefundDisabled(true)
+      setRefundDisabledReason('provider')
     }
     if (!order?.payment_events) return
-    const totalRefundAmount = order?.payment_events?.filter(item => item.event === 'refund').reduce((total, event) => total + (event?.amount || 0), 0) || 0
+    const totalRefundAmount = getTotalRefundedAmount(order)
     if (totalRefundAmount === (order?.summary?.total || order?.total)) {
-      setRefundDisabled(true)
+      setRefundDisabledReason('full')
     }
     if (totalRefundAmount) {
       setRefundAllDisabled(true)
@@ -135,13 +197,15 @@ export const RefundToWallet = (props) => {
         if (isAllowCashWalletRefund) {
           _refundOptions.push({
             value: 'cash_wallet',
-            content: <Option>{t('CASH_WALLET', 'Cash Wallet')}</Option>
+            label: t('CASH_WALLET_NAME', 'Cash wallet'),
+            content: <Option>{t('CASH_WALLET_NAME', 'Cash wallet')}</Option>
           })
         }
       } else if (event?.wallet_event?.wallet?.type === 'credit_point') {
         if (isAllowCreditPointRefund) {
           _refundOptions.push({
             value: event.id,
+            label: t('POINTS_WALLET', 'Points Wallet'),
             content: <Option>{t('POINTS_WALLET', 'Points Wallet')}</Option>
           })
         }
@@ -149,6 +213,7 @@ export const RefundToWallet = (props) => {
         if (isAllowStripeRefund) {
           _refundOptions.push({
             value: event.id,
+            label: t('STRIPE', 'Stripe'),
             content: <Option>{t('STRIPE', 'Stripe')}</Option>,
             isStripe: true
           })
@@ -157,6 +222,7 @@ export const RefundToWallet = (props) => {
         const gw = event?.paymethod?.gateway || event?.data?.gateway || 'braintree'
         _refundOptions.push({
           value: event.id,
+          label: t(gw.toUpperCase(), event?.paymethod?.name || gw),
           content: <Option>{t(gw.toUpperCase(), event?.paymethod?.name || gw)}</Option>,
           isBraintree: true
         })
@@ -165,7 +231,8 @@ export const RefundToWallet = (props) => {
           if (!_refundOptions.find(item => item.value === 'cash_wallet')) {
             _refundOptions.push({
               value: 'cash_wallet',
-              content: <Option>{t('CASH_WALLET', 'Cash Wallet')}</Option>
+              label: t('CASH_WALLET_NAME', 'Cash wallet'),
+              content: <Option>{t('CASH_WALLET_NAME', 'Cash wallet')}</Option>
             })
           }
         }
@@ -182,6 +249,20 @@ export const RefundToWallet = (props) => {
       setOpenModal(false)
     }
   }, [actionStatus?.loading])
+
+  // The legacy select draws its own trigger: it is named by the visible label, as soon as the
+  // dialog mounts it (the dialog's content appears after the open state changes) and when its options change.
+  const labelRefundType = (node) => {
+    node?.querySelector('[role="button"]')?.setAttribute('aria-labelledby', refundTypeLabelId)
+  }
+  const setRefundTypeWrapper = (node) => {
+    refundTypeWrapperRef.current = node
+    labelRefundType(node)
+  }
+  useEffect(() => {
+    if (!openModal) return
+    labelRefundType(refundTypeWrapperRef.current)
+  }, [openModal, refundOptions, refundTypeLabelId])
 
   const toggleProductSelection = (productId, maxQty) => {
     setSelectedItems(prev => {
@@ -206,35 +287,81 @@ export const RefundToWallet = (props) => {
   const hasRefundOptions = refundOptions.length > 0
   const showButton = isAllowCashWalletRefund || isAllowCreditPointRefund || isAllowStripeRefund || isAllowOtherRefund || refundOptions.some(o => o.isBraintree)
   const isBraintreeOrder = braintreePaymethods.includes(order?.paymethod?.gateway)
-  const refundLabel = isBraintreeOrder ? t('REFUND', 'Refund') : t('REFUND_TO_WALLET', 'Refund to Wallet')
+  const refundLabel = isBraintreeOrder ? t('REFUND', 'Refund') : t('REFUND_TO_WALLET', 'Refund to wallet')
+  // redesign F6d (Q3-08): the hint of a fully refunded order says what happened, «Refunded to Cash Wallet: € 217,05», from the
+  // refund events (method and amount); the old sentence stays only when no event says it.
+  const refundedSummary = summarizeRefunds(order, t)
+    .map(({ label, amount }) => (label
+      ? t('REFUND_DISABLED_REFUNDED_TO', 'Refunded to _method_: _amount_').replace('_method_', () => label).replace('_amount_', () => formatRefundPrice(amount))
+      : t('REFUND_DISABLED_REFUNDED_AMOUNT', 'Refunded: _amount_').replace('_amount_', () => formatRefundPrice(amount))))
+    .join(' · ')
 
   return (
     <>
       {showButton && (
-        <RefundWalletButtonWrapper>
-          <Button
-            color='primary'
-            borderRadius='8px'
-            disabled={actionStatus?.loading || refundDisabled}
-            onClick={() => setOpenModal(true)}
-          >
-            {refundLabel}
-          </Button>
-        </RefundWalletButtonWrapper>
-      )}
-      {openModal && (
-        <Modal
-          width='700px'
-          open={openModal}
-          onClose={() => setOpenModal(false)}
+        <ProductButton
+          variant='secondary'
+          disabled={actionStatus?.loading || refundDisabled}
+          aria-describedby={refundDisabled ? refundHintId : undefined}
+          onClick={() => setOpenModal(true)}
         >
-          <RefundContainer onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
-            <h2>{refundLabel}</h2>
+          {refundLabel}
+        </ProductButton>
+      )}
+      {showButton && refundDisabled && (
+        <span id={refundHintId} className='odc-refund-hint'>
+          {refundDisabledReason === 'full'
+            ? (refundedSummary.length > 0 ? refundedSummary : t('REFUND_DISABLED_FULLY_REFUNDED', 'This order is already fully refunded.'))
+            : t('REFUND_DISABLED_BY_PROVIDER', 'This order was refunded through its payment provider.')}
+        </span>
+      )}
+      <Dialog
+        open={openModal}
+        onOpenChange={(next) => { if (!next) setOpenModal(false) }}
+        size='lg'
+        // The legacy select is not a ref target: the focus starts on the first control of the form.
+        initialFocus={() => refundFormRef.current?.querySelector('[role="button"], input:not([disabled]), textarea') ?? true}
+        title={refundLabel}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={hasRefundOptions
+          ? (
+            <>
+              <ProductButton onClick={() => setOpenModal(false)}>{t('CANCEL', 'Cancel')}</ProductButton>
+              <ProductButton
+                variant='primary'
+                type='submit'
+                form={refundFormId}
+                busy={!!actionStatus?.loading}
+                disabled={actionStatus?.loading}
+              >
+                {t('CONTINUE', 'Continue')}
+              </ProductButton>
+            </>
+            )
+          : undefined}
+      >
+        <form
+          id={refundFormId}
+          ref={refundFormRef}
+          className='odc-refund'
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete='off'
+          noValidate
+        >
+          <p className='odc-refund-summary odc-num'>
+            {(hasPaidPayment
+              ? t('REFUND_SUMMARY_CHARGED', 'Charged: _amount_')
+              : t('REFUND_SUMMARY_ORDER_TOTAL', 'Order total: _amount_'))
+              .replace('_amount_', () => formatRefundPrice(orderTotal))}
+            {' · '}
+            {t('REFUND_SUMMARY_REFUNDED', 'Already refunded: _amount_')
+              .replace('_amount_', () => formatRefundPrice(totalRefundedAmount))}
+          </p>
             {hasRefundOptions
               ? (
               <>
-                <SelectWrapper>
-                  <span>{t('REFUND_TYPES', 'Refund types')}</span>
+                <SelectWrapper ref={setRefundTypeWrapper}>
+                  <span id={refundTypeLabelId}>{t('REFUND_TYPES', 'Refund types')}</span>
                   <Select
                     defaultValue={selectedRefundOption}
                     options={refundOptions}
@@ -250,13 +377,23 @@ export const RefundToWallet = (props) => {
 
                 {selectedOption && (
                   <>
-                    <p>{t('QUESTION_REFUND_AMOUNT', 'How do you want to refund?')}</p>
+                    <p id={refundModeLabelId}>{t('QUESTION_REFUND_AMOUNT', 'How do you want to refund?')}</p>
+                    <div role='radiogroup' aria-labelledby={refundModeLabelId}>
                     <RadioItemContainer
                       active={refundMode === 'total'}
                       disabled={refundAllDisabled}
-                      onClick={() => !refundAllDisabled && setRefundMode('total')}
                     >
-                      {refundMode === 'total' ? <RecordCircleFill /> : <Circle />}
+                      <RadioButton
+                        name='refund-mode'
+                        role='radio'
+                        data-refund-mode='total'
+                        aria-checked={refundMode === 'total'}
+                        checked={refundMode === 'total'}
+                        disabled={refundAllDisabled}
+                        onChange={() => setRefundMode('total')}
+                        tabIndex={refundMode === 'total' && !refundAllDisabled ? 0 : -1}
+                        onKeyDown={event => moveRefundMode(event, refundModes, refundMode, setRefundMode, refundAllDisabled ? ['total'] : [])}
+                      />
                       <span>{t('REFUND_ALL', 'Refund all')}</span>
                     </RadioItemContainer>
                     {refundAllDisabled && (
@@ -267,14 +404,24 @@ export const RefundToWallet = (props) => {
                     )}
                     <RadioItemContainer
                       active={refundMode === 'amount'}
-                      onClick={() => setRefundMode('amount')}
                     >
-                      {refundMode === 'amount' ? <RecordCircleFill /> : <Circle />}
+                      <RadioButton
+                        name='refund-mode'
+                        role='radio'
+                        data-refund-mode='amount'
+                        aria-checked={refundMode === 'amount'}
+                        checked={refundMode === 'amount'}
+                        onChange={() => setRefundMode('amount')}
+                        tabIndex={refundMode === 'amount' || (refundMode === 'total' && refundAllDisabled) ? 0 : -1}
+                        onKeyDown={event => moveRefundMode(event, refundModes, refundMode, setRefundMode, refundAllDisabled ? ['total'] : [])}
+                      />
                       <span>{t('REFUND_ONLY_AN_AMOUNT', 'Refund only an amount')}</span>
                     </RadioItemContainer>
                     {refundMode === 'amount' && (
-                      <RefundAmountWrapper>
+                      <RefundAmountWrapper className='odc-refund-amount'>
                         <Input
+                          aria-label={t('AMOUNT', 'Amount')}
+                          inputMode='decimal'
                           placeholder={t('AMOUNT', 'Amount')}
                           value={refundAmount}
                           onKeyPress={(e) => {
@@ -289,57 +436,68 @@ export const RefundToWallet = (props) => {
                     {isItemsRefundAllowed && (
                       <RadioItemContainer
                         active={refundMode === 'items'}
-                        onClick={() => setRefundMode('items')}
                       >
-                        {refundMode === 'items' ? <RecordCircleFill /> : <Circle />}
+                        <RadioButton
+                          name='refund-mode'
+                          role='radio'
+                          data-refund-mode='items'
+                          aria-checked={refundMode === 'items'}
+                          checked={refundMode === 'items'}
+                          onChange={() => setRefundMode('items')}
+                          tabIndex={refundMode === 'items' ? 0 : -1}
+                          onKeyDown={event => moveRefundMode(event, refundModes, refundMode, setRefundMode, refundAllDisabled ? ['total'] : [])}
+                        />
                         <span>{t('REFUND_BY_ITEMS', 'Refund specific items')}</span>
                       </RadioItemContainer>
                     )}
+                    </div>
                     {isItemsRefundAllowed && refundMode === 'items' && (
-                      <div style={itemsPickerStyles.wrapper}>
+                      <RefundItemsPicker>
                         {(order?.products || []).map(product => {
                           const productId = product?.id
                           const entry = selectedItems[productId]
                           const productSelected = !!entry
                           const maxQty = product?.quantity || 1
                           return (
-                            <div key={productId} style={itemsPickerStyles.productRow}>
-                              <input
-                                type='checkbox'
+                            <RefundProductRow key={productId}>
+                              <Checkbox
+                                aria-label={`${t('REFUND', 'Refund')} ${product?.name ?? ''}`.trim()}
                                 checked={productSelected}
                                 onChange={() => toggleProductSelection(productId, maxQty)}
                               />
-                              <span style={itemsPickerStyles.productLabel}>
+                              <RefundProductLabel>
                                 {product?.name} <small>({t('QTY', 'Qty')}: {maxQty})</small>
-                              </span>
+                              </RefundProductLabel>
                               {productSelected && maxQty > 1 && (
-                                <input
+                                <RefundQuantityInput
+                                  aria-label={`${t('QTY', 'Qty')} ${product?.name ?? ''}`.trim()}
                                   type='number'
                                   min={0}
                                   max={maxQty}
                                   value={entry?.quantity ?? 0}
                                   onChange={(e) => setProductQty(productId, e.target.value, maxQty)}
-                                  style={itemsPickerStyles.qtyInput}
                                 />
                               )}
-                            </div>
+                            </RefundProductRow>
                           )
                         })}
                         {(!order?.products || order.products.length === 0) && (
                           <ErrorText>{t('NO_PRODUCTS', 'No products available')}</ErrorText>
                         )}
-                      </div>
+                      </RefundItemsPicker>
                     )}
                   </>
                 )}
 
-                <RefundReasonContainer>
-                  <label>{t('COMMENTS', 'Comments')}</label>
+                <div className='odc-refund-field'>
+                  <label className='odc-refund-label' htmlFor={refundDescriptionId}>{t('COMMENTS', 'Comments')}</label>
                   <Controller
                     name='description'
                     control={control}
+                    defaultValue=''
                     render={({ onChange, value }) => (
                       <TextArea
+                        id={refundDescriptionId}
                         rows={3}
                         value={value}
                         onChange={e => {
@@ -348,30 +506,40 @@ export const RefundToWallet = (props) => {
                       />
                     )}
                   />
-                </RefundReasonContainer>
-                <Button
-                  type='submit'
-                  color='primary'
-                  borderRadius='8px'
-                >
-                  {t('REFUND', 'Refund')}
-                </Button>
+                </div>
               </>
                 )
               : (
-              <ErrorText>{t('REFUND_NOT_ALLOWED', 'The refund is not allowed.')}</ErrorText>
+              <ErrorText role='status'>{t('REFUND_NOT_ALLOWED', 'The refund is not allowed.')}</ErrorText>
                 )}
-          </RefundContainer>
-        </Modal>
-      )}
-      <Alert
-        title={t('WEB_APPNAME', 'Ordering')}
+        </form>
+      </Dialog>
+      <ConfirmDialog
+        open={!!pendingRefund}
+        tone='primary'
+        busy={!!actionStatus?.loading}
+        title={t('REFUND_CONFIRM_TITLE', 'Refund _subject_?').replace('_subject_', () => shownRefund ? getPendingRefundSubject(shownRefund) : '')}
+        confirmLabel={t('REFUND_CONFIRM_ACTION', 'Refund _subject_').replace('_subject_', () => shownRefund ? getPendingRefundSubject(shownRefund) : '')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={handleConfirmRefund}
+        onCancel={() => setPendingRefund(null)}
+      >
+        {shownRefund && (
+          <p>
+            {t('REFUND_CONFIRM_MESSAGE', 'Refund _subject_ to _destination_.')
+              .replace('_subject_', () => getPendingRefundSubject(shownRefund))
+              .replace('_destination_', () => selectedOption?.label ?? '')}
+          </p>
+        )}
+      </ConfirmDialog>
+      <AlertDialog
+        title={t('REFUND_NOT_SENT', 'Refund not sent')}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
         content={alertState?.content}
-        acceptText={t('ACCEPT', 'Accept')}
         open={alertState?.open}
         onClose={() => setAlertState({ open: false, content: [] })}
-        onAccept={() => setAlertState({ open: false, content: [] })}
-        closeOnBackdrop={false}
       />
     </>
   )

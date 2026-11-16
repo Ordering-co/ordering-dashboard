@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useLanguage, useApi, useSession, useToast, ToastType } from '../../../../../index'
 import { Button, Input } from '../../../styles'
+import { Button as ProductButton, EmptyState } from '../../Shared/Product'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import styled, { css } from 'styled-components'
@@ -18,7 +19,7 @@ const Container = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   font-weight: 700;
   color: ${props => props.theme.colors?.headingColor};
   margin-top: 5px;
@@ -31,20 +32,20 @@ const SettingRow = styled.div`
 
 const Label = styled.label`
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors?.headingColor};
   margin: 0;
 `
 
 const HelpText = styled.p`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: ${props => props.theme.colors?.secundaryContrast || '#909BA9'};
   margin: 4px 0 10px;
 `
 
 const ErrorText = styled.p`
   color: ${props => props.theme.colors?.danger || '#e74c3c'};
-  font-size: 13px;
+  font-size: var(--od-type-secondary-size);
   margin-bottom: 12px;
 `
 
@@ -60,7 +61,7 @@ const LabelRow = styled.div`
 `
 
 const GlobalBadge = styled.span`
-  font-size: 11px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 600;
   color: ${props => props.theme.colors?.primary || '#4393F5'};
   background: ${props => props.theme.colors?.primary ? `${props.theme.colors.primary}18` : '#4393F518'};
@@ -76,7 +77,7 @@ const LoadingOverlay = styled.div`
 
 const EmptyHelp = styled.p`
   margin: 0 0 16px;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 18px;
   color: ${props => props.theme.colors?.secundaryContrast || '#909BA9'};
 `
@@ -95,6 +96,7 @@ export const CustomOrder = ({ hideHeader } = {}) => {
   const [settingsSchema, setSettingsSchema] = useState({})
   const [settingsValues, setSettingsValues] = useState({})
   const [saveState, setSaveState] = useState({ loading: false, error: null })
+  const [settingsError, setSettingsError] = useState(false)
 
   const orderingHeaders = {
     'Content-Type': 'application/json',
@@ -127,8 +129,9 @@ export const CustomOrder = ({ hideHeader } = {}) => {
     }
   }
 
+  // Resolves `true` when the schema arrived, `false` when the request failed or answered without settings.
   const fetchSettings = async (pluginRoot) => {
-    if (!pluginRoot) return
+    if (!pluginRoot) return false
     try {
       const projectCode = ordering.project
       const res = await fetch(
@@ -146,18 +149,25 @@ export const CustomOrder = ({ hideHeader } = {}) => {
           values[key] = String(schema[key].value ?? '')
         })
         setSettingsValues(values)
+        return true
       }
-    } catch (_) {}
+      return false
+    } catch (_) {
+      return false
+    }
+  }
+
+  const init = async () => {
+    setSettingsError(false)
+    const pluginRoot = await fetchInstalledPlugin()
+    if (pluginRoot) {
+      const loaded = await fetchSettings(pluginRoot)
+      setSettingsError(!loaded)
+      setPluginState({ loading: false, installed: true, pluginRoot, error: null })
+    }
   }
 
   useEffect(() => {
-    const init = async () => {
-      const pluginRoot = await fetchInstalledPlugin()
-      if (pluginRoot) {
-        await fetchSettings(pluginRoot)
-        setPluginState({ loading: false, installed: true, pluginRoot, error: null })
-      }
-    }
     init()
   }, [])
 
@@ -244,6 +254,19 @@ export const CustomOrder = ({ hideHeader } = {}) => {
         >
           {t('SETTINGS_CUSTOM_ORDER_OPEN_PLUGINS', 'Go to plugins')}
         </Button>
+      </Container>
+    )
+  }
+
+  if (settingsError) {
+    return (
+      <Container $embedded={hideHeader}>
+        {!hideHeader && <Title>{t('CUSTOM_ORDER', 'Custom Order')}</Title>}
+        <EmptyState
+          tone='error'
+          title={t('SETTINGS_CUSTOM_ORDER_LOAD_ERROR', 'The Custom Order settings could not be loaded. Try again.')}
+          action={<ProductButton onClick={init}>{t('RETRY', 'Retry')}</ProductButton>}
+        />
       </Container>
     )
   }

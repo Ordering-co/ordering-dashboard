@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import { usePostHog } from 'posthog-js/react'
 import { useConfig, useSession } from '~components'
-import { ConfigFileContext, useProjectState } from '~ui'
+import { ConfigFileContext } from '~ui/src/contexts/ConfigFileContext'
+import { useProjectState } from '~ui/src/contexts/ProjectContext'
 import {
   getDashboardCommonProperties,
   getDashboardGroupProperties,

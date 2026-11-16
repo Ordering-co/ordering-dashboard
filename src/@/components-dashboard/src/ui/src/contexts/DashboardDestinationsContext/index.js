@@ -15,6 +15,7 @@ import { buildSettingsHub } from '../../../../utils/settingsIa'
 import { useDashboardNavigation } from '../../hooks/useDashboardNavigation'
 import { useAssistant } from '../../../../contexts/AssistantContext'
 import { useCommandPalette } from '../CommandPaletteContext'
+import { useGoogleActionsVisibility } from '../../hooks/useGoogleActionsVisibility'
 
 const DashboardDestinationsContext = createContext(null)
 const makeOpaque = () => {
@@ -48,7 +49,9 @@ export const DashboardDestinationsProvider = ({ children }) => {
   const { open: openPalette } = useCommandPalette()
   const { level } = getDashboardRoleFlags(user)
   const project = ordering?.project
-  const navCatalog = useMemo(() => buildDashboardDestinationCatalog({ t, user, configs, sites, project }), [configs, sites, project, t, user])
+  // Order with Google is a destination while the project shows it
+  const { visible: googleActionsVisible } = useGoogleActionsVisibility()
+  const navCatalog = useMemo(() => buildDashboardDestinationCatalog({ t, user, configs, sites, project, googleActionsVisible }), [configs, sites, project, t, user, googleActionsVisible])
   const settingsCatalog = useSettingsCatalog({ enabled: false })
   const loadIntegrations = Object.values(INTEGRATION_TYPES).some(item => navCatalog.can(item.url))
   const loadDeliveryCompanies = navCatalog.can(DELIVERY_SERVICES_URL)
@@ -65,6 +68,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
     configs,
     sites,
     project,
+    googleActionsVisible,
     settingsHub: settingsCatalog.hub,
     integrations: integrationsCatalog.integrations,
     deliveryCompanies: integrationsCatalog.deliveryCompanies,
@@ -72,6 +76,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
   }), [
     configs,
     sites,
+    googleActionsVisible,
     integrationsCatalog.builderApps,
     integrationsCatalog.deliveryCompanies,
     integrationsCatalog.integrations,
@@ -149,6 +154,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
       configs,
       sites,
       project,
+      googleActionsVisible,
       settingsHub,
       integrations: dynamic.integrations,
       deliveryCompanies: dynamic.deliveryCompanies,
@@ -162,6 +168,7 @@ export const DashboardDestinationsProvider = ({ children }) => {
   }, [
     configs,
     sites,
+    googleActionsVisible,
     getCatalogErrors,
     integrationsCatalog,
     navCatalog.settingsAllowed,

@@ -1,0 +1,234 @@
+/*
+ * RecordPanel (redesign W0-7, T0-26): the shell of a record's panel, generalised from the order detail
+ * (order-details.css, order-details-header.css): header, tabs or a navigation slot, one scrolling body, a fixed footer.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * The root is a size container named `odc-record`: the same markup fits the split panel, a sheet and the expanded page,
+ * and a SectionNav in the `nav` slot can follow the same query. Opened as a page (`data-expanded`) the content keeps one
+ * column of --od-x-page-content while the hairlines of the header and the footer still cross the page.
+ */
+
+.odc-record {
+  --odc-record-gutter: var(--od-space-5);
+  --odc-record-bound: 0%;
+  container-type: inline-size;
+  container-name: odc-record;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+@media (max-width: 767px) {
+  .odc-record { --odc-record-gutter: var(--od-space-4); }
+}
+
+/* Opened as a page: each region pads its sides so its content is the column. The percentage is of the region's own width,
+   which is the page's for the header, the tabs, the body and the footer alike. */
+@media (min-width: 768px) {
+  .odc-record[data-expanded] {
+    --odc-record-bound: max(0%, calc((100% - var(--od-x-page-content)) / 2));
+  }
+}
+
+/* redesign SB-B0 (, auditor 2): `fullWidth` opts out of the column, the content takes the whole page. */
+@media (min-width: 768px) {
+  .odc-record[data-expanded][data-full-width] {
+    --odc-record-bound: 0%;
+  }
+}
+
+/* ── Header: the title, the status, a spacer and the actions; the subtitle under it ── */
+.odc-record-head {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) 0;
+  padding-inline: calc(var(--odc-record-gutter) + var(--odc-record-bound));
+  background: var(--od-bg);
+}
+
+.odc-record-head-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-record-title {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+  /* redesign  (row 63 Q-05, from batch D): a long name gives way before the actions do. Two lines, then «…» (as the page header's
+     title, PH-1); the clamp needs overflow: hidden. The full text is in the DOM and in the heading's `title` (RecordPanel.jsx).
+     A flex line breaks by the items' hypothetical size, and a long name's was its whole text: wherever the row wraps (this panel under
+     480px, pages that drop their status earlier) the actions went to a line of their own. The title keeps its own size and shrink
+     (`0 1 auto`, so beside an inline status it shares the room as before: review F-1) and is capped short of the actions: four control
+     heights cover the back button or three header buttons and the gaps of the row. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  flex: 0 1 auto;
+  max-inline-size: calc(100% - var(--od-x-control-height) * 4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-record-status {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-record-spacer {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-record-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-half);
+}
+
+.odc-record-subtitle {
+  margin-block-start: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* A narrow panel: the status drops to its own line, after the title. */
+@container odc-record (max-width: 480px) {
+  .odc-record-head-row { flex-wrap: wrap; }
+  .odc-record-head-row > .odc-record-status {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* ── Frame: what is under the header. Tabs, or the nav and the body, then the footer that stays at the bottom ── */
+.odc-record-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-record-frame.odc-record-tabs {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+/* redesign  (OP-23, from ): the list of Tabs reaches --od-space-1 past its box on each side (tabs.css) to leave room for
+   the ring of the first and the last tab. Here the padding is already the gutter (16px or more, the ring needs 4), so the reach only made the
+   list 8px wider than the panel and the panel scrolled 4px sideways on a phone. The list takes the panel's width (margin 0) and its hairline,
+   which tabs.css draws 8px shorter than the list, takes all of it again. The labels line up with the title and the body. */
+.odc-record-tabs > .odc-tabs-list {
+  margin-block-start: var(--od-space-3);
+  margin-inline: 0;
+  padding-inline: calc(var(--odc-record-gutter) + var(--odc-record-bound));
+  background-size: 100% var(--od-x-hairline);
+}
+
+.odc-record-body {
+  /* redesign  (OP-20, from ): a sticky box stops at the padding of its scroller, so the foot padding is a variable the
+     bar below gives back; a record without a bar keeps its air. */
+  --odc-record-pad-end: var(--od-space-6);
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-block: var(--od-space-4) var(--odc-record-pad-end);
+  padding-inline: calc(var(--odc-record-gutter) + var(--odc-record-bound));
+}
+
+/* P/SaveBar is sticky with `inset-block-end: 0`, which stops --odc-record-pad-end above the foot of the panel and lets the fields scroll
+   under it. Offsetting the stick by the padding puts the bar on the very foot (the same offset the forms that already did it locally use). */
+.odc-record-body .odc-savebar {
+  inset-block-end: calc(var(--odc-record-pad-end) * -1);
+}
+
+/* The panels stay mounted; Base UI hides the ones that are not selected (`hidden`). */
+.odc-record-panel { min-inline-size: 0; }
+
+/* ── Navigation slot: a row above the body when the panel is narrow, a column at its start when it is wide ── */
+.odc-record-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
+  padding-inline: var(--odc-record-bound);
+}
+
+.odc-record-nav {
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--odc-record-gutter);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-record-main > .odc-record-body {
+  padding-inline: var(--odc-record-gutter);
+}
+
+@container odc-record (min-width: 640px) {
+  .odc-record-main {
+    grid-template-columns: var(--od-x-record-nav, var(--od-x-menu-min)) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .odc-record-nav {
+    min-block-size: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-block: var(--od-space-4);
+    padding-inline: var(--od-space-3);
+    border-block-end: 0;
+    border-inline-end: var(--od-x-hairline) solid var(--od-border);
+  }
+}
+
+/* ── Footer: fixed under the body ── */
+.odc-record-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-3);
+  padding-inline: calc(var(--odc-record-gutter) + var(--odc-record-bound));
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+/* On a phone the actions of the foot take the full width, one per row, 44px tall. */
+@media (max-width: 767px) {
+  .odc-record-foot > .odc-btn {
+    flex: 1 1 100%;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign tramo B r2 (W0-QB1-10): with the navigation slot as a row under the header, the close button (32px, 44px area) and the
+   selector below it would overlap their areas by a few pixels; the header leaves room under the row. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-record[data-layout='nav'] .odc-record-head {
+    padding-block-end: var(--od-space-2);
+  }
+}

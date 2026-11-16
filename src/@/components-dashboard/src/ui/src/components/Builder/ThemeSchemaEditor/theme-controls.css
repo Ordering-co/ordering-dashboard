@@ -1,0 +1,324 @@
+/*
+ * redesign  B3b · the controls of the theme editor (controls.js: numbers, levels, selects side by side, segmented
+ * and cards, typography, image, text, html, a computed value) and the drawings of the options (drawings.js).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Prefix: odc-tc-*.
+ */
+
+/* ── Layout helpers ── */
+.odc-tc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-tc-row {
+  display: grid;
+  grid-template-columns: var(--odc-tc-columns, minmax(0, 1fr));
+  gap: var(--od-x-space-2-5);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+@media (max-width: 640px) {
+  .odc-tc-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+.odc-tc-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-tc-text { margin: 0; }
+
+/* ── A value the API works out: to read ── */
+.odc-tc-computed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+/* ── Numbers: the field, its unit beside it and the range under it ── */
+.odc-tc-number {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  max-inline-size: calc(var(--od-x-search-min) - var(--od-space-4));
+}
+
+.odc-tc-number-field {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odc-tc-unit {
+  display: flex;
+  flex: none;
+  align-items: center;
+  min-block-size: var(--od-x-control-height);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+/* ── Level: the select and, for Custom, its number ── */
+.odc-tc-level {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-tc-level > .odc-select-trigger {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odc-tc-level-number.odc-tc-number {
+  flex: none;
+  inline-size: calc(var(--od-space-9) + var(--od-space-1));
+}
+
+/* ── Segmented: P/RadioGroup cards narrowed so 5–6 drawings fit in a row (decision 1) ── */
+.odc-tc-segmented.odc-radiogroup[data-variant='cards'] .odc-radiogroup-options {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 2.5)), 1fr));
+  gap: var(--od-space-2);
+}
+
+.odc-tc-segmented.odc-radiogroup[data-variant='cards'] .odc-radio { padding: var(--od-space-2); }
+
+/* The drawing: muted, in the action colour once chosen (only the editor's own groups) */
+.odc-tc-choices .odc-radio-media {
+  display: flex;
+  justify-content: center;
+  color: var(--od-text-muted);
+}
+
+.odc-tc-choices .odc-radio[data-checked] .odc-radio-media { color: var(--od-action); }
+
+/* ── Typography: the fields of a text style in a wrapping row ── */
+.odc-tc-typography {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.odc-tc-line-px {
+  align-self: center;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-tc-weight {
+  display: flex;
+  inline-size: var(--od-x-search-min);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.odc-tc-switch {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+}
+
+/* ── Image ── */
+.odc-tc-image-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-tc-thumb {
+  inline-size: var(--od-space-8);
+  block-size: var(--od-x-control-height-lg);
+  object-fit: contain;
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-tc-link {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.odc-tc-link-field {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odc-tc-hint,
+.odc-tc-counter {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-tc-counter { align-self: flex-end; }
+
+.odc-tc-error {
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Html ── */
+.odc-tc-code.odc-field-input { font-family: var(--od-font-mono); }
+
+/* ── Drawings of the options (drawings.js) ── */
+.odc-tc-drawing-line {
+  display: block;
+  inline-size: var(--od-space-5);
+  block-size: var(--od-x-space-half);
+  background: currentColor;
+}
+
+.odc-tc-drawing-line[data-variant='full'] { inline-size: var(--od-space-7); }
+.odc-tc-drawing-line[data-variant='small'] { inline-size: var(--od-space-3); }
+
+.odc-tc-drawing-item {
+  display: block;
+  inline-size: calc(var(--od-space-7) + var(--od-space-2));
+  block-size: var(--od-space-2);
+  background: currentColor;
+  opacity: 0.4;
+}
+
+.odc-tc-drawing-item[data-variant='inset'] {
+  inline-size: calc(var(--od-space-6) + var(--od-space-1));
+  border-radius: var(--od-radius-control);
+}
+
+.odc-tc-drawing-nesting {
+  display: block;
+  block-size: calc(var(--od-space-4) + var(--od-x-space-half));
+  background: repeating-linear-gradient(currentColor 0 var(--od-x-space-half), transparent var(--od-x-space-half) var(--od-space-2));
+  background-clip: content-box;
+  opacity: 0.6;
+}
+
+.odc-tc-drawing-nesting[data-variant='line'] {
+  inline-size: calc(var(--od-space-6) + var(--od-space-1));
+  margin-inline-start: var(--od-x-space-1-5);
+  padding-inline-start: var(--od-x-space-1-5);
+  border-inline-start: var(--od-x-space-half) solid currentColor;
+}
+
+.odc-tc-drawing-nesting[data-variant='indent'] {
+  inline-size: calc(var(--od-space-6) - var(--od-x-space-half));
+  margin-inline-start: var(--od-space-3);
+}
+
+.odc-tc-drawing-nesting[data-variant='none'] { inline-size: calc(var(--od-space-6) + var(--od-x-space-2-5)); }
+
+.odc-tc-drawing-level {
+  display: block;
+  inline-size: calc(var(--od-space-5) - var(--od-x-space-half));
+  block-size: calc(var(--od-space-5) - var(--od-x-space-half));
+  border-block-start: var(--od-x-space-half) solid currentColor;
+  border-inline-start: var(--od-x-space-half) solid currentColor;
+  border-start-start-radius: var(--od-space-2);
+}
+
+.odc-tc-drawing-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  inline-size: calc(var(--od-space-9) + var(--od-space-5));
+  max-inline-size: 100%;
+  color: var(--od-text-muted);
+}
+
+.odc-tc-drawing-layout-chips {
+  display: flex;
+  gap: var(--od-space-1);
+}
+
+.odc-tc-drawing-layout-chip {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-space-2);
+  border: var(--od-x-hairline) solid currentColor;
+  border-radius: var(--od-radius-control);
+  opacity: 0.5;
+}
+
+.odc-tc-drawing-layout-chip:first-child { inline-size: calc(var(--od-space-6) - var(--od-space-1)); }
+.odc-tc-drawing-layout-chip:nth-child(2) { inline-size: var(--od-x-icon-md); }
+
+.odc-tc-drawing-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--od-x-space-1-5);
+}
+
+.odc-tc-drawing-layout-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-x-space-half);
+}
+
+.odc-tc-drawing-layout-picture {
+  align-self: stretch;
+  block-size: calc(var(--od-space-5) - var(--od-x-space-half));
+  border-radius: var(--od-radius-control);
+  background: var(--od-action-soft);
+}
+
+.odc-tc-drawing-layout-picture[data-variant='round'] {
+  align-self: center;
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  border-radius: var(--od-radius-round);
+}
+
+.odc-tc-drawing-layout-line {
+  align-self: stretch;
+  block-size: var(--od-space-1);
+  border-radius: var(--od-x-space-half);
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.odc-tc-drawing-tabs {
+  display: inline-flex;
+  gap: var(--od-space-3);
+  border-radius: var(--od-space-2);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-tc-drawing-tabs[data-variant='pill'] {
+  gap: var(--od-x-space-half);
+  padding: var(--od-x-space-half);
+  background: var(--od-surface-subtle);
+}
+
+.odc-tc-drawing-tab {
+  position: relative;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-3);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-tc-drawing-tab[data-active] { color: var(--od-action); }
+.odc-tc-drawing-tabs[data-variant='pill'] .odc-tc-drawing-tab[data-active] { background: var(--od-bg); }
+.odc-tc-drawing-tabs[data-variant='plain'] .odc-tc-drawing-tab[data-active] { font-weight: var(--od-font-weight-semibold); }
+
+.odc-tc-drawing-tab-line {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: var(--od-x-space-half);
+  background: currentColor;
+}

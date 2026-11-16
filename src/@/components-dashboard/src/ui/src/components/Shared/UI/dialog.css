@@ -1,0 +1,30 @@
+.od-ui.od-dialog-confirm-only-host {
+  background-color: transparent;
+}
+
+.od-ui:where(.od-dialog-legacy-portal),
+.od-ui:where(.od-dialog-confirm-portal) {
+  @apply od-relative;
+  isolation: isolate;
+  z-index: var(--od-dialog-layer);
+}
+
+.od-ui:where(.od-dialog-legacy-portal) > .od-dialog-legacy-backdrop {
+  @apply od-fixed;
+  inset: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 1000);
+  background: transparent;
+}
+
+.od-ui:where(.od-dialog-legacy-popup) {
+  @apply od-fixed od-flex od-items-center od-justify-center;
+  inset: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 1001);
+  outline: none;
+  background-color: rgb(0 0 0 / 0.3);
+  pointer-events: none;
+}
+
+.od-ui:where(.od-dialog-legacy-popup) > * {
+  pointer-events: auto;
+}

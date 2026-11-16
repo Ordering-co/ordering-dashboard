@@ -1,0 +1,120 @@
+.od-ui:where(.od-selection-control) {
+  @apply od-relative od-box-border od-flex-none od-cursor-pointer od-m-0 od-appearance-none;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  font-family: var(--od-field-font);
+}
+
+/* Preserve the former doubled styled selector against Bootstrap controls. */
+.od-ui.od-selection-control {
+  border: none;
+  background: transparent;
+}
+
+.od-ui.od-selection-control:focus {
+  border: none;
+}
+
+.od-ui:where(.od-selection-control)::before {
+  content: "";
+  display: block;
+  position: absolute;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--od-field-border-strong);
+  background: var(--od-field-surface);
+  transition:
+    background-color var(--od-field-duration) var(--od-field-easing),
+    border-color var(--od-field-duration) var(--od-field-easing);
+}
+
+.od-ui:where(.od-selection-control):hover:not(:disabled)::before {
+  border-color: var(--od-field-action);
+}
+
+.od-ui:where(.od-selection-control):checked::before,
+.od-ui:where(.od-selection-control):indeterminate::before {
+  background-color: var(--od-field-action);
+  border-color: var(--od-field-action);
+}
+
+.od-ui:where(.od-selection-control):focus-visible {
+  outline: var(--od-field-focus-width) solid var(--od-field-focus);
+  outline-offset: var(--od-field-focus-offset);
+}
+
+.od-ui:where(.od-selection-control):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.od-ui:where(.od-checkbox)::before {
+  border-radius: var(--od-field-radius);
+}
+
+.od-ui:where(.od-checkbox):checked::after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 10px;
+  border: solid var(--od-field-action-foreground);
+  border-width: 0 2px 2px 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.od-ui:where(.od-checkbox):indeterminate::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--od-field-action-foreground);
+  border: 0;
+  box-sizing: border-box;
+}
+
+.od-ui:where(.od-radio-button)::before {
+  border-radius: 50%;
+}
+
+.od-ui:where(.od-radio-button):checked::after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--od-field-action-foreground);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (pointer: coarse) {
+  .od-ui.od-selection-control {
+    width: var(--od-field-touch-target);
+    min-width: var(--od-field-touch-target);
+    height: var(--od-field-touch-target);
+    flex-shrink: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-selection-control)::before {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

@@ -36,5 +36,14 @@
     "booking_url": "https://calendly.com/orderingteam/ordering-demo",
     "days": 14
   },
-  "intercom_app_id": ""
+  "intercom_app_id": "",
+  "dashboard_dark_mode": false,
+  "legacy_dashboard": {
+    "enabled": false
+  },
+  "dashboard_project_allowlists": {
+    "backoffice_businesses": [],
+    "white_label_sites": [],
+    "driver_plate": []
+  }
 }

@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../../../index'
 import { useDashboardDestinations } from '../../contexts/DashboardDestinationsContext'
 import { useCommandPalette } from '../../contexts/CommandPaletteContext'
-import { Button } from '../../styles/OrderingUi/button'
-import '../../styles/OrderingUi/tailwind.css'
-import { DestinationCard, Spinner } from './styles'
+import { Button } from '../Shared/Product'
+import { LoaderCircle } from '../Shared/Icon'
+import './assistant-destinations.css'
 import {
   ASSISTANT_NAV_CHOOSE_STORE,
   ASSISTANT_NAV_GO_TO,
@@ -76,31 +76,34 @@ export const AssistantDestinations = ({ result }) => {
       : t('ASSISTANT_NAV_GO_TO', 'Go to {{title}}')).replace('{{title}}', item.title)
   }
 
+  // redesign J5 row 51 (assistant P-3, ): the destinations are P/Button (secondary; the single one keeps the discreet main-action
+  // border of AS-C D4) and «Search the Dashboard» is the link variant. The vendored registry button (styles/Ordering-Ui) has no
+  // consumer left; decision 32 removes it.
   return (
-    <DestinationCard aria-label={t('ASSISTANT_NAVIGATION', 'Dashboard navigation')} aria-busy={busy}>
+    <section className='odc-as-destinations' aria-label={t('ASSISTANT_NAVIGATION', 'Dashboard navigation')} aria-busy={busy}>
       {items.map(item => (
-        <div key={item.id}>
+        <div key={item.id} className='odc-as-destination-item'>
           <Button
             type='button'
-            variant={items.length === 1 ? 'default' : 'outline'}
-            className='mia:w-full mia:min-h-11 mia:h-auto mia:whitespace-normal mia:break-words mia:py-2 mia:text-start mia:justify-start mia:focus-visible:outline-2 mia:focus-visible:outline-solid mia:focus-visible:outline-offset-2 mia:focus-visible:outline-ring mia:motion-reduce:transition-none'
+            variant='secondary'
+            className={`odc-as-dest-btn${items.length === 1 ? ' odc-as-dest-single' : ''}`}
             disabled={busy}
             onClick={() => select(item)}
           >
             {label(item)}
           </Button>
-          {items.length === 1 && item.subtitle && <p className='mia:mb-0 mia:mt-1 mia:text-xs' style={{ color: 'var(--od-text-muted)' }}>{item.subtitle}</p>}
+          {items.length === 1 && item.subtitle && <p className='odc-as-subtitle'>{item.subtitle}</p>}
         </div>
       ))}
-      {busy && <div role='status'><Spinner /> {t('LOADING', 'Loading')}</div>}
-      {error && <p role='alert'>{t('ASSISTANT_NAVIGATION_ERROR', 'This destination is no longer available. Search the Dashboard again.')}</p>}
-      {!items.length && <p role='status'>{t('ASSISTANT_NAV_NOT_FOUND', 'No available destination was found.')}</p>}
-      {result.status === 'partial' && <p role='status'>{t('ASSISTANT_DESTINATIONS_PARTIAL', 'Some results could not be loaded.')}</p>}
+      {busy && <div role='status' className='odc-as-note'><LoaderCircle className='odc-icon odc-as-spin' aria-hidden='true' /> {t('LOADING', 'Loading')}</div>}
+      {error && <p role='alert' className='odc-as-note odc-as-note-error'>{t('ASSISTANT_NAVIGATION_ERROR', 'This destination is no longer available. Search the Dashboard again.')}</p>}
+      {!items.length && <p role='status' className='odc-as-note'>{t('ASSISTANT_NAV_NOT_FOUND', 'No available destination was found.')}</p>}
+      {result.status === 'partial' && <p role='status' className='odc-as-note'>{t('ASSISTANT_DESTINATIONS_PARTIAL', 'Some results could not be loaded.')}</p>}
       {palette.isAvailable && (
-        <Button type='button' variant='link' className='mia:min-h-11 mia:h-auto mia:whitespace-normal mia:focus-visible:outline-2 mia:focus-visible:outline-solid mia:focus-visible:outline-offset-2 mia:focus-visible:outline-ring' disabled={busy} onClick={() => palette.open({ query: result.query, fromAssistant: true })}>
+        <Button type='button' variant='link' className='odc-as-dest-search' disabled={busy} onClick={() => palette.open({ query: result.query, fromAssistant: true })}>
           {t('ASSISTANT_NAV_SEARCH', 'Search the Dashboard')}
         </Button>
       )}
-    </DestinationCard>
+    </section>
   )
 }

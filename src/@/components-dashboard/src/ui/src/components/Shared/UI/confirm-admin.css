@@ -1,0 +1,164 @@
+.od-ui:where(.od-confirm-admin-form) {
+  @apply od-flex od-flex-col;
+  gap: var(--od-space-4);
+  color: var(--od-confirm-admin-text);
+  font-family: var(--od-confirm-admin-font);
+  font-size: var(--od-confirm-admin-font-size);
+}
+
+.od-ui:where(.od-confirm-admin-form-control) {
+  @apply od-flex od-flex-col;
+}
+
+/*
+ * redesign fix-qa E5 · the method tabs, the title and the actions come from the Product Dialog and
+ * SegmentedControl; what stays here is the field (a labelled brand input) and the OTP step. Values from
+ * --od-* (release) and --od-x-* (src/brand/candidates.css) only; logical properties.
+ */
+.od-ui:where(.od-confirm-admin-form-control) label {
+  margin-block-end: var(--od-space-1);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-confirm-admin-input {
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.od-confirm-admin-input::placeholder {
+  color: var(--od-x-text-subtle);
+  opacity: 1;
+}
+
+.od-confirm-admin-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.od-confirm-admin-back {
+  align-self: center;
+}
+
+.od-ui:where(.od-confirm-admin-form-control) .PhoneInputInput {
+  height: 43px;
+  border-radius: 8px !important;
+}
+
+.od-ui:where(.od-confirm-admin-form-control) .PhoneInputCountry {
+  height: 43px;
+  padding: 8px;
+  background-color: var(--od-confirm-admin-surface);
+  border-radius: 8px;
+}
+
+.od-ui:where(.od-confirm-admin-form-control) .PhoneInputCountry * {
+  padding: 0;
+}
+
+.od-ui:where(.od-confirm-admin-resend):focus-visible {
+  outline: var(--od-confirm-admin-focus-width) solid var(--od-confirm-admin-focus);
+  outline-offset: var(--od-confirm-admin-focus-offset);
+}
+
+.od-ui:where(.od-confirm-admin-countdown) {
+  @apply od-flex od-justify-center;
+  margin: 15px;
+}
+
+.od-ui:where(.od-confirm-admin-countdown) > span {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.od-ui:where(.od-confirm-admin-otp) {
+  width: 100%;
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-container {
+  @apply od-flex;
+  justify-content: space-evenly;
+  margin: 20px;
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-input {
+  width: 50px !important;
+  height: 45px;
+  color: var(--od-confirm-admin-text);
+  background-color: var(--od-confirm-admin-surface);
+  border: 1px solid var(--od-confirm-admin-border);
+  border-radius: 8px;
+  font-family: var(--od-confirm-admin-font);
+  font-size: 20px;
+  font-weight: 700;
+  outline: none;
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-input:focus {
+  border-color: var(--od-confirm-admin-focus) !important;
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-input:focus-visible {
+  outline: var(--od-confirm-admin-focus-width) solid var(--od-confirm-admin-focus);
+  outline-offset: var(--od-confirm-admin-focus-offset);
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-input::placeholder,
+.od-ui:where(.od-confirm-admin-otp) .otp-input::-webkit-input-placeholder {
+  color: var(--od-confirm-admin-placeholder);
+  opacity: 1;
+}
+
+.od-ui:where(.od-confirm-admin-otp) .otp-input:-ms-input-placeholder {
+  color: var(--od-confirm-admin-placeholder);
+  opacity: 1;
+}
+
+.od-ui:where(.od-confirm-admin-resend) {
+  align-self: center;
+  color: var(--od-confirm-admin-resend-color);
+  font-size: 20px;
+  cursor: var(--od-confirm-admin-resend-cursor);
+  outline: none;
+}
+
+@media (pointer: coarse) {
+  .od-confirm-admin-input {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .od-ui:where(.od-confirm-admin-resend) {
+    min-width: var(--od-confirm-admin-touch-target);
+    min-height: var(--od-confirm-admin-touch-target);
+  }
+
+  .od-ui:where(.od-confirm-admin-otp) .otp-input {
+    min-width: var(--od-confirm-admin-touch-target);
+    min-height: var(--od-confirm-admin-touch-target);
+  }
+}
+
+@media (max-width: 380px) and (pointer: coarse) {
+  .od-ui:where(.od-confirm-admin-otp) .otp-container {
+    width: calc(100% + 20px);
+    margin: 20px -10px;
+    justify-content: space-between;
+  }
+
+  .od-ui:where(.od-confirm-admin-otp) .otp-input {
+    flex: 0 0 var(--od-confirm-admin-touch-target);
+    width: var(--od-confirm-admin-touch-target) !important;
+    height: var(--od-confirm-admin-touch-target);
+  }
+}

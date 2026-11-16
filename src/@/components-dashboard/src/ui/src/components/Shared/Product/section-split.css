@@ -1,0 +1,109 @@
+/*
+ * SectionSplit (redesign Tiendas 2.B, ): the third level of a section of the store editor. A list and the detail of
+ * one of its records, side by side when the section has room for both and stacked (the detail replaces the list) when not.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * This piece, and anything it adds, must NOT get `container-type`, `contain`, `transform`, `filter`, `backdrop-filter`,
+ * `perspective` or `will-change`: each one makes the element the containing block of its fixed descendants, and a legacy fixed
+ * SideBar opened from the detail would be clipped and painted under the page instead of over it (stores-list analysis §6,
+ * finding 1). The size of the root is measured with a ResizeObserver, never with a size container. No z-index: the detail is
+ * in the flow and the sticky offsets do not need a layer.
+ *
+ * The root is `data-mode` (split | stack) and `data-view` (list | split | detail). The detail is sticky at the top of the
+ * scroller the piece lives in; its height is measured by the component into `--odc-section-split-max`.
+ */
+
+.odc-section-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* Side by side: the detail is 40% of the root, at least as wide as the narrow panel (440px) and at most the large dialog (720px). */
+.odc-section-split[data-view='split'] {
+  grid-template-columns: minmax(0, 1fr) clamp(var(--od-x-panel-narrow), 40%, var(--od-x-dialog-lg));
+  align-items: start;
+}
+
+.odc-section-split-list { min-inline-size: 0; }
+
+/* Programmatic last-resort target of the focus when the row that opened the detail is gone. */
+.odc-section-split-list:focus { outline: none; }
+
+.odc-section-split-detail {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  background: var(--od-bg);
+  color: var(--od-text);
+}
+
+.odc-section-split-detail:focus { outline: none; }
+
+.odc-section-split[data-view='split'] > .odc-section-split-detail {
+  position: sticky;
+  inset-block-start: 0;
+  max-block-size: var(--odc-section-split-max, none);
+  overflow-y: auto;
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* ── Stacked: the way back above the detail ── */
+.odc-section-split-back {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* ── Head: the title, the actions and the X ── */
+.odc-section-split-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-section-split-title {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-section-split-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* Under a coarse pointer or 768px the controls are 32px seen and 44px reached: 12px apart, so the area of one does not cross
+   the next (same rule as the store editor header). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-section-split-head,
+  .odc-section-split-actions { gap: var(--od-space-3); }
+}
+
+.odc-section-split-body {
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+}
+
+/* Pinned to the bottom of the detail (the save bar). Sticky does not make a containing block for fixed descendants. */
+.odc-section-split-foot {
+  position: sticky;
+  inset-block-end: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}

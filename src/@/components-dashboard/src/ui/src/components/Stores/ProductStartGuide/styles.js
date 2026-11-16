@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 export const Container = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     line-height: 36px;
     text-align: center;
     margin: 0;
@@ -45,14 +45,14 @@ export const InfoWrapper = styled.div`
   flex: 1;
   h3 {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
     margin: 0;
   }
   p {
     margin: 0;
     font-weight: 400;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
     > span {
       display: flex;

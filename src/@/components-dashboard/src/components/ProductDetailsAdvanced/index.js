@@ -5,6 +5,12 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useEvent } from '../../contexts/EventContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+
+// The first message of an API error: a string, a list of strings or of { message } (as BusinessDetails reads it).
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 /**
  * Component to manage product properties behavior without UI component
@@ -151,134 +157,88 @@ export const ProductDetailsAdvanced = (props) => {
     }
   }
 
-  const handleSaveTax = async (id, action) => {
-    let result
-    showToast(ToastType.Info, t('LOADING', 'Loading'))
-    if (id) {
-      const response = await fetch(`${ordering.root}/${action}/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.auth}`
-        },
-        body: JSON.stringify({
-          ...formTaxChanges,
-          ...(action === 'taxes' ? { target: 'product' } : {})
-        })
-      })
-      const { result: data } = await response.json()
-      result = data
-      if (action === 'taxes') {
-        setTaxes({
-          ...taxes,
-          [`id:${data.id}`]: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            rate: data.rate,
-            type: data.type,
-            recipient: data.recipient,
-            apply_to_fees: data.apply_to_fees,
-            order_type_rates: data.order_type_rates || null
-          }
-        })
-        events.emit('tax_changed', {
-          tax: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            rate: data.rate,
-            type: data.type,
-            recipient: data.recipient,
-            apply_to_fees: data.apply_to_fees,
-            order_type_rates: data.order_type_rates || null
-          }
-        })
-        showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
-      } else {
-        setFees({
-          ...fees,
-          [`id:${data.id}`]: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            fixed: data.fixed,
-            percentage: data.percentage,
-            taxable: data.taxable,
-            recipient: data.recipient,
-            target: data.target
-          }
-        })
-        events.emit('fee_changed', {
-          fee: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            fixed: data.fixed,
-            percentage: data.percentage,
-            taxable: data.taxable,
-            recipient: data.recipient,
-            target: data.target
-          }
-        })
-        showToast(ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'))
-      }
-    } else {
-      const response = await fetch(`${ordering.root}/${action}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.auth}`
-        },
-        body: JSON.stringify({
-          ...formTaxChanges,
-          ...(action === 'taxes' ? { target: 'product' } : {})
-        })
-      })
-      const { result: data } = await response.json()
-      if (action === 'taxes') {
-        setTaxes({
-          ...taxes,
-          [`id:${data.id}`]: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            rate: data.rate,
-            type: data.type,
-            recipient: data.recipient,
-            apply_to_fees: data.apply_to_fees,
-            order_type_rates: data.order_type_rates || null
-          }
-        })
-        showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
-      } else {
-        setFees({
-          ...fees,
-          [`id:${data.id}`]: {
-            name: data.name,
-            description: data.description,
-            id: data.id,
-            fixed: data.fixed,
-            percentage: data.percentage,
-            taxable: data.taxable,
-            recipient: data.recipient,
-            target: data.target
-          }
-        })
-        showToast(ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'))
-      }
-    }
-    if (result?.error) return
-    setTaxToEdit({ action: null, payload: null })
+  // bugs E row 13: a failed save or delete says why, in the place of the «Loading» toast (as the store editor does since
+  // G4-10). The API sends its reason as text (translated by its slug) or nothing; then the generic text.
+  const showTaxError = (error) => {
+    showToast(ToastType.Error, translateApiMessage(t, firstMessage(error), t('STORES_CHANGE_FAILED', "We couldn't save the change.")))
   }
 
-  const handleDeleteTax = async (id, action) => {
-    setFormTaxState({
-      ...formTaxState,
-      loading: true
-    })
+  const taxRecord = (data) => ({
+    name: data.name,
+    description: data.description,
+    id: data.id,
+    rate: data.rate,
+    type: data.type,
+    recipient: data.recipient,
+    apply_to_fees: data.apply_to_fees,
+    order_type_rates: data.order_type_rates || null
+  })
+
+  const feeRecord = (data) => ({
+    name: data.name,
+    description: data.description,
+    id: data.id,
+    fixed: data.fixed,
+    percentage: data.percentage,
+    taxable: data.taxable,
+    recipient: data.recipient,
+    target: data.target
+  })
+
+  /**
+   * Creates (no id, POST) or edits (PUT) a product tax or fee.
+   * @returns {Promise<{ok: boolean, result?: object, error?: *}>} bugs E row 13: `{ ok: true, result }` once saved;
+   * `{ ok: false, error }` on an API error or an exception, after the error toast. EditTaxManager stays open on `{ ok: false }`.
+   */
+  const handleSaveTax = async (id, action) => {
     showToast(ToastType.Info, t('LOADING', 'Loading'))
-    if (id) {
+    try {
+      const response = await fetch(id ? `${ordering.root}/${action}/${id}` : `${ordering.root}/${action}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        },
+        body: JSON.stringify({
+          ...formTaxChanges,
+          ...(action === 'taxes' ? { target: 'product' } : {})
+        })
+      })
+      const { error, result: data } = await response.json()
+      if (error || !data?.id) {
+        showTaxError(data)
+        return { ok: false, error: data }
+      }
+      if (action === 'taxes') {
+        const tax = taxRecord(data)
+        setTaxes({ ...taxes, [`id:${data.id}`]: tax })
+        if (id) events.emit('tax_changed', { tax })
+        showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
+      } else {
+        const fee = feeRecord(data)
+        setFees({ ...fees, [`id:${data.id}`]: fee })
+        if (id) events.emit('fee_changed', { fee })
+        showToast(ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'))
+      }
+      setTaxToEdit({ action: null, payload: null })
+      return { ok: true, result: data }
+    } catch (err) {
+      showTaxError() // an exception's text («Failed to fetch», «Invalid response») is not for the user: the generic text
+      return { ok: false, error: [err.message] }
+    }
+  }
+
+  /**
+   * Deletes a product tax or fee.
+   * @returns {Promise<{ok: boolean, error?: *}>} bugs E row 13: a refused or failed delete says why and keeps the record.
+   * It builds a new object without the key (it mutated the list in place) and `fee_deleted` carries `{ fee }`, the shape its listener
+   * reads (it carried `{ tax }`, D9).
+   */
+  const handleDeleteTax = async (id, action) => {
+    if (!id) return { ok: false }
+    setFormTaxState(prev => ({ ...prev, loading: true }))
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    try {
       const response = await fetch(`${ordering.root}/${action}/${id}`, {
         method: 'DELETE',
         headers: {
@@ -286,27 +246,33 @@ export const ProductDetailsAdvanced = (props) => {
           Authorization: `Bearer ${session.auth}`
         }
       })
-      const { error } = await response.json()
-      if (!error) {
-        if (action === 'taxes') {
-          const newTaxes = taxes
-          events.emit('tax_deleted', { tax: newTaxes[`id:${id}`], isRemove: true })
-          delete newTaxes[`id:${id}`]
-          setTaxes(newTaxes)
-          showToast(ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'))
-        } else {
-          const newFees = fees
-          events.emit('fee_deleted', { tax: newFees[`id:${id}`], isRemove: true })
-          delete newFees[`id:${id}`]
-          setFees(newFees)
-          showToast(ToastType.Success, t('PRODUCT_FEE_DELETED', 'Product fee deleted'))
-        }
+      const { error, result } = await response.json()
+      if (error) {
+        showTaxError(result)
+        return { ok: false, error: result }
       }
+      const key = `id:${id}`
+      const without = (list) => {
+        const next = { ...list }
+        delete next[key]
+        return next
+      }
+      if (action === 'taxes') {
+        events.emit('tax_deleted', { tax: taxes[key], isRemove: true })
+        setTaxes(without)
+        showToast(ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'))
+      } else {
+        events.emit('fee_deleted', { fee: fees[key], isRemove: true })
+        setFees(without)
+        showToast(ToastType.Success, t('PRODUCT_FEE_DELETED', 'Product fee deleted'))
+      }
+      return { ok: true }
+    } catch (err) {
+      showTaxError() // an exception's text («Failed to fetch», «Invalid response») is not for the user: the generic text
+      return { ok: false, error: [err.message] }
+    } finally {
+      setFormTaxState(prev => ({ ...prev, loading: false }))
     }
-    setFormTaxState({
-      ...formTaxState,
-      loading: false
-    })
   }
 
   useEffect(() => {

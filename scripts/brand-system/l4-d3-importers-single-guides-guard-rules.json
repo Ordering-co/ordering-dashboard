@@ -1,0 +1,1612 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-d3-importers-single-guides-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-d3-stores-batchimageform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "batchImageFormProps /* binding-sha256:93ab714f32c66c4f2eb0b655dc2a9d81d39e0872e2c9f779a9f93f8e8b656405 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-batchimageform-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BatchImageForm/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "IssueBoard",
+      "property": "font",
+      "match": "props => props.emptyboard && css`\n    min-height: 75px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Title",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ConditionTitle",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "Conditions",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ImageIssue",
+      "property": "border-left",
+      "match": "1px solid #E9ECEF",
+      "context": "@media (min-width: 768px)",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ImageIssue",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SkeletonWrapper",
+      "property": "border",
+      "match": "4px solid #2C7BE5",
+      "context": "@keyframes loader > 0%",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SkeletonWrapper",
+      "property": "border",
+      "match": "() => darken(0.06, '#2C7BE5')",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SkeletonWrapper",
+      "property": "border",
+      "match": "() => darken(0.03, '#2C7BE5')",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIconContainer",
+      "property": "background",
+      "match": "#E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "color",
+      "match": "#ADB5BD",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadImageIcon",
+      "property": "border",
+      "match": "1px dashed #fff",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IssueBoard",
+      "property": "border",
+      "match": "1px ridge #f2f2f2",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "IssueBoard",
+      "property": "color-block",
+      "match": "props => props.emptyboard && css`\n    min-height: 75px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-importerform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ImporterForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "addImporterProps /* binding-sha256:eeae6c364b7ad6cf3014c14f3ca3814f6a2c75a17e04d10ad3a7f4fa1b78510a */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-importerjobform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ImporterJobForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "addCsvDetailProps /* binding-sha256:4931dde834f315a8696ac6dd8962fdae6f8eb3129eaac2fb9ddf9de34cb42dc9 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-importersbutton-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ImportersButton/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-d3-stores-importerslist-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ImportersList/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-d3-stores-importerslisting-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ImportersListing/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "importersListingProps /* binding-sha256:6c95f3a2eb872552638ace210cd8b1c48465862c7127e4e3213438025c5b27c3 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesscategoryedit-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessCategoryEdit/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "singleBusinessCategoryProps /* binding-sha256:425a884f50830b9ce6b68309063cd9fb288171bd089777e0423f3f5d47a726ab */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesscategoryedit-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessCategoryEdit/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "SingleCategoryContainer",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.lightPrimary};\n    border: 1px solid ${props => props.theme.colors.primary};\n    box-sizing: border-box;\n    .actions-btn {\n      display: block;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SingleCategoryContainer",
+      "property": "font",
+      "match": "({ isAccept }) => isAccept && css`\n    background: ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ImageContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n  margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ImageContainer",
+      "property": "font",
+      "match": "({ disabled }) => disabled && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CategoryEnableWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "DraggableContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "SingleCategoryContainer",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.lightPrimary};\n    border: 1px solid ${props => props.theme.colors.primary};\n    box-sizing: border-box;\n    .actions-btn {\n      display: block;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleCategoryContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleCategoryContainer",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleCategoryContainer",
+      "property": "color-block",
+      "match": "({ isAccept }) => isAccept && css`\n    background: ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleCategoryContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CategoryContent",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ImageContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n  margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ImageContainer",
+      "property": "color-block",
+      "match": "({ disabled }) => disabled && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CategoryEnableWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CategoryEnableWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "#F8F9FA",
+      "context": ".show > button",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "border",
+      "match": "1px solid #E9ECEF",
+      "context": ".show > > div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+      "context": ".show > > div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "#E63757",
+      "context": "> div > > div > a:last-child",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DraggableContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinessproduct-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 3,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "Redesign SP: the catalog page moved to Product pieces; re-pinned to the current source: the row and the card (SP-F3) each spread the controller props; three props spreads. Checked with verifyMigration."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "singleBusinessProductProps /* binding-sha256:90b0da583f62a02c546554c561f3ff675b836746ce99003f6494b87afa2610ce */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinessproduct-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessProduct/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "font",
+      "match": "({ isAccept }) => isAccept && css`\n    tr {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "font",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    tr {\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessGeneralInfo",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid #E9ECEF;\n  `\n: css`\n    border-right: 1px solid #E9ECEF;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessEnableWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductTypeImage",
+      "property": "font",
+      "match": "({ disabled }) => disabled && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "DragImageWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 14px;\n    `\n: css`\n      margin-right: 14px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary};\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "color-block",
+      "match": "({ isAccept }) => isAccept && css`\n    tr {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "SingleListBusinessContainer",
+      "property": "color-block",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    tr {\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessGeneralInfo",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid #E9ECEF;\n  `\n: css`\n    border-right: 1px solid #E9ECEF;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessGeneralInfo",
+      "property": "border-left",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessGeneralInfo",
+      "property": "border-right",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessGeneralInfo",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InfoBlock",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "InfoBlock",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "BusinessEnableWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "ProductTypeImage",
+      "property": "color-block",
+      "match": "({ disabled }) => disabled && css`\n    pointer-events: none;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadWrapper",
+      "property": "background",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "UploadWrapper",
+      "property": "color",
+      "match": "white",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "DragImageWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 14px;\n    `\n: css`\n      margin-right: 14px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesssubcateogries-productlayout-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/ProductLayout/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "singleBusinessSubCateogriesProps /* binding-sha256:167fb59b7d9d66c559b108f66eb1953c284aabbd29dd15b751b7c63d7d5c4f2e */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesssubcateogries-productlayout-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/ProductLayout/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "AccordionStyled",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    border: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isAccept }) => isAccept && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ hasNotSubcategoriesAndPrincipal }) => hasNotSubcategoriesAndPrincipal && css`\n    > div {\n      position: relative;\n      right: 20px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isLastCategory }) => isLastCategory && css`\n    > div {\n        position: relative;\n        left: 7px;\n      }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "font",
+      "match": "props => props.disabled && css`\n    div{\n      pointer-events: none;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "inline-style",
+      "property": "font",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "AccordionStyled",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    border: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isAccept }) => isAccept && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ hasNotSubcategoriesAndPrincipal }) => hasNotSubcategoriesAndPrincipal && css`\n    > div {\n      position: relative;\n      right: 20px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isLastCategory }) => isLastCategory && css`\n    > div {\n        position: relative;\n        left: 7px;\n      }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color-block",
+      "match": "props => props.disabled && css`\n    div{\n      pointer-events: none;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "inline-style",
+      "property": "color-block",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesssubcateogries-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "singleBusinessSubCateogriesProps /* binding-sha256:167fb59b7d9d66c559b108f66eb1953c284aabbd29dd15b751b7c63d7d5c4f2e */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-singlebusinesssubcateogries-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/SingleBusinessSubCateogries/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "AccordionSection",
+      "property": "font",
+      "match": "({ isAccept }) => isAccept && css`\n    background: ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionStyled",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    border: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isAccept }) => isAccept && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "inline-style",
+      "property": "font",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "AccordionSection",
+      "property": "color-block",
+      "match": "({ isAccept }) => isAccept && css`\n    background: ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionSection",
+      "property": "background",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionStyled",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    border: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isAccept }) => isAccept && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isBorderBottom }) => isBorderBottom && css`\n    border-radius: unset;\n    border: 1px solid ${props => props.theme.colors.backgroundPage};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "inline-style",
+      "property": "color-block",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-wizardbusiness-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/WizardBusiness/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The d3-importers-single-guides semantic inventory pins the full expression. L4 changes no existing colour in this batch."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-d3-stores-wizardbusiness-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/WizardBusiness/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-d3-stores-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  }
+ ]
+}

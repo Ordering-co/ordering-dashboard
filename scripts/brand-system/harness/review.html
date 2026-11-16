@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordering.co — Revisión del piloto L1</title>
+  <link rel="stylesheet" href="/src/brand/ordering.tokens.generated.css">
+  <link rel="stylesheet" href="./review.css">
+</head>
+<body data-ordering-brand data-od-theme="light">
+  <header>
+    <h1>Pantalla de carga · Piloto L1</h1>
+    <p>Esta demostración muestra únicamente la apariencia de AppBootLoader. La animación permanece visible y no abre el dashboard.</p>
+    <nav aria-label="Variantes del piloto">
+      <fieldset><legend>Color</legend><button type="button" data-mode="light" aria-pressed="true">Claro</button><button type="button" data-mode="dark" aria-pressed="false">Oscuro</button></fieldset>
+      <fieldset><legend>Sesión de ejemplo</legend><button type="button" data-density="full" aria-pressed="true">Con sesión</button><button type="button" data-density="light" aria-pressed="false">Sin sesión</button></fieldset>
+    <button type="button" id="retry" hidden>Volver a cargar</button>
+    </nav>
+    <p id="preview-status" role="status">Preparando la demostración…</p>
+  </header>
+  <iframe title="Demostración aislada de la pantalla de carga" src="./index.html?pilot=light&amp;density=full"></iframe>
+  <script type="module" src="./review.js"></script>
+</body>
+</html>

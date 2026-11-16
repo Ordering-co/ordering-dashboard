@@ -1,108 +1,162 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLanguage, BusinessGallery as BusinessGalleryController } from '../../../../../index'
-import { Confirm, Alert } from '../../Shared'
-import { Input, Button } from '../../../styles'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { Plus, Trash2, Video as VideoIcon } from '../../Shared/Icon'
+import { Button, ConfirmDialog, EmptyState, IconButton, InlineNotice, TextField } from '../../Shared/Product'
+import './business-videos.css'
 
-import {
-  Container,
-  BusinessVideoPathWrapper,
-  BusinessAddVideoWrapper
-} from './styles'
+// redesign stores 5.3 (; G2-15, G2-16, G2-17, G2-18): the store's video links on Product. Adding and deleting are
+// immediate, as before. The URL field has a label and only takes an http(s) link (D6); «Add» is off while it is empty or saving.
+// A failed add says why under the field; a failed delete says why above the list. Delete asks first (P/ConfirmDialog). Every
+// notice belongs to the action that caused it, so none re-opens on an unrelated change.
+
+const isHttpUrl = (value) => {
+  try {
+    const url = new URL(value)
+    return (url.protocol === 'http:' || url.protocol === 'https:') && !!url.hostname
+  } catch {
+    return false
+  }
+}
+
+const withCount = (template, values) => Object.entries(values)
+  .reduce((result, [key, value]) => result.split(`_${key}_`).join(String(value)), template)
 
 const BusinessVideosUI = (props) => {
   const {
     businessVideos,
-    formState,
-    cleanFormState,
-    handleChangeBusinessVideo,
-    handleUpdateBusinessGallery,
+    adding,
+    deletingId,
+    handleAddGalleryItem,
     handleDeleteBusinessGallery
   } = props
   const [, t] = useLanguage()
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
 
-  const handleDeleteClick = (id) => {
-    setConfirm({
-      open: true,
-      content: t('QUESTION_DELETE_VIDEO', 'Are you sure that you want to delete this video?'),
-      handleOnAccept: () => {
-        setConfirm({ ...confirm, open: false })
-        handleDeleteBusinessGallery(id)
-      }
-    })
-  }
+  const mounted = useRef(true)
+  useEffect(() => () => { mounted.current = false }, [])
+  const inputRef = useRef(null)
+  const [url, setUrl] = useState('')
+  const [fieldError, setFieldError] = useState(null)
+  const [deleteError, setDeleteError] = useState(null)
+  const [confirmId, setConfirmId] = useState(null)
 
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-  }
+  const value = url.trim()
 
-  useEffect(() => {
-    if (formState?.result?.error) {
-      setAlertState({
-        open: true,
-        content: formState?.result?.result
-      })
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!value || adding) return
+    setDeleteError(null)
+    if (!isHttpUrl(value)) {
+      setFieldError(t('GALLERY_VIDEO_URL_INVALID', 'Enter a link that starts with http:// or https://'))
+      inputRef.current?.focus()
+      return
     }
-  }, [formState])
+    setFieldError(null)
+    const result = await handleAddGalleryItem({ video: value })
+    if (!mounted.current) return
+    if (result?.ok) setUrl('')
+    else {
+      setFieldError(translateApiMessage(t, result?.error, t('GALLERY_VIDEO_ADD_FAILED', 'The video could not be added.')))
+      inputRef.current?.focus()
+    }
+  }
 
-  useEffect(() => {
-    cleanFormState({ changes: {} })
-  }, [])
+  const confirmDelete = async () => {
+    const id = confirmId
+    const result = await handleDeleteBusinessGallery(id)
+    if (!mounted.current) return
+    setConfirmId(null)
+    if (!result?.ok) {
+      setDeleteError(translateApiMessage(t, result?.error, t('GALLERY_VIDEO_DELETE_FAILED', 'The video could not be deleted.')))
+    }
+  }
+
+  const confirmVideo = businessVideos.find(video => video.id === confirmId)
 
   return (
-    <>
-      <Container>
-        {businessVideos.map(video => (
-          <BusinessVideoPathWrapper key={video.id}>
-            <span>{video?.video}</span>
-            <p
-              onClick={() => handleDeleteClick(video.id)}
-            >
-              {t('DELETE', 'Delete')}
-            </p>
-          </BusinessVideoPathWrapper>
-        ))}
-        <BusinessAddVideoWrapper>
-          <Input
-            placeholder={t('VIDEO_URL', 'Video url')}
-            value={formState?.changes?.video ?? ''}
-            onChange={(e) => handleChangeBusinessVideo(e)}
-            disabled={formState?.loading}
-            autoComplete='off'
+    <div className='odc-videos'>
+      {deleteError && <InlineNotice tone='danger'>{deleteError}</InlineNotice>}
+
+      {businessVideos.length === 0
+        ? (
+          <EmptyState
+            icon={VideoIcon}
+            title={t('GALLERY_NO_VIDEOS', 'No videos yet')}
+            description={t('GALLERY_NO_VIDEOS_HINT', 'Add a link to a video of the store.')}
           />
-          <Button
-            disabled={!formState?.changes?.video}
-            onClick={() => handleUpdateBusinessGallery()}
-            color='primary'
-          >
-            {t('ADD', 'Add')}
-          </Button>
-        </BusinessAddVideoWrapper>
-        <Alert
-          title={t('ERROR', 'Error')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
-        />
-        <Confirm
-          title={t('WEB_APPNAME', 'Ordering')}
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
-        />
-      </Container>
-    </>
+          )
+        : (
+          <ul className='odc-videos-list' aria-label={t('VIDEOS', 'Videos')}>
+            {businessVideos.map((video, index) => (
+              <li key={video.id} className='odc-videos-row'>
+                {/* only an http(s) address is a link: anything else saved elsewhere (javascript:, data:) stays text (review 2) */}
+                {isHttpUrl(video.video)
+                  ? (
+                    <a className='odc-videos-link' href={video.video} target='_blank' rel='noopener noreferrer'>
+                      <bdi>{video.video}</bdi>
+                    </a>
+                    )
+                  : <span className='odc-videos-link'><bdi>{video.video}</bdi></span>}
+                <IconButton
+                  icon={Trash2}
+                  label={withCount(t('GALLERY_DELETE_VIDEO_N', 'Delete video _number_'), { number: index + 1 })}
+                  variant='ghost'
+                  size='sm'
+                  disabled={deletingId != null}
+                  onClick={() => { setDeleteError(null); setConfirmId(video.id) }}
+                />
+              </li>
+            ))}
+          </ul>
+          )}
+
+      <form className='odc-videos-add' noValidate onSubmit={handleSubmit}>
+        <div className='odc-videos-field'>
+          <TextField
+            ref={inputRef}
+            type='url'
+            inputMode='url'
+            label={t('VIDEO_URL', 'Video url')}
+            hint={t('GALLERY_VIDEO_URL_HINT', 'A link to the video, for example on YouTube or Vimeo.')}
+            placeholder='https://'
+            value={url}
+            error={fieldError || undefined}
+            disabled={adding}
+            autoComplete='off'
+            spellCheck={false}
+            onChange={(next) => { setUrl(next ?? ''); setFieldError(null) }}
+          />
+        </div>
+        <Button
+          type='submit'
+          variant='primary'
+          icon={Plus}
+          busy={adding}
+          disabled={!value}
+          className='odc-videos-submit'
+        >
+          {t('ADD', 'Add')}
+        </Button>
+      </form>
+
+      <ConfirmDialog
+        open={confirmVideo != null}
+        title={t('GALLERY_DELETE_VIDEO_TITLE', 'Delete this video?')}
+        confirmLabel={t('GALLERY_DELETE_VIDEO_CONFIRM', 'Delete video')} // redesign tanda AB (S-5): verb + object
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        busy={deletingId != null}
+        onConfirm={confirmDelete}
+        onCancel={() => setConfirmId(null)}
+      >
+        {confirmVideo && (
+          <div className='odc-videos-confirm'>
+            <p><bdi className='odc-videos-confirm-url'>{confirmVideo.video}</bdi></p>
+            <p>{t('GALLERY_DELETE_VIDEO_BODY', 'It is removed from the store\'s gallery right away.')}</p>
+          </div>
+        )}
+      </ConfirmDialog>
+    </div>
   )
 }
 

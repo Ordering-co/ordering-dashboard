@@ -73,7 +73,7 @@ export const Image = (props) => {
 }
 
 export const BusinessName = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   ${props => props.theme?.rtl
 ? css`
     margin-right: 12px;
@@ -85,7 +85,7 @@ export const BusinessName = styled.span`
 
 export const NoSelectedBrand = styled.div`
   padding: 30px 10px;
-  font-size: 18px;
+  font-size: var(--od-type-section-title-size);
   text-align: center;
 `
 export const SelectButtonGroup = styled.div`

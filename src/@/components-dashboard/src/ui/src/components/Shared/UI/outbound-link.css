@@ -1,0 +1,105 @@
+/* Scoped outbound-link surfaces. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-personalization) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 20px;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-personalization) h1 {
+  width: 100%;
+  margin: 0 0 30px;
+  color: var(--od-entity-selector-text);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.od-ui:where(.od-personalization) p {
+  width: 100%;
+  margin-inline: 0;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-personalization) .od-outbound-link,
+.od-ui:where(.od-linkable-text) .od-outbound-link {
+  color: var(--od-entity-selector-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.od-ui:where(.od-personalization) p .od-outbound-link {
+  margin-inline-start: 10px;
+}
+
+.od-ui:where(.od-personalization) .od-outbound-link:focus-visible,
+.od-ui:where(.od-linkable-text) .od-outbound-link:focus-visible {
+  border-radius: var(--od-entity-selector-radius);
+  outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus);
+  outline-offset: var(--od-entity-selector-focus-offset);
+}
+
+.od-ui:where(.od-personalization) img {
+  display: block;
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.od-ui:where(.od-personalization-actions) {
+  position: sticky;
+  top: 100%;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.od-ui:where(.od-personalization-actions) > .od-personalization-contact {
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui:where(.od-linkable-text) {
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: inherit;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 390px) {
+  .od-ui:where(.od-personalization) {
+    padding: 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-personalization) .od-outbound-link,
+  .od-ui:where(.od-linkable-text) .od-outbound-link {
+    display: inline-block;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: var(--od-entity-selector-touch-target);
+    min-width: var(--od-entity-selector-touch-target);
+    padding-block: 12px;
+    line-height: 20px;
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-personalization) .od-outbound-link,
+  .od-ui:where(.od-linkable-text) .od-outbound-link {
+    transition-duration: 0s;
+  }
+}

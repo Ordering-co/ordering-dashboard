@@ -1,0 +1,417 @@
+/*
+ * Date range of the filters (redesign fix-qa E1): the trigger, the popover (a bottom sheet under 768px),
+ * the preset chips, the From / To fields and the calendar. Tokens only; logical properties only.
+ *
+ * --odc-dr-day is the height of a day button: the compact control (32px), the touch target with a coarse
+ * pointer (44px). The popover is --od-x-daterange wide (as far as the viewport allows) and the days share it.
+ */
+
+.odc-dr-trigger,
+.odc-dr,
+.odc-dr * {
+  box-sizing: border-box;
+}
+
+/* ── Trigger: dressed as the field of the Filters sheet (same height, border, radius, type) ── */
+.odc-dr-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--odc-ofs-control, var(--od-x-control-height));
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-dr-trigger[data-empty] .odc-dr-trigger-text {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-dr-trigger:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-dr-trigger-text {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dr-trigger-chevron {
+  flex: none;
+  color: var(--od-text-muted);
+}
+
+/* ── Popover ── */
+.odc-dr-positioner {
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-dr-popup,
+.odc-dr-sheet {
+  --odc-dr-day: var(--od-x-control-height);
+}
+
+.odc-dr-popup {
+  inline-size: var(--od-x-daterange);
+  max-inline-size: var(--available-width);
+  max-block-size: var(--available-height);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--od-space-3);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  outline: 0;
+}
+
+.odc-dr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── Presets: chips that wrap ── */
+.odc-dr-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1);
+}
+
+.odc-dr-preset {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-dr-preset:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-dr-preset[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-dr-preset:focus-visible,
+.odc-dr-input:focus-visible,
+.odc-dr-day:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── From / To ── */
+.odc-dr-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-2);
+}
+
+.odc-dr-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-dr-label {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-dr-input {
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+}
+
+.odc-dr-input::placeholder {
+  color: var(--od-x-text-subtle);
+  opacity: 1;
+}
+
+.odc-dr-input[aria-invalid='true'] {
+  border-color: var(--od-danger-functional);
+}
+
+.odc-dr-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Calendar ── */
+.odc-dr-cal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-dr-cal-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-dr-cal-title {
+  flex: 1;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  text-align: center;
+  /* redesign tramo A r5 (W0-QA3-04): the title is the text the formatter gives («octubre de 2026»); capitalize made
+     «Octubre De 2026». The grid of the calendar in main (react-datepicker) did not transform it either.
+     DayCalendar draws it for the Date range popover and for the DatePicker, so both are covered here. */
+}
+
+.odc-dr-grid {
+  inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.odc-dr-weekday {
+  padding: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.odc-dr-cell {
+  padding: 0;
+  text-align: center;
+}
+
+.odc-dr-cell[data-range],
+.odc-dr-cell[data-edge] {
+  background: var(--od-x-selected);
+}
+
+/* The band closes at the inner edge of the first and last day, so it reads as one run in both directions. */
+.odc-dr-cell[data-edge='start'] {
+  background: linear-gradient(to right, transparent 50%, var(--od-x-selected) 50%);
+}
+
+.odc-dr-cell[data-edge='end'] {
+  background: linear-gradient(to left, transparent 50%, var(--od-x-selected) 50%);
+}
+
+[dir='rtl'] .odc-dr-cell[data-edge='start'] {
+  background: linear-gradient(to left, transparent 50%, var(--od-x-selected) 50%);
+}
+
+[dir='rtl'] .odc-dr-cell[data-edge='end'] {
+  background: linear-gradient(to right, transparent 50%, var(--od-x-selected) 50%);
+}
+
+.odc-dr-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--odc-dr-day);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.odc-dr-day:hover {
+  background: var(--od-x-hover);
+}
+
+/* Today is outlined, never only coloured. */
+.odc-dr-day[data-today] {
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-border-strong);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-dr-day[data-edge-day] {
+  background: var(--od-action);
+  color: var(--od-action-foreground);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-dr-day[data-edge-day]:hover {
+  background: var(--od-action-hover);
+}
+
+.odc-dr-foot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Touch: 44px days and a field height that can be pressed ── */
+@media (pointer: coarse) {
+  .odc-dr-popup,
+  .odc-dr-sheet {
+    --odc-dr-day: var(--od-x-target-coarse);
+  }
+
+  .odc-dr-trigger {
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  .odc-dr-preset,
+  .odc-dr-input {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-dr-input {
+    font-size: var(--od-x-type-lead-size);
+  }
+}
+
+/* redesign : the 44px boxes of the presets and the From / To inputs were under `(pointer: coarse)` only, so a 390px window
+   with a mouse (and the touch audit at that width) measured 32px with no area. Below 768px they take the same box as with a coarse
+   pointer (above), like the other Product controls (, segmented.css). A 44px box, not a pseudo-element: the presets wrap 4px
+   apart (areas would cross) and an <input> cannot hold one. The days follow in the sheet (it is what the phone width opens; the popover
+   is a desktop layer). Font sizes stay with the coarse pointer: this changes the target, not the look. DatePicker's own input keeps
+   32px visible and its frame's area (date-picker.css, higher specificity). */
+@media (max-width: 767px) {
+  .odc-dr-preset,
+  .odc-dr-input {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-dr-sheet {
+    --odc-dr-day: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign W0-3d (T0-12, decision 12): the trigger is a loose control. On a phone (a coarse pointer, or below 768px with a mouse)
+   it keeps its box (32px, or the height of the field in the Filters sheet through --odc-ofs-control) and its 44px touch area is a
+   centered pseudo-element. Stays as it was, with the 44px box: the days (stacked rows), the presets (they wrap 4px apart) and
+   the From / To inputs (an <input> cannot hold a pseudo-element: it needs a wrapper element, see the delivery). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-dr-trigger {
+    position: relative;
+  }
+
+  .odc-dr-trigger::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* redesign W0-E-14 (decision 12): with a coarse pointer (or a phone width) «Next month» (28px) and «Today» (28px high) reach 44px by an
+   area of their own and sat 4px apart (areas of 8px each way crossed: the later one won the press), and «Done» (32px, 6px of area
+   above) sat 1px under the last row of days. The month row opens a --od-space-5 margin before «Today» (4 + 21px at the 14px root of
+   the gallery, 4 + 24px in the app): «Today» is wider than 44px, so it has no area to the side and the 8px area of «Next month»
+   is the only one in the gap; a touch in the dead strip goes to the nearest area (measured), so the strip beyond that area is
+   12px (6px each way) and a touch up to 6px off «Today» still goes to «Today». «Done» sits more than 12px of dead strip clear of the days (below).
+   The days are the dense grid: each is 44px high and as wide as its column, an area that is its own box, so two days never cross. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-dr-cal-head > .odc-btn:last-child {
+    margin-inline-start: var(--od-space-5);
+  }
+}
+
+@media (pointer: coarse) {
+  .odc-dr-popup .odc-dr-foot {
+    margin-block-start: var(--od-space-3);
+  }
+}
+
+/* ── Phones: the bottom sheet. The calendar uses the whole width, so the seven days stay 44px wide at 320px. ── */
+@media (max-width: 767px) {
+  .odc-dr-sheet .odc-dr-cal {
+    margin-inline: calc(var(--od-space-5) * -1);
+    padding-inline: var(--od-space-1);
+  }
+
+  .odc-dr-sheet .odc-dr-cal-head {
+    padding-inline: var(--od-space-4);
+  }
+
+  /* redesign W0-2 r2 (W0-Q1-03): live changes (no draft) need no «Done» in the sheet: the close button is enough. A held
+     draft is handed over only by «Done», so it stays, pinned to the bottom of the sheet body while the calendar scrolls. */
+  .odc-dr-sheet .odc-dr-foot:not([data-hold]) {
+    display: none;
+  }
+
+  .odc-dr-sheet .odc-dr-foot[data-hold] {
+    position: sticky;
+    /* redesign W0-E-14: the foot reaches over the body padding (margin-block-end below) and Chromium measures `bottom` from the
+       content edge, so with 0 it was pulled 21px up over the last row of days (1px between them and «Done»). It sticks to the
+       padding edge, which is where it sits when the body does not scroll. */
+    inset-block-end: calc(var(--od-space-5) * -1);
+    margin-inline: calc(var(--od-space-5) * -1);
+    margin-block-end: calc(var(--od-space-5) * -1);
+    padding-block: var(--od-space-3);
+    padding-inline: var(--od-space-5);
+    border-block-start: var(--od-x-hairline) solid var(--od-border);
+    background: var(--od-x-dialog-bg);
+  }
+
+  .odc-dr-sheet .odc-dr-foot[data-hold] > .odc-btn {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-dr-day,
+  .odc-dr-preset {
+    transition: none;
+  }
+}

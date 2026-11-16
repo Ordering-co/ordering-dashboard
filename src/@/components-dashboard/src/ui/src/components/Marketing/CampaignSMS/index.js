@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, useId } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useLanguage } from '../../../../../index'
@@ -28,10 +28,15 @@ export const CampaignSMS = (props) => {
     handleUpdateContact,
     handleAddCampaign,
     formState,
-    categoryList
+    categoryList,
+    // redesign CA-B2 (decision 3|4): opt-in props, all default off
+    hideActions = false,
+    previewOnly = false,
+    onConfigStateChange
   } = props
 
   const [, t] = useLanguage()
+  const fieldId = useId() // redesign CA-R2 (P7): ties each visible label to its field
   const theme = useTheme()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
 
@@ -89,6 +94,27 @@ export const CampaignSMS = (props) => {
     }
   }
 
+  // redesign CA-B2 (decision 4): tell the host whether the Twilio gate is satisfied (boolean, false while loading)
+  useEffect(() => {
+    if (typeof onConfigStateChange === 'function') onConfigStateChange(!!isEnableConfig)
+  }, [isEnableConfig])
+
+  const smsPreview = (
+    <SmsPreviewWrapper>
+      <SmsContentLayout bgimage={theme.images.general.mobileHalfMask}>
+        <SmsPreviewContentWrapper>
+          <SmsPreviewContent>
+            <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
+            <p>{contactState?.changes?.contact_data?.body || ''}</p>
+          </SmsPreviewContent>
+        </SmsPreviewContentWrapper>
+      </SmsContentLayout>
+    </SmsPreviewWrapper>
+  )
+
+  // redesign CA-B2 (decision 3): facsimile only, read-only, no gate
+  if (previewOnly) return smsPreview
+
   return (
     <>
       {isEnableConfig
@@ -96,53 +122,48 @@ export const CampaignSMS = (props) => {
         <>
           <Container>
             <InputWrapper>
-              <label>{t('TITLE', 'Title')}</label>
+              <label htmlFor={`${fieldId}-title`}>{t('TITLE', 'Title')}</label>
               <Input
                 name='title'
+                id={`${fieldId}-title`}
                 placeholder={t('TITLE', 'Title')}
                 defaultValue={contactState?.changes?.contact_data?.title || ''}
                 onChange={handleChangeData}
               />
             </InputWrapper>
             <InputWrapper>
-              <label>{t('MESSAGES', 'Messages')}</label>
+              <label htmlFor={`${fieldId}-body`}>{t('MESSAGES', 'Messages')}</label>
               <TextArea
                 name='body'
+                id={`${fieldId}-body`}
                 placeholder={t('WRITE_MESSAGE', 'Write a message')}
                 defaultValue={contactState?.changes?.contact_data?.body || ''}
                 onChange={handleChangeData}
               />
             </InputWrapper>
-            <SmsPreviewWrapper>
-              <SmsContentLayout bgimage={theme.images.general.mobileHalfMask}>
-                <SmsPreviewContentWrapper>
-                  <SmsPreviewContent>
-                    <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
-                    <p>{contactState?.changes?.contact_data?.body || ''}</p>
-                  </SmsPreviewContent>
-                </SmsPreviewContentWrapper>
-              </SmsContentLayout>
-            </SmsPreviewWrapper>
+            {smsPreview}
           </Container>
-          <ButtonWrapper>
-            <Button
-              color='primary'
-              onClick={() => handleSaveSms()}
-              disabled={contactState.loading}
-            >
-              {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
-            </Button>
-          </ButtonWrapper>
+          {!hideActions && (
+            <ButtonWrapper>
+              <Button
+                color='primary'
+                onClick={() => handleSaveSms()}
+                disabled={contactState.loading}
+              >
+                {isAddMode ? t('ADD', 'Add') : t('SAVE', 'Save')}
+              </Button>
+            </ButtonWrapper>
+          )}
         </>
           )
         : (
         <>
           <ContactWrapper>
             <p>{t('IF_YOU_NEED_HELP_WITH_SETUP_CONTACT_SUPPORT_TEAM', 'If you need help with your setup, contact our support team.')}</p>
-            <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
+            <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank', 'noopener,noreferrer')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
           </ContactWrapper>
           <Description>
-            <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/social-login-options/twilio-otp/', '_blank')}>
+            <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/social-login-options/twilio-otp/', '_blank', 'noopener,noreferrer')}>
               {t('TWILIO_SETTINGS_LINK_DESC', 'You need to complete Twilio configuration first')}
             </span>
           </Description>
@@ -165,15 +186,17 @@ export const CampaignSMS = (props) => {
           <BottomSpace />
         </>
           )}
-      <Alert
-        title={t('CAMPAIGN', 'Campaign')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
+      {!hideActions && (
+        <Alert
+          title={t('CAMPAIGN', 'Campaign')}
+          content={alertState.content}
+          acceptText={t('ACCEPT', 'Accept')}
+          open={alertState.open}
+          onClose={() => closeAlert()}
+          onAccept={() => closeAlert()}
+          closeOnBackdrop={false}
+        />
+      )}
     </>
   )
 }

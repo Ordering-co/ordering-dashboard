@@ -1,0 +1,55 @@
+/*
+ * redesign AB-B5 (decision 1) · Ad banners: the page shell. The list's frame (header, search, the positions) sits beside the banner panel
+ * in a split view, as the campaigns page (.odc-campaign-*) and /orders. Values: --od-* and --od-x-* only (guard:
+ * productLiteralGuard.test.js). Logical properties only. Class prefix odc-banners-.
+ *
+ * Not measured in a browser yet: the gutters below follow the rules of the pieces they hold (the table gives its first and last cell the
+ * page gutter; the position heads and the search take it from ad-banners.css; the phone cards cancel the mobile gutter of their parent).
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-banners-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: the header, then the search and the positions, one under the other. */
+.odc-banners-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  /* no inline padding here: the table's cells and the position heads already take the page gutter (ad-banners.css) */
+  padding-block: var(--od-x-page-gutter);
+}
+
+/* The header has no cell to take the gutter from */
+.odc-banners-frame > .odc-banners-head {
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders, and the pieces that took the desktop gutter themselves drop it; the cards
+   of the phone list cancel the frame's mobile gutter with a negative margin (record-card.css) and draw their own. */
+@media (max-width: 767px) {
+  .odc-banners-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-banners-frame > .odc-banners-head,
+  .odc-banners-frame .odc-banners-bar,
+  .odc-banners-frame .odc-banners-group-title,
+  .odc-banners-frame .odc-banners-section-head,
+  .odc-banners-frame .odc-banners-section-empty {
+    padding-inline: 0;
+  }
+}
+
+@media print {
+  .odc-banners-frame {
+    display: none;
+  }
+}

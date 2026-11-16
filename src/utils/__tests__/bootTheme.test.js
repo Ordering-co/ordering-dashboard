@@ -11,6 +11,7 @@ const {
   readStoredDashboardAuth,
   resolveBootRevealAction,
   resolveInitialDashboardProject,
+  shouldNormalizeStoredProjectAlias,
   shouldResolveDashboardProject,
   shouldResolveDashboardProjectAtBoot
 } = bootTheme
@@ -166,6 +167,30 @@ describe('shouldResolveDashboardProjectAtBoot', () => {
   })
 })
 
+describe('shouldNormalizeStoredProjectAlias', () => {
+  it('normalizes an authenticated session with a stored project and no pin', () => {
+    expect(shouldNormalizeStoredProjectAlias({
+      auth: 'token',
+      storedProject: 'tenant-project',
+      localProjectPin: null
+    })).toBe(true)
+  })
+
+  it('does not normalize without an authenticated session or a stored project', () => {
+    expect(shouldNormalizeStoredProjectAlias({ auth: null, storedProject: 'tenant-project' })).toBe(false)
+    expect(shouldNormalizeStoredProjectAlias({ auth: 'token', storedProject: null })).toBe(false)
+    expect(shouldNormalizeStoredProjectAlias({ auth: 'token', storedProject: '_' })).toBe(false)
+  })
+
+  it('respects a local project pin', () => {
+    expect(shouldNormalizeStoredProjectAlias({
+      auth: 'token',
+      storedProject: 'tenant-project',
+      localProjectPin: 'tenant-project'
+    })).toBe(false)
+  })
+})
+
 describe('readStoredDashboardAuth', () => {
   const storageWindow = values => ({
     localStorage: {
@@ -225,7 +250,7 @@ describe('readFirstLoadConfigsForProject', () => {
   })
 
   it('ignores first_load injected for another project than the session', () => {
-    expect(readFirstLoadConfigsForProject('luisv4plus', workerWindow('orderingplus'))).toBeNull()
+    expect(readFirstLoadConfigsForProject('exampletenant', workerWindow('orderingplus'))).toBeNull()
   })
 
   it('keeps first_load when the worker resolved the active project', () => {

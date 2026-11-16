@@ -84,7 +84,7 @@ export const McpTokenForm = (props) => {
   if (created) {
     return (
       <SecretView data-testid='mcp-secret'>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>{t('MCP_KEY_CREATED', 'Your new MCP key')}</h2>
+        <h2 style={{ margin: 0, fontSize: 'var(--od-type-section-title-size)', fontWeight: 700 }}>{t('MCP_KEY_CREATED', 'Your new MCP key')}</h2>
         <Notice role='alert'>
           <strong>{t('MCP_KEY_SHOWN_ONCE', 'Copy this key now. You will not see this key again.')}</strong>
         </Notice>
@@ -112,7 +112,7 @@ export const McpTokenForm = (props) => {
 
   return (
     <Form onSubmit={onSubmit} noValidate data-testid='mcp-create-form'>
-      <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>{t('MCP_CREATE_KEY_TITLE', 'Create an MCP key')}</h2>
+      <h2 style={{ margin: 0, fontSize: 'var(--od-type-section-title-size)', fontWeight: 700 }}>{t('MCP_CREATE_KEY_TITLE', 'Create an MCP key')}</h2>
 
       <Field>
         <label htmlFor='mcp-token-name'>{t('NAME', 'Name')}</label>

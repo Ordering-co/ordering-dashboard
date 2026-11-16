@@ -1,6 +1,6 @@
 # Ordering.co brand in the dashboard
 
-The dashboard consumes the released Ordering.co brand system (https://brand.ordering.co) through a small adapter. First surface: the sign-in flow (login, forgot password, reset password).
+The dashboard consumes the released Ordering.co brand system (https://brand.ordering.co) through the product tokens and adapters described below.
 
 ## What is pinned
 
@@ -39,27 +39,31 @@ const Shell = styled.div`
 `
 ```
 
-Light mode is the default; dark follows `prefers-color-scheme`. Icons are Lucide (inlined in `Login/AuthLayout/icons.js`).
+Use semantic tokens so the same component supports both color modes and project branding. Icons use Lucide; follow the treatment of the surrounding surface.
 
-## Boundary
+## Product UI boundary
 
-Mia navigation buttons use the governed `ordering-button` registry wrapper on Base UI,
-with prefixed Tailwind utilities and the existing semantic Ordering.co token adapter.
-`brand/ordering-ui.lock.json` pins the vendored registry JSON by checksum; `pnpm ui:check`
-verifies provenance and generated JSX parity, and `pnpm ui:sync` regenerates it offline.
-The adapter only removes TypeScript annotations, rewrites the utility import and prefixes
-classes. It does not fork the button's states or appearance. Tailwind Preflight is not
-imported, and utility scanning is restricted to these buttons and their consumer, so the
-existing Bootstrap and styled-components surfaces are not reset or implicitly migrated.
+Use the governed wrappers in `Shared/Product` where they fit. Keep network calls,
+authorization and domain state in the feature that owns them; pass data and
+callbacks to the wrapper. Use a direct component import for a heavy optional
+surface when loading it through the barrel would make other routes heavier.
 
-The consumer explicitly sets `focus-visible:outline-solid` alongside the token-colored
-2px outline and 2px offset; width/color alone inherit the registry's `outline-none` style.
+Two Tailwind pipelines coexist. The registry button adapter uses the existing
+Tailwind 4 integration; the Product utilities use scoped Tailwind 3 with
+`od-` classes and no Preflight. Do not add a global reset or broaden scanning
+into Bootstrap and styled-components surfaces. Preserve the existing browser
+targets when changing either pipeline.
 
-The rest of the dashboard remains a legacy boundary:
+`brand/ordering-ui.lock.json` pins the vendored button registry JSON.
+`pnpm ui:check` verifies the adapter and `pnpm ui:sync` regenerates it.
+`pnpm brand:check` also validates the vendored release and generated Product
+outputs under `src/brand/`. Keep the [upstream notice](third-party/shadcn-ui/upstream/LICENSE.md)
+and [provenance](third-party/shadcn-ui/provenance.json) with the adapted primitives.
 
-The brand contract asks new React web UI to use shadcn/ui on Base UI with Tailwind. This dashboard is a legacy styled-components + Bootstrap 4 app, so it consumes the same tokens through this adapter instead. Moving to shadcn/Tailwind is a separate migration; until then, do not hard-code brand values, add a second token source or copy the generated file.
-
-Project branding still wins where the project set it: `dashboard_logo` and `dashboard_login_background` replace the Ordering.co lockup and the brand panel.
+Preserve a visible focus indicator, keyboard operation and accessible labels.
+Project overrides such as `dashboard_logo` and `dashboard_login_background`
+remain effective. Avoid using a tenant action color for neutral surfaces or
+status meanings; use the semantic roles for those.
 
 ## Feature styling
 

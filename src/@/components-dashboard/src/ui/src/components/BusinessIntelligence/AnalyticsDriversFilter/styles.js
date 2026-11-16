@@ -27,7 +27,7 @@ export const TreeViewParentItem = styled.div`
 export const TreeViewParentLabel = styled.span`
   user-select: none;
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--od-type-control-value-size);
   cursor: pointer;
   color: ${props => props.theme.colors.headingColor};
   margin-left: 10px;
@@ -58,7 +58,7 @@ export const TreeViewChildrenItem = styled.div`
 
 export const TreeViewChildrenLabel = styled.span`
   user-select: none;
-  font-size: 15px;
+  font-size: var(--od-type-control-value-size);
   color: ${props => props.theme.colors.headingColor};
   margin-left: 30px;
   ${props => props.theme?.rtl && css`
@@ -96,7 +96,7 @@ export const SelectBtnWrapper = styled.div`
 : css`
       margin-right: 10px;
     `}
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     white-space: nowrap;
 
     svg {

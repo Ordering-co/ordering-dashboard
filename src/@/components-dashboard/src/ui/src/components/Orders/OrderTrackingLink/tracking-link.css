@@ -1,0 +1,76 @@
+/*
+ * 5.4-B · Tracking domain on Product Dialog (C8): the help text, the labelled domain selector (a C18
+ * FirstSelect, redesign F6c) and, for «Other», a labelled field whose error is text tied to it. Values come from --od-* (release) and
+ * --od-x-* (src/brand/candidates.css) only. Logical properties only (C17). The dark mode is the
+ * tokens' own.
+ */
+
+.odc-tracking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-tracking-help {
+  margin: 0;
+}
+
+.odc-tracking-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-tracking-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-tracking-input {
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The domain source is a C18 dropdown (FirstSelect, redesign F6c, Q2-14). Its list is an overlay in the shared layer
+   host (`portal`, redesign F6d-2, Q3-11), so the dialog keeps its size when it opens: nothing here reserves room for it. */
+
+.odc-tracking-input::placeholder {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-tracking-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-tracking-input[aria-invalid='true'] {
+  border-color: var(--od-danger-functional);
+}
+
+/* The error is text, in the danger text color, tied to the field by aria-describedby. */
+.odc-tracking-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign F3 (C3): 44px below 768px of screen too, not only on a coarse pointer */
+@media (pointer: coarse), (max-width: 767px) {
+  /* The select's root carries the class too: it reaches the same 44px and the same text size as the input. */
+  .odc-tracking-input,
+  .odc-tracking-select {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+}

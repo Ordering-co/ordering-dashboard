@@ -6,6 +6,7 @@ import {
   BatchImageForm as BatchImageFormController
 } from '../../../../../index'
 import { bytesConverter } from '../../../utils'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
 import { Alert } from '../../Shared'
 import { Button } from '../../../styles'
 import {
@@ -26,6 +27,14 @@ import {
   IssueBoard,
   UploadedImages
 } from './styles'
+
+// bugs E D16c: what the API answered when a product could not be updated, as messages the Alert can show. The
+// answer is a list of texts, a text, or an Error; with no text in it, the generic error.
+const getApiErrorMessages = (t, result) => {
+  const items = Array.isArray(result) ? result : [typeof result?.message === 'string' ? result.message : result]
+  const messages = items.map(item => translateApiMessage(t, item, '')).filter(Boolean)
+  return messages.length > 0 ? messages : [t('ERROR_UNKNOWN', 'An error has occurred')]
+}
 
 const BatchImageFormUI = (props) => {
   const {
@@ -106,12 +115,34 @@ const BatchImageFormUI = (props) => {
     handleFiles(e.target.files)
   }
 
-  const handleSubmit = () => {
-    event.preventDefault()
+  // bugs E D16a: this read the global `event` (window.event), which throws where the browser does not set it. Save sits
+  // inside the form and would submit it, so it takes the click's own event to stop that.
+  const handleSubmit = (e) => {
+    e?.preventDefault()
     if (formState?.photos.length > 0 && updateProduct) {
       updateProduct()
     }
   }
+
+  const handleZoneKeyDown = (e) => {
+    // The hidden file input lives inside the zone; only a key pressed on the zone itself opens the picker.
+    if (e.target !== e.currentTarget) return
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleClick()
+    }
+  }
+
+  // bugs E D16c: the controller keeps a failed update in formState.result but nothing showed it. It goes to the same
+  // Alert as the local validations.
+  useEffect(() => {
+    if (formState?.result?.error) {
+      setAlertState({
+        open: true,
+        content: getApiErrorMessages(t, formState.result.result)
+      })
+    }
+  }, [formState?.result])
 
   useEffect(() => {
     if (products && products.length > 0) {
@@ -146,7 +177,17 @@ const BatchImageFormUI = (props) => {
         <FormContainer>
           <BatchUploadForm>
             <ImageInput>
-              <BatchImages onClick={handleClick}>
+              {/* bugs E D21: the drop zone was a clickable div, out of the tab order. It stays the same div (it holds the
+                  hidden file input and the drag-and-drop area, which a native <button> cannot) and is now a named button that Enter
+                  or Space open; no new style (the browser's focus ring), so the governed styles do not change. */}
+              <BatchImages
+                role='button'
+                tabIndex={0}
+                aria-label={t('UPLOAD_IMAGES_BATCH', 'Upload images in batch')}
+                aria-disabled={formState.loading || undefined}
+                onClick={handleClick}
+                onKeyDown={handleZoneKeyDown}
+              >
                 <input
                   type='file'
                   multiple
@@ -198,14 +239,15 @@ const BatchImageFormUI = (props) => {
                 borderRadius='8px'
                 color='primary'
                 disabled={formState?.photos.length === 0 || formState?.loading}
-                onClick={() => handleSubmit()}
+                onClick={(e) => handleSubmit(e)}
               >
                 {t('SAVE', 'Save')}
               </Button>
             </Action>
           </BatchUploadForm>
           <ImageIssue>
-            <p><b>Issues with images:</b></p>
+            {/* bugs E D16b: this heading was English-only */}
+            <p><b>{t('BATCH_IMAGES_ISSUES', 'Issues with images:')}</b></p>
             {invalidImages.length > 0
               ? (
               <IssueBoard>
@@ -222,7 +264,7 @@ const BatchImageFormUI = (props) => {
           </ImageIssue>
         </FormContainer>
         <Alert
-          title={t('PROFILE', 'Profile')}
+          title={t('UPLOAD_IMAGES_BATCH', 'Upload images in batch')}
           content={alertState.content}
           acceptText={t('ACCEPT', 'Accept')}
           open={alertState.open}

@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { ribbonValues } from '../../ui/src/utils'
 
 /**
  * Component to manage BusinessBrandGENDetail behavior without UI component
@@ -13,26 +14,42 @@ export const BusinessBrandGENDetail = (props) => {
     UIComponent,
     brand,
     handleUpdateBrandList,
-    brandListState,
-    onSelectedBrand
+    onSelectedBrand,
+    setPaginationProps
   } = props
 
   const [ordering] = useApi()
   const [, t] = useLanguage()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
   const [{ token }] = useSession()
 
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
    * Method to update or create a brand
+   * redesign SB-B1: returns `{ ok: true }`, `{ ok: false, error: result }` (API error) or
+   * `{ ok: false, error: [message] }` (exception). On failure `formState.result` keeps the error (the UI draws it in the save
+   * bar) and `changes` are kept.
    */
   const handleUpdateClick = async () => {
     if (brand) {
-      updateBrand()
-    } else {
-      createBrand()
+      return updateBrand()
     }
+    return createBrand()
+  }
+
+  // redesign SB-B1: a failure keeps the error in `result` (the bar draws it) and the `changes`
+  // redesign bugs F row 19: the failure is drawn in the save bar, so the «Loading» toast must not stay
+  const handleFailure = (content) => {
+    hideToast?.()
+    setFormState(prev => ({ ...prev, result: content, loading: false }))
+    return { ok: false, error: content?.result }
+  }
+
+  const handleException = (err) => {
+    hideToast?.()
+    setFormState(prev => ({ ...prev, result: { error: true, result: err.message }, loading: false }))
+    return { ok: false, error: [err.message] }
   }
 
   /**
@@ -40,7 +57,7 @@ export const BusinessBrandGENDetail = (props) => {
    */
   const createBrand = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = { ...formState?.changes }
       if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
@@ -59,49 +76,32 @@ export const BusinessBrandGENDetail = (props) => {
       }
       const response = await fetch(`${ordering.root}/franchises`, requestOptions)
       const content = await response.json()
-      if (!content?.error) {
-        setFormState({
-          ...formState,
-          changes: {},
-          result: content,
-          loading: false
-        })
-        if (handleUpdateBrandList) {
-          handleUpdateBrandList([...brandListState?.brands, content.result])
-        }
-        onSelectedBrand && onSelectedBrand(content.result)
-        showToast(ToastType.Success, t('BRAND_ADDED', 'Brand added'))
-      } else {
-        setFormState({
-          ...formState,
-          changes: formState.changes,
-          result: content,
-          loading: false
-        })
+      if (content?.error) return handleFailure(content)
+      setFormState(prev => ({ ...prev, changes: {}, result: content, loading: false }))
+      if (handleUpdateBrandList) {
+        handleUpdateBrandList(prevBrands => [...(prevBrands || []), content.result])
       }
+      // redesign SB-B1 (M-SB8): the list has one brand more
+      setPaginationProps && setPaginationProps(prev => Number.isFinite(prev?.totalItems)
+        ? { ...prev, totalItems: prev.totalItems + 1 }
+        : prev)
+      onSelectedBrand && onSelectedBrand(content.result)
+      showToast(ToastType.Success, t('BRAND_ADDED', 'Brand added'))
+      return { ok: true }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      return handleException(err)
     }
   }
+
   /**
    * Function to update brand
+   * redesign SB-B1: the saved brand is handed to the detail (`onSelectedBrand`) on update too, not only on create,
+   * so the detail shows what was saved.
    */
   const updateResult = (content) => {
-    setFormState({
-      ...formState,
-      changes: {},
-      result: content,
-      loading: false
-    })
+    setFormState(prev => ({ ...prev, changes: {}, result: content, loading: false }))
     if (handleUpdateBrandList) {
-      const _brands = brandListState?.brands.map(item => {
+      handleUpdateBrandList(prevBrands => (prevBrands || []).map(item => {
         if (item.id === content.result.id) {
           return {
             ...item,
@@ -109,8 +109,7 @@ export const BusinessBrandGENDetail = (props) => {
           }
         }
         return item
-      })
-      handleUpdateBrandList(_brands)
+      }))
     }
     onSelectedBrand && onSelectedBrand({ ...brand, ...content.result })
   }
@@ -120,7 +119,7 @@ export const BusinessBrandGENDetail = (props) => {
    */
   const updateBrand = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = { ...formState?.changes }
       for (const key in changes) {
@@ -138,42 +137,36 @@ export const BusinessBrandGENDetail = (props) => {
       }
       const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, requestOptions)
       const content = await response.json()
-      if (!content?.error) {
-        if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
-          const updatedChanges = { ribbon: JSON.stringify({ enabled: false }) }
-          const Options = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(updatedChanges)
-          }
-          const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, Options)
-          const content = await response.json()
-          updateResult(content)
-        } else {
-          updateResult(content)
+      if (content?.error) return handleFailure(content)
+      if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
+        const updatedChanges = { ribbon: JSON.stringify({ enabled: false }) }
+        const Options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedChanges)
         }
-        showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
+        const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, Options)
+        const content = await response.json()
+        if (content?.error) return handleFailure(content)
+        updateResult(content)
       } else {
-        setFormState({
-          ...formState,
-          changes: formState.changes,
-          result: content,
-          loading: false
-        })
+        updateResult(content)
       }
+      showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
+      return { ok: true }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      return handleException(err)
     }
+  }
+
+  /**
+   * redesign SB-B1: throws the unsaved changes (and the last error) away.
+   */
+  const handleDiscard = () => {
+    setFormState(prev => ({ ...prev, changes: {}, result: { error: false } }))
   }
 
   /**
@@ -185,10 +178,10 @@ export const BusinessBrandGENDetail = (props) => {
       [e.target.name]: e.target.value
     }
 
-    setFormState({
-      ...formState,
-      changes: { ...formState.changes, ...currentChanges }
-    })
+    setFormState(prev => ({
+      ...prev,
+      changes: { ...prev.changes, ...currentChanges }
+    }))
   }
 
   /**
@@ -199,44 +192,48 @@ export const BusinessBrandGENDetail = (props) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setFormState({
-        ...formState,
+      setFormState(prev => ({
+        ...prev,
         changes: {
-          ...formState.changes,
+          ...prev.changes,
           [name]: reader.result
         }
-      })
+      }))
     }
   }
 
   const handleChangeItem = (changes) => {
-    const currentChanges = { ...formState?.changes, ...changes }
-    setFormState({
-      ...formState,
-      changes: currentChanges
-    })
+    setFormState(prev => ({
+      ...prev,
+      changes: { ...prev.changes, ...changes }
+    }))
   }
 
   /**
    * Update ribbon data
    * @param {Object} changes Related HTML event
+   * redesign SB-B1 (auditor 10): turning the ribbon on seeds what the brand has no value for (color, shape) with the
+   * defaults. Turning it off sends `enabled: false` only, as before. redesign bugs C: not the text, which the form
+   * asks for (the default «ribbon» reached the customers).
    */
   const handleChangeRibbon = (changes) => {
-    const ribbonChanges = formState?.changes?.ribbon
-      ? { ...formState?.changes?.ribbon, ...changes }
-      : { ...changes }
-    const currentChanges = { ...formState?.changes, ribbon: ribbonChanges }
-    setFormState({
-      ...formState,
-      changes: currentChanges
+    setFormState(prev => {
+      const pending = prev.changes?.ribbon
+      let ribbonChanges = pending ? { ...pending, ...changes } : { ...changes }
+      if (changes?.enabled === true) {
+        const seeded = {}
+        for (const key of ['color', 'shape']) {
+          const has = (value) => typeof value !== 'undefined' && value !== null
+          if (!has(brand?.ribbon?.[key]) && !has(ribbonChanges[key])) seeded[key] = ribbonValues[key]
+        }
+        ribbonChanges = { ...seeded, ...ribbonChanges }
+      }
+      return { ...prev, changes: { ...prev.changes, ribbon: ribbonChanges } }
     })
   }
 
   useEffect(() => {
-    setFormState({
-      ...formState,
-      changes: {}
-    })
+    setFormState(prev => ({ ...prev, changes: {} }))
   }, [brand?.id])
 
   return (
@@ -246,6 +243,7 @@ export const BusinessBrandGENDetail = (props) => {
           {...props}
           brandFormState={formState}
           handleUpdateClick={handleUpdateClick}
+          handleDiscard={handleDiscard}
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           handleChangeItem={handleChangeItem}
@@ -276,5 +274,9 @@ BusinessBrandGENDetail.propTypes = {
   /**
    * Function to set selected brand
    */
-  onSelectedBrand: PropTypes.func
+  onSelectedBrand: PropTypes.func,
+  /**
+   * Setter of the list controller's pagination (a created brand adds one to `totalItems`)
+   */
+  setPaginationProps: PropTypes.func
 }

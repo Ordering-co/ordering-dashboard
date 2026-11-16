@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useLanguage, useUtils, useOrder } from '../../../../../../index'
-import { Input, IconButton, DefaultSelect as Select } from '../../../../styles'
-import { DashCircle, PlusCircle, Pencil, Trash } from 'react-bootstrap-icons'
-import BiImage from '@meronex/icons/bi/BiImage'
-import { Modal, Confirm } from '../../../Shared'
+import { Avatar, Button, Dialog, IconButton, SearchField, Skeleton } from '../../../Shared/Product'
+import { Minus, Plus, Trash2 } from '../../../Shared/Icon'
+import { Confirm } from '../../../Shared'
 import { ProductForm } from '../ProductForm'
+import '../steps.css'
 
-import {
-  Container,
-  SelectOption,
-  WrapperImage,
-  CartProductsWrapper,
-  ProductQuantityActionsContainer,
-  CartProductsConatiner,
-  ProductEditDeleteActions,
-  SelectWrapper,
-  Option
-} from './styles'
+const SKELETON_ROWS = 3
 
+// Redesign 5.5-B: search + product rows (name and price), the cart lines with 32/44px quantity steppers,
+// and ProductForm in a Product dialog. Same product list, same server search, same cart handlers.
 export const SelectProducts = (props) => {
   const {
     productList,
@@ -28,10 +20,9 @@ export const SelectProducts = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ optimizeImage }] = useUtils()
+  const [{ optimizeImage, parsePrice }] = useUtils()
   const [, { removeProduct }] = useOrder()
 
-  const [productsOptions, setProductsOptions] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [openProduct, setOpenProduct] = useState(false)
   const [curProduct, setCurProduct] = useState(null)
@@ -69,50 +60,10 @@ export const SelectProducts = (props) => {
     })
   }
 
-  useEffect(() => {
-    if (!productList?.products?.length) return
-    const el = document.querySelector('.custom-order-content')
-    if (el) {
-      el.scrollTo({
-        top: 350,
-        behavior: 'smooth'
-      })
-    }
-  }, [productList?.products])
-
-  const onChange = (val) => {
-    const findProduct = productList?.products.find(product => product?.id === val)
-    handleSelectProduct(findProduct)
+  const onChange = (product) => {
+    handleSelectProduct(product)
     setSearchValue('')
   }
-
-  useEffect(() => {
-    const _productsOptions = []
-    if (productList?.loading) {
-      _productsOptions.push({
-        value: null,
-        content: <Option>{t('LOADING', 'Loading')}...</Option>
-      })
-      setProductsOptions(_productsOptions)
-      return
-    }
-    if (!productList?.products) {
-      setProductsOptions(_productsOptions)
-      return
-    }
-    productList.products.filter(product => (product?.name || '').toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())).map(product => {
-      _productsOptions.push({
-        value: product?.id,
-        content: (
-          <Option>
-            <img src={optimizeImage(product?.images, 'h_50,c_limit')} alt='' />
-            <span>{product?.name}</span>
-          </Option>
-        )
-      })
-    })
-    setProductsOptions(_productsOptions)
-  }, [productList, searchValue])
 
   useEffect(() => {
     if (productList?.products) {
@@ -123,84 +74,106 @@ export const SelectProducts = (props) => {
     }
   }, [searchValue])
 
+  const loading = !!productList?.loading
+  const visible = loading || !productList?.products
+    ? []
+    : productList.products.filter(product => (product?.name || '').toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+  const formProduct = curProduct || selectedProductCart
+
   return (
-    <Container>
-      <h3>{t('WAHT_WANT_TO_BUY', 'What do you want us to buy?')}</h3>
-      <SelectWrapper>
-        <Select
-          noSelected
-          placeholder={<Option>{t('SELECT_PRODUCT', 'Select product')}</Option>}
-          options={productsOptions}
-          onChange={onChange}
-          optionInnerMaxHeight='300px'
-          isShowSearchBar
-          searchValue={searchValue}
-          handleChangeSearch={setSearchValue}
-        />
-      </SelectWrapper>
-      <CartProductsConatiner>
-        {cart?.products?.map((product, index) => (
-          <CartProductsWrapper key={`${product.id}_${index}`}>
-            <SelectOption>
-              <WrapperImage>
-                {product?.images
-                  ? (
-                  <img src={optimizeImage(product?.images, 'h_50,c_limit')} alt='' />
-                    )
-                  : (
-                  <BiImage />
-                    )}
-              </WrapperImage>
-              <span className='name'>{product?.name}</span>
-            </SelectOption>
-            <ProductQuantityActionsContainer>
-              <IconButton
-                color='black'
-                disabled={product?.quantity === 1}
-                onClick={() => handeUpdateProductCart(product, false)}
-              >
-                <DashCircle />
-              </IconButton>
-              <Input
-                type='number'
-                disabled
-                max={product?.maximum_per_order}
-                value={product?.quantity}
-              />
-              <IconButton
-                color='black'
-                disabled={product?.maximum_per_order === product?.quantity}
-                onClick={() => handeUpdateProductCart(product, true)}
-              >
-                <PlusCircle />
-              </IconButton>
-            </ProductQuantityActionsContainer>
-            <ProductEditDeleteActions>
-              <IconButton
-                color='black'
-                onClick={() => handleEditProduct(product)}
-              >
-                <Pencil />
-              </IconButton>
-              <IconButton
-                color='black'
-                onClick={() => handleDeleteClick(product)}
-              >
-                <Trash />
-              </IconButton>
-            </ProductEditDeleteActions>
-          </CartProductsWrapper>
+    <div className='odc-steps'>
+      <h4 className='odc-steps-heading'>{t('WAHT_WANT_TO_BUY', 'What do you want us to buy?')}</h4>
+      <SearchField
+        label={t('SEARCH_PRODUCTS', 'Search products')}
+        placeholder={t('SEARCH_PRODUCTS', 'Search products')}
+        clearLabel={t('CLEAR', 'Clear')}
+        value={searchValue}
+        onChange={setSearchValue}
+      />
+      <ul className='odc-steps-list' data-scroll='' aria-label={t('SELECT_PRODUCT', 'Select product')} aria-busy={loading || undefined}>
+        {loading && Array.from({ length: SKELETON_ROWS }, (_, index) => (
+          <li key={index} className='odc-steps-skeleton-row'><Skeleton size='60%' /></li>
         ))}
-      </CartProductsConatiner>
+        {visible.map(product => (
+          <li key={product?.id}>
+            <button type='button' className='odc-steps-row' onClick={() => onChange(product)}>
+              <Avatar
+                kind='business'
+                name={product?.name}
+                src={product?.images ? optimizeImage(product.images, 'h_50,c_limit') : undefined}
+              />
+              <span className='odc-steps-row-main'>
+                <span className='odc-steps-row-name'>{product?.name}</span>
+              </span>
+              {typeof product?.price === 'number' && (
+                <span className='odc-steps-row-price odc-figure'>{parsePrice(product.price)}</span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+      {!loading && productList?.products && visible.length === 0 && (
+        <p className='odc-steps-hint'>{t('NO_PRODUCTS_FOUND', 'No products found.')}</p>
+      )}
+      {cart?.products?.length > 0 && (
+        <ul className='odc-steps-list' aria-label={t('ITEMS', 'Items')}>
+          {cart.products.map((product, index) => (
+            <li key={`${product.id}_${index}`} className='odc-steps-cart-line'>
+              <Avatar
+                kind='business'
+                name={product?.name}
+                src={product?.images ? optimizeImage(product.images, 'h_50,c_limit') : undefined}
+              />
+              <span className='odc-steps-row-main'>
+                <span className='odc-steps-row-name'>{product?.name}</span>
+                {typeof product?.total === 'number' && (
+                  <span className='odc-steps-row-meta odc-figure'>{parsePrice(product.total)}</span>
+                )}
+              </span>
+              <span className='odc-steps-stepper'>
+                <IconButton
+                  icon={Minus}
+                  label={t('DECREMENT_QUANTITY', 'Decrease quantity')}
+                  disabled={product?.quantity === 1}
+                  onClick={() => handeUpdateProductCart(product, false)}
+                />
+                <span className='odc-steps-qty odc-num'>
+                  <span className='odc-sr-only'>{t('QUANTITY', 'Quantity')}</span>
+                  {product?.quantity}
+                </span>
+                <IconButton
+                  icon={Plus}
+                  label={t('INCREMENT_QUANTITY', 'Increase quantity')}
+                  disabled={product?.maximum_per_order === product?.quantity}
+                  onClick={() => handeUpdateProductCart(product, true)}
+                />
+              </span>
+              <span className='odc-steps-line-actions'>
+                <Button
+                  variant='ghost'
+                  aria-label={t('EDIT_PRODUCT', 'Edit product')}
+                  onClick={() => handleEditProduct(product)}
+                >
+                  {t('EDIT', 'Edit')}
+                </Button>
+                <IconButton
+                  icon={Trash2}
+                  label={t('DELETE_PRODUCT', 'Delete product')}
+                  onClick={() => handleDeleteClick(product)}
+                />
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
       {openProduct && (
-        <Modal
-          width='680px'
+        <Dialog
           open={openProduct}
-          closeOnBackdrop
-          onClose={() => closeModalProductForm()}
-          padding='0'
-          isProductForm
-          disableOverflowX
+          size='md'
+          className='odc-steps-product-dialog'
+          title={formProduct?.name || t('PRODUCT', 'Product')}
+          closeLabel={t('CLOSE', 'Close')}
+          onOpenChange={next => { if (!next) closeModalProductForm() }}
         >
           <ProductForm
             isCartProduct={isCartProduct}
@@ -213,7 +186,7 @@ export const SelectProducts = (props) => {
             onSave={() => setOpenProduct(false)}
             productAddedToCartLength={cart?.products?.reduce((productsLength, Cproduct) => { return productsLength + (Cproduct?.id === curProduct?.id ? Cproduct?.quantity : 0) }, 0) || 0}
           />
-        </Modal>
+        </Dialog>
       )}
 
       <Confirm
@@ -226,6 +199,6 @@ export const SelectProducts = (props) => {
         onAccept={confirm.handleOnAccept}
         closeOnBackdrop={false}
       />
-    </Container>
+    </div>
   )
 }

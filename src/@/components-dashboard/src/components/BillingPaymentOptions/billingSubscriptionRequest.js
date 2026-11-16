@@ -5,9 +5,12 @@ export const buildBillingSubscriptionRequest = ({
   planId,
   period,
   replace,
-  userPaymethodId
+  userPaymethodId,
+  payPending
 }) => {
-  const isExistingRetry = Boolean(
+  // «Pay the pending payment» pays that subscription's own pending charge, also an active one whose plan change by
+  // modify waits for its invoice (billing-api#103). Only that action asks for it: «Pay» buys what the dialog shows.
+  const isExistingRetry = Boolean(subscription?.id && payPending) || Boolean(
     subscription?.id && RETRY_STATUSES.includes(subscription?.status) && planId
   )
 

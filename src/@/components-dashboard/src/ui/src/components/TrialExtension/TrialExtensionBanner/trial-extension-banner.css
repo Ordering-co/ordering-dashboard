@@ -1,0 +1,44 @@
+/* redesign  (R2): the trial-extension offer on Product's InlineNotice (info tone). Tokens only, logical properties.
+   In normal document flow on purpose (no position, no z-index): it scrolls away with the page and never sits over a dialog;
+   the sticky stack of the past-due and connection banners is a different container. */
+
+/* Two classes: the notice's own margins (filter-bar.css) must lose to ours whatever the load order. */
+.odc-notice.odc-trial-banner {
+  margin-block: var(--od-space-2);
+}
+
+.odc-trial-banner strong {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-trial-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+/* Desktop: the long sentence; the short one (days remaining) is for the phone. */
+.odc-trial-banner-short {
+  display: none;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+@media (max-width: 767px) {
+  .odc-notice.odc-trial-banner {
+    margin-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-trial-banner-full {
+    display: none;
+  }
+
+  .odc-trial-banner-short {
+    display: inline;
+  }
+}
+
+@media print {
+  .odc-notice.odc-trial-banner {
+    display: none;
+  }
+}

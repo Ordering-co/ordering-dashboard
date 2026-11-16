@@ -1,0 +1,167 @@
+/*
+ * Dialog, ConfirmDialog and the parts Sheet shares (C8, C15, C17).
+ * The portal mounts in the shared legacy host (#app-modals) and takes the layer
+ * order from the registry, so it stacks with legacy dialogs. Logical properties only.
+ */
+
+.odc-overlay-portal {
+  position: relative;
+  isolation: isolate;
+  z-index: var(--od-dialog-layer);
+}
+
+.odc-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--od-x-scrim);
+  opacity: 1;
+  /* redesign W0-3c (T0-11, decisión 11c): the scrim follows the panel it sits behind, at Slow. */
+  transition: opacity var(--od-duration-slow) var(--od-ease-standard);
+}
+
+.odc-overlay-backdrop[data-starting-style],
+.odc-overlay-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+/* ── Shared anatomy: header, scrolling body, footer ── */
+.odc-overlay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-5);
+}
+
+.odc-overlay-title {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.odc-overlay-close {
+  flex: none;
+}
+
+.odc-overlay-body {
+  min-block-size: 0;
+  overflow: auto;
+  padding-block: 0 var(--od-space-5);
+  padding-inline: var(--od-space-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-overlay-desc:not(:last-child) {
+  margin-block-end: var(--od-space-3);
+}
+
+.odc-overlay-body strong {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-overlay-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* ── Dialog: centered, widths 400 / 560 / 720 (C8) ── */
+.odc-dialog {
+  --odc-dialog-top: clamp(var(--od-space-4), 10vh, var(--od-space-9));
+  position: fixed;
+  inset-block-start: var(--odc-dialog-top);
+  inset-inline: 0;
+  margin-inline: auto;
+  inline-size: var(--od-x-dialog-sm);
+  max-inline-size: calc(100vw - 2 * var(--od-x-viewport-gap));
+  max-block-size: calc(100dvh - var(--odc-dialog-top) - var(--od-space-4));
+  display: grid;
+  /* redesign F6g-1: an implicit auto column grows to the widest label of the footer and pushes the header (and its X)
+     out of the viewport; this one never outgrows the dialog. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: var(--od-x-dialog-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  box-shadow: var(--od-x-pop-shadow);
+  opacity: 1;
+  translate: 0 0;
+  transition-property: opacity, translate;
+  /* redesign W0-3c (T0-11, decisión 11c): a dialog is an overlay, so Slow. */
+  transition-duration: var(--od-duration-slow);
+  transition-timing-function: var(--od-ease-standard);
+}
+
+.odc-dialog[data-size='sm'] { inline-size: var(--od-x-dialog-sm); }
+.odc-dialog[data-size='md'] { inline-size: var(--od-x-dialog-md); }
+.odc-dialog[data-size='lg'] { inline-size: var(--od-x-dialog-lg); }
+
+.odc-dialog[data-starting-style],
+.odc-dialog[data-ending-style] {
+  opacity: 0;
+  translate: 0 var(--od-space-2);
+}
+
+.odc-dialog:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Mobile: a bottom sheet; full-width buttons only here (C8) ── */
+@media (max-width: 767px) {
+  .odc-dialog[data-size] {
+    inset-block: auto 0;
+    inset-inline: 0;
+    margin-inline: 0;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    max-block-size: calc(100dvh - var(--od-space-5));
+    border-radius: var(--od-radius-panel) var(--od-radius-panel) 0 0;
+  }
+
+  .odc-dialog[data-starting-style],
+  .odc-dialog[data-ending-style] {
+    translate: 0 100%;
+  }
+
+  /* redesign F6g-1: the buttons share a row while their labels fit it and stack at full width when they do not; a label
+     longer than the row wraps inside its button (the button grows, 44px stays the floor) instead of being clipped. */
+  .odc-overlay-foot > .odc-btn {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    block-size: auto;
+    padding-block: var(--od-space-2);
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* redesign W0-3c (T0-11): nothing moves; the entering and leaving state keeps no offset either (the phone bottom sheet's
+   100% included), so there is no frame of travel before the dialog appears or after it leaves. */
+@media (prefers-reduced-motion: reduce) {
+  .odc-dialog,
+  .odc-overlay-backdrop {
+    transition: none;
+  }
+
+  .odc-dialog[data-starting-style],
+  .odc-dialog[data-ending-style] {
+    translate: 0 0;
+  }
+}

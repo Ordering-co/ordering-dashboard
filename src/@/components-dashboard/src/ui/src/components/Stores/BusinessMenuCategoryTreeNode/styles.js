@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { brandFocusRing, coarseHitArea } from '../../../styles/touchTarget'
 
 export const AccordionSection = styled.div`
 `
@@ -50,7 +51,7 @@ export const AccordionItem = styled.div`
     align-items: center;
 
     span {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       font-weight: 600;
       margin: 0 12px;
     }
@@ -73,13 +74,47 @@ export const AccordionItem = styled.div`
   `}
 `
 
+// The category expander: a native button wrapping only the chevron, a sibling of the
+// category checkbox (never nested in it). It resets to the bare glyph it replaced, so the
+// row keeps its box: `display: flex` leaves no line box around the svg, and the font and
+// colour are inherited like the bare svg's were.
+export const AccordionToggle = styled.button.attrs({ type: 'button' })`
+  appearance: none;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  ${brandFocusRing}
+  ${coarseHitArea}
+`
+
 export const AccordionContent = styled.div`
   overflow: hidden;
   transition: max-height 0.6s ease;
   width: 100%;
 `
 export const CheckboxWrapper = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
   cursor: pointer;
+  ${brandFocusRing}
+  ${coarseHitArea}
   svg {
     font-size: 18px;
     color: ${props => props.theme.colors.disabled};

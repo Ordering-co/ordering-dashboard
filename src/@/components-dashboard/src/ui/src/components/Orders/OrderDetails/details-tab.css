@@ -1,0 +1,678 @@
+/*
+ * Batch 5.3 · the Details tab of the order panel (prototype: detailBody(), route(), totals()).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard
+ * (src/__tests__/tools/productLiteralGuard.test.js) fails on anything else. Logical properties only
+ * (C17). Component classes use the `odt-` prefix (details tab); the wrappers keep `odc-`.
+ * Shared by DetailsTab, OrderContactInformation, OrderBill (variant panel) and the compact
+ * ProductItemAccordion, so it lives next to DetailsTab.
+ */
+
+.odt-tab {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odt-tab a,
+.odt-sec a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.odt-tab a:focus-visible,
+.odt-sec a:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Fraud notice (Forter): shown above the route when the plugin is on ── */
+.odt-notice {
+  display: grid;
+  gap: var(--od-x-space-half);
+  margin-block-end: var(--od-space-4);
+  padding: var(--od-x-space-2-5) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-notice[data-tone='invalid'] {
+  border-color: var(--od-danger-signal);
+  background: var(--od-danger-soft);
+}
+
+.odt-notice[data-tone='error'] {
+  border-color: var(--od-warning-signal);
+  background: var(--od-warning-soft);
+}
+
+.odt-notice b { font-weight: var(--od-font-weight-semibold); }
+.odt-notice p { margin: 0; color: var(--od-text-muted); overflow-wrap: anywhere; }
+
+/* ── The route ── */
+.odt-route-block {
+  margin-block: var(--od-space-2) var(--od-space-4);
+}
+
+/* redesign F6d (Q3-15): the time of a route step. A time with its date is two fixed lines, date then time, and no line
+   wraps (it used to break at its spaces wherever the column ended). Mono stays: the brand allows it for timestamps and
+   Activity and the chat draw theirs the same way. */
+.odt-route-at { display: block; }
+
+.odt-route-at > span {
+  display: block;
+  white-space: nowrap;
+}
+
+/* ── A section of the tab: hairline on top, one rhythm ── */
+.odt-sec {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odt-route-block + .odt-sec,
+.odt-notice + .odt-sec {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odt-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  margin-block-end: var(--od-space-3);
+}
+
+.odt-sec h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-sec-head + .odt-party,
+.odt-sec > h3 + .odt-party { margin-block-start: 0; }
+
+.odt-sec > h3 { margin-block-end: var(--od-space-3); }
+
+.odt-sec-count {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odt-sec-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* ── Customer, business, driver ── */
+.odt-party {
+  display: grid;
+  grid-template-columns: var(--od-x-avatar-lg) minmax(0, 1fr) auto;
+  gap: var(--od-x-space-half) var(--od-space-3);
+  align-items: start;
+}
+
+.odt-party + .odt-party { margin-block-start: var(--od-space-4); }
+
+.odt-party > .odc-avatar { grid-row: span 2; }
+
+.odt-party-name {
+  min-inline-size: 0;
+  align-self: center;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odt-party-name[data-muted] {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odt-party-acts {
+  display: flex;
+  gap: var(--od-x-space-half);
+  grid-row: 1 / 3;
+  grid-column: 3;
+}
+
+.odt-party-lines {
+  display: grid;
+  gap: var(--od-x-space-half);
+  grid-column: 2;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  overflow-wrap: anywhere;
+}
+
+.odt-party-lines bdi { unicode-bidi: isolate; }
+
+.odt-addr {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-2-5);
+  margin-block-start: var(--od-space-3);
+  padding: var(--od-x-space-2-5) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odt-addr > .odc-icon {
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-text-muted);
+}
+
+.odt-addr-body {
+  display: grid;
+  gap: var(--od-x-space-half);
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odt-addr-body b {
+  display: block;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odt-addr-body span {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  overflow-wrap: anywhere;
+}
+
+.odt-addr > .odc-btn { margin-inline-start: auto; }
+
+/* redesign fix-qa E6 · "On behalf of": a small label over the name it belongs to. */
+.odt-party-tag {
+  display: block;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign fix-qa E6 · the edit form: labelled fields, the map only when there is one, Cancel and Save
+   at the end. The fields are the governed Input (od-field), the address one is the same class on the
+   bare input of the Google autocomplete. */
+.odt-edit {
+  display: grid;
+  gap: var(--od-space-3);
+  margin-block-start: var(--od-space-3);
+}
+
+.odt-field {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odt-field-label {
+  /* redesign F6c (Q2-21): the Address one is a <label> element, which brings a bottom margin of its own */
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-edit .od-field-input {
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+}
+
+.odt-edit-map {
+  block-size: calc(var(--od-x-control-height) * 5);
+  overflow: hidden;
+  border-radius: var(--od-radius-component);
+}
+
+.odt-edit-map > div {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odt-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+@media (pointer: coarse) {
+  .odt-edit .od-field-input {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  /* redesign W0-3d (T0-12, decisión 12): Cancel / Save keep the box of their Button; their 44px area is Product's
+     .odc-btn::after (product.css, phone @media). They are one row of wide buttons 8px apart (the area grows in the block
+     direction only) and the field above is 12px away, so nothing crosses. */
+}
+
+/* Driver / company selectors (open orders only). */
+.odt-assign {
+  margin-block-start: var(--od-space-3);
+}
+
+/* redesign fix-qa E6 · nobody to pick: the reason, in words, where the selector would be. */
+.odt-assign-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* main cc33a76c · the store has no driver while one is assigned: the reason sits under the selector, apart from it */
+.odt-assign-note {
+  margin-block-start: var(--od-space-2);
+}
+
+.odt-assign-label {
+  display: block;
+  margin-block-end: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+/* redesign F6c (Q2-25): the label of the driver selector with the driver's phone at its end */
+.odt-assign-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  margin-block-end: var(--od-space-1);
+}
+
+.odt-assign-head > .odt-assign-label { margin: 0; }
+
+/* ── Items ── */
+.odt-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odt-item {
+  display: grid;
+  grid-template-columns: minmax(var(--od-x-avatar-lg), auto) minmax(0, 1fr) auto;
+  gap: var(--od-space-2);
+  padding-block: var(--od-x-space-1-5);
+}
+
+/* redesign fix-qa E6 (main showed the product image): with one, it takes a column between the quantity and the name. */
+.odt-item:has(.odt-item-img) {
+  grid-template-columns: minmax(var(--od-x-avatar-lg), auto) var(--od-x-avatar-lg) minmax(0, 1fr) auto;
+}
+
+.odt-item-img {
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  border-radius: var(--od-radius-component);
+  object-fit: cover;
+  background: var(--od-surface-subtle);
+}
+
+.odt-item-q {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odt-item-name { min-inline-size: 0; overflow-wrap: anywhere; }
+
+.odt-item-opt {
+  display: block;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odt-item-price {
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* ── Bill (OrderBill variant panel): Inter with tabular numbers; the amounts of the tax and fee rows are mono (W0-3a, below) ── */
+.odt-bill {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin-block-start: var(--od-space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.odt-bill table {
+  inline-size: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-bill td,
+.odt-bill th {
+  min-inline-size: 0;
+  padding-block: var(--od-x-space-half);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.odt-bill th {
+  padding-block-end: var(--od-space-1);
+  text-align: start;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odt-bill td:first-child {
+  padding-inline-end: var(--od-space-3);
+  color: var(--od-text-muted);
+}
+
+.odt-bill td:last-child:not(:first-child) {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.odt-bill td > span { margin-inline-start: var(--od-x-space-1-5); }
+
+.odt-bill table[aria-label]:first-child {
+  padding-block-start: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) dashed var(--od-border);
+}
+
+.odt-bill table.total td {
+  padding-block-start: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* redesign W0-3a (T0-9, decisión 11a): the amount of the tax and fee rows of the order bill is a figure (mono, tabular).
+   TaxBillRows and FeeBillRows are shared with CartRecovery and the custom-order bill, so the rule is by surface: it
+   answers to the bill of this panel (.odt-bill) and to the slot their amount cell carries. The other rows of the bill
+   already carry .odc-figure on their cell. */
+.odt-bill table td[data-bill-row-slot='amount'] {
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+/* Payment: a row with a badge, the refund as a secondary action in the same block. */
+.odt-pay {
+  display: grid;
+  gap: var(--od-space-2);
+  padding: var(--od-x-space-2-5) var(--od-space-3);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-pay-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  min-inline-size: 0;
+}
+
+.odt-pay-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odt-pay-row > .odc-badge { margin-inline-start: auto; }
+
+.odt-pay-amount {
+  font-weight: var(--od-font-weight-medium);
+  white-space: nowrap;
+}
+
+.odt-pay-ref {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odt-pay-ref > span:last-child { overflow-wrap: anywhere; text-align: end; }
+
+.odt-pay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odt-pay-actions:empty { display: none; }
+
+/* ── Key / value grid: logistics and the facts of the order ── */
+.odt-kv {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+}
+
+.odt-kv dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odt-kv dd {
+  margin: var(--od-x-space-half) 0 0;
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odt-kv [data-wide] { grid-column: 1 / -1; }
+
+.odt-note {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ── Foot of the panel (DetailsFooter): the primary action, the selector as the secondary ── */
+.odt-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3) var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odt-foot-selector {
+  flex: 1 1 var(--od-x-menu-min);
+  min-inline-size: 0;
+}
+
+/* The selector's options are indented with a rule under their group in the open list;
+   the closed trigger shows only the current status, without that rule. */
+.odt-foot-selector .od-first-select-header > * {
+  margin-inline-start: 0;
+  border-inline-start: 0;
+}
+.odt-foot-selector .od-first-select-header p { padding-inline: 0; }
+
+/* The list is at least as wide as its options need (the select's own floor), so next to the buttons it
+   is wider than the selector: line it up with the selector's start so it stays inside the panel
+   instead of spilling over the list to the side. It opens upward (placement='auto') near the bottom. */
+.odt-foot .odt-foot-selector .od-ui > .od-first-select-list[data-position] {
+  inset-inline: 0 auto;
+  margin-inline: calc(-1 * var(--od-x-hairline)) 0;
+}
+
+.odt-foot > .odc-btn { flex: 1 1 auto; }
+
+/* redesign fix-qa E6: Mia's floating button sits over the bottom end corner of the page, above the foot.
+   While it is on screen (the open assistant replaces it, and docks the page instead through
+   --assistant-offset), the foot gets room under its controls so neither the status selector nor the
+   primary action ends up beneath it. In a Sheet the modal layer is above the button, so nothing is reserved there. */
+:root:has(button[aria-controls='assistant_panel'][aria-expanded='false']) .odt-foot:not(.odc-sheet *) {
+  padding-block-end: calc(var(--od-space-3) + var(--od-x-launcher-clearance));
+}
+
+@media (max-width: 767px) {
+  .odt-kv { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* On a phone the actions take the full width, one per row, 44px tall. */
+  .odt-foot { padding-inline: var(--od-space-4); }
+  .odt-foot-selector { flex-basis: 100%; }
+  .odt-foot > .odc-btn {
+    flex-basis: 100%;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign fix-qa E8 · the status selector of the foot (its closed trigger) reaches 44px with a coarse pointer and on
+   a phone-width viewport: it measured 30px next to Reject and Accept at 44. Three classes, so it outranks the
+   select's own rule at any order. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odt-foot .odt-foot-selector .od-first-select-trigger {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign fix-qa E8 · opened as a page the foot spans the whole screen: the buttons keep their own size (Reject
+   measured 316px) and sit at the end, the selector keeps a reasonable width. Not on a phone, which stacks them. */
+@media (min-width: 768px) {
+  .odc-od[data-expanded] .odt-foot-selector { flex: 0 1 var(--od-x-popover); }
+  .odc-od[data-expanded] .odt-foot > .odc-btn { flex: 0 0 auto; }
+  .odc-od[data-expanded] .odt-foot > .odc-btn:first-of-type { margin-inline-start: auto; }
+
+  /* redesign F6e (Q4-07): the foot's content follows the 960px column of the Details body (it started where the column
+     does, but its buttons ended 184px past it). The end padding takes what the column leaves (a percentage is of the
+     foot's own width, which is the page's), so the hairline still crosses the page and the buttons end at the column. */
+  .odc-od[data-expanded] .odt-foot {
+    padding-inline-end: max(var(--od-space-5), calc(100% - var(--od-x-page-content) - var(--od-space-5)));
+  }
+
+  /* redesign F6c (Q2-24): the driver select stretched to the whole page (1144px). Selects and the edit form keep a field width.
+     redesign F6d (Q2-24): the cap sits on the select (not on its head), so the driver's phone ends the row where the icons of
+     customer and business do (it sat at x=818 against 1401), and the whole Details column keeps one content width, so the
+     rows stop running a line of text across 1144px. */
+  .odc-od[data-expanded] .odt-assign > :not(.odt-assign-head),
+  .odc-od[data-expanded] .odt-edit { max-inline-size: var(--od-x-dialog-md); }
+
+  .odc-od[data-expanded] .odc-od-body > .odt-tab { max-inline-size: var(--od-x-page-content); }
+}
+
+/* redesign fix-qa E9: the map of Edit customer. Google's element used to carry an inline absolute 70% x 50% box
+   that spilled out of the panel and covered Cancel / Save and the foot; the map now fills this box (fillContainer),
+   and the box takes the width of the form, never more. These rules supersede the first `.odt-edit-map` ones above.
+   Cancel / Save come after the box in the form, so they sit below the map. */
+.odt-edit { grid-template-columns: minmax(0, 1fr); }
+
+.odt-edit-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--od-x-map-edit);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+/* redesign F3 (D-03): the field box of Edit customer. The governed `.od-field` rules paint border, background and colour
+   from `--od-field-*` properties that only the styled `Input` defines (inline, from the theme). The Google autocomplete
+   renders a bare <input class="od-field ..."> that never gets them, so its border resolved to `none` and only the label and
+   the value were left. Every field of the form now takes them from the brand tokens, here: Cellphone, Email, Notes and
+   Address look the same, with the field border of C2/C3 (--od-x-field-border, 3:1) instead of the decorative hairline.
+   This selector is stronger than the styled class, so it also wins over the theme-derived values. */
+.odt-edit .od-field {
+  --od-field-surface: var(--od-bg);
+  --od-field-surface-subtle: var(--od-surface-subtle);
+  --od-field-text: var(--od-text);
+  --od-field-text-muted: var(--od-text-muted);
+  --od-field-text-subtle: var(--od-x-text-subtle);
+  --od-field-border: var(--od-x-field-border);
+  --od-field-border-strong: var(--od-x-text-subtle);
+  --od-field-focus: var(--od-focus-ring-color);
+  --od-field-focus-width: var(--od-focus-ring-width);
+  --od-field-focus-offset: var(--od-focus-ring-offset);
+  --od-field-danger: var(--od-danger-functional);
+  --od-field-radius: var(--od-radius-component);
+  --od-field-font: var(--od-font-sans);
+  --od-field-font-size: var(--od-x-type-body-size);
+  --od-field-duration: var(--od-duration-fast);
+  --od-field-easing: var(--od-ease-standard);
+  --od-field-compact-height: var(--od-x-control-height);
+  --od-field-touch-target: var(--od-x-target-coarse);
+  box-sizing: border-box;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Disabled (the address input while Google is not there): the value stays legible, only the field says it is off. */
+.odt-edit .od-field:disabled {
+  opacity: 1;
+  -webkit-text-fill-color: var(--od-text-muted);
+}
+
+.odt-field-hint {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* C3: below 768px of screen every control reaches 44px, not only on a coarse pointer. Same 16px text as the coarse rule. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odt-edit .od-field-input {
+    min-block-size: var(--od-x-target-coarse);
+    font-size: var(--od-x-type-lead-size);
+  }
+}
+
+/* redesign tramo A r3 (W0-QA1-01, decision 12): on a phone the grouped buttons of the detail are SEEN at 44px. Their
+   neighbours are closer than 12px (Call / Message 2px, Review / Edit Customer 8px, the driver call next to the foot), so
+   the centered 32px + ::after area of product.css would make two 44px areas cross. They keep the 44px box instead, as
+   before W0-3d4 (and as the base does). The attribute selectors outrank `.odc-btn[data-size]` of product.css whatever the
+   load order. Listed in the delivery for the owner. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odt-sec-actions .odc-btn[data-size][data-variant],
+  .odt-party-acts .odc-btn[data-size][data-variant],
+  .odt-addr > .odc-btn[data-size][data-variant],
+  .odt-assign-head .odc-btn[data-size][data-variant] {
+    block-size: var(--od-x-target-coarse);
+  }
+
+  .odt-party-acts .odc-btn[data-icon-only][data-size][data-variant],
+  .odt-addr > .odc-btn[data-icon-only][data-size][data-variant],
+  .odt-assign-head .odc-btn[data-icon-only][data-size][data-variant] {
+    inline-size: var(--od-x-target-coarse);
+  }
+
+  /* bugs H W0-E-16: the tel: / mailto: links of the party lines were 17px high; a 44px box (stacked lines, no ::after
+     to cross) */
+  .odt-party-lines a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

@@ -1,0 +1,153 @@
+/*
+ * redesign OC-E: the panel of an open cart (RecordPanel). Values come from --od-* (release) and --od-x-*
+ * (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `ocp-` prefix; the wrappers keep `odc-`.
+ */
+
+.ocp-body {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A block of the panel: hairline on top, one rhythm. The first one has no line. */
+.ocp-sec {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.ocp-sec:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.ocp-sec > h3 {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.ocp-sec a:not(.odc-btn) {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ocp-sec a:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Customer and business: the avatar, the name and the lines under it ── */
+.ocp-party {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--od-x-space-half) var(--od-space-3);
+  align-items: start;
+}
+
+.ocp-party > .odc-avatar { grid-row: span 2; }
+
+.ocp-name {
+  min-inline-size: 0;
+  align-self: center;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.ocp-name[data-muted] {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.ocp-lines {
+  display: grid;
+  gap: var(--od-x-space-half);
+  grid-column: 2;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ocp-lines bdi { unicode-bidi: isolate; }
+
+.ocp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  grid-column: 2;
+  margin-block-start: var(--od-space-2);
+}
+
+/* redesign OC-integration (measure 390): on a phone the 28px buttons reach 44px through their ::after (decision 12);
+   16px between them keeps neighbouring hit areas from crossing (Email/Call over Copy phone/Copy email measured 2 crossings) */
+@media (max-width: 767px) {
+  .ocp-actions { gap: var(--od-space-4); }
+}
+
+/* ── In the cart ── */
+.ocp-items {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.ocp-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+/* ── Recovery ── */
+.ocp-recovery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+}
+
+.ocp-recovery-text {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+/* ── Loading and error ── */
+.ocp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.ocp-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.ocp-skeleton-lines {
+  display: grid;
+  flex: 1;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── Delete dialog: the consequence, then the API's reason when it fails ── */
+.ocp-dialog-error {
+  margin-block-start: var(--od-space-3);
+  padding: var(--od-x-space-2-5) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-danger-signal);
+  border-radius: var(--od-radius-component);
+  background: var(--od-danger-soft);
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}

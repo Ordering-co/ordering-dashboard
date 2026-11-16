@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useId, useRef } from 'react'
 import { useLanguage, useUtils, useConfig } from '../../../../../index'
 import { RefundToWallet } from './RefundToWallet'
+import { summarizeRefunds } from './refundSummary'
 import { verifyDecimals, getCurrenySymbol } from '../../../utils'
-import { Alert, Confirm, Modal, TaxBillRows, FeeBillRows } from '../../Shared'
-import { Button, Input } from '../../../styles'
-import { RecordCircleFill, Circle } from 'react-bootstrap-icons'
+import { TaxBillRows, FeeBillRows } from '../../Shared'
+import { Button, Input, RadioButton } from '../../../styles'
+import { StatusBadge } from '../../Shared/Product/Status'
+import { Button as ProductButton } from '../../Shared/Product/Button'
+import { ConfirmDialog, Dialog } from '../../Shared/Product/Dialog'
+import { AlertDialog } from '../../Shared/Product/AlertDialog'
+import { RefundErrorDialog } from './RefundErrorDialog'
+import { Wallet } from '../../Shared/Icon'
+import '../OrderDetails/details-tab.css'
+import './refund-dialogs.css'
 
 import {
   OrderBillContainer,
   RefundButtonWrapper,
-  RefundContainer,
   RadioItemContainer,
   RefundAmountWrapper
 } from './styles'
@@ -24,6 +31,17 @@ const getGatewayHumanLabel = (gateway) => {
   return gateway.replace(/_/g, ' ')
 }
 
+const movePluginRefundMode = (event, isRefundAll, setIsRefundAll) => {
+  if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return
+  event.preventDefault()
+  const nextMode = isRefundAll ? 'amount' : 'total'
+  setIsRefundAll(nextMode === 'total')
+  const group = event.currentTarget.closest('[role="radiogroup"]')
+  window.requestAnimationFrame(() => {
+    Array.from(group?.querySelectorAll('[data-refund-mode]') ?? []).find(control => control.dataset.refundMode === nextMode)?.focus()
+  })
+}
+
 export const OrderBill = (props) => {
   const {
     order,
@@ -32,15 +50,25 @@ export const OrderBill = (props) => {
     handleRefundPaymentsPlugin,
     getPluginRefundProvider = () => null,
     handleOrderRefund,
-    viewOnly
+    viewOnly,
+    // 'panel' is the bill of the order detail panel (same rows and calculations, the payment as a
+    // row with a badge, the rest of the order facts live in DetailsTab). The default is the bill
+    // the print sheet and every other consumer render.
+    variant = 'default'
   } = props
+  const isPanel = variant === 'panel'
 
   const isGiftCardOrder = order?.products?.[0]?.type === 'gift_card'
   const [, t] = useLanguage()
+  const pluginRefundModeLabelId = useId()
+  const pluginRefundFormId = useId()
+  const pluginRefundFormRef = useRef(null)
   const [{ parsePrice, parseNumber }] = useUtils()
   const [{ configs }] = useConfig()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  // redesign F6i-3 (A3-03): the status whose refund error the operator already read.
+  const [dismissedRefundStatus, setDismissedRefundStatus] = useState(null)
+  const [confirm, setConfirm] = useState({ open: false, handleOnAccept: null })
   const SPOT_DICTIONARY = {
     3: t('SPOT_NUMBER_EAT_IN', 'Table number'),
     4: t('SPOT_NUMBER_CURBSIDE', 'Spot number'),
@@ -55,7 +83,7 @@ export const OrderBill = (props) => {
 
   const walletName = {
     cash: {
-      name: t('CASH_WALLET', 'Cash Wallet')
+      name: t('CASH_WALLET_NAME', 'Cash wallet')
     },
     credit_point: {
       name: t('POINTS_WALLET', 'Points Wallet')
@@ -68,6 +96,8 @@ export const OrderBill = (props) => {
   const [refundAmount, setRefundAmount] = useState('')
   const refundProvider = getPluginRefundProvider(order?.paymethod?.gateway)
   const formatPrice = (amount) => parsePrice(amount, { currency: getCurrenySymbol(order?.currency) })
+  // What the refund of the whole payment moves: the total of the order, as the bill shows it.
+  const refundTotal = order?.summary?.total ?? order?.total
 
   const closeAlert = () => {
     setAlertState({
@@ -84,7 +114,6 @@ export const OrderBill = (props) => {
     } else if (refundProvider) {
       setConfirm({
         open: true,
-        content: t('QUESTION_REFUND_ORDER', 'Do you want to refund this order? This action is irreversible.'),
         handleOnAccept: () => {
           setConfirm({ ...confirm, open: false })
           handleRefundPaymentsPlugin()
@@ -93,7 +122,6 @@ export const OrderBill = (props) => {
     } else {
       setConfirm({
         open: true,
-        content: t('QUESTION_REFUND_ORDER', 'Do you want to refund this order? This action is irreversible.'),
         handleOnAccept: () => {
           setConfirm({ ...confirm, open: false })
           handleRefundPaymentsStripe()
@@ -152,15 +180,71 @@ export const OrderBill = (props) => {
   const orderDisplayTotal = (order?.summary?.total ?? order?.total ?? 0) + (isCustomOrder ? (declaredValue || 0) : 0)
   const hideOrderPrices = Number(orderDisplayTotal) === 0
 
+  const paymentEvents = order?.payment_events?.filter(item => item.event === 'payment') ?? []
+  const refundEvents = order?.payment_events?.filter(item => item.event === 'refund') ?? []
+  // redesign F6d (Q3-08): what was already refunded («Cash Wallet € 217,05»), told in the confirmations of «Refund»
+  const previousRefunds = summarizeRefunds(order, t)
+    .map(({ label, amount }) => (label ? `${label} ${formatPrice(amount)}` : formatPrice(amount)))
+    .join(', ')
+  const previousRefundNotice = previousRefunds
+    ? t('REFUND_PREVIOUS_NOTICE', 'This order was already refunded: _refunds_. Check it before you refund again.').replace('_refunds_', () => previousRefunds)
+    : null
+  const refundedAmount = refundEvents.reduce((total, event) => total + (event?.amount || 0), 0)
+  const isFullyRefunded = refundEvents.length > 0 && (
+    order?.refund_data === 'refunded' || (Number(orderDisplayTotal) > 0 && refundedAmount >= Number(orderDisplayTotal))
+  )
+  const getPaymentEventLabel = (event) => (
+    event?.wallet_event
+      ? walletName[event?.wallet_event?.wallet?.type]?.name
+      : event?.paymethod
+        ? t(event?.paymethod?.gateway?.toUpperCase(), event?.paymethod?.name)
+        : event?.data?.gateway
+          ? t(event?.data?.gateway?.toUpperCase(), getGatewayHumanLabel(event?.data?.gateway))
+          : walletName[event?.data?.wallet_currency]?.name
+  )
+  const canRefundToWallet = !isGiftCardOrder && !viewOnly
+  const canRefundPayment = !isGiftCardOrder && (!order?.refund_data || (refundProvider?.partial && order?.refund_data === 'partially_refunded')) && (stripePaymethods.includes(order?.paymethod?.gateway) || !!refundProvider) && !viewOnly
+  const refundButtonDisabled = actionStatus?.loading || order?.payment_events?.find(item => item.event === 'refund' && (stripePaymethods.includes(item?.paymethod?.gateway) || !!getPluginRefundProvider(item?.paymethod?.gateway)))
+
+  // redesign F6i-3 (A3-03): a failed refund is told here and only here, once, not while a new attempt runs; «Try again» asks the
+  // confirmation of the refund again (the wallet refund is retried in its own form, and an answer that cannot be read is checked first).
+  const showRefundError = actionStatus?.errorSource === 'refund' && actionStatus?.error != null && !actionStatus?.loading && dismissedRefundStatus !== actionStatus
+  const canRetryRefund = canRefundPayment && !refundButtonDisabled && actionStatus?.refundTarget !== 'wallet'
+
+  const refundActions = (
+    <>
+      {canRefundToWallet && (
+        <RefundToWallet
+          order={order}
+          actionStatus={actionStatus}
+          handleOrderRefund={handleOrderRefund}
+          stripePaymethods={stripePaymethods}
+          braintreePaymethods={braintreePaymethods}
+        />
+      )}
+      {canRefundPayment && (
+        <ProductButton
+          variant='secondary'
+          disabled={refundButtonDisabled}
+          onClick={onClickRefund}
+        >
+          {t('REFUND', 'Refund')}
+        </ProductButton>
+      )}
+    </>
+  )
+
+  const Container = isPanel ? 'div' : OrderBillContainer
+
   return (
-    <OrderBillContainer>
+    <Container className={isPanel ? 'odt-bill' : undefined}>
       {!hideOrderPrices && (<>
-      <table>
+      <table aria-label={t('ORDER_BILL', 'Order bill')}>
         <tbody>
           {!isCustomOrder && (
             <tr>
               <td>{t('SUBTOTAL', 'Subtotal')}</td>
-              <td>
+              <td className='odc-figure'>
                 {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: getCurrenySymbol(order?.currency) })}
               </td>
             </tr>
@@ -177,7 +261,7 @@ export const OrderBill = (props) => {
                 : (
                 <td>{t('DISCOUNT', 'Discount')}</td>
                   )}
-              <td>- {parsePrice(order?.summary?.discount ?? order?.discount, { currency: getCurrenySymbol(order?.currency) })}</td>
+              <td className='odc-figure'>- {parsePrice(order?.summary?.discount ?? order?.discount, { currency: getCurrenySymbol(order?.currency) })}</td>
             </tr>
           )}
           {
@@ -189,7 +273,7 @@ export const OrderBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                 </td>
-                <td>
+                <td className='odc-figure'>
                   - {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
                 </td>
               </tr>
@@ -200,10 +284,10 @@ export const OrderBill = (props) => {
               <td>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</td>
               {order?.tax_type === 1
                 ? (
-                <td>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0), { currency: getCurrenySymbol(order?.currency) })}</td>
+                <td className='odc-figure'>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0), { currency: getCurrenySymbol(order?.currency) })}</td>
                   )
                 : (
-                <td>{parsePrice(order?.summary?.subtotal_with_discount ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
+                <td className='odc-figure'>{parsePrice(order?.summary?.subtotal_with_discount ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
                   )}
             </tr>
           )}
@@ -214,7 +298,7 @@ export const OrderBill = (props) => {
                   {t('TAX', 'Tax')}
                   <span>{`(${verifyDecimals(order?.tax, parseNumber)}%)`}</span>
                 </td>
-                <td>{parsePrice(order?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
+                <td className='odc-figure'>{parsePrice(order?.summary?.tax ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
               </tr>
             )
           }
@@ -225,7 +309,7 @@ export const OrderBill = (props) => {
                   {t('SERVICE_FEE', 'Service fee')}
                   <span>{`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}</span>
                 </td>
-                <td>{parsePrice(order?.summary?.service_fee ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
+                <td className='odc-figure'>{parsePrice(order?.summary?.service_fee ?? 0, { currency: getCurrenySymbol(order?.currency) })}</td>
               </tr>
             )
           }
@@ -250,7 +334,7 @@ export const OrderBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                 </td>
-                <td>
+                <td className='odc-figure'>
                   - {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
                 </td>
               </tr>
@@ -266,13 +350,13 @@ export const OrderBill = (props) => {
           {typeof order?.summary?.delivery_price === 'number' && !isPickupOrder && parseFloat((order?.summary?.delivery_price ?? 0) + getIncludedTaxes(true)) !== 0 && (
             <tr>
               <td>{t('DELIVERY_FEE', 'Delivery Fee')}</td>
-              <td>{formatPrice(order?.summary?.delivery_price + getIncludedTaxes(true))}</td>
+              <td className='odc-figure'>{formatPrice(order?.summary?.delivery_price + getIncludedTaxes(true))}</td>
             </tr>
           )}
           {isCustomOrder && declaredValue > 0 && (
             <tr>
               <td>{t('DECLARED_VALUE', 'Declared value')}</td>
-              <td>{parsePrice(declaredValue, { currency: getCurrenySymbol(order?.currency) })}</td>
+              <td className='odc-figure'>{parsePrice(declaredValue, { currency: getCurrenySymbol(order?.currency) })}</td>
             </tr>
           )}
           <TaxBillRows
@@ -291,7 +375,7 @@ export const OrderBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                 </td>
-                <td>
+                <td className='odc-figure'>
                   - {parsePrice(offer?.summary?.discount, { currency: getCurrenySymbol(order?.currency) })}
                 </td>
               </tr>
@@ -308,7 +392,7 @@ export const OrderBill = (props) => {
                     <span>{`(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}</span>
                   )}
               </td>
-              <td>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: getCurrenySymbol(order?.currency) })}</td>
+              <td className='odc-figure'>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: getCurrenySymbol(order?.currency) })}</td>
             </tr>
           )}
           {extraValueAdjustment?.length > 0 && extraValueAdjustment?.map(extra => (
@@ -316,7 +400,7 @@ export const OrderBill = (props) => {
               <td>
                 {pulseCouponName?.value ? pulseCouponName?.value : t(extra?.key?.toUpperCase(), extra?.key)}{' '}
               </td>
-              <td>{parseFloat(extra?.value) > 0
+              <td className='odc-figure'>{parseFloat(extra?.value) > 0
                 ? parsePrice(parseFloat(extra?.value), { currency: getCurrenySymbol(order?.currency) })
                 : `- ${parsePrice(parseFloat(extra?.value) * -1, { currency: getCurrenySymbol(order?.currency) })}`}
               </td>
@@ -324,7 +408,7 @@ export const OrderBill = (props) => {
           ))}
         </tbody>
       </table>
-      <table className='total'>
+      <table className='total' aria-label={t('ORDER_TOTAL', 'Order total')}>
         <tbody>
           <tr>
             <td>
@@ -333,7 +417,7 @@ export const OrderBill = (props) => {
                 : t('TOTAL', 'Total')
               }
             </td>
-            <td>
+            <td className='odc-figure'>
               {isCustomOrder
                 ? `~ ${parsePrice((order?.summary?.total ?? order?.total ?? 0) + (declaredValue || 0), { currency: getCurrenySymbol(order?.currency) })}`
                 : parsePrice(order?.summary?.total ?? order?.total, { currency: getCurrenySymbol(order?.currency) })
@@ -343,8 +427,43 @@ export const OrderBill = (props) => {
         </tbody>
       </table>
       </>)}
-      {order?.payment_events?.length > 0 && (
-        <table className='payments'>
+      {/* (owner decision 9, 2026-10-27): the block, and its Transaction ID, show with any payment event, as main did (a refund or
+          a wallet event alone kept it in main); the rows are still the «payment» events only */}
+      {isPanel && (order?.payment_events?.length > 0 || canRefundPayment) && (
+        <div className='odt-pay' role='group' aria-label={t('PAYMENTS', 'Payments')}>
+          {paymentEvents.map((event, i) => {
+            const isNotPrepaid = ['cash', 'card_delivery'].includes(event?.paymethod?.gateway)
+            return (
+              <div className='odt-pay-row' key={i}>
+                <Wallet className='odc-icon' />
+                <span className='odt-pay-name'>{getPaymentEventLabel(event)}</span>
+                {isNotPrepaid
+                  ? <StatusBadge family='pending' label={t('PAYMENT_NOT_PREPAID', 'Not prepaid')} />
+                  : <StatusBadge family='done' label={isFullyRefunded ? t('REFUNDED', 'Refunded') : t('PAID', 'Paid')} />}
+                {!isCustomOrder && (
+                  <span className='odt-pay-amount odc-figure'>
+                    {event?.paymethod?.gateway === 'cash' && order?.cash
+                      ? parsePrice(order?.cash, { currency: getCurrenySymbol(order?.currency) })
+                      : parsePrice(event?.amount, { currency: getCurrenySymbol(order?.currency) })}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+          {order?.pay_data && (
+            <div className='odt-pay-ref'>
+              <span>{order?.paymethod?.gateway === 'braintree' ? t('BRAINTREE_ID', 'BrainTree ID') : t('TRANSACTION_ID', 'Transaction ID')}</span>
+              <span className='odc-mono'>{order?.pay_data}</span>
+            </div>
+          )}
+          <div className='odt-pay-actions'>{refundActions}</div>
+        </div>
+      )}
+      {isPanel && paymentEvents.length === 0 && !canRefundPayment && canRefundToWallet && (
+        <div className='odt-pay-actions'>{refundActions}</div>
+      )}
+      {!isPanel && order?.payment_events?.length > 0 && (
+        <table className='payments' aria-label={t('PAYMENTS', 'Payments')}>
           <thead>
             <tr>
               <th colSpan='2'>{t('PAYMENTS', 'Payments')}</th>
@@ -354,7 +473,7 @@ export const OrderBill = (props) => {
             {order?.payment_events?.filter(item => item.event === 'payment').map((event, i) => (
               <tr key={i}>
                 <td>
-                  {`${['cash', 'card_delivery'].includes(event?.paymethod?.gateway) ? `${t('NOT_PREPAID', 'NOT PREPAID')}: ` : ''}`}
+                  {`${['cash', 'card_delivery'].includes(event?.paymethod?.gateway) ? `${t('NOT_PREPAID', 'Not prepaid')}: ` : ''}`}
                   {event?.wallet_event
                     ? walletName[event?.wallet_event?.wallet?.type]?.name
                     : event?.paymethod
@@ -364,7 +483,7 @@ export const OrderBill = (props) => {
                         : walletName[event?.data?.wallet_currency]?.name}
                 </td>
                 {!isCustomOrder && (
-                  <td>
+                  <td className='odc-figure'>
                     {event?.paymethod?.gateway === 'cash' && order?.cash
                       ? parsePrice(order?.cash, { currency: getCurrenySymbol(order?.currency) })
                       : `${parsePrice(event?.amount, { currency: getCurrenySymbol(order?.currency) })}`}
@@ -383,7 +502,7 @@ export const OrderBill = (props) => {
           )}
         </table>
       )}
-      {!isGiftCardOrder && !viewOnly && (
+      {!isPanel && canRefundToWallet && (
         <RefundToWallet
           order={order}
           actionStatus={actionStatus}
@@ -393,7 +512,7 @@ export const OrderBill = (props) => {
         />
       )}
       {order?.payment_events?.filter(item => item.event === 'refund').length > 0 && (
-        <table className='payments'>
+        <table className='payments' aria-label={t('REFUND', 'Refund')}>
           <thead>
             <tr>
               <th colSpan='2'>{t('REFUND', 'Refund')}</th>
@@ -411,17 +530,17 @@ export const OrderBill = (props) => {
                         ? t(event?.data?.gateway?.toUpperCase(), getGatewayHumanLabel(event?.data?.gateway))
                         : walletName[event?.data?.wallet_currency]?.name}
                 </td>
-                <td>{parsePrice(event?.amount, { currency: getCurrenySymbol(order?.currency) })}</td>
+                <td className='odc-figure'>{parsePrice(event?.amount, { currency: getCurrenySymbol(order?.currency) })}</td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {parseInt(order?.delivery_type, 10) !== 9 && (
-        <table className='delivery_option'>
+      {!isPanel && parseInt(order?.delivery_type, 10) !== 9 && (
+        <table className='delivery_option' aria-label={t('DELIVERY_PREFERENCE', 'Delivery preference')}>
           <thead>
             <tr>
-              <th colSpan='2'>{t('DELIVERY_PREFERENCE', 'Delivery Preference')}</th>
+              <th colSpan='2'>{t('DELIVERY_PREFERENCE', 'Delivery preference')}</th>
             </tr>
           </thead>
           <tbody>
@@ -431,18 +550,18 @@ export const OrderBill = (props) => {
           </tbody>
         </table>
       )}
-      {order?.comment && (
-        <table className='comments'>
+      {!isPanel && order?.comment && (
+        <table className='comments' aria-label={t('COMMENT', 'Comment')}>
           <tbody>
             <tr>
-              <td style={{ color: '#000', fontWeight: 600 }}>{t('COMMENT', 'Comment')}</td>
+              <td className='comment-heading'>{t('COMMENT', 'Comment')}</td>
               <td>{order?.comment}</td>
             </tr>
           </tbody>
         </table>
       )}
-      {order?.spot_number && (
-        <table className='spot_number'>
+      {!isPanel && order?.spot_number && (
+        <table className='spot_number' aria-label={SPOT_DICTIONARY[order?.delivery_type]}>
           <tbody>
             <tr>
               <td>{SPOT_DICTIONARY[order?.delivery_type]}</td>
@@ -451,8 +570,8 @@ export const OrderBill = (props) => {
           </tbody>
         </table>
       )}
-      {order?.vehicle && (
-        <table className='vehicle'>
+      {!isPanel && order?.vehicle && (
+        <table className='vehicle' aria-label={t('ORDER_VEHICLE', 'Vehicle')}>
           <thead>
             <tr>
               <th colSpan='2'>{t('ORDER_VEHICLE', 'Vehicle')}</th>
@@ -479,12 +598,13 @@ export const OrderBill = (props) => {
         </table>
       )}
 
-      {!isGiftCardOrder && (!order?.refund_data || (refundProvider?.partial && order?.refund_data === 'partially_refunded')) && (stripePaymethods.includes(order?.paymethod?.gateway) || !!refundProvider) && !viewOnly && (
+      {!isPanel && canRefundPayment && (
         <RefundButtonWrapper>
           <Button
+            type='button'
             color='primary'
             borderRadius='8px'
-            disabled={actionStatus?.loading || order?.payment_events?.find(item => item.event === 'refund' && (stripePaymethods.includes(item?.paymethod?.gateway) || !!getPluginRefundProvider(item?.paymethod?.gateway)))}
+            disabled={refundButtonDisabled}
             onClick={onClickRefund}
           >
             {t('REFUND', 'Refund')}
@@ -492,76 +612,127 @@ export const OrderBill = (props) => {
         </RefundButtonWrapper>
       )}
 
-      <Alert
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
+      <RefundErrorDialog
+        open={showRefundError}
+        kind={actionStatus?.errorKind}
+        error={actionStatus?.error}
+        canRetry={canRetryRefund}
+        onClose={() => setDismissedRefundStatus(actionStatus)}
+        onRetry={() => {
+          setDismissedRefundStatus(actionStatus)
+          onClickRefund()
+        }}
+      />
+      <AlertDialog
+        title={t('ORDER_BILL', 'Order bill')}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
         content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}
         onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
       />
-      <Confirm
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={confirm.content}
-        acceptText={t('ACCEPT', 'Accept')}
+      <ConfirmDialog
         open={confirm.open}
-        onClose={() => setConfirm({ ...confirm, open: false })}
+        tone='primary'
+        busy={!!actionStatus?.loading}
+        title={t('REFUND_ORDER_QUESTION', 'Refund order #_id_?').replace('_id_', () => order?.id ?? '')}
+        confirmLabel={refundTotal > 0
+          ? t('REFUND_CONFIRM_ACTION', 'Refund _subject_').replace('_subject_', () => formatPrice(refundTotal))
+          : t('REFUND', 'Refund')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => confirm.handleOnAccept?.()}
         onCancel={() => setConfirm({ ...confirm, open: false })}
-        onAccept={confirm.handleOnAccept}
-        closeOnBackdrop={false}
-      />
-      {openPluginRefund && (
-        <Modal
-          width='500px'
-          open={openPluginRefund}
-          onClose={() => setOpenPluginRefund(false)}
+      >
+        {t('REFUND_PAYMENT_CONSEQUENCE', 'The payment is refunded to the customer’s card. This can’t be undone.')}
+        {previousRefundNotice && <p className='odc-refund-previous'>{previousRefundNotice}</p>}
+      </ConfirmDialog>
+      <Dialog
+        open={openPluginRefund}
+        onOpenChange={(next) => { if (!next) setOpenPluginRefund(false) }}
+        size='sm'
+        // The focus starts on the chosen way to refund.
+        initialFocus={() => pluginRefundFormRef.current?.querySelector('[role="radio"][tabindex="0"]') ?? true}
+        title={t('REFUND_ORDER_TITLE', 'Refund order #_id_').replace('_id_', () => order?.id ?? '')}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={(
+          <>
+            <ProductButton onClick={() => setOpenPluginRefund(false)}>{t('CANCEL', 'Cancel')}</ProductButton>
+            <ProductButton
+              variant='primary'
+              type='submit'
+              form={pluginRefundFormId}
+              busy={!!actionStatus?.loading}
+              disabled={actionStatus?.loading}
+            >
+              {t('REFUND', 'Refund')}
+            </ProductButton>
+          </>
+        )}
+      >
+        <form
+          id={pluginRefundFormId}
+          ref={pluginRefundFormRef}
+          className='odc-refund'
+          autoComplete='off'
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault()
+            handlePluginRefundSubmit()
+          }}
         >
-          <RefundContainer autoComplete='off' onSubmit={(e) => e.preventDefault()}>
-            <h2>{t('REFUND', 'Refund')}</h2>
-            <p>{t('QUESTION_REFUND_AMOUNT', 'How do you want to refund?')}</p>
+          {previousRefundNotice && <p className='odc-refund-previous'>{previousRefundNotice}</p>}
+          <p id={pluginRefundModeLabelId}>{t('QUESTION_REFUND_AMOUNT', 'How do you want to refund?')}</p>
+          <div role='radiogroup' aria-labelledby={pluginRefundModeLabelId}>
             <RadioItemContainer
               active={isRefundAll}
-              onClick={() => setIsRefundAll(true)}
             >
-              {isRefundAll ? <RecordCircleFill /> : <Circle />}
+              <RadioButton
+                name='plugin-refund-mode'
+                role='radio'
+                data-refund-mode='total'
+                aria-checked={isRefundAll}
+                checked={isRefundAll}
+                onChange={() => setIsRefundAll(true)}
+                tabIndex={isRefundAll ? 0 : -1}
+                onKeyDown={event => movePluginRefundMode(event, isRefundAll, setIsRefundAll)}
+              />
               <span>{t('REFUND_ALL', 'Refund all')}</span>
             </RadioItemContainer>
             <RadioItemContainer
               active={!isRefundAll}
-              onClick={() => setIsRefundAll(false)}
             >
-              {!isRefundAll ? <RecordCircleFill /> : <Circle />}
+              <RadioButton
+                name='plugin-refund-mode'
+                role='radio'
+                data-refund-mode='amount'
+                aria-checked={!isRefundAll}
+                checked={!isRefundAll}
+                onChange={() => setIsRefundAll(false)}
+                tabIndex={!isRefundAll ? 0 : -1}
+                onKeyDown={event => movePluginRefundMode(event, isRefundAll, setIsRefundAll)}
+              />
               <span>{t('REFUND_ONLY_AN_AMOUNT', 'Refund only an amount')}</span>
             </RadioItemContainer>
-            {!isRefundAll && (
-              <RefundAmountWrapper>
-                <Input
-                  placeholder={t('AMOUNT', 'Amount')}
-                  value={refundAmount}
-                  onKeyPress={(e) => {
-                    if (!/^[0-9.]$/.test(e.key)) {
-                      e.preventDefault()
-                    }
-                  }}
-                  onChange={(e) => setRefundAmount(e.target.value)}
-                />
-              </RefundAmountWrapper>
-            )}
-            <Button
-              color='primary'
-              borderRadius='8px'
-              disabled={actionStatus?.loading}
-              onClick={handlePluginRefundSubmit}
-              style={{ marginTop: '20px' }}
-            >
-              {t('REFUND', 'Refund')}
-            </Button>
-          </RefundContainer>
-        </Modal>
-      )}
-    </OrderBillContainer>
+          </div>
+          {!isRefundAll && (
+            <RefundAmountWrapper className='odc-refund-amount'>
+              <Input
+                aria-label={t('AMOUNT', 'Amount')}
+                inputMode='decimal'
+                placeholder={t('AMOUNT', 'Amount')}
+                value={refundAmount}
+                onKeyPress={(e) => {
+                  if (!/^[0-9.]$/.test(e.key)) {
+                    e.preventDefault()
+                  }
+                }}
+                onChange={(e) => setRefundAmount(e.target.value)}
+              />
+            </RefundAmountWrapper>
+          )}
+        </form>
+      </Dialog>
+    </Container>
   )
 }

@@ -1,0 +1,232 @@
+/*
+ * redesign  (lot D, decision 7) · The Theme tab of an Ordering product on Product: the section picker, the blocks of the
+ * section with their controls, the image zone and the bar at the foot with «N unsaved changes», Discard and «Update».
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on a wrapper between the root and the panel's scroller: the bar
+ * is sticky to that scroller. Prefix: odc-op-theme-*.
+ */
+
+.odc-op-theme {
+  display: grid;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* review r1 (Q-09): after Discard the tab itself takes the focus (tabIndex -1), with no ring, like `.odc-op-form:focus` of General */
+.odc-op-theme:focus { outline: none; }
+
+.odc-op-theme *,
+.odc-op-theme *::before,
+.odc-op-theme *::after {
+  box-sizing: border-box;
+}
+
+.odc-op-theme-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  max-inline-size: var(--od-x-dialog-lg);
+  min-inline-size: 0;
+}
+
+/* ── No theme yet: the picker and «Save» ── */
+.odc-op-theme-assign {
+  display: grid;
+  gap: var(--od-space-4);
+  max-inline-size: var(--od-x-dialog-lg);
+  min-inline-size: 0;
+}
+
+.odc-op-theme-assign-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-2);
+}
+
+/* ── The section and its blocks ── */
+.odc-op-theme-body {
+  display: grid;
+  align-content: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-op-theme-section {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-op-theme-heading {
+  margin: 0;
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-op-theme-block {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-end: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-op-theme-block-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  text-transform: capitalize;
+}
+
+.odc-op-theme-title {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  text-transform: capitalize;
+}
+
+/* The label of a boolean is the title of its option, capitalized as in `main`; the choices of a picker too. */
+.odc-op-theme-cap,
+.odc-op-theme-option {
+  text-transform: capitalize;
+}
+
+/* An option is a framed group; a component sits indented under its block (the start side, so it follows the writing direction). */
+.odc-op-theme-box {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-op-theme-component {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-inline-start: var(--od-space-3);
+}
+
+/* The C18 select is drawn by its own stylesheet: this span adds no box of its own. */
+.odc-op-theme-select { display: contents; }
+
+/* ── Image zone: tile, «Choose image» and the drag-and-drop hint ── */
+.odc-op-theme-image {
+  min-inline-size: 0;
+}
+
+.odc-op-theme-image-zone {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+}
+
+.odc-op-theme-image-tile {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: calc(var(--od-x-control-height) * 5);
+  block-size: calc(var(--od-x-control-height) * 5);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-op-theme-image-tile > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.odc-op-theme-image-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-op-theme-image-hint {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── The bar at the foot ── */
+/* redesign : sticks to the very foot of the panel (see .odc-op-savebar in ordering-product-general.css) */
+.odc-op-theme-bar {
+  position: sticky;
+  inset-block-end: calc(var(--od-space-6) * -1);
+  z-index: var(--od-x-layer-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+  padding-block: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odc-op-theme-bar-text {
+  display: grid;
+  flex: 1 1 0;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-op-theme-count {
+  margin: 0;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-op-theme-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  overflow-wrap: anywhere;
+}
+
+.odc-op-theme-error > .odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}
+
+.odc-op-theme-bar-actions {
+  display: flex;
+  flex: none;
+  gap: var(--od-space-2);
+}
+
+/* When the actions wrap under the text, or with a coarse pointer, the 44px areas of the buttons must not cross (same rule as the
+   save bar of Product). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-op-theme-bar { row-gap: var(--od-space-4); }
+}
+
+/* On a phone the actions take the full width, 44px tall, as the save bar of Product. */
+@media (max-width: 767px) {
+  .odc-op-theme-bar-actions { inline-size: 100%; }
+
+  .odc-op-theme-bar-actions > .odc-btn {
+    flex: 1 1 0;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign : P/InlineNotice brings the page gutter as its inline margin; inside the panel it lines up with the fields. */
+.odc-op-theme .odc-notice { margin-inline: 0; }

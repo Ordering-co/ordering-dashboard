@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import {
   BUILDER_TYPE_OPTIONS,
+  byKind,
+  getAppDetailTabs,
+  getDetailTab,
+  getProductHasThemes,
+  getWebDetailTab,
+  getWebDetailTabs,
   getDomainErrorMessage,
   getDomainUrl,
   getOwnDomain,
@@ -30,6 +36,34 @@ describe('Builder website helpers', () => {
     expect(getProductKind({ product_type: 'dashboard' })).toBe('web')
     expect(getProductKind({ product_type: 'driver_app' })).toBe('app')
     expect(getProductKind(null)).toBe('app')
+  })
+
+  it('reads whether a product has themes from the API, else only a website has them', () => {
+    expect(getProductHasThemes({ kind: 'app', product_type: 'marketplace_app', has_themes: true })).toBe(true)
+    expect(getProductHasThemes({ kind: 'web', product_type: 'marketplace_website', has_themes: false })).toBe(false)
+    expect(getProductHasThemes({ kind: 'web', product_type: 'marketplace_website' })).toBe(true)
+    expect(getProductHasThemes({ product_type: 'marketplace_app' })).toBe(false)
+    expect(getProductHasThemes(null)).toBe(false)
+  })
+
+  it('puts the Theme tab where the product has themes', () => {
+    const values = (tabs) => tabs.map(tab => tab.value)
+    expect(values(getAppDetailTabs(true))).toEqual(['general', 'theme', 'files', 'constants', 'credentials', 'push', 'builds'])
+    expect(values(getAppDetailTabs(false))).toEqual(['general', 'appearance', 'files', 'constants', 'credentials', 'push', 'builds'])
+    expect(getDetailTab('appearance', getAppDetailTabs(true))).toBe('general')
+    expect(values(getWebDetailTabs(true))).toEqual(['general', 'site', 'theme'])
+    expect(values(getWebDetailTabs(false))).toEqual(['general', 'site'])
+    expect(getDetailTab('theme', getAppDetailTabs(true))).toBe('theme')
+    expect(getDetailTab('theme', getAppDetailTabs(false))).toBe('general')
+    expect(getDetailTab('theme')).toBe('general')
+    expect(getWebDetailTab('theme')).toBe('theme')
+    expect(getWebDetailTab('theme', getWebDetailTabs(false))).toBe('general')
+  })
+
+  it('says a text of the app for an app, and of the website otherwise', () => {
+    expect(byKind('app', 'website text', 'app text')).toBe('app text')
+    expect(byKind('web', 'website text', 'app text')).toBe('website text')
+    expect(byKind(undefined, 'website text', 'app text')).toBe('website text')
   })
 
   it('reads the own domain configured, as a string or as the domain answer gives it', () => {

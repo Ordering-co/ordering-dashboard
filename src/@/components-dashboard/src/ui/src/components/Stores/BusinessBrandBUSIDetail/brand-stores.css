@@ -1,0 +1,122 @@
+/*
+ * redesign SB-B4 · The Stores tab of a brand: search, «Select all / Select none», one row per store with its checkbox,
+ * the failure of each store under it, and the foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ * Logical properties only, so the tab mirrors in RTL.
+ */
+
+.odc-brand-stores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* P/SearchField carries a row's flex basis (FilterBar); in this column that basis would be its height. */
+.odc-brand-stores-search {
+  flex: none;
+  max-inline-size: calc(var(--od-x-control-height) * 12);
+}
+
+/* The actions and what they apply to share a line and wrap together on a narrow panel. */
+.odc-brand-stores-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+}
+
+.odc-brand-stores-scope {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-brand-stores-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── The list ── */
+.odc-brand-stores-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-brand-store {
+  padding-block: var(--od-space-1);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-brand-store:last-child { border-block-end: 0; }
+
+/* The row is the checkbox: logo and name sit in its text slot and the whole line toggles. */
+.odc-brand-store .odc-checkbox-text {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-brand-store-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* While the store saves the box waits for the answer; it stays focusable so the keyboard keeps its place. */
+.odc-brand-store .odc-checkbox[aria-busy='true'] {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+/* «In Vips» and the failure align under the name: checkbox padding + box + gap + logo + gap. */
+.odc-brand-store-note,
+.odc-brand-store-error {
+  margin-block: 0 var(--od-space-1);
+  margin-inline: calc(var(--od-x-space-1-5) + var(--od-x-checkbox-box) + var(--od-space-2) + var(--od-x-avatar) + var(--od-space-2)) 0;
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-brand-store-note { color: var(--od-text-muted); }
+
+/* Never colour alone: the icon and the words say it failed. */
+.odc-brand-store-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-danger-functional);
+}
+
+.odc-brand-store-error-icon.odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}
+
+/* ── Skeleton ── */
+.odc-brand-store-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+.odc-brand-stores-foot { min-inline-size: 0; }
+
+/* redesign SB-R1 (phase 3, touch probe): on a phone the whole row is the target, 44px tall, so a tap never lands on the next store. */
+@media (max-width: 767px) {
+  .odc-brand-store .odc-checkbox-labelled {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

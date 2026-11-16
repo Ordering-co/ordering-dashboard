@@ -1,0 +1,227 @@
+/*
+ * redesign stores 3.C · the importer form and the list of mappings of a multiple importer, both levels of the Importers
+ * panel (ImportersButton/ImportersPanes). The level brings the title, the way back and the scroll; this file is what is inside.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * Prefixes: odc-imp-form-* (the form) and odc-imp-map-* (the list of mappings).
+ */
+
+/* ── The form ── */
+.odc-imp-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+}
+
+.odc-imp-form-main {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* «Mapping» and the CSV example under it (outside the disabled block: a default importer can still download the example) */
+.odc-imp-form-mapping {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-imp-form-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-form-csv {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A fieldset is only the disabled switch of a block: no border, no padding. */
+.odc-imp-form-group {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-imp-form-legend {
+  padding: 0;
+  margin-block-end: var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-form-group-body {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The ids of a mapping: two to a row where the level has room (a pair per row: own id, external id), one on a phone */
+.odc-imp-form-ids {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  gap: var(--od-space-4) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The native select of the type: the Product input look comes from `odc-field-input` (field.css) */
+.odc-imp-form-select {
+  cursor: pointer;
+}
+
+.odc-imp-form-select:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Fields and MetaFields: the pairs already there, then the row that adds one ── */
+.odc-imp-form-pair-list {
+  display: grid;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-imp-form-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-imp-form-pair-name,
+.odc-imp-form-pair-value {
+  min-inline-size: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-form-pair-value {
+  color: var(--od-text-muted);
+}
+
+.odc-imp-form-pair-add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* ── The foot: the error and the one button, at the bottom of the level while it scrolls ── */
+.odc-imp-form-foot {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--od-x-layer-sticky);
+  display: grid;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-3);
+  background: var(--od-x-dialog-bg);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-imp-form-foot > .odc-btn {
+  justify-self: start;
+}
+
+.odc-imp-form-errors {
+  display: grid;
+  gap: var(--od-space-1);
+}
+
+/* The notice holds the messages as lines, and its close button stays at the end */
+.odc-imp-form-foot .odc-notice {
+  align-items: start;
+}
+
+@media (max-width: 767px) {
+  .odc-imp-form-foot > .odc-btn {
+    justify-self: stretch;
+  }
+}
+
+/* ── The list of mappings of a multiple importer ── */
+.odc-imp-map {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-imp-map-list {
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  overflow: hidden;
+}
+
+.odc-imp-map-list > li + li {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-imp-map-item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-row-comfortable);
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border: 0;
+  border-inline-start: var(--od-x-indicator) solid transparent;
+  background: transparent;
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-imp-map-item:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-imp-map-item[aria-current='true'] {
+  background: var(--od-x-selected);
+  border-inline-start-color: var(--od-action);
+}
+
+/* inside the rounded list: the ring is drawn inward, so the list does not clip it */
+.odc-imp-map-item:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-imp-map-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-map-chevron {
+  flex: none;
+  color: var(--od-text-muted);
+}

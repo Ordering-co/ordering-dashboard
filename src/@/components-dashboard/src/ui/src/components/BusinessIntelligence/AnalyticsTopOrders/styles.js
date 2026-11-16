@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { glyphButtonReset } from '../../../styles/glyphButton'
+
 export const Container = styled.div`
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
   border-radius: 7.6px;
@@ -16,13 +18,16 @@ export const AnalyticsTopOrdersHeader = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme?.colors.headingColor};
     text-transform: uppercase;
   }
 `
 
 export const ActionBlock = styled.div`
+
+  ${glyphButtonReset}
+
   svg {
     font-size: 16px;
     color: #212121;
@@ -49,7 +54,7 @@ export const TopOrdersContent = styled.div`
 
   p {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme?.colors.headingColor};
     margin-right: 10px;
   }
@@ -62,7 +67,7 @@ export const SkeletonContainerWrapper = styled.div`
 `
 
 export const PercentContainer = styled.span`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme?.colors.headingColor};
   min-width: 60px;
   text-align: right;
@@ -100,7 +105,7 @@ export const ValueWrapper = styled.div`
 `
 
 export const ValueContainer = styled.span`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme?.colors.headingColor};
   
   ${({ percent }) => percent > 50 && css`

@@ -5,10 +5,18 @@ export const Container = styled.div`
   align-items: center;
   padding: 10px 0px;
   cursor: pointer;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: start;
 
   span {
     display: flex;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.darkGray};
   }
 

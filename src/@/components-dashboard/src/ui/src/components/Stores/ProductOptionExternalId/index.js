@@ -10,10 +10,10 @@ export const ProductOptionExternalId = (props) => {
   return (
     <Container>
       <FormControl>
-        <label htmlFor='externalId'>{t('EXTERNAL_ID', 'External Id')}</label>
+        <label htmlFor='externalId'>{t('EXTERNAL_ID', 'External ID')}</label>
         <Input
           defaultValue={value || ''}
-          placeholder={t('EXTERNAL_ID', 'External Id')}
+          placeholder={t('EXTERNAL_ID', 'External ID')}
           onChange={(e) => handleChange(e.target.value)}
         />
       </FormControl>

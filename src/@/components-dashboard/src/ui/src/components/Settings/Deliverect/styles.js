@@ -13,7 +13,7 @@ export const DeliverectContainer = styled.div`
     margin-top: 36px;
     span {
       font-weight: 600;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
     }
     svg {
       margin-left: 5px;
@@ -49,7 +49,7 @@ export const Header = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
     text-transform: capitalize;
@@ -58,7 +58,7 @@ export const Header = styled.div`
   button {
     line-height: 12px;
     height: 16px;
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     margin-left: 15px;
     padding: 2px 8px;
     border-radius: 50px;
@@ -87,7 +87,7 @@ export const ApiKeysListTable = styled.table`
     width: 100%;
     th,
     td {
-      font-size: 12px;
+      font-size: var(--od-type-content-size);
       word-break: break-all;
 
       &:last-child {
@@ -159,7 +159,7 @@ export const DropdownButtonWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
@@ -170,7 +170,7 @@ export const DropdownButtonWrapper = styled.div`
 `
 export const AddNewButton = styled.div`
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.lightGray};
   margin: 20px 0;
   width: fit-content;
@@ -187,7 +187,7 @@ export const AllSetting = styled.div`
   cursor: pointer;
   span {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.primary};
   }
   svg {
@@ -208,7 +208,7 @@ export const AllSetting = styled.div`
 
 export const Description = styled.p`
   margin-top: 40px;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin-bottom: 0px;
   text-align: justify;
 
@@ -233,7 +233,7 @@ export const CategoryExtraContent = styled.div`
   `}
 
   > button {
-    z-index: 100;
+    z-index: var(--od-x-layer-sticky);
     position: absolute;
     top: 25px;
     ${props => props.theme?.rtl
@@ -267,7 +267,7 @@ export const Container = styled.div`
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
   height: calc(var(--vh, 1vh) * 100);
   top: 0px;
-  z-index: 1001;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
   overflow-x: hidden;
   transition: 0.3s;
 
@@ -317,7 +317,7 @@ export const Tab = styled.div`
   padding: 10px 0px;
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
   ${props => props.theme?.rtl
 ? css`
@@ -340,14 +340,14 @@ export const Tab = styled.div`
 export const GetStarted = styled.div`
   h2 {
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 10px;
   }
   p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-secondary-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 8px;

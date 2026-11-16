@@ -1,0 +1,86 @@
+/* C6 · Selection checkbox: the button is the target, the box is drawn inside. */
+
+.odc-checkbox {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-target-fine);
+  block-size: var(--od-x-target-fine);
+  margin: calc(var(--od-space-1) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-action-foreground);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.odc-checkbox:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-checkbox-box {
+  display: grid;
+  place-items: center;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+}
+
+.odc-checkbox[data-checked] .odc-checkbox-box,
+.odc-checkbox[data-indeterminate] .odc-checkbox-box {
+  border-color: var(--od-action);
+  background: var(--od-action);
+}
+
+.odc-checkbox-mark { display: grid; place-items: center; }
+
+.odc-checkbox-mark .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+  stroke-width: var(--od-x-indicator);
+}
+
+.odc-checkbox[data-disabled] { cursor: not-allowed; }
+.odc-checkbox[data-disabled] .odc-checkbox-box { opacity: 0.55; }
+
+/* With visible text the whole row is the target. */
+.odc-checkbox-labelled {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-inline: var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+}
+
+.odc-checkbox-labelled:hover { background: var(--od-x-hover); }
+.odc-checkbox-labelled:focus-visible { outline-offset: var(--od-x-focus-inset); }
+
+.odc-checkbox-text { min-inline-size: 0; flex: 1; }
+
+/* tanda P: the 44px area of decision 12 on a coarse pointer OR below 768px, as switch.css and field.css (with a mouse in
+   a narrow window the click near a card's box fell on the card's link) */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-checkbox {
+    inline-size: var(--od-x-target-coarse);
+    block-size: var(--od-x-target-coarse);
+    margin: calc(var(--od-x-space-3-5) * -1);
+  }
+  .odc-checkbox-labelled {
+    inline-size: 100%;
+    min-block-size: var(--od-x-target-coarse);
+    margin: 0;
+  }
+}

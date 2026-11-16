@@ -15,7 +15,7 @@ export const HeaderContainer = styled.div`
 
   h1 {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0;
     color: ${props => props.theme.colors.headingColor};
   }
@@ -50,14 +50,14 @@ export const PaymentHistorySection = styled.div`
 
   h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }
 
   p {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--od-type-secondary-size);
     color: #909BA9;
   }
 `
@@ -73,7 +73,7 @@ export const BusinessNameWrapper = styled.div`
   cursor: pointer;
 
   h1 {
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     color: ${props => props.theme?.colors?.headingColor};
 
@@ -101,7 +101,7 @@ export const Table = styled.table`
   th, td {
     padding: 12px 16px;
     text-align: left;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     border-bottom: 1px solid ${props => props.theme?.colors?.borderColor || '#DEE2E6'};
     ${props => props.theme?.rtl && css`
       text-align: right;
@@ -137,7 +137,7 @@ export const EmptyState = styled.div`
   color: ${props => props.theme?.colors?.lightGray || '#909BA9'};
 
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-top: 10px;
   }
 `
@@ -160,7 +160,13 @@ export const ViewModeWrapper = styled.div`
   }
 `
 
-export const ViewModeCard = styled.div`
+export const ViewModeCard = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
   flex: 1;
   max-width: 300px;
 
@@ -184,14 +190,14 @@ export const ViewModeCard = styled.div`
   }
 
   h3 {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 600;
     margin: 0;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }
 
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 4px 0 0 0;
     color: ${props => props.theme.colors?.lightGray || '#909BA9'};
   }
@@ -214,7 +220,7 @@ export const MethodSelectorWrapper = styled.div`
   }
 
   label {
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }
@@ -222,7 +228,7 @@ export const MethodSelectorWrapper = styled.div`
   .select {
     border: 1px solid ${props => props.theme.colors?.borderColor || '#E9ECEF'};
     border-radius: 8px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 `
 
@@ -232,7 +238,7 @@ export const CalendarSection = styled.div`
   gap: 12px;
 
   > label {
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }
@@ -317,7 +323,7 @@ export const YearSelector = styled.div`
   margin-bottom: 20px;
 
   span {
-    font-size: 18px;
+    font-size: var(--od-type-control-value-size);
     font-weight: 700;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
     min-width: 60px;
@@ -365,7 +371,11 @@ export const MonthGrid = styled.div`
   gap: 10px;
 `
 
-export const MonthCard = styled.div`
+export const MonthCard = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -374,7 +384,7 @@ export const MonthCard = styled.div`
     ? (props.theme.colors?.primary || '#E63757')
     : (props.theme.colors?.borderColor || '#E9ECEF')};
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
@@ -421,14 +431,14 @@ export const PeriodInfoText = styled.div`
   gap: 4px;
 
   span.label {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 600;
     text-transform: uppercase;
     color: ${props => props.theme.colors?.lightGray || '#909BA9'};
   }
 
   span.dates {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     font-weight: 600;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }
@@ -441,7 +451,7 @@ export const DownloadButton = styled.button`
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -464,7 +474,7 @@ export const DownloadButton = styled.button`
 `
 
 export const CalendarHint = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin: 0;
   color: ${props => props.theme.colors?.lightGray || '#909BA9'};
 `
@@ -475,12 +485,16 @@ export const TabsContainer = styled.div`
   margin-bottom: 20px;
 `
 
-export const TabButton = styled.div`
+export const TabButton = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  text-align: inherit;
+  font-family: inherit;
   padding: 10px 20px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   color: ${props => props.theme.colors?.lightGray || '#909BA9'};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   transition: all 0.2s ease;
 
@@ -535,7 +549,7 @@ export const PaginationWrapper = styled.div`
   }
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 600;
     color: ${props => props.theme.colors?.headingColor || '#344054'};
   }

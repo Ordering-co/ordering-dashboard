@@ -107,6 +107,89 @@ describe('PosMenuBusinessDetails controller', () => {
     expect(controller.integrationActionLoading).toBe(false)
   })
 
+  describe('push actions and other failed requests', () => {
+    const READABLE = 'The integration did not respond. Please try again.'
+
+    it('says a push menu that never reached the API in words, not the browser text', async () => {
+      fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      renderController()
+
+      await act(async () => {
+        await controller.handlePushAction(364, 'push_menu')
+      })
+
+      expect(mocks.showToast).toHaveBeenLastCalledWith('error', READABLE)
+    })
+
+    it('says it in words for the other browser wordings of a failed request', async () => {
+      renderController()
+
+      for (const text of ['NetworkError when attempting to fetch resource.', 'Load failed']) {
+        fetchMock.mockRejectedValueOnce(new TypeError(text))
+        await act(async () => {
+          await controller.handlePushAction(364, 'push_menu')
+        })
+        expect(mocks.showToast).toHaveBeenLastCalledWith('error', READABLE)
+      }
+    })
+
+    it('keeps showing the error the API returns for a push', async () => {
+      fetchMock.mockResolvedValueOnce({ json: async () => ({ error: true, result: 'Menu is empty' }) })
+      renderController()
+
+      await act(async () => {
+        await controller.handlePushAction(364, 'push_menu')
+      })
+
+      expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'Menu is empty')
+    })
+
+    it('keeps the message of an error that is not a network failure', async () => {
+      fetchMock.mockRejectedValueOnce(new SyntaxError('Unexpected token <'))
+      renderController()
+
+      await act(async () => {
+        await controller.handlePushAction(364, 'push_menu')
+      })
+
+      expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'Unexpected token <')
+    })
+
+    it('exposes the readable text, not the browser one, when a business action fails to reach the API', async () => {
+      renderController()
+
+      fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      await act(async () => {
+        await controller.handleDeleteBusiness()
+      })
+      expect(controller.actionStatus.error).toEqual([READABLE])
+
+      fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      await act(async () => {
+        await controller.handleDuplicateBusiness()
+      })
+      expect(controller.actionStatus.error).toEqual([READABLE])
+
+      fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      await act(async () => {
+        await controller.handleUpdateBusinessConfigs({ a: 1 }, 5)
+      })
+      expect(controller.actionStatus.error).toEqual([READABLE])
+    })
+
+    it('exposes the readable text when the business cannot be loaded or synced because the request failed', async () => {
+      mocks.businessGet.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      render(<PosMenuBusinessDetails UIComponent={UI} businessId={42} />)
+      await waitFor(() => expect(controller.businessState.error).toEqual([READABLE]))
+
+      fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      await act(async () => {
+        await controller.handleSyncEvent('business')
+      })
+      expect(controller.businessState.error).toEqual([READABLE])
+    })
+  })
+
   it('ignores a second request while one is in flight', async () => {
     let resolveFetch
     fetchMock.mockImplementation(() => new Promise(resolve => { resolveFetch = resolve }))

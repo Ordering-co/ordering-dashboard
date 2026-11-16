@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { ArrowClockwise, BoxArrowUpRight, Check2, Clipboard, ExclamationCircle, ExclamationTriangle } from 'react-bootstrap-icons'
 
 import { ToastType, useLanguage, useToast } from '../../../../../index'
-import { Button, Input } from '../../../styles'
-import { Confirm } from '../../Shared'
-import { BuilderMessage } from '../BuilderShared'
+import { CircleAlert, ExternalLink, TriangleAlert } from '../../Shared/Icon'
+import { Button, ConfirmDialog, CopyButton, EmptyState, InlineNotice, Skeleton, StatusBadge, TextField } from '../../Shared/Product'
 import {
   getDomainErrorMessage,
   getDomainUrl,
@@ -15,89 +11,17 @@ import {
   isRootDomain,
   normalizeDomain
 } from '../utils'
-import {
-  CnameHelp,
-  CopyButton,
-  DomainField,
-  DomainSteps,
-  DomainsCard,
-  ErrorBanner,
-  FieldError,
-  LinkButton,
-  MutedText,
-  Notice,
-  OwnDomainBox,
-  OwnDomainHead,
-  OwnDomainName,
-  Pill,
-  RecordTable,
-  TemporaryDomain
-} from '../styles'
+import { CnameRecord } from './CnameRecord'
+import './builder-detail.css'
+
+export { CnameRecord }
+
+// redesign B2: the Domains card on Product pieces (P/TextField, P/Button, P/InlineNotice, P/StatusBadge, P/Skeleton,
+// P/EmptyState, P/ConfirmDialog) and --od-* tokens. Same steps, errors, suggestion, states, texts and requests as main; the
+// polling and the socket stay in the controller (BuilderProductDomain).
 
 /** Where every own domain points its CNAME record when the API hasn't said yet. */
 const DEFAULT_CNAME_TARGET = 'cname.my-sites.app'
-
-/** Copies `value`, and says so for a moment. */
-const CopyValue = ({ value }) => {
-  const [, t] = useLanguage()
-  const [copied, setCopied] = useState(false)
-  const timer = useRef(null)
-
-  useEffect(() => () => clearTimeout(timer.current), [])
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(value)
-      setCopied(true)
-      clearTimeout(timer.current)
-      timer.current = setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      setCopied(false)
-    }
-  }
-
-  return (
-    <CopyButton type='button' aria-label={t('BUILDER_COPY_VALUE', 'Copy _value_').replace('_value_', value)} onClick={copy}>
-      {copied ? <Check2 aria-hidden='true' /> : <Clipboard aria-hidden='true' />}
-      <span aria-live='polite'>{copied ? t('BUILDER_COPIED', 'Copied') : t('BUILDER_COPY', 'Copy')}</span>
-    </CopyButton>
-  )
-}
-
-/** The CNAME record to create: `name` is its Name, or `nameHint` explains it. */
-export const CnameRecord = ({ name, nameHint, target }) => {
-  const [, t] = useLanguage()
-  return (
-    <RecordTable>
-      <table>
-        <thead>
-          <tr>
-            <th scope='col'>{t('BUILDER_DNS_TYPE', 'Type')}</th>
-            <th scope='col'>{t('BUILDER_DNS_NAME', 'Name')}</th>
-            <th scope='col'>{t('BUILDER_DNS_VALUE', 'Value')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>CNAME</code></td>
-            <td>
-              <div>
-                {name && <code>{name}</code>}
-                {nameHint && <MutedText small>{nameHint}</MutedText>}
-              </div>
-            </td>
-            <td>
-              <div>
-                <code>{target}</code>
-                <CopyValue value={target} />
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </RecordTable>
-  )
-}
 
 /**
  * Adds the own domain, or changes it (`current`). The API checks the CNAME
@@ -146,30 +70,24 @@ const OwnDomainForm = (props) => {
   }
 
   return (
-    <OwnDomainBox as='form' tone={changing ? 'editing' : 'empty'} noValidate aria-labelledby='builder-own-domain-title' onSubmit={handleSubmit}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <form className='odc-bd-own' data-tone={changing ? 'editing' : 'empty'} noValidate aria-labelledby='builder-own-domain-title' onSubmit={handleSubmit}>
+      <div className='odc-bd-stack'>
         <h3 id='builder-own-domain-title'>
           {changing ? t('BUILDER_DOMAIN_CHANGE_TITLE', 'Change your domain') : t('BUILDER_DOMAIN_USE_OWN', 'Use your own domain')}
         </h3>
         {changing
-          ? <MutedText small>{t('BUILDER_DOMAIN_NOW', 'Now: _domain_').replace('_domain_', current.name)}</MutedText>
-          : <MutedText>{t('BUILDER_DOMAIN_USE_OWN_HELP', 'Show your website at an address like www.yourbrand.com. It has to be a subdomain (www., shop., order.…): a root domain like yourbrand.com can’t be used.')}</MutedText>}
+          ? <span className='odc-bd-small'>{t('BUILDER_DOMAIN_NOW', 'Now: _domain_').replace('_domain_', current.name)}</span>
+          : <span className='odc-bd-muted'>{t('BUILDER_DOMAIN_USE_OWN_HELP', 'Show your website at an address like www.yourbrand.com. It has to be a subdomain (www., shop., order.…): a root domain like yourbrand.com can’t be used.')}</span>}
       </div>
 
       {unsupported && (
-        <ErrorBanner role='alert'>
-          <ExclamationCircle aria-hidden='true' />
-          <span>{error.message}</span>
-        </ErrorBanner>
+        <InlineNotice tone='danger' icon={CircleAlert} role='alert'>{error.message}</InlineNotice>
       )}
 
       {!unsupported && changing && (
-        <Notice>
-          <ExclamationTriangle aria-hidden='true' />
-          <span>
-            {t('BUILDER_DOMAIN_CHANGE_WARNING', 'When you save, _domain_ stops opening your website. Create the CNAME record for the new domain first: we check it when you save.').replace('_domain_', current.name)}
-          </span>
-        </Notice>
+        <InlineNotice tone='warning' icon={TriangleAlert} live={false}>
+          {t('BUILDER_DOMAIN_CHANGE_WARNING', 'When you save, _domain_ stops opening your website. Create the CNAME record for the new domain first: we check it when you save.').replace('_domain_', current.name)}
+        </InlineNotice>
       )}
 
       {!unsupported && changing && (
@@ -177,78 +95,64 @@ const OwnDomainForm = (props) => {
       )}
 
       {!unsupported && !changing && (
-        <DomainSteps>
+        <ol className='odc-bd-steps'>
           <li>
-            <span aria-hidden='true'>1</span>
-            <div>
+            <span className='odc-bd-step-number' aria-hidden='true'>1</span>
+            <div className='odc-bd-step-text'>
               <span>
                 <strong>{t('BUILDER_DOMAIN_STEP_CNAME', 'Create a CNAME record')}</strong>{' '}
-                <MutedText>{t('BUILDER_DOMAIN_STEP_CNAME_HELP', 'in the DNS settings of the provider where you bought your domain:')}</MutedText>
+                <span className='odc-bd-muted'>{t('BUILDER_DOMAIN_STEP_CNAME_HELP', 'in the DNS settings of the provider where you bought your domain:')}</span>
               </span>
               <CnameRecord name='www' nameHint={t('BUILDER_DOMAIN_OR_SUBDOMAIN', 'or the subdomain you want')} target={target} />
             </div>
           </li>
           <li>
-            <span aria-hidden='true'>2</span>
-            <div>
+            <span className='odc-bd-step-number' aria-hidden='true'>2</span>
+            <div className='odc-bd-step-text'>
               <span>
                 <strong>{t('BUILDER_DOMAIN_STEP_WAIT', 'Wait until your provider saves it.')}</strong>{' '}
-                <MutedText>{t('BUILDER_DOMAIN_STEP_WAIT_HELP', 'It usually takes a few minutes.')}</MutedText>
+                <span className='odc-bd-muted'>{t('BUILDER_DOMAIN_STEP_WAIT_HELP', 'It usually takes a few minutes.')}</span>
               </span>
             </div>
           </li>
           <li>
-            <span aria-hidden='true'>3</span>
-            <div>
+            <span className='odc-bd-step-number' aria-hidden='true'>3</span>
+            <div className='odc-bd-step-text'>
               <span>
                 <strong>{t('BUILDER_DOMAIN_STEP_SAVE', 'Enter your domain here and save.')}</strong>{' '}
-                <MutedText>{t('BUILDER_DOMAIN_STEP_SAVE_HELP', 'We check the record when you save, so create it first.')}</MutedText>
+                <span className='odc-bd-muted'>{t('BUILDER_DOMAIN_STEP_SAVE_HELP', 'We check the record when you save, so create it first.')}</span>
               </span>
             </div>
           </li>
-        </DomainSteps>
+        </ol>
       )}
 
       {!unsupported && (
-        <DomainField invalid={!!error?.inField}>
-          <label htmlFor='builder-own-domain'>
-            {changing ? t('BUILDER_DOMAIN_NEW', 'New domain') : t('BUILDER_DOMAIN_YOURS', 'Your domain')}
-          </label>
-          <div>
-            <Input
-              ref={inputRef}
-              id='builder-own-domain'
-              type='text'
-              value={value}
-              autoComplete='off'
-              autoCapitalize='none'
-              spellCheck={false}
-              placeholder={changing ? 'order.yourbrand.com' : 'www.yourbrand.com'}
-              aria-invalid={error?.inField ? 'true' : 'false'}
-              aria-describedby='builder-own-domain-help'
-              onChange={(e) => setValue(e.target.value)}
-            />
-            {!changing && (
-              <Button type='submit' color='primary' borderRadius='8px' disabled={saving}>
-                {saving ? t('BUILDER_SAVING', 'Saving…') : t('BUILDER_DOMAIN_SAVE', 'Save domain')}
-              </Button>
-            )}
-          </div>
-          <div id='builder-own-domain-help'>
-            {error?.inField
-              ? (
-                <FieldError role='alert'>
-                  <ExclamationCircle aria-hidden='true' />
-                  <span>{error.message}</span>
-                </FieldError>
-                )
-              : <MutedText small>{t('BUILDER_DOMAIN_FIELD_HELP', 'The full subdomain, like shop.yourbrand.com. You can paste the whole address.')}</MutedText>}
-          </div>
-        </DomainField>
+        // The field's help, or its error (a role=alert), is its description; the save of a new domain sits under it
+        <div className='odc-bd-stack'>
+          <TextField
+            ref={inputRef}
+            id='builder-own-domain'
+            label={changing ? t('BUILDER_DOMAIN_NEW', 'New domain') : t('BUILDER_DOMAIN_YOURS', 'Your domain')}
+            value={value}
+            autoComplete='off'
+            autoCapitalize='none'
+            spellCheck={false}
+            placeholder={changing ? 'order.yourbrand.com' : 'www.yourbrand.com'}
+            error={error?.inField ? error.message : undefined}
+            hint={error?.inField ? undefined : t('BUILDER_DOMAIN_FIELD_HELP', 'The full subdomain, like shop.yourbrand.com. You can paste the whole address.')}
+            onChange={(next) => setValue(next)}
+          />
+          {!changing && (
+            <Button type='submit' variant='primary' disabled={saving}>
+              {saving ? t('BUILDER_SAVING', 'Saving…') : t('BUILDER_DOMAIN_SAVE', 'Save domain')}
+            </Button>
+          )}
+        </div>
       )}
 
       {cnameMissing && (
-        <CnameHelp>
+        <div className='odc-bd-cname-help'>
           <h4>
             {root
               ? t('BUILDER_DOMAIN_USE_SUBDOMAIN', 'Use a subdomain, like _domain_, and create its record').replace('_domain_', suggestion)
@@ -257,11 +161,11 @@ const OwnDomainForm = (props) => {
           <CnameRecord name={root ? 'www' : getRecordName(sent)} target={recordTarget} />
           {root
             ? (
-              <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+              <div className='odc-bd-row'>
                 <p>{t('BUILDER_DOMAIN_ONCE_SAVED', 'Once the record is saved in your provider:')}</p>
-                <LinkButton type='button' style={{ fontSize: 13 }} onClick={useSuggestion}>
+                <Button variant='link' size='sm' onClick={useSuggestion}>
                   {t('BUILDER_DOMAIN_USE_SUGGESTION', 'Use _domain_').replace('_domain_', suggestion)}
-                </LinkButton>
+                </Button>
               </div>
               )
             : (
@@ -269,45 +173,39 @@ const OwnDomainForm = (props) => {
                 {t('BUILDER_DOMAIN_FULL_NAME', 'Some providers ask for the full name, _domain_. If you just created it, wait a few minutes and save again.').replace('_domain_', sent)}
               </p>
               )}
-        </CnameHelp>
+        </div>
       )}
 
       {!unsupported && error && !error.inField && (
-        <ErrorBanner role='alert'>
-          <ExclamationCircle aria-hidden='true' />
-          <span>{error.message}</span>
-        </ErrorBanner>
+        <InlineNotice tone='danger' icon={CircleAlert} role='alert'>{error.message}</InlineNotice>
       )}
 
       {changing && (
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <Button type='button' color='secundary' borderRadius='8px' disabled={saving} onClick={onCancel}>{t('CANCEL', 'Cancel')}</Button>
+        <div className='odc-bd-row' data-end=''>
+          <Button disabled={saving} onClick={onCancel}>{t('CANCEL', 'Cancel')}</Button>
           {!unsupported && (
-            <Button type='submit' color='primary' borderRadius='8px' disabled={saving}>
+            <Button type='submit' variant='primary' disabled={saving}>
               {saving ? t('BUILDER_SAVING', 'Saving…') : t('BUILDER_DOMAIN_SAVE_NEW', 'Save new domain')}
             </Button>
           )}
         </div>
       )}
-    </OwnDomainBox>
+    </form>
   )
 }
 
-/** The look and words of each `own.status`. */
+/** The status family (P/StatusBadge) and words of each `own.status`. */
 const STATUSES = {
   pending: {
-    pill: { kind: 'progress' },
-    icon: <ArrowClockwise aria-hidden='true' />,
+    family: 'progress',
     label: (t) => t('BUILDER_DOMAIN_PENDING', 'Setting up')
   },
   active: {
-    pill: { kind: 'success' },
-    icon: <Check2 aria-hidden='true' />,
+    family: 'done',
     label: (t) => t('BUILDER_DOMAIN_ACTIVE', 'Active')
   },
   error: {
-    pill: { kind: 'failed' },
-    icon: <ExclamationCircle aria-hidden='true' />,
+    family: 'cancel',
     label: (t) => t('BUILDER_DOMAIN_NOT_WORKING', 'Not working')
   }
 }
@@ -335,82 +233,76 @@ const OwnDomainStatus = (props) => {
   }
 
   return (
-    <OwnDomainBox tone={status === 'error' ? 'error' : null} aria-labelledby='builder-own-domain-label'>
-      <OwnDomainHead>
-        <div>
-          <MutedText small id='builder-own-domain-label'>{t('BUILDER_DOMAIN_YOURS', 'Your domain')}</MutedText>
-          <OwnDomainName>
+    <div className='odc-bd-own' data-tone={status === 'error' ? 'error' : undefined} role='group' aria-labelledby='builder-own-domain-label'>
+      <div className='odc-bd-own-head'>
+        <div className='odc-bd-stack'>
+          <span className='odc-bd-small' id='builder-own-domain-label'>{t('BUILDER_DOMAIN_YOURS', 'Your domain')}</span>
+          <div className='odc-bd-own-name'>
             {status === 'active'
               ? (
-                <a href={getDomainUrl(own.name)} target='_blank' rel='noopener noreferrer'>
+                <a className='odc-bd-link' href={getDomainUrl(own.name)} target='_blank' rel='noopener noreferrer'>
                   {own.name}
-                  <BoxArrowUpRight aria-hidden='true' />
-                  <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+                  <ExternalLink className='odc-icon' aria-hidden='true' />
+                  <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
                 </a>
                 )
               : <span>{own.name}</span>}
-            <Pill {...copy.pill} role={status === 'pending' ? 'status' : undefined}>
-              {copy.icon}
-              {copy.label(t)}
-            </Pill>
-          </OwnDomainName>
+            <StatusBadge family={copy.family} label={copy.label(t)} role={status === 'pending' ? 'status' : undefined} />
+          </div>
         </div>
-        <div>
-          <Button type='button' color='primary' outline borderRadius='8px' disabled={busy} onClick={onChange}>
+        <div className='odc-bd-row'>
+          <Button disabled={busy} onClick={onChange}>
             {t('BUILDER_DOMAIN_CHANGE', 'Change')}
           </Button>
-          <Button type='button' color='secundary' borderRadius='8px' disabled={busy} onClick={onRemove}>
+          <Button disabled={busy} onClick={onRemove}>
             {domainAction === 'remove' ? t('BUILDER_DOMAIN_REMOVING', 'Removing…') : t('BUILDER_DOMAIN_REMOVE', 'Remove')}
           </Button>
         </div>
-      </OwnDomainHead>
+      </div>
 
       {status === 'pending' && (
         <>
           <p>
             {t('BUILDER_DOMAIN_PENDING_HELP', 'We’re checking the CNAME record and getting the security certificate (HTTPS). This takes a few minutes, up to about 20. This page updates by itself, so you can leave it and come back.')}
           </p>
-          <MutedText small>
+          <span className='odc-bd-small'>
             {t('BUILDER_DOMAIN_KEEP_RECORD', 'Meanwhile your website keeps opening at its temporary address. Keep the CNAME record _name_ → _target_ in your DNS.')
               .replace('_name_', recordName || own.name)
               .replace('_target_', target)}
-          </MutedText>
+          </span>
         </>
       )}
 
       {status === 'active' && (
         <>
           <p>{t('BUILDER_DOMAIN_ACTIVE_HELP', 'Your website opens at this domain, with HTTPS.')}</p>
-          <MutedText small>{t('BUILDER_DOMAIN_ACTIVE_KEEP', 'Keep the CNAME record in your DNS. If you remove it, this domain stops working.')}</MutedText>
+          <span className='odc-bd-small'>{t('BUILDER_DOMAIN_ACTIVE_KEEP', 'Keep the CNAME record in your DNS. If you remove it, this domain stops working.')}</span>
         </>
       )}
 
       {failure && (
         <>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div className='odc-bd-stack'>
             <h3>{failure.title}</h3>
             <p>{failure.text.replace('_target_', target)}</p>
           </div>
           <CnameRecord name={recordName || own.name} target={target} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
-            <Button type='button' color='primary' borderRadius='8px' disabled={busy} onClick={verify}>
+          <div className='odc-bd-stack'>
+            <Button variant='primary' disabled={busy} onClick={verify}>
               {domainAction === 'verify' ? t('BUILDER_DOMAIN_VERIFYING', 'Verifying…') : t('BUILDER_DOMAIN_VERIFY', 'Verify again')}
             </Button>
             {verifyCodes.length > 0 && (
-              <FieldError role='alert'>
-                <ExclamationCircle aria-hidden='true' />
-                <span>
-                  {verifyCodes.includes('domain.cname_missing')
-                    ? t('BUILDER_DOMAIN_STILL_MISSING', 'The CNAME record for _domain_ still isn’t there. Check it in your provider and try again in a few minutes.').replace('_domain_', own.name)
-                    : t('BUILDER_DOMAIN_VERIFY_ERROR', 'We couldn’t verify the domain. Try again.')}
-                </span>
-              </FieldError>
+              <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+                {verifyCodes.includes('domain.cname_missing')
+                  ? t('BUILDER_DOMAIN_STILL_MISSING', 'The CNAME record for _domain_ still isn’t there. Check it in your provider and try again in a few minutes.').replace('_domain_', own.name)
+                  : t('BUILDER_DOMAIN_VERIFY_ERROR', 'We couldn’t verify the domain. Try again.')}
+              </InlineNotice>
             )}
           </div>
-          <MutedText small>{t('BUILDER_DOMAIN_STILL_TEMPORARY', 'Your website keeps opening at its temporary address.')}</MutedText>
+          <span className='odc-bd-small'>{t('BUILDER_DOMAIN_STILL_TEMPORARY', 'Your website keeps opening at its temporary address.')}</span>
         </>
       )}
-    </OwnDomainBox>
+    </div>
   )
 }
 
@@ -454,19 +346,18 @@ export const BuilderWebDomains = (props) => {
   const renderOwn = () => {
     if (error) {
       return (
-        <BuilderMessage
-          role='alert'
+        <EmptyState
           tone='error'
-          icon={<ExclamationCircle aria-hidden='true' />}
+          icon={CircleAlert}
+          titleAs='h3'
           title={t('BUILDER_DOMAIN_LOAD_ERROR', 'We couldn’t load your domain')}
-          text={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
-        >
-          <Button color='primary' borderRadius='8px' onClick={() => reloadDomain()}>{t('BUILDER_RETRY', 'Try again')}</Button>
-        </BuilderMessage>
+          description={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
+          action={<Button variant='primary' onClick={() => reloadDomain()}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+        />
       )
     }
     if (loading && !domain) {
-      return <div aria-busy='true'><Skeleton height={140} borderRadius={10} /></div>
+      return <div aria-busy='true'><Skeleton shape='box' block='var(--od-space-10)' /></div>
     }
     if (!own || editing) {
       return (
@@ -494,45 +385,51 @@ export const BuilderWebDomains = (props) => {
   }
 
   return (
-    <DomainsCard aria-labelledby='builder-web-domains'>
-      <header>
+    <section className='odc-root odc-bd-card' aria-labelledby='builder-web-domains'>
+      <header className='odc-bd-card-head'>
         {/* Focusable for "Go to Domains" next to the status actions */}
         <h2 id='builder-web-domains' tabIndex={-1}>{t('BUILDER_DOMAINS', 'Domains')}</h2>
         <p>{t('BUILDER_DOMAINS_HELP', 'The addresses where people open your website.')}</p>
       </header>
-      <div>
+      <div className='odc-bd-card-body'>
         {renderOwn()}
 
         {temporary && (
-          <TemporaryDomain>
+          <div className='odc-bd-temporary'>
             <div>
-              <MutedText small>{t('BUILDER_DOMAIN_TEMPORARY', 'Temporary address')}</MutedText>
+              <span className='odc-bd-small'>{t('BUILDER_DOMAIN_TEMPORARY', 'Temporary address')}</span>
               <a href={getDomainUrl(temporary)} target='_blank' rel='noopener noreferrer'>
                 {temporary}
-                <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+                <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
               </a>
-              <MutedText small>{t('BUILDER_DOMAIN_TEMPORARY_HELP', 'Always works, also after you add your own domain.')}</MutedText>
+              <span className='odc-bd-small'>{t('BUILDER_DOMAIN_TEMPORARY_HELP', 'Always works, also after you add your own domain.')}</span>
             </div>
-            <CopyValue value={temporary} />
-          </TemporaryDomain>
+            <CopyButton
+              text={temporary}
+              size='sm'
+              label={t('BUILDER_COPY_VALUE', 'Copy _value_').replace('_value_', temporary)}
+              copyLabel={t('BUILDER_COPY', 'Copy')}
+              copiedLabel={t('BUILDER_COPIED', 'Copied')}
+              failedLabel={t('CUSTOMERS_COPY_FAILED', "We couldn't copy. Select the text and copy it.")}
+            />
+          </div>
         )}
       </div>
 
-      <Confirm
+      <ConfirmDialog
         open={removeOpen}
-        width='min(480px, calc(100vw - 72px))'
         title={t('BUILDER_DOMAIN_REMOVE_TITLE', 'Remove _domain_?').replace('_domain_', own?.name || '')}
-        acceptText={t('BUILDER_DOMAIN_REMOVE_ACCEPT', 'Remove domain')}
-        cancelText={t('CANCEL', 'Cancel')}
-        onAccept={handleRemove}
+        confirmLabel={t('BUILDER_DOMAIN_REMOVE_ACCEPT', 'Remove domain')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={handleRemove}
         onCancel={() => setRemoveOpen(false)}
-        onClose={() => setRemoveOpen(false)}
       >
         <p>{t('BUILDER_DOMAIN_REMOVE_HELP', 'Your website stops opening at _domain_ right away.').replace('_domain_', own?.name || '')}</p>
         {temporary && (
           <p>{t('BUILDER_DOMAIN_REMOVE_TEMPORARY', 'It stays online at _temporary_. You can add a domain again later.').replace('_temporary_', temporary)}</p>
         )}
-      </Confirm>
-    </DomainsCard>
+      </ConfirmDialog>
+    </section>
   )
 }

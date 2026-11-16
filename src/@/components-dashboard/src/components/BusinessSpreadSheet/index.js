@@ -24,6 +24,8 @@ export const BusinessSpreadSheet = (props) => {
   const [{ parsePrice }] = useUtils()
   const [formState, setFormState] = useState({ products: null, loading: false, result: { error: false } })
   const [removingWithSupr, setRemovingWithSupr] = useState(false)
+  // redesign D-9 (owner, 2026-10-19): the rows waiting for the owner's answer, `{ ids, count, names }`
+  const [pendingRemoval, setPendingRemoval] = useState(null)
   const [undo, setUndo] = useState(false)
   const [curCell, setCurCell] = useState({
     row: -1,
@@ -61,7 +63,10 @@ export const BusinessSpreadSheet = (props) => {
   }
 
   /**
-   * Method to remove a row from spreadSheet table
+   * Hook for Handsontable's `beforeRemoveRow`, used by both the context-menu «Remove row» and the emptied-row path of
+   * `handleItemChange`. redesign D-9 (owner, 2026-10-19): rows with an id are not deleted here. The removal is
+   * held back (returning `false` makes Handsontable keep the rows) as `pendingRemoval` until `confirmRemoval()`. Rows that
+   * were never saved have no id and go at once, as before.
    * @param {Number} row Number of selected row
    * @param {Number} amount Count of selected row
    * @param {Array} datarows Numbers of selected row
@@ -70,15 +75,52 @@ export const BusinessSpreadSheet = (props) => {
   const handleRowRemove = (row, amount, dataRows, hotTableObj) => {
     if (!hotTableObj) return
     const toRemove = []
+    const saved = []
     for (const dataRow of dataRows) {
-      toRemove.push(hotTableObj?.getSourceDataAtRow(dataRow).id)
+      const sourceRow = hotTableObj?.getSourceDataAtRow(dataRow)
+      toRemove.push(sourceRow?.id)
+      if (sourceRow?.id) {
+        // an emptied row has lost its name: the saved product still has it
+        const product = (categoryState?.products || []).find(item => item.id === sourceRow.id)
+        saved.push({ id: sourceRow.id, name: product?.name || sourceRow.name })
+      }
     }
     if (removingWithSupr) {
       setRemovingWithSupr(false)
     }
+    if (saved.length > 0) {
+      // Handsontable calls this hook once per block when a removal has several non-contiguous blocks (Cmd/Ctrl
+      // multi-selection, or several emptied rows): merge into what is already waiting instead of replacing it. It is
+      // null again after a confirm or a cancel, so the next removal starts fresh.
+      setPendingRemoval(previous => {
+        const ids = [...(previous?.ids || [])]
+        const names = [...(previous?.names || [])]
+        for (const { id, name } of saved) {
+          if (ids.includes(id)) continue
+          ids.push(id)
+          if (name) names.push(name)
+        }
+        return { ids, count: ids.length, names }
+      })
+      return false
+    }
     setTimeout(() => {
       deleteProducts(toRemove)
     }, 1)
+  }
+
+  const confirmRemoval = async () => {
+    if (!pendingRemoval) return
+    const deleted = await deleteProducts(pendingRemoval.ids)
+    setPendingRemoval(null)
+    // when the delete did not happen the grid may still show emptied cells: bring it back to what is saved
+    if (!deleted) getProductsByCategoryId()
+  }
+
+  const cancelRemoval = async () => {
+    setPendingRemoval(null)
+    // nothing was deleted: reload what is saved, which also restores the cells the user had emptied
+    await getProductsByCategoryId()
   }
 
   const handleItemChange = (changeItems, accionHanson, hotTableObj) => {
@@ -128,7 +170,8 @@ export const BusinessSpreadSheet = (props) => {
                   ...formState,
                   result: {
                     error: true,
-                    result: [t('PRODUCT_PRICE_NUMBER')]
+                    // bugs E D15: the key has no text in the catalog, so it showed the raw key or nothing
+                    result: [t('PRODUCT_PRICE_NUMBER', 'The price must be a number')]
                   }
                 })
               } else row.price = price
@@ -197,7 +240,9 @@ export const BusinessSpreadSheet = (props) => {
       }
 
       if (itemToRemove.length > 0) {
-        hotTableObj.alter('remove_row', itemToRemove[0].row, itemToRemove.length)
+        // each emptied row is removed by its own index: `[row, amount]` blocks, not "N rows from the first one"
+        const rowsToRemove = [...new Set(itemToRemove.map(item => item.row))].sort((a, b) => a - b)
+        hotTableObj.alter('remove_row', rowsToRemove.map(row => [row, 1]))
         setRemovingWithSupr(true)
       }
     }
@@ -260,7 +305,10 @@ export const BusinessSpreadSheet = (props) => {
   const getProductsByCategoryId = async () => {
     if (loading) return
     try {
-      const id = categoryId || categorySelected.id
+      const id = categoryId || categorySelected?.id
+      // bugs E D15: with no category there is nothing to reload; it used to throw on `categorySelected.id` and
+      // land in the catch as an error message.
+      if (!id) return
       const params = {
         business_id: business?.id,
         category_id: parseInt(id)
@@ -318,7 +366,7 @@ export const BusinessSpreadSheet = (props) => {
   }
 
   const deleteProducts = async (params) => {
-    if (loading) return
+    if (loading) return false
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
@@ -346,6 +394,7 @@ export const BusinessSpreadSheet = (props) => {
         })
         showToast(ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'))
         getProductsByCategoryId()
+        return true
       } else {
         setFormState({
           ...formState,
@@ -355,6 +404,7 @@ export const BusinessSpreadSheet = (props) => {
             result
           }
         })
+        return false
       }
     } catch (err) {
       setFormState({
@@ -365,6 +415,7 @@ export const BusinessSpreadSheet = (props) => {
         },
         loading: false
       })
+      return false
     }
   }
 
@@ -391,6 +442,9 @@ export const BusinessSpreadSheet = (props) => {
           handleItemChange={handleItemChange}
           spreadSheetState={formState}
           handleRowRemove={handleRowRemove}
+          pendingRemoval={pendingRemoval}
+          confirmRemoval={confirmRemoval}
+          cancelRemoval={cancelRemoval}
           handleAfterSectionEnd={handleAfterSectionEnd}
           handleoutsideClickDeselects={handleoutsideClickDeselects}
         />

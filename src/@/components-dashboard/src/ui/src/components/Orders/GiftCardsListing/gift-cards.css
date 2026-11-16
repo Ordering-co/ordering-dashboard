@@ -1,0 +1,208 @@
+/*
+ * redesign GC-B ( | D1, D2, D8) · Gift cards page: the frame (header, tabs and search, table, foot) and the cells of the
+ * gift cards table and its phone cards. Product's PageHeader, Tabs, SearchField, DataTable, RecordCard and Pagination own their own
+ * structure; this adds what a gift card cell is made of. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left
+ * needs no second set of rules.
+ */
+
+/* ── The frame: header, toolbar, list and foot, one under the other ── */
+.odc-gc-frame {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+@media (max-width: 767px) {
+  .odc-gc-frame { padding-inline: var(--od-x-page-gutter-mobile); }
+}
+
+@media print {
+  .odc-gc-frame { display: none; }
+}
+
+/* ── Header: the page header (its `leading` is the open-menu button, ), then the tabs and the search ── */
+.odc-gc-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-gc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-gc-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-gc-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-gc-search { flex-basis: 100%; max-inline-size: none; }
+}
+
+/* ── Foot: the pagination ── */
+.odc-gc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-gc-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The list ── */
+.odc-gc-list { min-inline-size: 0; }
+
+/* the two ways out of «No gift cards match», side by side and wrapping */
+.odc-gc-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+/* ── The Gift card cell: «#id», then «Order #n», then what its columns left when they are away (Recipient, Purchased date) ── */
+.odc-gc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-gc-id { font-weight: var(--od-font-weight-medium); }
+
+/* redesign AC-D (, G4): «#id» and «Order #n» share one line (the rows were 98px at 1440 with each one under the other). */
+.odc-gc-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* The secret field of the card (P/SecretField, read-only) sits in a row with its «Ends in …» line instead of that line under it,
+   so the cell is two lines tall: «#id · Order #n» and the field. The line wraps under the field only when the column is too narrow
+   for both. Scoped to this cell: SecretField itself, and the field family, are untouched. */
+.odc-gc-card .odc-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-2);
+  row-gap: 0;
+  max-inline-size: 100%;
+}
+
+.odc-gc-card .odc-field-hint { white-space: nowrap; }
+
+/* the box of the masked code does not ask for the whole width of an input: the dots scroll, the ending says how the code ends */
+/* (the width of a person cell, the token for «a short piece of identity in a table row»: no literal width of our own) */
+.odc-gc-card .odc-secret > .odc-field-box { flex: 0 1 var(--od-x-cell-person); }
+
+/* «Order #n» is a link in the text; the Product link button gives it its colour, underline and (touch) 44px reach */
+.odc-gc-order.odc-btn { min-inline-size: 0; }
+
+.odc-gc-sub {
+  display: block;
+  max-inline-size: 100%;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  /* redesign GC-B (live 1024): the lines a narrow table folds in here wrap instead of widening the column (nothing is clipped) */
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* ── A person: the avatar, the name, and under it the phone or the email ── */
+.odc-gc-person {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-gc-who {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-gc-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the lines wrap and stop at two lines; the email keeps one and ends in an ellipsis */
+td .odc-gc-name,
+th .odc-gc-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* A cell with no data says so quietly */
+.odc-gc-none { color: var(--od-x-text-subtle); }
+
+/* ── Phone: the cards ── */
+/* The buyer and the recipient share the row of the card (with the arrow between them), each taking half of it. */
+.odc-gc-cards .odc-order-card-people { align-items: flex-start; }
+
+.odc-gc-card-person {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* redesign GC-D (R9): on a phone nothing of a person ends in an ellipsis (the full text was only in a `title`, which a phone cannot
+   show): a long email breaks into lines. The name line is also where a person with no name carries their only line, the email. */
+.odc-gc-cards .odc-gc-name,
+.odc-gc-cards .odc-gc-sub {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* «Order #n» sits above the card's link overlay (the card has no detail to open, but the overlay would still catch the pointer) */
+.odc-gc-card-actions {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-block-start: var(--od-space-1);
+}

@@ -19,6 +19,11 @@ const deferred = () => {
   return { promise, resolve: resolvePromise, reject: rejectPromise }
 }
 
+// redesign stores 5.18: McpCopyButton is P/CopyButton. Both words share one cell (the one shown is not aria-hidden) and a
+// failed copy is said beside the button.
+const shown = (button) => button.querySelector('.odc-copy-word:not([aria-hidden])')?.textContent
+const failureOf = (button) => button.closest('.odc-copy').querySelector('[role="status"]')
+
 describe('MCP setup prompt copy', () => {
   beforeEach(() => {
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } })
@@ -33,8 +38,9 @@ describe('MCP setup prompt copy', () => {
   it('copies one canonical prompt without tenant or credentials, regardless of manual client', async () => {
     const { rerender } = render(guide())
     const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
+    expect(shown(copy)).toBe('Copy prompt to connect')
     fireEvent.click(copy)
-    await waitFor(() => expect(copy).toHaveTextContent('Copied'))
+    await waitFor(() => expect(shown(copy)).toBe('Copied'))
     const prompt = navigator.clipboard.writeText.mock.calls[0][0]
     expect(prompt).toBe('Connect me to Ordering.co: clone https://github.com/Ordering-co/ordering-dev-quickstart to ~/ordering-dev-quickstart (or pull it if I already have it), then read its SETUP.md and follow it step by step.')
     rerender(guide({ url: 'https://api.ordering.co/mcp/project-b', token: 'ord_mcp_DO_NOT_COPY' }))
@@ -51,11 +57,11 @@ describe('MCP setup prompt copy', () => {
     render(guide())
     const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     fireEvent.click(copy)
-    await waitFor(() => expect(copy).toHaveTextContent('Copy failed. Try again.'))
-    expect(copy).not.toHaveTextContent('Copied')
+    await waitFor(() => expect(failureOf(copy)).toHaveTextContent('Copy failed. Try again.'))
+    expect(shown(copy)).not.toBe('Copied')
     expect(copy).toBeEnabled()
     fireEvent.click(copy)
-    await waitFor(() => expect(copy).toHaveTextContent('Copied'))
+    await waitFor(() => expect(shown(copy)).toBe('Copied'))
   })
 
   it('handles an unavailable clipboard without unhandled errors', async () => {
@@ -65,6 +71,8 @@ describe('MCP setup prompt copy', () => {
     expect(await screen.findByText('Copy failed. Try again.')).toBeInTheDocument()
   })
 
+  // redesign stores 5.18: P/CopyButton does not disable the button while it copies (a disabled button drops the focus to
+  // <body>); an older copy that ends late is still ignored
   it('ignores obsolete completions when a copy consumer changes text', async () => {
     const oldCopy = deferred()
     const currentCopy = deferred()
@@ -73,15 +81,14 @@ describe('MCP setup prompt copy', () => {
     const { rerender } = render(consumer('first'))
     const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     fireEvent.click(copy)
-    expect(copy).toBeDisabled()
     rerender(consumer('second'))
     expect(copy).toBeEnabled()
     fireEvent.click(copy)
     await act(async () => oldCopy.resolve())
-    expect(copy).toBeDisabled()
-    expect(copy).not.toHaveTextContent('Copied')
+    expect(shown(copy)).not.toBe('Copied')
     await act(async () => currentCopy.resolve())
-    expect(copy).toHaveTextContent('Copied')
+    expect(copy).toBeEnabled()
+    expect(shown(copy)).toBe('Copied')
   })
 
   it('ignores obsolete failures when a copy consumer changes text', async () => {
@@ -92,7 +99,9 @@ describe('MCP setup prompt copy', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Copy prompt to connect' }))
     rerender(consumer('second'))
     await act(async () => oldCopy.reject(new Error('Denied')))
-    expect(screen.getByRole('button', { name: 'Copy prompt to connect' })).toHaveTextContent('Copy prompt to connect')
+    const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
+    expect(shown(copy)).toBe('Copy prompt to connect')
+    expect(copy).toBeEnabled()
   })
 
   it('resets successful feedback after two seconds and cancels timers on unmount', async () => {
@@ -100,9 +109,9 @@ describe('MCP setup prompt copy', () => {
     const { unmount } = render(guide())
     const copy = screen.getByRole('button', { name: 'Copy prompt to connect' })
     await act(async () => fireEvent.click(copy))
-    expect(copy).toHaveTextContent('Copied')
+    expect(shown(copy)).toBe('Copied')
     act(() => vi.advanceTimersByTime(2000))
-    expect(copy).toHaveTextContent('Copy prompt to connect')
+    expect(shown(copy)).toBe('Copy prompt to connect')
     await act(async () => fireEvent.click(copy))
     expect(vi.getTimerCount()).toBe(1)
     unmount()
@@ -123,9 +132,9 @@ describe('MCP setup prompt copy', () => {
   it('preserves the visible Copy label and aria-only labels of existing key/URL consumers', async () => {
     render(<ThemeProvider theme={theme}><McpCopyButton text='test-key' label='Copy the key' /></ThemeProvider>)
     const copy = screen.getByRole('button', { name: 'Copy the key' })
-    expect(copy).toHaveTextContent(/^Copy$/)
+    expect(shown(copy)).toBe('Copy')
     fireEvent.click(copy)
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledWith('test-key'))
-    expect(copy).toHaveTextContent('Copied')
+    expect(shown(copy)).toBe('Copied')
   })
 })

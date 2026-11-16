@@ -436,12 +436,11 @@ const BusinessLogoStyled = styled.div`
   border-radius: 7.6px;
 `
 export const BusinessLogo = (props) => {
-  const style = {}
-  if (props.bgimage) {
-    style.backgroundImage = `url(${props.bgimage})`
-  }
   return (
-    <BusinessLogoStyled {...props} style={style}>
+    <BusinessLogoStyled
+      {...props}
+      style={{ backgroundImage: props.bgimage ? `url(${props.bgimage})` : undefined }}
+    >
       {props.children}
     </BusinessLogoStyled>
   )
@@ -670,15 +669,14 @@ const CardLogoStyled = styled.div`
   border-radius: 8px;
 `
 export const CardLogo = (props) => {
-  const style = {}
-  if (props.bgimage) {
-    style.backgroundImage = `url(${props.bgimage})`
-  }
-  if (props.soldOut) {
-    style.filter = 'brightness(70%)'
-  }
   return (
-    <CardLogoStyled {...props} style={style}>
+    <CardLogoStyled
+      {...props}
+      style={{
+        backgroundImage: props.bgimage ? `url(${props.bgimage})` : undefined,
+        filter: props.soldOut ? 'brightness(70%)' : undefined
+      }}
+    >
       {props.children}
     </CardLogoStyled>
   )

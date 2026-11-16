@@ -1,0 +1,17 @@
+/* redesign stores 2.H: «Share with» of menus and delivery zones (StoreSharePicker). The notices sit inside
+   the panel's own padding, not the page gutter InlineNotice has by default. */
+.odc-share-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-share-picker .odc-share-picker-notice {
+  margin-block: var(--od-space-2);
+  margin-inline: 0;
+  white-space: normal;
+}
+
+/* redesign : Save keeps its own width under P/SelectableList */
+.odc-share-picker .odc-share-picker-save { align-self: flex-start; }

@@ -1,0 +1,102 @@
+/*
+ * 5.4-A · Orders CSV export: the tab picker, the result and the error on Product Dialog (C8).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only. Logical
+ * properties only (C17). The dark mode is the tokens' own.
+ */
+
+/* The labelled Product checkbox is already a full-width row; the list only stacks them. */
+.odc-export-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+/* The reason Export is off: text in the danger text color, never only the disabled look. */
+.odc-export-reason {
+  margin-block: var(--od-space-3) 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-export-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-export-messages > p {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* redesign fix-qa E4 · the confirmation: the option chosen as the lead line, then what it will do. */
+.odc-export-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-export-choice {
+  margin: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-export-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding-inline-start: var(--od-space-4);
+  color: var(--od-text);
+}
+
+.odc-export-download {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--od-x-target-fine);
+  color: var(--od-action-content);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-export-download:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-space-half);
+}
+
+/* redesign W0-3d5 (T0-12, decision 12): the link is SEEN at its own height and its 44px area is a centered pseudo-element. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-export-download {
+    position: relative;
+  }
+
+  .odc-export-download::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  /* Several files stack their links 8px apart (24 + 44 areas would cross): then the link keeps its 44px box. */
+  .odc-export-messages:has(> p:has(.odc-export-download) ~ p:has(.odc-export-download)) .odc-export-download {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign fix-qa E4 · phones: the export rows (and the Learn rows after them) are 44px at phone width,
+   also with a mouse or a resized window, where `pointer: coarse` does not answer.
+   redesign W0-3d5 (T0-12, decision 12): the buttons of the dialogs are Product's, which carry their own 44px area. The close
+   button and a lone OK are loose and keep their box. The two-button footers keep the 44px box: Product stacks them 8px apart
+   (dialog.css) and at one line each is 35.6px tall, so two 44px areas would cross by 0.4px. */
+@media (max-width: 767px) {
+  [data-export-menu] .odc-menu-item {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .odc-export-dialog .odc-overlay-foot > .odc-btn:not(:only-child) {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

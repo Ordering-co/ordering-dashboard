@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useHistory, useLocation } from 'react-router-dom'
-import BsChevronRight from '@meronex/icons/bs/BsChevronRight'
+import { ChevronRight } from '../../Shared/Icon'
 import { ArrowsAngleContract, ArrowsAngleExpand } from 'react-bootstrap-icons'
 import { useLanguage, CheckoutFieldsSetting as CheckoutFieldsSettingController } from '../../../../../index'
-import { IconButton, Switch } from '../../../styles'
+import { IconButton } from '../../../styles'
+import { Switch } from '../../Shared/Product/Switch'
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { SideBar, Alert } from '../../Shared'
 import { getCodeNames } from '../../../utils'
+import { validationFieldLabel } from '../../../utils/validationFieldLabel'
 
 import {
   CheckoutFieldsDetailsContainer,
@@ -40,6 +42,13 @@ const CheckoutFieldsSettingUI = (props) => {
   const query = new URLSearchParams(useLocation().search)
 
   const [isExpand, setIsExpand] = useState(false)
+
+  // the panel says which channel it is, and each switch which field and column it is
+  const selectedSite = (sitesState?.sites || []).find(site => site.id === selectedSiteId)
+  const panelTitle = selectedSite?.code
+    ? t('CHECKOUT_FIELDS_SITE_SETTINGS', 'Settings for _site_').replace('_site_', getCodeNames(selectedSite.code, t))
+    : t('SETTINGS', 'Settings')
+  const switchName = (column, fieldName) => t('CHECKOUT_FIELD_SWITCH_NAME', '_column_: _field_').replace('_column_', column).replace('_field_', fieldName)
 
   const orderValidationFields = ['name', 'middle_name', 'lastname', 'second_lastname', 'email', 'mobile_phone', 'city_dropdown_option', 'address', 'zipcode', 'address_notes', 'coupon', 'driver_tip', 'comments', 'birthdate']
 
@@ -79,10 +88,11 @@ const CheckoutFieldsSettingUI = (props) => {
     <>
       <SitesListContainer>
         <Header>
-          <h1>{t('CART_CUSTOMER_FIELDS', 'Cart and Customer fields')}</h1>
+          <h1>{t('CART_CUSTOMER_FIELDS', 'Cart and customer fields')}</h1>
           {!avoidExpand && width > 576 && !selectedSiteId && (
             <IconButton
               color='black'
+              aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
               onClick={expandSideBar}
             >
               {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -108,7 +118,7 @@ const CheckoutFieldsSettingUI = (props) => {
                 onClick={() => handleOpenSiteSettingDetails(site.id)}
               >
                 <span>{getCodeNames(site.code, t)}</span>
-                <BsChevronRight />
+                <ChevronRight />
               </SiteItem>
             ))}
           </SitesWrapper>
@@ -124,7 +134,7 @@ const CheckoutFieldsSettingUI = (props) => {
           onClose={() => handleCloseDetails()}
         >
           <CheckoutFieldsDetailsContainer>
-            <h1>{t('SETTINGS', 'Settings')}</h1>
+            <h1>{panelTitle}</h1>
             <FieldContainer isHeader>
               <div className='name'>{t('FIELD', 'Field')}</div>
               <div className='required'>{t('REQUIRED', 'Required')}</div>
@@ -153,25 +163,30 @@ const CheckoutFieldsSettingUI = (props) => {
                     const indexB = orderValidationFields.indexOf(b?.validation_field.code)
                     return indexA - indexB
                   })
-                  .map(field => (
+                  .map(field => {
+                    const fieldName = validationFieldLabel(t, field?.validation_field)
+                    return (
                     <FieldContainer key={field.id}>
-                      <div className='name'>{t(field?.validation_field?.code.toUpperCase(), field?.validation_field?.name)}</div>
+                      <div className='name'>{fieldName}</div>
                       <div className='required'>
                         <Switch
+                          label={switchName(t('REQUIRED', 'Required'), fieldName)}
                           defaultChecked={field.required}
                           disabled={field?.validation_field?.code === 'email'}
-                          onChange={(val) => handleChangeCheckoutFieldSetting(field.validation_field_id, selectedSiteId, { required: val })}
+                          onCheckedChange={(val) => handleChangeCheckoutFieldSetting(field.validation_field_id, selectedSiteId, { required: val })}
                         />
                       </div>
                       <div className='status'>
                         <Switch
+                          label={switchName(t('STATE', 'Status'), fieldName)}
                           defaultChecked={field.enabled}
                           disabled={field?.validation_field?.code === 'email'}
-                          onChange={(val) => handleChangeCheckoutFieldSetting(field.validation_field_id, selectedSiteId, { enabled: val })}
+                          onCheckedChange={(val) => handleChangeCheckoutFieldSetting(field.validation_field_id, selectedSiteId, { enabled: val })}
                         />
                       </div>
                     </FieldContainer>
-                  ))}
+                    )
+                  })}
               </>
                 )}
           </CheckoutFieldsDetailsContainer>

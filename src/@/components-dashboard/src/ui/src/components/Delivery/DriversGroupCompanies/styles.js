@@ -12,15 +12,12 @@ export const SearchBarWrapper = styled.div`
 export const ButtonGroup = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
   margin-bottom: 20px;
-  button:first-child {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 7px;
-    `
-: css`
-      margin-right: 7px;
-    `}
+
+  button {
+    min-height: 44px;
   }
 `
 
@@ -34,18 +31,15 @@ export const GroupWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 
-  p {
+  label {
     margin: 0px;
-    font-size: 14px;
-    ${props => props.theme?.rtl
-? css`
-      padding-right: 15px;
-    `
-: css`
-      padding-left: 15px;
-    `}
+    font-size: var(--od-type-content-size);
+    padding-inline-start: 15px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   ${({ isDisabed }) => isDisabed && css`

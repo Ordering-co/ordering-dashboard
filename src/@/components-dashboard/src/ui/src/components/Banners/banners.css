@@ -1,0 +1,45 @@
+/*
+ * redesign  (R1, R2): the shell's notice stack (past due, real-time connection) on Product. The stack is sticky at the top
+ * of the page, above the page content and under the persistent chrome's own layers; each notice is an InlineNotice (filter-bar.css)
+ * whose block margin the stack's gap replaces. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ */
+
+.odc-banner-stack {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 30);
+  display: grid;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-2);
+  background: var(--od-bg);
+}
+
+/* App.js always mounts the container; with no notice inside it must not leave a strip. */
+.odc-banner-stack:empty { display: none; }
+
+.odc-banner-stack .odc-notice {
+  margin-block: 0;
+  margin-inline: var(--od-x-page-gutter);
+}
+
+/* A notice's action can hold more than one control (Refresh + Close). */
+.odc-banner-stack .odc-notice-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-shell-notice-title,
+.odc-shell-notice-body { display: block; }
+
+.odc-shell-notice-title { font-weight: var(--od-font-weight-semibold); }
+
+/* A phone: the row may break, and the action takes its own line when it does not fit beside the text. Words are never broken. */
+@media (max-width: 767px) {
+  .odc-banner-stack .odc-notice {
+    flex-wrap: wrap;
+    margin-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-banner-stack .odc-notice-text { flex: 1 1 auto; }
+}

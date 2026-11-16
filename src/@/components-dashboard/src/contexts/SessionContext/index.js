@@ -5,6 +5,7 @@ import { clearTicketSections } from '../../utils/ticketSectionStorage'
 import { getSessionStorageSyncAction } from './sessionStorageSync'
 import { getSessionCheckAction, getSessionCheckUrl } from './sessionCheck'
 import { getDocsConnectMode } from '../../components/DocsConnection/mode'
+import { fetchProjectCode } from '../../utils/resolveProjectCode'
 /**
  * Create SessionContext
  * This context will manage the session internally and provide an easy interface
@@ -85,15 +86,23 @@ export const SessionProvider = ({ children, strategy, settings }) => {
 
   const login = async (values) => {
     if (settings?.local_project_pin && values.project !== settings.local_project_pin) return
+    // `values.project` may be the alias the user typed/was redirected with; /current
+    // always answers with the internal code, which integrations key their data on.
+    // `ordering.root` is only that project's root when both match, and `_` stays the
+    // wildcard: storing its code would change how domain dashboards boot.
+    const canResolve = values.project && values.project !== '_' && !settings?.local_project_pin && values.project === ordering.project
+    const project = canResolve
+      ? (await fetchProjectCode(ordering.root)) || values.project
+      : values.project
     await strategy.setItem('token', values.token)
     await strategy.setItem('user', values.user, true)
-    await strategy.setItem('project', values.project)
+    await strategy.setItem('project', project)
     setState({
       ...state,
       auth: true,
       user: values.user,
       token: values.token,
-      project: values.project,
+      project,
       loading: false
     })
   }

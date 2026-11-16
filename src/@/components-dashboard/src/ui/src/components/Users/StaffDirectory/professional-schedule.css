@@ -1,0 +1,55 @@
+/*
+ * redesign  (B1a): the Schedule section of a professional's record (date range + weekly hours + Save).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else.
+ * Logical properties only, so right-to-left needs no second set of rules. Component classes use the `psc-` prefix; the
+ * wrappers keep `odc-`.
+ */
+
+.psc-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.psc-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.psc-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.psc-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The number sits under the «days» option, in line with its label: the radio's side padding, its circle and the gap to the text */
+.psc-days {
+  padding-inline-start: calc(var(--od-x-space-1-5) + var(--od-x-checkbox-box) + var(--od-space-2));
+}
+
+/* Four digits at most make sense for a booking window; the field is a short one, not the width of the section */
+.psc-days .psc-days-field {
+  inline-size: calc(var(--od-x-control-height) * 3);
+  max-inline-size: 100%;
+}
+
+.psc-actions {
+  display: flex;
+  justify-content: flex-start;
+}

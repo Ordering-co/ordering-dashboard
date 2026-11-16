@@ -1,0 +1,103 @@
+/*
+ * DatePicker (redesign W0-7, T0-28): one day. It composes date-range.css (the trigger, the popover and the sheet,
+ * the field, the calendar and its day buttons are the odc-dr-* classes); this file only adds what one day needs:
+ * the trigger with the calendar icon, disabled days, the disabled / invalid states and the phone hit area.
+ * Tokens only; logical properties only.
+ *
+ * Decision 12 (phone): the trigger is a button and stays 32px visible with a 44px hit area. The typed field is an
+ * <input> (no ::after): it stays 32px visible too and its frame `.odc-dp-input-frame` carries the 44px area (redesign tramo B
+ * r3, W0-QB2-02), so a form has one height for all of them. The days of the grid
+ * keep the 44px of the date range under a coarse pointer (adjacent cells, so a hit area would overlap): see --odc-dr-day.
+ */
+
+/* ── Trigger: the field of date-range.css, with the icon first and no chevron ── */
+.odc-dp-trigger {
+  position: relative; /* containing block of the .odc-sr-only name */
+  justify-content: flex-start;
+}
+
+.odc-dp-trigger-icon {
+  color: var(--od-text-muted);
+}
+
+.odc-dp-trigger[data-invalid] {
+  border-color: var(--od-danger-functional);
+  /* redesign tramo B r2 (W0-QB1-04): a thicker border drawn inside, as Field does, so the invalid state is not colour alone */
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-dp-trigger:disabled,
+.odc-dp-trigger[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ── Disabled days: focusable (aria-disabled), never chosen, never only a colour: struck through ── */
+.odc-dr-day[data-disabled] {
+  color: var(--od-x-text-subtle);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.odc-dr-day[data-disabled]:hover {
+  background: none;
+}
+
+/* A disabled day that is also the chosen one (a value outside min / max) keeps the chosen fill. */
+.odc-dr-day[data-disabled][data-edge-day] {
+  color: var(--od-action-foreground);
+}
+
+.odc-dr-day[data-disabled][data-edge-day]:hover {
+  background: var(--od-action);
+}
+
+/* ── Phone and touch ── */
+@media (pointer: coarse), (max-width: 767px) {
+  /* The date range grows its trigger and its field to 44px; here both stay 32px visible (the trigger has its hit area below, the typed field its frame's). */
+  .odc-dr-trigger.odc-dp-trigger {
+    min-block-size: var(--od-x-control-height);
+  }
+
+  /* redesign tramo B r3 (W0-QB2-02): the typed field is an input: 32px visible, the 44px area is on its frame (one layer below the
+     input) and only answers in the 6px above and below it */
+  .odc-dr-input.odc-dp-input {
+    min-block-size: var(--od-x-control-height);
+  }
+
+  .odc-dp-input-frame {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .odc-dp-input-frame::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+
+  /* redesign tramo B r4 (W0-PB3-02): the typed field's area reaches 6px under its frame and the area of «Previous month» / «Next month» /
+     «Today» 8px above their 28px buttons, so the two must be >= 14px apart or one covers the other (a press at the corner of the
+     field landed on a month button). The gap that was there (10.5px) plus one --od-space-2 clears it, with room for the error line. */
+  /* redesign tramo B cierre (W0-PB3-02): 14px kept the two areas apart, but Chromium's touch adjustment moves a touch to the nearest
+     node that answers to touches, and the frame's ::after is not one: with 17.5px between the frame and the month row, 15 of 30
+     touches 1 to 6px under the field's corners changed the month; with 25.5px, 0 of 10 did. Two --od-space-2 and one --od-space-1 of margin
+     put it at 28px (measured >= 26px, with real taps, at 390 and 320). */
+  .odc-dp > .odc-dr-field {
+    margin-block-end: calc(var(--od-space-2) * 2 + var(--od-space-1));
+  }
+
+  .odc-dp-trigger::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* The sheet has no pointer media of its own: a narrow window with a fine pointer still gets 44px days. */
+@media (max-width: 767px) {
+  .odc-dp-sheet {
+    --odc-dr-day: var(--od-x-target-coarse);
+  }
+}

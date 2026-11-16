@@ -1,0 +1,143 @@
+/*
+ * redesign UC-B5 (decisions 4 and 5): the Wallet section of the customer panel. Values come from --od-* (release) and
+ * --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `cw-` prefix; the wrappers keep `odc-`.
+ */
+
+.cw-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.cw-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* The notices belong to the section, not to a page bar: no page gutter around them */
+.cw-section .odc-notice { margin-inline: 0; margin-block: 0; }
+.cw-notice-lines { display: grid; gap: var(--od-x-space-half); }
+
+/* ── Balance: the figure is the key figure of the section (display role) ── */
+.cw-balance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.cw-balance-figure {
+  color: var(--od-text);
+  font-size: var(--od-x-type-display-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.cw-balance-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Adjust balance ── */
+.cw-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.cw-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* A fieldset only to disable every control at once (a locked wallet); it draws nothing */
+.cw-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.cw-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+}
+
+.cw-reason {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* An empty live region holds its place without taking space */
+.cw-updated {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.cw-updated:empty { display: none; }
+
+/* ── History ── */
+.cw-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.cw-history-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.cw-event-amount {
+  margin-inline-end: var(--od-space-2);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.cw-event-label { overflow-wrap: anywhere; }
+
+.cw-event-comment {
+  display: block;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.cw-event-details {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--od-x-space-half) var(--od-space-3);
+  margin: 0;
+}
+
+.cw-event-details dt { color: var(--od-text-muted); }
+.cw-event-details dd { margin: 0; overflow-wrap: anywhere; }
+
+/* On a phone the primary action takes the width, as the buttons of the overlays do */
+@media (max-width: 767px) {
+  .cw-actions { align-items: stretch; }
+}

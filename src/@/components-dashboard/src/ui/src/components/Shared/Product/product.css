@@ -1,0 +1,227 @@
+/*
+ * Ordering.co Product wrappers — shared base (orders pilot, Part 2).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only;
+ * the literal guard (src/__tests__/tools/productLiteralGuard.test.js) fails on any other.
+ * Class prefix `odc-` keeps component classes apart from Tailwind's `od-` utilities.
+ * Logical properties only (C17).
+ */
+
+.odc-root,
+.odc-root *,
+.odc-root *::before,
+.odc-root *::after {
+  box-sizing: border-box;
+}
+
+/* The legacy body sets `text-align: left`; Product text follows the writing direction (C17, audit A2-04). */
+.odc-root {
+  text-align: start;
+}
+
+.odc-sr-only {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.odc-mono {
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  unicode-bidi: isolate;
+}
+
+.odc-num {
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+/* redesign W0-3a (T0-9, decisión 11): amounts, prices, hours and metrics in mono with tabular figures (released:
+   the implementation stack lists them among the mono uses). Never prose, navigation, buttons or labels: put the class
+   on the node that holds the figure only. */
+.odc-figure {
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  font-variant-numeric: tabular-nums;
+  unicode-bidi: isolate;
+}
+
+.odc-muted { color: var(--od-text-muted); }
+.odc-subtle { color: var(--od-x-text-subtle); }
+
+.odc-icon {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+  flex: none;
+  stroke-width: var(--od-icon-stroke);
+}
+
+[dir='rtl'] .odc-icon-flip,
+.odc-rtl .odc-icon-flip {
+  scale: -1 1;
+}
+
+/* ── Button (C4: one primary per view; secondary is outline, tertiary is ghost) ── */
+.odc-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--od-x-space-1-5);
+  block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  margin: 0;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    border-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-btn:hover { background: var(--od-x-hover); }
+.odc-btn:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+.odc-btn:disabled,
+.odc-btn[aria-disabled='true']:not([data-busy]) {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+  background: var(--od-bg);
+}
+
+/* redesign W0-6 (T0-19): the tenant action color (decision 30) reaches the primary button through --od-x-tenant-action, set at runtime in :root. */
+.odc-btn[data-variant='primary'] {
+  background: var(--od-x-tenant-action, var(--od-action));
+  border-color: var(--od-x-tenant-action, var(--od-action));
+  /* decision 42: always white; a tenant accent where white misses AA is painted as a darker shade (bootTheme tenantAccentPaint) */
+  color: var(--od-action-foreground);
+}
+.odc-btn[data-variant='primary']:hover {
+  background: var(--od-x-tenant-action-hover, var(--od-action-hover));
+  border-color: var(--od-x-tenant-action-hover, var(--od-action-hover));
+}
+.odc-btn[data-variant='primary']:disabled,
+.odc-btn[data-variant='primary'][aria-disabled='true']:not([data-busy]) {
+  background: var(--od-surface-subtle);
+  border-color: var(--od-border);
+  color: var(--od-x-text-subtle);
+}
+
+.odc-btn[data-variant='danger'] {
+  background: var(--od-x-danger-strong);
+  border-color: var(--od-x-danger-strong);
+  color: var(--od-action-foreground);
+}
+.odc-btn[data-variant='danger']:hover { filter: brightness(0.94); }
+
+.odc-btn[data-variant='ghost'] {
+  border-color: transparent;
+  background: transparent;
+  color: var(--od-text-muted);
+}
+.odc-btn[data-variant='ghost']:hover { background: var(--od-x-hover); color: var(--od-text); }
+
+.odc-btn[data-variant='link'] {
+  block-size: auto;
+  min-block-size: var(--od-x-target-fine);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--od-action-content);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+.odc-btn[data-variant='link']:hover { background: transparent; }
+
+/* redesign stores 5.18 (, from 5.2): the variants above come after `.odc-btn:disabled` with the same specificity, so a
+   disabled ghost, link or danger button kept its colour (and its hover). A disabled button looks off in every variant: the subtle
+   text of the secondary one; ghost and link keep no fill, danger takes the off fill of primary. */
+.odc-btn:is([data-variant='ghost'], [data-variant='link']):is(:disabled, [aria-disabled='true']:not([data-busy])),
+.odc-btn:is([data-variant='ghost'], [data-variant='link']):is(:disabled, [aria-disabled='true']:not([data-busy])):hover {
+  background: transparent;
+  color: var(--od-x-text-subtle);
+}
+.odc-btn[data-variant='danger']:is(:disabled, [aria-disabled='true']:not([data-busy])),
+.odc-btn[data-variant='danger']:is(:disabled, [aria-disabled='true']:not([data-busy])):hover {
+  background: var(--od-surface-subtle);
+  border-color: var(--od-border);
+  color: var(--od-x-text-subtle);
+  filter: none;
+}
+
+.odc-btn[aria-pressed='true'] {
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+.odc-btn[data-size='sm'] {
+  block-size: var(--od-x-control-height-sm);
+  padding-inline: var(--od-x-space-2-5);
+}
+.odc-btn[data-size='lg'] {
+  block-size: var(--od-x-control-height-lg);
+  padding-inline: var(--od-space-4);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-btn[data-icon-only] {
+  inline-size: var(--od-x-control-height);
+  padding-inline: 0;
+}
+.odc-btn[data-icon-only][data-size='sm'] { inline-size: var(--od-x-control-height-sm); }
+.odc-btn[data-icon-only][data-size='lg'] { inline-size: var(--od-x-control-height-lg); }
+
+.odc-btn[data-busy='true'] { cursor: progress; }
+.odc-btn .odc-spin { animation: odc-spin var(--od-duration-slow) linear infinite; }
+
+@keyframes odc-spin { to { rotate: 1turn; } }
+
+/*
+ * Touch (C3): with a coarse pointer every control reaches 44×44. Below 768px the same
+ * holds with a mouse (E10): a narrow window or device emulation is still a phone layout.
+ * redesign W0-3d (T0-12, decision 12): the box does not grow. A button is SEEN at its size
+ * (md 32, sm 28, lg 40, icon-only 32×32, link) and its 44×44 touch area is a centered
+ * pseudo-element (never smaller than the control: a control of 44 or more adds nothing).
+ * The button is already positioned (above), so the pseudo is placed against it. The zero of
+ * the min() is the target token times 0 (a length, no literal: the literal guard rejects `0px`).
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-btn::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  /* redesign W0 close-fixes-3 (W0-E-12, decision 12): the link variant (24px on a mouse) is SEEN at 32 like every control and
+     keeps the 44×44 area of the pseudo-element above; its 24px box left the corners of the area to the neighbour below. */
+  .odc-btn[data-variant='link'] {
+    min-block-size: var(--od-x-control-height);
+  }
+
+  /*  (W0-E-13, decision 12): a small button (28 with a mouse) is SEEN at 32 on a phone like every control; its 44×44 area
+     is the pseudo-element above. The icon-only small button follows in width. */
+  .odc-btn[data-size='sm'] { block-size: var(--od-x-control-height); }
+  .odc-btn[data-icon-only][data-size='sm'] { inline-size: var(--od-x-control-height); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-btn { transition: none; }
+  .odc-btn .odc-spin { animation: none; }
+}

@@ -26,7 +26,8 @@ export const DriversCompaniesList = (props) => {
    */
   const getDriversCompanies = async () => {
     try {
-      setDriversCompaniesState({ ...driversCompaniesState, loading: true })
+      // redesign DC-B1 (M-DC3): a load clears the previous error
+      setDriversCompaniesState(prev => ({ ...prev, loading: true, error: null }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -37,10 +38,13 @@ export const DriversCompaniesList = (props) => {
       const response = await fetch(`${ordering.root}/driver_companies`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setDriversCompaniesState({ ...driversCompaniesState, companies: content.result, loading: false })
+        setDriversCompaniesState(prev => ({ ...prev, companies: content.result, loading: false }))
+      } else {
+        // redesign DC-B1 (M-DC3): main had no branch here, and the list stayed loading for good
+        setDriversCompaniesState(prev => ({ ...prev, loading: false, error: content.result }))
       }
     } catch (err) {
-      setDriversCompaniesState({ ...driversCompaniesState, loading: false, error: [err.message] })
+      setDriversCompaniesState(prev => ({ ...prev, loading: false, error: [err.message] }))
     }
   }
 
@@ -64,19 +68,20 @@ export const DriversCompaniesList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const companies = driversCompaniesState.companies.filter(company => {
-          if (company.id === driverCompanyId) {
-            Object.assign(company, content.result)
-          }
-          return true
-        })
-        setDriversCompaniesState({ ...driversCompaniesState, companies })
+        // redesign DC-B1 (M-DC22): a new object for the saved company (the row's switch is controlled), not a mutation
+        setDriversCompaniesState(prev => ({
+          ...prev,
+          companies: prev.companies.map(company => (company.id === driverCompanyId ? { ...company, ...content.result } : company))
+        }))
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+        return { ok: true } // redesign DC-B1 (M-DC2)
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
+        return { ok: false, error: content.result } // redesign DC-B1 (M-DC2)
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] } // redesign DC-B1 (M-DC2)
     }
   }
 
@@ -99,8 +104,7 @@ export const DriversCompaniesList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const companies = driversCompaniesState.companies.filter(company => company.id !== driverCompanyId)
-        setDriversCompaniesState({ ...driversCompaniesState, companies })
+        setDriversCompaniesState(prev => ({ ...prev, companies: prev.companies.filter(company => company.id !== driverCompanyId) }))
         showToast(ToastType.Success, t('DRIVER_COMPANY_DELETED', 'Driver company deleted'))
         if (startSeveralDeleteStart) {
           const companyList = [...selectedCompanyList]
@@ -110,12 +114,17 @@ export const DriversCompaniesList = (props) => {
           }
           setSelectedCompanyList(companyList)
         }
+        return { ok: true } // redesign DC-B1
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
         setStartSeveralDeleteStart(false)
+        return { ok: false, error: content.result } // redesign DC-B1
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      // redesign DC-B1 (M-DC18): main left the bulk delete armed here, and the next checkbox fired a DELETE nobody confirmed
+      setStartSeveralDeleteStart(false)
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -164,6 +173,8 @@ export const DriversCompaniesList = (props) => {
             selectedCompanyList={selectedCompanyList}
             handleAllSelectCompany={handleAllSelectCompany}
             handleDeleteSelectedCompanies={() => setStartSeveralDeleteStart(true)}
+            reloadDriversCompanies={getDriversCompanies}
+            setSelectedCompanyList={setSelectedCompanyList}
           />
         )
       }

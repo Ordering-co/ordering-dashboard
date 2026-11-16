@@ -1,0 +1,69 @@
+/*
+ * redesign  B3b · theme editor, the image crop dialog (ImageCropDialog): the cropperjs area, the size facts and
+ * the «Too small» badge. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * Prefix: odc-ic-*.
+ */
+
+.odc-ic-area {
+  position: relative;
+  inline-size: 100%;
+  /* about the old 420px, never taller than half the window */
+  block-size: min(56dvh, calc(var(--od-space-10) * 3.25));
+  border-radius: var(--od-radius-component);
+  overflow: hidden;
+  background: var(--od-surface-subtle);
+  outline: none;
+}
+
+.odc-ic-area:focus-visible {
+  box-shadow: 0 0 0 var(--od-focus-ring-width) var(--od-focus-ring-color);
+}
+
+.odc-ic-area img {
+  display: block;
+  /* cropperjs needs it */
+  max-inline-size: 100%;
+}
+
+.odc-ic-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-ic-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--od-space-1) var(--od-space-3);
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-ic-facts dt {
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-ic-facts dd {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+/* Next to the result: it ends up under the recommended size */
+.odc-ic-small {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin-inline-start: var(--od-space-2);
+  padding: 0 var(--od-space-2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-warning-soft);
+  color: var(--od-warning-functional);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  cursor: help;
+}
+
+.odc-ic-small:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}

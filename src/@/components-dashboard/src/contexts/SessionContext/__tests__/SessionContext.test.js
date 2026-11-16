@@ -11,13 +11,13 @@ describe('getSessionStorageValues', () => {
     const strategy = new WebStrategy()
     const user = { id: 1, level: 0 }
     localStorage.setItem('token', 'valid-token')
-    localStorage.setItem('project', 'rokys')
+    localStorage.setItem('project', 'examplerestaurant')
     localStorage.setItem('user', JSON.stringify(user))
 
     await expect(getSessionStorageValues(strategy)).resolves.toEqual({
       auth: 'valid-token',
       token: 'valid-token',
-      project: 'rokys',
+      project: 'examplerestaurant',
       user
     })
     expect(localStorage.getItem('token')).toBe('valid-token')
@@ -26,19 +26,19 @@ describe('getSessionStorageValues', () => {
   it('invalidates only session keys when the persisted user is corrupt', async () => {
     const strategy = new WebStrategy()
     localStorage.setItem('token', 'stale-token')
-    localStorage.setItem('project', 'rokys')
+    localStorage.setItem('project', 'examplerestaurant')
     localStorage.setItem('language', JSON.stringify({ code: 'es' }))
     localStorage.setItem('user', '[object Object]')
 
     await expect(getSessionStorageValues(strategy)).resolves.toEqual({
       auth: null,
       token: null,
-      project: 'rokys',
+      project: 'examplerestaurant',
       user: null
     })
     expect(localStorage.getItem('token')).toBeNull()
     expect(localStorage.getItem('user')).toBeNull()
-    expect(localStorage.getItem('project')).toBe('rokys')
+    expect(localStorage.getItem('project')).toBe('examplerestaurant')
     expect(localStorage.getItem('language')).toBe(JSON.stringify({ code: 'es' }))
   })
 

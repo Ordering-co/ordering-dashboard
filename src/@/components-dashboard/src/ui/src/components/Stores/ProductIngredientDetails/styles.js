@@ -31,7 +31,7 @@ export const Header = styled.div`
   margin-bottom: 30px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     flex: 1;
     margin-bottom: 0;
@@ -91,7 +91,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {
@@ -109,7 +109,7 @@ export const InputWrapper = styled.div`
   flex-direction: column;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 11px;
   }

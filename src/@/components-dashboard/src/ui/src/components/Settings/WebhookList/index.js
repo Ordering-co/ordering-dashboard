@@ -15,6 +15,7 @@ import {
   WebhookListContainer,
   Header,
   WebhookListTable,
+  TableScroller,
   DropdownButtonWrapper,
   SelectorWrapper,
   PagesBottomContainer
@@ -47,6 +48,9 @@ const WebhookListUI = (props) => {
   // Get current webhooks
   const [currentWebhooks, setCurrentWebhooks] = useState([])
   const [totalPages, setTotalPages] = useState(null)
+
+  // The three-dots button has no text of its own: its name carries the row it belongs to.
+  const rowActionsLabel = (name) => t('STORES_ROW_ACTIONS', 'Actions for _name_').replace('_name_', name ?? '')
 
   const handleChangePage = (page) => {
     setCurrentPage(page)
@@ -116,6 +120,7 @@ const WebhookListUI = (props) => {
           search={searchValue}
           onSearch={val => setSearchValue(val)}
         />
+        <TableScroller role='region' tabIndex={0} aria-label={t('TITLE_WEBHOOKS', 'Webhooks')}>
         <WebhookListTable>
           <thead>
             <tr>
@@ -158,8 +163,13 @@ const WebhookListUI = (props) => {
                       <DropdownButtonWrapper>
                         <DropdownButton
                           menuAlign={theme?.rtl ? 'left' : 'right'}
-                          title={<FiMoreVertical />}
-                          id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
+                          title={(
+                            <>
+                              <FiMoreVertical aria-hidden='true' />
+                              <span className='odc-sr-only'>{rowActionsLabel(webhook.url)}</span>
+                            </>
+                          )}
+                          id={`webhook-actions-${webhook.id}`}
                         >
                           <Dropdown.Item
                             onClick={() => onClickDeleteWebhook(webhook.id)}
@@ -206,6 +216,7 @@ const WebhookListUI = (props) => {
                 </td>
                 <td>
                   <IconButton
+                    aria-label={t('ADD_NEW_WEBHOOK', 'Add webhook')}
                     color='primary'
                     onClick={() => handleAddNewWebhook()}
                   >
@@ -216,6 +227,7 @@ const WebhookListUI = (props) => {
             </tbody>
           )}
         </WebhookListTable>
+        </TableScroller>
         {!webhookListState.loading && (
           <PagesBottomContainer>
             <Button

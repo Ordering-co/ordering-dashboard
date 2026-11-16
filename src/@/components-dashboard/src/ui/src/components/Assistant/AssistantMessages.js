@@ -1,11 +1,12 @@
-import React from 'react'
-import { CheckLg, ExclamationCircle } from 'react-bootstrap-icons'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLanguage, useAssistant } from '../../../../index'
+import { Button, InlineNotice } from '../Shared/Product'
+import { Check, CircleAlert, LoaderCircle } from '../Shared/Icon'
 import { AssistantMarkdown } from './AssistantMarkdown'
 import { AssistantActionCard } from './AssistantActionCard'
 import { AssistantDestinations } from './AssistantDestinations'
-import { getActionDisplayStatus } from './format'
-import { ActionButton, AssistantText, Callout, Messages, Note, Spinner, ToolLine, UserBubble } from './styles'
+import { getActionDisplayStatus, getRecordName } from './format'
+import './assistant-card.css'
 
 /**
  * Consecutive tool calls read as one line: what is running now, or how many
@@ -46,15 +47,16 @@ const errorText = (code, t) => {
   }
 }
 
+// redesign AS-A (D1): the tool line, icons by token and the spinner of Product
 const ToolGroup = ({ tools }) => {
   const [, t] = useLanguage()
   const running = tools.find(tool => tool.status === 'running')
   if (running) {
     return (
-      <ToolLine role='status'>
-        <Spinner aria-hidden />
+      <div className='odc-as-tool' role='status' data-state='running'>
+        <LoaderCircle className='odc-icon odc-spin' />
         {running.label || t('ASSISTANT_TOOL_RUNNING', 'Looking up data…')}
-      </ToolLine>
+      </div>
     )
   }
   const failed = tools.every(tool => tool.status === 'error')
@@ -65,35 +67,93 @@ const ToolGroup = ({ tools }) => {
       ? t('ASSISTANT_TOOLS_DONE', 'Looked up data (_count_)').replace('_count_', tools.length)
       : t('ASSISTANT_TOOL_DONE', 'Looked up data')
   return (
-    <ToolLine>
+    <div className='odc-as-tool' data-state={failed ? 'error' : 'done'}>
       {failed
-        ? <ExclamationCircle size={13} aria-hidden />
-        : <CheckLg size={13} color='#0E9B55' aria-hidden />}
+        ? <CircleAlert className='odc-icon' />
+        : <Check className='odc-icon' />}
       {text}
-    </ToolLine>
+    </div>
+  )
+}
+
+/**
+ * The proposals of one turn, and when more than one waits, one row to confirm them all.
+ * redesign AS-A (M-AS2): the row goes away as the changes get applied, so a focus on its
+ * button goes to the first card of the group, which carries it to its result.
+ */
+const ActionGroup = ({ item, onProposeAgain }) => {
+  const [, t] = useLanguage()
+  const { actions, streaming, confirmActions, cancelActions } = useAssistant()
+  const groupRef = useRef(null)
+
+  // redesign R1-1: the row follows the clock like the cards (they re-render each second while they wait), so
+  // «Confirm all» never offers, nor sends, a proposal its card already shows as expired
+  const anyProposed = item.actionIds.some(id => actions[id]?.status === 'proposed')
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    if (!anyProposed) return
+    const timer = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(timer)
+  }, [anyProposed])
+
+  const waiting = item.actionIds.filter(id => getActionDisplayStatus(actions[id], now) === 'proposed' && !actions[id]?.busy)
+
+  const confirmAll = (event) => {
+    if (document.activeElement === event.currentTarget) {
+      const card = Array.from(groupRef.current?.querySelectorAll('[data-action-id]') || []).find(node => node.dataset.actionId === waiting[0])
+      card?.querySelector('[data-as-confirm]')?.focus({ preventScroll: true })
+    }
+    confirmActions(waiting)
+  }
+
+  return (
+    <div className='odc-as-actions-group' ref={groupRef}>
+      {item.actionIds.map(id => (
+        <AssistantActionCard
+          key={id}
+          action={actions[id]}
+          onConfirm={confirmActions}
+          onCancel={cancelActions}
+          onProposeAgain={streaming ? null : onProposeAgain}
+        />
+      ))}
+      {waiting.length > 1 && (
+        <div className='odc-as-group'>
+          <p className='odc-as-group-text'>
+            {t('ASSISTANT_CHANGES_WAITING_NAMED', 'Waiting for you: _names_')
+              .replace('_names_', waiting.map(id => getRecordName(actions[id], t)).join(', '))}
+          </p>
+          <Button variant='secondary' size='md' onClick={confirmAll}>
+            {/* decision 11: no figures in buttons */}
+            {t('ASSISTANT_CONFIRM_ALL', 'Confirm all (_count_)').replace('_count_', waiting.length)}
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }
 
 export const AssistantMessages = ({ onProposeAgain }) => {
   const [, t] = useLanguage()
-  const { items, actions, streaming, confirmActions, cancelActions } = useAssistant()
+  const { items, streaming } = useAssistant()
 
   return (
-    <Messages aria-live='polite'>
+    // redesign AS-A (M-AS13): busy while the answer streams, so it is announced whole at the end
+    <div className='odc-as-messages' aria-live='polite' aria-busy={streaming}>
       {groupItems(items).map(item => {
         switch (item.kind) {
           case 'user':
-            return <UserBubble key={item.key}>{item.text}</UserBubble>
+            return <div className='odc-as-user' key={item.key}>{item.text}</div>
 
           case 'assistant':
             return (
               <div key={item.key}>
                 {item.text && (
-                  <AssistantText streaming={item.streaming}>
+                  <div className='odc-as-text' data-streaming={item.streaming ? 'true' : undefined}>
                     <AssistantMarkdown text={item.text} />
-                  </AssistantText>
+                  </div>
                 )}
-                {item.aborted && <Note>{t('ASSISTANT_ANSWER_STOPPED', 'Answer stopped')}</Note>}
+                {item.aborted && <div className='odc-as-note'>{t('ASSISTANT_ANSWER_STOPPED', 'Answer stopped')}</div>}
               </div>
             )
 
@@ -103,39 +163,20 @@ export const AssistantMessages = ({ onProposeAgain }) => {
           case 'destinations':
             return <AssistantDestinations key={item.key} result={item} />
 
-          case 'actions': {
-            const waiting = item.actionIds.filter(id => getActionDisplayStatus(actions[id]) === 'proposed' && !actions[id]?.busy)
-            return (
-              <React.Fragment key={item.key}>
-                {item.actionIds.map(id => (
-                  <AssistantActionCard
-                    key={id}
-                    action={actions[id]}
-                    onConfirm={confirmActions}
-                    onCancel={cancelActions}
-                    onProposeAgain={streaming ? null : onProposeAgain}
-                  />
-                ))}
-                {waiting.length > 1 && (
-                  <ActionButton type='button' primary onClick={() => confirmActions(waiting)}>
-                    {t('ASSISTANT_CONFIRM_ALL', 'Confirm all (_count_)').replace('_count_', waiting.length)}
-                  </ActionButton>
-                )}
-              </React.Fragment>
-            )
-          }
+          case 'actions':
+            return <ActionGroup key={item.key} item={item} onProposeAgain={onProposeAgain} />
 
           case 'error':
             return (
-              <Callout key={item.key} tone='danger' role='alert'>
+              <InlineNotice key={item.key} tone='danger' icon={CircleAlert} role='alert' className='odc-as-notice'>
                 {errorText(item.code, t)}
-              </Callout>
+              </InlineNotice>
             )
 
           default:
             return null
         }
       })}
-    </Messages>
+    </div>
   )
 }

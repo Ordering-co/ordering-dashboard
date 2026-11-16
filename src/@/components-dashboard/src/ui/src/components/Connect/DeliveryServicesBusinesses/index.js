@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import {
-  Image,
-  WrapperImage,
-  ButtonGroup,
-  SearchBarWrapper,
-  BusinessesContainer,
-  SkeletonWrapper,
-  SkeletonContainer,
-  BusinessWrapper,
-  PaginationWrapper
-} from './styles'
-import { SearchBar, Pagination } from '../../Shared'
-import { Button, Checkbox } from '../../../styles'
-import { useLanguage } from '../../../../../index'
+import React, { useMemo, useState } from 'react'
+import { useLanguage, useUtils } from '../../../../../index'
+import { Button, SelectableList } from '../../Shared/Product'
+import './delivery-service-businesses.css'
 
+const PAGE_SIZES = [10, 25, 50]
+
+const fill = (template, values) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{values[name]}</React.Fragment> : part
+})
+
+// the Businesses section of the delivery provider panel on P/SelectableList, in place of main's
+// SearchBar, grey buttons, empty logo box, legacy checkboxes and Pagination. Same data and handlers as main: the stores come
+// whole and are filtered and paginated here; «Select all» / «Select none» and each row call the controller; Save (or Add)
+// sends the same change.
 export const DeliveryServiceBusinesses = (props) => {
   const {
     deliveryServiceState,
@@ -31,8 +29,19 @@ export const DeliveryServiceBusinesses = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const [searchValue, setSearchValue] = useState(null)
-  const [filteredBusinesses, setFilteredBusinesses] = useState([])
+  const [{ optimizeImage }] = useUtils()
+  const [searchValue, setSearchValue] = useState('')
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(PAGE_SIZES[0])
+
+  const filtered = useMemo(() => {
+    const needle = searchValue.trim().toLowerCase()
+    return needle ? businesses.filter(business => business?.name?.toLowerCase().includes(needle)) : businesses
+  }, [businesses, searchValue])
+  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize)
+
+  const saving = Boolean(actionState?.loading)
+  const count = selectedBusinessIds?.length ?? 0
 
   const onSubmit = () => {
     if (deliveryServiceState.deliveryService) {
@@ -42,143 +51,65 @@ export const DeliveryServiceBusinesses = (props) => {
     }
   }
 
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    pageSize: 10,
-    totalItems: null,
-    totalPages: null
-  })
-
-  const handleChangePage = (page) => {
-    setPagination({
-      ...pagination,
-      currentPage: page
-    })
-  }
-
-  const handleChangePageSize = (pageSize) => {
-    const expectedPage = Math.ceil(((pagination?.currentPage - 1) * pagination?.pageSize + 1) / pageSize)
-    setPagination({
-      ...pagination,
-      currentPage: expectedPage,
-      pageSize,
-      totalPages: Math.ceil(filteredBusinesses?.length / pageSize)
-    })
-  }
-
-  const filterFunction = (_, index) => {
-    const validation = pagination?.currentPage === 1
-      ? index < (pagination.pageSize * pagination.currentPage)
-      : (index >= (pagination.pageSize * (pagination.currentPage - 1))) && (index < (pagination.pageSize * pagination.currentPage))
-    return validation
-  }
-
-  useEffect(() => {
-    let _filteredBusinesses = []
-    if (searchValue) {
-      _filteredBusinesses = businesses.filter(business => business?.name?.toLowerCase().includes(searchValue?.toLowerCase()))
-    } else {
-      _filteredBusinesses = [...businesses]
-    }
-    setFilteredBusinesses(_filteredBusinesses)
-    setPagination({
-      ...pagination,
-      currentPage: 1,
-      totalItems: _filteredBusinesses?.length,
-      totalPages: Math.ceil(_filteredBusinesses?.length / pagination.pageSize)
-    })
-  }, [searchValue, businesses])
-
   return (
-    <>
-      <SearchBarWrapper>
-        <SearchBar
-          placeholder={t('SEARCH', 'Search')}
-          isCustomLayout
-          lazyLoad
-          search={searchValue}
-          onSearch={val => setSearchValue(val)}
-        />
-      </SearchBarWrapper>
-      <ButtonGroup>
-        <Button
-          type='button'
-          color='secundaryDark'
-          onClick={() => handleSelectAllBusiness(true)}
-        >
-          {t('SELECT_ALL', 'Select all')}
-        </Button>
-        <Button
-          type='button'
-          color='secundaryDark'
-          onClick={() => handleSelectAllBusiness(false)}
-        >
-          {t('SELECT_NONE', 'Select none')}
-        </Button>
-      </ButtonGroup>
-      <BusinessesContainer>
-        {businessesLoading
-          ? (
-            <>
-              {
-                [...Array(9).keys()].map(i => (
-                  <SkeletonWrapper key={i}>
-                    <tr>
-                      <td>
-                        <SkeletonContainer>
-                          <Skeleton width={18} height={18} />
-                          <Skeleton width={35} height={35} style={{ margin: '0px 5px', borderRadius: '100%' }} />
-                        </SkeletonContainer>
-                      </td>
-                      <td>
-                        <Skeleton width={250} />
-                      </td>
-                    </tr>
-                  </SkeletonWrapper>
-                ))
-              }
-            </>
-            )
-          : (
-            <>
-              {filteredBusinesses.filter(filterFunction).map(business => (
-                <BusinessWrapper
-                  key={business.id}
-                  isDisabed={actionState.loading}
-                >
-                  <Checkbox
-                    checked={selectedBusinessIds?.includes(business.id)}
-                    onChange={e => handleSelectBusiness(business.id, e.target.checked)}
-                  />
-                  <WrapperImage>
-                    <Image bgimage={business?.logo} alt='logo' />
-                  </WrapperImage>
-                  <p>{business?.name}</p>
-                </BusinessWrapper>
-              ))}
-            </>
-            )
-        }
-        {pagination && handleChangePageSize && handleChangePage && (
-          <PaginationWrapper>
-            <Pagination
-              currentPage={pagination?.currentPage}
-              totalPages={pagination?.totalPages}
-              handleChangePage={handleChangePage}
-              handleChangePageSize={handleChangePageSize}
-              defaultPageSize={pagination?.pageSize}
-            />
-          </PaginationWrapper>
-        )}
-        <Button
-          borderRadius='8px'
-          color='primary'
-          onClick={onSubmit}
-          disabled={!changesState?.business || actionState?.loading}
-        >
-          {deliveryServiceState.deliveryService ? t('SAVE', 'Save') : t('ADD', 'Add')}
-        </Button>
-      </BusinessesContainer>
-    </>
+    <div className='dsp-businesses'>
+      <SelectableList
+        label={t('STORES', 'Stores')}
+        items={pageItems.map(business => ({
+          id: business.id,
+          name: business.name,
+          photo: business.logo ? optimizeImage(business.logo, 'h_50,c_limit') : undefined
+        }))}
+        avatars='business'
+        selectedIds={selectedBusinessIds}
+        onToggle={handleSelectBusiness}
+        locked={saving}
+        loading={Boolean(businessesLoading)}
+        loadingLabel={t('LOADING', 'Loading')}
+        emptyTitle={t('STAFF_STORES_NO_MATCH', 'No stores match this search')}
+        onSearch={(text) => {
+          // a new search starts at its first page, as main
+          setSearchValue(text)
+          setPage(1)
+        }}
+        searchLabel={t('STAFF_STORES_SEARCH', 'Search stores')}
+        clearSearchLabel={t('CLEAR_SEARCH', 'Clear search')}
+        onSelectAll={() => handleSelectAllBusiness(true)}
+        selectAllLabel={t('SELECT_ALL', 'Select all')}
+        onSelectNone={() => handleSelectAllBusiness(false)}
+        selectNoneLabel={t('SELECT_NONE', 'Select none')}
+        pagination={{
+          page,
+          pageSize,
+          total: filtered.length,
+          pageSizeOptions: PAGE_SIZES,
+          onPageChange: setPage,
+          onPageSizeChange: (size, nextPage) => {
+            setPageSize(size)
+            setPage(nextPage)
+          },
+          label: t('PAGINATION', 'Pagination'),
+          previousLabel: t('PREVIOUS_PAGE', 'Previous page'),
+          nextLabel: t('NEXT_PAGE', 'Next page'),
+          pageSizeLabel: t('ITEMS_PER_PAGE', 'Items per page'),
+          rangeLabel: (from, to, total, figureOf) => fill(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from: figureOf(from), to: figureOf(to), total: figureOf(total) }),
+          pageStatusLabel: (current, totalPages) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(totalPages))
+        }}
+      />
+      {/* redesign D-12 (owner, 2026-10-19): the total of the selection, all pages, announced politely */}
+      <p className='dsp-businesses-count' role='status'>
+        {count === 1
+          ? t('STORES_N_SELECTED_ONE', '_count_ store selected').replace('_count_', '1')
+          : t('STORES_N_SELECTED_OTHER', '_count_ stores selected').replace('_count_', String(count))}
+      </p>
+      <Button
+        variant='primary'
+        disabled={!changesState?.business}
+        busy={saving}
+        onClick={onSubmit}
+      >
+        {deliveryServiceState.deliveryService ? t('SAVE', 'Save') : t('ADD', 'Add')}
+      </Button>
+    </div>
   )
 }

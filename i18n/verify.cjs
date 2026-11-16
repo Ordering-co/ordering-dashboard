@@ -5,6 +5,7 @@
  *  2. Catalog English (sourceLanguage) does not match code scan
  *  3. Any supportedLocale is missing or empty for a catalog key
  *     (except runtime_variable_fallback keys: no static EN to translate)
+ *  4. A catalog key or a static t() key carries the app prefix (DASHBOARD_): it never reaches the screen
  *
  * Orphan keys (in catalog but not in code) are reported as warnings only —
  * they are intentionally kept (no DB delete in this project).
@@ -16,6 +17,7 @@ const { scanKeys } = require('./scanKeys.cjs')
 const { loadConfig } = require('./loadConfig.cjs')
 const { isRuntimeVariableRow } = require('./isRuntimeVariable.cjs')
 const { printTranslateKeysHint } = require('./translateKeysHint.cjs')
+const { findPrefixedKeys } = require('./prefixedKeys.cjs')
 
 const config = loadConfig()
 const sourceLang = config.sourceLanguage
@@ -70,6 +72,8 @@ for (const [key, row] of codeByKey) {
     }
   }
 }
+
+errors.push(...findPrefixedKeys({ catalogKeys: Object.keys(catalog), codeKeys: [...codeByKey.keys()], prefix: config.prefix }))
 
 for (const key of Object.keys(catalog)) {
   if (!codeByKey.has(key)) {

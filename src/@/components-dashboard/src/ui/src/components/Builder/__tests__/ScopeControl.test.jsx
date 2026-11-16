@@ -8,12 +8,6 @@ import SCHEMA from './themeNodesFixture.json'
 vi.mock('../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback]
 }))
-vi.mock('../../../styles', async () => {
-  const ReactActual = await vi.importActual('react')
-  return {
-    Button: ReactActual.forwardRef(({ color, borderRadius, outline, ...props }, ref) => <button ref={ref} {...props} />)
-  }
-})
 
 import { SiteSettingsEditor } from '../ThemeSchemaEditor'
 
@@ -52,9 +46,17 @@ describe('Website type pickers', () => {
     renderPicker({ scopeOptions: { stores: list({ items: STORES, loaded: true, page: 1, totalPages: 1, total: 2 }), franchises: list() }, scope: { mode: 'single_store', businessId: 7, franchiseId: null }, scopeSelection: { item: STORES[0] } })
     const types = screen.getByRole('radiogroup', { name: 'Website type' })
     expect(within(types).getByRole('radio', { name: 'One store' })).toBeChecked()
+    // redesign B3a: the types are a Product RadioGroup (cards), named by the row, with no title of its own
+    expect(types).toHaveClass('odc-radiogroup')
+    expect(types).toHaveAttribute('data-variant', 'cards')
+    expect(within(types).getByRole('radio', { name: 'One store' })).toHaveClass('odc-radio')
     const picker = screen.getByRole('group', { name: 'Store' })
-    expect(within(picker).getByRole('searchbox', { name: 'Search stores by name, slug or ID' })).toBeInTheDocument()
+    const search = within(picker).getByRole('searchbox', { name: 'Search stores by name, slug or ID' })
+    // redesign B3a: a Product SearchField that still controls the list
+    expect(search.closest('.odc-search')).not.toBeNull()
+    expect(search).toHaveAttribute('placeholder', 'Search stores by name, slug or ID')
     const options = within(picker).getByRole('listbox', { name: 'Stores' })
+    expect(search).toHaveAttribute('aria-controls', options.id)
     expect(options).toHaveAttribute('aria-busy', 'false')
     expect(within(options).getByRole('option', { name: 'Burger Town Centro' })).toHaveAttribute('aria-selected', 'true')
     expect(within(options).getByRole('option', { name: 'Burger Town Norte' })).toHaveAttribute('aria-selected', 'false')
@@ -84,9 +86,25 @@ describe('Website type pickers', () => {
     expect(site.loadScopeOptions).toHaveBeenCalledWith('stores', { search: 'centro' })
   })
 
+  // redesign B3a: the Product search has a clear button; clearing asks for the whole list at once, as emptying it did
+  it('asks for the whole list again when the search is cleared', () => {
+    vi.useFakeTimers()
+    const { site, rerender } = renderPicker({ scopeOptions: { stores: list({ items: STORES, loaded: true, page: 1, totalPages: 1, total: 2 }), franchises: list() } })
+    const search = screen.getByRole('searchbox', { name: 'Search stores by name, slug or ID' })
+    fireEvent.change(search, { target: { value: 'centro' } })
+    act(() => { vi.advanceTimersByTime(300) })
+    expect(site.loadScopeOptions).toHaveBeenLastCalledWith('stores', { search: 'centro' })
+    rerender({ scopeOptions: { stores: list({ items: [STORES[0]], loaded: true, page: 1, totalPages: 1, total: 1, search: 'centro' }), franchises: list() } })
+    site.loadScopeOptions.mockClear()
+    fireEvent.click(screen.getByRole('button', { name: 'Clear search' }))
+    expect(search).toHaveValue('')
+    expect(site.loadScopeOptions).toHaveBeenCalledWith('stores', { search: '' })
+  })
+
   it('loads the next page with its button or at the end of the list', () => {
     const { site, rerender } = renderPicker({ scopeOptions: { stores: list({ items: STORES, loaded: true, page: 1, totalPages: 3, total: 41 }), franchises: list() } })
     expect(screen.getByText('Showing 2 of 41')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Load more' })).toHaveClass('odc-btn') // redesign B3a
     fireEvent.click(screen.getByRole('button', { name: 'Load more' }))
     expect(site.loadScopeOptions).toHaveBeenLastCalledWith('stores', { more: true })
     const options = screen.getByRole('listbox', { name: 'Stores' })
@@ -123,7 +141,9 @@ describe('Website type pickers', () => {
     rerender({ scope: { mode: 'single_store', businessId: 70, franchiseId: null }, scopeSelection: { item: null, missing: true } })
     expect(screen.getByRole('alert')).toHaveTextContent('Store #70 isn’t available anymore. Choose another one.')
     rerender({ scope: { mode: 'single_store', businessId: 70, franchiseId: null }, scopeSelection: { item: null, error: true } })
-    fireEvent.click(within(screen.getByRole('group', { name: 'Store' })).getByRole('button', { name: 'Try again' }))
+    const retry = within(screen.getByRole('group', { name: 'Store' })).getByRole('button', { name: 'Try again' })
+    expect(retry).toHaveClass('odc-btn') // redesign B3a
+    fireEvent.click(retry)
     expect(site.reloadScopeSelection).toHaveBeenCalled()
   })
 
@@ -142,6 +162,7 @@ describe('Website type pickers', () => {
     rerender({ scopeOptions: { stores: list({ error: true }), franchises: list() } })
     const alert = screen.getByRole('alert')
     expect(alert).toHaveTextContent('We couldn’t load the list. Try again in a moment.')
+    expect(within(alert).getByRole('button', { name: 'Try again' })).toHaveClass('odc-btn') // redesign B3a
     fireEvent.click(within(alert).getByRole('button', { name: 'Try again' }))
     expect(site.loadScopeOptions).toHaveBeenLastCalledWith('stores', { search: '', force: true })
   })

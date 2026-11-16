@@ -9,7 +9,7 @@ export const ProdcutGalleryContainer = styled.div`
   overflow-x: hidden;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 30px;
     padding: 0 10px;
@@ -34,7 +34,7 @@ export const GalleryItemBottom = styled.div`
 
   > input {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     ${({ isAdd }) => isAdd
 ? css`
       border: 1px solid ${props => props.theme.colors.borderColor};
@@ -93,7 +93,7 @@ export const UploadImageIconContainer = styled.div`
   p {
     margin: 0px;
     padding-top: 14px;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.textGray};
     text-align: center;
   }
@@ -143,7 +143,7 @@ export const DropDownWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {

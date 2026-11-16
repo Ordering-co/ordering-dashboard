@@ -4,7 +4,7 @@ export const SectionContainer = styled.div`
   margin-bottom: 50px;
 
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin-top: 0;
     margin-bottom: 24px;
@@ -65,6 +65,12 @@ export const SearchBarWrapper = styled.div`
       animation: spinner-content 1.85s linear infinite;
       color: ${props => props.theme.colors.headingColor};
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      svg {
+        animation: none;
+      }
+    }
   }
 `
 export const OptionsToSelectContainer = styled.div`
@@ -80,10 +86,15 @@ export const OptionsToSelectContainer = styled.div`
   padding: 9px 0;
 
   > p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0 16px;
 
-    > span.new {
+    > button.new {
+      min-height: 44px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font: inherit;
       cursor: pointer;
       color: ${props => props.theme.colors.primary};
       &:hover {
@@ -96,37 +107,32 @@ export const SelectOption = styled.div`
   position: relative;
   cursor: pointer;
   width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 9px 16px;
   display: flex;
   align-items: center;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: start;
 
   &:hover {
     background-color: ${props => props.theme.colors.secundary};
   }
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     &.name {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-    width: 20px;
-    height: 20px;
-    transform: translate(100%, -50%);
-    top: 11px;
-    right: 20px;
-  }
 `
 
 export const WrapperImage = styled.div`
+  display: inline-flex;
   position: relative;
   max-width: 24px;
   max-height: 24px;
@@ -154,10 +160,16 @@ export const WrapperImage = styled.div`
 export const SelectedUserWrapper = styled.div`
   border-radius: 8px;
   border: 1px solid ${props => props.theme.colors.borderColor};
-  height: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   flex: 1;
+
+  > button.remove_option {
+    margin: 0 8px;
+    min-width: 44px;
+    min-height: 44px;
+  }
 
   ${props => props.theme?.rtl
 ? css`
@@ -179,7 +191,7 @@ export const CustomerAddressWrapper = styled.div`
   
     span {
       flex: 1;
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       line-height: 24px;
       ${props => props.theme?.rtl
 ? css`
@@ -191,7 +203,7 @@ export const CustomerAddressWrapper = styled.div`
     }
   }
 
-  a {
+  a, button {
     ${props => props.theme?.rtl
 ? css`
       margin-left: 30px;
@@ -199,7 +211,15 @@ export const CustomerAddressWrapper = styled.div`
 : css`
       margin-left: 30px;
     `}
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
+  }
+
+  button {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
   }
 `
 export const SavedPlaces = styled.div`
@@ -211,7 +231,7 @@ export const SavedPlaces = styled.div`
   `}
 
   > h2 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 25px;
@@ -226,7 +246,7 @@ export const SavedPlaces = styled.div`
   }
 
   > p {
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     font-weight: 600;
     margin-top: 0;

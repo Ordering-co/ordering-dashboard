@@ -1,0 +1,1842 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-settings-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l8-settings-apiusagelimits-index-js-77d257",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-apiusagelimits-styles-js-8194a1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CooldownBar",
+            "property": "font",
+            "match": "props => props.$durationMs",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RefreshButton",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "font",
+            "match": "props => !props.$status && css`\n    color: ${heading(props)};\n    background: ${border(props)};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CardFooter",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CardMeta",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CardTitle",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CooldownBar",
+            "property": "background",
+            "match": "props => props.theme.colors?.primary || '#2C7BE5'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CooldownBar",
+            "property": "color-block",
+            "match": "props => props.$durationMs",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CooldownCount",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FooterMeta",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LimitCard",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Notice",
+            "property": "background",
+            "match": "props => props.$tone === 'danger'\n    ? (props.theme.colors?.danger100 || '#FEEDF0')\n    : (props.theme.colors?.warning100 || '#FFF9E2')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Notice",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Percent",
+            "property": "color",
+            "match": "props => props.$status === 'exceeded' ? statusColor(props.theme, 'exceeded') : muted(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ProgressFill",
+            "property": "background",
+            "match": "props => statusColor(props.theme, props.$status)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ProgressTrack",
+            "property": "background",
+            "match": "props => props.theme.colors?.secundary || '#F8F9FA'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ProgressTrack",
+            "property": "box-shadow",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "RefreshButton",
+            "property": "border-color",
+            "match": "props => props.theme.colors?.primary || '#2C7BE5'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "RefreshButton",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "RefreshButton",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "RefreshButton",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "background",
+            "match": "border(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "background",
+            "match": "props => statusColor(props.theme, props.$status)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "color-block",
+            "match": "props => !props.$status && css`\n    color: ${heading(props)};\n    background: ${border(props)};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "color",
+            "match": "heading(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "color",
+            "match": "props => props.$status === 'warning' ? heading(props) : '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-apiusagelimits-utils-js-3732ea",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ApiUsageLimits/utils.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-mcpsetupguide-js-9ed522",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/McpSetupGuide.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-mcptokenform-js-89996a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/McpTokenForm.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-index-js-e900e7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "mcpTokensProps /* binding-sha256:d4f7c52d4d7e5f49d71fcdef4312bfa29b5a066f5eb91350dccb226ae48bb21a */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'lightPrimary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-shared-js-e0f519",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/shared.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-styles-js-ee11c5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Chip",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Chip",
+            "property": "font",
+            "match": "props => props.$active && css`\n    border-color: ${primary(props)};\n    color: ${primary(props)};\n    background: ${props.theme.colors?.lightPrimary || '#E9F2FE'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CodeBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl ? css`left: 8px;` : css`right: 8px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "GuideActions",
+            "property": "font",
+            "match": "GuideTab",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "GuideTab",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "GuideTab",
+            "property": "font",
+            "match": "props => props.$active && css`\n    background: ${props.theme.colors?.backgroundPage || '#FFF'};\n    color: ${heading(props)};\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl ? css`margin-left: 65px;` : css`margin-right: 65px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InactiveToggle",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LinkAction",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ScopeOption",
+            "property": "font",
+            "match": "props => props.$active && css`\n    border-color: ${primary(props)};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SecretView",
+            "property": "font",
+            "match": "CopyRow",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SetupSection",
+            "property": "font",
+            "match": "GuideTab",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SetupSection",
+            "property": "font",
+            "match": "Steps",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Steps",
+            "property": "font-size",
+            "match": "12.5px",
+            "context": "> li > code",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup: it lives in a component the product does render, but nothing it renders is reached by it, so the declaration can never apply. Asserting a role over it would be asserting something unprovable.",
+            "evidence": "Steps > li > code: ningun <li> de Steps tiene un <code> hijo directo. McpSetupGuide.js (unico consumidor de Steps) monta en cada li solo h3, p, Code (que pinta CodeBlock > pre), OptionLabel (p) y Notice (div)."
+          },
+          {
+            "component": "Steps",
+            "property": "font",
+            "match": "props => props.theme?.rtl ? css`padding-right: 34px;` : css`padding-left: 34px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Steps",
+            "property": "font",
+            "match": "props => props.theme?.rtl ? css`right: 0;` : css`left: 0;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TokenCard",
+            "property": "font",
+            "match": "props => props.$inactive && css`\n    background: ${subtle(props)};\n\n    h3 {\n      color: ${muted(props)};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Chip",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "background",
+            "match": "props.theme.colors?.lightPrimary || '#E9F2FE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "border-color",
+            "match": "primary(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "color-block",
+            "match": "props => props.$active && css`\n    border-color: ${primary(props)};\n    color: ${primary(props)};\n    background: ${props.theme.colors?.lightPrimary || '#E9F2FE'};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Chip",
+            "property": "color",
+            "match": "primary(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CodeBlock",
+            "property": "background",
+            "match": "subtle",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CodeBlock",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CodeBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl ? css`left: 8px;` : css`right: 8px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CodeBlock",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ComingSoon",
+            "property": "background",
+            "match": "props => props.theme.colors?.lightPrimary || '#E9F2FE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ComingSoon",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ComingSoon",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ComingSoon",
+            "property": "color",
+            "match": "primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Container",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CopyRow",
+            "property": "background",
+            "match": "subtle",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CopyRow",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CopyRow",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "DataNotice",
+            "property": "background",
+            "match": "props => props.theme.colors?.warning100 || '#FFF9E2'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldHelp",
+            "property": "color",
+            "match": "props => props.$error ? (props.theme.colors?.danger || '#E63757') : muted(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Form",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideActions",
+            "property": "color-block",
+            "match": "GuideTab",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "background",
+            "match": "props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "box-shadow",
+            "match": "0 1px 2px rgba(0, 0, 0, 0.08)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "color-block",
+            "match": "props => props.$active && css`\n    background: ${props.theme.colors?.backgroundPage || '#FFF'};\n    color: ${heading(props)};\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "color",
+            "match": "heading(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTab",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "GuideTabs",
+            "property": "background",
+            "match": "subtle",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl ? css`margin-left: 65px;` : css`margin-right: 65px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Header",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InactiveToggle",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InactiveToggle",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InactiveToggle",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LinkAction",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LinkAction",
+            "property": "color",
+            "match": "props => props.$danger ? (props.theme.colors?.danger || '#E63757') : primary(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Notice",
+            "property": "background",
+            "match": "props => props.$tone === 'danger'\n    ? (props.theme.colors?.danger100 || '#FEEDF0')\n    : props.$tone === 'info'\n      ? (props.theme.colors?.backgroundInfo || '#E9F2FE')\n      : (props.theme.colors?.warning100 || '#FFF9E2')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Notice",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "OptionLabel",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopeOption",
+            "property": "border-color",
+            "match": "primary(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopeOption",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopeOption",
+            "property": "color-block",
+            "match": "props => props.$active && css`\n    border-color: ${primary(props)};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopeOption",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopePill",
+            "property": "border",
+            "match": "props => props.$write ? primary(props) : border(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ScopePill",
+            "property": "color",
+            "match": "props => props.$write ? primary(props) : muted(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "SecretView",
+            "property": "color-block",
+            "match": "CopyRow",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "SecretView",
+            "property": "color",
+            "match": "heading",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "SecretView",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Section",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Section",
+            "property": "border-right",
+            "match": "2px solid currentColor",
+            "context": "details summary::before",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. : the summary arrow is drawn with borders that follow the summary text colour (currentColor) and introduce no colour value of their own."
+          },
+          {
+            "component": "Section",
+            "property": "border-bottom",
+            "match": "2px solid currentColor",
+            "context": "details summary::before",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. : the summary arrow is drawn with borders that follow the summary text colour (currentColor) and introduce no colour value of their own."
+          },
+          {
+            "component": "SetupSection",
+            "property": "color-block",
+            "match": "GuideTab",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This is a component reference in a selector (the same pin as GuideActions); the colour it scopes is var(--od-text), a governed token, and no literal colour is allowed."
+          },
+          {
+            "component": "SetupSection",
+            "property": "color-block",
+            "match": "Steps",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This is a component reference in a selector; the colour it scopes is var(--od-text), a governed token, and no literal colour is allowed."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "background",
+            "match": "props => statusColor(props.theme, props.$status)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "StatusBadge",
+            "property": "color",
+            "match": "props => props.$status === 'expired' ? heading(props) : '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Steps",
+            "property": "background",
+            "match": "props => props.theme.colors?.lightPrimary || '#E9F2FE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Steps",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl ? css`padding-right: 34px;` : css`padding-left: 34px;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Steps",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl ? css`right: 0;` : css`left: 0;`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Steps",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Steps",
+            "property": "color",
+            "match": "primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenCard",
+            "property": "background",
+            "match": "subtle(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenCard",
+            "property": "border",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenCard",
+            "property": "color-block",
+            "match": "props => props.$inactive && css`\n    background: ${subtle(props)};\n\n    h3 {\n      color: ${muted(props)};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenCard",
+            "property": "color",
+            "match": "muted(props)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenFacts",
+            "property": "color",
+            "match": "border",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TokenFacts",
+            "property": "color",
+            "match": "muted",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Warn",
+            "property": "color",
+            "match": "props => props.theme.colors?.danger || '#E63757'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. : SecretViewBase forwards its own props to a <div>; they carry no colour."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-mcptokens-utils-js-d61b31",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/utils.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-settingscustomblocks-index-js-381651",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "frame",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. : ProductSecretInput forwards the field-frame props (label, hint, error, aria-label) to P/SecretField; they carry no colour."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-settingscustomblocks-styles-js-d9601e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCustomBlocks/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "FieldControl",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Field",
+            "property": "font",
+            "match": "({ $focused }) => $focused && css`\n    box-shadow: inset 3px 0 0 ${props => props.theme.colors.primary};\n    padding-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FieldSelect",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Table",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BlockHelp",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "BlockTitle",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "CompactTable",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Field",
+            "property": "box-shadow",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Field",
+            "property": "color-block",
+            "match": "({ $focused }) => $focused && css`\n    box-shadow: inset 3px 0 0 ${props => props.theme.colors.primary};\n    padding-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldControl",
+            "property": "border",
+            "match": "({ $invalid, theme }) => $invalid ? '#E63757' : '#DEE2E6'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldControl",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldError",
+            "property": "color",
+            "match": "#E63757",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldHelp",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldLabel",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldSelect",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldSelect",
+            "property": "border",
+            "match": "1px solid #DEE2E6",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldSelect",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "FieldSelect",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PreviewItem",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PreviewList",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PreviewList",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Table",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Table",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Table",
+            "property": "border",
+            "match": "1px solid #DEE2E6",
+            "context": "input[type='text'],\n  input[type='number'],\n  input[type='password'],\n  select",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Table",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Table",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ToggleRow",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-settingshub-settingshubdetail-js-4433b5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsHub/SettingsHubDetail.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-settingshub-index-js-db6cac",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsHub/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-settingshub-styles-js-188e2c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsHub/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-settings-settingsloyaltystores-index-js-d07181",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-settings-settingsloyaltystores-styles-js-4986a3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLoyaltyStores/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "LoyaltyTab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    border-bottom-color: ${props => props.theme.colors.headingColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of settings: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "LoyaltyCard",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyCard",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyCardHeader",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyCardTitle",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "border-bottom-color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "border-bottom",
+            "match": "2px solid transparent",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.headingColor};\n    font-weight: 600;\n    border-bottom-color: ${props => props.theme.colors.headingColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTab",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoyaltyTabs",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The settings semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    }
+  ]
+}

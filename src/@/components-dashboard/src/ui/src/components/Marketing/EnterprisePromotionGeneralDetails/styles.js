@@ -60,7 +60,7 @@ export const UploadImageIcon = styled.div`
   flex-direction: column;
   color: #ADB5BD;
   span {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
   svg {   
@@ -73,14 +73,14 @@ export const InputWrapper = styled.div`
   margin-top: 20px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
 `
 export const DateRangeWrapper = styled.div`
   label {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 export const CalendarContainer = styled.div`
@@ -105,7 +105,7 @@ export const CalendarWrapper = styled.div`
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
-  z-index: 100;
+  z-index: var(--od-x-layer-sticky);
   position: absolute;
   margin-top: 18px;
   overflow: hidden;
@@ -163,7 +163,7 @@ export const LabelWrapper = styled.div`
   flex-direction: column;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
     text-decoration: capitalize;
   }
@@ -174,7 +174,7 @@ export const OrderPriorityContainer = styled.div`
   flex-direction: column;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   .select {
@@ -185,7 +185,7 @@ export const OrderPriorityContainer = styled.div`
 : css`
       margin-right: 2px;
     `}
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     background: ${props => props.theme.colors.secundary};
     border: none;
     > div:first-child {
@@ -205,7 +205,7 @@ export const StackableContainer = styled.div`
   margin-top: 24px;
 
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-left: 10px;

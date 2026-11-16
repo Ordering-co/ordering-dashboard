@@ -152,7 +152,7 @@ export const ProductHeader = styled.div`
 
   h1 {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     margin: 0;
   }
 
@@ -212,7 +212,7 @@ export const BusinessNameWrapper = styled.div`
   display: flex;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
   }
   cursor: pointer;
@@ -229,7 +229,7 @@ export const BusinessNameWrapper = styled.div`
 export const Breadcrumb = styled.div`
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: ${props => props.theme.colors.lightGray};
 
   span {

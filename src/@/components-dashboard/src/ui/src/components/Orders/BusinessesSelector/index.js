@@ -3,6 +3,8 @@ import {
   useLanguage
 } from '../../../../../index'
 import { MultiSelect } from '../../../styles'
+import { SelectOptionContent } from '../../Shared/UI/SelectOption'
+import { useSelectSurface } from '../../Shared/UI/selectPlacement'
 import {
   Option,
   PlaceholderTitle,
@@ -17,10 +19,14 @@ export const BusinessesSelector = (props) => {
   const {
     filterValues,
     businessesList,
-    handleChangeBusinesses
+    handleChangeBusinesses,
+    ariaLabel
   } = props
 
   const [, t] = useLanguage()
+  // redesign F2 (C18): inside the orders surfaces a business is a rounded-square logo of 20px, its name and its
+  // categories as a muted second column, in a list that scrolls instead of paging; outside them the legacy rows.
+  const c18 = !!useSelectSurface().fitTrigger
   const [businessTypes, setBusinessTypes] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [pagination, setPagination] = useState({
@@ -47,8 +53,8 @@ export const BusinessesSelector = (props) => {
     })
   }
 
-  const Placeholder = <PlaceholderTitle>{t('SELECT_BUSINESS', 'Select business')}</PlaceholderTitle>
-  const businessesLoading = [{ value: 'default', content: <Option>{t('BUSINESSES_LOADING', 'Businesses loading')}...</Option> }]
+  const Placeholder = c18 ? t('SELECT_BUSINESS', 'Select business') : <PlaceholderTitle>{t('SELECT_BUSINESS', 'Select business')}</PlaceholderTitle>
+  const businessesLoading = [{ value: 'default', content: c18 ? <span>{t('BUSINESSES_LOADING', 'Businesses loading')}...</span> : <Option>{t('BUSINESSES_LOADING', 'Businesses loading')}...</Option> }]
 
   useEffect(() => {
     const _businessesOptionList = []
@@ -56,6 +62,20 @@ export const BusinessesSelector = (props) => {
       const _businessesOption = businessesList.businesses
         .filter(option => option?.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
         .map((business) => {
+          if (c18) {
+            const media = { kind: 'business', name: business.name, src: business.logo }
+            const categories = [
+              business?.alcohol && t('ALCOHOL', 'Alcohol'),
+              business?.food && t('FOOD', 'Food'),
+              business?.groceries && t('GROCERIES', 'Groceries'),
+              business?.laundry && t('LAUNDRY', 'Laundry')
+            ].filter(Boolean).join(', ')
+            return {
+              value: business.id,
+              content: <SelectOptionContent label={business.name} media={media} meta={categories} />,
+              showOnSelected: <SelectOptionContent label={business.name} media={media} />
+            }
+          }
           return {
             value: business.id,
             content: (
@@ -85,7 +105,7 @@ export const BusinessesSelector = (props) => {
     }
 
     setBusinessTypes(_businessesOptionList)
-  }, [businessesList, searchValue])
+  }, [businessesList, searchValue, c18])
 
   useEffect(() => {
     if (businessTypes?.length) {
@@ -102,6 +122,7 @@ export const BusinessesSelector = (props) => {
       {!businessesList.loading
         ? (
         <MultiSelect
+          ariaLabel={ariaLabel ?? t('BUSINESS', 'Business')}
           defaultValue={filterValues.businessIds}
           placeholder={Placeholder}
           options={businessTypes}
@@ -115,13 +136,14 @@ export const BusinessesSelector = (props) => {
           searchValue={searchValue}
           handleChangeSearch={(val) => setSearchValue(val)}
           isHidePagecontrol
-          pagination={pagination}
-          handleChangePage={handleChangePage}
-          handleChangePageSize={handleChangePageSize}
+          pagination={c18 ? undefined : pagination}
+          handleChangePage={c18 ? undefined : handleChangePage}
+          handleChangePageSize={c18 ? undefined : handleChangePageSize}
         />
           )
         : (
         <MultiSelect
+          ariaLabel={ariaLabel ?? t('BUSINESS', 'Business')}
           defaultValue='default'
           options={businessesLoading}
           optionInnerMargin='10px'

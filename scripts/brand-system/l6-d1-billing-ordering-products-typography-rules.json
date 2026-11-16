@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-d1-billing-ordering-products-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "d1-billing-ordering-products-cardform-errormessage-root-16px-7cf952",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/CardForm/styles.js",
+      "component": "ErrorMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "d1-billing-ordering-products-stripe-optionstripecontainer-a-link-span-te-3b35aa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "OptionStripeContainer",
+      "property": "font-size",
+      "context": "a.Link > span.Text",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "d1-billing-ordering-products-stripe-carditemcontent-span-14px-741ba6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "CardItemContent",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "d1-billing-ordering-products-stripe-actionscontent-div-14px-767348",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "ActionsContent",
+      "property": "font-size",
+      "context": "button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "d1-billing-ordering-products-stripe-errormessage-root-16px-63cbcf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "ErrorMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "d1-billing-ordering-products-pres-cardform-formrow-input-18px-ff9e9b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/CardForm/styles.js",
+      "component": "FormRow",
+      "property": "font-size",
+      "context": "input",
+      "match": "18px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-elementsform-errormessage-root-24px-508883",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/ElementsForm/styles.js",
+      "component": "ErrorMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "24px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-stripe-optionstripecontainer-a-link-svg-12p-5255f3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "OptionStripeContainer",
+      "property": "font-size",
+      "context": "a.Link > svg",
+      "match": "12px",
+      "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c4 lo repitieron. Incluye `PlanDescription #action > span#switch`, un span que envuelve UNICAMENTE el svg `ToggleOn` y ningun nodo de texto."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-stripe-warningmessage-root-24px-a8198b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "24px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-stripe-carditemactions-span-12px-37f46d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "CardItemActions",
+      "property": "font-size",
+      "context": "> span",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-stripe-addnewcard-span-14px-86d429",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "AddNewCard",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+    },
+    {
+      "id": "d1-billing-ordering-products-pres-stripe-carditemactionswrapper-span-svg-20px-798667",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "component": "CardItemActionsWrapper",
+      "property": "font-size",
+      "context": "> button > svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c4 lo repitieron. Incluye `PlanDescription #action > span#switch`, un span que envuelve UNICAMENTE el svg `ToggleOn` y ningun nodo de texto. Context moved in  (row 82): the ⋮ span became a real button; same glyph, same 20px."
+    }
+  ]
+}

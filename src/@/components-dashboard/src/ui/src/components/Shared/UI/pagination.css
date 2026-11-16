@@ -1,0 +1,79 @@
+.od-ui:where(.od-pagination),
+.od-ui:where(.od-pagination-buttons) {
+  @apply od-flex od-flex-wrap od-items-center od-max-w-full;
+}
+
+.od-ui:where(.od-pagination-buttons) {
+  row-gap: 4px;
+}
+
+.od-ui:where(.od-pagination-page-button) {
+  @apply od-box-border od-flex od-shrink-0 od-items-center od-justify-center;
+  min-width: var(--od-pagination-compact-height);
+  min-height: var(--od-pagination-compact-height);
+  padding: 0 7px;
+  color: var(--od-pagination-page-color);
+  background: var(--od-pagination-page-background);
+  border: 0;
+  border-radius: var(--od-pagination-radius-round);
+  font-family: var(--od-pagination-font);
+  font-size: var(--od-pagination-font-ui);
+  cursor: pointer;
+  outline: none;
+  transition:
+    background-color var(--od-pagination-duration) var(--od-pagination-easing),
+    color var(--od-pagination-duration) var(--od-pagination-easing);
+}
+
+.od-ui:where(.od-pagination-page-button):hover:not(:disabled) { background: var(--od-pagination-page-hover); }
+.od-ui:where(.od-pagination-page-button):active:not(:disabled) { background: var(--od-pagination-page-pressed); }
+.od-ui:where(.od-pagination-page-button):disabled { cursor: not-allowed; opacity: 0.5; }
+.od-ui:where(.od-pagination-page-button):disabled:hover,
+.od-ui:where(.od-pagination-page-button):disabled:active { background: var(--od-pagination-page-background); }
+.od-ui:where(.od-pagination-page-button):focus-visible {
+  outline: var(--od-pagination-focus-width) solid var(--od-pagination-focus);
+  outline-offset: var(--od-pagination-focus-offset);
+}
+
+.od-ui:where(.od-pagination-gap) {
+  @apply od-box-border od-inline-flex od-shrink-0 od-items-center od-justify-center;
+  min-width: var(--od-pagination-compact-height);
+  min-height: var(--od-pagination-compact-height);
+  padding: 0 7px;
+  color: var(--od-pagination-muted);
+  font-family: var(--od-pagination-font);
+  font-size: var(--od-pagination-font-ui);
+}
+
+.od-ui:where(.od-pagination-size) {
+  @apply od-flex od-items-center;
+  margin: 10px 0;
+}
+
+.od-ui:where(.od-pagination-size) .select {
+  border-color: var(--od-pagination-border-strong);
+  padding: 5px 0;
+}
+
+.od-ui:where(.od-pagination-size) .select > div:first-child { padding-left: 10px; padding-right: 10px; }
+
+.od-ui:where(.od-pagination-size-title) {
+  margin: 0 var(--od-pagination-title-margin-right) 0 var(--od-pagination-title-margin-left);
+  color: var(--od-pagination-muted);
+  font-family: var(--od-pagination-font);
+  font-size: var(--od-pagination-font-ui);
+}
+
+.od-ui:where(.od-pagination-option) { color: var(--od-pagination-muted); font-size: var(--od-pagination-font-size); }
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-pagination-page-button),
+  .od-ui:where(.od-pagination-gap) {
+    min-width: var(--od-pagination-touch-target);
+    min-height: var(--od-pagination-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-pagination-page-button) { transition-property: none; transition-duration: 0s; }
+}

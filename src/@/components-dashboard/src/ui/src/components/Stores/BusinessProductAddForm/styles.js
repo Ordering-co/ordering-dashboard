@@ -7,7 +7,7 @@ export const FormInput = styled.div`
   box-sizing: border-box;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 10px;
     margin-bottom: 50px;
@@ -56,7 +56,7 @@ export const FieldRow = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
   color: ${props => props.theme.colors.secundaryContrast};
   span {
@@ -70,7 +70,7 @@ export const SelectWrapper = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   > div {
@@ -83,7 +83,7 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
       color: ${props => props.theme.colors.secundaryContrast};
     }
@@ -134,7 +134,7 @@ export const UploadImageIcon = styled.div`
   span {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {   
@@ -158,7 +158,7 @@ export const InputWrapper = styled.div`
   label {
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   input,
@@ -188,8 +188,13 @@ export const ActionsForm = styled.div`
   }
 `
 export const SkipButton = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   ${props => props.theme?.rtl
 ? css`
@@ -201,6 +206,17 @@ export const SkipButton = styled.div`
 
   &:hover {
     color: ${props => props.theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
   }
 `
 
@@ -222,7 +238,7 @@ export const TimeBlock = styled.div`
     padding: 0px 10px;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     color: ${props => props.theme?.colors.secundaryLight};
     appearance: none;
   }

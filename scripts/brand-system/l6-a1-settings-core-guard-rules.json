@@ -1,0 +1,1967 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a1-settings-core-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-a1-settings-core-allsettings-index-js-cb5ab8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "allSettingsProps /* binding-sha256:614e7c4e516fc2f2a33b4a862d9aef683772d0301e071d2754d84d0bdbef999b */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-allsettings-styles-js-41ca0f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/AllSettings/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: 0px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconButton",
+            "property": "font",
+            "match": "({ active }) => active && css`\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconButton",
+            "property": "font",
+            "match": "({ color }) => color === 'black' && css`\n    > svg {\n      color: ${props => props.theme.colors.headingColor};\n    }\n    &:hover {\n      background-color: ${props => props.theme.colors.secundary};\n    }\n    &:active {\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    }\n\n    ${({ active }) => active && css`\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconButton",
+            "property": "font",
+            "match": "({ color }) => color === 'primary' && css`\n    > svg {\n      color: ${props => props.theme.colors.primary};\n    }\n    &:hover {\n      background-color: #1507260a;\n      > svg {\n        color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconButton",
+            "property": "font",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "IconWrapper svg: el glifo del icono de la categoria en la barra lateral."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MenuContainer",
+            "property": "font",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme.colors.disabled};\n    cursor: not-allowed;\n    > button {\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "SidebarContent button > svg: el glifo del icono dentro del boton de la barra lateral."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 15px;\n      `\n: css`\n        margin-left: 15px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SubMenu",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SubMenu",
+            "property": "font",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme.colors.disabled}!important;\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SubMenu",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    padding-right: 40px;\n  `\n: css`\n    padding-left: 40px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: 0px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "background-color",
+            "match": "#1507261a",
+            "context": "&:active",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "background-color",
+            "match": "#1507260a",
+            "context": "&:hover",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color-block",
+            "match": "({ color }) => color === 'black' && css`\n    > svg {\n      color: ${props => props.theme.colors.headingColor};\n    }\n    &:hover {\n      background-color: ${props => props.theme.colors.secundary};\n    }\n    &:active {\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    }\n\n    ${({ active }) => active && css`\n      background-color: ${props => props.theme.colors.secundaryDarkContrast};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color-block",
+            "match": "({ color }) => color === 'primary' && css`\n    > svg {\n      color: ${props => props.theme.colors.primary};\n    }\n    &:hover {\n      background-color: #1507260a;\n      > svg {\n        color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color-block",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color",
+            "match": "#151b26",
+            "context": "&:hover > > svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconButton",
+            "property": "color",
+            "match": "#B1BCCC",
+            "context": "> svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MenuContainer",
+            "property": "background-color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MenuContainer",
+            "property": "color-block",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme.colors.disabled};\n    cursor: not-allowed;\n    > button {\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MenuContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "background-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".accordion",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SidebarContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 15px;\n      `\n: css`\n        margin-left: 15px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "background-color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    color: ${props => props.theme.colors.primary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "color-block",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme.colors.disabled}!important;\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    padding-right: 40px;\n  `\n: css`\n    padding-left: 40px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubMenu",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-filtersettings-index-js-76d656",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "filterSettingsProps /* binding-sha256:1bb776f4f1ed7e8e70748eb8eac0a9d82200c047b6fcace232da95554c1fc8e1 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-filtersettings-styles-js-bbb6b3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/FilterSettings/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "IconWrapper svg: el glifo GearFill o la imagen del ajuste."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 13px;\n  `\n: css`\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 13px;\n  `\n: css`\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemContent",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LoyaltyItemWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-infohelpbox-index-js-89ded6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InfoHelpBox/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'secundary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-infohelpbox-styles-js-fc680f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InfoHelpBox/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CategoryName",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font-size",
+            "match": "34px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "VideoContainer svg: el glifo MdcPlayCircle sobre el video."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CategoryName",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "video",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color",
+            "match": "#748194",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingitemui-index-js-e0aa67",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingItemUI/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingitemui-styles-js-51ebe4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingItemUI/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "IconWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "IconWrapper svg: el glifo del icono de la tarjeta de ajuste."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 15px;\n  `\n: css`\n    margin-right: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border: 1px solid #2C7BE5 !important;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "font",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme?.colors.disabled} !important;\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "IconWrapper",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 15px;\n  `\n: css`\n    margin-right: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "IconWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "background-color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "background",
+            "match": "#E9F2FE",
+            "context": "&:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "border",
+            "match": "1px solid #2C7BE5",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "border",
+            "match": "1px solid transparent",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border: 1px solid #2C7BE5 !important;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemContainer",
+            "property": "color-block",
+            "match": "({ disabledFeature }) => disabledFeature && css`\n    background-color: ${props => props.theme?.colors.disabled} !important;\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SettingItemDescription",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Title",
+            "property": "color",
+            "match": "#344050",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsdetail-index-js-29597a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 6,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsdetail-styles-js-6e27f5",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsDetail/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CategoryExtraContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 20px;\n    `\n: css`\n      right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CategoryName",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ isDriverOrders }) => isDriverOrders && css`\n    position: absolute;\n    box-shadow: none;\n\n    ${props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    left: var(--assistant-offset, 0px);\n    `\n: css`\n    right: var(--assistant-offset, 0px);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Content",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 5px;\n        margin-left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderIcons",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font-size",
+            "match": "34px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "VideoContainer svg: el mismo glifo MdcPlayCircle que InfoHelpBox, en la otra pantalla que monta el video."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "font",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CategoryExtraContent",
+            "property": "border-left",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "border-right",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      left: 20px;\n    `\n: css`\n      right: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryExtraContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    border-right: 1px solid #E9ECEF;\n  `\n: css`\n    border-left: 1px solid #E9ECEF;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CategoryName",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0;\n    margin-left: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "border-left",
+            "match": "1px solid #CCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "border-right",
+            "match": "1px solid #CCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "-4px 0px 7px #ccc",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ isDriverOrders }) => isDriverOrders && css`\n    position: absolute;\n    box-shadow: none;\n\n    ${props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      border-right: 1px solid #CCC;\n    `\n: css`\n      border-left: 1px solid #CCC;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    left: var(--assistant-offset, 0px);\n    `\n: css`\n    right: var(--assistant-offset, 0px);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Content",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n        margin-right: 5px;\n        margin-left: 0px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderIcons",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MoreInfo",
+            "property": "color",
+            "match": "props => props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "background",
+            "match": "#E9ECEF",
+            "context": "video",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color",
+            "match": "#748194",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "VideoContainer",
+            "property": "color-block",
+            "match": "overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${overlayGlyphButton} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token; glyphSize is the svg icon box, not text."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsimage-index-js-27e62d",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsImage/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Pinned as found in the merged source after the merge of main; the expression is main's and no existing colour is rewritten."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsimage-styles-js-c52596",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsImage/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ConfigImage",
+            "property": "font",
+            "match": "({ isEdit }) => !isEdit && css`\n    pointer-event: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ConfigImage",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 45px;\n      height: 45px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ConfigImage",
+            "property": "color-block",
+            "match": "({ isEdit }) => !isEdit && css`\n    pointer-event: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ConfigImage",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n      width: 25px;\n      height: 25px;\n    `\n: css`\n      width: 45px;\n      height: 45px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "rgba(0,0,0,0.2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingslist-index-js-a2a504",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "settingsListProps /* binding-sha256:98d8efb2e9200fd598151bafaf253b03514e637e894efe48dd8e24a3eb10a11c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingslist-styles-js-fa1be3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PasswordInputWrapper",
+            "property": "font-size",
+            "match": "18px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "PasswordInputWrapper button > svg: el glifo de mostrar/ocultar contrasena."
+          },
+          {
+            "component": "PasswordInputWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl ? 'left: 10px;' : 'right: 10px;'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ConfigRow",
+            "property": "font",
+            "match": "({ $focused }) => $focused && css`\n    box-shadow: inset 3px 0 0 ${props => props.theme.colors.primary};\n    padding-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of the merged source: this one declares no literal font-size. It carries layout or state composition only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormGroupCheck",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormGroupCheck",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormGroupText",
+            "property": "border",
+            "match": "1px solid #DEE2E6",
+            "context": "input[type='text'],\n  input[type='password']",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormGroupText",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "GeneralTitle",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionsError",
+            "property": "color",
+            "match": "#d83520",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PasswordInputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl ? 'left: 10px;' : 'right: 10px;'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PasswordInputWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Required",
+            "property": "color",
+            "match": "#E63757",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubmitBtnWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SubmitBtnWrapper",
+            "property": "color",
+            "match": "white",
+            "context": "button",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ConfigRow",
+            "property": "color-block",
+            "match": "({ $focused }) => $focused && css`\n    box-shadow: inset 3px 0 0 ${props => props.theme.colors.primary};\n    padding-left: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Pinned as found in the merged source after the merge of main; the expression is main's and no existing colour is rewritten."
+          },
+          {
+            "component": "ConfigRow",
+            "property": "box-shadow",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Pinned as found in the merged source after the merge of main; the expression is main's and no existing colour is rewritten."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingslogs-index-js-3da4d2",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsLogs/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "settingsLogsProps /* binding-sha256:d0bf9dec70835cf7d4e7200d18c8a3b21d8db1d22cf9372a44ce19e3714d5996 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsselectui-index-js-f88495",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settingsselectui-styles-js-6a468f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsSelectUI/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "InputWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      right: 0px;\n    `\n: css`\n      left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a1-settings-core: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SelectContent",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This selector matches no node in the component's current markup: it lives in a component the product does render, but nothing it renders is reached by it, so the declaration can never apply. Asserting a role over it would be asserting something unprovable. The distinction with a dead EXPORT is deliberate and decides the treatment: a whole component with no consumer is well formed and a fixture CAN mount it, so its role is demonstrable and it is migrated; a dead selector inside a live component is not.",
+            "evidence": "SelectContent p: SettingsSelectUI/index.js:89-92 mete dentro de SelectContent un unico hijo, el Select compartido de Shared/UI, y Shared/UI/Select.jsx no renderiza ningun elemento <p> — su unica coincidencia de 'p>' en todo el archivo es el cierre de </SelectPrimitive.Popup>. El selector no alcanza a nada."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "InputWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      right: 0px;\n    `\n: css`\n      left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionsError",
+            "property": "color",
+            "match": "#d83520",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectContent",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectContent",
+            "property": "color",
+            "match": "#748194",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectHeader",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a1-settings-core semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-a1-settings-core-settings-index-js-57d1da",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

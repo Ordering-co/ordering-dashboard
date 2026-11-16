@@ -1,47 +1,61 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   useLanguage,
-  useUtils,
   useApi,
   useConfig,
   BusinessBrandListing as BusinessBrandListingController
 } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
-import { ThreeDots, List as MenuIcon, ArrowsAngleContract, ArrowsAngleExpand } from 'react-bootstrap-icons'
-import { Button, IconButton, Switch, DefaultSelect, LinkButton } from '../../../styles'
-import { useTheme } from 'styled-components'
-import { Alert, Pagination, SearchBar, SideBar } from '../../Shared'
-import { BusinessBrandGENDetail } from '../BusinessBrandGENDetail'
-import { BusinessBrandBUSIDetail } from '../BusinessBrandBUSIDetail'
-import { BrandWhiteLabel } from '../BrandWhiteLabel'
 import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
-import { WHITE_LABEL_SITES_ENABLED } from '../../../../../utils/businessDetailSections'
-
+import { settleFocusOn } from '../../../utils/listFocus'
+import { Menu as MenuIcon, Plus, TriangleAlert } from '../../Shared/Icon'
+import { isWhiteLabelSiteConfigured, WHITE_LABEL_SITES_ENABLED } from '../../../../../utils/businessDetailSections'
 import {
-  BrandListingContainer,
-  HeaderContainer,
-  ActionsGroup,
-  HeaderTitleContainer,
-  BrandListTable,
-  BrandBody,
-  ActionsContainer,
-  EnableWrapper,
-  ActionSelectorWrapper,
-  WrapperImage,
-  Image,
-  BrandGeneralInfo,
-  InfoBlock,
-  BrandListTableWrapper,
-  BrandListBottomContainer,
-  BrandDetailContainer,
-  DetailHeder,
-  TabContainer,
-  Tab,
-  RightHeader
-} from './styles'
+  AlertDialog,
+  Button,
+  ConfirmDialog,
+  IconButton,
+  InlineNotice,
+  PageHeader,
+  Pagination,
+  SearchField,
+  SplitView
+} from '../../Shared/Product'
+import { BrandPanel } from './BrandPanel'
+import { BrandsTable } from './BrandsTable'
+import './brand-listing.css'
+
+// redesign SB-B2 (; decisions 1, 2, 5, 6, 7; G5-43, G5-44, G5-47, M-SB1, M-SB3, M-SB4, M-SB6, M-SB8, M-SB9, auditor 1, 9, 14, 15):
+// /stores/brand on Product. A header (title, count, «Add brand»), the search, the brand table (cards under 768px) and its foot, beside
+// the brand's ficha in a split view. The controller (C/BusinessBrandListing) owns the data; this owns what the person sees of it: the URL
+// (`?id=` when a brand opens, `?tab=` when the tab changes, both gone on close), the brand that is open, the width of the ficha, the
+// discard guard and the two dialogs (delete, and the error of a delete). The three tabs are the children of before (SB-B3, SB-B4, SB-B5).
+//
+// `?tab=` keeps the values of main (`general`, `businesses`, `white_label`) although the second one says «Stores» now, and `?id=` and the
+// command palette are as they were (auditor 9). Opening a brand asks for nothing: only General is mounted; Stores and White label mount
+// when their tab opens (auditor 1).
+
+const SEARCH_DEBOUNCE_MS = 750 // the wait of `SearchBar lazyLoad` of main: each change of the search is a request
+const PAGE_SIZES = [10, 25, 50]
+const NAME_TOKEN = '_name_'
+
+const positiveInt = (text) => {
+  const value = Number(text)
+  return text != null && text !== '' && Number.isInteger(value) && value > 0 ? value : null
+}
+
+// «of _total_» → the number becomes an .odc-figure node and keeps its direction in RTL
+const fill = (template, values) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{values[name]}</React.Fragment> : part
+})
+
+// The API answers a list of messages, one text or nothing
+const errorLines = (error, fallback) => {
+  const list = (Array.isArray(error) ? error : [error]).filter(message => typeof message === 'string' && message.trim())
+  return list.length ? [...new Set(list)] : [fallback]
+}
 
 const BusinessBrandListingUI = (props) => {
   const {
@@ -49,359 +63,453 @@ const BusinessBrandListingUI = (props) => {
     onSearch,
     brandListState,
     handleChangeState,
-    brandFormState,
     handleDeleteBrand,
+    getBrand,
     openDetail,
     setOpenDetail,
     paginationProps,
     getBrands,
-    getBrand,
     handleUpdateBrandList
   } = props
 
-  const query = new URLSearchParams(useLocation().search)
+  const location = useLocation()
   const [, t] = useLanguage()
-  const theme = useTheme()
-  const [{ optimizeImage }] = useUtils()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [ordering] = useApi()
   const [{ configs }] = useConfig()
-  const isWhiteLabelBrandsEnabled = WHITE_LABEL_SITES_ENABLED && (configs?.whitelabel_brands_sites?.value === '1' || configs?.whitelabel_brands_sites?.value === true ||
-    ['luisv4plus', 'eatstreetstaging'].includes(ordering?.project))
-  const [brandList, setBrandList] = useState([])
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [selectedType, setSelectedType] = useState('general')
+  // main, the brand's White label tab is hidden while WHITE_LABEL_SITES_ENABLED is false
+  const whiteLabelEnabled = WHITE_LABEL_SITES_ENABLED && isWhiteLabelSiteConfigured(ordering?.project, configs?.whitelabel_brands_sites)
+
+  const brands = brandListState?.brands ?? []
+  const listError = brandListState?.error
+  // before the first answer the list is on its way, not empty (`loaded` comes from the controller)
+  const loading = !!brandListState?.loading || (brandListState?.loaded === false && !listError)
+  const currentPage = paginationProps?.currentPage
+  const pageSize = paginationProps?.pageSize
+  const total = paginationProps?.totalItems ?? null
+
+  // ---- the brand that is open: a row, or just an id (`?id=` of a brand the page does not hold is asked for) ----
   const [selectedBrand, setSelectedBrand] = useState(null)
-  const [isExpand, setIsExpand] = useState(false)
+  const [tab, setTab] = useState('general')
+  const [expanded, setExpanded] = useState(false)
+  const [panelKey, setPanelKey] = useState(0) // a new brand (or «Add new brand») starts a new panel; creating one does not
+  const [notFound, setNotFound] = useState(false)
+  const widthBefore = useRef(false) // the width the ficha had before White label took the whole page
+  const frameRef = useRef(null)
+  const openIdRef = useRef(null)
+  openIdRef.current = openDetail ? (selectedBrand?.id ?? null) : null
 
-  const handleChangePage = (page) => {
-    if (page === paginationProps?.currentPage) return
-    getBrands && getBrands(page, paginationProps?.pageSize)
+  // The list's version of the open brand when it has one (a switch or a save moved it); else the one we hold (it may be on another page)
+  const listBrand = selectedBrand ? brands.find(item => item.id === selectedBrand.id) : null
+  const shownBrand = useMemo(
+    () => (selectedBrand ? (listBrand ? { ...selectedBrand, ...listBrand } : selectedBrand) : null),
+    [selectedBrand, listBrand]
+  )
+
+  // ---- unsaved changes in General: switching brand or opening «Add brand» asks first (closing is guarded by the panel) ----
+  const [dirty, setDirty] = useState(false)
+  const dirtyRef = useRef(false)
+  const [discard, setDiscard] = useState(null) // { go }
+  const resetDraft = () => {
+    dirtyRef.current = false
+    setDirty(false)
   }
-  const handleChangePageSize = (size) => {
-    getBrands && getBrands(1, size)
+  const handleDirty = useCallback((value) => {
+    dirtyRef.current = !!value
+    setDirty(!!value)
+  }, [])
+  const withDraftGuard = (go) => (dirtyRef.current ? setDiscard({ go }) : go())
+  // redesign SB-R1 (review R1-02): «Keep editing» gives the focus back to the General field the user was in, not to the row that asked
+  const lastFieldRef = useRef(null)
+  const keepingRef = useRef(false)
+  useEffect(() => {
+    const track = (event) => {
+      if (event.target?.closest?.('.odc-brand-general')) lastFieldRef.current = event.target
+    }
+    document.addEventListener('focusin', track)
+    return () => document.removeEventListener('focusin', track)
+  }, [])
+
+  const normalizeTab = (value, hasBrand) => {
+    if (!hasBrand) return 'general'
+    if (value === 'businesses') return 'businesses'
+    if (value === 'white_label' && whiteLabelEnabled) return 'white_label'
+    return 'general'
   }
 
-  const moreOptions = [
-    { value: 0, content: t('DELETE', 'Delete') }
-  ]
+  // Shows a brand in the panel; true when it is another one than the one that was open. The URL is the caller's.
+  const showBrand = (brand, tabParam) => {
+    const changed = openIdRef.current !== brand.id
+    setNotFound(false)
+    if (!changed) return false
+    const nextTab = normalizeTab(tabParam, true)
+    resetDraft()
+    setPanelKey(key => key + 1)
+    setSelectedBrand(brand)
+    setTab(nextTab)
+    widthBefore.current = false
+    setExpanded(nextTab === 'white_label') // White label is opened as a page, as in main
+    setOpenDetail(true)
+    return true
+  }
 
-  const handleCloseSidebar = () => {
+  const openBrand = (brand) => withDraftGuard(() => {
+    const changed = showBrand(brand, 'general')
+    addQueryToUrl({ id: brand.id })
+    if (changed) removeQueryToUrl(['tab'])
+  })
+
+  const openNew = () => withDraftGuard(() => {
+    resetDraft()
+    setPanelKey(key => key + 1)
+    setSelectedBrand(null)
+    setTab('general')
+    widthBefore.current = false
+    setExpanded(false)
+    setNotFound(false)
+    setOpenDetail(true)
+    removeQueryToUrl(['id', 'tab'])
+  })
+
+  // What the panel's close, Escape and scrim end in (the panel asked about unsaved changes before), and what a delete ends in
+  const closePanel = () => {
+    // redesign bugs F row 20 (M-01): a brand opened by the address (?id=, ⌘K) had no opener to give the focus back to, so
+    // it fell to <body>; it goes to the brand's row (after a delete, the table). A focus already on something of the list stays.
+    settleFocusOn(() => frameRef.current, selectedBrand?.id ?? null)
+    resetDraft()
     setOpenDetail(false)
     setSelectedBrand(null)
-    setIsExpand(false)
+    setTab('general')
+    widthBefore.current = false
+    setExpanded(false) // M-SB9: the next brand opens in the split
     removeQueryToUrl(['id', 'tab'])
   }
 
-  const handleOpenSideBar = async (id) => {
-    setSelectedType('general')
-    if (id) {
-      const brand = brandListState?.brands.find(item => item.id === id) || await getBrand?.(id)
-      if (!brand) {
-        removeQueryToUrl(['id', 'tab'])
-        return
+  const handleTab = (next) => {
+    const target = normalizeTab(next, !!selectedBrand)
+    if (target === tab) return
+    // White label is a wide surface: the ficha takes the page and goes back to the width it had when the person leaves it
+    if (target === 'white_label') {
+      widthBefore.current = expanded
+      setExpanded(true)
+    } else if (tab === 'white_label') {
+      setExpanded(widthBefore.current)
+    }
+    setTab(target)
+    addQueryToUrl({ tab: target })
+  }
+
+  // General created a brand (`onSelectedBrand` with the new one) or saved one (with what the API answered): the panel follows it (M-SB8)
+  const handleSelectedBrand = (brand) => {
+    if (!brand || brand.id == null) return
+    if (!selectedBrand) addQueryToUrl({ id: brand.id })
+    setSelectedBrand(previous => (previous && previous.id === brand.id ? { ...previous, ...brand } : brand))
+  }
+
+  // White label made a site for the brand: the brand and the list know its `site_id`
+  const handleUpdateBrand = (updated) => {
+    setSelectedBrand(updated)
+    if (handleUpdateBrandList && brandListState?.brands) {
+      handleUpdateBrandList(brandListState.brands.map(item => (item.id === updated.id ? updated : item)))
+    }
+  }
+
+  // The switch of a row and the one of the panel: the same call; what it answers is what AsyncSwitch reads (`{ ok: false }` goes back)
+  const toggleEnabled = async (brand, next) => {
+    const result = await handleChangeState?.(brand.id, 'enabled', next)
+    // a brand the page does not hold has no row to show what the switch just did
+    if (!result || result.ok !== false) {
+      setSelectedBrand(previous => (previous && previous.id === brand.id ? { ...previous, enabled: next } : previous))
+    }
+    return result
+  }
+
+  // ---- ?id= (M-SB1): decided once, when the first list is in (a list with 0 brands counts); `?tab=` is applied when it opens ----
+  const resolveBrand = async (id, tabParam, fromRouter) => {
+    const found = brands.find(item => item.id === id)
+    let brand = found
+    if (!brand) {
+      let result = null
+      try {
+        result = await getBrand?.(id)
+      } catch {
+        result = null
       }
-      setSelectedBrand(brand)
-    } else {
-      setSelectedBrand(null)
+      brand = result?.ok ? result.brand : null
     }
-    setOpenDetail(true)
+    if (!brand) {
+      setNotFound(true)
+      removeQueryToUrl(['id', 'tab']) // never «Add new brand» for an id that does not exist
+      return
+    }
+    const changed = showBrand(brand, tabParam)
+    const wanted = normalizeTab(tabParam, true)
+    if (changed && tabParam && tabParam !== wanted) removeQueryToUrl(['tab']) // a `?tab=` the brand cannot show
+    if (changed && fromRouter && !tabParam) removeQueryToUrl(['tab'])
   }
 
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
+  const pendingId = useRef(positiveInt(new URLSearchParams(location.search).get('id')))
+  const pendingTab = useRef(new URLSearchParams(location.search).get('tab'))
+  const listArrived = brandListState?.loaded ?? (!loading && (brands.length > 0 || !!listError || total != null))
+  useEffect(() => {
+    if (pendingId.current == null || !listArrived) return
+    const id = pendingId.current
+    pendingId.current = null
+    resolveBrand(id, pendingTab.current, false)
+  }, [listArrived])
+
+  // The router navigated to a brand while the page was open (⌘K): our own replaceState writes never reach the router
+  const visited = useRef({ search: location.search, key: location.key })
+  useEffect(() => {
+    if (visited.current.search === location.search && visited.current.key === location.key) return
+    visited.current = { search: location.search, key: location.key }
+    const params = new URLSearchParams(location.search)
+    const id = positiveInt(params.get('id'))
+    if (id == null || openIdRef.current === id) return
+    withDraftGuard(() => resolveBrand(id, params.get('tab'), true))
+  }, [location.key, location.search])
+
+  // ---- delete (G5-43, decision 6): asks first; on success the panel and the URL go (G5-44) and the focus goes to the list's heading ----
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteErrors, setDeleteErrors] = useState(null)
+  const deletedRef = useRef(false)
+  const deletingRef = useRef(false)
+  const mounted = useRef(true)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
+  const askToDelete = (brand) => {
+    deletedRef.current = false
+    setDeleteTarget(brand)
+    setDeleteOpen(true)
   }
 
-  const handleClickBrand = (e, brandId, isInitialRender) => {
-    const isInvalid = e?.target?.closest('.brand_enable_control')
-    if (isInvalid) return
-    handleOpenSideBar(brandId)
-    if (!isInitialRender) {
-      addQueryToUrl({ id: brandId })
+  const confirmDelete = async () => {
+    if (deletingRef.current || !deleteTarget) return
+    deletingRef.current = true
+    setDeleting(true)
+    let result
+    try {
+      result = await handleDeleteBrand?.(deleteTarget.id)
+    } catch (error) {
+      result = { ok: false, error: [error?.message] }
     }
+    deletingRef.current = false
+    if (!mounted.current) return
+    setDeleting(false)
+    setDeleteOpen(false)
+    if (result && result.ok === false) {
+      setDeleteErrors(errorLines(result.error, t('DELETE_BRAND_ERROR', 'The brand could not be deleted.')))
+      return
+    }
+    deletedRef.current = true
+    closePanel()
   }
 
-  const expandSideBar = () => {
-    const element = document.getElementById('brand-details')
-    if (!element) return
-    if (isExpand) element.style.width = '500px'
-    else element.style.width = 'var(--app-width, 100vw)'
-    setIsExpand(prev => !prev)
+  const deleteTitleParts = t('DELETE_BRAND_TITLE', 'Delete _name_?').split(NAME_TOKEN)
+  const deleteTitle = deleteTitleParts.reduce(
+    (nodes, part, index) => (index === 0 ? [part] : [...nodes, <bdi key={index}>{deleteTarget?.name ?? ''}</bdi>, part]),
+    []
+  )
+
+  // ---- search: typed here, sent after a wait (at once on Enter and on clear) ----
+  const [searchText, setSearchText] = useState(searchValue || '')
+  const searchTimer = useRef(null)
+  const searchInput = useRef(null)
+  const sentSearch = useRef(searchValue || '')
+  sentSearch.current = searchValue || ''
+  // a value set from outside shows unless the person is typing
+  useEffect(() => {
+    if (!searchValue) {
+      setSearchText('')
+      return
+    }
+    if (typeof document !== 'undefined' && document.activeElement !== searchInput.current) setSearchText(searchValue)
+  }, [searchValue])
+  useEffect(() => () => clearTimeout(searchTimer.current), [])
+  const sendSearch = (text) => {
+    clearTimeout(searchTimer.current)
+    if (text !== sentSearch.current) onSearch?.(text)
+  }
+  const typeSearch = (text) => {
+    setSearchText(text)
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => sendSearch(text), SEARCH_DEBOUNCE_MS)
   }
 
-  useEffect(() => {
-    setBrandList(brandListState?.brands || [])
-  }, [brandListState?.brands])
+  // ---- what the pieces receive ----
+  const known = total != null && Number.isFinite(Number(total))
+  const countLabel = Number(total) === 1
+    ? t('BRANDS_COUNT_ONE', '1 brand')
+    : t('BRANDS_COUNT_OTHER', '_count_ brands').replace('_count_', String(total))
+  const addLabel = t('ADD_BRAND', 'Add brand')
 
-  useEffect(() => {
-    if (brandList?.length > 0 && selectedBrand) {
-      const brand = brandListState?.brands?.find(item => item.id === selectedBrand?.id)
-      if (brand) setSelectedBrand(brand)
-    }
-  }, [brandList])
+  const listView = (
+    <div ref={frameRef} className='odc-root odc-brand-frame'>
+      <PageHeader
+        leading={isCollapse && <IconButton icon={MenuIcon} label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)} />}
+        title={t('BRANDS', 'Brands')}
+        count={known ? Number(total) : undefined}
+        countLabel={known ? countLabel : undefined}
+        primaryAction={(
+          <Button variant='primary' icon={Plus} title={addLabel} onClick={openNew}>
+            <span data-collapse-label=''>{addLabel}</span>
+          </Button>
+        )}
+      />
+      <div className='odc-brand-search'>
+        <SearchField
+          value={searchText}
+          onChange={typeSearch}
+          onClear={() => sendSearch('')}
+          onKeyDown={(event) => { if (event.key === 'Enter') sendSearch(searchText) }}
+          inputRef={searchInput}
+          label={t('SEARCH', 'Search')}
+          placeholder={t('BRANDS_SEARCH_PLACEHOLDER', 'Search brands')}
+          clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+        />
+      </div>
+      {notFound && (
+        <InlineNotice tone='warning' icon={TriangleAlert} role='status'>
+          {t('BRAND_NOT_FOUND', 'Brand not found')}
+        </InlineNotice>
+      )}
+      <BrandsTable
+        brands={brands}
+        loading={loading}
+        error={listError}
+        pageSize={pageSize}
+        activeBrandId={openDetail ? (selectedBrand?.id ?? null) : null}
+        onOpenBrand={openBrand}
+        hasSearch={!!searchValue}
+        onRetry={() => getBrands?.(currentPage, pageSize)}
+        onAddBrand={openNew}
+        onToggleEnabled={toggleEnabled}
+      />
+      {/* decision 5: no «Add new brand» in the foot; «Add brand» is the header's and the empty state's */}
+      {!listError && total != null && (
+        <div className='odc-brand-foot'>
+          <Pagination
+            page={currentPage}
+            pageSize={pageSize}
+            total={total}
+            pageSizeOptions={PAGE_SIZES}
+            onPageChange={(page) => getBrands?.(page, pageSize)}
+            onPageSizeChange={(size, page) => getBrands?.(page, size)}
+            busy={loading}
+            showPageInput
+            label={t('PAGINATION', 'Pagination')}
+            previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+            nextLabel={t('NEXT_PAGE', 'Next page')}
+            pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+            pageLabel={t('PAGE', 'Page')}
+            pageOfLabel={(totalPages, figureOf) => fill(t('PAGE_OF_TOTAL', 'of _total_'), { total: figureOf(totalPages) })}
+            // after a delete the page holds fewer rows than its size until the next load: never claim more than the rows on screen
+            rangeLabel={(from, to, count, figureOf) => fill(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from: figureOf(from), to: figureOf(brands.length > 0 ? Math.min(to, from + brands.length - 1) : to), total: figureOf(count) })}
+            pageStatusLabel={(current, totalPages) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(totalPages))}
+          />
+        </div>
+      )}
+    </div>
+  )
 
-  useEffect(() => {
-    if (brandFormState?.result?.error) {
-      setAlertState({
-        open: true,
-        content: brandFormState?.result?.result
-      })
-    }
-  }, [brandFormState?.result])
-
-  useEffect(() => {
-    if (!brandListState?.brands?.length) return
-    const id = query.get('id')
-    if (id) {
-      handleClickBrand(null, Number(id), true)
-    }
-  }, [brandListState?.brands?.length])
-
-  const handleTabClick = (tab, isInitialRender) => {
-    setSelectedType(tab)
-    if (!isInitialRender) {
-      addQueryToUrl({ tab })
-    }
-  }
-
-  useEffect(() => {
-    if (!selectedBrand) return
-    const tab = query.get('tab')
-    if (tab) {
-      handleTabClick(tab, true)
-    } else {
-      handleTabClick(selectedType)
-    }
-  }, [selectedBrand])
+  const panel = openDetail && (
+    <BrandPanel
+      key={panelKey}
+      brand={shownBrand}
+      tab={tab}
+      onTabChange={handleTab}
+      whiteLabelEnabled={whiteLabelEnabled}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+      onClose={closePanel}
+      onDelete={askToDelete}
+      onToggleEnabled={toggleEnabled}
+      dirty={dirty}
+      onDirtyChange={handleDirty}
+      onSelectedBrand={handleSelectedBrand}
+      onUpdateBrand={handleUpdateBrand}
+      controllerProps={props}
+    />
+  )
 
   return (
     <>
-      <BrandListingContainer>
-        <HeaderContainer>
-          <HeaderTitleContainer>
-            {isCollapse && (
-              <IconButton
-                color='black'
-                onClick={() => handleMenuCollapse(false)}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            <h1>{t('BRAND_MANAGER', 'Brand manager')}</h1>
-          </HeaderTitleContainer>
-          <ActionsGroup>
-            <Button
-              borderRadius='8px'
-              color='lightPrimary'
-              onClick={() => handleOpenSideBar()}
-            >
-              {t('ADD_BRAND', 'Add brand')}
-            </Button>
-            <SearchBar
-              lazyLoad
-              search={searchValue}
-              onSearch={(value) => onSearch(value)}
-              placeholder={t('SEARCH', 'Search')}
-            />
-          </ActionsGroup>
-        </HeaderContainer>
-        <BrandListTableWrapper>
-          <BrandListTable>
-            <thead>
-              <tr>
-                <th>{t('NAME', 'Name')}</th>
-                <th>{t('ACTIONS', 'Actions')}</th>
-              </tr>
-            </thead>
-            {brandListState.loading
-              ? (
-                  [...Array(8).keys()].map(i => (
-                <BrandBody key={i}>
-                  <tr>
-                    <td>
-                      <BrandGeneralInfo>
-                        <WrapperImage isSkeleton={brandListState?.loading}>
-                          <Skeleton width={32} height={32} />
-                        </WrapperImage>
-                        <InfoBlock>
-                          <p><Skeleton width={80} height={20} /></p>
-                        </InfoBlock>
-                      </BrandGeneralInfo>
-                    </td>
-                    <td>
-                      <ActionsContainer>
-                        <EnableWrapper>
-                          <Skeleton width={50} height={20} />
-                        </EnableWrapper>
-                      </ActionsContainer>
-                    </td>
-                  </tr>
-                </BrandBody>
-                  ))
-                )
-              : (
-                  brandList.map(brand => (
-                <BrandBody
-                  key={brand.id}
-                  active={brand.id === selectedBrand?.id}
-                  onClick={e => handleClickBrand(e, brand.id)}
-                >
-                  <tr>
-                    <td>
-                      <BrandGeneralInfo>
-                        <WrapperImage>
-                          <Image bgimage={optimizeImage(brand?.logo || theme.images?.dummies?.businessLogo, 'h_50,c_limit')} />
-                        </WrapperImage>
-                        <InfoBlock>
-                          <p>{brand?.name}</p>
-                        </InfoBlock>
-                      </BrandGeneralInfo>
-                    </td>
-                    <td>
-                      <ActionsContainer>
-                        <EnableWrapper className='brand_enable_control'>
-                          <span>{t('ENABLE', 'Enable')}</span>
-                          <Switch
-                            defaultChecked={brand?.enabled}
-                            onChange={(enabled) => handleChangeState(brand.id, 'enabled', enabled)}
-                          />
-                        </EnableWrapper>
-                      </ActionsContainer>
-                    </td>
-                  </tr>
-                </BrandBody>
-                  ))
-                )}
-          </BrandListTable>
-        </BrandListTableWrapper>
-        {!brandListState.loading && brandList?.length > 0 && (
-          <Pagination
-            currentPage={paginationProps?.currentPage}
-            totalPages={paginationProps?.totalPages}
-            defaultPageSize={paginationProps?.pageSize}
-            handleChangePage={handleChangePage}
-            handleChangePageSize={handleChangePageSize}
-          />
-        )}
-        <BrandListBottomContainer>
-          <LinkButton onClick={() => handleOpenSideBar()}>{t('ADD_NEW_BRAND', 'Add new brand')}</LinkButton>
-        </BrandListBottomContainer>
-        {openDetail && (
-          <SideBar
-            sidebarId='brand-details'
-            defaultSideBarWidth={500}
-            open={openDetail}
-            onClose={() => handleCloseSidebar()}
-          >
-            <BrandDetailContainer>
-              <DetailHeder>
-                <div>
-                  {
-                    selectedBrand?.name && (
-                      <span>{selectedBrand?.name}</span>
-                    )
-                  }
-                  {!selectedBrand && (
-                    <span>{t('ADD_NEW_BRAND', 'Add new brand')}</span>
-                  )}
-                  {selectedBrand && (
-                    <Switch
-                      defaultChecked={selectedBrand?.enabled || false}
-                      onChange={(enabled) => handleChangeState(selectedBrand?.id, 'enabled', enabled)}
-                    />
-                  )}
-                </div>
-                <RightHeader>
-                  <IconButton
-                    color='black'
-                    onClick={expandSideBar}
-                  >
-                    {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
-                  </IconButton>
-                  {selectedBrand && (
-                    <ActionSelectorWrapper>
-                      <DefaultSelect
-                        placeholder={<ThreeDots />}
-                        options={moreOptions}
-                        onChange={() => handleDeleteBrand(selectedBrand.id)}
-                      />
-                    </ActionSelectorWrapper>
-                  )}
-                </RightHeader>
-              </DetailHeder>
-              <TabContainer>
-                <Tab
-                  active={selectedType === 'general'}
-                  onClick={() => handleTabClick('general')}
-                >
-                  {t('GENERAL', 'General')}
-                </Tab>
-                {selectedBrand && (
-                  <Tab
-                    active={selectedType === 'businesses'}
-                    onClick={() => handleTabClick('businesses')}
-                  >
-                    {t('BUSINESSES', 'Businesses')}
-                  </Tab>
-                )}
-                {selectedBrand && isWhiteLabelBrandsEnabled && (
-                  <Tab
-                    active={selectedType === 'white_label'}
-                    onClick={() => handleTabClick('white_label')}
-                  >
-                    {t('WHITE_LABEL', 'White Label')}
-                  </Tab>
-                )}
-              </TabContainer>
-              {
-                selectedType === 'general' && (
-                  <BusinessBrandGENDetail
-                    {...props}
-                    brand={selectedBrand}
-                    onSelectedBrand={setSelectedBrand}
-                  />
-                )
-              }
-              {
-                selectedType === 'businesses' && (
-                  <BusinessBrandBUSIDetail
-                    {...props}
-                    brand={selectedBrand}
-                  />
-                )
-              }
-              {
-                selectedType === 'white_label' && selectedBrand && isWhiteLabelBrandsEnabled && (
-                  <BrandWhiteLabel
-                    brand={selectedBrand}
-                    expandSideBar={expandSideBar}
-                    isExpand={isExpand}
-                    handleUpdateBrand={(updated) => {
-                      setSelectedBrand(updated)
-                      if (handleUpdateBrandList && brandListState?.brands) {
-                        const _brands = brandListState.brands.map(b => b.id === updated.id ? updated : b)
-                        handleUpdateBrandList(_brands)
-                      }
-                    }}
-                  />
-                )
-              }
-            </BrandDetailContainer>
-          </SideBar>
-        )}
-      </BrandListingContainer>
-      <Alert
-        title={t('TRANSLATIONS', 'Translations')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+      <SplitView
+        className='odc-brand-split'
+        list={listView}
+        panel={panel}
+        open={!!openDetail}
+        expanded={expanded}
+        panelLabel={shownBrand?.name ?? t('ADD_NEW_BRAND', 'Add new brand')}
+        resizeLabel={t('BRANDS_RESIZE_PANEL', 'Resize the brand panel')}
+        storageKey='odc-brand-panel'
+        onClose={closePanel}
       />
+
+      <ConfirmDialog
+        open={deleteOpen}
+        tone='danger'
+        title={deleteTitle}
+        confirmLabel={t('DELETE_BRAND', 'Delete brand')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        busy={deleting}
+        finalFocus={() => {
+          const heading = frameRef.current?.querySelector('h1')
+          if (deletedRef.current && heading?.isConnected) {
+            deletedRef.current = false
+            heading.setAttribute('tabindex', '-1')
+            return heading
+          }
+          return true
+        }}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteOpen(false)}
+      >
+        {/* P8: the API unlinks the stores and does not touch the white-label site */}
+        {t('DELETE_BRAND_BODY_STORES', "Its stores are left without a brand. Its white-label site is not deleted. This can't be undone.")}
+      </ConfirmDialog>
+
+      <AlertDialog
+        open={!!deleteErrors}
+        title={t('DELETE_BRAND_ERROR_TITLE', "The brand wasn't deleted")}
+        content={deleteErrors ?? []}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
+        onClose={() => setDeleteErrors(null)}
+      />
+
+      <ConfirmDialog
+        open={!!discard}
+        title={t('ORDER_PANEL_DISCARD_TITLE', 'Discard your changes?')}
+        confirmLabel={t('DISCARD', 'Discard')}
+        cancelLabel={t('KEEP_EDITING', 'Keep editing')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => {
+          const go = discard?.go
+          keepingRef.current = false
+          setDiscard(null)
+          resetDraft()
+          go?.()
+        }}
+        onCancel={() => {
+          keepingRef.current = true
+          setDiscard(null)
+        }}
+        finalFocus={() => {
+          const field = lastFieldRef.current
+          const keep = keepingRef.current
+          keepingRef.current = false
+          return keep && field?.isConnected ? field : true
+        }}
+      >
+        {t('DRIVERS_DISCARD_BODY', 'What you changed here is not saved yet.')}
+      </ConfirmDialog>
     </>
   )
 }

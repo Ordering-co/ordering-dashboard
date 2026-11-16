@@ -4,7 +4,7 @@ export const EmailSettingsContainer = styled.div``
 
 export const AccordionTitle = styled.div`
   color: ${props => props.theme?.colors.headingColor};
-  font-size: 17px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   cursor: pointer;
   border-bottom: 1px solid ${props => props.theme?.colors.borderColor};
@@ -28,7 +28,7 @@ export const SelectWrapper = styled.div`
   margin-bottom: 20px;
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 10px;
   }
@@ -42,9 +42,9 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
-      color: ${props => props.theme.colors.secundaryContrast};
+      color: var(--od-x-text-subtle);
     }
     .list {
       background-color: ${props => props.theme.colors.secundary};
@@ -64,9 +64,9 @@ export const SelectWrapper = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
   text-transform: lowercase;
   &::first-letter {
     text-transform: uppercase;

@@ -59,7 +59,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
 
   const walletName = {
     cash: {
-      name: t('CASH_WALLET', 'Cash Wallet')
+      name: t('CASH_WALLET_NAME', 'Cash wallet')
     },
     credit_point: {
       name: t('POINTS_WALLET', 'Points Wallet')
@@ -89,8 +89,8 @@ export const OrderToPrint = forwardRef((props, ref) => {
   }
 
   return (
-    <PrintContainer ref={ref}>
-      <h1>{t('INVOICE_ORDER_NO', 'Order No')} {order?.id}</h1>
+    <PrintContainer ref={ref} role='document'>
+      <h1>{t('INVOICE_ORDER_NO', 'Order number')} {order?.id}</h1>
       <p>
         {order?.payment_events?.length > 0
           ? (
@@ -157,7 +157,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
             <PhotoWrapper>
               {order?.business?.logo
                 ? (
-                <Photo bgimage={optimizeImage(order?.business?.logo, 'h_50,c_limit')} />
+                <Photo role='img' aria-label={order?.business?.name} bgimage={optimizeImage(order?.business?.logo, 'h_50,c_limit')} />
                   )
                 : (
                 <BisBusiness />
@@ -208,7 +208,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
             <PhotoWrapper>
               {order?.customer?.photo
                 ? (
-                <Photo bgimage={optimizeImage(order?.customer?.photo, 'h_50,c_limit')} />
+                <Photo role='img' aria-label={`${order?.customer?.name ?? ''} ${order?.customer?.lastname ?? ''}`.trim()} bgimage={optimizeImage(order?.customer?.photo, 'h_50,c_limit')} />
                   )
                 : (
                 <FaUserAlt />
@@ -277,7 +277,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
                   <PhotoWrapper>
                     {order?.driver?.photo
                       ? (
-                      <Photo bgimage={optimizeImage(order?.driver?.photo, 'h_50,c_limit')} />
+                      <Photo role='img' aria-label={`${order?.driver?.name ?? ''} ${order?.driver?.lastname ?? ''}`.trim()} bgimage={optimizeImage(order?.driver?.photo, 'h_50,c_limit')} />
                         )
                       : (
                       <FaUserAlt />
@@ -314,7 +314,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
             <ProductInfo>
               {product?.images && (
                 <WrapperProductImage>
-                  <ProductImage bgimage={optimizeImage(product?.images, 'h_100,c_limit')} />
+                  <ProductImage role='img' aria-label={product?.name} bgimage={optimizeImage(product?.images, 'h_100,c_limit')} />
                 </WrapperProductImage>
               )}
               <ProductQuantity>
@@ -327,7 +327,7 @@ export const OrderToPrint = forwardRef((props, ref) => {
             <AccordionContent>
               {product.ingredients?.length > 0 && product.ingredients.some(ingredient => !ingredient.selected) && (
                 <ProductOptionsList>
-                  <p>{t('INGREDIENTS', 'Ingredients')}</p>
+                  <li className='options-heading'><p>{t('INGREDIENTS', 'Ingredients')}</p></li>
                   {product.ingredients.map((ingredient) => !ingredient.selected && (
                     <li className='ingredient' key={ingredient.id}>
                       <span>{t('NO', 'No')} {ingredient.name}</span>

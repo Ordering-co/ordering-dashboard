@@ -1,0 +1,89 @@
+/*
+ * redesign : SelectableList, promoted from the catalog block of Users/StaffDirectory/StaffStoresSection
+ * (staff-stores.css). Values come from --od-* and --od-x-* only; logical properties only, so RTL needs no second set.
+ */
+
+.odc-selectable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* P/SearchField carries `flex: 0 1 280px` for a row bar; in this column that basis became its HEIGHT: no flex here */
+.odc-selectable-search { flex: none; inline-size: 100%; }
+
+.odc-selectable-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* One row per item; the whole row is the checkbox */
+.odc-selectable-list {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-selectable-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-selectable-row .odc-checkbox-labelled {
+  flex: 1 1 0;
+  inline-size: auto;
+  min-inline-size: 0;
+}
+
+.odc-selectable-row .odc-checkbox-text {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-selectable-name {
+  display: block;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+/* A change that is not saved yet says it in words; the strike is only a second cue */
+.odc-selectable-note {
+  flex: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-selectable-row[data-removed='true'] .odc-selectable-name {
+  color: var(--od-text-muted);
+  text-decoration: line-through;
+}
+
+.odc-selectable-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-selectable-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-inline: var(--od-x-space-1-5);
+}

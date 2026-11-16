@@ -282,6 +282,85 @@ describe('BusinessProductsListing', () => {
     act(() => root.unmount())
   })
 
+  // redesign SP-FA SP-06: the page shows the error of the store and a Retry; a retry that works must end without that error
+  test('a store that failed to load is retried without the old error, and a good answer ends without it', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      json: vi.fn().mockResolvedValue({ error: false, result: [] })
+    }))
+    const businessGet = vi.fn()
+      .mockRejectedValueOnce(new Error('Network Error'))
+      .mockResolvedValue({ content: { result: { id: 10, categories: [{ id: 1 }] } } })
+    const businessResource = {
+      asDashboard: vi.fn(() => ({
+        select: vi.fn(() => ({
+          parameters: vi.fn(() => ({ get: businessGet }))
+        }))
+      })),
+      products: vi.fn(() => ({
+        parameters: vi.fn(() => ({
+          get: vi.fn().mockResolvedValue({ content: { error: false, result: [], pagination: { page_size: 10, current_page: 1, total: 0, total_pages: 1 } } })
+        }))
+      }))
+    }
+    const ordering = { root: 'https://api.test', businesses: vi.fn(() => businessResource) }
+    let controllerProps
+    const UIComponent = props => {
+      controllerProps = props
+      return null
+    }
+
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const root = createRoot(container)
+    await act(async () => {
+      root.render(<BusinessProductsListing ordering={ordering} slug='test-business' propsToFetch={['id', 'categories']} UIComponent={UIComponent} />)
+    })
+    await vi.waitFor(() => expect(controllerProps.businessState.error).toEqual(['Network Error']))
+    expect(controllerProps.businessState.loading).toBe(false)
+
+    await act(async () => {
+      controllerProps.getBusiness()
+    })
+    await vi.waitFor(() => expect(controllerProps.businessState.business).toMatchObject({ id: 10 }))
+    expect(controllerProps.businessState.error).toBeNull()
+    expect(controllerProps.businessState.loading).toBe(false)
+
+    act(() => root.unmount())
+  })
+
+  // redesign SP-FA SP-06 (D5): an API answer with `error: true` is an error, not a store made of messages
+  test('a store answer with error: true is kept as the error and not as the business', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      json: vi.fn().mockResolvedValue({ error: false, result: [] })
+    }))
+    const businessGet = vi.fn().mockResolvedValue({ content: { error: true, result: ['The business was not found'] } })
+    const businessResource = {
+      asDashboard: vi.fn(() => ({
+        select: vi.fn(() => ({
+          parameters: vi.fn(() => ({ get: businessGet }))
+        }))
+      }))
+    }
+    const ordering = { root: 'https://api.test', businesses: vi.fn(() => businessResource) }
+    let controllerProps
+    const UIComponent = props => {
+      controllerProps = props
+      return null
+    }
+
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const root = createRoot(container)
+    await act(async () => {
+      root.render(<BusinessProductsListing ordering={ordering} slug='missing-business' propsToFetch={['id', 'categories']} UIComponent={UIComponent} />)
+    })
+    await vi.waitFor(() => expect(controllerProps.businessState.error).toEqual(['The business was not found']))
+    expect(controllerProps.businessState.loading).toBe(false)
+    expect(Array.isArray(controllerProps.businessState.business)).toBe(false)
+
+    act(() => root.unmount())
+  })
+
   test('restores the cached unfiltered product snapshot when an opted-in consumer clears search', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: true,

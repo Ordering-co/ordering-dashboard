@@ -116,8 +116,10 @@ export const Route = styled.ol`
     display: flex;
     flex-direction: column;
     gap: var(--od-space-3);
+    /* : the page may inherit a physical text-align (left); logical start keeps each label under its dot in RTL. */
+    text-align: start;
     color: rgb(255 255 255 / 0.72);
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     font-weight: var(--od-font-weight-medium);
   }
 
@@ -165,10 +167,17 @@ export const Route = styled.ol`
 
 export const FormSide = styled.main`
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--od-space-6) var(--od-space-5);
+
+  /* At 320px the 24px side padding leaves a 272px panel, narrower than the
+     six 44px OTP boxes need; trim it only on the narrowest viewports. */
+  @media (max-width: 359.98px) {
+    padding-inline: var(--od-space-4);
+  }
 
   @media (min-width: 768px) {
     padding: var(--od-space-7);
@@ -204,7 +213,7 @@ export const AuthNotice = styled.p`
   border-radius: 999px;
   background: var(--od-action-soft);
   color: var(--od-action-content);
-  font-size: var(--od-font-size-1);
+  font-size: var(--od-type-secondary-size);
   font-weight: var(--od-font-weight-medium);
 `
 
@@ -228,9 +237,8 @@ export const TitleFormSide = styled.div`
 `
 
 export const Tabs = styled.div`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
   margin-bottom: var(--od-space-5);
@@ -239,6 +247,16 @@ export const Tabs = styled.div`
 `
 
 export const Tab = styled.button`
+  /* Segmented tabs of equal width while they fit (flex: 1 1 0). The floor is the
+     longest word of the label (min-width: min-content), so no word is ever split
+     mid-word (en "Password") and a long one (nl "Telefoonnummer", da
+     "Telefonnummer", el "Αριθμός τηλεφώνου") never widens the page. When the
+     floors do not fit in one row the track wraps the tabs onto a second row
+     instead of breaking words or overflowing the viewport. text-wrap: balance
+     keeps a hyphenated word (da/nl "e-mail") whole when a label must wrap. */
+  flex: 1 1 0;
+  min-width: min-content;
+  text-wrap: balance;
   min-height: 32px;
   padding: 4px 8px;
   border: 0;
@@ -264,6 +282,12 @@ export const Tab = styled.button`
     color: var(--od-text);
     box-shadow: var(--od-shadow-1);
   `}
+
+  /* Row #53: 32px is short of the 44px touch target. On a coarse pointer the box itself grows (not a 44px area over a 32px
+     box): the tabs wrap onto rows with a 4px gap, and two 44px areas over 32px boxes would overlap. */
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
 `
 
 export const FormInput = styled.form`
@@ -378,6 +402,14 @@ export const TogglePassword = styled.button`
   &:focus-visible {
     ${orderingFocusRing}
   }
+
+  /*  A-1: 36px is short of the 44px touch target. On a coarse pointer the toggle takes the field's full height
+     (44px), flush with its end; it is transparent, so only the hit area and the focus ring grow. */
+  @media (pointer: coarse) {
+    inset-inline-end: 0;
+    width: 44px;
+    height: 44px;
+  }
 `
 
 export const PhoneNumberWrapper = styled.div`
@@ -461,6 +493,9 @@ export const RedirectLink = styled.p`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  /* : on a coarse pointer the link box is 44px tall; stretch (the default) left the phrase at the top of the row and the
+     link text 11px lower. Centring puts both texts on one line, as on main. */
+  align-items: center;
   gap: 4px;
   margin: 0;
   color: var(--od-text-muted);
@@ -479,6 +514,14 @@ export const RedirectLink = styled.p`
     &:focus-visible {
       ${orderingFocusRing}
     }
+
+    /* A text link is 22px tall; on a coarse pointer it gets the 44px touch
+       target as box height, with the text still centred and still a link. */
+    @media (pointer: coarse) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
   }
 `
 
@@ -488,7 +531,7 @@ export const Divider = styled.div`
   gap: var(--od-space-3);
   margin: var(--od-space-5) 0 var(--od-space-4);
   color: var(--od-text-muted);
-  font-size: var(--od-font-size-1);
+  font-size: var(--od-type-secondary-size);
 
   &::before,
   &::after {
@@ -527,6 +570,12 @@ export const OtpWrapper = styled.div`
     display: flex;
     justify-content: center;
     gap: var(--od-space-2);
+
+    /* Six 44px boxes need 264px plus five gaps; the 288px panel at 320px only
+       fits gaps of 4.8px or less. The scale has no 4px step, so halve space-2. */
+    @media (max-width: 359.98px) {
+      gap: calc(var(--od-space-2) / 2);
+    }
   }
 
   .otp-input {
@@ -571,5 +620,11 @@ export const ResendCode = styled.button`
 
   &:focus-visible {
     ${orderingFocusRing}
+  }
+
+  /*  (decision 12): the text button is 26px tall. On a coarse pointer the box itself grows to 44px (not an overlay),
+     so it cannot cross the Cancel button or the code boxes around it; the column gap keeps them apart. */
+  @media (pointer: coarse) {
+    min-block-size: 44px;
   }
 `

@@ -10,8 +10,12 @@ export const Shell = styled.div`
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  background: ${props => props.theme.colors.backgroundPage || '#F8F9FA'};
-  color: ${props => props.theme.colors.headingColor};
+  background: ${props => props.theme.ordering?.semantic.background ?? (props.theme.colors.backgroundPage || '#F8F9FA')};
+  color: ${props => props.theme.ordering?.semantic.text.default ?? props.theme.colors.headingColor};
+  font-family: ${props => props.theme.ordering?.font.family.sans ?? 'inherit'};
+  font-size: ${props => props.theme.ordering?.font.size.productUi ?? 'inherit'};
+  font-weight: ${props => props.theme.ordering?.font.weight.regular ?? 'inherit'};
+  line-height: ${props => props.theme.ordering?.font.lineHeight.body ?? 'inherit'};
 `
 
 export const SrOnly = styled.span`
@@ -30,14 +34,15 @@ export const Sidebar = styled.aside`
   display: none;
   flex-shrink: 0;
   box-sizing: border-box;
-  width: 240px;
+  /* F6d (Q2-09): as wide as the real sidebar (--od-x-sidebar, 248px), so the columns do not move when the shell arrives */
+  width: 248px;
   padding: 20px 16px;
-  border-right: 1px solid ${props => props.theme.colors.borderColor};
-  background: ${props => props.theme.colors.backgroundPage || '#FFF'};
+  border-right: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+  background: ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')};
 
   ${props => props.theme?.rtl && css`
     border-right: 0;
-    border-left: 1px solid ${props.theme.colors.borderColor};
+    border-left: 1px solid ${props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
   `}
 
   @media (min-width: 768px) {
@@ -77,7 +82,7 @@ export const SidebarFooter = styled.div`
   gap: 8px;
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid ${props => props.theme.colors.borderColor};
+  border-top: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
 `
 
 export const SidebarFooterRow = styled.div`
@@ -108,6 +113,70 @@ export const BreadcrumbRow = styled.div`
   margin: 10px 0 36px;
 `
 
+export const WhatsAppRouteSkeleton = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`
+
+export const WhatsAppRouteHeader = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+`
+
+export const WhatsAppRouteHeading = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, 70%);
+`
+
+export const WhatsAppRouteActions = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+export const WhatsAppRouteTable = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+`
+
+export const WhatsAppRouteRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(180px, 1.5fr) minmax(130px, 1fr) minmax(120px, 0.8fr) 120px;
+  align-items: center;
+  gap: 24px;
+  min-height: 68px;
+  border-bottom: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+
+  @media (max-width: 767px) {
+    grid-template-columns: minmax(160px, 1fr) 100px;
+
+    > :nth-child(2),
+    > :nth-child(3) {
+      display: none;
+    }
+  }
+`
+
+export const WhatsAppRouteIdentity = styled.div`
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+`
+
+export const WhatsAppRouteCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+`
+
 export const WelcomeBlock = styled.div`
   display: flex;
   align-items: center;
@@ -117,10 +186,10 @@ export const WelcomeBlock = styled.div`
   margin-bottom: 28px;
   padding: 20px 24px;
   box-sizing: border-box;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  border-radius: 8px;
-  background: ${props => props.theme.colors.backgroundPage || '#FFF'};
-  box-shadow: 0 1px 4px ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+  border-radius: ${props => props.theme.ordering?.radius.panel ?? '8px'};
+  background: ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')};
+  box-shadow: ${props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`};
 
   @media (min-width: 768px) {
     padding: 20px 30px;
@@ -180,10 +249,10 @@ export const MetricCard = styled.div`
   align-items: center;
   min-height: 108px;
   padding: 20px;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  border-radius: 7.6px;
-  background: ${props => props.theme.colors.backgroundPage || '#FFF'};
-  box-shadow: 0 1px 4px ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+  border-radius: ${props => props.theme.ordering?.radius.panel ?? '7.6px'};
+  background: ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')};
+  box-shadow: ${props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`};
   box-sizing: border-box;
 `
 
@@ -229,10 +298,10 @@ export const ChartPanel = styled.div`
   flex-direction: column;
   min-height: 360px;
   padding: 20px;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  border-radius: 7.6px;
-  background: ${props => props.theme.colors.backgroundPage || '#FFF'};
-  box-shadow: 0 1px 4px ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+  border-radius: ${props => props.theme.ordering?.radius.panel ?? '7.6px'};
+  background: ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')};
+  box-shadow: ${props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`};
   box-sizing: border-box;
 
   @media (min-width: 800px) {
@@ -286,10 +355,10 @@ export const ServiceCard = styled.div`
   flex-direction: column;
   min-height: 150px;
   padding: 20px;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  border-radius: 8px;
-  background: ${props => props.theme.colors.backgroundPage || '#FFF'};
-  box-shadow: 0 1px 4px ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor};
+  border-radius: ${props => props.theme.ordering?.radius.panel ?? '8px'};
+  background: ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')};
+  box-shadow: ${props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`};
   box-sizing: border-box;
 `
 
@@ -324,8 +393,8 @@ export const ServiceCardFooter = styled.div`
 export const Bone = styled.div`
   position: relative;
   overflow: hidden;
-  border-radius: ${props => props.$radius || '6px'};
-  background: ${props => props.theme.colors.gray || '#DEE2E6'};
+  border-radius: ${props => props.$radius || props.theme.ordering?.radius.component || '6px'};
+  background: ${props => props.theme.ordering?.semantic.border.default ?? (props.theme.colors.gray || '#DEE2E6')};
   width: ${props => props.$width || '100%'};
   height: ${props => props.$height || '100%'};
 
@@ -336,7 +405,7 @@ export const Bone = styled.div`
     background: linear-gradient(
       90deg,
       transparent 0%,
-      ${props => props.theme.colors.secundary || '#F8F9FA'} 50%,
+      ${props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.secundary || '#F8F9FA')} 50%,
       transparent 100%
     );
     animation: ${shimmer} 1.4s ease-out infinite;

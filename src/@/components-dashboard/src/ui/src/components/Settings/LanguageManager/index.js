@@ -85,6 +85,7 @@ const LanguageManagerUI = (props) => {
           {isCollapse && !avoidExpand && (
             <IconButton
               color='black'
+              aria-label={t('MENU', 'Menu')}
               onClick={() => handleMenuCollapse(false)}
             >
               <MenuIcon />
@@ -124,18 +125,22 @@ const LanguageManagerUI = (props) => {
                 <ViewIconWrapper
                   className='table-mode'
                   active={viewMode === 'table'}
+                  aria-pressed={viewMode === 'table'}
+                  aria-label={t('LIST_VIEW', 'List view')}
                   onClick={() => setViewMode('table')}
                 >
-                  <ViewList />
+                  <ViewList aria-hidden='true' />
                 </ViewIconWrapper>
                 <ViewIconWrapper
                   active={viewMode === 'spread'}
+                  aria-pressed={viewMode === 'spread'}
+                  aria-label={t('SPREADSHEET', 'Spreadsheet')}
                   onClick={() => {
                     setViewMode('spread')
                     removeQueryToUrl(['page', 'pageSize'])
                   }}
                 >
-                  <Table />
+                  <Table aria-hidden='true' />
                 </ViewIconWrapper>
               </ActionGroup>
             </ActionGroupWrapper>

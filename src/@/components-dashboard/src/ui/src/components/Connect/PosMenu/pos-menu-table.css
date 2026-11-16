@@ -1,0 +1,137 @@
+/*
+ * redesign PM-B · /connect/pos-menu: the store table and the cards of a phone.
+ * Product's DataTable, RecordCard, Status and EmptyState own the structure; this adds what a store cell and a POS cell are made of.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── Above the table: the column manager ── */
+.odc-pm-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* the table takes the height of its rows */
+.odc-pm-table { min-inline-size: 0; }
+
+/* ── The Business cell: logo, name, city ── */
+.odc-pm-store {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-pm-store-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-pm-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-pm-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside a table cell the name and the city wrap (two lines at most) so a long name never widens the column */
+td .odc-pm-name,
+th .odc-pm-name,
+td .odc-pm-sub,
+th .odc-pm-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── The POS cell: the logo and the name of each POS, one under the other ── */
+.odc-pm-pos-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-pm-pos {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pm-pos-logo {
+  flex: none;
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  border-radius: var(--od-radius-control);
+  object-fit: contain;
+}
+
+.odc-pm-pos-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* No POS: the dash is for the eye, the words for a screen reader */
+.odc-pm-dash,
+.odc-pm-muted {
+  color: var(--od-text-muted);
+}
+
+.odc-pm-reason {
+  display: block;
+  max-inline-size: var(--od-x-search);
+  overflow-wrap: anywhere;
+}
+
+/* ── Phone: RecordCard draws the store (RecordCardList, under 768px) ── */
+/* a store has one side, not «from → to»: the arrow of the card has nothing to point at */
+.odc-pm-cards .odc-order-card-arrow { display: none; }
+
+/* the link holds the name, in the text face of the page (the card gave the id its mono face) */
+.odc-pm-cards .odc-order-card-link { font-family: var(--od-font-sans); }
+
+.odc-pm-cards .odc-order-card-link .odc-pm-name { font-weight: var(--od-font-weight-semibold); }
+
+.odc-pm-cards .odc-pm-card-sub {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* : the state of a POS, its warning beside it, and its reason and date under it */
+.odc-pm-status {
+  display: inline-grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-pm-status-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}

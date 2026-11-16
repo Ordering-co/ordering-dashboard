@@ -1,0 +1,40 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b1-business-listing-filters-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b1-businessselectheader-optionitem-div-b-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSelectHeader/styles.js",
+   "component": "OptionItem",
+   "property": "font-size",
+   "context": "> div > b",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b1-businessselectheader-optionitem-div-p-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSelectHeader/styles.js",
+   "component": "OptionItem",
+   "property": "font-size",
+   "context": "> div > p",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b1-businessselectheader-wrapperpagination-div-div-button-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSelectHeader/styles.js",
+   "component": "WrapperPagination",
+   "property": "font-size",
+   "context": ">div>div > button",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  }
+ ],
+ "preservations": []
+}

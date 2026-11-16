@@ -1,0 +1,105 @@
+/*
+ * /intelligence/reports (redesign reports FC2): the bodies of the reports — blocks, states, the timeline and the map.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-rp-*. The cards are the kit's (AnalyticsKit/analytics-kit.css), the chart is P/Chart (chart.css) and the
+ * tables are PivotTable (AnalyticsKit/pivot-table.css). Breakpoints are the numbers of C/utils/breakpoints.js as literals in @media.
+ */
+
+/* ── The blocks of a report (D1): one column; two rankings side by side from 1024 ── */
+.odc-rp-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+@media (min-width: 1024px) {
+  .odc-rp-body[data-columns='two'] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--od-space-6);
+  }
+}
+
+/* Phone (< 768) */
+@media (max-width: 767px) {
+  .odc-rp-body {
+    gap: var(--od-space-4);
+  }
+}
+
+/* the content of a block: the chart, the notice and the table, one under the other */
+.odc-rp-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── States (D13) ── */
+/* «Updating…» sits with the actions of the block, so the card does not change size; the old data stay under it, dimmed */
+.odc-rp-updating {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+/* the live region is in the page before it has text (a region that appears with its text is not announced), and takes no room while empty */
+.odc-rp-updating:empty {
+  position: absolute;
+}
+
+.odc-rp-block[data-stale] {
+  opacity: 0.6;
+}
+
+/* the skeleton of a table or a ranking: rows of the height of the final ones */
+.odc-rp-skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* ── The total of a line chart (13, 14): the figure of the period, without a card inside the card ── */
+.odc-metric.odc-rp-total {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* the notice of a chart that has too many series sits above the table that replaces it */
+.odc-rp-chart-limit {
+  align-self: flex-start;
+}
+
+/* ── The schedule of the drivers (7): the chart grows with the number of drivers, so many rows are not squeezed (inventory 7.D5) ── */
+.odc-chart.odc-rp-timeline {
+  --odc-rp-rows: 1;
+  --odc-chart-height: max(var(--od-x-chart-height), calc((var(--odc-rp-rows) + 1) * var(--od-x-row-comfortable)));
+}
+
+/* ── The map (9): the switch above the frame, as in /intelligence/business ── */
+.odc-rp-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-rp-map-toggle {
+  min-inline-size: 0;
+}
+
+/* GoogleMapsMap draws its own box at 70% × 50%; main stretched it to its wrapper (BI/AnalyticsMap/styles.js WrapperMap): it fills the frame */
+.odc-rp-map-canvas {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-rp-map-canvas > div {
+  position: relative !important;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}

@@ -167,4 +167,26 @@ describe('useImportRawLogs', () => {
     )
     expect(showToast).toHaveBeenCalledWith('SUCCESS', 'Log deleted.')
   })
+
+  // redesign IM-C2 (IM-04): the logs host could not be reached
+  it('says in words that the importer could not be reached when listing, downloading or deleting', async () => {
+    const message = "Couldn't reach the menu importer. Check your connection and try again."
+    global.fetch.mockRejectedValue(new TypeError('Failed to fetch'))
+    const { result } = renderHook(() => useImportRawLogs({ businessId: 42, enabled: true }))
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false)
+    })
+    expect(result.current.error?.message).toBe(message)
+
+    await act(async () => {
+      await result.current.downloadLog({ id: 'log-1', downloadable: true, source: 'doordash' })
+    })
+    expect(showToast).toHaveBeenLastCalledWith('ERROR', message)
+
+    await act(async () => {
+      await result.current.deleteLogs(['log-1'])
+    })
+    expect(showToast).toHaveBeenLastCalledWith('ERROR', message)
+  })
 })

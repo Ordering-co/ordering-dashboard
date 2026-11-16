@@ -1,0 +1,54 @@
+/*
+ * Settings › Website pages: search and «Add page», the table of pages, and the foot (add link and pagination), one under
+ * the other. Values come from --od-* / --od-x-* only; logical properties only. The controls are the Product ones.
+ * (styles.js stays on disk for the brand-system harness; this screen no longer imports it.)
+ */
+.odc-cms {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+}
+
+/* Only outside the hub (the hub prints the section title) */
+.odc-cms-title {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-cms-title h1 {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-cms-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-cms-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+/* The switch and the menu columns take only the room of their control */
+.odc-cms .odc-cms-shrink {
+  inline-size: 1%;
+  white-space: nowrap;
+}
+
+.odc-cms-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}

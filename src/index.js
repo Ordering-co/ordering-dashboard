@@ -1,23 +1,30 @@
 import './polyfills/resizeObserver'
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
+import { StyleSheetManager } from 'styled-components'
 import * as Sentry from '@sentry/react'
 import { PostHogProvider } from 'posthog-js/react'
 
 import './index.css'
+import './brand/ordering.tokens.generated.css'
+import './brand/candidates.css'
+// bootstrap.css arrived through the ~ui index and every screen relies on it (its reboot sets the body), so the
+// entry keeps it explicitly, ahead of the shell's stylesheets, now that the shell no longer imports that index.
+import 'bootstrap/dist/css/bootstrap.css'
+import { createDashboardTheme } from './brand/adapter'
 import reportWebVitals from './reportWebVitals'
 import { Router } from './router'
 import { OrderingProvider, AssistantProvider } from '~components'
-import {
-  ThemeProvider,
-  ConfigFileContext,
-  ProjectProvider,
-  InfoShareProvider,
-  FilterValuesProvider,
-  Alert,
-  Toast,
-  getOrderingSubdomains
-} from '~ui'
+// the shell imports ~ui pieces by file. The ~ui index reaches every component, and with it every
+// stylesheet, so importing it here put the whole app's CSS in the entry stylesheet that blocks the first paint.
+import { ThemeProvider } from '~ui/src/contexts/ThemeContext'
+import { ConfigFileContext } from '~ui/src/contexts/ConfigFileContext'
+import { ProjectProvider } from '~ui/src/contexts/ProjectContext'
+import { InfoShareProvider } from '~ui/src/contexts/InfoShareContext'
+import { FilterValuesProvider } from '~ui/src/contexts/FilterValuesContext'
+import { Alert } from '~ui/src/components/Shared/Confirm'
+import { Toast } from '~ui/src/styles/Toast'
+import { getOrderingSubdomains } from '~ui/src/utils'
 
 import theme from './theme.json'
 import notificationMp3 from './assets/sounds/notification.mp3'
@@ -26,12 +33,15 @@ import settings from './config'
 import { publicAssetUrl } from './utils/publicAssetUrl'
 import { getStoredLanguageCode } from './utils/storage'
 import { applyLocalProjectPin } from './utils/local-tenant'
+import { getDashboardEnvironment } from './utils/dashboardBranding'
 import {
   readFirstLoadConfigs,
   readStoredDashboardAuth,
   resolveInitialDashboardProject,
+  shouldNormalizeStoredProjectAlias,
   shouldResolveDashboardProjectAtBoot
 } from './utils/bootTheme'
+import { fetchProjectCode } from './@/components-dashboard/src/utils/resolveProjectCode'
 import { AutologinParams } from './components/AutologinParams'
 import { AutologinNotice } from './components/AutologinParams/AutologinNotice'
 import { PostHogIdentify } from './components/PostHogIdentify'
@@ -51,10 +61,7 @@ import isotype from './assets/images/isotype.svg'
 import isotypeInvert from './assets/images/isotype-invert.svg'
 import logoPdf from './assets/images/logo-pdf.png'
 
-import notNetwork from './assets/images/not-network.svg'
 import notFound from './assets/images/not-found.svg'
-import notFound404 from './assets/images/not-found-404.svg'
-import notFoundLighting from './assets/images/not-found-lighting.svg'
 import personalization from './assets/images/personalization.svg'
 import mobileCase from './assets/images/mobile-case.png'
 import mobileMask from './assets/images/mobile-mask.png'
@@ -76,41 +83,10 @@ import googleCalendarIcon from './assets/images/google-calendar-icon.png'
 /**
  * project statuses
  */
-import projectActive from './assets/images/projectStatuses/project-active.png'
-import projectPastDuePayment from './assets/images/projectStatuses/project-past-due-payment.png'
 
 /**
    * sales channels
    */
-import facebookProfileStep2 from './assets/images/salesChannels/facebook-profile-step2.png'
-import facebookProfileStep31 from './assets/images/salesChannels/facebook-profile-step3-1.png'
-import facebookProfileStep32 from './assets/images/salesChannels/facebook-profile-step3-2.png'
-import facebookProfileStep4 from './assets/images/salesChannels/facebook-profile-step4.png'
-import facebookProfileStep5 from './assets/images/salesChannels/facebook-profile-step5.png'
-import facebookPostStep1 from './assets/images/salesChannels/facebook-post-step1.png'
-import facebookPostStep2 from './assets/images/salesChannels/facebook-post-step2.png'
-import tiktokStep1 from './assets/images/salesChannels/tiktok-step1.png'
-import tiktokStep2 from './assets/images/salesChannels/tiktok-step2.png'
-import tiktokStep3 from './assets/images/salesChannels/tiktok-step3.png'
-import tiktokStep4 from './assets/images/salesChannels/tiktok-step4.png'
-import tiktokStep5 from './assets/images/salesChannels/tiktok-step5.png'
-import tiktokStep6 from './assets/images/salesChannels/tiktok-step6.png'
-import tiktokStep7 from './assets/images/salesChannels/tiktok-step7.png'
-import tiktokStep8 from './assets/images/salesChannels/tiktok-step8.png'
-import tiktokStep9 from './assets/images/salesChannels/tiktok-step9.png'
-import tiktokStep10 from './assets/images/salesChannels/tiktok-step10.png'
-import instagramGeneralStep2 from './assets/images/salesChannels/instagram-general-step2.png'
-import instagramGeneralStep3 from './assets/images/salesChannels/instagram-general-step3.png'
-import instagramGeneralStep4 from './assets/images/salesChannels/instagram-general-step4.png'
-import instagramGeneralStep5 from './assets/images/salesChannels/instagram-general-step5.png'
-import instagramGeneralStep6 from './assets/images/salesChannels/instagram-general-step6.png'
-import instagramAdvancedStep31 from './assets/images/salesChannels/instagram-advanced-step31.png'
-import instagramAdvancedStep32 from './assets/images/salesChannels/instagram-advanced-step32.png'
-import instagramAdvancedStep41 from './assets/images/salesChannels/instagram-advanced-step41.png'
-import instagramAdvancedStep42 from './assets/images/salesChannels/instagram-advanced-step42.png'
-import googleStep1 from './assets/images/salesChannels/google-step1.png'
-import googleStep2 from './assets/images/salesChannels/google-step2.png'
-import googleStep3 from './assets/images/salesChannels/google-step3.png'
 
 /**
  * Theme apps
@@ -139,24 +115,9 @@ import noBusinesses from './assets/images/dummies/no-businesses.png'
 /**
  * icons
  */
-import ordersList from './assets/images/icons/ordersList.svg'
-import shop from './assets/images/icons/shop.svg'
-import pieChart from './assets/images/icons/pieChart.svg'
-import setting from './assets/images/icons/setting.svg'
-import support from './assets/images/icons/support.svg'
-import deadline from './assets/images/icons/deadline.svg'
-import deadlineOK from './assets/images/icons/deadlineOK.svg'
-import deadlineRisk from './assets/images/icons/deadlineRisk.svg'
-import deadlineDelayed from './assets/images/icons/timeOut.svg'
-import deadlineSetting from './assets/images/icons/deadlineSetting.png'
 import search from './assets/images/icons/search.svg'
-import group from './assets/images/icons/group.svg'
 import calendar from './assets/images/icons/calendar.svg'
-import email from './assets/images/icons/email.svg'
-import lock from './assets/images/icons/lock.svg'
-import cash from './assets/images/icons/cash.svg'
 import help from './assets/images/icons/help.svg'
-import timeline from './assets/images/icons/timeline.svg'
 import mapMarker from './assets/images/icons/marker.png'
 import sixDots from './assets/images/icons/sixDots.svg'
 import shopToShop from './assets/images/icons/shopToShop.svg'
@@ -172,15 +133,8 @@ import facebook from './assets/images/icons/facebook.svg'
 import tiktok from './assets/images/icons/tiktok.svg'
 import instagram from './assets/images/icons/instagram.svg'
 import businessGoogle from './assets/images/icons/business-google.svg'
-import doordashSetup from './assets/video/setup-doordash.mp4'
 
-import orderPending from './assets/images/orderStatus/pending.svg'
-import orderInProgress from './assets/images/orderStatus/inProgress.svg'
-import orderCompleted from './assets/images/orderStatus/completed.svg'
-import orderCancelled from './assets/images/orderStatus/cancelled.svg'
 import noDriver from './assets/images/avatars/noDriver.png'
-import driverDelivery from './assets/images/icons/driverDelivery.svg'
-import pickUp from './assets/images/icons/pickUp.svg'
 
 import orderStatus0 from './assets/images/order/status-0.svg'
 import orderStatus1 from './assets/images/order/status-1.svg'
@@ -310,7 +264,8 @@ import singleStore from './assets/images/preview/single-store.png'
 
 if (import.meta.env.VITE_SENTRY_RELEASE) {
   Sentry.init({
-    environment: 'production',
+    // «beta» on dashboard-beta.ordering.co, «production» everywhere else
+    environment: getDashboardEnvironment(),
     release: `dashboard@${import.meta.env.VITE_SENTRY_RELEASE}`,
     dsn: settings.sentry_key,
     integrations: [
@@ -320,6 +275,10 @@ if (import.meta.env.VITE_SENTRY_RELEASE) {
     autoSessionTracking: true
   })
 }
+
+// redesign tramo B r3 (W0-PB2-01): no global `vite:preloadError` listener here. A page or panel chunk that no longer exists (a deploy
+// under an open tab) reloads the page once through `lazyWithReload` (utils/chunkReload.js), which wraps only those imports; the
+// other dynamic imports (pdf, web-vitals) keep their own `catch`, as in main.
 
 const logos = {
   logotype,
@@ -332,10 +291,7 @@ const logos = {
 theme.images = {
   logos,
   general: {
-    notNetwork,
     notFound,
-    notFound404,
-    notFoundLighting,
     personalization,
     mobileCase,
     mobileMask,
@@ -353,10 +309,6 @@ theme.images = {
     importMenu,
     importedMenu,
     googleCalendarIcon
-  },
-  project: {
-    active: projectActive,
-    pastDuePayment: projectPastDuePayment
   },
   apps: {
     storeApp,
@@ -389,12 +341,6 @@ theme.images = {
     status20: orderStatus20,
     status21: orderStatus21
   },
-  orderStatus: {
-    pending: orderPending,
-    inProgress: orderInProgress,
-    completed: orderCompleted,
-    cancelled: orderCancelled
-  },
   categories: {
     all: categoryAll
   },
@@ -418,37 +364,6 @@ theme.images = {
     appStoreSmall,
     playStoreSmall,
     customProject
-  },
-  salesChannels: {
-    facebookProfileStep2,
-    facebookProfileStep31,
-    facebookProfileStep32,
-    facebookProfileStep4,
-    facebookProfileStep5,
-    facebookPostStep1,
-    facebookPostStep2,
-    tiktokStep1,
-    tiktokStep2,
-    tiktokStep3,
-    tiktokStep4,
-    tiktokStep5,
-    tiktokStep6,
-    tiktokStep7,
-    tiktokStep8,
-    tiktokStep9,
-    tiktokStep10,
-    instagramGeneralStep2,
-    instagramGeneralStep3,
-    instagramGeneralStep4,
-    instagramGeneralStep5,
-    instagramGeneralStep6,
-    instagramAdvancedStep31,
-    instagramAdvancedStep32,
-    instagramAdvancedStep41,
-    instagramAdvancedStep42,
-    googleStep1,
-    googleStep2,
-    googleStep3
   },
   pos: {
     square,
@@ -518,27 +433,10 @@ theme.images = {
     foodTec
   },
   icons: {
-    ordersList,
-    shop,
-    pieChart,
-    setting,
-    support,
-    deadline,
-    deadlineOK,
-    deadlineRisk,
-    deadlineDelayed,
-    deadlineSetting,
     search,
     calendar,
-    group,
-    email,
-    lock,
     noDriver,
-    driverDelivery,
-    pickUp,
-    cash,
     help,
-    timeline,
     mapMarker,
     sixDots,
     shopToShop,
@@ -587,9 +485,7 @@ theme.sounds = {
   notificationOgg
 }
 
-theme.videos = {
-  doordashSetup
-}
+const dashboardTheme = createDashboardTheme(theme)
 
 const RouteApp = () => {
   const language = getStoredLanguageCode()
@@ -663,6 +559,21 @@ const RouteApp = () => {
     getProjectStatus()
   }, [])
 
+  // One-time cleanup for a session stored before this normalization shipped: a stored
+  // project can be a public alias. /current always answers with the internal code that
+  // integrations key their data on, so re-check it once and correct storage if it drifted.
+  useEffect(() => {
+    if (!shouldNormalizeStoredProjectAlias({ auth, storedProject, localProjectPin: settings.local_project_pin })) return
+    let cancelled = false
+    const { url, language, version } = settings.api
+    fetchProjectCode(`${url}/${version}/${language}/${storedProject}`).then((code) => {
+      if (cancelled || !code || code === storedProject) return
+      window.localStorage.setItem('project', code)
+      setConfigFile((currentConfig) => ({ ...currentConfig, project: code }))
+    })
+    return () => { cancelled = true }
+  }, [])
+
   return (
     <ConfigFileContext.Provider value={[configFile, setConfigFile]}>
       <PostHogProvider
@@ -682,7 +593,7 @@ const RouteApp = () => {
           })
         }}
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={dashboardTheme}>
           <AutologinParams configFile={configFile}>
             <OrderingProvider Alert={Alert}>
               <InfoShareProvider>
@@ -706,5 +617,10 @@ const RouteApp = () => {
   )
 }
 
+// page stylesheets now arrive with their chunk, appended to <head> after styled-components' <style>, so on equal
+// specificity they would start beating the components (a mobile padding, a reduced-motion transition). With its styles at the
+// end of <body>, styled-components comes after every stylesheet the entry used to hold, as before. It also comes after what
+// was already appended to <head> later than it (the create-order wizard sheet, Google Maps' and OneSignal's <style>): none of
+// those rules can match an element a component styles at equal specificity (PR #429 lists the check).
 const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(<RouteApp />)
+root.render(<StyleSheetManager target={document.body}><RouteApp /></StyleSheetManager>)

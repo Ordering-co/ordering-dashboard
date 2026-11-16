@@ -1,0 +1,403 @@
+/*
+ * The desktop grid of the drivers' time calendar (redesign DT-B3): one table in a frame that scrolls sideways on its own, with the
+ * driver column fixed at the start edge. A day is 24 hour columns and a lane per driver; several days are a column per day.
+ * Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ *
+ * The only custom properties are the local --dt-* ones, built from tokens: --dt-hour (the width of an hour), --dt-who (the driver
+ * column), --dt-day (the narrowest day column) and --dt-lane (the height of a lane). The markup gives a block its place as plain
+ * factors (--dt-from, --dt-span, in hours), never a length, so the geometry stays here and the tokens stay the only unit.
+ */
+
+.odc-sg {
+  --dt-hour: calc(var(--od-space-8) * 1.5);
+  --dt-who: calc(var(--od-space-8) * 3);
+  --dt-day: calc(var(--od-space-8) * 2);
+  --dt-lane: var(--od-x-row-comfortable);
+  min-inline-size: 0;
+}
+
+/* ── The frame: it scrolls on its own (never the page), the driver column stays ── */
+.odc-sg-scroller {
+  position: relative;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  /* What the browser scrolls to (a focused button, scrollIntoView) stops short of the fixed driver column, not under it */
+  scroll-padding-inline-start: var(--dt-who);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-sg-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  inline-size: 100%;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A day: the driver column and 24 hours of one width. Several days: the day columns share the rest and never get narrower than --dt-day. */
+.odc-sg[data-mode='day'] .odc-sg-table {
+  table-layout: fixed;
+  inline-size: calc(var(--dt-who) + var(--dt-hour) * 24);
+}
+
+.odc-sg[data-mode='days'] .odc-sg-table {
+  min-inline-size: calc(var(--dt-who) + var(--dt-day) * var(--dt-days));
+}
+
+.odc-sg-table th,
+.odc-sg-table td {
+  padding: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  font-weight: var(--od-font-weight-regular);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.odc-sg-table tbody tr:last-child > th,
+.odc-sg-table tbody tr:last-child > td { border-block-end: 0; }
+
+/* ── The fixed column (DT-06): it stays at the start edge while the hours or the days scroll under it ── */
+.odc-sg-corner,
+.odc-sg-who {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: var(--od-x-layer-sticky);
+  box-sizing: border-box;
+  inline-size: var(--dt-who);
+  min-inline-size: var(--dt-who);
+  max-inline-size: var(--dt-who);
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odc-sg-corner {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-sg-who {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+}
+
+.odc-sg-person {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sg-ident {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-sg-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sg-sub {
+  display: flex;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-sg-sub .odc-figure { flex: none; }
+
+.odc-sg-email {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Header: hours (a day) or days (several) ── */
+.odc-sg-hour,
+.odc-sg-day {
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.odc-sg-hour {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  font-size: var(--od-x-type-caption-size);
+  white-space: nowrap;
+}
+
+.odc-sg-day {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-sg-dow {
+  display: block;
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-sg-dom {
+  display: block;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* Today: a fill and a heavier number, and aria-current for everyone else */
+.odc-sg-day[aria-current='date'] { background: var(--od-action-soft); }
+.odc-sg-day[aria-current='date'] .odc-sg-dom {
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* ── A day: the lane of a driver ── */
+.odc-sg-lane { padding: 0; }
+
+/* The track is as wide as the 24 hours; its lines are the hours (they flip in right to left, where the day runs from the right) */
+.odc-sg-track {
+  position: relative;
+  display: grid;
+  align-content: center;
+  block-size: var(--dt-lane);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--od-border) 0,
+    var(--od-border) var(--od-x-hairline),
+    transparent var(--od-x-hairline),
+    transparent var(--dt-hour)
+  );
+}
+
+[dir='rtl'] .odc-sg-track,
+.odc-rtl .odc-sg-track {
+  background-image: repeating-linear-gradient(
+    to left,
+    var(--od-border) 0,
+    var(--od-border) var(--od-x-hairline),
+    transparent var(--od-x-hairline),
+    transparent var(--dt-hour)
+  );
+}
+
+/* A free hour: a button the size of the hour. It shows its plus when pointed at or focused, and always with a coarse pointer. */
+.odc-sg-slot {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: calc(var(--dt-hour) * var(--dt-from));
+  inline-size: var(--dt-hour);
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--od-text-muted);
+  cursor: pointer;
+}
+
+.odc-sg-slot .odc-icon { opacity: 0; }
+
+.odc-sg-slot:hover { background: var(--od-x-hover); }
+.odc-sg-slot:hover .odc-icon,
+.odc-sg-slot:focus-visible .odc-icon { opacity: 1; }
+
+/* A block: the hours it fills, the name and hours on one line, the break striped along its lower edge */
+.odc-sg-block {
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: calc(var(--dt-hour) * var(--dt-from));
+  inline-size: calc(var(--dt-hour) * var(--dt-span));
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-action-content);
+  border-radius: var(--od-radius-control);
+  background: var(--od-action-soft);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-sg-block:hover { border-color: var(--od-action); }
+
+.odc-sg-block-text {
+  position: relative;
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sg-block-name { font-weight: var(--od-font-weight-medium); }
+
+/* The break is hatched, with a dashed edge so it still shows when a forced palette drops the background */
+.odc-sg-break {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: calc(var(--dt-hour) * var(--dt-from));
+  inline-size: calc(var(--dt-hour) * var(--dt-span));
+  max-inline-size: 100%;
+  block-size: var(--od-space-2);
+  border-block-start: var(--od-x-hairline) dashed var(--od-action-content);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--od-action-content) 0,
+    var(--od-action-content) var(--od-x-hairline),
+    transparent var(--od-x-hairline),
+    transparent var(--od-space-1)
+  );
+}
+
+/* ── Several days: the cell of a driver and a day ── */
+.odc-sg-table td.odc-sg-cell {
+  min-inline-size: var(--dt-day);
+  padding: var(--od-space-1);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  vertical-align: top;
+}
+
+.odc-sg-cell[data-today] { background: var(--od-surface-subtle); }
+
+.odc-sg-cell-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-sg-chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sg-chip {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-sm);
+  margin: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-action-content);
+  border-radius: var(--od-radius-control);
+  background: var(--od-action-soft);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-sg-chip:hover { border-color: var(--od-action); }
+
+/* The second line of a block with a break: «break 13:00 – 13:30», as the phone agenda says it */
+.odc-sg-chip-break {
+  display: block;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* «+N more»: a link-like button, small */
+.odc-sg-more {
+  position: relative;
+  align-self: flex-start;
+  min-block-size: var(--od-x-target-fine);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-1);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-action-content);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Add: 32px seen, at the end of the cell. It shows when the cell is pointed at or has focus, and always with a coarse pointer. */
+.odc-sg-add {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: flex-end;
+  flex: none;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: var(--od-text-muted);
+  cursor: pointer;
+  opacity: 0;
+}
+
+.odc-sg-cell:hover .odc-sg-add,
+.odc-sg-cell:focus-within .odc-sg-add,
+.odc-sg-add:focus-visible { opacity: 1; }
+
+.odc-sg-add:hover { background: var(--od-x-hover); color: var(--od-text); }
+
+/* ── Focus: a ring inside the control (the frame clips what is outside it) ── */
+.odc-sg-slot:focus-visible,
+.odc-sg-block:focus-visible,
+.odc-sg-chip:focus-visible,
+.odc-sg-more:focus-visible,
+.odc-sg-add:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/*
+ * Touch (decision 12): seen at its size, reached at 44×44 by a centred pseudo-element that never shrinks a control already larger.
+ * The add button of a cell is always visible here: there is no pointer to bring it up.
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-sg-block::after,
+  .odc-sg-chip::after,
+  .odc-sg-more::after,
+  .odc-sg-add::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  .odc-sg-add { opacity: 1; }
+  .odc-sg-slot .odc-icon { opacity: 1; color: var(--od-x-text-subtle); }
+}

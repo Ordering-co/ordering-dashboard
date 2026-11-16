@@ -1,0 +1,111 @@
+/* Scoped ColorPicker surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-color-picker) {
+  @apply od-relative;
+}
+
+.od-ui:where(.od-color-picker-trigger) {
+  @apply od-flex od-items-center;
+  min-width: var(--od-color-picker-touch-target);
+  min-height: var(--od-color-picker-touch-target);
+  padding: 0;
+  color: inherit;
+  background: transparent !important;
+  border: 0;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-color-picker-trigger):focus-visible,
+.od-ui:where(.od-color-picker-panel) :where(input, [tabindex='0']):focus-visible {
+  outline: var(--od-color-picker-focus-width) solid var(--od-color-picker-focus);
+  outline-offset: var(--od-color-picker-focus-offset);
+}
+
+.od-ui:where(.od-color-picker-panel) .sketch-picker input {
+  color: var(--od-color-picker-text) !important;
+  background: var(--od-color-picker-surface) !important;
+}
+
+.od-ui:where(.od-color-picker-panel) .sketch-picker label {
+  color: var(--od-color-picker-text) !important;
+}
+
+.od-ui:where(.od-color-picker-panel) .sketch-picker [title][tabindex='0'] {
+  box-shadow: inset 0 0 0 1px var(--od-color-picker-swatch-boundary) !important;
+}
+
+.od-ui:where(.od-color-picker-trigger):disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.od-ui:where(.od-color-picker-value) {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  margin-inline-end: 10px;
+  background-color: var(--od-color-picker-value, var(--od-color-picker-subtle));
+  border: 1px solid var(--od-color-picker-border);
+  border-radius: 50%;
+}
+
+.od-ui:where(.od-color-picker-trigger) > svg {
+  width: var(--od-color-picker-icon-size);
+  height: var(--od-color-picker-icon-size);
+}
+
+.od-ui:where(.od-color-picker-panel) {
+  --od-color-picker-slider-height: 10px;
+  --od-color-picker-preview-size: 24px;
+  position: absolute;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
+  top: 100%;
+  left: 0;
+  width: fit-content;
+  max-width: 100vw;
+  margin-top: 5px;
+  overflow-x: auto;
+  background: var(--od-color-picker-surface);
+  border-radius: var(--od-color-picker-radius);
+  box-shadow: var(--od-color-picker-shadow);
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-color-picker-panel) {
+    --od-color-picker-slider-height: var(--od-color-picker-touch-target);
+    --od-color-picker-preview-size: var(--od-color-picker-touch-target);
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker > .flexbox-fix:has(input) {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker > .flexbox-fix:has(input) > div {
+    min-width: var(--od-color-picker-touch-target);
+    padding-left: 0 !important;
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker > .flexbox-fix:has(input) > div:first-child {
+    flex-basis: 60px !important;
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker input {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: var(--od-color-picker-touch-target);
+    min-height: var(--od-color-picker-touch-target);
+    padding: 4px !important;
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker > .flexbox-fix:last-child > div {
+    width: var(--od-color-picker-touch-target) !important;
+    height: var(--od-color-picker-touch-target) !important;
+    margin: 0 8px 8px 0 !important;
+  }
+
+  .od-ui:where(.od-color-picker-panel) .sketch-picker [title][tabindex='0'] {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}

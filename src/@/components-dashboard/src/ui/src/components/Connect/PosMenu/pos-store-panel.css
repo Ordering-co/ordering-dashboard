@@ -1,0 +1,395 @@
+/*
+ * redesign PM-C: the store panel of /connect/pos-menu (RecordPanel with the connected POS as cards and the other POS
+ * systems as a list). Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on
+ * anything else. Logical properties only (C17). Component classes use the `psp-` prefix; the wrappers keep `odc-`.
+ */
+
+/* The body, the sections and the dialogs' content share one voice */
+.psp-body,
+.psp-section {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.psp-body {
+  display: grid;
+  gap: var(--od-space-5);
+}
+
+.psp-section {
+  display: grid;
+  gap: var(--od-space-3);
+  align-content: start;
+}
+
+.psp-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* A heading or a title the focus is sent to (the POS just connected, ?section=integration) shows where it is */
+.psp-heading:focus-visible,
+.psp-card-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Header: the status switch, under «Back» on a phone ── */
+.psp-status {
+  display: inline-flex;
+  min-inline-size: 0;
+}
+
+.psp-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+/* ── Loading ── */
+.psp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The logo of a POS: decorative, next to its name */
+.psp-logo {
+  flex: none;
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  object-fit: contain;
+}
+
+/* : the wordmark of a setup-call provider (Checkmate 400x62, Deliverect 217x77) is wide. Fixed maximum height, width on its own
+   up to three times that height, the whole image shown: the 24px square squeezed it into a line. */
+.psp-logo-wordmark {
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: calc(var(--od-x-control-height-lg) * 3);
+  max-block-size: var(--od-x-control-height-lg);
+  object-fit: contain;
+}
+
+/* ── Connected POS: a card each ── */
+.psp-card {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+}
+
+.psp-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.psp-card-name {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+/* The on/off switch of the integration goes to the end of the row */
+.psp-card-switch {
+  margin-inline-start: auto;
+}
+
+.psp-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.psp-card-data {
+  display: grid;
+  gap: var(--od-space-1);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.psp-card-data > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.psp-card-data dt {
+  margin: 0;
+}
+
+.psp-card-data dd {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* redesign SC-02: the external id of a sales channel is a field with Save beside it (the field grows, Save keeps its size);
+   under 480px they stack with 12px between, so their 44px reach areas do not cross */
+.psp-card-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.psp-card-form-field {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+@media (max-width: 480px) {
+  .psp-card-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .psp-card-form > .odc-btn {
+    inline-size: 100%;
+  }
+}
+
+/* On a phone the actions are a grid of two columns (D6); a long label wraps inside its button */
+@media (max-width: 767px) {
+  /* redesign PM-T1: 12px between stacked controls so their 44px reach areas do not cross (phase 3 touch probe) */
+  .psp-status {
+    margin-block-start: var(--od-space-3);
+  }
+
+  .psp-card {
+    gap: var(--od-space-4);
+  }
+
+  .psp-card-head {
+    gap: var(--od-space-3);
+  }
+
+  .psp-card-actions {
+    display: grid;
+    gap: var(--od-space-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .psp-card-actions > .odc-btn[data-icon-only] {
+    justify-self: start;
+  }
+
+  .psp-card-actions > .odc-btn:not([data-icon-only]) {
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: auto;
+    min-block-size: var(--od-x-control-height);
+    padding-block: var(--od-space-2);
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* ── Other POS systems: a list, a hairline between rows ── */
+.psp-catalog {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.psp-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.psp-row:last-child {
+  border-block-end: 0;
+}
+
+/* The logos have different widths (a 24px mark, a wide wordmark): the rows share the columns of the list so the names line up */
+@supports (grid-template-columns: subgrid) {
+  .psp-catalog {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .psp-row {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+}
+
+.psp-row-text {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.psp-row-name {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.psp-note {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* main #399: the reason an install failed, as the API wrote it */
+.psp-note-danger {
+  color: var(--od-danger-functional);
+}
+
+/* main #394: why the other POS cannot be connected (a store keeps one POS) */
+.psp-section-note {
+  margin: 0;
+}
+
+.psp-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+  text-align: end;
+}
+
+/* On a phone the action drops under the name and takes the width, as the buttons of a dialog do */
+@media (max-width: 767px) {
+  .psp-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  @supports (grid-template-columns: subgrid) {
+    .psp-catalog {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .psp-row {
+      grid-template-columns: subgrid;
+    }
+  }
+
+  .psp-row-action {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    text-align: start;
+  }
+
+  .psp-row-action > .odc-btn {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    white-space: normal;
+  }
+}
+
+/* ── The plugin's page: it takes the height the dialog gives ── */
+/* /#400: the plugin page. A page that fits sets the width of the Dialog and the height of the box (its
+   remembered or reported height); any other keeps the large Dialog and the fixed height. Only the height moves. */
+@media (min-width: 768px) {
+  .psp-frame-dialog[data-size] {
+    inline-size: var(--psp-frame-inline-size, var(--od-x-dialog-lg));
+  }
+}
+
+.psp-frame-box {
+  position: relative;
+  block-size: var(--psp-frame-block-size, 70dvh);
+  max-block-size: 80dvh;
+  transition: block-size var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.psp-frame {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+  background: var(--od-bg);
+  opacity: 0;
+  transition: opacity var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.psp-frame[data-loaded] {
+  opacity: 1;
+}
+
+.psp-frame-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.psp-frame-spin {
+  inline-size: var(--od-space-6);
+  block-size: var(--od-space-6);
+  animation: odc-spin var(--od-duration-slow) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psp-frame-box,
+  .psp-frame {
+    transition: none;
+  }
+
+  .psp-frame-spin {
+    animation: none;
+  }
+}
+
+/* : the warning beside the state of an integration whose plugin cannot serve it, and the line under the head
+   with the date and the reason of the state */
+.psp-setup-warning {
+  display: inline-flex;
+  align-items: center;
+  color: var(--od-warning-signal);
+}
+
+.psp-card-status {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.psp-card-status-date {
+  font-variant-numeric: tabular-nums;
+}
+
+/* : the confirmation of a sync says what it brings, on its own line */
+.psp-confirm-line {
+  display: block;
+}
+
+.psp-confirm-line + .psp-confirm-line {
+  margin-block-start: var(--od-space-2);
+}

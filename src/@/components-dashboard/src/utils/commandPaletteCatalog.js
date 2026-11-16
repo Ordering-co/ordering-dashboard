@@ -70,7 +70,7 @@ export const NAV_ALIASES = {
   callcenter_agents: ['agentes', 'call center', 'centro de llamadas'],
   admins: ['administradores', 'admins', 'managers', 'equipo'],
   professionals: ['profesionales', 'professionals', 'staff', 'empleados'],
-  enterprise_promotions: ['promociones', 'ofertas', 'cupones', 'descuentos', 'promotions', 'coupons', 'offers'],
+  enterprise_promotions: ['promociones', 'ofertas', 'cupones', 'descuentos', 'promotions', 'coupons', 'offers', 'advanced offers', 'ofertas avanzadas'],
   ad_banners: ['banners', 'anuncios', 'publicidad', 'ads'],
   recovery_actions: ['recuperacion de carritos', 'cart recovery', 'reglas'],
   campaign: ['campanas', 'campaigns', 'email marketing', 'notificaciones push', 'sms'],
@@ -90,7 +90,8 @@ export const NAV_ALIASES = {
   settings: ['configuracion', 'ajustes', 'settings', 'preferencias'],
   free_products: ['descargas gratis', 'free downloads', 'recursos'],
   open_source_code: ['codigo fuente', 'source code', 'open source code', 'download source code', 'descargar codigo fuente'],
-  profile: ['perfil', 'mi cuenta', 'profile', 'account', 'contrasena']
+  profile: ['perfil', 'mi cuenta', 'profile', 'account', 'contrasena'],
+  support: ['soporte', 'ayuda', 'help', 'help center', 'tech support', 'contact sales', 'ventas', 'contactar']
 }
 
 /** Search aliases per Settings group key. */
@@ -163,9 +164,9 @@ const translateCopy = (t, copy = {}, fallback = '') => t(copy.labelKey, copy.lab
 /**
  * Sidebar destinations and footer routes the user can open.
  */
-export const buildNavigationEntries = ({ t = defaultT, user, configs = {}, sites = [] } = {}) => {
+export const buildNavigationEntries = ({ t = defaultT, user, configs = {}, sites = [], googleActionsVisible = false } = {}) => {
   const { level } = getDashboardRoleFlags(user)
-  const sections = getDashboardNavSections({ t, user, configs, sites })
+  const sections = getDashboardNavSections({ t, user, configs, sites, googleActionsVisible })
   const entries = []
 
   Object.values(sections).forEach(section => {
@@ -198,6 +199,20 @@ export const buildNavigationEntries = ({ t = defaultT, user, configs = {}, sites
       pageName: item.pageName
     })
   })
+
+  // redesign (support P-1, n.º 18): /support has no sidebar link (its menu entry goes with T10-9), so the palette is
+  // the way in. It ignores Home's `disableSupportModule`, a constant of the Home page and not a project setting (coordinator, (b))
+  if (canOpenDashboardRoute('/support', level)) {
+    entries.push({
+      id: 'nav:support',
+      group: COMMAND_GROUPS.navigation.key,
+      title: t('SUPPORT', 'Support'),
+      path: '/support',
+      aliases: NAV_ALIASES.support,
+      icon: 'support',
+      pageName: 'support'
+    })
+  }
 
   return entries
 }

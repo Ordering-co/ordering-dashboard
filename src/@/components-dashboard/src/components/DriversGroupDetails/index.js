@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { saveAssignment } from '../../utils/saveAssignment'
 
 const isAlwaysOpenSchedule = (schedule) => Array.isArray(schedule) &&
   schedule.length === 7 &&
@@ -17,6 +18,37 @@ const isAlwaysOpenSchedule = (schedule) => Array.isArray(schedule) &&
 const normalizeScheduleChanges = (changes) => isAlwaysOpenSchedule(changes?.schedule)
   ? { ...changes, schedule: null }
   : changes
+
+const parseIds = (value) => (typeof value === 'string' ? JSON.parse(value) : value) ?? []
+const temporaryKey = (drivers) => JSON.stringify(drivers.map(({ id, temporary_at: at }) => [id, at ?? null]).sort((a, b) => a[0] - b[0]))
+
+/**
+ * takes the drivers and managers out of a save as one add or remove per person against the saved group
+ * (`[path, id, assign]`), so two people editing the same group keep each other's changes. The drivers stay in the
+ * whole list save when the type changes, when they are emptied (the API ignores an empty list), or when a temporary
+ * activation changes, which only the whole list carries.
+ */
+const splitAssignments = (changes, saved) => {
+  const rest = { ...changes }
+  const assignments = []
+  const diff = (path, nextIds, savedPeople) => {
+    const savedIds = (savedPeople ?? []).map(person => person.id)
+    nextIds.filter(id => !savedIds.includes(id)).forEach(id => assignments.push([path, id, true]))
+    savedIds.filter(id => !nextIds.includes(id)).forEach(id => assignments.push([path, id, false]))
+  }
+  const savedTemporary = (saved?.drivers ?? []).filter(driver => driver?.temporary_at)
+  const temporaryChanged = temporaryKey(parseIds(rest.temporary_drivers)) !== temporaryKey(savedTemporary)
+  if (rest.drivers && !('type' in rest) && !temporaryChanged) {
+    diff('drivers', parseIds(rest.drivers), saved?.drivers)
+    delete rest.drivers
+    delete rest.temporary_drivers
+  }
+  if ('administrators' in rest) {
+    diff('administrators', parseIds(rest.administrators), saved?.administrators)
+    delete rest.administrators
+  }
+  return [rest, assignments]
+}
 
 export const DriversGroupDetails = (props) => {
   const {
@@ -113,9 +145,38 @@ export const DriversGroupDetails = (props) => {
     }
   }
 
+  // redesign DG-R1 (R1-01): `refreshOnOpen` (opt-in). A group that comes from a row of the list has stores without `location`; the
+  // overview map of the zones needs it. The row is painted at once (no `loading`), the detail is asked for and swapped in. The id
+  // being refreshed is remembered so the answer of a group that is no longer the open one, or that a save has overtaken, is dropped.
+  const refreshingId = useRef(null)
+  const changesRef = useRef(changesState)
+  changesRef.current = changesState
+  useEffect(() => () => { refreshingId.current = null }, [])
+
+  const refreshDriversGroup = async (id) => {
+    refreshingId.current = id
+    try {
+      const response = await fetch(`${ordering.root}/drivergroups/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+      const { result, error } = await response.json()
+      if (refreshingId.current !== id || error || !result) return
+      setDriversGroupState({ loading: false, driversGroup: result, error: null })
+      // what the user already changed is theirs: the selections only follow the detail while nothing has been touched
+      if (Object.keys(changesRef.current).length === 0) initSet(result)
+    } catch (err) {
+      // the row stays on screen: the detail only adds what the list does not carry
+    }
+  }
+
   /**
    * Method to update selected drivers group from API
    * @param {Object} changes
+   * @returns {Promise<{ ok: boolean, error?: Array }>} redesign DG-B1
    */
   const handleUpdateDriversGroup = async (_changes) => {
     try {
@@ -132,6 +193,8 @@ export const DriversGroupDetails = (props) => {
         }
       })
 
+      let assignments
+      [changes, assignments] = splitAssignments(changes, driversGroupState?.driversGroup)
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -141,9 +204,18 @@ export const DriversGroupDetails = (props) => {
         body: JSON.stringify(changes)
       }
       const groupId = curDriversGroup?.id || driversGroupId
-      const response = await fetch(`${ordering.root}/drivergroups/${groupId}`, requestOptions)
-      const content = await response.json()
+      let content = { error: false, result: driversGroupState?.driversGroup }
+      if (Object.keys(changes).length > 0) {
+        const response = await fetch(`${ordering.root}/drivergroups/${groupId}`, requestOptions)
+        content = await response.json()
+      }
+      // each answer is the whole group, so the last one carries every change sent
+      for (const [path, id, assign] of assignments) {
+        if (content.error) break
+        content = await saveAssignment(ordering, token, `drivergroups/${groupId}/${path}/${id}`, assign)
+      }
       if (!content.error) {
+        refreshingId.current = null // redesign DG-R1 (R1-01): a refresh that was on its way is older than this answer
         setActionState({ error: null, loading: false })
         const groups = driversGroupsState.groups.filter(group => {
           if (group.id === groupId) {
@@ -160,17 +232,28 @@ export const DriversGroupDetails = (props) => {
           driversGroup: content.result
         })
         setIsScheduleEnabled(!!content.result?.schedule)
-        setChangesState({})
+        // redesign DG-B1 (M-DG5): only the keys that were sent leave `changesState`. A "Save" sends all of it (so it
+        // empties, as before); the header switch ({ enabled }) leaves the unsaved changes of the other tabs alone.
+        const sentKeys = Object.keys(_changes || {})
+        setChangesState(prev => {
+          const rest = { ...prev }
+          sentKeys.forEach(key => { delete rest[key] })
+          return rest
+        })
+        return { ok: true } // redesign DG-B1
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
+        return { ok: false, error: content.result } // redesign DG-B1
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] } // redesign DG-B1
     }
   }
 
   /**
    * Method to delete the drivers group from API
+   * @returns {Promise<{ ok: boolean, error?: Array }>} redesign DG-B1
    */
   const handleDeleteDriversGroup = async () => {
     try {
@@ -189,13 +272,17 @@ export const DriversGroupDetails = (props) => {
         setActionState({ ...actionState, loading: false })
         const groups = driversGroupsState.groups.filter(group => group.id !== curDriversGroup.id)
         setDriversGroupsState({ ...driversGroupsState, groups })
+        props.reloadDriversGroups?.() // the local filter leaves the total and the pages stale
         showToast(ToastType.Success, t('DRIVER_GROUP_DELETED', 'Driver group deleted'))
         props.onClose && props.onClose()
+        return { ok: true } // redesign DG-B1
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
+        return { ok: false, error: content.result } // redesign DG-B1
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] } // redesign DG-B1
     }
   }
 
@@ -232,9 +319,12 @@ export const DriversGroupDetails = (props) => {
         }
         const groups = [...driversGroupsState.groups, newGroup]
         setDriversGroupsState({ ...driversGroupsState, groups })
+        props.reloadDriversGroups?.() // the local append gives 11 rows on a page of 10 and a stale total
         showToast(ToastType.Success, t('DRIVER_GROUP_ADDED', 'Driver group added'))
         setChangesState({})
-        props.onClose && props.onClose()
+        // (row 27, drivers-groups P-10, D-39 (a)): with `onCreated` the owner opens the new group's record; without it, close as before (never both)
+        if (props.onCreated) props.onCreated(newGroup)
+        else props.onClose && props.onClose()
       } else {
         setActionState({ loading: false, error: content.result })
       }
@@ -274,12 +364,12 @@ export const DriversGroupDetails = (props) => {
   }
 
   const handleSelectAllBusiness = (isAll) => {
-    const businessIds = businesses?.reduce((ids, business) => [...ids, business.id], []) || []
     let filteredIds = []
     if (isAll) {
-      filteredIds = [...businessIds]
-    } else {
-      filteredIds = []
+      // redesign D-12 (owner, 2026-10-19): the page on screen joins the selection; the stores ticked on other
+      // pages stay ticked (it used to replace the selection). "Select none" still clears everything.
+      const pageIds = businesses?.map(business => business.id) || []
+      filteredIds = [...selectedBusinessIds, ...pageIds.filter(id => !selectedBusinessIds.includes(id))]
     }
     setSelectedBusinessIds(filteredIds)
     setChangesState({
@@ -447,11 +537,20 @@ export const DriversGroupDetails = (props) => {
     })
   }
 
+  // checking «Use advanced logistic» again restores the values it had (saved or edited here), 1 only if it never had any
+  const advancedValuesRef = useRef({})
   const handleLogistic = (checked) => {
-    const changes = {
-      autoassign_amount_drivers: checked ? 1 : 0,
-      orders_group_max_orders: checked ? 1 : 0
-    }
+    const positive = (value) => Number(value) > 0 ? Number(value) : null
+    const saved = driversGroupState?.driversGroup
+    const keys = ['autoassign_amount_drivers', 'orders_group_max_orders']
+    const changes = {}
+    keys.forEach(key => {
+      if (!checked) {
+        const current = positive(changesState[key] ?? saved?.[key])
+        if (current) advancedValuesRef.current[key] = current
+      }
+      changes[key] = checked ? (advancedValuesRef.current[key] ?? positive(saved?.[key]) ?? 1) : 0
+    })
     handleChangesState(changes)
   }
 
@@ -491,6 +590,7 @@ export const DriversGroupDetails = (props) => {
 
   useEffect(() => {
     setChangesState({})
+    refreshingId.current = null
     if (curDriversGroup) {
       setDriversGroupState({
         ...driversGroupState,
@@ -498,6 +598,8 @@ export const DriversGroupDetails = (props) => {
         driversGroup: curDriversGroup
       })
       initSet(curDriversGroup)
+      // redesign DG-R1 (R1-01): the row first, then the detail (a single request)
+      if (props.refreshOnOpen && curDriversGroup.id) refreshDriversGroup(curDriversGroup.id)
     } else {
       setDriversGroupState({
         driversGroup: null, loading: !props.curDriversGroup, error: null

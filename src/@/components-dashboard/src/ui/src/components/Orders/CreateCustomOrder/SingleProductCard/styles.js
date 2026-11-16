@@ -25,8 +25,7 @@ export const CardContainer = styled.div`
     `
     : css`
       flex-direction: row;
-    `
-  }
+    `}
     align-items: center;
     width: 100%;
   }
@@ -86,7 +85,7 @@ export const SoldOut = styled.span`
   border-radius: 2px 0px 0px 2px;
   right: 0px;
   color: white;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   ${props => props.theme?.rtl && css`
     left: 0px;
     right: initial;
@@ -114,7 +113,7 @@ export const CardInfo = styled.div`
   p {
     color: #909BA9;
     text-align: left;
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     ${props => props.theme?.rtl && css`
       text-align: right;
     `}
@@ -128,7 +127,7 @@ export const CardInfo = styled.div`
 
   span {
     color: ${props => props.theme.colors.darkTextColor};
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 
   ${({ oneLine }) => oneLine && css`
@@ -137,15 +136,6 @@ export const CardInfo = styled.div`
     }
   `}
 
-  @media (min-width: 1024px) {
-    p {
-      font-size: 12px;
-    }
-
-    span {
-      font-size: 14px;
-    }
-  }
 `
 
 export const WrapLogo = styled.div`
@@ -207,17 +197,18 @@ const CardLogoStyled = styled.div`
   object-fit: cover;
   min-height: 86px;
   border-radius: 10px;
+
+  ${({ bgimage }) => bgimage && css`
+    background-image: url(${bgimage});
+  `}
+
+  ${({ soldOut }) => soldOut && css`
+    filter: brightness(70%);
+  `}
 `
 export const CardLogo = (props) => {
-  const style = {}
-  if (props.bgimage) {
-    style.backgroundImage = `url(${props.bgimage})`
-  }
-  if (props.soldOut) {
-    style.filter = 'brightness(70%)'
-  }
   return (
-    <CardLogoStyled {...props} style={style}>
+    <CardLogoStyled {...props}>
       {props.children}
     </CardLogoStyled>
   )
@@ -231,7 +222,7 @@ export const PriceWrapper = styled.div`
     min-width: 64px
   }
   .off-price {
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     color: #909BA9;
     margin-left: 5px;
     text-decoration: line-through;
@@ -244,7 +235,6 @@ export const PriceWrapper = styled.div`
     `}
 
     @media (min-width: 1024px) {
-      font-size: 13px;
       ${({ isOffPrice }) => isOffPrice && css`
         min-width: 64px;
       `}
@@ -259,7 +249,7 @@ export const RibbonBox = styled.div`
   z-index: 10;
   color: ${props => props.theme.colors.colorTextSignForm};
   font-weight: 400;
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   line-height: 13px;
   top: -4px;
   right: -3px;
@@ -294,8 +284,8 @@ export const TitleWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  h1 {
-    font-size: 14px;
+  h3 {
+    font-size: var(--od-type-content-size);
     font-weight: 500;
     text-align: left;
     color: ${props => props.theme.colors.headingColor};

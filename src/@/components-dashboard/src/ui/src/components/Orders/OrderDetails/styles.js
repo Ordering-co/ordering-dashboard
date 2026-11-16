@@ -6,35 +6,22 @@ export const Container = styled.div`
   display: flex;
   width: 0;
   position: fixed;
-  box-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 8px 35px rgba(0, 0, 0, 0.16)'};
 
   ${({ isSelectedOrders }) => isSelectedOrders && css`
     box-shadow: none;
-
-    ${props => props.theme?.rtl
-? css`
-      border-right: 1px solid ${props => props.theme.colors.borderColor};
-    `
-: css`
-      border-left: 1px solid ${props => props.theme.colors.borderColor};
-    `}
+    border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   `}
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
+  background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'};
   height: calc(var(--vh, 1vh) * 100);
-  top: 0px;
-  z-index: 1001;
+  inset-block-start: 0px;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
   overflow-x: hidden;
   ${({ noAnimation }) => !noAnimation && css`
     transition: 0.3s;
   `}
 
-  ${props => props.theme?.rtl
-? css`
-    left: var(--assistant-offset, 0px);
-    `
-: css`
-    right: var(--assistant-offset, 0px);
-  `}
+  inset-inline-end: var(--assistant-offset, 0px);
   @media print {
     box-shadow: none;
   }
@@ -68,52 +55,61 @@ export const OrderDetailsExtraContent = styled.div`
   box-sizing: border-box;
   width: 100%;
 
-  ${props => props.theme?.rtl
-? css`
-    border-right: 1px solid #E9ECEF;
-  `
-: css`
-    border-left: 1px solid #E9ECEF;
-  `}
+  border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'};
 `
 
 export const ChatContainer = styled.div`
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   border-radius: 8px;
   margin-top: 40px;
   height: calc(100% - 40px);
   overflow: hidden;
 `
 
-export const ButtonLink = styled.div`
+export const ButtonLink = styled.button.attrs({ type: 'button' })`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   cursor: pointer;
   padding: 5px;
   margin: 0 5px;
+  border: 0;
+  background: transparent;
 
   &:hover {
-    background-color: ${props => props.theme.colors?.secundary};
+    background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.secundary};
     border-radius: 5px;
   }
 
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors?.primary};
+    outline-offset: 2px;
+  }
+
   svg {
-    color: ${props => props.theme.colors?.secundaryContrast};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.secundaryContrast};
     font-size: 24px;
   }
 `
 
 export const OrderStatus = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
   margin: ${({ noMargin }) => noMargin ? '0px' : '20px 0'};
 
   h2 {
-    color: ${props => props.theme.colors?.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     margin: 0px;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
   }
 
   p {
-    color: ${props => props.theme.colors?.headingColor};
-    font-size: 14px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
+    font-size: var(--od-type-content-size);
     margin: 0px;
   }
 
@@ -132,9 +128,9 @@ export const OrderStatusSelectorWrapper = styled.div`
   width: 45%;
   > div {
     > div:first-child {
-      border-color: ${props => props.theme.colors?.secundary};
+      border-color: ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary};
       border-radius: 8px;
-      background-color: ${props => props.theme.colors?.secundary};
+      background-color: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary};
       > div:first-child {
         padding-top: 5px;
         padding-bottom: 5px;
@@ -142,7 +138,7 @@ export const OrderStatusSelectorWrapper = styled.div`
           > div {
             border: none !important;
             p {
-              color: ${props => props.theme.colors.headingColor} !important;
+              color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor} !important;
               padding: 0 !important;
             }
           }
@@ -164,7 +160,7 @@ export const StatusBarContainer = styled.div`
 const StatusBarStyled = styled.div`
   height: 10px;
   border-radius: 10px;
-  background: ${props => `linear-gradient(to right, ${props.theme.colors.primary} ${props.percentage}%, ${props.theme.colors.borderColor} ${props.percentage}%)`};
+  background: ${props => `linear-gradient(to ${props.theme?.rtl ? 'left' : 'right'}, ${props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary} ${props.percentage}%, ${props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor} ${props.percentage}%)`};
 `
 
 export const StatusBar = (props) => {
@@ -185,42 +181,36 @@ export const AdvancedLogistic = styled.div`
 
   > div {
     p {
-      color: ${props => props.theme.colors?.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
       margin: 0px;
 
       &:first-child {
         font-weight: 500;
-        font-size: 14px;
+        font-size: var(--od-type-content-size);
       }
       &:not(:first-child) {
-        font-size: 12px;
-        color: ${props => props.theme.colors.lightGray};
+        font-size: var(--od-type-secondary-size);
+        color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
       }
     }
   }
 `
 export const OrderProducts = styled.div`
   padding: 10px 0 10px 0;
-  border-bottom: 1px solid #E9ECEF;
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'};
   h2 {
-    color: ${props => props.theme.colors?.headingColor};
-    font-size: 18px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
+    font-size: var(--od-type-section-title-size);
   }
 `
 
 export const CloseButtonWrapper = styled.div`
   width: fit-content;
   cursor: pointer;
-  z-index: 100;
+  z-index: var(--od-x-layer-sticky);
   position: absolute;
-  top: 30px;
-  ${props => props.theme?.rtl
-? css`
-    left: 20px;
-  `
-: css`
-    right: 20px;
-  `}
+  inset-block-start: 30px;
+  inset-inline-end: 20px;
 `
 
 export const PlaceSpotContainer = styled.div`
@@ -230,14 +220,14 @@ export const PlaceSpotContainer = styled.div`
   margin: 10px 0;
 
   p {
-    color: ${props => props.theme.colors?.headingColor};
-    font-size: 14px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
+    font-size: var(--od-type-content-size);
     margin: 0px;
   }
 `
 export const RejectReasonsContainer = styled.div`
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
     font-weight: 500;
     margin: 0;
@@ -247,18 +237,18 @@ export const RejectReasonsList = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: calc(100% + 10px);
-  margin-left: -5px;
+  margin-inline-start: -5px;
   margin-top: 10px;
 `
 export const RejectReasonWrapper = styled.div`
   padding: 4px 10px;
   border-radius: 50px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   margin: 5px;
   width: fit-content;
-  background-color: ${props => lighten(0.4, props.theme.colors.danger)};
-  color: ${props => props.theme.colors.danger};
+  background-color: ${props => props.theme?.ordering?.semantic?.state?.danger?.soft ?? lighten(0.4, props.theme.colors.danger)};
+  color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};
 `
 
 export const DetailBottom = styled.div`
@@ -268,16 +258,16 @@ export const DetailBottom = styled.div`
 export const FormControl = styled.div`
   label {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
   textarea {
     width: 100%;
   }
   ${({ isError }) => isError && css`
     textarea {
-      border: 1px solid ${props => props.theme.colors.danger};
+      border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};
       &:focus {
-        border: 1px solid ${props => props.theme.colors.danger};
+        border: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger};
       }
     }
   `}
@@ -293,8 +283,8 @@ export const AssigmentCommentContainer = styled.form`
 `
 
 export const ErrorMessage = styled.div`
-  color: ${props => props.theme.colors.danger};
-  font-size: 14px;
+  color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};
+  font-size: var(--od-type-content-size);
 `
 
 export const OrderStatusTime = styled.div`
@@ -314,14 +304,14 @@ export const ForterDecisionContainer = styled.div`
   margin: 10px 0;
 
   span {
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     font-weight: 600;
     color: ${({ status }) => getForterColor(status)};
   }
 
   p {
-    font-size: 13px;
-    color: ${props => props.theme.colors?.lightGray};
+    font-size: var(--od-type-secondary-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
     margin: 4px 0 0 0;
   }
 `

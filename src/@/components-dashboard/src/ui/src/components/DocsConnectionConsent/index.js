@@ -5,7 +5,7 @@ import { getDocsConnectView } from '../../../../components/DocsConnection/mode'
 import { OrderingBrandFonts } from '../../styles/OrderingBrand'
 import { PrimaryButton, SecondaryButton } from '../Login/AuthLayout/styles'
 import { CheckIcon, CircleCheckIcon, ClockIcon, ShieldIcon } from '../Login/AuthLayout/icons'
-import { SpinnerLoader } from '../Shared'
+import { SpinnerLoader } from '../Shared/SpinnerLoader'
 import { getDocsConnectContext, getDocsConnectCopy } from './copy'
 import {
   ConsentPage,

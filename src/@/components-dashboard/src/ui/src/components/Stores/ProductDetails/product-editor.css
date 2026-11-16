@@ -1,0 +1,429 @@
+/*
+ * redesign SP-F1 (D1) · /stores/products: the shell of the product editor (panel, header, overview).
+ * It is store-editor.css (SL-F2, B2) for a product: same panel, same widths, same grid. Values: --od-* and --od-x-* only
+ * (guard: productLiteralGuard.test.js). Logical properties only (C17).
+ *
+ * The panel is fixed at the inline end of the page, as Container was. It must NOT get `container-type`, `contain`,
+ * `transform`, `filter`, `will-change` or `perspective` (here or on anything this file adds above it): any of them makes
+ * the panel the containing block of the legacy fixed SideBars that the sections open (Labels, the details of an ingredient
+ * or of an extra), and they would stop painting over the page. Width comes from `data-size`, not from a style written on
+ * the node (utils/editorPanel getPanelSize):
+ *   base  the Overview: --od-x-store-panel (500px)
+ *   wide  a section open on a window of 1000px or more: --od-x-store-panel-wide (1000px)
+ *   full  Expand, a window of 500px or less, or a section that asked for the whole width (isExtendExtraOpen); also a
+ *         section on a window between 500 and 999px, which opens inside this same panel instead of a modal at 80%.
+ * The two panel tokens are the ones of the store editor (src/brand/candidates.css).
+ */
+
+.odc-pe-panel {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-end: var(--assistant-offset, 0);
+  /* The layer Container had (1005): chrome + 5, so it keeps its place against the legacy side bars of the list page. */
+  z-index: calc(var(--od-x-layer-chrome) + 5);
+  display: flex;
+  flex-direction: column;
+  inline-size: 0;
+  max-inline-size: var(--app-width, 100vw);
+  block-size: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  transition: inline-size var(--od-duration-slow) var(--od-ease-standard);
+}
+
+.odc-pe-panel[data-open] {
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+.odc-pe-panel[data-open][data-size='base'] { inline-size: var(--od-x-store-panel); }
+.odc-pe-panel[data-open][data-size='wide'] { inline-size: var(--od-x-store-panel-wide); }
+.odc-pe-panel[data-open][data-size='full'] { inline-size: var(--app-width, 100vw); }
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-pe-panel { transition: none; }
+}
+
+/* ── Header ── */
+.odc-pe-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-3);
+  padding-inline: var(--od-space-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odc-pe-head-row,
+.odc-pe-head-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* : the row wraps. Thumbnail, name, state and switch are one block (`-lead`) that asks for room for its name; when the block and
+   the actions do not fit together, the actions (fixed width, kept at the end) drop to a line of their own and the name keeps the whole
+   width, instead of being left ~55px at 390px. */
+.odc-pe-head-row {
+  flex-wrap: wrap;
+}
+
+.odc-pe-head-lead {
+  display: flex;
+  flex: 1 1 calc(var(--od-x-type-title-size) * 15);
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Stacked 32px buttons with a 44px hit area on a phone: 12px between them keeps the areas from crossing. */
+.odc-pe-head-tools {
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+}
+
+.odc-pe-title {
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  /* : between words, like `main`; only a word longer than the line breaks (the previous value made every letter a break point) */
+  overflow-wrap: break-word;
+}
+
+.odc-pe-spacer {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-pe-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-half);
+  margin-inline-start: auto;
+}
+
+/* Under 768px («More actions», Close and Expand are 32px seen, 44px reached) they are 12px apart instead of 2, so the area of
+   one does not cross the next (the same probe as the store editor: More actions crossed Close). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-pe-actions { gap: var(--od-space-3); }
+}
+
+/* The thumbnail: a square tile with a hairline, the image cut to fill it. */
+.odc-pe-thumb {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.odc-pe-thumb > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* What the last switch or Duplicate answered: a line of its own in the tools row, never over a control. */
+.odc-pe-notice {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+}
+
+/* ── Body: Overview is one column (the section list above its content); a section is the list beside it ── */
+.odc-pe-main {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.odc-pe-nav {
+  min-inline-size: 0;
+}
+
+.odc-pe-main[data-view='overview'] > .odc-pe-nav {
+  flex: none;
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-pe-main[data-view='section'] {
+  display: grid;
+  grid-template-columns: var(--od-x-record-nav) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.odc-pe-main[data-view='section'][data-nav='hidden'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.odc-pe-main[data-view='section'] > .odc-pe-nav {
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-3);
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The legacy section lays itself out inside this box, as it did inside MoreSidebarLayout. The box is what scrolls, so the
+   Save of Information (position: sticky; bottom: 0 in its form) stays at the foot of the panel. */
+.odc-pe-content {
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-pe-main[data-view='section'] > .odc-pe-content {
+  overflow: auto;
+}
+
+/* Below 1000px the sections of main opened in a modal that gave them their margin, and they only pad themselves from 1000px;
+   inside the panel they need the panel's gutter. */
+@media (max-width: 999px) {
+  .odc-pe-main[data-view='section'] > .odc-pe-content {
+    padding: var(--od-space-4);
+  }
+}
+
+/* A phone: the section selector sits above the content, both at the full width of the panel. The selector is capped so
+   that it stays a selector (SectionNav turns into a list when its own box reaches 600px) on a wide phone or a tablet.
+   The Overview keeps the whole list (the shell passes wideMinWidth={0}), so the cap is for the selector only. */
+@media (max-width: 767px) {
+  .odc-pe-head {
+    padding-inline: var(--od-space-4);
+  }
+
+  .odc-pe-main[data-view='overview'] > .odc-pe-nav {
+    padding-inline: var(--od-space-4);
+  }
+
+  .odc-pe-main[data-view='section'] .odc-pe-sections {
+    max-inline-size: calc(var(--od-x-record-nav) * 2);
+  }
+
+  .odc-pe-main[data-view='section'] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .odc-pe-main[data-view='section'] > .odc-pe-nav {
+    padding-block: var(--od-space-3);
+    padding-inline: var(--od-space-4);
+    border-inline-end: 0;
+    border-block-end: var(--od-x-hairline) solid var(--od-border);
+  }
+}
+
+/* redesign SP-Q1 (R-2): on a phone the section box is a column (the five sibling tabs, then the section) and the section
+ * takes the room left, instead of the 100% height of the legacy ProductMainDetails box: that box scrolled under the tabs row
+ * and the sticky Save of Information stuck to its foot, below the screen. */
+@media (max-width: 767px) {
+  .odc-pe-main[data-view='section'] > .odc-pe-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .odc-pe-main[data-view='section'] > .odc-pe-content > :not(.odc-pe-tabs) {
+    flex: 1 1 0;
+    min-block-size: 0;
+    block-size: auto;
+  }
+}
+
+/* On a phone, the five tabs of Product details over the content: buttons that wrap, never a sideways scroll. */
+.odc-pe-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin-block-end: var(--od-space-4);
+}
+
+/* ── Overview ── */
+.odc-pe-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-6);
+  padding-inline: var(--od-space-5);
+}
+
+@media (max-width: 767px) {
+  .odc-pe-overview {
+    padding-inline: var(--od-space-4);
+  }
+}
+
+.odc-pe-overview-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* The image of main was 150px and 200px from 768px; it is one square of six avatars (192px) that never outgrows the panel. */
+.odc-pe-image {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: min(100%, calc(var(--od-x-avatar-lg) * 6));
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.odc-pe-image > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-pe-image-empty {
+  inline-size: 40%;
+  block-size: 40%;
+}
+
+.odc-pe-roi {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-pe-roi-text {
+  min-inline-size: 0;
+}
+
+.odc-pe-roi-text > p,
+.odc-pe-price > dt,
+.odc-pe-price > dd {
+  margin: 0;
+}
+
+.odc-pe-roi-value,
+.odc-pe-price > dd {
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-pe-label,
+.odc-pe-price > dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+/* Each price is a figure over its name: the name comes first in the markup (term, then value), the figure is drawn above it. */
+.odc-pe-prices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-cell-person), 1fr));
+  gap: var(--od-space-4);
+  margin: 0;
+}
+
+.odc-pe-price {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-pe-service-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-pe-description {
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.odc-pe-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+/* ── Not found / could not load ── */
+.odc-pe-notfound {
+  display: grid;
+  flex: 1 1 0;
+  place-items: center;
+  min-block-size: 0;
+}
+
+/* ── Preview (the Modal of main): the heading and the Reload / Desktop / Mobile tools above the storefront simulation ── */
+.odc-pe-preview-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  margin-block-end: var(--od-space-4);
+  padding-inline-end: var(--od-space-8);
+}
+
+.odc-pe-preview-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-pe-preview-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+/* The action menus (P/Menu, also the compact SectionNav) mount in body on the overlay role (overlay + 9), already above the
+   editor panel (chrome + 5) and the dialog host: no lift here ( O-7; the old chrome + 6 put them under a dialog). */
+
+/* The panel takes the focus when it opens; the focus ring is for its controls, not for the panel. */
+.odc-pe-panel:focus { outline: none; }

@@ -1,0 +1,36 @@
+.od-ui:where(.od-toast-container) {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-family: var(--od-toast-font);
+}
+
+.od-ui:where(.od-toast-container) > .toast-bar {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: var(--od-x-layer-notice);
+  /* : Product/SaveBar sets --od-toast-offset (its height + 12px) while it is drawn, so the toast never covers Discard / Save */
+  bottom: calc(30px + var(--od-toast-offset, 0px));
+  inset-inline-end: 30px;
+  min-width: 200px;
+  max-width: min(200px, calc(100vw - 32px));
+  padding: 16px;
+  border: 1px solid var(--od-toast-border);
+  border-radius: var(--od-toast-radius);
+  background: var(--od-toast-background);
+  color: var(--od-toast-foreground);
+  box-shadow: var(--od-toast-shadow);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  overflow-wrap: anywhere;
+  opacity: 1;
+}
+
+@media (min-width: 380px) {
+  .od-ui:where(.od-toast-container) > .toast-bar {
+    min-width: 250px;
+    max-width: min(520px, calc(100vw - 60px));
+    font-size: 16px;
+  }
+}

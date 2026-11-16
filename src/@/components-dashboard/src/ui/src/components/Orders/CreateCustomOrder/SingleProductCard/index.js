@@ -52,7 +52,7 @@ const SingleProductCardUI = (props) => {
         <div>
           <CardInfo soldOut={maxProductQuantity <= 0} isBgimage={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_86,c_limit')}>
             <TitleWrapper>
-              <h1>{product?.name}</h1>
+              <h3>{product?.name}</h3>
             </TitleWrapper>
             <PriceWrapper isOffPrice={product?.offer_price && product?.in_offer}>
               <span className='current-price'>{product?.price ? parsePrice(product?.price) : ''}</span>
@@ -63,7 +63,7 @@ const SingleProductCardUI = (props) => {
                 <WrapTags>
                   {product?.tags.map((tag, i) => (
                     <div key={i}>
-                      <img src={tag.image ?? ''} />
+                      <img src={tag.image ?? ''} alt='' />
                     </div>
                   ))}
                 </WrapTags>

@@ -1,0 +1,81 @@
+/*
+ * redesign stores 3.D: the detail of a store in the integration-sync panel. Values come from --od-* (release) and
+ * --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `bsd-` prefix; the wrappers keep `odc-`.
+ */
+
+.bsd {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The panel already has its title (the integration), so the store is a heading one level under it */
+.bsd-title {
+  margin: 0 0 var(--od-space-4);
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.bsd-rows {
+  display: grid;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.bsd-row {
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.bsd-row:first-child { padding-block-start: 0; }
+
+.bsd-row > dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* the URL takes the room and parts anywhere (it has no spaces); the copy button keeps its own */
+.bsd-row > dd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.bsd-link {
+  flex: 1;
+  min-inline-size: 0;
+  color: var(--od-action-content);
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+  unicode-bidi: isolate;
+}
+
+.bsd-link:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+  border-radius: var(--od-radius-control);
+}
+
+/* «Copied»: a live status that keeps its line, so the block does not jump when it appears */
+.bsd-note {
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+  margin: var(--od-space-2) 0 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

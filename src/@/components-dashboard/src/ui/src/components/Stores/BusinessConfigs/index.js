@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useLanguage, BusinessConfigs as BusinessConfigsController } from '../../../../../index'
 import { SettingsList } from '../../Settings'
 import { getBusinessConfigSections } from '../../../../../utils/businessConfigSections'
@@ -17,7 +17,9 @@ export const BusinessConfigsUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const sections = getBusinessConfigSections(business?.configs)
+  // redesign stores 5.16 (; G2-35): SettingsList resets its configs from `staticConfigs` in an effect, so a new array
+  // on every render of a parent would drop the edits not saved yet. Rebuild the sections only when `business.configs` changes.
+  const sections = useMemo(() => getBusinessConfigSections(business?.configs), [business?.configs])
 
   return (
     <Container>

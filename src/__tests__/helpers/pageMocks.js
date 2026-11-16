@@ -30,7 +30,6 @@ const UI_EXPORT_NAMES = [
   'DriversTimeDisplay',
   'DriverAnalytics',
   'DriverStoreStatus',
-  'EcommerceReports',
   'EnterprisePromotionListing',
   'ForgotPasswordForm',
   'FreeProductsList',
@@ -56,6 +55,7 @@ const UI_EXPORT_NAMES = [
   'PosMenu',
   'ProductsBuilderList',
   'ProfilePage',
+  'ProfessionalAddForm', // redesign /users/professionals injects it into StaffListing as AddForm
   'ProfessionalListing',
   'PurchasedProductsList',
   'RecoveryActionListing',
@@ -65,8 +65,8 @@ const UI_EXPORT_NAMES = [
   'SalesChannels',
   'SchoolsManagement',
   'SettingsLogs',
+  'StaffListing',
   'Support',
-  'UsersListing',
   'WhatsAppBots'
 ]
 

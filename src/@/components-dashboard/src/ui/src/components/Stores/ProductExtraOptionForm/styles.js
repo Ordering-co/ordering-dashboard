@@ -101,7 +101,7 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   label {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   .default {
@@ -204,7 +204,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -238,7 +238,7 @@ export const CheckboxWrapper = styled.div`
   label {
     cursor: pointer;
     color: ${props => props.theme.colors.headingColor};
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 0px;
 
     ${props => props.theme?.rtl
@@ -263,7 +263,7 @@ export const SelectboxGroup = styled.div`
   }
 
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 0;
   }
 

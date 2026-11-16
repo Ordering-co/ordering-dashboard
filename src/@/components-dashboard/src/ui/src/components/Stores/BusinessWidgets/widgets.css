@@ -1,0 +1,76 @@
+/*
+ * redesign stores 5.15a · Widgets of Ordering channels: two blocks (popup, inline), each step a label, a read-only code
+ * block and its copy button. Values: --od-* and --od-x-* only, logical properties only.
+ */
+
+.odc-widgets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+}
+
+.odc-widgets-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-widgets-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* One step: its label, the code, then «Copy» at the start of the next line */
+.odc-widgets-step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-widgets-step > .odc-widgets-label,
+.odc-widgets-step > .odc-widgets-code,
+.odc-widgets-step > .odc-notice { align-self: stretch; }
+
+.odc-widgets-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Code reads in mono, left to right in every language; it scrolls inside its box and never widens the page. */
+.odc-widgets-code {
+  box-sizing: border-box;
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--od-space-2) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border-strong);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-body);
+  resize: vertical;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.odc-widgets-code:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-widgets-help {
+  display: flex;
+}

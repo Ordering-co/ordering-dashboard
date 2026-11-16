@@ -13,7 +13,7 @@ export const ReviewsTable = styled.table`
   }
 
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
   }
 
@@ -86,7 +86,7 @@ export const Image = (props) => {
 }
 
 export const ReviewObject = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   display: flex;
   align-items: center;
 
@@ -105,7 +105,7 @@ export const ReviewObject = styled.div`
   }
 `
 export const ReviewMarkerWrapper = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
 
   ${props => props.theme.colors.rtl
 ? css`

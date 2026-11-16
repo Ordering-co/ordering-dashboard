@@ -6,6 +6,7 @@ import { Modal, RangeCalendar, Alert } from '../../Shared'
 import { CampaignAmountOption } from '../CampaignAmountOption'
 import { CampaignSignUpOption } from '../CampaignSignUpOption'
 import { Select } from '../../../styles/Select/FirstSelect'
+import { radioGroupKeyDown, radioTabIndex } from '../../../utils/radioGroupKeyboard'
 
 import {
   Circle as UnCheckIcon,
@@ -55,6 +56,9 @@ export const CampaignDetailGeneral = (props) => {
   } = props
 
   const [, t] = useLanguage()
+
+  const audienceType = formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type
+  const isAudienceTypeSet = audienceType === 'dynamic' || audienceType === 'fixed'
 
   const [isASAP, setIsASAP] = useState(true)
   const [isRuleModal, setIsRuleModal] = useState(false)
@@ -253,13 +257,19 @@ export const CampaignDetailGeneral = (props) => {
             handleChangeSearch={(val) => setContactTypeSearchVal(val)}
           />
         </SelectWrapper>
-        <AudienceWrapper>
-          <h2>{t('AUDIENCE', 'Audience')}</h2>
+        <AudienceWrapper role='radiogroup' aria-labelledby='campaign-audience-heading'>
+          <h2 id='campaign-audience-heading'>{t('AUDIENCE', 'Audience')}</h2>
           <DynamicWrapper>
             <RadioCheckWrapper
+              as='button'
+              type='button'
+              role='radio'
+              aria-checked={(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'dynamic'}
+              tabIndex={radioTabIndex(audienceType === 'dynamic', true, isAudienceTypeSet)}
+              onKeyDown={radioGroupKeyDown}
               onClick={() => handleChangeItem('audience_type', 'dynamic')}
             >
-              {(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'dynamic' ? <CheckIcon className='fill' /> : <UnCheckIcon />}
+              {(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'dynamic' ? <CheckIcon className='fill' aria-hidden='true' /> : <UnCheckIcon aria-hidden='true' />}
               <span>{t('DYNAMIC', 'Dynamic')}</span>
             </RadioCheckWrapper>
             <DynamicContentWrapper>
@@ -293,9 +303,15 @@ export const CampaignDetailGeneral = (props) => {
           </DynamicWrapper>
           <FixedWrapper>
             <RadioCheckWrapper
+              as='button'
+              type='button'
+              role='radio'
+              aria-checked={(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'fixed'}
+              tabIndex={radioTabIndex(audienceType === 'fixed', false, isAudienceTypeSet)}
+              onKeyDown={radioGroupKeyDown}
               onClick={() => handleChangeItem('audience_type', 'fixed')}
             >
-              {(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'fixed' ? <CheckIcon className='fill' /> : <UnCheckIcon />}
+              {(formState?.changes?.audience_type ?? campaignState?.campaign?.audience_type) === 'fixed' ? <CheckIcon className='fill' aria-hidden='true' /> : <UnCheckIcon aria-hidden='true' />}
               <span>{t('FIXED', 'Fixed')}</span>
             </RadioCheckWrapper>
             <FixedContent>
@@ -308,20 +324,34 @@ export const CampaignDetailGeneral = (props) => {
                       <StatusPoint style={{ background: checkColor(formState?.changes?.status ?? campaignState?.campaign?.status) }} />
                     </FixedStatusWrapper>
                   )}
-                  <h3>{('DELIVERY_SCHEDULE', 'Delivery Schedule')}</h3>
-                  <RadioCheckWrapper
-                    onClick={() => handleChangeSchedule()}
-                    isBottom
-                  >
-                    {isASAP ? <CheckIcon className='fill' /> : <UnCheckIcon />}
-                    <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format('LLLL')})</span>
-                  </RadioCheckWrapper>
-                  <RadioCheckWrapper
-                    onClick={() => setIsASAP(false)}
-                  >
-                    {!isASAP ? <CheckIcon className='fill' /> : <UnCheckIcon />}
-                    <span>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</span>
-                  </RadioCheckWrapper>
+                  <h3 id='campaign-delivery-schedule-heading'>{t('DELIVERY_SCHEDULE', 'Delivery Schedule')}</h3>
+                  <div role='radiogroup' aria-labelledby='campaign-delivery-schedule-heading' style={{ display: 'contents' }}>
+                    <RadioCheckWrapper
+                      as='button'
+                      type='button'
+                      role='radio'
+                      aria-checked={isASAP}
+                      tabIndex={radioTabIndex(isASAP, true, true)}
+                      onKeyDown={radioGroupKeyDown}
+                      onClick={() => handleChangeSchedule()}
+                      isBottom
+                    >
+                      {isASAP ? <CheckIcon className='fill' aria-hidden='true' /> : <UnCheckIcon aria-hidden='true' />}
+                      <span>{t('CHECKOUT_ASAP', 'ASAP')} ({moment(new Date()).format('LLLL')})</span>
+                    </RadioCheckWrapper>
+                    <RadioCheckWrapper
+                      as='button'
+                      type='button'
+                      role='radio'
+                      aria-checked={!isASAP}
+                      tabIndex={radioTabIndex(!isASAP, false, true)}
+                      onKeyDown={radioGroupKeyDown}
+                      onClick={() => setIsASAP(false)}
+                    >
+                      {!isASAP ? <CheckIcon className='fill' aria-hidden='true' /> : <UnCheckIcon aria-hidden='true' />}
+                      <span>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</span>
+                    </RadioCheckWrapper>
+                  </div>
                   {!isASAP && (
                     <ScheduleForLateWrapper>
                       <RangeCalendar
@@ -356,9 +386,16 @@ export const CampaignDetailGeneral = (props) => {
                 onClick={(e) => handleOpenRuleModal(e, rule.key)}
               >
                 <div>
-                  <span className='rule-control' onClick={() => handleChangeCheckBox(rule.key)}>
+                  <button
+                    type='button'
+                    className='rule-control'
+                    role='checkbox'
+                    aria-checked={isEnableStatus(rule.key)}
+                    aria-label={rule.title}
+                    onClick={() => handleChangeCheckBox(rule.key)}
+                  >
                     {isEnableStatus(rule.key) ? <CheckSquareFill className='fill' /> : <Square />}
-                  </span>
+                  </button>
                   <p>{rule.title}</p>
                 </div>
                 <ChevronRight />

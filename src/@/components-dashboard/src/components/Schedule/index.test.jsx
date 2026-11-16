@@ -36,6 +36,50 @@ describe('Schedule controller synchronization', () => {
     expect(onChange.mock.calls[0][0][0].enabled).toBe(true)
     expect(initialSchedule[0].enabled).toBe(false)
   })
+
+  // (P-3): a day changed and put back must tell the consumer, or it keeps the last changed week as «pending».
+  const ToggleUI = ({ scheduleState, handleEnabledSchedule }) => (
+    <button type='button' onClick={() => handleEnabledSchedule(0, !scheduleState[0].enabled)}>
+      {scheduleState[0]?.enabled ? 'Enabled' : 'Disabled'}
+    </button>
+  )
+
+  test('does not notify on mount, with a saved schedule', () => {
+    const onChange = vi.fn()
+    render(<Schedule UIComponent={ToggleUI} scheduleList={initialSchedule} handleChangeScheduleState={onChange} />)
+    expect(onChange).not.toHaveBeenCalled()
+  })
+
+  test('puts the saved schedule back when the user undoes the change (stable saved list)', async () => {
+    const onChange = vi.fn()
+    render(<Schedule UIComponent={ToggleUI} scheduleList={initialSchedule} handleChangeScheduleState={onChange} />)
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1))
+    expect(onChange.mock.calls[0][0][0].enabled).toBe(true)
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() => expect(onChange).toHaveBeenCalledTimes(2))
+    expect(onChange.mock.calls[1][0]).toEqual(initialSchedule)
+  })
+
+  test('puts the saved schedule back when the parent echoes every emission, without a render loop', async () => {
+    const onChange = vi.fn()
+    const Harness = () => {
+      const [schedule, setSchedule] = useState(initialSchedule)
+      const handleChange = nextSchedule => {
+        onChange(nextSchedule)
+        setSchedule(nextSchedule)
+      }
+      return <Schedule UIComponent={ToggleUI} scheduleList={schedule} handleChangeScheduleState={handleChange} />
+    }
+    render(<Harness />)
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() => expect(screen.getByRole('button')).toHaveTextContent('Enabled'))
+    fireEvent.click(screen.getByRole('button'))
+    await waitFor(() => expect(screen.getByRole('button')).toHaveTextContent('Disabled'))
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(onChange).toHaveBeenCalledTimes(2)
+    expect(onChange.mock.calls[1][0]).toEqual(initialSchedule)
+  })
 })
 
 const defaultDay = (enabled = false) => ({

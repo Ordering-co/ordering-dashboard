@@ -1,172 +1,108 @@
 import React from 'react'
 import { useLanguage, useUtils, BusinessReviews as BusinessReviewsController } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { useTheme } from 'styled-components'
-import { PersonFill } from 'react-bootstrap-icons'
-import { Button, Switch } from '../../../styles'
+import { AsyncSwitch, Button } from '../../Shared/Product'
+import { SatisfactionScores } from '../AnalyticsKit/SatisfactionScores'
+import { ReviewItem, authorFullName } from '../ReviewsDirectory/ReviewItem'
+import { ReviewPanel } from '../ReviewsDirectory/ReviewPanel'
+import { businessScores, ratingOf } from '../ReviewsDirectory/reviewsData'
 
-import {
-  ReviewDetailsContainer,
-  Header,
-  BusinessLogoContainer,
-  WrapperImage,
-  Image,
-  ReviewItemContatiner,
-  InfoBlock,
-  ReviewItemHeader,
-  UserInfoContainer,
-  ReviewQualityContainer,
-  ReviewBarContainer,
-  ReviewBar,
-  ReviewQualityTextContainer,
-  Comment,
-  NotReviewed
-} from './styles'
+// redesign reviews FC (D1, D5, D8, RV-04, RV-08, RV-09): the text of a translation with its markers replaced (a function, so a `$` in a name stays a `$`)
+const fill = (text, values) => Object.entries(values)
+  .reduce((result, [marker, value]) => result.replace(`_${marker}_`, () => String(value)), String(text))
 
-const BusinessReviewDetailsUI = (props) => {
+/**
+ * The panel of the reviews of one business (redesign reviews FC, D1, D5, D8; RV-04, RV-08, RV-09). The page mounts it inside the
+ * SplitView and gives it `business` (the row of the list), `businessId`, `onClose`, `expanded`, `onExpandedChange` and
+ * `onOpenProducts(business)`; the controller (`BusinessReviews`) brings `businessState`, `reviewsList`, `reloadReviews` and
+ * `handleChangeReviewEnabled`, which answers `{ ok, error }`: each review has a switch that saves at once and says when it could not.
+ */
+export const BusinessReviewDetailsUI = (props) => {
   const {
     business,
     businessId,
     businessState,
     reviewsList,
-    handleOpenProducts,
-    handleChangeReviewEnabled
+    handleChangeReviewEnabled,
+    reloadReviews,
+    onClose,
+    expanded,
+    onExpandedChange,
+    onOpenProducts
   } = props
 
   const [, t] = useLanguage()
-  const theme = useTheme()
   const [{ optimizeImage, parseDate }] = useUtils()
-
-  const getReviewPercent = (quality) => {
-    return quality / 5 * 100
-  }
 
   const displayedBusiness = business?.id === businessId ? business : businessState?.business
   const isHeaderLoading = !displayedBusiness?.name && businessState?.loading
+  const reviews = Array.isArray(reviewsList?.reviews) ? reviewsList.reviews : []
+
+  const headerActions = (
+    <Button
+      disabled={Boolean(isHeaderLoading) || !displayedBusiness}
+      onClick={() => onOpenProducts?.(displayedBusiness)}
+    >
+      {t('REVIEWS_PRODUCT_REVIEWS', 'Product reviews')}
+    </Button>
+  )
+
+  // redesign reviews (live check): the business reviews of the API carry no author (`review.user` is absent), so the name of the
+  // switch says the order and the author only when they are there, and the date when neither is (it starts with «Visible», the
+  // visible text: WCAG 2.5.3)
+  const nameOfSwitch = (review) => {
+    const name = authorFullName(review?.user)
+    const order = review?.order_id != null && review.order_id !== '' ? review.order_id : null
+    if (order != null && name) return fill(t('REVIEWS_VISIBLE_LABEL', 'Visible: review of order _order_ by _name_'), { order, name })
+    if (order != null) return fill(t('REVIEWS_VISIBLE_LABEL_ORDER', 'Visible: review of order _order_'), { order })
+    if (name) return fill(t('REVIEWS_VISIBLE_LABEL_NO_ORDER', 'Visible: review by _name_'), { name })
+    const date = review?.created_at ? parseDate(review.created_at, { utc: false }) : ''
+    return fill(t('REVIEWS_VISIBLE_LABEL_DATE', 'Visible: review of _date_'), { date })
+  }
 
   return (
-    <>
-      <ReviewDetailsContainer>
-        <Header>
-          <h1>
-            {isHeaderLoading
-              ? <Skeleton width={200} height={24} />
-              : displayedBusiness?.name}
-          </h1>
-          <Button
-            color='lightPrimary'
-            borderRadius='8px'
-            disabled={isHeaderLoading || !displayedBusiness}
-            onClick={() => handleOpenProducts(displayedBusiness)}
-          >
-            {t('PRODUCT_REVIEW', 'Product review')}
-          </Button>
-        </Header>
-        <BusinessLogoContainer>
-          <WrapperImage isSkeleton={isHeaderLoading}>
-            {isHeaderLoading
-              ? <Skeleton width={120} height={120} />
-              : (
-                <Image bgimage={optimizeImage(displayedBusiness?.logo || theme.images?.dummies?.businessLogo, 'h_120,c_limit')} />
-                )}
-          </WrapperImage>
-        </BusinessLogoContainer>
-        {reviewsList?.loading
-          ? (
-              [...Array(10).keys()].map(i => (
-            <ReviewItemContatiner key={i}>
-              <ReviewItemHeader>
-                <UserInfoContainer>
-                  <WrapperImage isSmall isSkeleton>
-                    <Skeleton width={40} height={40} />
-                  </WrapperImage>
-                  <InfoBlock>
-                    <p><Skeleton width={80} /></p>
-                    <p><Skeleton width={100} /></p>
-                  </InfoBlock>
-                </UserInfoContainer>
-                <Skeleton width={20} />
-              </ReviewItemHeader>
-              <ReviewQualityContainer>
-                <ReviewBarContainer>
-                  <Skeleton height={10} />
-                </ReviewBarContainer>
-              </ReviewQualityContainer>
-              <ReviewQualityTextContainer>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-                <p><Skeleton width={40} /></p>
-              </ReviewQualityTextContainer>
-              <Comment>
-                <div><Skeleton width={300} /></div>
-                <div><Skeleton width={200} /></div>
-              </Comment>
-            </ReviewItemContatiner>
-              ))
-            )
-          : (
-              reviewsList?.reviews.map(review => (
-            <ReviewItemContatiner key={review?.id}>
-              <ReviewItemHeader>
-                <UserInfoContainer>
-                  <WrapperImage isSmall>
-                    {review?.user?.photo
-                      ? (
-                      <Image bgimage={optimizeImage(review?.user?.photo)} />
-                        )
-                      : (
-                      <PersonFill />
-                        )}
-                  </WrapperImage>
-                  <InfoBlock>
-                    <p className='bold'>{review?.user?.name} {review?.user?.lastname}</p>
-                    {review?.created_at && (
-                      <p>{parseDate(review?.created_at, { utc: false })}</p>
-                    )}
-                    {review?.order_id && (
-                      <p>
-                        <span>{t('INVOICE_ORDER_NO', 'Order No.')}{' '}</span>
-                        <span>{review?.order_id}</span>
-                      </p>
-                    )}
-                  </InfoBlock>
-                </UserInfoContainer>
-                <Switch
-                  defaultChecked={review?.enabled}
-                  onChange={val => handleChangeReviewEnabled(review?.id, val)}
-                />
-              </ReviewItemHeader>
-              <ReviewQualityContainer>
-                <ReviewBarContainer>
-                  <ReviewBar
-                    percentage={getReviewPercent(review?.quality)}
-                  />
-                </ReviewBarContainer>
-                <ReviewQualityTextContainer>
-                  <p>{t('TERRIBLE', 'Terrible')}</p>
-                  <p>{t('BAD', 'Bad')}</p>
-                  <p>{t('OKAY', 'Okay')}</p>
-                  <p>{t('GOOD', 'Good')}</p>
-                  <p>{t('GREAT', 'Great')}</p>
-                </ReviewQualityTextContainer>
-              </ReviewQualityContainer>
-              <Comment isEmpty={!review?.comment?.trim()}>
-                {review?.comment?.trim() || t('NO_COMMENT', 'No comment')}
-              </Comment>
-            </ReviewItemContatiner>
-              ))
-            )}
-
-        {!reviewsList?.loading && reviewsList?.reviews.length === 0 && (
-          <NotReviewed>
-            {t('ERROR_REVIEW_FIND', 'The review does not exist.')}
-          </NotReviewed>
-        )}
-      </ReviewDetailsContainer>
-    </>
+    <ReviewPanel
+      title={displayedBusiness?.name || t('BUSINESS', 'Business')}
+      titleLoading={Boolean(isHeaderLoading)}
+      headerActions={headerActions}
+      avatar={{
+        kind: 'business',
+        name: displayedBusiness?.name,
+        src: displayedBusiness?.logo ? optimizeImage(displayedBusiness.logo, 'h_120,c_limit') : undefined
+      }}
+      rating={displayedBusiness ? ratingOf(displayedBusiness.reviews?.total) : undefined}
+      ratingDecimals={2}
+      count={reviews.length}
+      // redesign reviews R1 (Q1-8): the average (`general` = `total`) is already in the head with two decimals; the «General» row
+      // repeated it with one (4.94 and 4.9, a few pixels apart), so the scores go without it
+      summary={<SatisfactionScores scores={{ ...businessScores(displayedBusiness?.reviews), general: undefined }} />}
+      expanded={expanded}
+      onExpandedChange={onExpandedChange}
+      onClose={onClose}
+      loading={Boolean(reviewsList?.loading)}
+      error={Boolean(reviewsList?.error)}
+      empty={reviews.length === 0}
+      onRetry={reloadReviews}
+    >
+      {reviews.map(review => (
+        <ReviewItem
+          key={review?.id}
+          review={review}
+          rating={ratingOf(review?.total)}
+          author={review?.user || undefined}
+          showBreakdown
+          action={(
+            <AsyncSwitch
+              checked={review?.enabled}
+              onToggle={(next) => handleChangeReviewEnabled(review?.id, next)}
+              failureText={t('REVIEWS_VISIBILITY_ERROR', "The review wasn't updated.")}
+              aria-label={nameOfSwitch(review)}
+            >
+              {t('REVIEWS_VISIBLE', 'Visible')}
+            </AsyncSwitch>
+          )}
+        />
+      ))}
+    </ReviewPanel>
   )
 }
 

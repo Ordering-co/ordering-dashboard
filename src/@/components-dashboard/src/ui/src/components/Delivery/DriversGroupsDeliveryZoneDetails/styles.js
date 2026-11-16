@@ -16,9 +16,9 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     margin-bottom: 0;
   }
   ${props => props.theme?.rtl
@@ -33,17 +33,25 @@ export const Header = styled.div`
 export const TabContainer = styled.div`
   width: 100%;
   display: flex;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
   margin-bottom: 24px;
   margin-top: 15px;
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button`
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
   padding: 10px 0px;
+  min-width: 44px;
+  min-height: 44px;
   cursor: pointer;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   position: relative;
   ${props => props.theme?.rtl
 ? css`
@@ -58,7 +66,7 @@ export const Tab = styled.div`
 
     &::after {
       content: "";
-      background: #344050;
+      background: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'};
       height: 1px;
       position: absolute;
       width: 100%;
@@ -73,8 +81,13 @@ export const Tab = styled.div`
     }
   `}
   ${({ active }) => !active && css`
-    color: ${props => props.theme.colors?.lightGray};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
+    outline-offset: 2px;
+  }
 `
 export const ActionSelectorWrapper = styled.div`
   button {
@@ -87,7 +100,7 @@ export const ActionSelectorWrapper = styled.div`
       box-shadow: none !important;
     }
     svg {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
       font-size: 20px;
     }
 
@@ -96,20 +109,20 @@ export const ActionSelectorWrapper = styled.div`
     }
 
     &:hover {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => darken(0.04, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)} !important;
     }
     &:active {
-      background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
+      background: ${props => darken(0.1, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)} !important;
     }
   }
 
   .show {
     button {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => darken(0.04, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)} !important;
     }
     >div {
-      border: 1px solid ${props => props.theme.colors.borderColor};
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+      border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
+      box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'};
     }
   }
 
@@ -117,15 +130,19 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
-        color: ${props => props.theme.colors.headingColor};
+        font-size: var(--od-type-secondary-size);
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
         &:active {
-          background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
+          background: ${props => darken(0.1, props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary)} !important;
         }
       }
       .dropdown-item:last-child {
-        color: #E63757;
+        color: ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'};
       }
     }
   }
+`
+
+export const TabPanel = styled.div`
+  width: 100%;
 `

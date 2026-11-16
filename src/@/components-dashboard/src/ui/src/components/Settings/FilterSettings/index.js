@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -45,6 +45,14 @@ const FilterSettingsUI = (props) => {
   const [showOption, setShowOption] = useState(null)
 
   const learnOptions = learnOptionsValues([], t)
+
+  // redesign D-81 (R-3): the details-only category keeps its identity between renders. The SettingsList controller puts
+  // its configs back to the saved ones whenever `category.configs` changes, so a new filtered array on every render of the page
+  // that holds this block wiped what the person had just typed (a re-render of the page reset the field, not the pending change).
+  const detailsCategory = useMemo(() => ({
+    ...categoryList?.categories[0],
+    configs: categoryList?.categories[0]?.configs?.filter(config => !configsToHide?.includes(config.key))
+  }), [categoryList?.categories, configsToHide])
 
   const handleOptionClick = (key, isInitialRender) => {
     setShowOption(key)
@@ -118,10 +126,7 @@ const FilterSettingsUI = (props) => {
               ? (
                 <SettingsList
                   {...props}
-                  category={{
-                    ...categoryList?.categories[0],
-                    configs: categoryList?.categories[0]?.configs?.filter(config => !configsToHide?.includes(config.key))
-                  }}
+                  category={detailsCategory}
                   onCloseSettingsList={() => (null)}
                   isRemoveGeneralTitle
                 />
@@ -132,6 +137,7 @@ const FilterSettingsUI = (props) => {
                     {isCollapse && (
                       <IconButton
                         color='black'
+                        aria-label={t('MENU', 'Menu')}
                         onClick={() => handleMenuCollapse(false)}
                       >
                         <MenuIcon />

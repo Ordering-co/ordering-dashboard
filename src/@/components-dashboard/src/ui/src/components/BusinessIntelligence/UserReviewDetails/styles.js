@@ -12,7 +12,7 @@ export const Header = styled.div`
   align-items: center;
   margin-bottom: 50px;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 0;
     ${props => props.theme?.rtl
@@ -85,7 +85,7 @@ export const ReviewItemContatiner = styled.div`
 
 export const ReviewMeta = styled.div`
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
   }
@@ -124,15 +124,15 @@ export const ReviewQualityTextContainer = styled.div`
   p {
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 `
 
 export const Comment = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   margin: 25px 0;
 `
 
 export const NotReviewed = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `

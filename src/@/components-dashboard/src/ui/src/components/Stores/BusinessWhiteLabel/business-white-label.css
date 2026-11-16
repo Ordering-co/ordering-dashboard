@@ -1,0 +1,102 @@
+/*
+ * redesign stores 5.16 (; G5-17, G5-18) · Store details › White label on Product: header, the card that holds the
+ * create step / the embedded site editor, and the muted copy. Values: --od-* and --od-x-* only. Logical properties.
+ * (styles.js stays on disk for the brand-system harness; this screen no longer imports it.)
+ */
+
+.odc-bwl {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  block-size: 100%;
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--od-space-5);
+  overflow: hidden;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-bwl-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  margin-block-end: var(--od-space-5);
+}
+
+.odc-bwl-title {
+  margin: 0;
+  font-size: var(--od-x-type-title-size);
+  line-height: var(--od-x-leading-title);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* The muted copy: the header line, the create step and the empty state share it (G5-18: it was an inline #748194). */
+.odc-bwl-muted {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  color: var(--od-text-muted);
+}
+
+.odc-bwl-card {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  margin-block-end: var(--od-space-4);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+/* With a site the editor takes the rest of the panel and scrolls inside. */
+.odc-bwl-card[data-fill] {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow: hidden;
+  margin-block-end: 0;
+}
+
+.odc-bwl-card-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  line-height: var(--od-x-leading-title);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bwl-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.odc-bwl-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-bwl-empty {
+  padding-block: var(--od-space-5);
+  text-align: center;
+}
+
+.odc-bwl-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+.odc-bwl-editor > * {
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+.odc-bwl-confirm-name {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}

@@ -490,7 +490,7 @@ export const BrandTriggerLabel = styled.span`
 
 export const BrandMenu = styled.div`
   position: fixed;
-  z-index: 1100;
+  z-index: calc(var(--od-x-layer-chrome) + 100); /* : the 1100 of main, on the chrome role */
   box-sizing: border-box;
   max-width: calc(100vw - 24px);
   padding: 4px 0;
@@ -582,6 +582,123 @@ export const SavedNote = styled.span`
   color: ${props => props.theme.colors.success};
 `
 
+export const TranslationsSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid ${props => props.theme.colors.borderColor};
+  border-radius: 8px;
+`
+
+export const TranslationHeader = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+
+  > div {
+    min-width: 0;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: ${props => props.theme.colors.headingColor};
+  }
+
+  ${Field} {
+    flex: 0 0 160px;
+  }
+`
+
+export const TranslationGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h4 {
+    margin: 2px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: ${props => props.theme.colors.headingColor};
+  }
+`
+
+export const TranslationField = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: ${props => props.theme.colors.headingColor};
+`
+
+export const TranslationFieldMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+`
+
+export const TranslationStatus = styled.span`
+  display: inline-flex;
+  padding: 1px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: ${props => props.$custom ? props.theme.colors.primary : props.theme.colors.lightGray};
+  background-color: ${props => props.$custom ? props.theme.colors.lightPrimary : props.theme.colors.secundary};
+`
+
+export const TranslationTextarea = styled.textarea`
+  width: 100%;
+  min-height: 86px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  resize: vertical;
+  border: 1px solid ${props => props.$invalid ? props.theme.colors.danger : props.theme.colors.borderColor};
+  border-radius: 8px;
+  background: ${props => props.theme.colors.backgroundPage};
+  color: ${props => props.theme.colors.headingColor};
+  font: inherit;
+  font-weight: 400;
+  line-height: 19px;
+
+  &::placeholder {
+    color: ${props => props.theme.colors.lightGray};
+    opacity: 1;
+  }
+
+  &:focus {
+    outline: 2px solid ${props => props.theme.colors.primary};
+    outline-offset: 1px;
+  }
+`
+
+export const TranslationDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 400;
+  color: ${props => props.theme.colors.lightGray};
+
+  .counter {
+    align-self: flex-end;
+    color: ${props => props.$overLimit ? props.theme.colors.danger : props.theme.colors.lightGray};
+    font-variant-numeric: tabular-nums;
+  }
+
+  .error {
+    color: ${props => props.theme.colors.danger};
+  }
+`
+
 export const ConnectionSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -612,6 +729,19 @@ export const FieldHeading = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 4px;
+`
+
+export const FieldLabelRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+
+  button {
+    width: auto;
+    flex: 0 0 auto;
+  }
 `
 
 export const HelpButton = styled.button`
@@ -691,6 +821,30 @@ export const DiagnoseRow = styled.div`
   border-radius: 8px;
   font-size: 13px;
   color: ${props => props.theme.colors.lightGray};
+`
+
+export const TextLink = styled.button`
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: ${props => props.theme.colors.primary};
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `
 
 export const TextDanger = styled.button`

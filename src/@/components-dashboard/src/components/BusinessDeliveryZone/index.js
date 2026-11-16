@@ -29,15 +29,38 @@ export const BusinessDeliveryZone = (props) => {
 
   /**
    * Method to update the business delivery zone from API
+   * redesign stores 2.F: `handleUpdateBusinessDeliveryZone({ snooze_until }, { keepPendingChanges: true })`
+   * saves only the given keys and leaves the other pending edits of the form (and `error`) alone. Without the option it
+   * sends every pending change, as before.
+   * @param {Object} partialChanges changes to send, only read with `options.keepPendingChanges`
+   * @param {Object} options { keepPendingChanges }
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
    */
-  const handleUpdateBusinessDeliveryZone = async () => {
+  const handleUpdateBusinessDeliveryZone = async (partialChanges, options) => {
+    const keepPending = !!options?.keepPendingChanges &&
+      !!partialChanges && Object.getPrototypeOf(partialChanges) === Object.prototype
+    const finishKeepingPending = (sentKeys) => setFormState(prev => {
+      const sentPending = sentKeys.some(key => key in prev.changes)
+      return {
+        ...prev,
+        loading: false,
+        changes: sentPending
+          ? Object.fromEntries(Object.entries(prev.changes).filter(([key]) => !sentKeys.includes(key)))
+          : prev.changes
+      }
+    })
     try {
-      const currentChanges = { ...formState.changes }
+      const currentChanges = { ...(keepPending ? partialChanges : formState.changes) }
       if (currentChanges.data) {
         currentChanges.data = JSON.stringify(currentChanges.data)
       }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
+      if (keepPending) {
+        setFormState(prev => ({ ...prev, loading: true }))
+      } else {
+        // G3-20: a new request starts without the error of the last one
+        setFormState(prev => ({ ...prev, loading: true, error: null }))
+      }
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -49,11 +72,11 @@ export const BusinessDeliveryZone = (props) => {
       const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zone.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setFormState({
-          ...formState,
-          loading: false,
-          changes: {}
-        })
+        if (keepPending) {
+          finishKeepingPending(Object.keys(partialChanges))
+        } else {
+          setFormState(prev => ({ ...prev, loading: false, changes: {} }))
+        }
         const zones = business.zones.filter(_zone => {
           if (_zone?.id === zone.id) {
             Object.assign(zone, content.result)
@@ -63,24 +86,30 @@ export const BusinessDeliveryZone = (props) => {
         const _business = { ...business, zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_SAVED', 'Delivery zone saved'))
+        return { ok: true }
       } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        if (keepPending) {
+          setFormState(prev => ({ ...prev, loading: false }))
+        } else {
+          setFormState(prev => ({ ...prev, loading: false, error: content.result }))
+        }
+        return { ok: false, error: content.result }
       }
     } catch (err) {
-      setFormState({
-        ...formState,
-        loading: false,
-        error: [err.message]
-      })
+      if (keepPending) {
+        setFormState(prev => ({ ...prev, loading: false }))
+      } else {
+        setFormState(prev => ({ ...prev, loading: false, error: [err.message] }))
+      }
+      return { ok: false, error: err.message }
     }
   }
 
   /**
    * Method to add new business delivery zone from API
+   * redesign stores 5.8: answers `{ ok: true }` or `{ ok: false, error }`, like the update does. The request, the
+   * body, the toasts, `handleSuccessUpdate` and `props.onClose()` are as they were.
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
    */
   const handleAddBusinessDeliveryZone = async () => {
     try {
@@ -101,7 +130,7 @@ export const BusinessDeliveryZone = (props) => {
         ])
       }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
+      setFormState(prev => ({ ...prev, loading: true, error: null })) // G3-20
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -113,11 +142,7 @@ export const BusinessDeliveryZone = (props) => {
       const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setFormState({
-          ...formState,
-          changes: {},
-          loading: false
-        })
+        setFormState(prev => ({ ...prev, changes: {}, loading: false }))
         const zones = [
           ...business.zones,
           content.result
@@ -126,33 +151,27 @@ export const BusinessDeliveryZone = (props) => {
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_ADDED', 'Delivery zone added'))
         props.onClose && props.onClose()
+        return { ok: true }
       } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        setFormState(prev => ({ ...prev, loading: false, error: content.result }))
+        return { ok: false, error: content.result }
       }
     } catch (err) {
-      setFormState({
-        ...formState,
-        error: err.message,
-        loading: false
-      })
+      setFormState(prev => ({ ...prev, error: err.message, loading: false }))
+      return { ok: false, error: err.message }
     }
   }
 
   /**
    * Method to delete the business delivery zone
-   * @param {Number} zoneId id of business dleivery zone
+   * redesign stores 5.8: answers `{ ok: true }` or `{ ok: false, error }` (the confirmation dialog stays open and says
+   * why). The request, the toasts, `handleSuccessUpdate` and `props.onClose()` are as they were.
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
    */
   const handleDeleteBusinessDeliveryZone = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({
-        ...formState,
-        loading: true
-      })
+      setFormState(prev => ({ ...prev, loading: true, error: null })) // G3-20
       const requestOptions = {
         method: 'DELETE',
         headers: {
@@ -164,27 +183,20 @@ export const BusinessDeliveryZone = (props) => {
       const content = await response.json()
       if (!content.error) {
         const zones = business.zones.filter(_zone => _zone?.id !== zone.id)
-        setFormState({
-          ...formState,
-          loading: false
-        })
+        setFormState(prev => ({ ...prev, loading: false }))
         const _business = { ...business, zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_DELETED', 'Business delivery zone deleted'))
         props.onClose && props.onClose()
+        return { ok: true }
       } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        // review R5.8-01: the caller (the delete confirmation) says why; the form's own error is not set, or it says it twice
+        setFormState(prev => ({ ...prev, loading: false }))
+        return { ok: false, error: content.result }
       }
     } catch (err) {
-      setFormState({
-        ...formState,
-        loading: false,
-        error: [err.message]
-      })
+      setFormState(prev => ({ ...prev, loading: false }))
+      return { ok: false, error: err.message }
     }
   }
 
@@ -193,25 +205,30 @@ export const BusinessDeliveryZone = (props) => {
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeInput = (e, unit) => {
-    if (e.target.name === 'distance') {
-      setFormState({
-        ...formState,
+    // G3-20: functional updates (an edit never overwrites another one made in the same tick) that also clear `error`, so the
+    // notice of the last request does not reopen while the user types. The event is read now: the updater may run later.
+    const { name, value } = e.target
+    if (name === 'distance') {
+      setFormState(prev => ({
+        ...prev,
+        error: null,
         changes: {
-          ...formState.changes,
+          ...prev.changes,
           data: {
-            [e.target.name]: e.target.value,
+            [name]: value,
             unit
           }
         }
-      })
+      }))
     } else {
-      setFormState({
-        ...formState,
+      setFormState(prev => ({
+        ...prev,
+        error: null,
         changes: {
-          ...formState.changes,
-          [e.target.name]: e.target.value
+          ...prev.changes,
+          [name]: value
         }
-      })
+      }))
     }
   }
 
@@ -220,13 +237,15 @@ export const BusinessDeliveryZone = (props) => {
    * @param {Object} updatedChange changes to update
    */
   const handleChangeFormState = (updatedChange) => {
-    setFormState({
-      ...formState,
+    // G3-20: functional update that also clears `error` (see handleChangeInput)
+    setFormState(prev => ({
+      ...prev,
+      error: null,
       changes: {
-        ...formState.changes,
+        ...prev.changes,
         ...updatedChange
       }
-    })
+    }))
   }
 
   const handleUploadKmlFiles = (files) => {
@@ -323,6 +342,7 @@ export const BusinessDeliveryZone = (props) => {
             kmlData={kmlData}
             handleChangeInput={handleChangeInput}
             handleChangeFormState={handleChangeFormState}
+            handleDiscardChanges={cleanFormState}
             handleDeleteBusinessDeliveryZone={handleDeleteBusinessDeliveryZone}
             handleUpdateBusinessDeliveryZone={handleUpdateBusinessDeliveryZone}
             handleAddBusinessDeliveryZone={handleAddBusinessDeliveryZone}

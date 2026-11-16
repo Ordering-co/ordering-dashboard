@@ -1,6 +1,6 @@
 import posthog from 'posthog-js'
 import settings from '../config'
-import { isOfficialOrderingDashboardHost } from '../utils/dashboardBranding'
+import { getDashboardEnvironment, isOfficialOrderingDashboardHost } from '../utils/dashboardBranding'
 
 export const DASHBOARD_APP_SURFACE = 'ordering_dashboard'
 const DASHBOARD_LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost'])
@@ -151,7 +151,7 @@ export const getDashboardAnalyticsContext = (config = settings, hostname = globa
   const isProductionDashboard = isOfficialOrderingDashboardHost(normalizedHostname) ||
     (config?.use_project_domain === true && normalizedHostname && !isLocalOrPreviewHost(normalizedHostname))
 
-  if (isProductionDashboard) return { enabled: true, environment: 'production' }
+  if (isProductionDashboard) return { enabled: true, environment: getDashboardEnvironment(normalizedHostname) }
   return { enabled: false }
 }
 

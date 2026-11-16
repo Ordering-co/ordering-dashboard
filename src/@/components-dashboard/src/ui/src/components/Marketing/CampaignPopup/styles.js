@@ -5,7 +5,7 @@ export const Container = styled.div``
 export const InputWrapper = styled.div`
   label {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
   input, textarea {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js/pure'
 
 import { useApi } from '../../contexts/ApiContext'
@@ -6,6 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
 import { useSession } from '../../contexts/SessionContext'
 
 import { flatArray } from '../../utils'
+import { awaitingPlanChangePayment, requestSubscriptions, toMessages } from '../../ui/src/components/Billing/BillingPaymentOptions/billingModel'
 import { buildBillingSubscriptionRequest } from './billingSubscriptionRequest'
 
 /**
@@ -26,12 +27,22 @@ export const BillingPaymentOptions = (props) => {
   const [, t] = useLanguage()
 
   const [paymethodSelected, setPaymethodSelected] = useState(null)
-  const [placeOrderState, setPlaceOrderState] = useState({ loading: false, error: null, result: null })
+  // redesign BM-A (D5, M-BM4, M-BM21): `error` stays main's string. `kind` says whether a retry is safe: 'declined' (nothing
+  // was charged) or 'uncertain' (the charge was sent and its outcome is unknown: never retry). `messages` are all the
+  // texts of the API.
+  const [placeOrderState, setPlaceOrderState] = useState({ loading: false, error: null, kind: null, messages: [], result: null })
   const [confirmState, setConfirmState] = useState({ loading: false, error: null, result: null, currentSub: null })
   const [subscriptionsState, setSubscriptionsState] = useState({ loading: false, error: null, subscriptions: [] })
   const [planStateToUpgrade, setPlanStateToUpgrade] = useState({ loading: false, error: null, plan: {} })
 
   const validStatus = ['active', 'trialing']
+  // (billing-api#103): an active subscription whose plan change still waits for its payment is not charged, and one
+  // with any change still pending is not done: no success screen until the change is applied.
+  const isCharged = (sub) => validStatus.includes(sub?.status) && !awaitingPlanChangePayment(sub)
+  const isSettled = (sub) => validStatus.includes(sub?.status) && sub?.data?.plan_change?.status !== 'pending'
+
+  // redesign BM-A (D5): one charge at a time. A second call while the first runs (double click, Enter held) sends nothing.
+  const placeOrderInFlight = useRef(false)
 
   /**
    * function to get public plans
@@ -135,6 +146,9 @@ export const BillingPaymentOptions = (props) => {
 
   /**
    * function to confirm payment methods
+   * redesign BM-A (M-BM4, M-BM21): returns { subs, charged, declined } instead of the bare list. `charged`: Stripe says the
+   * payment intent succeeded. `declined`: Stripe rejected the authentication and nothing was charged. Neither (an
+   * exception, a payment still processing, a failed sync after a charge) means the outcome is unknown.
    */
   const confirmPaymentMethod = async ({ clientSecret, projectId, subscriptionId, subs }) => {
     try {
@@ -145,6 +159,8 @@ export const BillingPaymentOptions = (props) => {
       const result = await stripe.confirmCardPayment(clientSecret)
 
       syncSubRes = await syncSubscription({ projectId, subscriptionId })
+
+      const charged = result?.paymentIntent?.status === 'succeeded'
 
       if (result?.error || syncSubRes?.error) {
         if (!syncSubRes?.error) {
@@ -158,12 +174,12 @@ export const BillingPaymentOptions = (props) => {
           loading: false,
           error: result?.error?.message ?? syncSubRes?.error
         })
-        return [syncSubRes?.result]
+        return { subs: [syncSubRes?.result], charged, declined: Boolean(result?.error) && !charged }
       }
 
       const _subs = subs ?? subscriptionsState.subscriptions
 
-      if (result?.paymentIntent?.status === 'succeeded') {
+      if (charged) {
         const currentSubIdx = _subs.findIndex(sub => sub.id === syncSubRes?.result?.id)
         _subs[currentSubIdx] = syncSubRes?.result
         setSubscriptionsState({
@@ -172,31 +188,47 @@ export const BillingPaymentOptions = (props) => {
         })
       }
       setConfirmState({ ...confirmState, loading: false })
-      return _subs
+      return { subs: _subs, charged, declined: false }
     } catch (error) {
       setConfirmState({
         ...confirmState,
         loading: false,
         error: error?.message
       })
+      return { subs: undefined, charged: false, declined: false }
     }
   }
 
-  const handlePlaceOrder = async ({ propPlanId, period, subscription }) => {
+  // redesign BM-A (M-BM4, M-BM21): every failure leaves with its kind and its messages, never a bare text.
+  const failPlaceOrder = (kind, error, messages) => {
+    setPlaceOrderState({
+      ...placeOrderState,
+      loading: false,
+      error,
+      kind,
+      messages: messages ?? (error ? [error] : [])
+    })
+  }
+
+  const handlePlaceOrder = async ({ propPlanId, period, subscription, payPending }) => {
+    if (placeOrderInFlight.current) return
     if (isUpgradeToPro && !subscription?.status) {
-      setPlaceOrderState({ ...placeOrderState, error: t('CURRENT_SUBCRIPTION_NOT_PAYED', 'Please pay your current subscription before you upgrade to Pro') })
+      failPlaceOrder('declined', t('CURRENT_SUBCRIPTION_NOT_PAYED', 'Please pay your current subscription before you upgrade to Pro'))
       return
     }
     if (!projectId) {
-      setPlaceOrderState({ ...placeOrderState, error: t('PROJECT_ID_MISSING', 'Project id is missing') })
+      failPlaceOrder('declined', t('PROJECT_ID_MISSING', 'Project id is missing'))
       return
     }
     if (!propPlanId) {
-      setPlaceOrderState({ ...placeOrderState, error: t('PROJECT_PLAN_MISSING', 'Project plan id is missing') })
+      failPlaceOrder('declined', t('PROJECT_PLAN_MISSING', 'Project plan id is missing'))
       return
     }
+    placeOrderInFlight.current = true
+    // `sent` flips right before the charge leaves: from there on, a failure we cannot read may hide a charge.
+    let sent = false
     try {
-      setPlaceOrderState({ ...placeOrderState, loading: true, error: null })
+      setPlaceOrderState({ ...placeOrderState, loading: true, error: null, kind: null, messages: [] })
       setConfirmState({ ...confirmState, error: null })
       const currentSubs = subscription
       const { urlPath, body } = buildBillingSubscriptionRequest({
@@ -204,10 +236,12 @@ export const BillingPaymentOptions = (props) => {
         planId: propPlanId,
         period,
         replace,
-        userPaymethodId: paymethodSelected?.id
+        userPaymethodId: paymethodSelected?.id,
+        payPending: !!payPending
       })
       const url = `${ordering.root}${urlPath}`
 
+      sent = true
       const req = await fetch(url, {
         method: 'POST',
         headers: {
@@ -230,23 +264,28 @@ export const BillingPaymentOptions = (props) => {
       })
 
       if (error || requireAnotherPaymethodSubs.length || canceledSubs.length) {
-        setPlaceOrderState({
-          ...placeOrderState,
-          loading: false,
-          error: error
-            ? typeof result === 'string'
-              ? result
-              : result?.[0]
-            : t('SUBSCRIPTION_STATUS_REQUIRES_PAYMENT_METHOD', 'Subscription status requires payment method')
-        })
+        // redesign BM-A (M-BM4, M-BM21): a 5xx may hide a charge; a 4xx is a clear refusal. A rejected card with another
+        // subscription already active is a partial success: money moved, so it is not safe to retry.
+        const messages = error ? toMessages(result) : []
+        const text = messages[0] ?? t('PAYMENT_FAILED', 'Payment Failed')
+        const anyCharged = requestSubscriptions(_subscriptions).some(isCharged)
+        const kind = error
+          ? Number(req?.status) >= 500 ? 'uncertain' : 'declined'
+          : anyCharged ? 'uncertain' : 'declined'
+        failPlaceOrder(
+          kind,
+          error ? text : t('SUBSCRIPTION_STATUS_REQUIRES_PAYMENT_METHOD', 'Subscription status requires payment method'),
+          error ? (messages.length ? messages : [text]) : undefined
+        )
         return
       }
 
       let subs = null
       let isActive = false
+      let confirmations = []
       if (requireStripeActionSubs.length) {
         const fetchSubs = requireStripeActionSubs
-        subs = await Promise.all(requireStripeActionSubs.map(async (sub) => {
+        confirmations = await Promise.all(requireStripeActionSubs.map(async (sub) => {
           const result = await confirmPaymentMethod({
             clientSecret: sub?.data?.client_secret,
             projectId: sub?.project_id,
@@ -256,13 +295,14 @@ export const BillingPaymentOptions = (props) => {
           return result
         }))
 
-        subs = flatArray(subs)
+        subs = flatArray(confirmations.map(confirmation => confirmation.subs))
 
-        isActive = subs && subs?.every(sub => validStatus.includes(sub.status))
+        // redesign BM-A: `sub?.` because a failed sync leaves an empty entry; main read `.status` of it and threw.
+        isActive = subs && subs?.every(isSettled)
         if (!isActive) {
           setSubscriptionsState({
             ...subscriptionsState,
-            subscriptions: error ? subscriptionsState.subscriptions : subs ?? _subscriptions
+            subscriptions: error ? subscriptionsState.subscriptions : subs?.some(Boolean) ? subs.filter(Boolean) : _subscriptions
           })
           setPlaceOrderState({
             ...placeOrderState,
@@ -280,22 +320,24 @@ export const BillingPaymentOptions = (props) => {
           ...placeOrderState,
           loading: false,
           error: error ? result : null,
+          kind: null,
+          messages: [],
           project,
           result: error ? null : subs ?? _subscriptions
         })
       } else {
-        setPlaceOrderState({
-          ...placeOrderState,
-          error: t('PAYMENT_FAILED', 'Payment Failed'),
-          loading: false
-        })
+        // redesign BM-A (M-BM21): the API accepted the charge but not everything ended active. Only a 3DS that Stripe
+        // rejected on every confirmation, with nothing active anywhere, proves nothing was charged.
+        const anyCharged = requestSubscriptions([..._subscriptions, ...(subs ?? [])]).some(isCharged)
+        const cleanDecline = confirmations.length > 0 && confirmations.every(confirmation => confirmation.declined) && !anyCharged
+        failPlaceOrder(cleanDecline ? 'declined' : 'uncertain', t('PAYMENT_FAILED', 'Payment Failed'))
       }
     } catch (error) {
-      setPlaceOrderState({
-        ...placeOrderState,
-        loading: false,
-        error: error?.message
-      })
+      // redesign BM-A (M-BM4): before the charge leaves, nothing was charged; after it, nobody knows.
+      const message = error?.message ?? t('PAYMENT_FAILED', 'Payment Failed')
+      failPlaceOrder(sent ? 'uncertain' : 'declined', message)
+    } finally {
+      placeOrderInFlight.current = false
     }
   }
 

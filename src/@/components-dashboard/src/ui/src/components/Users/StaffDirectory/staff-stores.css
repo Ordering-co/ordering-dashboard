@@ -1,0 +1,114 @@
+/*
+ * redesign BO-B5 (decision 6): the Stores section of a staff record (assigned stores, the catalog to add from, one save bar).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else.
+ * Logical properties only, so right-to-left needs no second set of rules. Component classes use the `sds-` prefix; the
+ * wrappers keep `odc-`.
+ */
+
+.sds-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The root takes the focus when the save bar goes with it inside (SaveBar hands it back); it draws no ring of its own */
+.sds-root:focus { outline: none; }
+
+.sds-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.sds-block-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--od-space-2);
+}
+
+.sds-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.sds-count {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.sds-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The lists: one row per store, the whole row is the checkbox ── */
+.sds-list {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sds-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.sds-row .odc-checkbox-labelled {
+  flex: 1 1 0;
+  inline-size: auto;
+  min-inline-size: 0;
+}
+
+.sds-name {
+  display: block;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+/* A change that is not saved yet says it in words; the strike is only a second cue */
+.sds-note {
+  flex: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.sds-row[data-state='removed'] .sds-name {
+  color: var(--od-text-muted);
+  text-decoration: line-through;
+}
+
+/* ── Add stores: P/SelectableList (selectable-list.css) ── */
+.sds-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.sds-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+/* The save bar belongs to the section, not to a page: no page gutter around it */
+.sds-root .odc-savebar { margin-block-start: 0; }

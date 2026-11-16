@@ -143,7 +143,8 @@ export const formatFieldValue = (field, value, { t, parsePrice, parseDate, chang
     if (status) return t(status.slug, status.value)
   }
   if (field === 'prepared_in' && Number.isFinite(Number(value))) {
-    return `${Number(value)} ${t('MIN', 'min')}`
+    // redesign AS-A (M-AS9): its own unit key; the generic MIN key keeps its meaning elsewhere
+    return `${Number(value)} ${t('ASSISTANT_UNIT_MIN', 'min')}`
   }
   if (field === 'schedule') {
     const lines = formatSchedule(value, t)
@@ -173,39 +174,39 @@ export const formatCountdown = (seconds) => `${Math.floor(seconds / 60)}:${pad(s
  */
 export const getActionDisplayStatus = (action, now = Date.now()) => {
   if (!action) return null
-  if (action.status === 'proposed' && getSecondsLeft(action.expires_at, now) === 0) return 'expired'
+  // redesign AS-A (M-AS12): a confirm already in flight is not expired by the clock;
+  // the server answers with what happened
+  if (action.status === 'proposed' && !action.busy && getSecondsLeft(action.expires_at, now) === 0) return 'expired'
   return action.status
-}
-
-const toLocale = (code) => {
-  const locale = typeof code === 'string' ? code.replace('_', '-') : undefined
-  try {
-    return Intl.DateTimeFormat.supportedLocalesOf(locale).length ? locale : undefined
-  } catch {
-    return undefined
-  }
 }
 
 const dayOf = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
 
+const pad2 = (value) => String(value).padStart(2, '0')
+
+/** The instant as the API's UTC 'YYYY-MM-DD HH:mm:ss', the input parseDate reads (utc: true) */
+const toApiUtc = (date) => `${date.getUTCFullYear()}-${pad2(date.getUTCMonth() + 1)}-${pad2(date.getUTCDate())} ${pad2(date.getUTCHours())}:${pad2(date.getUTCMinutes())}:${pad2(date.getUTCSeconds())}`
+
 /**
  * When a reached usage limit lets the user write again, in their time zone:
  * today / tomorrow at a time, or a date and time
+ * redesign AS-B (M-AS14, decision 13): the time and the date follow the project format through parseDate
+ * (UtilsContext), never the browser's toLocale* formats
  * @param {String|null} retryAt ISO date
  * @param {Function} t translate
- * @param {String} [languageCode] Dashboard language (`es`, `pt_br`)
+ * @param {Function} parseDate UtilsContext parseDate
  * @param {Number} [now] ms
  */
-export const formatRetryAt = (retryAt, t, languageCode, now = Date.now()) => {
+export const formatRetryAt = (retryAt, t, parseDate, now = Date.now()) => {
   const at = new Date(retryAt)
-  if (!retryAt || !Number.isFinite(at.getTime())) {
+  if (!retryAt || !Number.isFinite(at.getTime()) || typeof parseDate !== 'function') {
     return t('ASSISTANT_LIMIT_RETRY_LATER', 'You can use it again later.')
   }
-  const locale = toLocale(languageCode)
-  const time = at.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' })
+  const instant = toApiUtc(at)
+  const time = parseDate(instant, { timeOnly: true })
   const days = Math.round((dayOf(at) - dayOf(new Date(now))) / 86400000)
   if (days <= 0) return t('ASSISTANT_LIMIT_RETRY_TODAY', 'You can use it again today at _time_.').replace('_time_', time)
   if (days === 1) return t('ASSISTANT_LIMIT_RETRY_TOMORROW', 'You can use it again tomorrow at _time_.').replace('_time_', time)
-  const date = at.toLocaleDateString(locale, { day: 'numeric', month: 'short' })
+  const date = parseDate(instant, { dateOnly: true, omitYear: true })
   return t('ASSISTANT_LIMIT_RETRY_DATE', 'You can use it again on _date_ at _time_.').replace('_date_', date).replace('_time_', time)
 }

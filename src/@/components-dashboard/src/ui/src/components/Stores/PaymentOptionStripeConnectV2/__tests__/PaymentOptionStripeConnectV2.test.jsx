@@ -1,33 +1,18 @@
+/* eslint-disable import/first */
+// main on the redesign's PaymentOption (ProviderPanel): adapted for . The panel no longer writes the URL itself:
+// it reports the tab to the form through `onTabChange` (a number for a common tab, `null` for a tab of Stripe Connect).
 import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, screen } from '@testing-library/react'
-import { defaultTheme, renderWithProviders } from '~/__tests__/helpers/testUtils'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { renderWithProviders } from '~/__tests__/helpers/testUtils'
+import theme from '~/theme.json'
 
-const addQueryToUrl = vi.fn()
-const removeQueryToUrl = vi.fn()
 let user
 
 vi.mock('../../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback],
   useSession: () => [{ user }]
-}))
-
-vi.mock('../../../../hooks/useWindowSize', () => ({
-  useWindowSize: () => ({ width: 1400 })
-}))
-
-vi.mock('../../../Shared', () => ({
-  Confirm: () => null
-}))
-
-vi.mock('../../../../utils', () => ({
-  addQueryToUrl: (...args) => addQueryToUrl(...args),
-  removeQueryToUrl: (...args) => removeQueryToUrl(...args)
-}))
-
-vi.mock('../../../../styles', () => ({
-  Button: ({ children, color, borderRadius, ...props }) => <button type='button' {...props}>{children}</button>,
-  IconButton: ({ children, color, ...props }) => <button type='button' {...props}>{children}</button>
 }))
 
 vi.mock('../../../Shared/StripeConnectAccount', () => ({
@@ -44,97 +29,116 @@ vi.mock('../Payouts', () => ({
 
 import { PaymentOptionStripeConnectV2 } from '../index'
 
-const props = {
-  open: true,
-  onClose: vi.fn(),
-  title: 'Stripe Connect v2',
+const props = () => ({
+  paymethod: { id: 3, gateway: 'stripe_connect_v2', name: 'Stripe Connect v2' },
+  businessPaymethod: { id: 161, paymethod_id: 3, enabled: true, allowed_order_types: [1], sites: [], devices: [] },
+  gatewayName: 'Stripe Connect v2',
+  storeName: 'Burger Hub',
   business: { id: 41 },
-  businessPaymethod: { id: 161, allowed_order_types: [1, 2], sites: [] },
-  orderTypes: [{ value: 1, text: 'Delivery' }, { value: 2, text: 'Pickup' }],
-  sitesState: { sites: [] },
-  changesState: {},
-  actionState: { loading: false },
-  cleanChangesState: vi.fn(),
-  handleChangeBusinessPaymentState: vi.fn(),
-  handleSaveClick: vi.fn(),
-  handleDeletePaymethod: vi.fn(),
-  selectedPaymethodGateway: 'stripe_connect_v2'
+  sites: [{ id: 5, name: 'Website' }],
+  devices: [],
+  orderTypes: [{ value: 1, text: 'Delivery' }, { value: 2, text: 'Pickup' }]
+})
+
+const setup = (overrides = {}) => {
+  const userEvents = userEvent.setup()
+  const onSave = vi.fn().mockResolvedValue({ ok: true })
+  const onTabChange = vi.fn()
+  const utils = renderWithProviders(
+    <PaymentOptionStripeConnectV2 {...props()} onSave={onSave} onTabChange={onTabChange} {...overrides} />,
+    { theme }
+  )
+  return { user: userEvents, onSave, onTabChange, ...utils }
 }
 
-// The panel darkens this color for its menu
-const theme = { ...defaultTheme, colors: { ...defaultTheme.colors, secundary: '#f8f9fa' } }
-const renderPanel = (options = {}) => renderWithProviders(<PaymentOptionStripeConnectV2 {...props} />, { theme, ...options })
+const tabNames = () => screen.getAllByRole('tab').map(tab => tab.textContent)
 
 describe('PaymentOptionStripeConnectV2', () => {
   beforeEach(() => {
     user = { level: 0 }
-    addQueryToUrl.mockReset()
-    removeQueryToUrl.mockReset()
   })
 
   it('opens on the Stripe account of the store, with no Save for that tab', () => {
-    renderPanel()
+    setup()
 
-    expect(screen.getByRole('heading', { name: 'Stripe Connect v2' })).toBeInTheDocument()
+    expect(screen.getByRole('tablist', { name: 'Stripe Connect v2' })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Stripe account' })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByTestId('stripe-account')).toHaveTextContent('business:41')
     expect(screen.queryByTestId('platform-rule')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
   })
 
-  it('lets an administrator set the platform fee of the store', () => {
-    renderPanel()
+  it('draws its own tabs before the common ones', () => {
+    setup()
 
-    fireEvent.click(screen.getByText('Platform fee'))
+    expect(tabNames()).toEqual(['Stripe account', 'Platform fee', 'Payouts', 'Channels', 'Order type'])
+  })
+
+  it('lets an administrator set the platform fee of the store', async () => {
+    const { user: events } = setup()
+
+    await events.click(screen.getByRole('tab', { name: 'Platform fee' }))
 
     expect(screen.getByTestId('platform-rule')).toHaveTextContent('platform:41')
     expect(screen.queryByTestId('stripe-account')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
   })
 
   it('keeps the platform fee away from a store owner', () => {
     user = { level: 2 }
-    renderPanel()
+    setup()
 
     expect(screen.getByTestId('stripe-account')).toBeInTheDocument()
-    expect(screen.queryByText('Platform fee')).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: 'Platform fee' })).not.toBeInTheDocument()
+    expect(tabNames()).toEqual(['Stripe account', 'Payouts', 'Channels', 'Order type'])
   })
 
-  it('lists the payouts of the store, for an administrator and for its owner', () => {
+  it('lists the payouts of the store, for an administrator and for its owner', async () => {
     user = { level: 2 }
-    renderPanel()
+    const { user: events } = setup()
 
-    fireEvent.click(screen.getByText('Payouts'))
+    await events.click(screen.getByRole('tab', { name: 'Payouts' }))
 
     expect(screen.getByTestId('payouts')).toHaveTextContent('41')
     expect(screen.queryByTestId('stripe-account')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
   })
 
-  it('never leaves a tab of its own in the URL, where the other payment methods read a tab number', () => {
-    renderPanel()
+  it('never leaves a tab of its own in the URL, where the other payment methods read a tab number', async () => {
+    const { user: events, onTabChange } = setup()
 
-    expect(removeQueryToUrl).toHaveBeenCalledWith(['paymethod_tab'])
-    fireEvent.click(screen.getByText('Platform fee'))
-    expect(addQueryToUrl).not.toHaveBeenCalled()
+    // the panel reports only what the user picks: `null` asks the form to take `paymethod_tab` away
+    expect(onTabChange).not.toHaveBeenCalled()
+    await events.click(screen.getByRole('tab', { name: 'Platform fee' }))
+    expect(onTabChange).toHaveBeenLastCalledWith(null)
+    await events.click(screen.getByRole('tab', { name: 'Payouts' }))
+    expect(onTabChange).toHaveBeenLastCalledWith(null)
+    expect(onTabChange.mock.calls.flat().every(value => value === null)).toBe(true)
 
-    fireEvent.click(screen.getByText('Order type'))
-    expect(addQueryToUrl).toHaveBeenCalledWith({ paymethod_tab: 1 })
+    await events.click(screen.getByRole('tab', { name: 'Order type' }))
+    expect(onTabChange).toHaveBeenLastCalledWith(1)
   })
 
   it('opens on the Stripe account whatever tab another payment method left in the URL', () => {
-    renderPanel({ initialEntries: ['/stores/list?paymethod_tab=1'] })
+    const { onTabChange } = setup({ initialTab: 1 })
 
     expect(screen.getByTestId('stripe-account')).toBeInTheDocument()
-    expect(screen.queryByText('Delivery')).not.toBeInTheDocument()
-    expect(removeQueryToUrl).toHaveBeenCalledWith(['paymethod_tab'])
+    expect(screen.getByRole('tab', { name: 'Stripe account' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.queryByRole('checkbox', { name: 'Delivery' })).not.toBeInTheDocument()
+    expect(onTabChange).not.toHaveBeenCalled()
   })
 
-  it('still offers the common tabs, with their Save', () => {
-    renderPanel()
+  it('still offers the common tabs, with their Save', async () => {
+    const { user: events, onSave } = setup()
 
-    fireEvent.click(screen.getByText('Order type'))
+    await events.click(screen.getByRole('tab', { name: 'Order type' }))
 
-    expect(screen.getByText('Delivery')).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Delivery' })).toBeInTheDocument()
     expect(screen.queryByTestId('stripe-account')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
+    // the Save bar of the redesign comes up once something changed
+    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+    await events.click(screen.getByRole('checkbox', { name: 'Pickup' }))
+    await events.click(screen.getByRole('button', { name: 'Save' }))
+    expect(onSave).toHaveBeenCalledWith({ allowed_order_types: [1, 2] })
   })
 })

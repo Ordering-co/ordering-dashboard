@@ -32,7 +32,7 @@ const Backdrop = styled.div`
   padding: 16px;
   background: ${props => props.theme?.colors?.backgroundPage || '#FFFFFF'};
   font-family: ${props => props.theme?.fonts?.primary?.name ? `'${props.theme.fonts.primary.name}', ` : ''}-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  z-index: 10000;
+  z-index: var(--od-x-layer-notice);
 `
 
 const Card = styled.div`

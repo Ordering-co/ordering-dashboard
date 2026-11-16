@@ -1,0 +1,373 @@
+/*
+ * redesign PE-B4 (decisions 2, 3, 6, 7, 9, 10) · Quick offers: the compact catalog of templates, the heading above the shared list and the
+ * builder. Product's Button, Field family, SegmentedControl, DatePicker, TimeField, Checkbox, Pagination, ScheduleEditor and ConfirmDialog
+ * own their structure; this places them. The list itself is PromotionsTable (promotions-table.css).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (RTL). Class prefix odc-promo-quick-:
+ * the list (odc-promo-) and the editor of Advanced use their own names, and two rules on one class broke a layout once.
+ */
+
+.odc-promo-quick {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-6);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-promo-quick-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The heading and the line under it sit in the page gutter; the table brings its own */
+.odc-promo-quick-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-promo-quick-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-promo-quick-lead {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The catalog: eight one-click templates, 4 columns from 1024px, 2 below and on the phone ── */
+.odc-promo-quick-templates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+@media (min-width: 1024px) {
+  .odc-promo-quick-templates {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.odc-promo-quick-template {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-promo-quick-template:hover:not(:disabled) {
+  background: var(--od-x-hover);
+}
+
+.odc-promo-quick-template:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-promo-quick-template:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.odc-promo-quick-template-icon {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  flex: none;
+  color: var(--od-action);
+}
+
+.odc-promo-quick-template-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+/* Text wraps and is never cut: a long title or audience in another language grows the card */
+.odc-promo-quick-template-title,
+.odc-promo-quick-template-desc,
+.odc-promo-quick-template-audience {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.odc-promo-quick-template-title {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-promo-quick-template-desc {
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-promo-quick-template-audience {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The builder ── */
+.odc-promo-quick-builder {
+  margin-inline: var(--od-x-page-gutter);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-promo-quick-builder .odc-notice {
+  margin-inline: var(--od-space-4);
+  margin-block: 0 var(--od-space-3);
+}
+
+.odc-promo-quick-builder-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3) var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-promo-quick-builder-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-promo-quick-builder-sub {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-promo-quick-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--od-space-4);
+  padding: var(--od-space-4);
+}
+
+@media (max-width: 700px) {
+  .odc-promo-quick-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.odc-promo-quick-full {
+  grid-column: 1 / -1;
+}
+
+/* A field that is not a text control (a segmented control, the store list): its label above, its hint and error below */
+.odc-promo-quick-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-promo-quick-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-promo-quick-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-promo-quick-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The day and the time of one end of the promotion, side by side while they fit */
+.odc-promo-quick-when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-promo-quick-when > * {
+  min-inline-size: 0;
+}
+
+/* A group of the form that has its own heading: the businesses, the Buy X rule, the loyalty levels, the schedule */
+.odc-promo-quick-box {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-promo-quick-box[data-invalid] {
+  border-color: var(--od-danger-functional);
+}
+
+.odc-promo-quick-box-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-promo-quick-box-text {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-promo-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-2) var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 600px) {
+  .odc-promo-quick-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.odc-promo-quick-grid > li {
+  min-inline-size: 0;
+}
+
+/* «Retry» in a column of fields is a button, not a bar: it keeps its own width */
+.odc-promo-quick-retry {
+  align-self: flex-start;
+}
+
+.odc-promo-quick-count {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The rule of Buy X, get Y: two numbers side by side */
+.odc-promo-quick-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--od-space-4);
+}
+
+@media (max-width: 700px) {
+  .odc-promo-quick-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── The bar: Cancel · Save draft · Activate, fixed to the bottom of the builder while it is longer than the screen ── */
+.odc-promo-quick-actions {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3) var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  border-end-start-radius: var(--od-radius-component);
+  border-end-end-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-promo-quick-actions-main {
+  display: flex;
+  gap: var(--od-space-2);
+}
+
+@media (max-width: 520px) {
+  .odc-promo-quick-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .odc-promo-quick-actions-main {
+    flex-direction: column;
+  }
+}
+
+/* ── The list: the pager and the table are PromotionsTable's; this is only the room around the search ── */
+.odc-promo-quick-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* redesign : the shared list brings no page margin of its own (Advanced gets it from its frame): here the table sits in
+   the page gutter, as the heading above it. On the phone the cards bleed out of a 16px gutter by design (RecordCard), so the gutter
+   goes on their wrapper, and the search inside it lines up with the cards' text. */
+.odc-promo-quick-list > .odc-promo-table {
+  margin-inline: var(--od-x-page-gutter);
+}
+
+.odc-promo-quick-list > .odc-promo-cards {
+  padding-inline: var(--od-x-page-gutter-mobile);
+}
+
+.odc-promo-quick-list > .odc-promo-cards > .odc-promo-tools {
+  padding-inline: 0;
+}
+
+@media (max-width: 767px) {
+  .odc-promo-quick-head,
+  .odc-promo-quick-templates {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-promo-quick-builder {
+    margin-inline: var(--od-x-page-gutter-mobile);
+  }
+}

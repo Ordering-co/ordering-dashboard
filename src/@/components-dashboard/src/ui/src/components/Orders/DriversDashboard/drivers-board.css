@@ -1,0 +1,516 @@
+/*
+ * redesign drivers-dashboard B3 (decisions 1 to 4, 6, 7) · The board of /drivers-dashboard, the same model as the dispatch board of
+ * /deliveries (delivery-board.css): the page is a column (head, notices, board) and the board takes what is left, so nothing overflows
+ * and there is no second scroll. From 1024px the list and the map side by side (list 400 / 440 / 480px at 1024 / 1280 / 1440, the map the
+ * rest); below, one column with a List | Map switch. The map column holds the map and, at its foot, the panel of the chosen driver.
+ * Pieces: the board (.odd-board), the list (.odd-list, .odd-rows), the filter (.odd-filter), the row (.odd-row) and the panel (.odd-panel).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so it mirrors in RTL.
+ */
+
+/* ── The board ── */
+.odd-board {
+  --odd-list-size: var(--od-x-dialog-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The width the list column takes: 400px from 1024 to 1279, 440px (the narrow panel's) from 1280, 480px from 1440. No token holds
+   480px yet: it is 30rem, built from the spacing scale (8rem * 3.75). */
+@media (min-width: 1280px) {
+  .odd-board { --odd-list-size: var(--od-x-panel-narrow); }
+}
+
+@media (min-width: 1440px) {
+  .odd-board { --odd-list-size: calc(var(--od-space-10) * 3.75); }
+}
+
+.odd-board [hidden] {
+  display: none;
+}
+
+/* Below 1024px: the list first and the map behind the switch. «Map» gets most of the window (the board has no height of its own here). */
+.odd-view {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.odd-board[data-view='map'] {
+  min-block-size: 70vh;
+}
+
+.odd-board[data-view='map'] > .odd-map {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* From 1024px: two columns that share the height the page leaves; the list scrolls inside, never the page. */
+@media (min-width: 1024px) {
+  .odd-board {
+    flex-direction: row;
+    flex: 1 1 0;
+    min-block-size: 0;
+  }
+
+  .odd-list {
+    flex: 0 0 var(--odd-list-size);
+    inline-size: var(--odd-list-size);
+  }
+
+  .odd-map {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  .odd-rows {
+    flex: 1 1 0;
+    min-block-size: 0;
+    overflow-y: auto;
+  }
+}
+
+@media print {
+  .odd-board {
+    display: none;
+  }
+}
+
+/* ── The list column: tabs and tools on top, the rows take the rest and scroll inside, the pager at the foot ── */
+.odd-list {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* the frame (1px) is inside the 400 / 440 / 480px */
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odd-list-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odd-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odd-list-foot {
+  flex: none;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odd-empty {
+  margin: 0;
+  padding-block: var(--od-space-5);
+  padding-inline: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: center;
+}
+
+/* ── The map column: the map takes what the panel leaves ── */
+.odd-map {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}
+
+.odd-map > :not(.odd-panel) {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+.odd-map > .odd-panel {
+  flex: none;
+}
+
+/* ── The filter: Online / Offline tabs, then the Status control and the summary ── */
+.odd-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odd-load {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odd-load > .odc-seg {
+  flex: none;
+  max-inline-size: 100%;
+}
+
+/* Beside the control when it fits, on its own line when it does not; never wider than the column. */
+.odd-summary {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/*  (row 26, drivers-dashboard P1, D-33): the Driver group pill, under the load filter; it wraps and never widens the column */
+.odd-group-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── The state: a dot AND a word ── */
+.odd-state {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+.odd-dot {
+  flex: none;
+  inline-size: var(--od-x-dot-lg);
+  block-size: var(--od-x-dot-lg);
+  border-radius: var(--od-radius-round);
+  background: var(--od-border-strong);
+}
+
+.odd-state[data-state='available'] .odd-dot { background: var(--od-success-signal); }
+.odd-state[data-state='busy'] .odd-dot { background: var(--od-x-info-signal, var(--od-action)); }
+
+/* ── The signal: how long ago the last location was; a stale one carries an icon and words, never color alone ── */
+.odd-signal[data-signal='stale'] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  color: var(--od-warning-functional);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odd-signal .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* ── The row: two lines, no card, a hairline between rows ── */
+.odd-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  box-sizing: content-box; /* the 44px row is the content; the padding makes the ≈56px */
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-space-3);
+  color: var(--od-text);
+}
+
+.odd-row + .odd-row { border-block-start: var(--od-x-hairline) solid var(--od-border); }
+
+.odd-row:hover { background: var(--od-x-hover); }
+
+.odd-row[data-selected] { background: var(--od-action-soft); }
+
+.odd-row[data-selected]::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  background: var(--od-action);
+}
+
+/* tanda AG (, A3-1): the row holds two sibling actions. The button that chooses the driver is the first line, across the
+   row, with the row's padding inside it; the orders button is the line below it, under the name. They do not overlap. On a phone
+   the orders button's 44px area reaches 6px above its box (Button's ::after), so the line gap is 8px there: the area starts 2px
+   below the select button (50px) and no press on the select button's box lands on the orders. */
+.odd-row:has(> .odd-row-select) {
+  flex-wrap: wrap;
+  row-gap: var(--od-space-1);
+  padding-block: 0 var(--od-x-space-1-5);
+  padding-inline: 0;
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odd-row:has(> .odd-row-select) { row-gap: var(--od-space-2); }
+}
+
+.odd-row-select {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  min-block-size: calc(var(--od-x-row-comfortable) + var(--od-x-space-1-5));
+  margin: 0;
+  padding-block: var(--od-x-space-1-5) 0;
+  padding-inline: var(--od-space-3);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odd-row-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odd-row-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odd-row-line {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odd-row-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: var(--od-type-content-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odd-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-3); /* redesign drivers-dashboard R1-06: a gap instead of a «·» that hung at the end of the line when it wrapped */
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* tanda AG: the assigned orders are the last line, under the name (a link button, or the same text with none) */
+.odd-row-orders {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  /* the text with no orders takes the box of the link (a small button), so every row keeps the same rhythm */
+  min-block-size: var(--od-x-control-height-sm);
+  margin-inline-start: calc(var(--od-space-3) + var(--od-x-avatar-lg) + var(--od-space-3));
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odd-row .odd-row-orders.odc-btn {
+  padding-inline: 0;
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-caption-size);
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odd-row-orders { min-block-size: var(--od-x-control-height); }
+}
+
+/* ── The panel of the chosen driver, at the foot of the map column: as much as it needs up to 45% of the column, then it scrolls ── */
+.odd-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-block-size: 0;
+  max-block-size: 45%;
+  overflow-y: auto;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odd-panel-head {
+  display: flex;
+  flex-wrap: wrap; /* redesign drivers-dashboard F3 (bg at 390): Call and Close drop under the name when the name and state need the room */
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+/* At least 160px (10rem) for the name, the state and the signal before the actions wrap; then the whole line */
+.odd-panel-who {
+  display: flex;
+  flex: 1 1 calc(var(--od-space-10) * 1.25);
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odd-panel-meta > * {
+  min-inline-size: 0;
+}
+
+/* The title of a section, not the h1 of the page. */
+.odd-panel-title {
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Programmatic focus lands here when the page asks for it. */
+.odd-panel-title:focus { outline: none; }
+.odd-panel-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odd-panel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odd-panel-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odd-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--od-space-4);
+  row-gap: var(--od-space-1);
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odd-facts dt {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odd-facts dd {
+  min-inline-size: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.odd-orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-block-size: 0;
+}
+
+.odd-orders-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odd-orders-title {
+  margin: 0;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text);
+}
+
+.odd-orders .odd-empty {
+  padding: 0;
+  text-align: start;
+}
+
+.odd-orders .odc-notice { margin: 0; }
+
+.odd-order-list,
+.odd-orders-skeleton {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* redesign drivers-dashboard R1-04: two lines: number and status, then shop → customer on its own line (at 1024px the status took the
+   width and the who was 33px wide) */
+.odd-order {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-space-1);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-1);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odd-order + .odd-order { border-block-start: var(--od-x-hairline) solid var(--od-border); }
+
+.odd-order-number {
+  flex: none;
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odd-order .odc-status { justify-self: start; min-inline-size: 0; }
+
+.odd-order-who {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odd-order-who > span {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a5-settings-language-whitelabel-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a5-settings-language-whitelabel-cms-headerleft-h1-20px-9128b9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "HeaderLeft",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-cms-pagelisttable-thead-th-12px-4cdd88",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "PageListTable",
+      "property": "font-size",
+      "context": "thead > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-cms-pagetbody-td-12px-b06f85",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "PageTbody",
+      "property": "font-size",
+      "context": "td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-cms-enablewrapper-span-12px-28f212",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-cms-actionselectorwrapper-div-div-dropdo-f55a54",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagemanager-headertitlecontainer-h1--8ae7d0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "HeaderTitleContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagemanager-selectcontent-select-div-401bcb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "SelectContent",
+      "property": "font-size",
+      "context": ".select > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagemanager-option-root-13px-69411f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagemanager-languageselectorcontaine-a0fa15",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "LanguageSelectorContainer",
+      "property": "font-size",
+      "context": ".options > > div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagesetting-languagedetailscontainer-aebc22",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "component": "LanguageDetailsContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagesetting-fieldcontainer-div-14px-ceb739",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "> div",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagesetting-fieldcontainer-name-14px-9d11db",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".name",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagetransspread-transspreadcontainer-0918fb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransSpread/styles.js",
+      "component": "TransSpreadContainer",
+      "property": "font-size",
+      "context": "table > th > > div",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagetransspread-transspreadcontainer-aa0e68",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransSpread/styles.js",
+      "component": "TransSpreadContainer",
+      "property": "font-size",
+      "context": "table > td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagetranstable-tableheader-th-12px-8380b2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransTable/styles.js",
+      "component": "TableHeader",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-languagetranstable-tablebody-td-12px-8117ac",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageTransTable/styles.js",
+      "component": "TableBody",
+      "property": "font-size",
+      "context": "td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-pickerexpresscontainer-but-dfef25",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "PickerExpressContainer",
+      "property": "font-size",
+      "context": "button.all-setting > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-header-h1-20px-04c9b0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-header-button-10px-8b24a4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "button",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-apikeyslisttable-tr-th-td--b20ef1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "ApiKeysListTable",
+      "property": "font-size",
+      "context": "tr > th,\n    td",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-dropdownbuttonwrapper-div--c1b4e1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "DropdownButtonWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-addnewbutton-root-12px-244534",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "AddNewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-allsetting-span-14px-ad09bb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "AllSetting",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-description-root-14px-88b231",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-tab-root-14px-b4e62d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-paragraph-h2-16px-500bf2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-paragraph-p-12px-7b5e86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-paragraph-span-12px-7dcda9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pickerexpress-paragraph-a-12px-ba3a38",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PickerExpress/styles.js",
+      "component": "Paragraph",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a5-settings-language-whitelabel-pres-languagemanager-viewiconwrapper-svg-16px-ed5967",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "ViewIconWrapper",
+      "property": "font-size",
+      "context": "> svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ViewIconWrapper > svg: los glifos de los iconos de vista lista/tabla."
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pres-languagemanager-selectcontent-p-14px-6b2fb7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageManager/styles.js",
+      "component": "SelectContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "SelectContent p: ningun <p> existe en la cadena del Select (LegacySelect, SearchBar, Pagination: cero etiquetas <p>)."
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pres-languagesetting-fieldcontainer-default-s-3b6e77",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": ".default > svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "FieldContainer .default > svg: los glifos Circle/RecordCircle del radio."
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pres-languagesetting-radiowrapper-root-inherit",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/LanguageSetting/styles.js",
+      "component": "RadioWrapper",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This native button inherits the surrounding typography instead of declaring a local size; it only wraps the radio icon glyph, not readable text. Any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "Bugs H R1-02: the Default mark RadioWrapper became a native button; `font: inherit` only resets the user-agent button font and adds no size."
+    },
+    {
+      "id": "a5-settings-language-whitelabel-pres-cms-emptymessage-root-content-role",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/Cms/styles.js",
+      "component": "EmptyMessage",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-type-content-size)",
+      "reason": "The empty-list message is readable body text and already consumes the central content role.",
+      "evidence": ": EmptyMessage is a new <p> that names an empty pages list; it declares only var(--od-type-content-size) and no literal size."
+    }
+  ]
+}

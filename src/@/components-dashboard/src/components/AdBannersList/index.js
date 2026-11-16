@@ -11,6 +11,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
 export const AdBannersList = (props) => {
   const {
     defaultPosition,
+    loadSites,
     UIComponent
   } = props
   const [ordering] = useApi()
@@ -103,17 +104,20 @@ export const AdBannersList = (props) => {
         })
         setActionState({ loading: false, error: null })
         showToast(ToastType.Success, t('BANNER_SAVED', 'Banner saved'))
-      } else {
-        setActionState({
-          loading: false,
-          error: content.result
-        })
+        // redesign AB-B1 (M-AB13): the caller learns the outcome
+        return { ok: true, error: null, result: content.result }
       }
+      setActionState({
+        loading: false,
+        error: content.result
+      })
+      return { ok: false, error: content.result }
     } catch (err) {
       setActionState({
         loading: false,
         error: err.message
       })
+      return { ok: false, error: err.message }
     }
   }
 
@@ -172,9 +176,10 @@ export const AdBannersList = (props) => {
     })
   }
 
+  // redesign (row 6, P-5): only the legacy PageBanner reads `sitesState`; the others skip /sites
   useEffect(() => {
-    getSites()
-  }, [])
+    if (loadSites) getSites()
+  }, [loadSites])
 
   useEffect(() => {
     getAdBanners()
@@ -190,6 +195,7 @@ export const AdBannersList = (props) => {
           bannersListState={bannersListState}
           handleSuccessUpdate={handleSuccessUpdate}
           handleUpdateBanner={handleUpdateBanner}
+          getAdBanners={getAdBanners}
           handleSuccessAdd={handleSuccessAdd}
           handleSuccessDelete={handleSuccessDelete}
         />
@@ -199,6 +205,10 @@ export const AdBannersList = (props) => {
 }
 
 AdBannersList.propTypes = {
+  /**
+   * Opt in to read /sites (default false); `sitesState` stays empty otherwise
+   */
+  loadSites: PropTypes.bool,
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */

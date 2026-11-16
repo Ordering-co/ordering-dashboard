@@ -1,0 +1,29 @@
+/*
+ * 5.2-A · Status tabs on the orders list (C14).
+ * The Product Tabs wrapper owns the look; this file only settles what is specific
+ * to where it lives. Values: --od-* and --od-x-* only.
+ */
+
+/*
+ * The customer and driver lateral bars frame `div.order_status_filter` in a bordered
+ * box (legacy styles of those bars). The tabs carry their own underline now and the
+ * element also wraps the list, so the frame must not apply. Three classes outrank
+ * the bars' `.styled div.order_status_filter`.
+ */
+.odc-tabs.odc-status-tabs.order_status_filter {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Loading total: a skeleton of the badge's height, not a grey chip around it. */
+.odc-status-tabs .odc-count:has(.odc-skeleton) {
+  min-inline-size: 0;
+  padding-inline: 0;
+  background: transparent;
+}
+
+.odc-status-tabs .odc-count .odc-skeleton {
+  block-size: var(--od-x-count-height);
+}

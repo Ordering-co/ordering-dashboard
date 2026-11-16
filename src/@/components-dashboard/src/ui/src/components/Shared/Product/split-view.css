@@ -1,0 +1,187 @@
+/*
+ * SplitView (C8): a list and its detail panel.
+ *   split   (from 1280px)  list | panel, panel resizable, panel is a non-modal aside
+ *   overlay (768-1279px)   the panel is a modal sheet over the list (Base UI Dialog)
+ *   full    (below 768px)  the panel takes the view, the list hides but stays mounted
+ *   panel   (expanded)     the same, from 768px up
+ * data-view on the root says which one is drawn: list | split | overlay | panel.
+ * Logical properties only (C17). --odc-panel-size defaults to the panel token, the
+ * narrow one between 1280 and 1359px; the user's width overrides it inline.
+ */
+
+.odc-split {
+  --odc-panel-size: var(--od-x-panel);
+  --odc-slide: var(--od-space-4) 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-split[dir='rtl'] {
+  --odc-slide: calc(var(--od-space-4) * -1) 0;
+}
+
+@media (min-width: 1280px) and (max-width: 1359px) {
+  .odc-split {
+    --odc-panel-size: var(--od-x-panel-narrow);
+  }
+}
+
+.odc-split[data-view='split'] {
+  grid-template-columns: minmax(0, 1fr) var(--odc-panel-size);
+}
+
+/* ── List: always mounted; hidden (and inert, set by the component) in the panel view ── */
+.odc-split-list {
+  grid-column: 1;
+  grid-row: 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+.odc-split-list[hidden] {
+  display: none;
+}
+
+/* ── Inline panel: its own scroll, a hairline at its start ── */
+.odc-split-panel {
+  --odc-slide-in: var(--odc-slide);
+  grid-column: 2;
+  grid-row: 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  block-size: 100%;
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  /* redesign W0-3c (T0-11, decisión 11c): the detail panel is a panel, so Slow. */
+  animation: odc-split-in var(--od-duration-slow) var(--od-ease-standard);
+}
+
+.odc-split[data-view='panel'] .odc-split-panel {
+  --odc-slide-in: 0 0;
+  grid-column: 1;
+  border-inline-start: 0;
+}
+
+/* The panel receives focus on open only to orient screen readers; it is not a
+   control, so it shows no ring. Its controls keep their own focus ring. */
+.odc-split-panel:focus { outline: none; }
+
+@keyframes odc-split-in {
+  from {
+    opacity: 0;
+    translate: var(--odc-slide-in);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ── Separator: a grip centred on the boundary; visible as a line on hover, drag and focus ── */
+.odc-split-sep {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  inline-size: var(--od-x-target-fine);
+  margin-inline-start: calc(var(--od-x-target-fine) / -2);
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.odc-split-sep::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: var(--od-x-hairline);
+  background: transparent;
+  transition: background-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-split-sep:hover::after,
+.odc-split-sep[data-dragging]::after {
+  background: var(--od-action);
+}
+
+.odc-split-sep:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-split-sep:focus-visible::after {
+  background: var(--od-action);
+}
+
+@media (pointer: coarse) {
+  .odc-split-sep {
+    inline-size: var(--od-x-target-coarse);
+    margin-inline-start: calc(var(--od-x-target-coarse) / -2);
+  }
+}
+
+/* ── Overlay: a sheet at the end of the viewport, over the shared scrim ── */
+.odc-split-overlay {
+  --odc-slide: 100% 0;
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(var(--od-x-panel-narrow), 100vw);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: auto;
+  background: var(--od-x-dialog-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  box-shadow: var(--od-x-pop-shadow);
+  opacity: 1;
+  translate: 0 0;
+  transition-property: opacity, translate;
+  /* redesign W0-3c (T0-11, decisión 11c): the overlay sheet, Slow. */
+  transition-duration: var(--od-duration-slow);
+  transition-timing-function: var(--od-ease-standard);
+}
+
+.odc-split-overlay[dir='rtl'] {
+  --odc-slide: -100% 0;
+}
+
+.odc-split-overlay[data-starting-style],
+.odc-split-overlay[data-ending-style] {
+  opacity: 0;
+  translate: var(--odc-slide);
+}
+
+.odc-split-overlay:focus { outline: none; }
+
+/* Reduced motion: nothing moves or fades. */
+@media (prefers-reduced-motion: reduce) {
+  .odc-split-panel {
+    animation: none;
+  }
+
+  .odc-split-sep::after,
+  .odc-split-overlay {
+    transition: none;
+  }
+
+  /* redesign W0-3c (T0-11): no offset in the entering and leaving state of the overlay sheet either. */
+  .odc-split-overlay[data-starting-style],
+  .odc-split-overlay[data-ending-style] {
+    translate: 0 0;
+  }
+}

@@ -1,0 +1,186 @@
+/*
+ * redesign stores 3.C · The import of one importer (level 1 of the Importers panel; the level's title, its «‹ Back»
+ * and its X come from ImportersPane, importers.css).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only. The 44px targets are the
+ * buttons' and fields' own (Shared/Product).
+ */
+
+.odc-imp-job {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+}
+
+/* The readable type of the importer, a quiet line under the level's title */
+.odc-imp-job-kind {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-job .odc-imp-job-notice {
+  margin: 0;
+  align-items: flex-start;
+}
+
+.odc-imp-job .odc-imp-job-notice .odc-notice-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* Two columns as soon as the panel holds them (four 44px steps each), one column at 390 */
+.odc-imp-job-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-target-coarse) * 4)), 1fr));
+  gap: var(--od-space-4) var(--od-space-3);
+}
+
+/* ── The file: a drop zone with a button; the hint stays under it ── */
+.odc-imp-job-file-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-imp-job-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-5) var(--od-space-4);
+  border: var(--od-x-hairline) dashed var(--od-border-strong);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  text-align: center;
+}
+
+.odc-imp-job-drop.dragover {
+  border-color: var(--od-text);
+  background: var(--od-x-hover);
+}
+
+.odc-imp-job-drop-icon {
+  color: var(--od-text-muted);
+}
+
+.odc-imp-job-drop-text {
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-job-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--od-space-2);
+  max-inline-size: 100%;
+  min-block-size: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-job-file-name {
+  min-inline-size: 0;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-job-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-imp-job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+/* ── The state of the job ── */
+.odc-imp-job-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding: var(--od-space-4);
+  border-radius: var(--od-radius-component);
+  background: var(--od-x-info-soft);
+}
+
+.odc-imp-job-status[data-kind='failed'] {
+  background: var(--od-danger-soft);
+}
+
+.odc-imp-job-status[data-kind='success'] {
+  background: var(--od-success-soft);
+}
+
+.odc-imp-job-status-live {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-imp-job-status-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-imp-job-status[data-kind='failed'] .odc-imp-job-status-head .odc-icon {
+  color: var(--od-danger-functional);
+}
+
+.odc-imp-job-status[data-kind='success'] .odc-imp-job-status-head .odc-icon {
+  color: var(--od-success-functional);
+}
+
+.odc-imp-job-status-detail {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-job-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+}
+
+.odc-imp-job-spin {
+  animation: odc-spin var(--od-duration-slow) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-imp-job-spin {
+    animation: none;
+  }
+}
+
+/* review (3.C): the status takes the focus after «Import file» (the Import button is disabled while the job runs) */
+.odc-imp-job-status:focus:not(:focus-visible) {
+  outline: none;
+}

@@ -18,7 +18,7 @@ export const Header = styled.div`
   justify-content: space-between;
   position: relative;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 5px 0;
     color: ${props => props.theme.colors.headingColor};
@@ -35,7 +35,7 @@ export const Header = styled.div`
 export const ActionBlock = styled.div`
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
   position: absolute;
-  z-index: 1000;
+  z-index: var(--od-x-layer-chrome);
   display: flex;
   align-items: center;
   > button {
@@ -98,7 +98,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {
@@ -116,7 +116,7 @@ export const Content = styled.form`
   margin-top: 30px;
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   input {

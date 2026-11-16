@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-delivery-3-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "driversgrouppaymethods-groupwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupPaymethods/styles.js",
+      "component": "GroupWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "driversgroupsdeliveryzonedetails-header-h1-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "driversgroupsdeliveryzonedetails-tab-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driversgroupsdeliveryzonedetails-actionselectorwrapper-div-div-dropdown-item-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-groupstable-td-th-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "GroupsTable",
+      "property": "font-size",
+      "context": "td, th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-borderwrapper-root-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "BorderWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-groupnamecontainer-p-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "GroupNameContainer",
+      "property": "font-size",
+      "context": "> p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-drivermanagercontainer-root-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "DriverManagerContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-infoblock-p-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslist-infoblock-p-bold-13px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p.bold",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driversgroupslist-enablewrapper-span-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversgroupslisting-headerleftcontainer-h1-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsListing/styles.js",
+      "component": "HeaderLeftContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "driversmarkasbusy-container-h1-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "driversmarkasbusy-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driversmarkasbusy-checkboxwrapper-div-p-first-child-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "div > p > &:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "driversmarkasbusy-checkboxwrapper-div-p-last-child-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "div > p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driversmarkasbusy-stepitem-div-number-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "StepItem",
+      "property": "font-size",
+      "context": "div.number",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "driversmarkasbusy-stepitem-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversMarkAsBusy/styles.js",
+      "component": "StepItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "useraddform-formcontainer-h1-24px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "component": "FormContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "24px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "useraddform-inputwrapper-select-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "useraddform-inputwrapper-list-wrapper-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".list-wrapper",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "useraddform-drivergroupitem-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "component": "DriverGroupItem",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "driversgroupsdeliveryzonedetails-actionselectorwrapper-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This exact font-size controls the delivery-zone action menu trigger glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "driversgroupslist-checkboxwrapper-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "match": "24px",
+      "reason": "This exact font-size controls the driver-group selection checkbox glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "googlegpsbutton-gpsbuttonstyle-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/GoogleGpsButton/styles.js",
+      "component": "GpsButtonStyle",
+      "property": "font-size",
+      "match": "25px",
+      "reason": "This exact font-size controls the map GPS recenter control glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "useraddform-checkboxwrapper-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserAddForm/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "reason": "This exact font-size controls the driver-group assignment checkbox glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "userprofileform-camera-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/UserProfileForm/styles.js",
+      "component": "Camera",
+      "property": "font-size",
+      "match": "16px",
+      "reason": "This exact font-size controls the profile photo camera badge glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "driversgroupsdeliveryzonedetails-tab-native-reset",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsDeliveryZoneDetails/styles.js",
+      "component": "Tab",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This exact declaration resets inherited button chrome on the delivery-zone tab so the surrounding central role keeps governing its text.",
+      "evidence": "The native control was introduced by the Delivery-3 accessibility pass; it declares no size of its own and inherits the governed role."
+    },
+    {
+      "id": "driversgroupslist-checkboxwrapper-native-reset",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupsList/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This exact declaration resets inherited button chrome on the driver-group selection checkbox so the surrounding central role keeps governing its text.",
+      "evidence": "The native control was introduced by the Delivery-3 accessibility pass; it declares no size of its own and inherits the governed role."
+    }
+  ]
+}

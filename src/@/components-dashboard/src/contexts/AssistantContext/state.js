@@ -49,9 +49,10 @@ const applyStreamEvent = (state, event, data) => {
   switch (event) {
     case 'conversation': {
       // The turn started: the server expired what was still waiting
+      // (redesign AS-A, M-AS12: not what a confirm already sent, its answer decides)
       const actions = {}
       Object.entries(state.actions).forEach(([id, item]) => {
-        actions[id] = item.status === 'proposed' ? { ...item, status: 'expired' } : item
+        actions[id] = item.status === 'proposed' && !item.busy ? { ...item, status: 'expired' } : item
       })
       return { ...state, actions, conversation: { id: data.id, title: data.title ?? null } }
     }

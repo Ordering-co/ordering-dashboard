@@ -1,0 +1,47 @@
+/*
+ * redesign stores 5.1b · SEO of a store, a category and a product on Product: one column of labelled fields and the
+ * save bar at the foot. Values: --od-* and --od-x-* only. Logical properties.
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as Information, 5.1a).
+ */
+
+.odc-seo-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-seo-form:focus { outline: none; }
+
+/* The image keeps a card's width; it does not stretch across a wide panel. */
+.odc-seo-image {
+  max-inline-size: calc(var(--od-x-control-height) * 12);
+  min-inline-size: 0;
+}
+
+.odc-seo-fill {
+  display: flex;
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+
+/* A long label (Greek at 390) wraps at its spaces inside the button instead of leaving the panel; never mid-word. */
+.odc-seo-fill > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+  overflow-wrap: normal;
+  text-align: start;
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as Information). */
+.odc-seo-form :is(input, textarea, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

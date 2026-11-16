@@ -11,7 +11,8 @@ export const CustomDomain = (props) => {
     UIComponent,
     site,
     setSite,
-    onClose
+    onClose,
+    ensureSite
   } = props
 
   const [ordering] = useApi()
@@ -29,7 +30,7 @@ export const CustomDomain = (props) => {
     }
   }
 
-  const handleSaveDomain = async (changes) => {
+  const handleSaveDomain = async (changes, siteId) => {
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -39,7 +40,7 @@ export const CustomDomain = (props) => {
       body: JSON.stringify(changes)
     }
 
-    const response = await fetch(`${ordering.root}/sites/${site?.id}`, requestOptions)
+    const response = await fetch(`${ordering.root}/sites/${siteId}`, requestOptions)
     const { error, result } = await response.json()
     if (error) {
       throw Error(result)
@@ -54,6 +55,17 @@ export const CustomDomain = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
 
+      // /my-products/dashboard creates or fixes its site on the first save, so it hands `ensureSite` to get the site
+      // to write on; the other pages write on `site` as main. It goes first, so a failure leaves nothing half saved.
+      let target = site
+      if (ensureSite) {
+        try {
+          target = await ensureSite()
+        } catch (result) {
+          showToast(ToastType.Error, result instanceof Error ? result.message : result)
+          return
+        }
+      }
       if (mapKey) {
         const mapApiKeyChanges = {
           key: configs?.google_maps_api_key?.key,
@@ -65,10 +77,10 @@ export const CustomDomain = (props) => {
         ...formState?.changes,
         ssl_setup_type: 'automatic'
       }
-      const result = await handleSaveDomain(changes)
+      const result = await handleSaveDomain(changes, target?.id)
       showToast(ToastType.Success, t('DOMAIN_IS_CHANGED', 'The domain is changed'))
       setSite({
-        ...site,
+        ...target,
         ...result,
         domain: result?.domain ?? formState?.changes?.domain
       })

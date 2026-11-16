@@ -1,0 +1,34 @@
+/* redesign drivers FC1 (D5; auditor 1; DR-02, DR-14): the drivers tree of `main` in a Product pill (DriverTreePill). The popover, the
+   search, the rows (odc-checkbox-labelled) and «Clear» are Shared/Product's; this is only what a tree adds: the group row (fold
+   button + check on one line) and the indent of its drivers. Tokens only; logical properties (RTL). */
+
+.odc-bi-tree-group {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+/* The fold button and the group's check share a line; the check takes the rest of it. */
+.odc-bi-tree-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-bi-tree-toggle { flex: none; }
+
+.odc-bi-tree-row > .odc-checkbox-labelled {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* The drivers hang under the name of their group, one step in from the fold button (the start side, so it follows RTL). */
+.odc-bi-tree-children {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  padding-inline-start: var(--od-x-control-height);
+}
+
+.odc-bi-tree-children[hidden] { display: none; }

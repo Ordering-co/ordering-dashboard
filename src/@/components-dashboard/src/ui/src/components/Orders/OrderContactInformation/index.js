@@ -1,34 +1,41 @@
-import React, { useContext, useState, useRef } from 'react'
-import { useLanguage, useUtils, useConfig, GoogleAutocompleteInput, GoogleMapsMap } from '../../../../../index'
+import React, { useEffect, useId, useRef, useState } from 'react'
+import { useLanguage, useUtils, useConfig, useSession, GoogleAutocompleteInput, GoogleMapsMap } from '../../../../../index'
 import { getUserType } from '../../../utils'
-import FaUserAlt from '@meronex/icons/fa/FaUserAlt'
-import BisBusiness from '@meronex/icons/bi/BisBusiness'
+import { canAssignDriverManually } from '../../../../../utils/dashboardFeatureAccess'
 import { DriverSelector } from '../DriverSelector'
 import { CompanySelector } from '../CompanySelector'
-import { Button, IconButton, Input } from '../../../styles'
-import { Telephone, ChevronDown, Pencil } from 'react-bootstrap-icons'
-import { Accordion, AccordionContext, useAccordionToggle } from 'react-bootstrap'
+import { Input } from '../../../styles'
 import { ReviewCustomer } from '../ReviewCustomer'
-import { Modal } from '../../Shared'
+import { Avatar } from '../../Shared/Product/Avatar'
+import { Button as ProductButton, IconButton as ProductIconButton } from '../../Shared/Product/Button'
+import { ExternalLink, MapPin, MessageSquare, Phone } from '../../Shared/Icon'
+import '../OrderDetails/details-tab.css'
 
-import {
-  BusinessInfo,
-  PhotoWrapper,
-  Photo,
-  InfoContent,
-  CustomerInfo,
-  DriverInfoContainer,
-  DriverInfo,
-  DriverSelectorContainer,
-  CutsomerDetail,
-  CustomerInfoTable,
-  ToggleItemWrapper,
-  ReviewButton,
-  CustomerEditWrapper,
-  ActionIconWrapper,
-  WrapperMap
-} from './styles'
+const getTranslationKeyFromLabelName = (value) => {
+  if (typeof value !== 'string') return undefined
+  return value.toUpperCase().replace(/ /g, '_')
+}
 
+// A name on one line: the API may send «Marco » (a trailing space) or an empty middle name (redesign F6e-2, Q4-02)
+const joinName = (...parts) => parts.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim()
+
+const mapsLink = (query) => `http://maps.google.com/?q=${query}`
+
+// The Google script is loaded by the address field (and by the map); until it is there the map has nothing to draw
+const isGoogleMapsLoaded = () => typeof window !== 'undefined' && !!window.google?.maps?.Map
+
+// redesign F3: how long the address field waits for Google before it says the search is unavailable
+const GOOGLE_WAIT_MS = 5000
+
+const openInNewTab = (url) => window.open(url, '_blank', 'noopener,noreferrer')
+
+/**
+ * Customer, business and driver of an order, as two sections of the detail panel (batch 5.3):
+ * no accordions, the address is always in view. Edit customer, Review, the driver and company
+ * selectors and their conditions are the ones this component always had; only their place changed.
+ * The driver and company selectors have no condition on the status (as in main): a closed order can
+ * be reassigned. A pickup keeps its address, coordinates, notes, zipcode and the customer preference.
+ */
 export const OrderContactInformation = (props) => {
   const {
     order,
@@ -43,17 +50,27 @@ export const OrderContactInformation = (props) => {
     setCommentInfostate,
     commentInfoState,
     addressState,
-    disableSocketRoomDriver
+    disableSocketRoomDriver,
+    onSelectTab
   } = props
 
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
   const [{ configs }] = useConfig()
+  const [{ user }] = useSession()
   const googleInputRef = useRef(null)
+  const customerHeadingId = useId()
+  const businessHeadingId = useId()
+  const addressFieldId = useId()
+  const cellphoneFieldId = useId()
+  const emailFieldId = useId()
+  const notesFieldId = useId()
+  const addressHintId = useId()
 
   const googleMapsApiKey = configs?.google_maps_api_key?.value
   const isDisableDriverCompanies = configs?.disable_companies_order_details?.value === '1'
   const readOnlyBusinessOwner = !getUserType('viewOnlyBusinessOwner') && getUserType('readOnlyBusinessOwner')
+  const canAssignDriver = !readOnlyBusinessOwner && canAssignDriverManually({ level: user?.level, configs })
 
   const googleMapsControls = {
     defaultZoom: 15,
@@ -72,26 +89,49 @@ export const OrderContactInformation = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentCustomer, setCurrentCustomer] = useState(null)
+  // Each opening of the review starts a fresh form: the dialog stays mounted while it fades out.
+  const [reviewSession, setReviewSession] = useState(0)
   const [isEdit, setIsEdit] = useState(false)
+  // redesign fix-qa E6: the map block is drawn only once Google Maps has loaded, so an unreachable or
+  // keyless Google leaves no blank block between the address and the notes
+  const [mapsReady, setMapsReady] = useState(isGoogleMapsLoaded)
+  // redesign F3: a Google that has not answered after a few seconds is taken as blocked or offline (no hint before: it is
+  // still loading); without a key there is nothing to wait for
+  const [googleTimedOut, setGoogleTimedOut] = useState(false)
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 15, 16, 17]
   const deliveryTypes = [1, 7]
+  const customer = order?.customer
+  const business = order?.business
+  const showDriver = deliveryTypes.includes(order?.delivery_type) && !isServiceOrder
+
+  useEffect(() => {
+    if (!isEdit || !googleMapsApiKey || mapsReady) return
+    const timer = setInterval(() => {
+      if (!isGoogleMapsLoaded()) return
+      setMapsReady(true)
+      clearInterval(timer)
+    }, 200)
+    return () => clearInterval(timer)
+  }, [isEdit, googleMapsApiKey, mapsReady])
+
+  useEffect(() => {
+    if (!isEdit || !googleMapsApiKey || mapsReady) {
+      setGoogleTimedOut(false)
+      return
+    }
+    const timer = setTimeout(() => setGoogleTimedOut(true), GOOGLE_WAIT_MS)
+    return () => clearTimeout(timer)
+  }, [isEdit, googleMapsApiKey, mapsReady])
+
   const handleReviewCustomer = (customer) => {
     setCurrentCustomer(customer)
+    setReviewSession(session => session + 1)
     setIsModalOpen(true)
   }
 
   const handleCustomerReviewed = () => {
     setIsModalOpen(false)
-  }
-
-  const handleEdit = (event) => {
-    if (event.target.closest('#accordion1').getAttribute('data-id') === '1') {
-      event.stopPropagation()
-      setIsEdit(prev => !prev)
-    } else {
-      setIsEdit(true)
-    }
   }
 
   const handleChangeAddress = (e) => {
@@ -107,6 +147,35 @@ export const OrderContactInformation = (props) => {
     setIsEdit(false)
   }
 
+  // redesign fix-qa E6: leaving the form without saving drops what was typed. The controller keeps
+  // the edits in its state, so each edited field goes back to the value the order has, and the
+  // address picked on the map is forgotten.
+  const handleCancelEdit = () => {
+    const edited = Object.keys(customerInfoState?.customer ?? {})
+    if (edited.length > 0) {
+      handleChangeCustomerInfoState(Object.fromEntries(edited.map(key => [key, customer?.[key]])))
+    }
+    setAddressState({})
+    setIsEdit(false)
+  }
+
+  // redesign fix-qa E9: the Chat tab opens from here; the focus goes with it, to the composer of the chat (to the chat
+  // itself when the order has ended and has none). The chat stays mounted but hidden, so it is looked up once the tab shows.
+  const handleMessageCustomer = (event) => {
+    const panel = event.currentTarget.closest('#orderDetails') ?? document
+    onSelectTab('chat')
+    window.requestAnimationFrame(() => {
+      const chat = panel.querySelector('.odc-od-chat-pane')
+      const target = chat?.querySelector('[data-chat-composer]') ?? chat?.querySelector('[data-chat-root]')
+      target?.focus()
+    })
+  }
+
+  const handleToggleEdit = () => {
+    if (isEdit) handleCancelEdit()
+    else setIsEdit(true)
+  }
+
   const handleChangeCenter = (position) => {
     const newLat = position.lat()
     const newLng = position.lng()
@@ -116,138 +185,135 @@ export const OrderContactInformation = (props) => {
     }))
   }
 
+  // redesign F6h-3 (A2-04): what the API sends (names, addresses, notes) is wrapped in <bdi> where it is shown, so a Latin
+  // address or name keeps its own order inside a right-to-left line.
+  const customerFullName = joinName(customer?.name, customer?.middle_name, customer?.lastname, customer?.second_lastname)
+  const customerPhone = customer?.cellphone
+    ? `${customer?.country_phone_code ? '+' + customer?.country_phone_code : ''}${customer?.cellphone}`
+    : null
+  // Who the order is for: the person it was placed on behalf of, the customer, or a guest.
+  const displayName = order?.on_behalf_of ||
+    customerFullName ||
+    ((!customer?.email || !customer?.phone) ? t('GUEST_USER', 'Guest user') : '')
+
+  const hasAddress = !!customer?.address
+  const hasLocation = !!customer?.location
+  const showAddress = hasAddress || hasLocation
+  const mapsUrl = hasAddress
+    ? mapsLink(customer?.address)
+    : hasLocation ? mapsLink(`${customer?.location?.lat},${customer?.location?.lng}`) : null
+  const deliveryPreference = order?.delivery_option
+    ? t(getTranslationKeyFromLabelName(order?.delivery_option?.name), order?.delivery_option?.name)
+    : t('EITHER_WAY', 'Either way')
+  // Only the table (type 9) has no delivery preference, as in main (OrderBill: delivery_type !== 9).
+  const showPreference = parseInt(order?.delivery_type, 10) !== 9
+  const hasAddressExtras = !!customer?.address_notes || !!customer?.zipcode
+  // redesign F3: the address input is a Google Places Autocomplete, disabled until Google is there
+  const addressSearchUnavailable = !googleMapsApiKey || (!mapsReady && googleTimedOut)
+  const canMessage = !!onSelectTab && user?.level !== 5
+
+  const driverName = order?.driver_id
+    ? joinName(order?.driver?.name, order?.driver?.middle_name, order?.driver?.lastname, order?.driver?.second_lastname)
+    : order?.external_driver_id ? order?.external_driver?.name : null
+  const driverPhone = order?.driver_id ? order?.driver?.cellphone : order?.external_driver?.phone
+  const driverPhoto = order?.driver?.photo || order?.external_driver?.photo
+  // redesign F6c (Q2-25): the selector already shows the assigned driver, so the card with the same person goes away and
+  // the phone (which main showed on the card) moves to the selector's label. External drivers are not in the selector.
+  // redesign F6d (P4-02): only when the selector is on the page (not while the assignment comment is open) AND it really shows
+  // that driver. The selector draws the person from the order's candidates (`/controls/orders/:id`), so a driver that is not
+  // among them, a failed request or a list still loading leave its field empty or on «loading…»: then the card (main's, with
+  // the full name) stays.
+  // redesign F6e-2 (Q4-02): the selector says which driver id its field shows (`onSelectedShown`); the card goes by that id.
+  // No reading of the selector's text, no observer: a name padded with spaces cannot make the two disagree, and the card is
+  // only hidden in the commit where the selector draws the driver.
+  const driverSelectorShown = !order?.driver_company_id && canAssignDriver
+  const driverSelectorMounted = driverSelectorShown && !commentInfoState?.open
+  const [selectorShownId, setSelectorShownId] = useState(null)
+  const watchSelector = driverSelectorMounted && !!order?.driver_id && showDriver
+  const driverShownBySelector = watchSelector && selectorShownId !== null && String(selectorShownId) === String(order?.driver_id)
+
   return (
     <>
-      <Accordion>
-          <>
-            <ContextAwareToggle eventKey='0'>
-              <BusinessInfo>
-                <PhotoWrapper>
-                  {order?.business?.logo
-                    ? (
-                    <Photo bgimage={optimizeImage(order?.business?.logo, 'h_50,c_limit')} />
-                      )
-                    : (
-                    <BisBusiness />
-                      )}
-                </PhotoWrapper>
-                <InfoContent>
-                  <div>
-                    <p className='name'>{order?.business?.name}</p>
-                    <ActionIconWrapper>
-                      {order?.business?.phone && (
-                        <IconButton
-                          onClick={() => window.open(`tel:${order.business.phone}`)}
-                        >
-                          <Telephone />
-                        </IconButton>
-                      )}
-                    </ActionIconWrapper>
-                  </div>
-                  <p>{order?.business?.phone}</p>
-                </InfoContent>
-                <ActionIconWrapper>
-                  <ChevronDown className='down-arrow' />
-                </ActionIconWrapper>
-
-              </BusinessInfo>
-            </ContextAwareToggle>
-            <Accordion.Collapse eventKey='0'>
-              <CutsomerDetail>
-                <CustomerInfoTable>
-                  <tbody>
-                    {order?.business?.email && (
-                      <tr>
-                        <td>{t('EMAIL', 'Email')}</td>
-                        <td>
-                          <a href={`mailto: ${order?.business?.email}`}>{order?.business?.email}</a>
-                        </td>
-                      </tr>
-                    )}
-                    {order?.business?.address && (
-                      <tr>
-                        <td>{t('CHECKOUT_FULL_ADDRESS', 'Full address')}</td>
-                        <td>
-                          <a href={`http://maps.google.com/?q=${order?.business?.address}`} rel='noopener noreferrer' target='_blank'>{order?.business?.address}</a>
-                        </td>
-                      </tr>
-                    )}
-                    {order?.business?.address_notes && (
-                      <tr>
-                        <td>{t('NOTES', 'Notes')}</td>
-                        <td>{order?.business?.address_notes}</td>
-                      </tr>
-                    )}
-                    {order?.business?.zipcode && (
-                      <tr>
-                        <td>{t('ZIPCODE', 'Zipcode')}</td>
-                        <td>{order?.business?.zipcode}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </CustomerInfoTable>
-              </CutsomerDetail>
-            </Accordion.Collapse>
-          </>
-        <ContextAwareToggle eventKey='1'>
-          <CustomerInfo>
-            <PhotoWrapper>
-              {order?.customer?.photo && !order?.on_behalf_of
-                ? (
-                <Photo bgimage={optimizeImage(order?.customer?.photo, 'h_50,c_limit')} />
-                  )
-                : (
-                <FaUserAlt />
-                  )}
-            </PhotoWrapper>
-            <InfoContent>
-              <div>
-                {order?.on_behalf_of
-                  ? <p>{order?.on_behalf_of}</p>
-                  : (order?.customer?.name || order?.customer?.middle_name || order?.customer?.lastname || order?.customer?.second_lastname)
-                      ? (
-                  <p className='name'>{order?.customer?.name} {order?.customer?.middle_name} {order?.customer?.lastname} {order?.customer?.second_lastname}</p>
-                        )
-                      : (
-                          (!order?.customer?.email || !order?.customer?.phone) && <p className='name'>{t('GUEST_USER', 'Guest user')}</p>
-                        )}
-                {!order?.on_behalf_of && order?.customer?.cellphone && (
-                  <IconButton
-                    onClick={() => window.open(`tel:${order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''}${order?.customer?.cellphone}`)}
-                  >
-                    <Telephone />
-                  </IconButton>
-                )}
-              </div>
-              {order?.on_behalf_of && (order?.customer?.name || order?.customer?.middle_name || order?.customer?.lastname || order?.customer?.second_lastname) && (
-                <div>
-                  <p className='name-small'>{order?.customer?.name} {order?.customer?.middle_name} {order?.customer?.lastname} {order?.customer?.second_lastname}</p>
-                </div>
-              )}
-              {!order?.user_review && pastOrderStatuses.includes(order?.status) && (
-                <ReviewButton
-                  onClick={() => handleReviewCustomer(order?.customer)}
-                >
-                  {t('REVIEW', 'Review')}
-                </ReviewButton>
-              )}
-            </InfoContent>
-            {!readOnlyBusinessOwner && (
-              <ActionIconWrapper>
-                <Pencil className='edit-icon' onClick={handleEdit} />
-                <ChevronDown className='down-arrow' />
-              </ActionIconWrapper>
+      <section className='odt-sec' aria-labelledby={customerHeadingId}>
+        <div className='odt-sec-head'>
+          <h3 id={customerHeadingId}>{t('CUSTOMER', 'Customer')}</h3>
+          <div className='odt-sec-actions'>
+            {!order?.user_review && pastOrderStatuses.includes(order?.status) && (
+              <ProductButton size='sm' onClick={() => handleReviewCustomer(customer)}>
+                {t('REVIEW', 'Review')}
+              </ProductButton>
             )}
-          </CustomerInfo>
-        </ContextAwareToggle>
-        <Accordion.Collapse eventKey='1'>
-          <CutsomerDetail>
-            {isEdit
-              ? (
-              <CustomerEditWrapper>
+            {!readOnlyBusinessOwner && (
+              <ProductButton
+                size='sm'
+                aria-label={`${t('EDIT', 'Edit')} ${t('CUSTOMER', 'Customer')}`}
+                aria-pressed={isEdit}
+                onClick={handleToggleEdit}
+              >
+                {t('EDIT', 'Edit')}
+              </ProductButton>
+            )}
+          </div>
+        </div>
+        <div className='odt-party'>
+          <Avatar
+            size='lg'
+            name={displayName}
+            src={customer?.photo && !order?.on_behalf_of ? optimizeImage(customer?.photo, 'h_50,c_limit') : undefined}
+          />
+          <span className='odt-party-name'>
+            {!!order?.on_behalf_of && <span className='odt-party-tag'>{t('ON_BEHALF_OF', 'On behalf of')}</span>}
+            <bdi>{displayName}</bdi>
+          </span>
+          <span className='odt-party-acts'>
+            {!order?.on_behalf_of && customerPhone && (
+              <ProductIconButton
+                icon={Phone}
+                size='sm'
+                label={`${t('CALL', 'Call')} ${customer?.name ?? t('CUSTOMER', 'Customer')}`}
+                onClick={() => window.open(`tel:${customerPhone}`)}
+              />
+            )}
+            {canMessage && (
+              <ProductIconButton
+                icon={MessageSquare}
+                size='sm'
+                label={`${t('MESSAGE', 'Message')} ${customer?.name ?? t('CUSTOMER', 'Customer')}`}
+                onClick={handleMessageCustomer}
+              />
+            )}
+          </span>
+          {!isEdit && (
+            <span className='odt-party-lines'>
+              {order?.on_behalf_of && customerFullName && <span><bdi>{customerFullName}</bdi></span>}
+              {customerPhone && (
+                <span>
+                  <bdi dir='ltr' className='odc-num'>
+                    <a href={`tel:${customerPhone}`}>{customerPhone}</a>
+                  </bdi>
+                </span>
+              )}
+              {customer?.email && (
+                <span><bdi><a href={`mailto:${customer?.email}`}>{customer?.email}</a></bdi></span>
+              )}
+              {!!customer?.internal_number && (
+                <span>{`${t('INTERNAL_NUMBER', 'Internal number')}: ${customer?.internal_number}`}</span>
+              )}
+            </span>
+          )}
+        </div>
+        {isEdit
+          ? (
+            <div className='odt-edit' role='group' aria-label={`${t('EDIT', 'Edit')} ${t('CUSTOMER', 'Customer')}`}>
+              {/* redesign F6d (Q2-21): the four fields are the same shape: a div with a <label class=odt-field-label> tied to
+                  its control, so none of them measures (or reads) differently from the others */}
+              <div className='odt-field'>
+                <label className='odt-field-label' htmlFor={cellphoneFieldId}>{t('CELLPHONE', 'Phone / Mobile')}</label>
                 <Input
-                  placeholder='(603) 555-0123'
-                  value={customerInfoState?.customer?.cellphone ?? order?.customer?.cellphone ?? ''}
+                  id={cellphoneFieldId}
+                  type='tel'
+                  inputMode='numeric'
+                  value={customerInfoState?.customer?.cellphone ?? customer?.cellphone ?? ''}
                   onChange={(e) => {
                     handleChangeCustomerInfoState({ cellphone: e.target.value })
                   }}
@@ -257,244 +323,233 @@ export const OrderContactInformation = (props) => {
                     }
                   }}
                 />
+              </div>
+              <div className='odt-field'>
+                <label className='odt-field-label' htmlFor={emailFieldId}>{t('EMAIL', 'Email')}</label>
                 <Input
-                  placeholder='jane.cooper@example.com'
-                  value={customerInfoState?.customer?.email ?? order?.customer?.email ?? ''}
+                  id={emailFieldId}
+                  type='email'
+                  value={customerInfoState?.customer?.email ?? customer?.email ?? ''}
                   onChange={(e) => {
                     handleChangeCustomerInfoState({ email: e.target.value })
                   }}
                 />
+              </div>
+              {/* redesign F3: label, field and hint are siblings (the hint is not part of the field's name); the field is
+                  disabled by GoogleAutocompleteInput while Google is not there, and its box comes from details-tab.css */}
+              <div className='odt-field'>
+                <label className='odt-field-label' htmlFor={addressFieldId}>{t('ADDRESS', 'Address')}</label>
                 <GoogleAutocompleteInput
+                  id={addressFieldId}
                   name='address'
-                  className='input-autocomplete'
+                  className='input-autocomplete od-ui od-field od-field-input'
                   apiKey={googleMapsApiKey}
                   placeholder={t('ADDRESS', 'Address')}
+                  aria-describedby={addressSearchUnavailable ? addressHintId : undefined}
                   onChangeAddress={(e) => {
                     handleChangeAddress(e)
                   }}
-                  defaultValue={order?.customer?.address ?? ''}
+                  defaultValue={customer?.address ?? ''}
                   childRef={(ref) => {
                     googleInputRef.current = ref
                   }}
                   autoComplete='new-password'
                   countryCode={configs?.country_autocomplete?.value || '*'}
                 />
-                <WrapperMap>
+                {addressSearchUnavailable && (
+                  <span id={addressHintId} className='odt-field-hint'>
+                    {t('ADDRESS_SEARCH_UNAVAILABLE', 'Address search unavailable')}
+                  </span>
+                )}
+              </div>
+              {googleMapsApiKey && mapsReady && (
+                <div className='odt-edit-map'>
                   <GoogleMapsMap
-                    apiKey={configs?.google_maps_api_key?.value}
-                    location={addressState?.location ?? order?.customer?.location ?? defaultPosition}
+                    apiKey={googleMapsApiKey}
+                    fillContainer
+                    location={addressState?.location ?? customer?.location ?? defaultPosition}
                     mapControls={googleMapsControls}
                     handleChangeCenter={handleChangeCenter}
                     onlyMarkerChangeCenter
                   />
-                </WrapperMap>
+                </div>
+              )}
+              <div className='odt-field'>
+                <label className='odt-field-label' htmlFor={notesFieldId}>{t('NOTES', 'Notes')}</label>
                 <Input
-                  placeholder={t('NOTES', 'Notes')}
-                  defaultValue={customerInfoState?.customer?.address_notes ?? order?.customer?.address_notes ?? ''}
+                  id={notesFieldId}
+                  defaultValue={customerInfoState?.customer?.address_notes ?? customer?.address_notes ?? ''}
                   onChange={(e) => {
                     handleChangeCustomerInfoState({ address_notes: e.target.value })
                   }}
                 />
-                <Button color='primary' onClick={handleUpdateCustomer}>
+              </div>
+              <div className='odt-edit-actions'>
+                <ProductButton onClick={handleCancelEdit}>{t('CANCEL', 'Cancel')}</ProductButton>
+                <ProductButton variant='primary' busy={!!customerInfoState?.loading} onClick={handleUpdateCustomer}>
                   {customerInfoState?.loading ? t('LOADING', 'Loading') : t('SAVE', 'Save')}
-                </Button>
-              </CustomerEditWrapper>
-                )
-              : (
-              <CustomerInfoTable>
-                <tbody>
-                  {order?.customer?.cellphone && (
-                    <tr>
-                      <td>{t('CELLPHONE', 'Phone / Mobile')}</td>
-                      <td>
-                        <a href={`tel:${order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''}${order?.customer?.cellphone}`}>
-                          {(order?.customer?.country_phone_code && `+${order?.customer?.country_phone_code}`)} {order?.customer?.cellphone}
+                </ProductButton>
+              </div>
+            </div>
+            )
+          : (
+              (showAddress || showPreference || hasAddressExtras) && (
+                <div className='odt-addr'>
+                  {showAddress && <MapPin className='odc-icon' />}
+                  <div className='odt-addr-body'>
+                    {hasAddress && <b><bdi>{customer?.address}</bdi></b>}
+                    {hasLocation && (
+                      <span>
+                        <a
+                          href={mapsLink(`${customer?.location?.lat},${customer?.location?.lng}`)}
+                          rel='noopener noreferrer'
+                          target='_blank'
+                        >
+                          <bdi dir='ltr' className='odc-num'>{customer?.location?.lat}, {customer?.location?.lng}</bdi>
                         </a>
-                      </td>
-                    </tr>
-                  )}
-                  {order?.customer?.email && (
-                    <tr>
-                      <td>{t('EMAIL', 'Email')}</td>
-                      <td>
-                        <a href={`mailto: ${order?.customer?.email}`}>{order?.customer?.email}</a>
-                      </td>
-                    </tr>
-                  )}
-                  {!!order?.customer?.address && (
-                    <tr>
-                      <td>{t('CHECKOUT_FULL_ADDRESS', 'Full address')}</td>
-                      <td>
-                        <a href={`http://maps.google.com/?q=${order?.customer?.address}`} rel='noopener noreferrer' target='_blank'>{order?.customer?.address}</a>
-                      </td>
-                    </tr>
-                  )}
-                  {!!order?.customer?.location && (
-                    <tr>
-                      <td>{t('LOCATION', 'Location')}</td>
-                      <td>
-                        <a href={`http://maps.google.com/?q=${order?.customer?.location?.lat},${order?.customer?.location?.lng}`} rel='noopener noreferrer' target='_blank'>{order?.customer?.location?.lat}, {order?.customer?.location?.lng}</a>
-                      </td>
-                    </tr>
-                  )}
-                  {!!order?.customer?.internal_number && (
-                    <tr>
-                      <td>{t('INTERNAL_NUMBER', 'Internal number')}</td>
-                      <td>{order?.customer?.internal_number}</td>
-                    </tr>
-                  )}
-                  {!!order?.customer?.address_notes && (
-                    <tr>
-                      <td>{t('NOTES', 'Notes')}</td>
-                      <td>{order?.customer?.address_notes}</td>
-                    </tr>
-                  )}
-                  {!!order?.customer?.zipcode && (
-                    <tr>
-                      <td>{t('ZIPCODE', 'Zipcode')}</td>
-                      <td>{order?.customer?.zipcode}</td>
-                    </tr>
-                  )}
-                  {!!order?.on_behalf_of && (
-                    <tr>
-                      <td>{t('ON_BEHALF_OF', 'On behalf of')}</td>
-                      <td>{order?.on_behalf_of}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </CustomerInfoTable>
-                )}
-          </CutsomerDetail>
-        </Accordion.Collapse>
-      </Accordion>
-      {deliveryTypes.includes(order?.delivery_type) && !isServiceOrder && (
-        <>
-          {!order?.driver_id && !isDisableDriverCompanies && !readOnlyBusinessOwner && (
-            <CompanySelector
-              small
-              isPhoneView
-              defaultValue={order?.driver_company_id ?? 'default'}
-              order={order}
-              isTourOpen={isTourOpen}
-              setCurrentTourStep={setCurrentTourStep}
-              handleOpenMessages={handleOpenMessages}
-              isOrderDrivers
-              orderId={order?.id}
-              disableSocketRoomDriver
-            />
-          )}
-          {!order?.driver_company_id && !commentInfoState?.open && !readOnlyBusinessOwner && (
-            <DriverSelectorContainer>
-              <p>{t('DRIVER_ASSIGN', 'Driver assign')}</p>
-              <DriverSelector
-                small
-                isPhoneView
-                defaultValue={commentInfoState?.driverId ?? order?.driver_id ?? 'default'}
-                order={order}
-                isTourOpen={isTourOpen}
-                setCurrentTourStep={setCurrentTourStep}
-                handleOpenMessages={handleOpenMessages}
-                isOrderDrivers
-                orderId={order?.id}
-                setCommentInfostate={setCommentInfostate}
-                disableSocketRoomDriver={disableSocketRoomDriver}
-              />
-            </DriverSelectorContainer>
-          )}
-          <DriverInfoContainer>
-            <DriverInfo>
-              <PhotoWrapper>
-                {(order?.driver?.photo || order?.external_driver?.photo)
-                  ? (
-                  <Photo bgimage={optimizeImage((order?.driver?.photo || order?.external_driver?.photo), 'h_50,c_limit')} />
-                    )
-                  : (
-                  <FaUserAlt />
+                      </span>
                     )}
-              </PhotoWrapper>
-              {order.driver_id
-                ? (
-                <InfoContent>
-                  <div>
-                    <p>{order?.driver?.name} {order?.driver?.middle_name} {order?.driver?.lastname} {order?.driver?.second_lastname}</p>
-                    {order?.driver?.cellphone && (
-                      <IconButton
-                        onClick={() => window.open(`tel:${order?.driver?.cellphone}`)}
-                      >
-                        <Telephone />
-                      </IconButton>
+                    {!!customer?.address_notes && <span><bdi>{customer?.address_notes}</bdi></span>}
+                    {!!customer?.zipcode && <span>{`${t('ZIPCODE', 'Zipcode')}: ${customer?.zipcode}`}</span>}
+                    {showPreference && (
+                      <span>{`${t('DELIVERY_PREFERENCE', 'Delivery preference')}: ${deliveryPreference}`}</span>
                     )}
                   </div>
-                  <p>{t('DRIVER', 'Driver')}</p>
-                </InfoContent>
-                  )
-                : (
-                <>
-                  {order.external_driver_id
-                    ? (
-                    <InfoContent>
-                      <div>
-                        <p>{order?.external_driver?.name}</p>
-                        {order?.external_driver?.phone && (
-                          <IconButton
-                            onClick={() => window.open(`tel:${order?.external_driver?.phone}`)}
-                          >
-                            <Telephone />
-                          </IconButton>
-                        )}
-                      </div>
-                      <p>{t('DRIVER', 'Driver')}</p>
-                    </InfoContent>
-                      )
-                    : (
-                    <InfoContent>
-                      <div>
-                        <p>{t('NO_DRIVER', 'No driver')}</p>
-                      </div>
-                    </InfoContent>
-                      )}
-                </>
+                  {showAddress && mapsUrl && (
+                    <ProductIconButton
+                      icon={ExternalLink}
+                      size='sm'
+                      flipInRtl
+                      label={t('OPEN_ADDRESS_IN_MAPS', 'Open address in maps')}
+                      onClick={() => openInNewTab(mapsUrl)}
+                    />
                   )}
-            </DriverInfo>
-          </DriverInfoContainer>
-        </>
-      )}
-      {isModalOpen && (
-        <Modal
-          width='700px'
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        >
-          <ReviewCustomer
-            order={order}
-            customer={currentCustomer}
-            onClose={() => handleCustomerReviewed()}
+                </div>
+              )
+            )}
+      </section>
+
+      <section className='odt-sec' aria-labelledby={businessHeadingId} data-tour='tour_driver'>
+        <h3 id={businessHeadingId}>
+          {showDriver ? t('BUSINESS_AND_DRIVER', 'Business and driver') : t('BUSINESS', 'Business')}
+        </h3>
+        <div className='odt-party'>
+          <Avatar
+            kind='business'
+            size='lg'
+            name={business?.name}
+            src={business?.logo ? optimizeImage(business?.logo, 'h_50,c_limit') : undefined}
           />
-        </Modal>
+          <span className='odt-party-name'><bdi>{business?.name}</bdi></span>
+          <span className='odt-party-acts'>
+            {business?.phone && (
+              <ProductIconButton
+                icon={Phone}
+                size='sm'
+                label={`${t('CALL', 'Call')} ${business?.name ?? t('BUSINESS', 'Business')}`}
+                onClick={() => window.open(`tel:${business.phone}`)}
+              />
+            )}
+          </span>
+          <span className='odt-party-lines'>
+            {business?.address && (
+              <span>
+                <a href={mapsLink(business?.address)} rel='noopener noreferrer' target='_blank'><bdi>{business?.address}</bdi></a>
+              </span>
+            )}
+            {business?.address_notes && <span><bdi>{business?.address_notes}</bdi></span>}
+            {business?.zipcode && <span>{`${t('ZIPCODE', 'Zipcode')}: ${business?.zipcode}`}</span>}
+            {business?.phone && <span><bdi dir='ltr' className='odc-num'>{business?.phone}</bdi></span>}
+            {business?.email && (
+              <span><bdi><a href={`mailto:${business?.email}`}>{business?.email}</a></bdi></span>
+            )}
+          </span>
+        </div>
+        {showDriver && (
+          <>
+            {!driverShownBySelector && (
+              <div className='odt-party'>
+                <Avatar
+                  size='lg'
+                  name={driverName ?? undefined}
+                  src={driverPhoto ? optimizeImage(driverPhoto, 'h_50,c_limit') : undefined}
+                />
+                {driverName
+                  ? <span className='odt-party-name'><bdi>{driverName}</bdi></span>
+                  : <span className='odt-party-name' data-muted=''>{t('NO_DRIVER', 'No driver')}</span>}
+                <span className='odt-party-acts'>
+                  {driverName && driverPhone && (
+                    <ProductIconButton
+                      icon={Phone}
+                      size='sm'
+                      label={`${t('CALL', 'Call')} ${joinName(order?.driver_id ? order?.driver?.name : order?.external_driver?.name) || t('DRIVER', 'Driver')}`}
+                      onClick={() => window.open(`tel:${driverPhone}`)}
+                    />
+                  )}
+                </span>
+                {driverName && (
+                  <span className='odt-party-lines'><span>{t('DRIVER', 'Driver')}</span></span>
+                )}
+              </div>
+            )}
+            {!order?.driver_id && !isDisableDriverCompanies && canAssignDriver && (
+              <div className='odt-assign'>
+                <CompanySelector
+                  small
+                  isPhoneView
+                  defaultValue={order?.driver_company_id ?? 'default'}
+                  order={order}
+                  isTourOpen={isTourOpen}
+                  setCurrentTourStep={setCurrentTourStep}
+                  handleOpenMessages={handleOpenMessages}
+                  isOrderDrivers
+                  orderId={order?.id}
+                  disableSocketRoomDriver
+                />
+              </div>
+            )}
+            {driverSelectorMounted && (
+              <div className='odt-assign'>
+                <span className='odt-assign-head'>
+                  <span className='odt-assign-label'>{t('DRIVER', 'Driver')}</span>
+                  {driverShownBySelector && driverPhone && (
+                    <ProductIconButton
+                      icon={Phone}
+                      size='sm'
+                      label={`${t('CALL', 'Call')} ${joinName(order?.driver?.name) || t('DRIVER', 'Driver')}`}
+                      onClick={() => window.open(`tel:${driverPhone}`)}
+                    />
+                  )}
+                </span>
+                <DriverSelector
+                  small
+                  isPhoneView
+                  defaultValue={commentInfoState?.driverId ?? order?.driver_id ?? 'default'}
+                  order={order}
+                  isTourOpen={isTourOpen}
+                  setCurrentTourStep={setCurrentTourStep}
+                  handleOpenMessages={handleOpenMessages}
+                  isOrderDrivers
+                  orderId={order?.id}
+                  setCommentInfostate={setCommentInfostate}
+                  disableSocketRoomDriver={disableSocketRoomDriver}
+                  onSelectedShown={setSelectorShownId}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {currentCustomer && (
+        <ReviewCustomer
+          key={reviewSession}
+          open={isModalOpen}
+          order={order}
+          customer={currentCustomer}
+          onClose={() => handleCustomerReviewed()}
+        />
       )}
     </>
-  )
-}
-
-const ContextAwareToggle = ({ children, eventKey, callback }) => {
-  const currentEventKey = useContext(AccordionContext)
-  const decoratedOnClick = useAccordionToggle(
-    eventKey,
-    () => callback && callback(eventKey)
-  )
-  const isCurrentEventKey = currentEventKey === eventKey
-
-  const handleButtonClick = () => {
-    decoratedOnClick()
-  }
-  return (
-    <ToggleItemWrapper
-      active={isCurrentEventKey}
-      onClick={handleButtonClick}
-      id={`accordion${eventKey}`}
-      data-id={isCurrentEventKey ? '1' : '0'}
-    >
-      {children}
-    </ToggleItemWrapper>
   )
 }

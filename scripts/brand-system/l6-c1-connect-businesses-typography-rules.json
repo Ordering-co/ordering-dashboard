@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c1-connect-businesses-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "c1-connect-businesses-businesssummary-businessname-root-20px-f53c97",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "BusinessName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "c1-connect-businesses-businesssummary-actionselectorwrapper-div-div-drop-a2d8da",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c1-connect-businesses-infohelpbox-dataname-p-20px-c13349",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/InfoHelpBox/styles.js",
+      "component": "DataName",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "c1-connect-businesses-infohelpbox-description-root-14px-0d1101",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/InfoHelpBox/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-syncmenuwrapper-root-14px-5563c1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "SyncMenuWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "SyncMenuWrapper: solo vive bajo `{!isHideSetupForm && ...}`, y isHideSetupForm es `const = true` en la linea 64, sin setter en todo el fichero."
+    },
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-menustatuswrapper-span-14px-8f4fc3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "MenuStatusWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "MenuStatusWrapper > span: misma rama permanentemente inalcanzable."
+    },
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-radiobutton-svg-16px-88df86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "RadioButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "RadioButton svg: misma rama inalcanzable. De renderizarse seria un glifo, pero no se renderiza."
+    },
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-businessconfigitem-span-14px-4123c5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "BusinessConfigItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "BusinessConfigItem span: misma rama inalcanzable."
+    },
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-businessconfigitem-svg-20px-66e363",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "BusinessConfigItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "BusinessConfigItem svg: misma rama inalcanzable."
+    },
+    {
+      "id": "c1-connect-businesses-pres-businesssummary-actionselectorwrapper-button-svg-2-854f01",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/BusinessSummary/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ActionSelectorWrapper button > svg: el glifo de tres puntos de la cabecera del panel."
+    },
+    {
+      "id": "c1-connect-businesses-pres-infohelpbox-videocontainer-svg-34px-308074",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/InfoHelpBox/styles.js",
+      "component": "VideoContainer",
+      "property": "font-size",
+      "context": "svg",
+      "match": "34px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "VideoContainer svg: el glifo de reproducir sobre el video."
+    },
+    {
+      "id": "c1-connect-businesses-pres-posmenu-viewmethodbutton-svg-20px-9e3690",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/PosMenu/styles.js",
+      "component": "ViewMethodButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "ViewMethodButton svg: el componente no se importa en PosMenu/index.js, y nada fuera del directorio importa su styles.js."
+    },
+    {
+      "id": "c1-connect-businesses-pres-posmenu-viewmethodbutton-hover-svg-24px-6a7725",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/PosMenu/styles.js",
+      "component": "ViewMethodButton",
+      "property": "font-size",
+      "context": "&:hover > svg",
+      "match": "24px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "ViewMethodButton &:hover > svg: estado hover de un selector que no tiene nodo."
+    }
+  ]
+}

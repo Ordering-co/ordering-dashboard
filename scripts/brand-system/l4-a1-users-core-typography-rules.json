@@ -1,0 +1,286 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-a1-users-core-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "a1-useractivestatefilter-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserActiveStateFilter/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-useraddform-formcontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserAddForm/styles.js",
+   "component": "FormContainer",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a1-userdetails-username-span-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/styles.js",
+   "component": "UserName",
+   "property": "font-size",
+   "context": "> span",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a1-userdetails-verifieditem-root-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "10px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a1-userdetails-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-userdetailsmenu-tab-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetailsMenu/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-userdetailsmenu-tab-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetailsMenu/styles.js",
+   "component": "Tab",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-userfiltergroup-formcontrol-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-userfiltergroup-formcontrol-div-not-range-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "& > div:not(.range)",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-userfiltergroup-rangeselectwrapper-select-div-first-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/styles.js",
+   "component": "RangeSelectWrapper",
+   "property": "font-size",
+   "context": ".select > > div:first-child",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-userfiltergroup-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-userfiltergroup-switchwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/styles.js",
+   "component": "SwitchWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a1-userformdetails-driverzonerestrictionwrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFormDetails/styles.js",
+   "component": "DriverZoneRestrictionWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a1-userformdetails-inputwrapper-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFormDetails/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": ".select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-userformdetails-inputwrapper-list-wrapper-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFormDetails/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": ".list-wrapper",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a1-usermetafields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a1-usermetafields-metaaddcontainer-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-usermetafields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserMetaFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a1-usermetafields-nometafield-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserMetaFields/styles.js",
+   "component": "NoMetaField",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a1-usertypeselector-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserTypeSelector/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a1-userslistingheader-headertitlecontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UsersListingHeader/styles.js",
+   "component": "HeaderTitleContainer",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a1-userslistingheader-infocontent-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UsersListingHeader/styles.js",
+   "component": "InfoContent",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "a1-pres-userdetails-verifieditem-svg-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "svg",
+   "match": "12px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text.",
+   "evidence": "VerifiedItem scopes the declaration to its svg; the badge label text is governed separately by the reviewed root declaration."
+  },
+  {
+   "id": "a1-pres-userdetails-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text.",
+   "evidence": "ActionSelectorWrapper scopes the 20px declaration to button svg; the dropdown item text has its own reviewed declaration."
+  },
+  {
+   "id": "a1-pres-userformdetails-togglepassword-root-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFormDetails/styles.js",
+   "component": "TogglePassword",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "24px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text.",
+   "evidence": "TogglePassword renders only the Eye and EyeSlash icons from react-bootstrap-icons; the span carries no readable text, so the 24px sizes the glyph."
+  },
+  {
+   "id": "a1-pres-usermetafields-metacontainer-meta-value-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text.",
+   "evidence": "MetaContainer scopes the declaration to the delete icon inside .meta_value; .meta_type and the inputs carry the reviewed text declarations."
+  },
+  {
+   "id": "a1-pres-userprofileform-camera-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/UserProfileForm/styles.js",
+   "component": "Camera",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text.",
+   "evidence": "Camera contains only the camera badge icon; the profile form has no other declaration in this file."
+  }
+ ]
+}

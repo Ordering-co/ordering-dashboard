@@ -1,0 +1,900 @@
+/*
+ * C11 · Product sidebar (orders pilot, wave 5, batch 5.1).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the
+ * literal guard (src/__tests__/tools/productLiteralGuard.test.js) fails on any other.
+ * Logical properties only (C17). State lives in data-* / aria-* attributes:
+ *   data-collapsed  hidden (inert), data-rail  56px icon rail, data-drawer  mobile drawer.
+ */
+
+.odc-sidebar {
+  --odc-nav-pad: var(--od-space-3);
+  position: sticky;
+  /* : under the shell's sticky notice stack (BannerStack publishes its height on the root), never covered by it. */
+  inset-block-start: var(--odc-shell-banner-block, 0dvh);
+  z-index: var(--od-x-layer-chrome);
+  display: flex;
+  flex: none;
+  align-self: flex-start;
+  inline-size: var(--od-x-sidebar);
+  /* dvh, not the app's --vh: --vh can lag the real viewport and push the footer out of view.
+     : minus everything above the layout (notices; SidebarNav publishes it on this element), so at the top of the page
+     the account row is inside the window. The navigation list scrolls on its own. */
+  block-size: calc(100dvh - var(--odc-shell-notice-block, 0dvh));
+  margin-inline-start: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  transition:
+    margin-inline-start var(--od-duration-base) var(--od-ease-standard),
+    inline-size var(--od-duration-base) var(--od-ease-standard);
+}
+
+.odc-sidebar[data-rail] {
+  /* (rail - target) / 2: the inner box is exactly one 44px control wide, so every control
+     centres on the rail axis (x = 28 in 56) and none is squeezed by the padding. */
+  --odc-nav-pad: var(--od-x-space-1-5);
+  inline-size: var(--od-x-rail);
+}
+
+/* Hidden: pushed out of the flow's reach, inert and aria-hidden in the markup. */
+.odc-sidebar[data-collapsed] {
+  margin-inline-start: calc(var(--od-x-sidebar) * -1);
+}
+
+/* Below 768px the menu never takes room from the page: it is fixed, hidden or a drawer. */
+@media (max-width: 767px) {
+  .odc-sidebar {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100vw;
+    /* The drawer covers the notices: no offset on a phone. */
+    block-size: 100dvh;
+  }
+  .odc-sidebar[data-collapsed] {
+    margin-inline-start: -100vw;
+  }
+}
+
+/* Drawer: the root covers the page, the scrim takes clicks, the panel is the menu. */
+.odc-sidebar[data-drawer] {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 100vw;
+  block-size: 100dvh;
+  margin-inline-start: 0;
+}
+
+.odc-sidebar-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--od-x-scrim);
+}
+
+.odc-sidebar-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  block-size: 100%;
+  min-block-size: 0;
+  inline-size: 100%;
+  padding-block-end: env(safe-area-inset-bottom);
+  background: var(--od-bg);
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* In the rail the end hairline is drawn over the edge instead of taking 1px of the box, so the
+   inner width stays exactly one control and the controls centre on x = 28. */
+.odc-sidebar[data-rail] .odc-sidebar-panel {
+  border-inline-end: 0;
+}
+
+.odc-sidebar[data-rail] .odc-sidebar-panel::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: var(--od-x-hairline);
+  background: var(--od-border);
+  pointer-events: none;
+}
+
+.odc-sidebar[data-drawer] .odc-sidebar-panel {
+  inline-size: min(var(--od-x-drawer), 88vw);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+/* ── Header: logo as Home, collapse / expand / close ── */
+.odc-sidebar-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  block-size: calc(var(--od-x-control-height-lg) + var(--od-space-4));
+  padding-inline: var(--od-space-4) var(--od-space-3);
+}
+
+.odc-sidebar[data-rail] .odc-sidebar-head {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.odc-sidebar-logo {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-fine);
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  cursor: pointer;
+}
+
+.odc-sidebar-logo img {
+  display: block;
+  inline-size: auto;
+  max-inline-size: var(--od-x-menu-min);
+  block-size: var(--od-x-logo-height);
+  object-fit: contain;
+}
+
+/* ── Tools: search (⌘K) and the assistant row ── */
+.odc-nav-tools {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  padding-block: 0 var(--od-space-2);
+  padding-inline: var(--odc-nav-pad);
+}
+
+.odc-nav-search {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-space-3) var(--od-space-2);
+  margin: 0;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-x-text-subtle);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-nav-search:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-nav-search .odc-nav-text {
+  flex: 1;
+}
+
+.odc-kbd {
+  padding-inline: var(--od-x-space-1-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Navigation: groups, rows, sub-panels ── */
+.odc-nav-scroll {
+  flex: 1;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* A row focused by keyboard (or scrolled to) stops above the bottom fade, never under it. */
+  scroll-padding-block-end: var(--od-space-4);
+  padding-block: var(--od-space-1) var(--od-space-4);
+  padding-inline: var(--odc-nav-pad);
+}
+
+/* More below: a sticky fade, only while there is content to scroll to. It never takes room or clicks. */
+.odc-nav-scroll[data-more]::after {
+  content: '';
+  position: sticky;
+  inset-block-end: 0;
+  display: block;
+  block-size: var(--od-space-4);
+  margin-block-start: calc(var(--od-space-4) * -1);
+  background: linear-gradient(to top, var(--od-bg), transparent);
+  pointer-events: none;
+}
+
+.odc-nav-group + .odc-nav-group {
+  margin-block-start: var(--od-space-4);
+}
+
+.odc-nav-label {
+  display: flex;
+  align-items: center;
+  block-size: var(--od-x-target-fine);
+  padding-inline: var(--od-space-2);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  /* redesign W0-3b (T0-10, decisión 11b): the published sidebar row, 28px (the 32px candidate --od-x-nav-row is retired).
+      (DTD-58): 28px is the floor, not a fixed height: a label that wraps to a second line (Greek, German) makes the
+     row taller instead of being cut with an ellipsis. The menu keeps its width. */
+  min-block-size: var(--od-sidebar-item-height);
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  margin: 0;
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: none;
+  color: var(--od-text-muted);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-nav-item:hover {
+  background: var(--od-x-hover);
+  color: var(--od-text);
+}
+
+/* The one active state. The focus ring is separate and is never replaced by it. */
+.odc-nav-item[aria-current='page'],
+.odc-nav-item[aria-current='page']:hover {
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+}
+
+.odc-nav-item[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-2);
+  inset-inline-start: calc(var(--odc-nav-pad) * -1);
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action);
+}
+
+/* A current child puts its indicator on the sub-panel's guide line (the approved prototype),
+   not at the menu edge: back by the panel's padding and the line's own width. */
+.odc-nav-sub .odc-nav-item[aria-current='page']::before {
+  inset-inline-start: calc((var(--od-space-2) + var(--od-x-hairline)) * -1);
+}
+
+/* The parent of the current page: stronger text, never filled. */
+.odc-nav-item[data-contains-current],
+.odc-nav-item[aria-expanded='true'] {
+  color: var(--od-text);
+}
+.odc-nav-item[data-contains-current] {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-nav-item[aria-pressed='true'] {
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+.odc-nav-item[data-action='upgrade'] {
+  color: var(--od-action-content);
+}
+
+.odc-nav-item:focus-visible,
+.odc-nav-search:focus-visible,
+.odc-sidebar-logo:focus-visible,
+.odc-account-trigger:focus-visible,
+.odc-account-item:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-sidebar-logo:focus-visible {
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-nav-item:disabled {
+  background: none;
+  color: var(--od-x-text-subtle);
+  cursor: not-allowed;
+}
+
+.odc-nav-text {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*  (DTD-58): the label of a row wraps to a second line before it is cut (the Greek «Delivery» entry was cut with an
+   ellipsis at the menu's fixed width). Two lines of 13px on 1.35 are 35px, inside the 44px coarse row. The search button keeps
+   the one-line rule above: its box is fixed. */
+.odc-nav-item .odc-nav-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+/* AC-F L1: a group trigger is an `.odc-nav-item` like a child, but its label shares the row with the chevron (156px against 173px of
+   a child's), and «Одит на регистрационни файлове» (bg) needs 167px per line to fit in two, so it took a third line and the second
+   ended in «…». With a mouse from 768px the row is only a floor (28px, it grows), so the label may take three lines before any cut.
+   Under 768px or with a coarse pointer the row is a fixed 44px (below) that three lines of 17.55px do not fit: two stay the limit
+   there (the drawer is 320px wide, 228px of label). The rail has no label, and the floor of the row does not change. */
+@media (pointer: fine) and (min-width: 768px) {
+  .odc-nav-item .odc-nav-text {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}
+
+.odc-nav-chevron {
+  margin-inline-start: auto;
+  transition: rotate var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-nav-item[aria-expanded='true'] .odc-nav-chevron {
+  rotate: 180deg;
+}
+
+.odc-nav-ext {
+  margin-inline-start: auto;
+  color: var(--od-x-text-subtle);
+}
+
+.odc-nav-stage {
+  flex: none;
+  align-self: center; /* main: badges centred vertically */
+  padding-inline: var(--od-x-space-1-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Sub-panel: a hairline guide aligned under the parent icon, children indented past it. */
+.odc-nav-sub {
+  display: flex;
+  flex-direction: column;
+  margin-block: var(--od-x-space-half) var(--od-space-1);
+  margin-inline-start: var(--od-space-4);
+  padding-inline-start: var(--od-space-2);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-nav-sub[hidden] {
+  display: none;
+}
+
+.odc-nav-sub .odc-nav-item {
+  /* redesign W0-3b (decisión 11b): a submenu row is a sidebar row too, 28px at least (the floor of `.odc-nav-item`; the 30px
+     candidate --od-x-nav-sub-row is retired) */
+  padding-inline-start: var(--od-x-space-2-5);
+}
+
+/* A phone has no ⌘K: the shortcut hint goes, the search stays. */
+@media (max-width: 767px), (pointer: coarse) {
+  .odc-nav-search .odc-kbd { display: none; }
+}
+
+/* ── Rail: icons only, hairline between groups, nothing disappears ── */
+.odc-sidebar[data-rail] .odc-nav-label,
+.odc-sidebar[data-rail] .odc-nav-text,
+.odc-sidebar[data-rail] .odc-kbd,
+.odc-sidebar[data-rail] .odc-nav-chevron,
+.odc-sidebar[data-rail] .odc-nav-stage,
+.odc-sidebar[data-rail] .odc-nav-ext {
+  display: none;
+}
+
+.odc-sidebar[data-rail] .odc-nav-group + .odc-nav-group {
+  margin-block-start: var(--od-space-2);
+  padding-block-start: var(--od-space-2);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* Every rail control, whatever it is built from, is the same 44px box on the rail axis.
+   `.odc-sidebar[data-rail]` lifts these above the Product button rules (`.odc-btn[data-icon-only]`,
+   `[data-variant='ghost']`), which would otherwise leave the sections at 32px. */
+.odc-sidebar[data-rail] .odc-nav-scroll {
+  scrollbar-width: none;
+}
+
+.odc-sidebar[data-rail] .odc-nav-tools {
+  align-items: center;
+}
+
+.odc-sidebar[data-rail] .odc-nav-item,
+.odc-sidebar[data-rail] .odc-nav-search,
+.odc-sidebar[data-rail] .odc-account-trigger,
+.odc-sidebar[data-rail] .odc-nav-rail-btn,
+.odc-sidebar[data-rail] .odc-sidebar-toggle {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-target-coarse);
+  min-inline-size: var(--od-x-target-coarse);
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+.odc-sidebar[data-rail] .odc-nav-rail-btn {
+  position: relative;
+  /* redesign W0-3b (T0-10, decisión 11b): same published row height as .odc-nav-item. */
+  block-size: var(--od-sidebar-item-height);
+}
+
+/* The section that holds the current page reads as current: same fill, text and indicator. */
+.odc-sidebar[data-rail] .odc-nav-rail-current,
+.odc-sidebar[data-rail] .odc-nav-rail-current:hover {
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+}
+
+.odc-sidebar[data-rail] .odc-nav-rail-btn:focus-visible {
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-nav-rail-current::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-2);
+  inset-inline-start: calc(var(--odc-nav-pad) * -1);
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action);
+}
+
+/* The current page inside a rail menu: the same indicator, on the item's edge. The item
+   also carries aria-current="page" (Product Menu `current`); the mark sits in its icon slot. */
+.odc-menu .odc-menu-item:has(> .odc-menu-current) {
+  position: relative;
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+}
+
+.odc-menu-item > .odc-menu-current {
+  position: absolute;
+  inset-block: var(--od-space-2);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  block-size: auto;
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action);
+}
+
+/* : the same wrapper without the label (expanded menu, drawer): it takes no box, so the header lays out as before. */
+.odc-rail-item-bare {
+  display: contents;
+}
+
+/* Rail label: shown beside the control on hover and keyboard focus. `title` never shows on
+   focus, and the rail clips overflow, so the tip is fixed: it keeps the row's own height and
+   sits one gap past the rail edge. `aria-hidden`: the control already carries its name. */
+.odc-rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+}
+
+.odc-rail-tip {
+  position: fixed;
+  inset-inline-start: calc(var(--od-x-rail) + var(--od-space-1));
+  /* the control's measured centre (RailItem), so a scrolled rail keeps label and icon together */
+  inset-block-start: var(--odc-tip-y, auto);
+  translate: 0 -50%;
+  z-index: calc(var(--od-x-layer-chrome) + 20); /* redesign W0-5 (T0-17): was 1020 */
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-strong);
+  color: var(--od-text-inverse);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--od-duration-fast) var(--od-ease-standard),
+    visibility var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-rail-item:hover .odc-rail-tip,
+.odc-rail-item:has(:focus-visible) .odc-rail-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* An open menu or popover takes the place of the tip. */
+.odc-rail-item:has([aria-expanded='true']) .odc-rail-tip,
+.odc-rail-item[data-tip-dismissed] .odc-rail-tip {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ── Footer: the upgrade-offer card/rail button, then the account row ── */
+.odc-sidebar-foot {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--odc-nav-pad);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-upgrade-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+.odc-upgrade-card-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-upgrade-card-row .od-progress-ring {
+  flex: none;
+}
+
+.odc-upgrade-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-upgrade-card-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-card-subtitle {
+  margin: 0;
+  color: var(--od-action);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-upgrade-card-cta {
+  inline-size: 100%;
+}
+
+/* The foot scope outranks the icon button's own neutral colors: the offer reads as the accent, like the card. */
+.odc-sidebar-foot .odc-btn.odc-upgrade-rail-btn,
+.odc-sidebar-foot .odc-btn.odc-upgrade-rail-btn:hover {
+  color: var(--od-action);
+  background: var(--od-action-soft);
+}
+
+.odc-account-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-space-2);
+  margin: 0;
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: none;
+  color: var(--od-text);
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-account-trigger:hover,
+.odc-account-trigger[aria-expanded='true'] {
+  background: var(--od-x-hover);
+}
+
+.odc-account-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-account-name {
+  overflow: hidden;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* : project and email are two pieces. The project never shrinks; the email is the piece that gets the ellipsis (its own
+   LTR run, so it is cut at its end in RTL too). The separator is a flex item: the gap draws the spaces around it. */
+.odc-account-sub {
+  display: flex;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  white-space: nowrap;
+}
+
+.odc-account-project {
+  flex: none;
+}
+
+.odc-account-mail {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-account-chevron {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-sidebar[data-rail] .odc-account-text,
+.odc-sidebar[data-rail] .odc-account-chevron {
+  display: none;
+}
+
+/* ── Account popover ── */
+.odc-account-positioner {
+  z-index: calc(var(--od-x-layer-chrome) + 10); /* redesign W0-5 (T0-17): was 1010 */
+}
+
+.odc-account-popup {
+  min-inline-size: var(--od-x-popover);
+  max-inline-size: calc(100vw - var(--od-x-viewport-gap) * 2);
+  padding: var(--od-space-1);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  outline: 0;
+}
+
+.odc-account-head {
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-x-space-2-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-account-title {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-account-email {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  overflow-wrap: anywhere;
+}
+
+.odc-account-section {
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--od-space-1);
+}
+
+.odc-account-section + .odc-account-section {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-account-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  margin: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.odc-account-item:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-account-item[aria-current='page'] {
+  background: var(--od-action-soft);
+  color: var(--od-action-content);
+}
+
+.odc-account-language {
+  padding-inline: 0;
+}
+
+/* redesign fix-qa E8 · the language is one row like the others: Globe, the current language, a chevron at the end.
+   The menu is portaled to <body> on the overlay role (overlay + 9), above this popup (chrome + 10); it is as wide as its
+   trigger and scrolls inside the room it has.  (O-7): its old chrome + 20 lift pulled it under the dialog host. */
+.odc-account-language .odc-btn {
+  inline-size: 100%;
+  justify-content: flex-start;
+  padding-inline: var(--od-x-space-2-5);
+  text-align: start;
+}
+.odc-account-language .odc-btn > .odc-icon:last-child { margin-inline-start: auto; }
+
+/* The shared legacy language select paints its selected option with the theme's
+   inherited blue; inside the account menu it takes the Ordering.co action roles. */
+.odc-account-language,
+.odc-account-language * {
+  --od-legacy-select-action: var(--od-action);
+  --od-legacy-select-action-hover: var(--od-action-hover);
+  --od-legacy-select-action-content: var(--od-action-content);
+  --od-legacy-select-action-soft: var(--od-action-soft);
+}
+
+.odc-account-item-text {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+/* Targets (C3): every row and control reaches 44px with a coarse pointer.
+   redesign W0-3d (T0-10, decisión 12): these are STACKED rows of the drawer (nav items, sub-rows, rail buttons, the search
+   above the assistant row, the account popover items) or controls that are already >= 44px by content (the account trigger),
+   so they keep growing the box to 44px: a 32px box with a 44px area would cross the neighbouring row's area. The owner decides
+   their reflow. The logo is left too: its width is the image's and its neighbour, the toggle, is 8px away. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-nav-item,
+  .odc-nav-sub .odc-nav-item,
+  .odc-nav-rail-btn {
+    block-size: var(--od-x-target-coarse);
+  }
+  /*  (W0-E-15): the rail button's own rule above (`.odc-sidebar[data-rail] .odc-nav-rail-btn`, 28px) is more specific
+     than the plain selector in the group above, so it won on a coarse pointer. Same 44px, for that selector. */
+  .odc-sidebar[data-rail] .odc-nav-rail-btn {
+    block-size: var(--od-x-target-coarse);
+  }
+  .odc-nav-search {
+    block-size: var(--od-x-target-coarse);
+  }
+  .odc-sidebar-logo {
+    min-block-size: var(--od-x-target-coarse);
+  }
+  .odc-account-item,
+  .odc-account-trigger {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/*  · The destination of focusPageStart (Skip to content, the menu closing, ⌘K, a dialog giving the focus back): any element
+   it focuses carries data-odc-page-start while it has the focus. It gets the brand ring, the same as `.odc-pagehead-title` (page-header.css,
+   which stays), and none for a plain programmatic focus (a click or a route change from the mouse). The shell's CSS is always loaded, so
+   the 404 and the offline page, whose h1 is not a page title, get it too. */
+[data-odc-page-start]:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+[data-odc-page-start]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* redesign fix-qa E8 · Skip to content: out of sight until it has the focus, then a button over the corner of the page. */
+.odc-skip-link:not(:focus) {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.odc-skip-link:focus {
+  position: fixed;
+  inset-block-start: var(--od-space-2);
+  /* : past the rail, so the focused link never covers its «Expand sidebar» button at the top of the rail. */
+  inset-inline-start: calc(var(--od-x-rail) + var(--od-space-2));
+  z-index: var(--od-x-layer-drawer);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-space-3);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  text-decoration: none;
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* redesign W0-3d (T0-10, decisión 12): a loose control, seen at 32px on a phone with a 44px touch area centred on it.
+   --od-x-target-inset (candidates.css) is the one declaration of that area: it never shrinks a control already >= 44px. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-skip-link:focus::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+@media print {
+  .odc-skip-link { display: none; }
+  .odc-sidebar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-sidebar,
+  .odc-nav-item,
+  .odc-nav-chevron,
+  .odc-rail-tip {
+    transition: none;
+  }
+}

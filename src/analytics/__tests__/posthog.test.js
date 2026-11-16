@@ -10,6 +10,7 @@ import {
   captureDashboardEvent,
   captureDashboardOperation,
   captureDashboardWebVital,
+  getDashboardAnalyticsContext,
   getDashboardCommonProperties,
   getDashboardRoute,
   getDashboardUserProperties,
@@ -37,6 +38,14 @@ describe('dashboard PostHog analytics', () => {
     expect(shouldCaptureDashboardAnalytics({ posthog_analytics_enabled: true }, 'dashboardcf.orderingplus.com')).toBe(true)
     expect(shouldCaptureDashboardAnalytics({ posthog_analytics_enabled: true }, '127.0.0.1')).toBe(false)
     expect(shouldCaptureDashboardAnalytics({ posthog_analytics_enabled: false }, 'dashboard.ordering.co')).toBe(false)
+  })
+
+  // the beta domain captures too, tagged «beta» so production numbers stay apart
+  it('tags the beta dashboard as its own environment', () => {
+    expect(getDashboardAnalyticsContext({ posthog_analytics_enabled: true, use_project_domain: true }, 'dashboard-beta.ordering.co')).toEqual({ enabled: true, environment: 'beta' })
+    expect(getDashboardAnalyticsContext({ posthog_analytics_enabled: true, use_project_domain: true }, 'dashboard.ordering.co')).toEqual({ enabled: true, environment: 'production' })
+    expect(getDashboardAnalyticsContext({ posthog_analytics_enabled: true, use_project_domain: true }, 'dashboard.customer.com')).toEqual({ enabled: true, environment: 'production' })
+    expect(getDashboardAnalyticsContext({ posthog_analytics_enabled: false }, 'dashboard-beta.ordering.co')).toEqual({ enabled: false })
   })
 
   it('captures custom production domains while excluding worker previews', () => {
@@ -111,15 +120,15 @@ describe('dashboard PostHog analytics', () => {
   it('keeps approved dimensions and rejects PII, identifiers and nested payloads', () => {
     expect(sanitizeAnalyticsProperties({
       module: 'orders',
-      project_id: '301605',
+      project_id: '42007',
       email: 'private@example.com',
-      phone: '+10000000000',
+      phone: '+12025550123',
       promotion_id: 99,
       response: { result: 'secret' },
       fields: ['name', 'rate']
     })).toEqual({
       module: 'orders',
-      project_id: '301605',
+      project_id: '42007',
       promotion_id: 99,
       fields: ['name', 'rate']
     })
@@ -275,10 +284,16 @@ describe('dashboard PostHog analytics', () => {
     expect(getDashboardRoute('/builder/41')).toEqual({ route: '/builder', module: 'my_products' })
     expect(getDashboardRoute('/open-source-code')).toEqual({ route: '/open-source-code', module: 'my_products' })
     expect(getDashboardRoute('/open-source-code/private-version')).toEqual({ route: '/open-source-code', module: 'my_products' })
+    expect(getDashboardRoute('/my-products/ordering-website-2')).toEqual({ route: '/my-products', module: 'my_products' })
+    expect(getDashboardRoute('/my-products/franchises-website')).toEqual({ route: '/my-products', module: 'my_products' })
+    expect(getDashboardRoute('/my-products/dashboard')).toEqual({ route: '/my-products', module: 'my_products' })
     expect(getDashboardRoute('/settings')).toEqual({ route: '/settings', module: 'settings' })
     expect(getDashboardRoute('/settings/logs')).toEqual({ route: '/settings', module: 'settings' })
     expect(getDashboardRoute('/all-settings')).toEqual({ route: '/all-settings', module: 'settings' })
-    expect(getDashboardRoute('/orders/12345')).toEqual({ route: '/orders', module: 'orders' })
+    expect(getDashboardRoute('/orders/42007')).toEqual({ route: '/orders', module: 'orders' })
+    // redesign (n.º 21): the retired /intelligence/ecommerce_reports redirects into Enterprise reports; both report as intelligence
+    expect(getDashboardRoute('/intelligence/ecommerce_reports')).toEqual({ route: '/intelligence', module: 'intelligence' })
+    expect(getDashboardRoute('/intelligence/reports')).toEqual({ route: '/intelligence', module: 'intelligence' })
     expect(getDashboardRoute('/onboarding/store')).toEqual({ route: '/onboarding', module: 'stores' })
     expect(getDashboardRoute('/stores/products/987')).toEqual({ route: '/stores', module: 'stores' })
     expect(getDashboardRoute('/connect/sales-channels')).toEqual({ route: '/connect', module: 'connect' })

@@ -1,40 +1,41 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
-import { CustomerFees as CustomerFeesController, useLanguage, useUtils } from '../../../../../index'
-import { CheckSquareFill, Square } from 'react-bootstrap-icons'
+import { CustomerFees as CustomerFeesController, useLanguage, useSession } from '../../../../../index'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { EDITOR_PANEL_WIDE_FROM } from '../../../../../utils/editorPanel'
+import { Plus, TriangleAlert } from '../../Shared/Icon'
+import { Button, ConfirmDialog, InlineNotice, Pagination, SearchField, SectionSplit, SelectionBar } from '../../Shared/Product'
+import { CustomerFeeDetail } from './CustomerFeeDetail'
+import { CustomerFeesTable } from './CustomerFeesTable'
+import './customer-fees.css'
 
-import { Button, Switch } from '../../../styles'
-import { Input } from '../../../styles/Inputs'
-import { Select } from '../../../styles/Select/FirstSelect'
-import { Alert, Confirm, Modal, Pagination, RecipientSelect, SearchBar } from '../../Shared'
+// redesign stores 5.12 (; E4): the customer fees of a store on Product, in place of the table, the modal and the Alert of
+// `main`. The same controller and the same requests; what changes is how the screen says things.
+// - The list: a search and «Add customer fee» (it replaces «Add new» and «Use advanced fee settings»: both opened the same form), a
+//   P/DataTable (RecordCards under 768px) whose Status is a switch that saves at once and says why when it cannot, and the pages.
+// - Selecting rows brings a selection bar; «Delete» asks first (the count in the question) and says which fees stayed when some could
+//   not be deleted. Writes go through the controller with `{ inlineError: true }`: no toast, no Alert; the reason is said in place.
+// - The detail (`S/CustomerFees/CustomerFeeDetail`) opens beside the list from 1000px of window (`EDITOR_PANEL_WIDE_FROM`, where `main`
+//   opened its modal) and instead of it below, with «‹ Back». «New customer fee» opens it empty.
+// - The legacy «Service fee settings in %» field is the parent's (`legacyField`): shown on top while the store has no customer fees,
+//   and also with them when the parent asks (`keepLegacyField`).
+// - `PUT` and `DELETE /fees/{id}` are level 0 only; everyone else who reaches this screen, a store owner (level 2) above all,
+//   can only create. So below level 0 there is no switch, no selection and no delete, a stored fee opens to read, and the screen says who
+//   can do the rest. The API is the rule; this only stops offering what it would refuse.
 
-import {
-  CustomerFeesContainer,
-  HeaderContainer,
-  ActionsWrapper,
-  Table,
-  Thead,
-  Tbody,
-  PagesBottomContainer,
-  StatusWrapper,
-  CheckBoxWrapper,
-  FeeIdWrapper,
-  FeeNameWrapper,
-  ConditionBadge,
-  ConditionsColumn,
-  FormContainer,
-  FormHeader,
-  FormSection,
-  FieldsColumn,
-  FieldsRow,
-  Field,
-  FieldHint,
-  FormActions,
-  LegacyFeeContainer,
-  DateToggleWrapper
-} from './styles'
+const NEW = 'new'
+const PAGE_SIZES = [10, 25, 50]
+const SEARCH_DELAY_MS = 400
+
+// «Showing _from_–_to_ of _total_»: the numbers become .odc-figure nodes (decision 11) and keep their direction in RTL
+const fillTemplate = (template, values, figure) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{figure(values[name])}</React.Fragment> : part
+})
+
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 const CustomerFeesUI = (props) => {
   const {
@@ -50,29 +51,59 @@ const CustomerFeesUI = (props) => {
     setPaginationProps,
     sitesState,
     paymethodsState,
-    actionState,
-    // Legacy fee props (passed from BusinessTaxAndFees)
-    business,
-    formState: legacyFormState,
-    setFormState: setLegacyFormState
+    setIsExtendExtraOpen,
+    legacyField,
+    keepLegacyField
   } = props
 
   const [, t] = useLanguage()
-  const [{ parsePrice }] = useUtils()
+  const [{ user } = {}] = useSession() || []
+  const canManage = user?.level === 0
+  const adminOnlyNote = t('CUSTOMER_FEES_ADMIN_ONLY_NOTE', 'Only an administrator can turn off, change or delete a customer fee. Ask one if you need it.')
+  const splitRef = useRef(null)
+  const mounted = useRef(true)
+  useEffect(() => () => { mounted.current = false }, [])
 
-  const hasCustomerFees = !feesList?.loading && (feesList?.fees?.length > 0 || (paginationProps?.totalItems != null && paginationProps.totalItems > 0))
+  const [openKey, setOpenKey] = useState(null) // a fee id, NEW, or null
+  const [openFee, setOpenFee] = useState(null) // the record the detail holds (it follows the list; it outlives a page or a search)
+  const [selectedIds, setSelectedIds] = useState([])
+  const [deleting, setDeleting] = useState({ open: false, busy: false })
+  const [notice, setNotice] = useState(null)
 
-  const handleChangeLegacyFormState = (newChange) => {
-    if (!setLegacyFormState) return
-    setLegacyFormState({
-      ...legacyFormState,
-      changes: {
-        ...legacyFormState?.changes,
-        ...newChange
-      }
-    })
+  const loading = Boolean(feesList?.loading)
+  const fees = Array.isArray(feesList?.fees) ? feesList.fees : []
+  const totalItems = paginationProps?.totalItems
+  const searching = Boolean(searchValue)
+  const hasCustomerFees = !loading && (fees.length > 0 || (totalItems != null && totalItems > 0))
+  // a search that finds nothing does not mean the store has no fees: the legacy field stays out of it
+  const showLegacy = legacyField != null && (Boolean(keepLegacyField) || (!loading && !hasCustomerFees && !searching))
+
+  // ── The search: what is typed waits a moment, so the list is asked once per word and not once per letter ──
+  const [draft, setDraft] = useState(searchValue ?? '')
+  const timer = useRef(null)
+  const sent = useRef(searchValue ?? '')
+  useEffect(() => {
+    if ((searchValue ?? '') === sent.current) return
+    sent.current = searchValue ?? ''
+    setDraft(searchValue ?? '')
+  }, [searchValue])
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  const handleSearch = (next) => {
+    setDraft(next)
+    clearTimeout(timer.current)
+    const send = () => {
+      if (next === sent.current) return
+      sent.current = next
+      handleChangeSearch?.(next)
+    }
+    if (next === '') send()
+    else timer.current = setTimeout(send, SEARCH_DELAY_MS)
   }
 
+  const showTools = fees.length > 0 || Boolean(draft) || searching || (totalItems != null && totalItems > 0)
+
+  // ── Names of the conditions ──
   const deliveryTypeOptions = useMemo(() => ([
     { value: 'all', content: t('ALL_DELIVERY_TYPES', 'All delivery types') },
     { value: 'delivery', content: t('DELIVERY', 'Delivery') },
@@ -86,677 +117,279 @@ const CustomerFeesUI = (props) => {
     { value: 'reservation', content: t('RESERVATION', 'Reservation') }
   ]), [t])
 
-  const sitesOptions = useMemo(() => {
-    const base = [{ value: 'all', content: t('ALL_SITES', 'All sites') }]
-    const list = Array.isArray(sitesState?.sites) ? sitesState.sites : []
-    return base.concat(list.map((s) => ({ value: s.id, content: s.name || String(s.id) })))
-  }, [sitesState?.sites, t])
+  const sitesList = Array.isArray(sitesState?.sites) ? sitesState.sites : []
+  const paymethodsList = Array.isArray(paymethodsState?.paymethods) ? paymethodsState.paymethods : []
 
-  const paymethodsOptions = useMemo(() => {
-    const base = [{ value: 'all', content: t('ALL_PAYMENT_METHODS', 'All payment methods') }]
-    const list = Array.isArray(paymethodsState?.paymethods) ? paymethodsState.paymethods : []
-    return base.concat(list.map((p) => ({ value: p.id, content: p.name || String(p.id) })))
-  }, [paymethodsState?.paymethods, t])
+  const siteOptions = useMemo(
+    () => [{ value: 'all', content: t('ALL_SITES', 'All sites') }]
+      .concat(sitesList.map(site => ({ value: site.id, content: site.name || String(site.id) }))),
+    [sitesList, t]
+  )
+  const paymethodOptions = useMemo(
+    () => [{ value: 'all', content: t('ALL_PAYMENT_METHODS', 'All payment methods') }]
+      .concat(paymethodsList.map(paymethod => ({ value: paymethod.id, content: paymethod.name || String(paymethod.id) }))),
+    [paymethodsList, t]
+  )
 
-  const [isOpenFeeForm, setIsOpenFeeForm] = useState(false)
-  const [isEditFee, setIsEditFee] = useState(false)
-  const [editingFeeId, setEditingFeeId] = useState(null)
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [confirmState, setConfirmState] = useState({ open: false, content: '', handleOnAccept: null })
-
-  const [feeFormState, setFeeFormState] = useState({
-    name: '',
-    description: '',
-    enabled: true,
-    fixed: '',
-    percentage: '',
-    fixed_minimum: '',
-    delivery_type: 'all',
-    site_id: 'all',
-    paymethod_id: 'all',
-    recipient: 'business',
-    start_date: '',
-    end_date: ''
-  })
-
-  const [selectedFeeIds, setSelectedFeeIds] = useState([])
-
-  const [showDateRange, setShowDateRange] = useState(false)
-  const [deliveryTypeSearch, setDeliveryTypeSearch] = useState('')
-  const [siteSearch, setSiteSearch] = useState('')
-  const [paymethodSearch, setPaymethodSearch] = useState('')
-
-  const handleOpenAlert = (content) => {
-    const normalized = Array.isArray(content)
-      ? content
-      : content
-        ? [String(content)]
-        : []
-    setAlertState({ open: true, content: normalized })
+  // an id the lists do not know is said by its id, translated (it was «Site #7» and «PM #9»)
+  const conditionsOf = (fee) => {
+    const names = []
+    if (fee?.site_id) {
+      const site = sitesList.find(item => String(item.id) === String(fee.site_id))
+      names.push(site?.name || t('SITE_WITH_ID', 'Site _id_').replace('_id_', () => String(fee.site_id)))
+    }
+    if (fee?.paymethod_id) {
+      const paymethod = paymethodsList.find(item => String(item.id) === String(fee.paymethod_id))
+      names.push(paymethod?.name || t('PAYMETHOD_WITH_ID', 'Payment method _id_').replace('_id_', () => String(fee.paymethod_id)))
+    }
+    if (fee?.delivery_type) {
+      const option = deliveryTypeOptions.find(item => item.value === fee.delivery_type)
+      names.push(option?.content || fee.delivery_type.charAt(0).toUpperCase() + fee.delivery_type.slice(1).replace(/_/g, ' '))
+    }
+    return names
   }
 
-  const isAllFeesChecked = useMemo(() => {
-    const items = Array.isArray(feesList?.fees) ? feesList.fees : []
-    if (items.length === 0) return false
-    return items.every((f) => selectedFeeIds.includes(f.id))
-  }, [feesList?.fees, selectedFeeIds])
-
-  const handleToggleFeeId = (e, id) => {
-    e?.stopPropagation?.()
-    if (!id) return
-    setSelectedFeeIds((prev) => {
-      const exists = prev.includes(id)
-      if (exists) return prev.filter((x) => x !== id)
-      return prev.concat(id)
-    })
+  // ── Open and close the detail ──
+  const showDetail = (key, record) => {
+    setNotice(null)
+    setOpenKey(key)
+    setOpenFee(record)
   }
 
-  const handleSelectAllFees = (e) => {
-    e?.stopPropagation?.()
-    const items = Array.isArray(feesList?.fees) ? feesList.fees : []
-    if (items.length === 0) return
-    setSelectedFeeIds((prev) => {
-      const nextIds = items.map((f) => f.id)
-      const allSelected = nextIds.every((id) => prev.includes(id))
-      return allSelected ? [] : nextIds
-    })
+  const requestOpen = (key, record) => {
+    if (!businessId || String(key) === String(openKey)) return
+    if (splitRef.current) splitRef.current.requestLeave(() => showDetail(key, record))
+    else showDetail(key, record)
   }
 
-  const handleClickDeleteSelectedFees = () => {
-    if (selectedFeeIds.length === 0) return
-    setConfirmState({
-      open: true,
-      content: t('QUESTION_DELETE_FEES', 'Are you sure to delete these fees?'),
-      handleOnAccept: async () => {
-        setConfirmState((prev) => ({ ...prev, open: false }))
-        const res = await deleteFees?.(selectedFeeIds)
-        if (res?.error) return
-        setSelectedFeeIds([])
-      }
-    })
+  const closeDetail = () => {
+    setOpenKey(null)
+    setOpenFee(null)
   }
 
-  const handleChangeFeesPage = (page) => {
+  // the record in the detail follows the list (a switch of the table, a save)
+  useEffect(() => {
+    if (openKey == null || openKey === NEW) return
+    const found = fees.find(fee => String(fee.id) === String(openKey))
+    if (found && found !== openFee) setOpenFee(found)
+  }, [fees, openKey])
+
+  const isOpen = openKey === NEW || (openKey != null && openFee != null)
+
+  // ── The switch of a row ──
+  const toggleEnabled = (fee, next) => Promise.resolve(updateFee?.(fee.id, { enabled: next }, { inlineError: true }))
+    .then(result => (!result || result.error ? { ok: false, error: result?.result } : { ok: true }))
+
+  // ── Selection ──
+  const toggleOne = (id) => setSelectedIds(current => (current.includes(id) ? current.filter(item => item !== id) : [...current, id]))
+  const pageIds = fees.map(fee => fee.id)
+  const toggleAll = () => setSelectedIds(current => (
+    pageIds.length > 0 && pageIds.every(id => current.includes(id))
+      ? current.filter(id => !pageIds.includes(id))
+      : [...new Set([...current, ...pageIds])]
+  ))
+
+  const withCount = (template, value) => template.replace('_count_', String(value))
+
+  const confirmDelete = async () => {
+    const ids = selectedIds
+    setNotice(null)
+    setDeleting({ open: true, busy: true })
+    let result
+    try {
+      result = await deleteFees?.(ids, { inlineError: true })
+    } catch (error) {
+      result = { error: true, result: [error?.message], deletedIds: [], failedIds: ids }
+    }
+    if (!mounted.current) return
+    setDeleting({ open: false, busy: false })
+    const failed = result?.failedIds ?? (result?.error || !result ? ids : [])
+    const deleted = result?.deletedIds ?? ids.filter(id => !failed.includes(id))
+    setSelectedIds(failed)
+    if (openKey != null && openKey !== NEW && deleted.some(id => String(id) === String(openKey))) closeDetail()
+    if (failed.length === 0) return
+    const reason = translateApiMessage(t, firstMessage(result?.result), t('ERROR', 'Error'))
+    setNotice(withCount(failed.length === 1
+      ? t('CUSTOMER_FEES_DELETE_FAILED_ONE', '1 fee could not be deleted: _reason_')
+      : t('CUSTOMER_FEES_DELETE_FAILED_OTHER', '_count_ fees could not be deleted: _reason_'), failed.length).replace('_reason_', () => reason))
+  }
+
+  // ── Pages (the controller keeps the page; the foot asks for the next one) ──
+  const handleChangePage = (page) => {
     const nextPage = Number(page) >= 1 ? Number(page) : 1
-    setPaginationProps((prev) => ({ ...prev, currentPage: nextPage }))
+    setPaginationProps(prev => ({ ...prev, currentPage: nextPage }))
     getFees(nextPage, paginationProps.pageSize)
   }
 
-  const handleChangeFeesPageSize = (pageSize) => {
+  const handleChangePageSize = (pageSize) => {
     const nextPageSize = Number(pageSize) >= 1 ? Number(pageSize) : 10
-    setPaginationProps((prev) => ({ ...prev, pageSize: nextPageSize, currentPage: 1 }))
+    setPaginationProps(prev => ({ ...prev, pageSize: nextPageSize, currentPage: 1 }))
     getFees(1, nextPageSize)
   }
 
-  const handleResetFeeForm = () => {
-    setIsEditFee(false)
-    setEditingFeeId(null)
-    setFeeFormState({
-      name: '',
-      description: '',
-      enabled: true,
-      fixed: '',
-      percentage: '',
-      fixed_minimum: '',
-      delivery_type: 'all',
-      site_id: 'all',
-      paymethod_id: 'all',
-      recipient: 'business',
-      start_date: '',
-      end_date: ''
-    })
-    setShowDateRange(false)
-    setDeliveryTypeSearch('')
-    setSiteSearch('')
-    setPaymethodSearch('')
-  }
+  // ── The list ──
+  const addButton = (
+    <Button variant='primary' icon={Plus} disabled={!businessId} onClick={() => requestOpen(NEW, null)}>
+      {t('ADD_CUSTOMER_FEE', 'Add customer fee')}
+    </Button>
+  )
 
-  const handleOpenCreateFee = () => {
-    if (!businessId) {
-      handleOpenAlert(t('BUSINESS_REQUIRED', 'Business is required'))
-      return
-    }
-    handleResetFeeForm()
-    setIsOpenFeeForm(true)
-  }
+  const noRows = !loading && fees.length === 0
+  const emptyText = (searching || draft)
+    ? t('NO_RESULTS_FOUND', 'No results found')
+    : t('NO_CUSTOMER_FEES', 'No customer fees yet.')
 
-  const handleOpenEditFee = (id) => {
-    const fee = (feesList?.fees || []).find((f) => Number(f?.id) === Number(id)) || null
-    if (!fee) {
-      handleOpenAlert(t('NOT_FOUND', 'Not found'))
-      return
-    }
-
-    handleResetFeeForm()
-    setIsEditFee(true)
-    setEditingFeeId(id)
-    setIsOpenFeeForm(true)
-    setShowDateRange(!!(fee?.start_date || fee?.end_date))
-
-    setFeeFormState({
-      name: fee?.name ?? '',
-      description: fee?.description ?? '',
-      enabled: !!fee?.enabled,
-      fixed: fee?.fixed != null ? String(fee.fixed) : '',
-      percentage: fee?.percentage != null ? String(fee.percentage) : '',
-      fixed_minimum: fee?.fixed_minimum != null ? String(fee.fixed_minimum) : '',
-      delivery_type: fee?.delivery_type ?? 'all',
-      site_id: fee?.site_id ?? 'all',
-      paymethod_id: fee?.paymethod_id ?? 'all',
-      recipient: fee?.recipient ?? 'business',
-      start_date: fee?.start_date ? fee.start_date.split(' ')[0] : '',
-      end_date: fee?.end_date ? fee.end_date.split(' ')[0] : ''
-    })
-  }
-
-  const normalizeDecimalInput = (value) => {
-    const cleaned = String(value).replace(/[^0-9.]/g, '')
-    const parts = cleaned.split('.')
-    if (parts.length > 2) {
-      return parts[0] + '.' + parts.slice(1).join('')
-    }
-    return cleaned
-  }
-
-  const normalizePercentageInput = (value) => {
-    const cleaned = normalizeDecimalInput(value)
-    const num = parseFloat(cleaned)
-    if (!Number.isNaN(num) && num > 100) {
-      return '100'
-    }
-    return cleaned
-  }
-
-  const handleChangeForm = (key, value) => {
-    setFeeFormState((prev) => ({ ...prev, [key]: value }))
-  }
-
-  const buildFeePayload = () => {
-    const name = String(feeFormState.name || '').trim()
-    if (!name) return { error: true, result: t('NAME_IS_REQUIRED', 'Name is required') }
-    if (name.length > 255) return { error: true, result: t('NAME_MAX_255', 'Name max 255 chars') }
-
-    const fixed = feeFormState.fixed !== '' ? Number(feeFormState.fixed) : 0
-    if (Number.isNaN(fixed)) return { error: true, result: t('INVALID_FIXED_VALUE', 'Invalid fixed value') }
-
-    const percentage = feeFormState.percentage !== '' ? Number(feeFormState.percentage) : 0
-    if (Number.isNaN(percentage)) return { error: true, result: t('INVALID_PERCENTAGE_VALUE', 'Invalid percentage value') }
-    if (percentage < 0 || percentage > 100) return { error: true, result: t('PERCENTAGE_RANGE', 'Percentage must be between 0 and 100') }
-
-    const fixedMinimum = feeFormState.fixed_minimum !== '' ? Number(feeFormState.fixed_minimum) : null
-    if (fixedMinimum !== null && Number.isNaN(fixedMinimum)) return { error: true, result: t('INVALID_FIXED_MINIMUM', 'Invalid fixed minimum value') }
-
-    const payload = {
-      name,
-      description: String(feeFormState.description || '').trim(),
-      enabled: !!feeFormState.enabled,
-      fixed,
-      percentage,
-      fixed_minimum: fixedMinimum,
-      delivery_type: feeFormState.delivery_type === 'all' ? null : feeFormState.delivery_type,
-      site_id: feeFormState.site_id === 'all' ? null : feeFormState.site_id,
-      paymethod_id: feeFormState.paymethod_id === 'all' ? null : feeFormState.paymethod_id,
-      recipient: feeFormState.recipient || 'business',
-      start_date: feeFormState.start_date || null,
-      end_date: feeFormState.end_date || null
-    }
-
-    return { error: false, result: payload }
-  }
-
-  const handleSubmitFee = async () => {
-    const built = buildFeePayload()
-    if (built.error) {
-      handleOpenAlert(built.result)
-      return
-    }
-
-    const payload = built.result
-    const res = isEditFee
-      ? await updateFee?.(editingFeeId, payload)
-      : await createFee?.(payload)
-
-    if (res?.error) {
-      const msg = Array.isArray(res?.result) ? res.result : (res?.result ? [String(res.result)] : [t('ERROR', 'Error')])
-      handleOpenAlert(msg)
-      return
-    }
-    setIsOpenFeeForm(false)
-  }
-
-  const handleToggleFeeEnabled = async (id, enabled) => {
-    const res = await updateFee?.(id, { enabled: !!enabled })
-    if (res?.error) {
-      const msg = Array.isArray(res?.result) ? res.result : [t('ERROR', 'Error')]
-      handleOpenAlert(msg)
-    }
-  }
-
-  useEffect(() => {
-    if (!actionState?.error || actionState?.loading) return
-    handleOpenAlert(actionState.error)
-  }, [actionState?.error, actionState?.loading])
-
-  const formatCurrency = (amount) => {
-    const num = Number(amount)
-    if (Number.isNaN(num)) return '-'
-    return parsePrice(num)
-  }
-
-  const getSiteName = (siteId) => {
-    if (!siteId) return null
-    const site = (sitesState?.sites || []).find((s) => s.id === siteId)
-    return site?.name || `Site #${siteId}`
-  }
-
-  const getPaymethodName = (paymethodId) => {
-    if (!paymethodId) return null
-    const pm = (paymethodsState?.paymethods || []).find((p) => p.id === paymethodId)
-    return pm?.name || `PM #${paymethodId}`
-  }
-
-  const getDeliveryTypeName = (type) => {
-    if (!type) return null
-    const option = deliveryTypeOptions.find((o) => o.value === type)
-    return option?.content || type.charAt(0).toUpperCase() + type.slice(1).replace(/_/g, ' ')
-  }
-
-  const filteredDeliveryTypeOptions = useMemo(() => {
-    if (!deliveryTypeSearch) return deliveryTypeOptions
-    return deliveryTypeOptions.filter((opt) =>
-      opt.content?.toLowerCase().includes(deliveryTypeSearch.toLowerCase())
+  let body
+  if (!showTools && noRows) {
+    body = (
+      <div className='odc-cf-empty'>
+        <p className='odc-cf-empty-text'>{t('NO_CUSTOMER_FEES', 'No customer fees yet.')}</p>
+        {addButton}
+      </div>
     )
-  }, [deliveryTypeOptions, deliveryTypeSearch])
-
-  const filteredSitesOptions = useMemo(() => {
-    if (!siteSearch) return sitesOptions
-    return sitesOptions.filter((opt) =>
-      opt.content?.toLowerCase().includes(siteSearch.toLowerCase())
-    )
-  }, [sitesOptions, siteSearch])
-
-  const filteredPaymethodsOptions = useMemo(() => {
-    if (!paymethodSearch) return paymethodsOptions
-    return paymethodsOptions.filter((opt) =>
-      opt.content?.toLowerCase().includes(paymethodSearch.toLowerCase())
-    )
-  }, [paymethodsOptions, paymethodSearch])
-
-  return (
-    <>
-      {feesList?.loading
-        ? (
-            <div style={{ marginTop: 20 }}>
-              <Skeleton height={40} count={5} />
-            </div>
-          )
-        : !hasCustomerFees
-            ? (
-                <LegacyFeeContainer>
-                  <div className='legacy-field'>
-                    <label>{t('SERVICE_FEE_SETTINGS', 'Service fee settings in %')}</label>
-                    <Input
-                      placeholder='0.00%'
-                      defaultValue={business?.service_fee}
-                      onChange={e => handleChangeLegacyFormState({ service_fee: e.target.value })}
-                    />
-                  </div>
-                  <Button
-                    color='primary'
-                    borderRadius='8px'
-                    onClick={handleOpenCreateFee}
-                    disabled={actionState?.loading || !businessId}
-                  >
-                    {t('USE_ADVANCED_FEE', 'Use advanced fee settings')}
-                  </Button>
-                </LegacyFeeContainer>
-              )
-            : (
-                <CustomerFeesContainer>
-                  <HeaderContainer>
-                    <SearchBar
-                      placeholder={t('SEARCH', 'Search')}
-                      onSearch={handleChangeSearch}
-                      search={searchValue}
-                      lazyLoad
-                    />
-                    <ActionsWrapper>
-                      <Button
-                        color='lightPrimary'
-                        borderRadius='8px'
-                        disabled={selectedFeeIds.length === 0 || actionState?.loading}
-                        onClick={handleClickDeleteSelectedFees}
-                      >
-                        {t('DELETE', 'Delete')}
-                      </Button>
-                      <Button
-                        color='primary'
-                        borderRadius='8px'
-                        onClick={handleOpenCreateFee}
-                        disabled={actionState?.loading || !businessId}
-                      >
-                        {t('ADD_NEW', 'Add new')}
-                      </Button>
-                    </ActionsWrapper>
-                  </HeaderContainer>
-
-                  <Table>
-                    <Thead>
-                      <tr>
-                        <th style={{ width: 45 }}>
-                          <CheckBoxWrapper onClick={handleSelectAllFees} isChecked={isAllFeesChecked}>
-                            {isAllFeesChecked ? <CheckSquareFill /> : <Square />}
-                          </CheckBoxWrapper>
-                        </th>
-                        <th>ID</th>
-                        <th>{t('NAME', 'Name')}</th>
-                        <th>{t('AMOUNT', 'Amount')}</th>
-                        <th>{t('CONDITIONS', 'Conditions')}</th>
-                        <th>{t('STATUS', 'Status')}</th>
-                      </tr>
-                    </Thead>
-                    <Tbody>
-                      {(feesList?.fees || []).map((fee) => {
-                        const isChecked = selectedFeeIds.includes(fee?.id)
-                        return (
-                          <tr
-                            key={fee.id}
-                            role='row'
-                            tabIndex={0}
-                            onClick={() => handleOpenEditFee(fee.id)}
-                          >
-                            <td>
-                              <CheckBoxWrapper
-                                isChecked={isChecked}
-                                onClick={(e) => handleToggleFeeId(e, fee.id)}
-                              >
-                                {isChecked ? <CheckSquareFill /> : <Square />}
-                              </CheckBoxWrapper>
-                            </td>
-                            <td>
-                              <FeeIdWrapper>{fee.id}</FeeIdWrapper>
-                            </td>
-                            <td><FeeNameWrapper>{fee?.name}</FeeNameWrapper></td>
-                            <td>
-                              {`${fee?.fixed != null ? formatCurrency(fee.fixed) : formatCurrency(0)} + ${fee?.percentage != null ? fee.percentage : 0}%`}
-                              {fee?.fixed_minimum != null && (
-                                <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>
-                                  {t('MIN', 'Min')}: {formatCurrency(fee.fixed_minimum)}
-                                </div>
-                              )}
-                            </td>
-                            <td>
-                              <ConditionsColumn>
-                                {fee?.site_id && (
-                                  <ConditionBadge>{getSiteName(fee.site_id)}</ConditionBadge>
-                                )}
-                                {fee?.paymethod_id && (
-                                  <ConditionBadge>{getPaymethodName(fee.paymethod_id)}</ConditionBadge>
-                                )}
-                                {fee?.delivery_type && (
-                                  <ConditionBadge>{getDeliveryTypeName(fee.delivery_type)}</ConditionBadge>
-                                )}
-                                {!fee?.site_id && !fee?.paymethod_id && !fee?.delivery_type && '-'}
-                              </ConditionsColumn>
-                            </td>
-                            <td>
-                              <StatusWrapper>
-                                <span
-                                  className='enable_control'
-                                  onClick={(e) => e.stopPropagation()}
-                                  onMouseDown={(e) => e.stopPropagation()}
-                                  role='button'
-                                  tabIndex={-1}
-                                >
-                                  <Switch
-                                    defaultChecked={!!fee?.enabled}
-                                    onChange={(val) => handleToggleFeeEnabled(fee.id, val)}
-                                  />
-                                </span>
-                              </StatusWrapper>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </Tbody>
-                  </Table>
-
-                  <PagesBottomContainer>
-                    <Pagination
-                      currentPage={paginationProps?.currentPage}
-                      totalPages={paginationProps?.totalPages}
-                      defaultPageSize={paginationProps?.pageSize}
-                      handleChangePage={handleChangeFeesPage}
-                      handleChangePageSize={handleChangeFeesPageSize}
-                    />
-                  </PagesBottomContainer>
-                </CustomerFeesContainer>
-              )
-      }
-
-      {/* Fee Form Modal */}
-      {isOpenFeeForm && (
-        <Modal
-          width='700px'
-          height='650px'
-          open={isOpenFeeForm}
-          onClose={() => setIsOpenFeeForm(false)}
-          padding='0'
-        >
-          <FormContainer>
-            <FormHeader>
-              <div>
-                <h1>
-                  {feeFormState.name?.trim()
-                    ? feeFormState.name
-                    : (isEditFee ? t('EDIT_CUSTOMER_FEE', 'Edit Customer Fee') : t('ADD_CUSTOMER_FEE', 'Add Customer Fee'))}
-                </h1>
-                {isEditFee && (
-                  <Switch
-                    defaultChecked={!!feeFormState.enabled}
-                    onChange={(val) => handleChangeForm('enabled', val)}
-                  />
-                )}
-              </div>
-            </FormHeader>
-
-            <FormSection>
-              <FieldsColumn>
-                <Field>
-                  <label>{t('NAME', 'Name')}</label>
-                  <Input
-                    value={feeFormState.name}
-                    onChange={(e) => handleChangeForm('name', e.target.value)}
-                    placeholder={t('ENTER_FEE_NAME', 'Enter fee name')}
-                    maxLength={255}
-                  />
-                </Field>
-
-                <Field>
-                  <label>{t('DESCRIPTION', 'Description')}</label>
-                  <Input
-                    value={feeFormState.description}
-                    onChange={(e) => handleChangeForm('description', e.target.value)}
-                    placeholder={t('ENTER_FEE_DESCRIPTION', 'Enter fee description')}
-                    maxLength={500}
-                  />
-                </Field>
-
-                <FieldsRow>
-                  <Field>
-                    <label>{t('FIXED_AMOUNT', 'Fixed Amount')}</label>
-                    <Input
-                      value={feeFormState.fixed}
-                      onChange={(e) => handleChangeForm('fixed', normalizeDecimalInput(e.target.value))}
-                      placeholder='0.00'
-                    />
-                  </Field>
-                  <Field>
-                    <label>{t('PERCENTAGE', 'Percentage')}</label>
-                    <Input
-                      value={feeFormState.percentage}
-                      onChange={(e) => handleChangeForm('percentage', normalizePercentageInput(e.target.value))}
-                      placeholder='0%'
-                    />
-                  </Field>
-                </FieldsRow>
-
-                <Field>
-                  <label>{t('FIXED_MINIMUM', 'Fixed Minimum')}</label>
-                  <Input
-                    value={feeFormState.fixed_minimum}
-                    onChange={(e) => handleChangeForm('fixed_minimum', normalizeDecimalInput(e.target.value))}
-                    placeholder={t('OPTIONAL', 'Optional')}
-                  />
-                  <FieldHint>
-                    {t('FIXED_MINIMUM_DESCRIPTION', 'Minimum amount charged to the customer. If the calculated fee (fixed + percentage) is less than this value, this minimum will be applied instead.')}
-                  </FieldHint>
-                </Field>
-
-                <FieldsRow>
-                  <Field>
-                    <label>{t('DELIVERY_TYPE', 'Delivery Type')}</label>
-                    <Select
-                      options={filteredDeliveryTypeOptions}
-                      defaultValue={feeFormState.delivery_type || 'all'}
-                      onChange={(val) => handleChangeForm('delivery_type', val)}
-                      placeholder={t('SELECT_DELIVERY_TYPE', 'Select delivery type')}
-                      optionInnerMaxHeight='175px'
-                      isShowSearchBar
-                      searchValue={deliveryTypeSearch}
-                      handleChangeSearch={setDeliveryTypeSearch}
-                      searchBarIsCustomLayout
-                      searchBarIsNotLazyLoad
-                    />
-                  </Field>
-                  <Field>
-                    <label>{t('PAYMENT_METHOD', 'Payment Method')}</label>
-                    <Select
-                      options={filteredPaymethodsOptions}
-                      defaultValue={feeFormState.paymethod_id || 'all'}
-                      onChange={(val) => handleChangeForm('paymethod_id', val)}
-                      placeholder={t('SELECT_PAYMENT_METHOD', 'Select payment method')}
-                      optionInnerMaxHeight='175px'
-                      isShowSearchBar
-                      searchValue={paymethodSearch}
-                      handleChangeSearch={setPaymethodSearch}
-                      searchBarIsCustomLayout
-                      searchBarIsNotLazyLoad
-                    />
-                  </Field>
-                </FieldsRow>
-
-                <Field>
-                  <label>{t('SITE', 'Site')} ({t('PLATFORM', 'Platform')})</label>
-                  <Select
-                    options={filteredSitesOptions}
-                    defaultValue={feeFormState.site_id || 'all'}
-                    onChange={(val) => handleChangeForm('site_id', val)}
-                    placeholder={t('SELECT_SITE', 'Select site')}
-                    optionInnerMaxHeight='175px'
-                    isShowSearchBar
-                    searchValue={siteSearch}
-                    handleChangeSearch={setSiteSearch}
-                    searchBarIsCustomLayout
-                    searchBarIsNotLazyLoad
-                  />
-                </Field>
-
-                <Field>
-                  <RecipientSelect
-                    value={feeFormState.recipient ?? 'business'}
-                    onChange={(val) => handleChangeForm('recipient', val)}
-                  />
-                </Field>
-
-                <DateToggleWrapper>
-                  <Switch
-                    defaultChecked={showDateRange}
-                    onChange={(val) => {
-                      setShowDateRange(val)
-                      if (!val) {
-                        handleChangeForm('start_date', '')
-                        handleChangeForm('end_date', '')
-                      }
-                    }}
-                  />
-                  <div>
-                    <span>{t('LIMIT_BY_DATE', 'Limit by date range')}</span>
-                    <FieldHint>
-                      {t('LIMIT_BY_DATE_HINT', 'Without a date range, this fee applies indefinitely.')}
-                    </FieldHint>
-                  </div>
-                </DateToggleWrapper>
-
-                {showDateRange && (
-                  <FieldsRow>
-                    <Field>
-                      <label>{t('START_DATE', 'Start Date')}</label>
-                      <Input
-                        type='date'
-                        value={feeFormState.start_date}
-                        onChange={(e) => handleChangeForm('start_date', e.target.value)}
-                      />
-                    </Field>
-                    <Field>
-                      <label>{t('END_DATE', 'End Date')}</label>
-                      <Input
-                        type='date'
-                        value={feeFormState.end_date}
-                        onChange={(e) => handleChangeForm('end_date', e.target.value)}
-                      />
-                    </Field>
-                  </FieldsRow>
-                )}
-              </FieldsColumn>
-            </FormSection>
-
-            <FormActions>
-              <Button
-                color='primary'
-                borderRadius='8px'
-                onClick={handleSubmitFee}
-                disabled={actionState?.loading}
-              >
-                {isEditFee ? t('SAVE_CHANGES', 'Save changes') : t('CREATE', 'Create')}
+  } else {
+    body = (
+      <>
+        {showTools && (
+          <div className='odc-cf-tools'>
+            <SearchField
+              className='odc-cf-search'
+              value={draft}
+              onChange={handleSearch}
+              label={t('SEARCH_CUSTOMER_FEES', 'Search customer fees')}
+              placeholder={t('SEARCH', 'Search')}
+              clearLabel={t('CLEAR', 'Clear')}
+            />
+            {addButton}
+          </div>
+        )}
+        {notice && <InlineNotice tone='warning' icon={TriangleAlert} className='odc-cf-notice'>{notice}</InlineNotice>}
+        {selectedIds.length > 0 && (
+          <SelectionBar
+            label={t('CUSTOMER_FEES_BULK_ACTIONS_LABEL', 'Actions for selected customer fees')}
+            countLabel={withCount(t('STORES_SELECTED_COUNT', '_count_ selected'), selectedIds.length)}
+            clearLabel={t('CLEAR_SELECTION', 'Clear selection')}
+            onClear={() => setSelectedIds([])}
+            busy={deleting.busy}
+            actions={(
+              <Button size='sm' data-tone='danger' disabled={deleting.busy} onClick={() => setDeleting({ open: true, busy: false })}>
+                {t('DELETE', 'Delete')}
               </Button>
-            </FormActions>
-          </FormContainer>
-        </Modal>
-      )}
+            )}
+          />
+        )}
+        <CustomerFeesTable
+          fees={fees}
+          loading={loading && fees.length === 0}
+          selectedIds={selectedIds}
+          onToggle={toggleOne}
+          onToggleAll={toggleAll}
+          activeId={isOpen && openKey !== NEW ? openKey : undefined}
+          onOpen={(fee) => requestOpen(fee.id, fee)}
+          onToggleEnabled={toggleEnabled}
+          canManage={canManage}
+          conditionsOf={conditionsOf}
+          empty={<p className='odc-cf-empty-text'>{emptyText}</p>}
+        />
+        {totalItems > 0 && (
+          <div className='odc-cf-foot'>
+            <Pagination
+              page={paginationProps.currentPage}
+              pageSize={paginationProps.pageSize}
+              total={totalItems}
+              pageSizeOptions={PAGE_SIZES}
+              onPageChange={handleChangePage}
+              onPageSizeChange={(size) => handleChangePageSize(size)}
+              busy={loading}
+              showPageInput
+              label={t('PAGINATION', 'Pagination')}
+              previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+              nextLabel={t('NEXT_PAGE', 'Next page')}
+              pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+              pageLabel={t('PAGE', 'Page')}
+              pageOfLabel={(total, figure) => fillTemplate(t('PAGE_OF_TOTAL', 'of _total_'), { total }, figure)}
+              rangeLabel={(from, to, total, figure) => fillTemplate(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from, to, total }, figure)}
+              pageStatusLabel={(current, total) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(total))}
+            />
+          </div>
+        )}
+      </>
+    )
+  }
 
-      <Alert
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => setAlertState({ open: false, content: [] })}
-        onAccept={() => setAlertState({ open: false, content: [] })}
-        closeOnBackdrop={false}
-      />
+  const list = (
+    <div className='odc-cf-pane'>
+      {!canManage && <InlineNotice tone='info' live={false} className='odc-cf-notice'>{adminOnlyNote}</InlineNotice>}
+      {body}
+    </div>
+  )
 
-      <Confirm
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={confirmState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={confirmState.open}
-        onClose={() => setConfirmState((prev) => ({ ...prev, open: false }))}
-        onCancel={() => setConfirmState((prev) => ({ ...prev, open: false }))}
-        onAccept={confirmState.handleOnAccept}
-        closeOnBackdrop={false}
+  const count = selectedIds.length
+  return (
+    <div className='odc-root odc-cf'>
+      {showLegacy && <div className='odc-cf-legacy'>{legacyField}</div>}
+      <SectionSplit
+        revealDetail // redesign bugs F row 6 (D5 of 5.18): stacked, the detail opens at its header
+        ref={splitRef}
+        splitFrom={EDITOR_PANEL_WIDE_FROM}
+        open={isOpen}
+        detailKey={openKey}
+        onClose={closeDetail}
+        onExtendChange={value => setIsExtendExtraOpen?.(value)}
+        detailTitle={openFee?.name || t('NEW_CUSTOMER_FEE', 'New customer fee')}
+        closeLabel={t('CLOSE', 'Close')}
+        backLabel={t('BACK', 'Back')}
+        list={list}
+        detail={isOpen
+          ? (
+            <CustomerFeeDetail
+              key={openKey === NEW ? NEW : openFee.id}
+              fee={openKey === NEW ? null : openFee}
+              deliveryTypeOptions={deliveryTypeOptions}
+              siteOptions={siteOptions}
+              paymethodOptions={paymethodOptions}
+              createFee={createFee}
+              updateFee={updateFee}
+              canManage={canManage}
+              adminOnlyNote={adminOnlyNote}
+              onSaved={(record) => setOpenFee(current => (current ? { ...current, ...record } : current))}
+              onCreated={(record) => showDetail(record.id, record)}
+              onClose={closeDetail}
+            />
+            )
+          : null}
       />
-    </>
+      <ConfirmDialog
+        open={deleting.open}
+        tone='danger'
+        busy={deleting.busy}
+        title={count === 1
+          ? t('CUSTOMER_FEES_DELETE_TITLE_ONE', 'Delete 1 customer fee?')
+          : withCount(t('CUSTOMER_FEES_DELETE_TITLE_OTHER', 'Delete _count_ customer fees?'), count)}
+        // redesign tanda AB (S-5): the button names what it deletes, as the title does
+        confirmLabel={count === 1 ? t('CUSTOMER_FEES_DELETE_CONFIRM_ONE', 'Delete customer fee') : t('CUSTOMER_FEES_DELETE_CONFIRM_OTHER', 'Delete customer fees')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onCancel={() => setDeleting(current => (current.busy ? current : { ...current, open: false }))}
+        onConfirm={confirmDelete}
+      >
+        {t('CUSTOMER_FEES_DELETE_BODY', "Customers of this store stop paying them. This can't be undone.")}
+      </ConfirmDialog>
+    </div>
   )
 }
 
 export const CustomerFees = (props) => {
+  // `formState`, `setFormState` and `handleUpdateBusinessClick` are no longer used by this UI (the legacy field is the parent's);
+  // they are still accepted, and the controller does not need them.
   const {
     businessId,
     business,
+    /* eslint-disable no-unused-vars */
     formState,
     setFormState,
     handleUpdateBusinessClick,
+    /* eslint-enable no-unused-vars */
     ...rest
   } = props
 
@@ -764,9 +397,6 @@ export const CustomerFees = (props) => {
     ...rest,
     businessId,
     business,
-    formState,
-    setFormState,
-    handleUpdateBusinessClick,
     UIComponent: CustomerFeesUI
   }
 

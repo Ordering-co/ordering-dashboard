@@ -1,0 +1,19 @@
+/*
+ * : the Businesses section of the delivery provider panel: P/SelectableList, the selection count and Save, aligned to
+ * the inline start, as the Payment methods section. Values come from --od-* only; logical properties only.
+ */
+
+.dsp-businesses {
+  display: grid;
+  gap: var(--od-space-3);
+  justify-items: start;
+  min-inline-size: 0;
+}
+
+.dsp-businesses > .odc-selectable { justify-self: stretch; }
+
+.dsp-businesses-count {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-type-secondary-size);
+}

@@ -1,0 +1,75 @@
+/*
+ * redesign UC-B3 (decisions 2 and 3; M-C6): the filter bar of the customers list and its «Filters» sheet.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ */
+
+/* redesign UC-R1 (I-02): the Orders segmented control has its own row before the bar. It was a pill of the bar: always «active», parked
+   in «+N» (where a segmented control cannot work) and, on a phone, laid over the pills. Now nothing of the bar's overflow touches it.
+   The row is a block, so the control (`inline-size: 100%` of its container) measures its room: when the four options do not fit
+   it is the control's native select (capped, so it is not a full-width bar on a wide list). The bar keeps its own padding above. */
+.odc-cf-block {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.odc-cf-orders {
+  min-inline-size: 0;
+}
+
+.odc-cf-orders .odc-seg-select {
+  max-inline-size: var(--od-x-search);
+}
+
+/* The count in «Filters», a figure beside the word */
+.odc-cf-count {
+  margin-inline-start: var(--od-x-space-1-5);
+}
+
+/* ── The sheet's form ── */
+.odc-cf-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-2);
+}
+
+.odc-cf-amount {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-cf-legend {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The operator takes the width of its widest option; the number takes the rest */
+.odc-cf-amount-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-cf-select {
+  cursor: pointer;
+}
+
+.odc-cf-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The radios of the Verified popover: two groups, one above the other, with room between them */
+.odc-cf-verified {
+  display: grid;
+  gap: var(--od-space-3);
+  padding: var(--od-space-1);
+}

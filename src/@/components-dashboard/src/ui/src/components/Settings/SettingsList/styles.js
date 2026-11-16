@@ -10,7 +10,7 @@ export const GeneralTitle = styled.div`
 
   p {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 6px;
   }
@@ -28,7 +28,7 @@ export const ConfigRow = styled.div`
 `
 
 export const OptionsError = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: #d83520;
 `
 
@@ -38,13 +38,13 @@ export const FormGroupText = styled.div`
   label {
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
   }
 
   input[type='text'],
   input[type='password'] {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     height: 44px;
     border: 1px solid #DEE2E6;
     box-sizing: border-box;
@@ -65,7 +65,7 @@ export const FormGroupCheck = styled.div`
     margin-right: 10px;
   }
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     display: flex;
     align-items: center;
     color: ${props => props.theme.colors.headingColor};
@@ -79,7 +79,7 @@ export const FormGroupWrapper = styled.div`
 
 export const Required = styled.span`
   font-weight: 600;
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   color: #E63757;
 `
 
@@ -97,11 +97,11 @@ export const CheckBoxWrapper = styled.div`
   > label {
     font-weight: 600;
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
   }
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-bottom: 0px;
     margin-top: 10px;
   }
@@ -116,13 +116,13 @@ export const SubmitBtnWrapper = styled.div`
     background: ${props => props.theme.colors.primary};
     color: white;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin: 20px 0 10px 0;
   }
 `
 
 export const Description = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin-top: ${({ typeSix }) => typeSix ? '20px' : '0px'};
   margin-bottom: 5px;
 `

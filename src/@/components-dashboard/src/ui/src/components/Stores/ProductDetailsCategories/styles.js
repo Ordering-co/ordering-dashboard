@@ -5,7 +5,7 @@ export const Container = styled.div`
 
   h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 25px;
     margin-top: 0px;
@@ -19,7 +19,7 @@ export const HeaderTitleContainer = styled.div`
 
   h2 {
     font-weight: 600;
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0;
   }
@@ -31,7 +31,7 @@ export const InfoWrapper = styled.div`
   gap: 8px;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.headingColor};
   }
 `
@@ -39,4 +39,9 @@ export const InfoWrapper = styled.div`
 export const CategoriesWrapper = styled.div`
   display: flex;
   width: 100%;
+`
+
+// (D-9 c): the refused move's notice, between the hint and the tree
+export const MoveFailure = styled.div`
+  margin-block-end: var(--od-space-4);
 `

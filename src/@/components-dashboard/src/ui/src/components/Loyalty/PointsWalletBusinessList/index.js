@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLanguage, useUtils, PointsWalletBusinessList as PointsWalletBusinessListController } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { useTheme } from 'styled-components'
 import { useWindowSize } from '../../../hooks/useWindowSize'
-import { SearchBar, Pagination, Modal, SideBar, Alert } from '../../Shared'
-import { Switch } from '../../../styles'
-import { ChevronRight, Square, CheckSquareFill } from 'react-bootstrap-icons'
+import { Modal, SideBar, Alert } from '../../Shared'
+import { ChevronRight } from '../../Shared/Icon'
+import { Avatar, Checkbox, EmptyState, Pagination, SearchField, Skeleton, Switch } from '../../Shared/Product'
 import { PointsWalletBusinessDetail } from '../PointsWalletBusinessDetail'
-import {
-  Container,
-  SearchWrapper,
-  // BusinessSelectOption,
-  TableWrapper,
-  BusinessTable,
-  TBoday,
-  BusinessInfoWrapper,
-  WrapperImage,
-  Image,
-  CheckBoxWrapper,
-  ModifiedWrapper,
-  CheckBoxInnerWrapper
-} from './styles'
+import './points-wallet-business-list.css'
+
+// the wallet rules per store in Product pieces: P/SearchField (sent after main's 750ms wait), one row per store with its
+// P/Avatar, a P/Switch and two P/Checkbox named after the store, and P/Pagination. Same controller props, handlers and detail as main.
+
+const SEARCH_DEBOUNCE_MS = 750 // the wait of `SearchBar lazyLoad` of main: each change of the search is a request
+const PAGE_SIZES = [10, 25, 50] // the sizes of main's pagination
 
 const PointsWalletBusinessListUI = (props) => {
   const {
@@ -37,7 +27,8 @@ const PointsWalletBusinessListUI = (props) => {
     paginationProps,
     setPaginationProps,
     searchValue,
-    handleChangeSearch
+    handleChangeSearch,
+    onDirtyChange
   } = props
 
   const history = useHistory()
@@ -52,12 +43,25 @@ const PointsWalletBusinessListUI = (props) => {
   }
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
-  const theme = useTheme()
   const { width } = useWindowSize()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
 
   const [extraOpen, setExtraOpen] = useState(false)
   const [selectedBusiness, setSelectedBusiness] = useState(null)
+
+  // the search is typed here and sent after a wait, at once when cleared
+  const [searchText, setSearchText] = useState(searchValue || '')
+  const searchTimer = useRef(null)
+  useEffect(() => () => clearTimeout(searchTimer.current), [])
+  const typeSearch = (text) => {
+    setSearchText(text)
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => handleChangeSearch(text), SEARCH_DEBOUNCE_MS)
+  }
+  const clearSearch = () => {
+    clearTimeout(searchTimer.current)
+    handleChangeSearch('')
+  }
 
   const closeAlert = () => {
     setAlertState({
@@ -142,153 +146,139 @@ const PointsWalletBusinessListUI = (props) => {
     }
   }, [businessList])
 
+  const businesses = businessList?.businesses || []
+  const totalItems = paginationProps?.totalItems
+  const knownTotal = totalItems != null && Number.isFinite(Number(totalItems))
+  // a store's own name in each control of its row: «Status, Store A» (existing keys, composed)
+  const rowLabel = (key, fallback, business) => `${t(key, fallback)}, ${business?.name ?? ''}`
+
   return (
-    <Container>
-      <SearchWrapper>
-        <SearchBar
-          search={searchValue}
-          isCustomLayout
-          lazyLoad
-          onSearch={(value) => handleChangeSearch(value)}
-          placeholder={t('SEARCH', 'Search')}
-        />
-      </SearchWrapper>
+    <div className='pwbl'>
+      <SearchField
+        className='pwbl-search'
+        value={searchText}
+        onChange={typeSearch}
+        onClear={clearSearch}
+        label={t('SEARCH', 'Search')}
+        placeholder={t('SEARCH', 'Search')}
+        clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+      />
 
-      {/* {pointWallet?.type !== 'credit_point' && (
-        <BusinessSelectOption>
-          <Button color='secundaryDark'>{t('SELECT_ALL', 'Select all')}</Button>
-          <Button color='secundaryDark'>{t('SELECT_NONE', 'Select none')}</Button>
-        </BusinessSelectOption>
-      )} */}
-
-      <TableWrapper>
-        {businessList.loading
-          ? (
-            <BusinessTable>
-              <thead>
-                <tr>
-                  <th className='business-info'>
-                    <Skeleton width={100} height={17} />
-                  </th>
-                  <th><Skeleton width={60} height={17} /></th>
-                  <th><Skeleton width={80} height={17} /></th>
-                  <th><Skeleton width={90} height={17} /></th>
-                  <th />
-                </tr>
-              </thead>
-              {[...Array(7).keys()].map(i => (
-                <TBoday key={i}>
-                  <tr>
-                    <td>
-                      <BusinessInfoWrapper>
-                        <WrapperImage isSkeleton>
-                          <Skeleton width={38} height={38} />
-                        </WrapperImage>
-                        <Skeleton width={80} height={15} />
-                      </BusinessInfoWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <Skeleton width={40} height={20} />
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <Skeleton width={20} height={20} />
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <Skeleton width={20} height={20} />
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <ModifiedWrapper isSkeleton>
-                        <Skeleton width={17} height={17} />
-                        <Skeleton width={80} height={15} />
-                      </ModifiedWrapper>
-                    </td>
-                  </tr>
-                </TBoday>
-              ))}
-            </BusinessTable>)
-          : (
-            <BusinessTable>
-              <thead>
-                <tr>
-                  <th className='business-info'>{t('BUSINESSES', 'Businesses')}</th>
-                  <th>{t('ORDERS_BOX_STATUS_HEADER', 'Status')}</th>
-                  <th>{t('REDEEEM', 'Redeeem')}</th>
-                  <th>{t('ACCUMULATION', 'Accumulation')}</th>
-                  <th />
-                </tr>
-              </thead>
-              {businessList.businesses.map((business, i) => (
-                <TBoday
-                  key={i}
-                  active={business?.id === selectedBusiness?.id}
-                  onClick={(e) => handleClickBusiness(business, e)}
-                >
-                  <tr>
-                    <td>
-                      <BusinessInfoWrapper>
-                        <WrapperImage>
-                          <Image bgimage={optimizeImage(business?.logo || theme.images?.dummies?.businessLogo, 'h_120,c_limit')} />
-                        </WrapperImage>
-                        <span>{business?.name}</span>
-                      </BusinessInfoWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <Switch
-                          className='wallet_enabled'
-                          defaultChecked={business?.wallet_enabled}
-                          onChange={val => handleUpdateStatus(business.id, val)}
-                        />
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <CheckBoxInnerWrapper
-                          onClick={(e) => handleCheckBox(business.id, 'redeems', !business?.redeems)}
-                          className='redeems'
-                          noClick={!business?.wallet_enabled}
+      {businessList.loading
+        ? (
+          <div className='pwbl-loading' role='status' aria-busy='true' aria-label={t('LOADING', 'Loading')}>
+            {[...Array(7).keys()].map(i => (
+              <div className='pwbl-skeleton-row' key={i}>
+                <Skeleton shape='box' size='var(--od-x-control-height)' block='var(--od-x-control-height)' />
+                <Skeleton size='40%' />
+              </div>
+            ))}
+          </div>
+          )
+        : !businessList.error && businesses.length === 0
+            ? <EmptyState title={t('NO_BUSINESSES_FOUND', 'No businesses found')} />
+            : (
+              <div className='pwbl-table-wrap'>
+                <table className='pwbl-table'>
+                  <thead>
+                    <tr>
+                      <th className='pwbl-store'>{t('BUSINESSES', 'Businesses')}</th>
+                      <th>{t('ORDERS_BOX_STATUS_HEADER', 'Status')}</th>
+                      <th>{t('REDEEM', 'Redeem')}</th>
+                      <th>{t('ACCUMULATION', 'Accumulation')}</th>
+                      <th><span className='odc-sr-only'>{t('ACTIONS', 'Actions')}</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {businesses.map((business, i) => {
+                      const active = business?.id === selectedBusiness?.id
+                      return (
+                        <tr
+                          key={business?.id ?? i}
+                          className='pwbl-row'
+                          data-active={active ? '' : undefined}
+                          onClick={(e) => handleClickBusiness(business, e)}
                         >
-                          {business?.redeems ? <CheckSquareFill className='fill' /> : <Square />}
-                        </CheckBoxInnerWrapper>
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <CheckBoxWrapper>
-                        <CheckBoxInnerWrapper
-                          onClick={(e) => handleCheckBox(business.id, 'accumulates', !business?.accumulates)}
-                          className='accumulates'
-                          noClick={!business?.wallet_enabled}
-                        >
-                          {business?.accumulates ? <CheckSquareFill className='fill' /> : <Square />}
-                        </CheckBoxInnerWrapper>
-                      </CheckBoxWrapper>
-                    </td>
-                    <td>
-                      <ModifiedWrapper>
-                        <ChevronRight />
-                        {/* {business.name === 'Grilled' && (
-                          <span>{t('MODIFIED', 'Modified')}</span>
-                        )} */}
-                      </ModifiedWrapper>
-                    </td>
-                  </tr>
-                </TBoday>
-              ))}
-            </BusinessTable>)}
-      </TableWrapper>
-      {businessList.businesses?.length > 0 && (
+                          <td className='pwbl-store'>
+                            {/* the row opens on a click anywhere; this button is its keyboard way in (its click bubbles to the row) */}
+                            <button type='button' className='pwbl-open' aria-current={active ? 'true' : undefined}>
+                              <Avatar
+                                kind='business'
+                                size='sm'
+                                name={business?.name}
+                                src={business?.logo ? optimizeImage(business.logo, 'h_120,c_limit') : undefined}
+                              />
+                              <span className='pwbl-name'>{business?.name}</span>
+                            </button>
+                          </td>
+                          <td className='pwbl-cell'>
+                            {/* the column's name, drawn only where the row becomes a card (below 768px); the control carries its own name */}
+                            <span className='pwbl-cell-label' aria-hidden='true'>{t('ORDERS_BOX_STATUS_HEADER', 'Status')}</span>
+                            <Switch
+                              className='wallet_enabled'
+                              checked={Boolean(business?.wallet_enabled)}
+                              onCheckedChange={val => handleUpdateStatus(business.id, val)}
+                              label={rowLabel('ORDERS_BOX_STATUS_HEADER', 'Status', business)}
+                            />
+                          </td>
+                          <td className='pwbl-cell'>
+                            <span className='pwbl-cell-label' aria-hidden='true'>{t('REDEEM', 'Redeem')}</span>
+                            <Checkbox
+                              className='redeems'
+                              checked={Boolean(business?.redeems)}
+                              disabled={!business?.wallet_enabled}
+                              onCheckedChange={() => handleCheckBox(business.id, 'redeems', !business?.redeems)}
+                              label={rowLabel('REDEEM', 'Redeem', business)}
+                            />
+                          </td>
+                          <td className='pwbl-cell'>
+                            <span className='pwbl-cell-label' aria-hidden='true'>{t('ACCUMULATION', 'Accumulation')}</span>
+                            <Checkbox
+                              className='accumulates'
+                              checked={Boolean(business?.accumulates)}
+                              disabled={!business?.wallet_enabled}
+                              onCheckedChange={() => handleCheckBox(business.id, 'accumulates', !business?.accumulates)}
+                              label={rowLabel('ACCUMULATION', 'Accumulation', business)}
+                            />
+                          </td>
+                          <td className='pwbl-chevron-cell'>
+                            <ChevronRight className='odc-icon pwbl-chevron' aria-hidden='true' />
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              )}
+      {businesses.length > 0 && (
         <Pagination
-          currentPage={paginationProps.currentPage}
-          totalPages={paginationProps.totalPages}
-          handleChangePage={handleChangePage}
-          defaultPageSize={paginationProps.pageSize}
-          handleChangePageSize={handleChangePageSize}
+          className='pwbl-pagination'
+          page={paginationProps.currentPage}
+          pageSize={paginationProps.pageSize}
+          total={knownTotal ? Number(totalItems) : undefined}
+          hasMore={!knownTotal && paginationProps.currentPage < (paginationProps.totalPages ?? 0)}
+          itemCount={businesses.length}
+          pageSizeOptions={PAGE_SIZES}
+          onPageChange={handleChangePage}
+          onPageSizeChange={(size) => handleChangePageSize(size)}
+          busy={Boolean(businessList.loading)}
+          label={t('PAGINATION', 'Pagination')}
+          previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+          nextLabel={t('NEXT_PAGE', 'Next page')}
+          pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+          // without a total from the API the foot says only the range and the page number
+          rangeLabel={(from, to, total) => total == null
+            ? `${from}–${to}`
+            : t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_')
+              .replace('_from_', String(from))
+              .replace('_to_', String(to))
+              .replace('_total_', String(total))}
+          pageStatusLabel={(current, total) => total == null
+            ? String(current)
+            : t('PAGE_STATUS', 'Page _page_ of _total_')
+              .replace('_page_', String(current))
+              .replace('_total_', String(total))}
         />
       )}
 
@@ -308,6 +298,7 @@ const PointsWalletBusinessListUI = (props) => {
                 handleUpdateWalletBusiness={handleUpdateWalletBusiness}
                 handleUpdateBusinessList={updateBusinessList}
                 isBusiness
+                onDirtyChange={onDirtyChange}
               />
             </SideBar>
               )
@@ -315,7 +306,7 @@ const PointsWalletBusinessListUI = (props) => {
             <Modal
               width='70%'
               height='90vh'
-              padding='0px'
+              padding='0'
               open={extraOpen}
               onClose={handleCloseBusinessDetail}
             >
@@ -324,6 +315,7 @@ const PointsWalletBusinessListUI = (props) => {
                 handleUpdateWalletBusiness={handleUpdateWalletBusiness}
                 handleUpdateBusinessList={updateBusinessList}
                 isBusiness
+                onDirtyChange={onDirtyChange}
               />
             </Modal>
               )}
@@ -338,7 +330,7 @@ const PointsWalletBusinessListUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
-    </Container>
+    </div>
   )
 }
 

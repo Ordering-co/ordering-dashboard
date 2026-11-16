@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useApi, useLanguage, useSession, useToast, ToastType } from '~components'
 import { getMenuImportApiUrl } from './menuImportConfig'
+import { readableImportError } from './menuImportErrors'
 
 const triggerBrowserDownload = (blob, filename) => {
   const objectUrl = URL.createObjectURL(blob)
@@ -76,8 +77,9 @@ export const useImportRawLogs = ({ businessId, enabled = true } = {}) => {
       }
       setLogs(Array.isArray(data.logs) ? data.logs : [])
     } catch (err) {
-      const message = err?.message || t('IMPORTER_LOGS_ERROR', 'Could not load import logs.')
-      setError(err instanceof Error ? err : new Error(message))
+      // redesign IM-C2 (IM-04): a network failure reads as words, not «Failed to fetch»
+      const message = readableImportError(err, t, t('IMPORTER_LOGS_ERROR', 'Could not load import logs.'))
+      setError(err instanceof Error && err.message === message ? err : new Error(message))
       setLogs([])
     } finally {
       setLoading(false)
@@ -127,7 +129,7 @@ export const useImportRawLogs = ({ businessId, enabled = true } = {}) => {
     } catch (err) {
       showToast(
         ToastType.Error,
-        err?.message || t('IMPORTER_LOGS_DOWNLOAD_ERROR', 'Could not download this log.')
+        readableImportError(err, t, t('IMPORTER_LOGS_DOWNLOAD_ERROR', 'Could not download this log.'))
       )
     } finally {
       setDownloadingId(null)
@@ -186,7 +188,7 @@ export const useImportRawLogs = ({ businessId, enabled = true } = {}) => {
     } catch (err) {
       showToast(
         ToastType.Error,
-        err?.message || t('IMPORTER_LOGS_DELETE_ERROR', 'Could not delete the selected logs.')
+        readableImportError(err, t, t('IMPORTER_LOGS_DELETE_ERROR', 'Could not delete the selected logs.'))
       )
       return null
     } finally {

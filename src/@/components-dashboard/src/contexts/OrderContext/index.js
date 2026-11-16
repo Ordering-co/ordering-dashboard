@@ -232,8 +232,12 @@ export const OrderProvider = ({ Alert, children, strategy, franchiseId, isDisabl
 
   /**
    * Change order address
+   * @param {number|object} addressId Id of the address (or the address to keep in storage)
+   * @param {object} params `address`, `country_code`, `isEdit`
+   * @param {object} settings `silent`: a failure does not open the global Alert, the caller shows `error` itself
+   * @returns {Promise<{ok: boolean, error?: string}>}
    */
-  const changeAddress = async (addressId, params) => {
+  const changeAddress = async (addressId, params, { silent = false } = {}) => {
     const isCountryCodeChanged = state.options?.address?.country_code !== params?.country_code
     if (typeof addressId === 'object') {
       const optionsStorage = await strategy.getItem('options', true)
@@ -253,43 +257,46 @@ export const OrderProvider = ({ Alert, children, strategy, franchiseId, isDisabl
         ...state,
         options
       })
-      return
+      return { ok: true }
     }
 
     if (params && params?.address && !checkAddress(params?.address)) {
-      await updateOrderOptions({ address_id: params?.address?.id, country_code: params?.country_code })
+      const saved = await saveOrderOptions({ address_id: params?.address?.id, country_code: params?.country_code }, { silent })
       if (isCountryCodeChanged) {
         events.emit('country_code_changed', params?.country_code)
       }
-      return
+      return saved ?? { ok: false }
     }
 
     if (params && params?.isEdit) {
       if (addressId !== state.options.address_id) {
-        return
+        return { ok: true }
       }
-      await updateOrderOptions({ address_id: addressId, country_code: params?.country_code })
+      const saved = await saveOrderOptions({ address_id: addressId, country_code: params?.country_code }, { silent })
       if (isCountryCodeChanged) {
         events.emit('country_code_changed', params?.country_code)
       }
-      return
+      return saved ?? { ok: false }
     }
-    await updateOrderOptions({ address_id: addressId, country_code: params?.country_code })
+    const saved = await saveOrderOptions({ address_id: addressId, country_code: params?.country_code }, { silent })
     if (isCountryCodeChanged) {
       events.emit('country_code_changed', params?.country_code)
     }
+    return saved ?? { ok: false }
   }
 
   /**
    * Change order type
+   * @param {object} settings `silent`: a failure does not open the global Alert, the caller shows `error` itself
+   * @returns {Promise<{ok: boolean, error?: string}>}
    */
-  const changeType = async (type) => {
+  const changeType = async (type, { silent = false } = {}) => {
     const options = {
       ...state.options,
       type
     }
     if (state.options.type === type) {
-      return
+      return { ok: true }
     }
 
     const cityId = state.options?.city_id
@@ -308,7 +315,8 @@ export const OrderProvider = ({ Alert, children, strategy, franchiseId, isDisabl
       })
     }
 
-    updateOrderOptions(params)
+    const saved = await saveOrderOptions(params, { silent })
+    return saved ?? { ok: true }
   }
 
   /**
@@ -360,10 +368,27 @@ export const OrderProvider = ({ Alert, children, strategy, franchiseId, isDisabl
     updateOrderOptions({ city_id: id })
   }
   /**
-   * Update order option data
-   * @param {object} changes Changes to update order options
+   * Text of an API error: the API answers a list of messages or a single one, and an object may come in its
+   * place (redesign fix-qa C3): its `message`, else its `result`, else its text values joined. Never
+   * «[object Object]».
    */
-  const updateOrderOptions = async (changes) => {
+  const getErrorText = (error, depth = 0) => {
+    if (error === null || error === undefined) return ''
+    if (typeof error !== 'object') return String(error)
+    if (depth > 3) return ''
+    const next = (value) => getErrorText(value, depth + 1)
+    if (Array.isArray(error)) return error.map(next).filter(Boolean).join(' ')
+    const named = next(error.message) || next(error.result)
+    return named || Object.values(error).map(next).filter(Boolean).join(' ')
+  }
+
+  /**
+   * Save order option data and say how it went (redesign fix-qa E9)
+   * @param {object} changes Changes to update order options
+   * @param {object} settings `silent`: do not open the global Alert on failure, the caller shows the error
+   * @returns {Promise<{ok: boolean, error?: string}|undefined>} undefined when there is no session
+   */
+  const saveOrderOptions = async (changes, { silent = false } = {}) => {
     if (session.auth) {
       const countryCodeFromLocalStorage = await strategy.getItem('country-code')
       const customerFromLocalStorage = await strategy.getItem('user-customer', true)
@@ -416,22 +441,32 @@ export const OrderProvider = ({ Alert, children, strategy, franchiseId, isDisabl
             ...options
           }
           state.optionsUserId = body.user_id
-        } else {
+        } else if (!silent) {
           setAlert({ show: true, content: result })
         }
         setState({ ...state, loading: false })
         state.loading = false
-        return !error
+        return error ? { ok: false, error: getErrorText(result) } : { ok: true }
       } catch (err) {
         const message = err?.message?.includes('Internal error')
           ? 'INTERNAL_ERROR'
           : err.message
-        setAlert({ show: true, content: [message] })
+        if (!silent) setAlert({ show: true, content: [message] })
         setState({ ...state, loading: false })
         state.loading = false
-        return false
+        return { ok: false, error: getErrorText(message) }
       }
     }
+  }
+
+  /**
+   * Update order option data
+   * @param {object} changes Changes to update order options
+   * @returns {Promise<boolean|undefined>} whether the options were saved
+   */
+  const updateOrderOptions = async (changes) => {
+    const saved = await saveOrderOptions(changes)
+    return saved?.ok
   }
 
   /**

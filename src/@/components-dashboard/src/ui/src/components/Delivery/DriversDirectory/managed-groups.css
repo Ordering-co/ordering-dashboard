@@ -1,0 +1,48 @@
+/*
+ * redesign : the Managed groups section of a drivers manager (assigned groups, every group, one save bar).
+ * Values come from --od-* and --od-x-* only; logical properties only. The lists are P/SelectableList.
+ */
+
+.mgs-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The root takes the focus when the save bar goes with it inside (SaveBar hands it back); it draws no ring of its own */
+.mgs-root:focus { outline: none; }
+
+.mgs-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.mgs-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.mgs-count {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.mgs-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The save bar belongs to the section, not to a page: no page gutter around it */
+.mgs-root .odc-savebar { margin-block-start: 0; }

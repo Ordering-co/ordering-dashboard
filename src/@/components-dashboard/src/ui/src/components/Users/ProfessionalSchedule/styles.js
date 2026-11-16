@@ -7,13 +7,13 @@ export const Container = styled.div`
 export const DateRangeWrapper = styled.div`
   > h1 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     margin-top: 0px;
     margin-bottom: 6px;
   }
   > p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.lightGray};
     margin: 0px;
   }
@@ -50,7 +50,7 @@ export const RangeItem = styled.div`
 
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 0px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -64,7 +64,7 @@ export const ScheduleWrapper = styled.div`
   margin-top: 35px;
   > h1 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     margin-top: 0px;
     margin-bottom: 15px;
   }

@@ -1,0 +1,345 @@
+/*
+ * /intelligence/invoice (redesign invoice FC2): the page, the two columns, the preview and the dock of the phone.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-iv-*. Breakpoints are the numbers of C/utils/breakpoints.js as literals in @media: phone < 768, two columns from 1024.
+ * The form is C1's (invoice-form.css); the figures are P/Metric (Shared/Product/metric.css).
+ */
+
+/* redesign invoice FC2 (D1): the page takes the width of the shell, with the padding and the rhythm of the other BI pages */
+.odc-iv-page {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  max-block-size: 100dvh;
+  padding: var(--od-space-6);
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* redesign invoice FC2 (D1): the kind of invoice, a segmented control that is as wide as its text */
+.odc-iv-switch {
+  display: flex;
+  min-inline-size: 0;
+  /* redesign invoice (FASE 3, locales-390: el): the hidden measuring track of P/SegmentedControl (absolute, wider than the
+     phone when the labels are long) added 42 px of empty horizontal scroll to the page; clip it here, with room for the focus ring */
+  overflow-x: clip;
+  overflow-clip-margin: var(--od-space-1);
+}
+
+/* each kind has a panel; the one that is not shown is `hidden` (it stays mounted: D2) */
+.odc-iv-panel {
+  min-inline-size: 0;
+}
+
+.odc-iv-panel[hidden] {
+  display: none;
+}
+
+.odc-iv-kind {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+/* ── Columns (D1, D4): one on a phone and up to 1023, two from 1024 ── */
+.odc-iv-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-6);
+  align-items: start;
+  min-inline-size: 0;
+}
+
+.odc-iv-form {
+  min-inline-size: 0;
+}
+
+/* ── The preview: a card whose head is the only part that stays in view on a wide screen (auditor 9) ── */
+.odc-iv-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+}
+
+.odc-iv-preview-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  background: var(--od-surface);
+}
+
+.odc-iv-preview-titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-iv-preview-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-iv-preview-meta {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+/* the three figures: orders, orders total and total due */
+/* redesign invoice (integration, live 1440): the three figures share the row; a long amount moves its box to the next
+   line instead of breaking or spilling out of it */
+.odc-iv-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  margin: 0;
+}
+
+.odc-iv-figure {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding: var(--od-space-3) var(--od-space-4);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-iv-figure-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-figure-value {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  white-space: nowrap;
+}
+
+.odc-iv-figures [data-stale],
+.odc-iv-totals-wrap[data-stale] {
+  opacity: 0.6;
+}
+
+.odc-iv-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.odc-iv-updating {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* the total due is announced; its region has no box of its own */
+.odc-iv-live {
+  display: inline-block;
+  min-inline-size: 0;
+}
+
+/* ── The totals of the PDF, row by row ── */
+.odc-iv-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-iv-totals-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-iv-totals {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-totals th,
+.odc-iv-totals td {
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  font-weight: var(--od-font-weight-regular);
+  vertical-align: baseline;
+}
+
+.odc-iv-totals th {
+  padding-inline-end: var(--od-space-3);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.odc-iv-totals td {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.odc-iv-totals tfoot th,
+.odc-iv-totals tfoot td {
+  border-block-end: 0;
+}
+
+/* the total of the invoice is the last line, in the weight of the sections */
+.odc-iv-totals tr[data-row='total'] th,
+.odc-iv-totals tr[data-row='total'] td {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-iv-totals small {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-iv-payout-note {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The orders of the invoice ── */
+.odc-iv-orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-iv-search {
+  /* redesign invoice (integration, live 1440): P/SearchField has `flex: 0 1 280px` for a row; in this column that basis
+     became its height */
+  flex: none;
+  max-inline-size: 100%;
+}
+
+.odc-iv-lists-all {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── First load: the skeleton keeps the place of the figures and the rows ── */
+.odc-iv-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── Dock of the phone (D4, D13): the total and the button, at the bottom of the scroll; the page keeps its height ── */
+.odc-iv-dock {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--od-x-layer-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3) var(--od-x-page-gutter-mobile);
+  margin-inline: calc(var(--od-x-page-gutter-mobile) * -1);
+  margin-block-end: calc(var(--od-x-page-gutter-mobile) * -1);
+  background: var(--od-surface);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-iv-dock-info {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-iv-dock-total {
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-iv-dock-caption {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-dock-action {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--od-space-1);
+}
+
+@media (max-width: 767px) {
+  .odc-iv-page {
+    padding: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-iv-switch {
+    inline-size: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* redesign invoice (integration, live 1440): the preview gets the wider column so the five columns of the orders fit */
+  .odc-iv-columns {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+
+  /* auditor 9: only the head of the preview stays in view while the page scrolls; the rows and the list go with the flow */
+  .odc-iv-preview-head {
+    position: sticky;
+    inset-block-start: calc(var(--od-space-4) * -1);
+    z-index: var(--od-x-layer-sticky);
+    padding-block: var(--od-space-4) var(--od-space-3);
+    margin-block-start: calc(var(--od-space-4) * -1);
+    border-block-end: var(--od-x-hairline) solid var(--od-border);
+  }
+}

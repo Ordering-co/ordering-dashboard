@@ -1,60 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Clipboard, Check2 } from 'react-bootstrap-icons'
+import React from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { CopyButton } from './styles'
+import { CopyButton } from '../../Shared/Product'
 
-/** Copy button that says "Copied" for a moment. Never logs what it copies. */
+/**
+ * Copy button that says "Copied" for a moment. Never logs what it copies.
+ * redesign stores 5.18: P/CopyButton (from 5.15a) with the same words: `buttonText` or «Copy», «Copied», and «Copy
+ * failed. Try again.» (now beside the button). It copies over http too (the piece falls back to a selected text).
+ */
 export const McpCopyButton = ({ text, label, buttonText }) => {
   const [, t] = useLanguage()
-  const [copied, setCopied] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const [pending, setPending] = useState(false)
-  const [feedbackText, setFeedbackText] = useState(text)
-  const timerRef = useRef(null)
-  const generationRef = useRef(0)
-
-  if (text !== feedbackText) {
-    setFeedbackText(text)
-    setCopied(false)
-    setFailed(false)
-    setPending(false)
-  }
-
-  useEffect(() => () => {
-    generationRef.current += 1
-    clearTimeout(timerRef.current)
-  }, [text])
-
-  const handleCopy = async () => {
-    const generation = ++generationRef.current
-    clearTimeout(timerRef.current)
-    setCopied(false)
-    setFailed(false)
-    setPending(true)
-    try {
-      await navigator.clipboard.writeText(text)
-      if (generation !== generationRef.current) return
-      setCopied(true)
-      timerRef.current = setTimeout(() => {
-        if (generation !== generationRef.current) return
-        setCopied(false)
-      }, 2000)
-    } catch {
-      if (generation !== generationRef.current) return
-      setFailed(true)
-    } finally {
-      if (generation === generationRef.current) setPending(false)
-    }
-  }
-
+  const word = buttonText || t('COPY_BUTTON', 'Copy')
   return (
-    <CopyButton type='button' onClick={handleCopy} disabled={pending} $copied={copied} aria-label={label || buttonText || t('COPY_BUTTON', 'Copy')}>
-      {copied ? <Check2 aria-hidden='true' /> : <Clipboard aria-hidden='true' />}
-      <span aria-live='polite'>
-        {failed ? t('MCP_COPY_FAILED', 'Copy failed. Try again.') : copied ? t('MCP_COPIED', 'Copied') : buttonText || t('COPY_BUTTON', 'Copy')}
-      </span>
-    </CopyButton>
+    <CopyButton
+      text={text}
+      label={label || word}
+      copyLabel={word}
+      copiedLabel={t('MCP_COPIED', 'Copied')}
+      failedLabel={t('MCP_COPY_FAILED', 'Copy failed. Try again.')}
+    />
   )
 }
 

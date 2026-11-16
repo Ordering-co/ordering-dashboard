@@ -64,13 +64,15 @@ export const SiteDetails = (props) => {
   /**
    * Function to update site details from API
    */
-  const handleUpdateSite = async (_changes) => {
+  const handleUpdateSite = async (_changes, options) => {
+    // redesign `options.inlineError` = the caller shows the error inline (no Loading toast, no formState.error)
+    const inlineError = options?.inlineError === true
     try {
       const rawChanges = _changes && typeof _changes === 'object' ? _changes : formState.changes
-      if (!rawChanges || Object.keys(rawChanges).length === 0) return
+      if (!rawChanges || Object.keys(rawChanges).length === 0) return { error: false, result: null }
       const changesToSend = applySiteLogoHeaderSync(rawChanges, siteState.site)
 
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inlineError) showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState((prev) => ({
         ...prev,
         loading: true
@@ -109,24 +111,29 @@ export const SiteDetails = (props) => {
         setFormState((prev) => ({
           ...prev,
           loading: false,
-          error: content.result
+          error: inlineError ? prev.error : content.result
         }))
       }
+      // redesign hand the API answer back to the UI
+      return { error: !!content.error, result: content.result }
     } catch (err) {
       setFormState((prev) => ({
         ...prev,
         loading: false,
-        error: [err.message]
+        error: inlineError ? prev.error : [err.message]
       }))
+      return { error: true, result: [err.message] }
     }
   }
 
   /**
    * Function to delete the site from API
    */
-  const handleDeleteSite = async () => {
+  const handleDeleteSite = async (options) => {
+    // redesign see handleUpdateSite
+    const inlineError = options?.inlineError === true
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inlineError) showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -151,27 +158,31 @@ export const SiteDetails = (props) => {
         setFormState({
           ...formState,
           loading: false,
-          error: content.result
+          error: inlineError ? formState.error : content.result
         })
       }
+      return { error: !!content.error, result: content.result }
     } catch (err) {
       setFormState({
         ...formState,
         loading: false,
-        error: [err.message]
+        error: inlineError ? formState.error : [err.message]
       })
+      return { error: true, result: [err.message] }
     }
   }
 
   /**
    * Function to add new site from API
    */
-  const handleAddSite = async (_changes) => {
+  const handleAddSite = async (_changes, options) => {
+    // redesign see handleUpdateSite
+    const inlineError = options?.inlineError === true
     try {
       const changesToSend = _changes && typeof _changes === 'object' ? { ...formState.changes, ..._changes } : formState.changes
-      if (!changesToSend || Object.keys(changesToSend).length === 0) return
+      if (!changesToSend || Object.keys(changesToSend).length === 0) return { error: false, result: null }
 
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inlineError) showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState((prev) => ({
         ...prev,
         loading: true
@@ -192,20 +203,24 @@ export const SiteDetails = (props) => {
         if (handleSuccessUpdateSites) {
           handleSuccessUpdateSites([...sitesList, content.result])
         }
-        props.onClose && props.onClose()
+        // redesign J5 row 47 (ordering-products P-1, ): a page that gives onSiteAdded keeps the new site open; else it closes
+        if (props.onSiteAdded) props.onSiteAdded(content.result)
+        else props.onClose && props.onClose()
       } else {
         setFormState((prev) => ({
           ...prev,
           loading: false,
-          error: content.result
+          error: inlineError ? prev.error : content.result
         }))
       }
+      return { error: !!content.error, result: content.result }
     } catch (err) {
       setFormState((prev) => ({
         ...prev,
         loading: false,
-        error: [err.message]
+        error: inlineError ? prev.error : [err.message]
       }))
+      return { error: true, result: [err.message] }
     }
   }
 
@@ -249,6 +264,7 @@ export const SiteDetails = (props) => {
             handleUpdateSite={handleUpdateSite}
             handleDeleteSite={handleDeleteSite}
             handleAddSite={handleAddSite}
+            resetChanges={cleanFormState}
           />
         )
       }

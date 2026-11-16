@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
+// redesign stores 5.3 (; G2-15, G2-16, G2-17): the gallery of Store details › Images and Videos. Adding and deleting
+// say how they went, `{ ok: true, result }` or `{ ok: false, error }` (the API's first message, or the network's), so the screens
+// show each failure once, where it happened, and can upload several images one after another. Nothing throws. A failed delete is
+// no longer silent. Same requests as before: POST /business/:id/gallery with { business_id, type, file | video } and DELETE
+// /business/:id/gallery/:gid?business_id=; the shell refreshes its gallery through the same two callbacks.
+
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean) || null
+
 export const BusinessGallery = (props) => {
   props = { ...defaultProps, ...props }
   const {
     business,
     isVideoGallery,
-    isImageGallery,
-    UIComponent,
-    handleSucessAddBusinessGallery,
-    handleSucessDeleteBusinessGallery
+    UIComponent
   } = props
 
   const [ordering] = useApi()
@@ -21,137 +28,69 @@ export const BusinessGallery = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
-  const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-
   const [photos, setPhotos] = useState([])
   const [videos, setVideos] = useState([])
+  const [adding, setAdding] = useState(false)
+  const [deletingId, setDeletingId] = useState(null)
+  const mounted = useRef(true)
+  useEffect(() => () => { mounted.current = false }, [])
+  // The shell's callbacks append to (or filter) the gallery of the render they come from. Several uploads in a row await one
+  // another, so each refresh goes through the latest callback: an old one would drop the image added just before (review 1).
+  const latest = useRef(props)
+  latest.current = props
 
-  /**
-   * Clean formState
-   */
-  const cleanFormState = (values) => setFormState({ ...formState, ...values })
-
-  /**
-   * Update business photo data
-   * @param {File} file Image to change business photo
-   */
-  const handlechangeImage = (file) => {
-    const reader = new window.FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      setFormState({
-        ...formState,
-        changes: {
-          ...formState.changes,
-          business_id: business.id,
-          file: reader.result,
-          type: 1
-        }
-      })
-    }
-  }
-
-  /**
-   * Update business video path
-   * @param {EventTarget} e Related HTML event
-   */
-  const handleChangeBusinessVideo = (e) => {
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        business_id: business?.id,
-        type: 2,
-        video: e.target.value
-      }
-    })
-  }
-
-  /**
-   * Method to update the business
-   */
-  const handleUpdateBusinessGallery = async () => {
+  const request = async (url, options) => {
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(formState.changes)
-      }
-
-      const response = await fetch(`${ordering.root}/business/${business.id}/gallery`, requestOptions)
+      const response = await fetch(url, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+      })
       const content = await response.json()
-
-      setFormState({
-        ...formState,
-        changes: content.error ? formState.changes : {},
-        result: content,
-        loading: false
-      })
-
-      if (!content.error) {
-        if (isVideoGallery) {
-          showToast(ToastType.Success, t('GALLERY_VIDEO_ADDED'))
-        }
-        if (isImageGallery) {
-          showToast(ToastType.Success, t('GALLERY_IMAGE_ADDED'))
-        }
-        if (handleSucessAddBusinessGallery) {
-          handleSucessAddBusinessGallery(content.result)
-        }
-      }
+      if (content?.error) return { ok: false, error: firstMessage(content.result) }
+      return { ok: true, result: content?.result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      return { ok: false, error: err?.message || null }
     }
   }
+
   /**
-   * Method to delete the business gallery image
+   * Adds one item to the gallery: `{ file }` (a data URL) is an image, `{ video }` a video URL.
+   * `silent` leaves the success notice to the caller (the images screen reports a batch at once).
+   */
+  const handleAddGalleryItem = async (item = {}, { silent = false } = {}) => {
+    const isVideo = item.video != null
+    const body = isVideo
+      ? { business_id: business?.id, type: 2, video: item.video }
+      : { business_id: business?.id, type: 1, file: item.file }
+    setAdding(true)
+    const result = await request(`${ordering.root}/business/${business?.id}/gallery`, {
+      method: 'POST',
+      body: JSON.stringify(body)
+    })
+    if (mounted.current) setAdding(false)
+    if (!result.ok) return result
+    if (!silent) {
+      showToast(ToastType.Success, isVideo || isVideoGallery
+        ? t('GALLERY_VIDEO_ADDED', 'Business gallery video added')
+        : t('GALLERY_IMAGE_ADDED', 'Business gallery image added'))
+    }
+    latest.current.handleSucessAddBusinessGallery?.(result.result)
+    return result
+  }
+
+  /**
+   * Deletes one gallery item.
    */
   const handleDeleteBusinessGallery = async (id) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-
-      const response = await fetch(`${ordering.root}/business/${business.id}/gallery/${id}?business_id=${business.id}`, requestOptions)
-      const content = await response.json()
-
-      setFormState({
-        ...formState,
-        loading: false
-      })
-
-      if (!content.error) {
-        showToast(ToastType.Success, t('GALLERY_ITEM_DELETED'))
-        handleSucessDeleteBusinessGallery && handleSucessDeleteBusinessGallery(id)
-      }
-    } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
-    }
+    setDeletingId(id)
+    const result = await request(`${ordering.root}/business/${business?.id}/gallery/${id}?business_id=${business?.id}`, {
+      method: 'DELETE'
+    })
+    if (mounted.current) setDeletingId(null)
+    if (!result.ok) return result
+    showToast(ToastType.Success, t('GALLERY_ITEM_DELETED', 'Business gallery item deleted'))
+    latest.current.handleSucessDeleteBusinessGallery?.(id)
+    return { ok: true }
   }
 
   useEffect(() => {
@@ -166,14 +105,11 @@ export const BusinessGallery = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          businessSchedule={business?.schedule || []}
           businessPhotos={photos || []}
           businessVideos={videos || []}
-          formState={formState}
-          handlechangeImage={handlechangeImage}
-          cleanFormState={cleanFormState}
-          handleChangeBusinessVideo={handleChangeBusinessVideo}
-          handleUpdateBusinessGallery={handleUpdateBusinessGallery}
+          adding={adding}
+          deletingId={deletingId}
+          handleAddGalleryItem={handleAddGalleryItem}
           handleDeleteBusinessGallery={handleDeleteBusinessGallery}
         />
       )}

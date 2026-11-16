@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLanguage } from '../../../../../index'
 import Skeleton from 'react-loading-skeleton'
@@ -7,7 +7,7 @@ import { Pagination, SideBar, Confirm } from '../../Shared'
 import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { useTheme } from 'styled-components'
 import FiMoreVertical from '@meronex/icons/fi/FiMoreVertical'
-import { Switch, LinkButton } from '../../../styles'
+import { Switch } from '../../../styles'
 import { CountryDetails } from '../CountryDetails'
 import RiCheckboxBlankLine from '@meronex/icons/ri/RiCheckboxBlankLine'
 import RiCheckboxFill from '@meronex/icons/ri/RiCheckboxFill'
@@ -20,6 +20,7 @@ import {
   CountryWrapper,
   CheckboxWrapper,
   CountryName,
+  AddCountryButton,
   PagesBottomContainer
 } from './styles'
 
@@ -47,6 +48,25 @@ export const CountriesList = (props) => {
   const [openDetails, setOpenDetails] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState(null)
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+
+  // what opened the panel gets the focus back when it closes (the panel takes it when it opens).
+  const rowRefs = useRef({})
+  const addButtonRef = useRef(null)
+  const openerRef = useRef(null) // a country id, or 'add'
+  const wasOpenRef = useRef(false)
+
+  useEffect(() => {
+    const wasOpen = wasOpenRef.current
+    wasOpenRef.current = openDetails
+    if (!wasOpen || openDetails) return
+    // Only when the focus went down with the panel: a control the user moved to meanwhile keeps it.
+    const active = document.activeElement
+    if (active && active !== document.body) return
+    const opener = openerRef.current
+    openerRef.current = null
+    const target = (opener !== 'add' && rowRefs.current[opener]) || addButtonRef.current
+    target?.focus({ preventScroll: true })
+  }, [openDetails])
 
   const handleChangePageSize = (pageSize) => {
     const expectedPage = Math.ceil(((currentPage - 1) * countriesPerPage + 1) / pageSize)
@@ -76,6 +96,7 @@ export const CountriesList = (props) => {
   const handleClickCountry = (e, country, isInitialRender) => {
     const isInvalid = e?.target?.closest('.country-checkbox') || e?.target?.closest('.country-enabled') || e?.target?.closest('.country-actions')
     if (isInvalid) return
+    openerRef.current = country.id
     setSelectedCountry(country)
     setOpenDetails(true)
     if (!isInitialRender) {
@@ -173,6 +194,8 @@ export const CountriesList = (props) => {
               {currentCountries.map(country => (
                 <CountryWrapper
                   key={country.id}
+                  ref={node => { rowRefs.current[country.id] = node }}
+                  tabIndex={-1}
                   active={selectedCountry?.id === country.id}
                   onClick={e => handleClickCountry(e, country)}
                 >
@@ -208,6 +231,7 @@ export const CountriesList = (props) => {
                       >
                         <Dropdown.Item
                           onClick={() => {
+                            openerRef.current = country.id
                             setSelectedCountry(country)
                             setOpenDetails(true)
                           }}
@@ -231,14 +255,18 @@ export const CountriesList = (props) => {
 
       {!countriesState.loading && (
         <PagesBottomContainer>
-          <LinkButton
+          <AddCountryButton
+            as='button'
+            type='button'
+            ref={addButtonRef}
             onClick={() => {
+              openerRef.current = 'add'
               setSelectedCountry(null)
               setOpenDetails(true)
             }}
           >
             {t('ADD_NEW_COUNTRY ', 'Add new country')}
-          </LinkButton>
+          </AddCountryButton>
           {currentCountries?.length > 0 && (
             <Pagination
               currentPage={currentPage}

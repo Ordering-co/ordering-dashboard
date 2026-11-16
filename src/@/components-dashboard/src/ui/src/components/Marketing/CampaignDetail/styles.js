@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
+import { brandFocusRing, coarseHitArea } from '../../../styles/touchTarget'
 
 export const CampaignDetailContainer = styled.div`
   width: 100%;
@@ -16,7 +17,7 @@ export const CampaignDetailContainer = styled.div`
     }
 
     > p {
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       margin: 0px;
     }
   }
@@ -30,7 +31,7 @@ export const DetailsHeader = styled.div`
 
 export const CampaignName = styled.h1`
   color: ${props => props.theme.colors.headingColor};
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   margin-top: 0px;
   margin-bottom: 24px;
   font-weight: 700;
@@ -102,7 +103,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         padding: 6px 20px;
         color: ${props => props.theme.colors.headingColor};
         &:active {
@@ -123,12 +124,19 @@ export const Tabs = styled.div`
   border-bottom: 1px solid #E9ECEF;
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button.attrs({ type: 'button' })`
   user-select: none;
+  background: none;
+  border: 0;
+  text-align: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
   padding: 10px 0px;
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
   ${props => props.theme?.rtl
 ? css`
@@ -146,6 +154,9 @@ export const Tab = styled.div`
   ${({ active }) => !active && css`
     color: #909BA9;
   `}
+
+  ${brandFocusRing}
+  ${coarseHitArea}
 `
 
 export const ContactWrapper = styled.div`
@@ -154,7 +165,7 @@ export const ContactWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     text-align: center;
     margin-bottom: 14px;
   }

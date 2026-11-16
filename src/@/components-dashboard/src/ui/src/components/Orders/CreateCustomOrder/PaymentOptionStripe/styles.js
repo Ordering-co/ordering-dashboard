@@ -7,7 +7,7 @@ export const OptionStripeContainer = styled.div`
 
 export const WarningMessage = styled.p`
   color: #D81212;
-  font-size: 24px;
+  font-size: var(--od-type-content-size);
   padding-left: 10px;
   font-weight: bold;
   opacity: 0.8;
@@ -36,16 +36,29 @@ export const CardItem = styled.div`
   `}
 `
 
-export const CardItemContent = styled.div`
+export const CardItemContent = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
+  flex: 1;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
   
   .checks svg {
     color: ${props => props.theme.colors.primary};
     font-size: 22px;
   }
 
-  > div {
+  > span.brand {
     display: flex;
     align-items: center;
     margin: 0 13px 0 5px;
@@ -61,14 +74,13 @@ export const CardItemContent = styled.div`
   }
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme?.colors.headingColor};
   }
-  p {
-      margin: 0;
-      margin-left: 20px;
-      color: ${({ theme }) => theme?.colors?.danger500}
-    }
+  span.missing-zipcode {
+    margin-left: 20px;
+    color: ${({ theme }) => theme?.colors?.danger500};
+  }
 `
 
 export const CardItemActions = styled.div`
@@ -77,7 +89,7 @@ export const CardItemActions = styled.div`
 
   > span {
     font-weight: 600;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme?.colors.headingColor};
     margin-right: 20px;
     ${props => props.theme?.rtl && css`
@@ -93,8 +105,15 @@ export const BlockLoading = styled.div`
 `
 
 export const AddNewCard = styled.div`
-  span {
-    font-size: 14px;
+  button, span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme?.colors.primary};
     cursor: pointer;
     user-select: none;
@@ -103,16 +122,19 @@ export const AddNewCard = styled.div`
 
 export const CardItemActionsWrapper = styled.div`
   position: relative;
-  span {
+  button {
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 7.6px;
     cursor: pointer;
-    width: 26px;
-    height: 24px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     transition: all 0.3s;
-  
+
     svg {
       font-size: 20px;
       color: #212121;
@@ -122,13 +144,19 @@ export const CardItemActionsWrapper = styled.div`
       background: #F8F9FA;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    button {
+      transition: none;
+    }
+  }
 `
 
 export const ActionsContent = styled.div`
   position: absolute;
   z-index: 10;
   top: 100%;
-  background: #FFFFFF;
+  background: ${({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? '#FFFFFF'};
   border: 1px solid #E9ECEF;
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
@@ -144,7 +172,7 @@ export const ActionsContent = styled.div`
 
   div {
     padding: 10px 13px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.3s;

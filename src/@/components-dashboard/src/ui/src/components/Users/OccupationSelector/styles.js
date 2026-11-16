@@ -8,16 +8,16 @@ export const SelectWrapper = styled.div`
     .select {
       border: 1px solid ${props => props.theme.colors.borderColor};
       padding: 6px 0;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
 
       .header {
-        font-size: 14px;
+        font-size: var(--od-type-control-value-size);
         padding: 4px 0;
       }
     }
 
     .list .option {
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       padding: 10px;
     }
 
@@ -28,6 +28,6 @@ export const SelectWrapper = styled.div`
   }
 `
 export const Option = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   padding: 4px 0;
 `

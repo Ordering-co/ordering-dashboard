@@ -62,13 +62,7 @@ export const UploadImageIcon = styled.div`
   span {
     margin: 0;
     color: #ADB5BD;
-    ${({ small }) => small
-? css`
-      font-size: 8px;
-    `
-: css`
-      font-size: 12px;
-    `}
+    font-size: var(--od-type-control-size);
   }
 
   svg {
@@ -99,7 +93,7 @@ export const FormControl = styled.div`
     border: 1px solid #DEE2E6;
     box-sizing: border-box;
     border-radius: 7.6px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     padding: 10px 15px;
     outline: none;
     width: 100%;
@@ -110,7 +104,7 @@ export const FormControl = styled.div`
 `
 
 export const Label = styled.label`
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme?.colors.headingColor};
   margin-bottom: 10px;
 `
@@ -131,7 +125,7 @@ export const SwitchWrapper = styled.div`
   margin-bottom: 30px;
 
   > span {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
 
     ${props => props.theme?.rtl
@@ -156,7 +150,7 @@ export const ColorWrapper = styled.div`
 
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 7px;
   }
 `
@@ -164,7 +158,7 @@ export const ColorWrapper = styled.div`
 export const ShapeWrapper = styled(ColorWrapper)`
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 

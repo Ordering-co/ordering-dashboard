@@ -1,0 +1,21 @@
+/*
+ * Settings logs. The failure of the list: its own sentence is the headline and the API's text, when it gave one, is the
+ * secondary line under it. Values come from --od-* / --od-x-* only; logical properties only. The notice, the page frame and the
+ * button are the shared ones (P/InlineNotice, Shared/ChangeLog's .odc-cl, P/Button).
+ */
+.odc-sl-error-title,
+.odc-sl-error-detail {
+  display: block;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-sl-error-title {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-sl-error-detail {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}

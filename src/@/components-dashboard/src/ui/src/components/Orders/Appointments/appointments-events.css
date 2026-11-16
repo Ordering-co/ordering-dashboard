@@ -1,0 +1,53 @@
+/* tanda P: a week or day event is a container (styles.js, `.rbc-time-view .appointments-event-inline`); styled-components
+   drops nested @container rules, so they live here. A wide event (the day view, a wide week) keeps the photo and «range · name» in a
+   row. A narrow one (about 140px at 1440, 80px at 1024):
+   - gives the decorative photo's room to the hour, so the range fits one line («11:30 AM – 12:00 PM» needs about 125px);
+   - stacks the range and then the name in a column that wraps into a second, clipped column: a line that does not fit the height of
+     a short event is left out whole instead of showing half its letters. The range comes first, so it is the one that stays.
+   The name and the range are always in `title`. */
+@container (max-width: 10rem) {
+  .rbc-time-view .appointments-event-inline > [aria-hidden='true'] {
+    display: none;
+  }
+
+  .rbc-time-view .appointments-event-inline [data-event-line] {
+    align-self: stretch;
+    flex-direction: column;
+    align-content: flex-start;
+    margin-inline-start: 0;
+  }
+
+  .rbc-time-view .appointments-event-inline [data-event-line] > * {
+    flex: none;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  /* the name is on its own line: no separator in front of it */
+  .rbc-time-view .appointments-event-inline [data-event-sep] {
+    display: none;
+  }
+}
+
+/* Below 6rem (a week at 1024) the range takes two lines, broken at the dash; at a tight leading both fit a 30-minute event. */
+@container (max-width: 6rem) {
+  .rbc-time-view .appointments-event-inline [data-event-line] {
+    line-height: 1;
+  }
+}
+
+/* The month event keeps its two lines (name, range: rbc's row heights count on them). In a narrow one (a month at 1440 gives about
+   160px) the photo gives its room to them too, so an AM–PM range («11:30 AM – 12:00 PM») is not cut. */
+.rbc-month-view .rbc-event-content > [role='button'] {
+  container-type: inline-size;
+}
+
+@container (max-width: 11rem) {
+  .rbc-month-view .rbc-event-content > [role='button'] > [aria-hidden='true'] {
+    display: none;
+  }
+
+  .rbc-month-view .rbc-event-content > [role='button'] > .info {
+    inline-size: 100%;
+  }
+}

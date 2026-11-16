@@ -1,13 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Search } from 'react-bootstrap-icons'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { TabButton, TabList } from '../styles'
-import { ChipRow, ComponentDetail, ComponentLayout, ComponentList, EditorBody, EditorMain, SectionNav } from '../BuilderWebTheme/styles'
+import { RadioGroup, SearchField, Tabs } from '../../Shared/Product'
 import { EditorErrorBoundary } from './EditorErrorBoundary'
 import { Changed, GroupCard, SchemaGroup, touchesPath } from './SchemaGroup'
 import { childKeys, componentGroupsOf, componentsOfGroup, editorOf, formatText, getAt, isHidden, isNode, isPlacedElsewhere, joinPath, labelOf, pageGroupsOf, pagesOfGroup, splitPath, storedErrorsOf } from './schemaNodes'
 import { isSiteSection } from './SiteSettings'
+import './theme-editor.css'
 
 export { SchemaGroup, GroupCard, NodeField, readNode } from './SchemaGroup'
 export { CONTROLS } from './controls'
@@ -19,6 +18,10 @@ export { invalidText } from './SchemaGroup'
 // shows (`layout`, the parts' `sources`, `choices` and `nested`, each card's
 // `part` and `placement`). What it doesn't declare follows the rules below.
 // Values go through `setValue(path, value)` as BuilderThemeEditor has it.
+//
+// redesign B3b: the nav stays links (a plain click opens in place, a modifier click is the browser's) on the editor's
+// own CSS (theme-editor.css); part and screen tabs are P/Tabs, a part's choices and Inside's components P/RadioGroup, a list's
+// search P/SearchField (Esc still clears it). The detail's narrow rows are a container query now, not a measured width.
 
 const normalizeSearch = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
 
@@ -103,14 +106,17 @@ const ComponentParts = ({ ctx, path, mount }) => {
       if (!name) return null
       return (
         <>
-          <ChipRow role='radiogroup' aria-label={t('BUILDER_THEME_INSIDE_COMPONENT', 'Component')}>
-            {names.map(item => (
-              <button key={item} type='button' role='radio' aria-checked={item === name ? 'true' : 'false'} onClick={() => setInner(item)}>
-                {formatText(t, labelOf(schema, ['components', item]), { fallback: item })}
-                {touchesPath(ctx, [...partPath, item]) && <Changed t={t} />}
-              </button>
-            ))}
-          </ChipRow>
+          <RadioGroup
+            label={t('BUILDER_THEME_INSIDE_COMPONENT', 'Component')}
+            hideLabel
+            orientation='horizontal'
+            value={name}
+            onValueChange={setInner}
+            options={names.map(item => ({
+              value: item,
+              label: <>{formatText(t, labelOf(schema, ['components', item]), { fallback: item })}{touchesPath(ctx, [...partPath, item]) && <> <Changed t={t} /></>}</>
+            }))}
+          />
           <ComponentParts
             key={name}
             ctx={ctx}
@@ -137,13 +143,14 @@ const ComponentParts = ({ ctx, path, mount }) => {
         {shows}
         {before}
         {choices.length > 1 && (
-          <ChipRow role='radiogroup' aria-label={tabLabel(parts.find(item => item.key === part))}>
-            {choices.map(choicePath => (
-              <button key={choicePath} type='button' role='radio' aria-checked={choicePath === chosen ? 'true' : 'false'} onClick={() => setChoice(choicePath)}>
-                {formatText(t, labelOf(schema, choicePath), { fallback: splitPath(choicePath).pop() })}
-              </button>
-            ))}
-          </ChipRow>
+          <RadioGroup
+            label={tabLabel(parts.find(item => item.key === part))}
+            hideLabel
+            orientation='horizontal'
+            value={chosen}
+            onValueChange={setChoice}
+            options={choices.map(choicePath => ({ value: choicePath, label: formatText(t, labelOf(schema, choicePath), { fallback: splitPath(choicePath).pop() }) }))}
+          />
         )}
         {chosen && <SchemaGroup ctx={partCtx} path={chosen} exclude={exclude} />}
         {after}
@@ -154,13 +161,12 @@ const ComponentParts = ({ ctx, path, mount }) => {
   return (
     <>
       {parts.length > 1 && (
-        <TabList role='tablist' aria-label={t('BUILDER_THEME_COMPONENT_PARTS', '_name_ parts').replace('_name_', formatText(t, meta.label, { fallback: keys[keys.length - 1] }))}>
-          {parts.map(item => (
-            <TabButton key={item.key} type='button' role='tab' aria-selected={item.key === part ? 'true' : 'false'} selected={item.key === part} onClick={() => { setPicked(item.key); setChoice(null) }}>
-              {tabLabel(item)}
-            </TabButton>
-          ))}
-        </TabList>
+        <Tabs
+          label={t('BUILDER_THEME_COMPONENT_PARTS', '_name_ parts').replace('_name_', formatText(t, meta.label, { fallback: keys[keys.length - 1] }))}
+          value={part}
+          onValueChange={(next) => { setPicked(next); setChoice(null) }}
+          items={parts.map(item => ({ value: item.key, label: tabLabel(item) }))}
+        />
       )}
       {part && content()}
     </>
@@ -180,14 +186,20 @@ const ScreenTabs = ({ ctx, label, platform, onChange, touched }) => {
   const { t, schema } = ctx
   const labels = schema?.editor?.labels?.platforms || {}
   return (
-    <TabList role='tablist' aria-label={label}>
-      {['base', ...platformsOf(schema)].map(value => (
-        <TabButton key={value} type='button' role='tab' aria-selected={value === platform ? 'true' : 'false'} selected={value === platform} onClick={() => onChange(value)}>
-          {value === 'base' ? t('BUILDER_THEME_ALL_SCREENS', 'All screens') : formatText(t, labels[value], { fallback: value })}
-          {value !== 'base' && touched(value) && <> <Changed t={t} /></>}
-        </TabButton>
-      ))}
-    </TabList>
+    <Tabs
+      label={label}
+      value={platform}
+      onValueChange={onChange}
+      items={['base', ...platformsOf(schema)].map(value => ({
+        value,
+        label: (
+          <>
+            {value === 'base' ? t('BUILDER_THEME_ALL_SCREENS', 'All screens') : formatText(t, labels[value], { fallback: value })}
+            {value !== 'base' && touched(value) && <> <Changed t={t} /></>}
+          </>
+        )
+      }))}
+    />
   )
 }
 
@@ -226,7 +238,7 @@ const PageScreens = ({ ctx, path }) => {
 /** The roots whose values a platform can have of its own in a section of cards (`platforms.<p>.visibility`). */
 const PLATFORM_ROOTS = ['visibility']
 
-const platformHelp = (t) => <p style={{ margin: 0, color: '#5E6B7D' }}>{t('BUILDER_THEME_PLATFORM_VISIBILITY_HELP', 'What phones show. Until you change one here, it shows as on all screens, or as the website has it on phones.')}</p>
+const platformHelp = (t) => <p className='odc-te-help'>{t('BUILDER_THEME_PLATFORM_VISIBILITY_HELP', 'What phones show. Until you change one here, it shows as on all screens, or as the website has it on phones.')}</p>
 
 /**
  * What a component shows: the groups of other sections that name it
@@ -301,14 +313,14 @@ const CardsSection = ({ ctx, section }) => {
  * a plain click opens it here, without loading the page again.
  */
 const NavEntry = ({ href, onSelect, children, ...props }) => {
-  if (!href) return <button type='button' onClick={onSelect} {...props}>{children}</button>
+  if (!href) return <button type='button' className='odc-te-entry' onClick={onSelect} {...props}>{children}</button>
   const follow = (e) => {
     // A new tab or window (Cmd, Ctrl, Shift, Alt, another button) is the browser's
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
     e.preventDefault()
     onSelect()
   }
-  return <a href={href} onClick={follow} {...props}>{children}</a>
+  return <a href={href} className='odc-te-entry' onClick={follow} {...props}>{children}</a>
 }
 
 /** The groups a list section shows (not `hidden`), with the components or pages the schema has and shows. */
@@ -326,27 +338,13 @@ const touchesItem = (ctx, path) => {
   return ['base', ...platformsOf(ctx.schema)].some(platform => touchesOn(ctx, platform, paths))
 }
 
-/** Below this width the chosen one's rows stack (styled-components v5 has no container queries). */
-const DETAIL_NARROW = 560
-
 /** A section whose groups hold components or pages: a list to search, and the chosen one. `itemHref`: each one's link. */
 const ListSection = ({ ctx, section, selected, onSelect, itemHref }) => {
   const { t, schema } = ctx
   const [query, setQuery] = useState('')
   const search = normalizeSearch(query)
+  // Narrow (under 560px of its own), the chosen one's rows put their name above their controls: a container query (theme-editor.css)
   const detail = useRef(null)
-  // Narrow, rows put their name above their controls
-  const [narrow, setNarrow] = useState(false)
-  useLayoutEffect(() => {
-    const measure = () => {
-      const width = detail.current?.getBoundingClientRect().width
-      if (width) setNarrow(width < DETAIL_NARROW)
-    }
-    measure()
-    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null
-    if (detail.current) observer?.observe(detail.current)
-    return () => observer?.disconnect()
-  }, [])
   const nameOf = (path) => formatText(t, labelOf(schema, path), { fallback: splitPath(path).pop() })
   const groups = listGroups(schema, section)
   const shown = search
@@ -358,17 +356,22 @@ const ListSection = ({ ctx, section, selected, onSelect, itemHref }) => {
   const isPage = splitPath(current || '')[0] === 'pages'
   const listLabel = formatText(t, section.label, { fallback: section.key })
   return (
-    <ComponentLayout>
-      <ComponentList aria-label={listLabel}>
-        <label>
-          <Search aria-hidden='true' />
-          <input type='search' value={query} placeholder={t('SEARCH', 'Search')} aria-label={`${t('SEARCH', 'Search')}: ${listLabel}`} autoComplete='off' onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Escape') setQuery('') }} />
-        </label>
-        <div>
+    <div className='odc-te-split'>
+      <nav className='odc-te-list' aria-label={listLabel}>
+        {/* P/SearchField spreads extra props on its frame: Esc in the input clears the search, as before */}
+        <SearchField
+          value={query}
+          onChange={setQuery}
+          label={`${t('SEARCH', 'Search')}: ${listLabel}`}
+          placeholder={t('SEARCH', 'Search')}
+          clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+          onKeyDown={(e) => { if (e.key === 'Escape') setQuery('') }}
+        />
+        <div className='odc-te-list-items'>
           {shown.length === 0 && <p role='status'>{t('BUILDER_THEME_NO_MATCH', 'Nothing matches “_query_”.').replace('_query_', query.trim())}</p>}
           {shown.map(group => (
             <React.Fragment key={group.key}>
-              {group.label && <h4>{formatText(t, group.label)}</h4>}
+              {group.label && <h4 className='odc-te-list-group'>{formatText(t, group.label)}</h4>}
               {group.paths.map(path => (
                 <NavEntry key={path} href={itemHref?.(path)} aria-current={path === current ? 'true' : undefined} onSelect={() => { detail.current?.scrollTo?.(0, 0); onSelect(path) }}>
                   {nameOf(path)}
@@ -378,11 +381,11 @@ const ListSection = ({ ctx, section, selected, onSelect, itemHref }) => {
             </React.Fragment>
           ))}
         </div>
-      </ComponentList>
-      <ComponentDetail ref={detail} data-narrow={narrow ? 'true' : undefined}>
+      </nav>
+      <div className='odc-te-detail' ref={detail}>
         {current && (
           <>
-            <header>
+            <header className='odc-te-detail-head'>
               <div>
                 <h3>{nameOf(current)}</h3>
                 {meta.info && <p>{formatText(t, meta.info)}</p>}
@@ -395,8 +398,8 @@ const ListSection = ({ ctx, section, selected, onSelect, itemHref }) => {
             </EditorErrorBoundary>
           </>
         )}
-      </ComponentDetail>
-    </ComponentLayout>
+      </div>
+    </div>
   )
 }
 
@@ -466,10 +469,11 @@ const startOf = (schema, sections, start) => {
  * (a path) opens the section that shows it; `onLocationChange` tells the
  * section, the component or page open, and whether the section is a list.
  * `start` (`{ section, item }`) is where it opens, and `linkTo` gives the
- * address of each one, so the nav's entries are links.
+ * address of each one, so the nav's entries are links. `kind` (`web` or
+ * `app`, the product's): what its texts say of the product.
  */
 export const ThemeSchemaEditor = (props) => {
-  const { schema, format, current, edits, fieldErrors, invalid, setValue, resolved, sources, aliases, uploadImage, editorAction, focus, onLocationChange, start, linkTo } = props
+  const { schema, format, current, edits, fieldErrors, invalid, setValue, resolved, sources, aliases, uploadImage, editorAction, focus, onLocationChange, start, linkTo, kind = 'web' } = props
   const [, t] = useLanguage()
   const sections = (schema?.editor?.sections || []).filter(item => !isSiteSection(item))
   const parents = schema?.editor?.section_groups || []
@@ -477,7 +481,7 @@ export const ThemeSchemaEditor = (props) => {
   const [items, setItems] = useState(() => startOf(schema, sections, start).items)
   const sectionKey = sections.some(item => item.key === own) ? own : sections[0]?.key
   const section = sections.find(item => item.key === sectionKey)
-  const ctx = { schema, format, current, edits, fieldErrors: fieldErrors || {}, storedErrors: storedErrorsOf(invalid, edits), setValue, resolved, sources, aliases, uploadImage, editorAction, t }
+  const ctx = { schema, format, current, edits, fieldErrors: fieldErrors || {}, storedErrors: storedErrorsOf(invalid, edits), setValue, resolved, sources, aliases, uploadImage, editorAction, t, kind }
   const navGroups = parents.length
     ? parents.map(parent => ({ ...parent, sections: sections.filter(item => item.parent === parent.key) })).concat([{ key: null, sections: sections.filter(item => !parents.some(parent => parent.key === item.parent)) }])
     : [{ key: null, sections }]
@@ -498,11 +502,11 @@ export const ThemeSchemaEditor = (props) => {
 
   if (!section) return null
   return (
-    <EditorBody $fill={!!list}>
-      <SectionNav aria-label={t('BUILDER_THEME_SECTIONS', 'Theme sections')}>
+    <div className='odc-te-body'>
+      <nav className='odc-te-nav' aria-label={t('BUILDER_THEME_SECTIONS', 'Theme sections')}>
         {navGroups.filter(group => group.sections.length).map(group => (
           <React.Fragment key={group.key || 'other'}>
-            {group.label && <h3>{formatText(t, group.label)}</h3>}
+            {group.label && <h3 className='odc-te-nav-group'>{formatText(t, group.label)}</h3>}
             {group.sections.map(item => (
               <NavEntry key={item.key} href={linkTo?.({ section: item.key })} aria-current={item.key === sectionKey ? 'true' : undefined} onSelect={() => setOwn(item.key)}>
                 {formatText(t, item.label, { fallback: item.key })}
@@ -510,9 +514,9 @@ export const ThemeSchemaEditor = (props) => {
             ))}
           </React.Fragment>
         ))}
-      </SectionNav>
-      <EditorMain $fill={!!list}>
-        <div>
+      </nav>
+      <div className='odc-te-main' data-fill={list ? 'true' : undefined}>
+        <div className='odc-te-heading'>
           <h2>{formatText(t, section.label, { fallback: section.key })}</h2>
           {section.info && <p>{formatText(t, section.info)}</p>}
         </div>
@@ -521,7 +525,7 @@ export const ThemeSchemaEditor = (props) => {
             ? <ListSection key={section.key} ctx={ctx} section={section} selected={item} onSelect={(path) => setItems(prev => ({ ...prev, [section.key]: path }))} itemHref={linkTo && ((path) => linkTo({ section: section.key, item: path }))} />
             : <CardsSection key={section.key} ctx={ctx} section={section} />}
         </EditorErrorBoundary>
-      </EditorMain>
-    </EditorBody>
+      </div>
+    </div>
   )
 }

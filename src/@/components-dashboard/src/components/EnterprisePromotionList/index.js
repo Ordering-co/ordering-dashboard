@@ -4,6 +4,8 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+import { BUILDER_MAX_PAGE_SIZE, fetchAllPages } from '../../utils/fetchAllPages'
 import {
   deletePromotionJourney,
   getAllPromotionBusinesses,
@@ -13,6 +15,11 @@ import {
 } from './promotionJourneyApi'
 
 const BUSINESSES_PAGE_SIZE = 10
+
+// redesign PE-B2: the first readable message of what the API (or a throw) left as an error: a string, a list of strings or a list of lists
+const firstMessage = (error) => (Array.isArray(error) ? error.flat(Infinity) : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 export const EnterprisePromotionList = (props) => {
   props = { ...defaultProps, ...props }
@@ -28,10 +35,12 @@ export const EnterprisePromotionList = (props) => {
   const [ordering] = useApi()
   const [{ token, user }] = useSession()
   const [, t] = useLanguage()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
 
   const firstRender = useRef(true)
   const businessesSearchValue = useRef('')
+  // redesign PE-B2 (inventory D6): a search typed while a request is in flight waits for it instead of being dropped
+  const searchPending = useRef(false)
 
   const [promotionListState, setPromotionListState] = useState({ promotions: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
@@ -84,7 +93,8 @@ export const EnterprisePromotionList = (props) => {
    */
   const getPromotions = async (page, pageSize) => {
     try {
-      setPromotionListState({ ...promotionListState, loading: true })
+      // redesign PE-B2: functional updates, so a record the list just forgot (or changed) is not brought back by a stale copy of the state
+      setPromotionListState(current => ({ ...current, loading: true }))
       let where = null
       const conditions = []
       if (searchValue) {
@@ -140,29 +150,29 @@ export const EnterprisePromotionList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setPromotionListState({ promotions: content.result, loading: false, error: null })
-        setPaginationProps({
-          ...paginationProps,
+        setPaginationProps(current => ({
+          ...current,
           currentPage: content.pagination.current_page,
-          pageSize: content.pagination.page_size === 0 ? paginationProps.pageSize : content.pagination.page_size,
+          pageSize: content.pagination.page_size === 0 ? current.pageSize : content.pagination.page_size,
           totalPages: content.pagination.total_pages,
           totalItems: content.pagination.total,
           from: content.pagination.from,
           to: content.pagination.to
-        })
+        }))
       } else {
-        setPromotionListState({
-          ...promotionListState,
+        setPromotionListState(current => ({
+          ...current,
           loading: false,
           error: content.result
-        })
+        }))
       }
       firstRender.current = false
     } catch (err) {
-      setPromotionListState({
-        ...promotionListState,
+      setPromotionListState(current => ({
+        ...current,
         loading: false,
         error: [err.message]
-      })
+      }))
     }
   }
 
@@ -170,6 +180,8 @@ export const EnterprisePromotionList = (props) => {
    * Method to control the business promotion enabled state
    * @param {Number} promotionId promotion id
    */
+  // redesign PE-B2 (PE-03): RESOLVES its outcome (`{ ok: true }` or `{ ok: false, error }`) for the switch that asked, always frees
+  // `actionState.loading` and replaces the «Loading» toast with the failure. The record in the list is replaced by a new object (inventory D32).
   const handleEnablePromotion = async (promotionId, enabled) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -184,18 +196,23 @@ export const EnterprisePromotionList = (props) => {
       }
       const response = await fetch(`${ordering.root}/offers/${promotionId}`, requestOptions)
       const content = await response.json()
-      if (!content.error) {
-        const _promotions = promotionListState.promotions.filter(promotion => {
-          if (promotion.id === promotionId) {
-            Object.assign(promotion, content.result)
-          }
-          return true
-        })
-        setPromotionListState({ ...promotionListState, promotions: _promotions })
-        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+      if (content.error) {
+        setActionState({ loading: false, error: content.result })
+        showToast(ToastType.Error, translateApiMessage(t, firstMessage(content.result), t('PROMOTION_TOGGLE_FAILED', "We couldn't change this promotion. Try again.")))
+        return { ok: false, error: content.result }
       }
+      setPromotionListState(current => ({
+        ...current,
+        promotions: current.promotions.map(promotion => (promotion.id === promotionId ? { ...promotion, ...content.result } : promotion))
+      }))
+      setActionState({ loading: false, error: null })
+      showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+      return { ok: true }
     } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
+      const error = [err.message]
+      setActionState({ loading: false, error })
+      showToast(ToastType.Error, translateApiMessage(t, err.message, t('PROMOTION_TOGGLE_FAILED', "We couldn't change this promotion. Try again.")))
+      return { ok: false, error }
     }
   }
 
@@ -207,7 +224,7 @@ export const EnterprisePromotionList = (props) => {
 
     const ghostEle = document.createElement('div')
     ghostEle.classList.add('ghostDragging')
-    ghostEle.innerHTML = promotion?.name
+    ghostEle.textContent = promotion?.name
     document.body.appendChild(ghostEle)
     event.dataTransfer.setDragImage(ghostEle, 0, 0)
   }
@@ -270,6 +287,8 @@ export const EnterprisePromotionList = (props) => {
   /**
    * Method to change the rank of transfer category
    */
+  // redesign PE-B2 (PE-14, inventory D16): RESOLVES `{ ok, error }`, says «Priority updated» (main said «Category updated»), frees
+  // `actionState.loading` and asks for the current page again, so the rows that moved over show the ranks the API gave them.
   const handleChangeCategoryRank = async (transferCategoryId, params) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -284,20 +303,65 @@ export const EnterprisePromotionList = (props) => {
       }
       const response = await fetch(`${ordering.root}/offers/${transferCategoryId}`, requestOptions)
       const { error, result } = await response.json()
-      if (!error) {
-        showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
-        const _promotions = promotionListState?.promotions.map(promotion => promotion?.id === result?.id ? { ...promotion, rank: result?.rank } : promotion)
-        setPromotionListState({
-          promotions: _promotions,
-          loading: false,
-          error: false
-        })
+      if (error) {
+        setActionState({ loading: false, error: result })
+        showToast(ToastType.Error, translateApiMessage(t, firstMessage(result), t('PROMOTION_PRIORITY_FAILED', "We couldn't change the priority. Try again.")))
+        return { ok: false, error: result }
       }
+      setActionState({ loading: false, error: null })
+      showToast(ToastType.Success, t('PROMOTION_PRIORITY_UPDATED', 'Priority updated'))
+      setPromotionListState(current => ({
+        ...current,
+        promotions: current.promotions.map(promotion => (promotion?.id === result?.id ? { ...promotion, rank: result?.rank } : promotion))
+      }))
+      getPromotions(paginationProps.currentPage, paginationProps.pageSize)
+      return { ok: true }
     } catch (err) {
-      setActionState({
-        loading: false,
-        error: [err.message]
-      })
+      const errors = [err.message]
+      setActionState({ loading: false, error: errors })
+      showToast(ToastType.Error, translateApiMessage(t, err.message, t('PROMOTION_PRIORITY_FAILED', "We couldn't change the priority. Try again.")))
+      return { ok: false, error: errors }
+    }
+  }
+
+  /**
+   * Method to delete a promotion from the list (the row menu)
+   * @param {Object} promotion promotion to delete
+   */
+  // redesign PE-B2 (PE-07): the same request the editor sends (`DELETE offers/:id`), then the list and the totals forget it and the page is
+  // asked for again (the one before when this one is left empty). Resolves `{ ok }` or `{ ok: false, error }`: the page's confirmation
+  // shows the error inside itself.
+  const handleDeletePromotionFromList = async (promotion) => {
+    const promotionId = promotion?.id
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/offers/${promotionId}`, requestOptions)
+      const content = await response.json()
+      if (content.error) {
+        hideToast?.() // redesign (row 81, review r1 R10): the «Loading» toast must not outlive a failed delete
+        setActionState({ loading: false, error: content.result })
+        return { ok: false, error: content.result }
+      }
+      setActionState({ loading: false, error: null })
+      showToast(ToastType.Success, t('OFFER_DELETED', 'Offer deleted'))
+      const remaining = promotionListState.promotions.filter(item => item.id !== promotionId).length
+      handleSuccessDeletePromotion(promotionId)
+      const currentPage = Number(paginationProps.currentPage) || 1
+      getPromotions(remaining === 0 && currentPage > 1 ? currentPage - 1 : currentPage, paginationProps.pageSize)
+      return { ok: true }
+    } catch (err) {
+      hideToast?.()
+      const error = [err.message]
+      setActionState({ loading: false, error })
+      return { ok: false, error }
     }
   }
 
@@ -305,24 +369,24 @@ export const EnterprisePromotionList = (props) => {
    * Method to update the promotion list
    */
   const handleSuccessUpdatePromotions = (updatedPromotions) => {
-    setPromotionListState({
-      ...promotionListState,
+    setPromotionListState(current => ({
+      ...current,
       promotions: updatedPromotions
-    })
+    }))
   }
 
   /**
    * Method to add the promotion in the promotion list
    * @param {Object} promotion promotion to add
    */
+  // redesign PE-B2 (inventory D16): the pager reads `totalItems`; main wrote a `total` nobody reads
   const handleSuccessAddPromotion = (promotion) => {
-    const promotions = [...promotionListState.promotions, promotion]
-    setPaginationProps({
-      ...paginationProps,
-      to: paginationProps?.to + 1,
-      total: paginationProps?.total + 1
-    })
-    setPromotionListState({ ...promotionListState, promotions })
+    setPaginationProps(current => ({
+      ...current,
+      to: (current?.to ?? 0) + 1,
+      totalItems: (current?.totalItems ?? 0) + 1
+    }))
+    setPromotionListState(current => ({ ...current, promotions: [...current.promotions, promotion] }))
   }
 
   /**
@@ -330,12 +394,12 @@ export const EnterprisePromotionList = (props) => {
    * @param {Number} promotionId promotion to delete
    */
   const handleSuccessDeletePromotion = (promotionId) => {
-    const promotions = promotionListState.promotions.filter(promotion => promotion.id !== promotionId)
-    setPaginationProps({
-      ...paginationProps,
-      total: paginationProps?.total - 1
-    })
-    setPromotionListState({ ...promotionListState, promotions })
+    setPaginationProps(current => ({
+      ...current,
+      to: Math.max((current?.to ?? 0) - 1, 0),
+      totalItems: Math.max((current?.totalItems ?? 0) - 1, 0)
+    }))
+    setPromotionListState(current => ({ ...current, promotions: current.promotions.filter(promotion => promotion.id !== promotionId) }))
   }
 
   /**
@@ -457,6 +521,44 @@ export const EnterprisePromotionList = (props) => {
     }
   }
 
+  /**
+   * Method to get the id of EVERY business of the project, or of every business the current search finds (owner decision 14 B:
+   * «Select all» of the editor is not the loaded page). Ids only, every page at the API maximum, with the same name filter as
+   * `getBusinesses` (the search the list was last asked for) in each branch. Rejects with the first failing page's message.
+   */
+  const getAllBusinessIds = async () => {
+    const search = String(businessesSearchValue.current ?? '').trim()
+    const conditions = search
+      ? [{ attribute: 'name', value: { condition: 'ilike', value: encodeURI(`%${search}%`) } }]
+      : []
+    // an API error without text gives an empty message: the caller says its own (translated) text
+    const failure = (result) => new Error(firstMessage(result) || '')
+    const idsOf = (list) => (Array.isArray(list) ? list : []).map(business => business.id)
+
+    if (user?.level === 0) {
+      const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+      }
+      const whereParam = conditions.length ? `&where=${JSON.stringify({ conditions, conector: 'AND' })}` : ''
+      const { error, result } = await fetchAllPages(`${ordering.root}/backoffice/businesses?params=id${whereParam}`, requestOptions)
+      if (error) throw failure(result)
+      return idsOf(result)
+    }
+
+    const getPage = async (page) => {
+      let endpoint = ordering.setAccessToken(token).businesses().select(['id']).asDashboard()
+      if (conditions.length) endpoint = endpoint.where({ conditions, conector: 'AND' })
+      const { content } = await endpoint.get({ query: { page, page_size: BUILDER_MAX_PAGE_SIZE } })
+      if (content?.error) throw failure(content.result)
+      return content
+    }
+    const first = await getPage(1)
+    const totalPages = Number(first?.pagination?.total_pages) || 1
+    const rest = await Promise.all(Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => getPage(index + 2)))
+    return [first, ...rest].flatMap(content => idsOf(content?.result))
+  }
+
   const searchBusinesses = (searchVal) => {
     businessesSearchValue.current = searchVal ?? ''
     getBusinesses(1, businessesPaginationProps.pageSize, searchVal ?? '')
@@ -470,10 +572,21 @@ export const EnterprisePromotionList = (props) => {
     getBusinesses(1, pageSize, businessesSearchValue.current)
   }
 
+  // redesign PE-B2 (inventory D6): a search typed while a request is out is kept (the latest value) and runs when that request ends
   useEffect(() => {
-    if (promotionListState.loading) return
+    if (promotionListState.loading) {
+      searchPending.current = true
+      return
+    }
+    searchPending.current = false
     getPromotions(firstRender.current ? paginationProps.currentPage : 1, paginationProps.pageSize)
   }, [searchValue])
+
+  useEffect(() => {
+    if (promotionListState.loading || !searchPending.current) return
+    searchPending.current = false
+    getPromotions(1, paginationProps.pageSize)
+  }, [promotionListState.loading])
 
   useEffect(() => {
     getSites()
@@ -491,6 +604,7 @@ export const EnterprisePromotionList = (props) => {
             businessesList={businessesList}
             businessesPaginationProps={businessesPaginationProps}
             searchBusinesses={searchBusinesses}
+            getAllBusinessIds={getAllBusinessIds}
             handleChangeBusinessPage={handleChangeBusinessPage}
             handleChangeBusinessPageSize={handleChangeBusinessPageSize}
             paymethodsState={paymethodsState}
@@ -507,6 +621,8 @@ export const EnterprisePromotionList = (props) => {
             handleDragEnd={handleDragEnd}
             isPromotionBottom={isPromotionBottom}
             handleEnablePromotion={handleEnablePromotion}
+            handleChangeCategoryRank={handleChangeCategoryRank}
+            handleDeletePromotionFromList={handleDeletePromotionFromList}
             handleSuccessUpdatePromotions={handleSuccessUpdatePromotions}
             handleSuccessAddPromotion={handleSuccessAddPromotion}
             handleSuccessDeletePromotion={handleSuccessDeletePromotion}

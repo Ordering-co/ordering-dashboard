@@ -24,7 +24,7 @@ export const HeaderSection = styled.div`
 
 export const HeaderTitle = styled.p`
   color: ${(props) => props.theme.colors.headingColor};
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   font-weight: bold;
   margin: 0px;
   text-transform: capitalize;
@@ -64,14 +64,14 @@ export const InfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;

@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b3-invoices-pdf-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b3-invoices-pdf-businesspaymentinvoicedetail-downloadbutton-root-12px-4f0202",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DownloadButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentinvoicedetail-errorwrapper-root-14px-86da88",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "ErrorWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-headercontainer-h1-20px-20bc68",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "HeaderContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-paymenthistorysection-h3-16px-c39468",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "PaymentHistorySection",
+      "property": "font-size",
+      "context": "h3",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-paymenthistorysection-p-13px-5fcf60",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "PaymentHistorySection",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-businessnamewrapper-h1-18px-e161aa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "BusinessNameWrapper",
+      "property": "font-size",
+      "context": "h1",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-table-th-td-14px-88a0a2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th, td",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-emptystate-p-14px-d2b69e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-viewmodecard-h3-14px-db5c78",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "ViewModeCard",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-viewmodecard-p-12px-20c946",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "ViewModeCard",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-methodselectorwrapper-label-18px-b76556",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "MethodSelectorWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-methodselectorwrapper-select-14px-12362c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "MethodSelectorWrapper",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-calendarsection-label-18px-f70dab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "CalendarSection",
+      "property": "font-size",
+      "context": "> label",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-yearselector-span-18px-8f085e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "YearSelector",
+      "property": "font-size",
+      "context": "span",
+      "match": "18px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-monthcard-root-14px-94e2d2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "MonthCard",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-periodinfotext-span-label-12px-a58f44",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "PeriodInfoText",
+      "property": "font-size",
+      "context": "span.label",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-periodinfotext-span-dates-14px-510f24",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "PeriodInfoText",
+      "property": "font-size",
+      "context": "span.dates",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-downloadbutton-root-14px-1f570d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "DownloadButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-calendarhint-root-14px-0a238c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "CalendarHint",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-tabbutton-root-14px-91097a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "TabButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-businesspaymentreports-paginationwrapper-span-14px-12a892",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "PaginationWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b3-invoices-pdf-eatstreetreportdetail-actionbutton-root-13px-f6c163",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/EatStreetReportDetail/styles.js",
+      "component": "ActionButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-detailcontainer-root-12px-b7d507",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DetailContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-detailheader-h1-20px-d5c81b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DetailHeader",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-detailheader-p-12px-8d8a99",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DetailHeader",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-periodlabel-root-10px-9c79f9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "PeriodLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-periodvalue-root-13px-cf2a4d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "PeriodValue",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-summarylabel-root-10px-b418b3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "SummaryLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-summaryvalue-root-16px-7282b1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "SummaryValue",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-sectiontitle-root-14px-4d9900",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "SectionTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-daytitle-root-12px-d1ff8a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DayTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-datatable-root-11px-351a83",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "DataTable",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-feegroup-root-11px-134ce9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "FeeGroup",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-feename-root-11px-7494f8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "FeeName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-feeamount-root-11px-0b22d4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "FeeAmount",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-countlabel-root-10px-28815d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "CountLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-totalslabel-root-11px-dbee04",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "TotalsLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-totalsvalue-root-11px-ec7aae",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "TotalsValue",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-transferrow-span-13px-e8ec86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "TransferRow",
+      "property": "font-size",
+      "context": "span",
+      "match": "13px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentinvoicedetail-invoicefooter-root-10px-f04f20",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentInvoiceDetail/styles.js",
+      "component": "InvoiceFooter",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "reason": "Este sitio pertenece al subarbol `PrintableContent` de un documento A4, que tiene su propio sistema tipografico: declara una pila de fuentes de sistema en vez de la de la marca, su cuerpo usa hex fijos y no tokens, y once de sus veinte cifras son 10px u 11px, por debajo del piso de la escala gobernada, que es 12px. NO se preserva por una frontera tecnica —las variables CSS SI sobreviven a react-to-print, medido replicando su copyStyles contra el documento real— sino por diseno: migrar solo la mitad que cabe desincronizaria cada par etiqueta/valor (10 con 13, 10 con 16, 11 con 11) dentro de una misma hoja.",
+      "evidence": "Dentro del subarbol PrintableContent: el cuerpo del documento A4."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentreports-businessnamewrapper-h1-svg-0-7em-eb9a50",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "BusinessNameWrapper",
+      "property": "font-size",
+      "context": "h1 > svg",
+      "match": "0.7em",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "BusinessNameWrapper h1 > svg: el glifo de flecha del selector de negocio, a 0.7em del h1."
+    },
+    {
+      "id": "b3-invoices-pdf-pres-businesspaymentreports-viewmodecard-root-inherit-ac9e90",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessPaymentReports/styles.js",
+      "component": "ViewModeCard",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent receives from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made.",
+      "evidence": "Introducida por la conversion de este lote, declarada en `_newSites`, y el re-indexado falla si no aparece en el inventario fresco o si ya estaba en la instantanea. Solo DOS de los seis componentes convertidos la necesitan: los otros cuatro ya declaran su propio font-size."
+    }
+  ]
+}

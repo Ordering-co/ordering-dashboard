@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLanguage, useApi } from '../../../../../index'
+import { useLanguage } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import {
   Check2 as CheckIcon,
@@ -7,23 +7,27 @@ import {
   XCircle as CancelIcon
 } from 'react-bootstrap-icons'
 import { capitalize } from '../../../utils'
+import {
+  ANDROID_REQUIRED_FIELDS,
+  IOS_NO_MERCHANT_CODES,
+  IOS_REQUIRED_FIELDS
+} from '../AppEditor/buildReadiness'
 
 /**
  * The `utilities` function in the JavaScript code provides utility functions related to app building,
  * version checking, and status display.
- * @returns The `utilities` function is returning an object with three properties: `buildButtons`,
- * `isAppUpdated`, `getQRs`, and `buildStatus`.
+ * @returns The `utilities` function is returning an object with `isAppUpdated`, `buildStatus`, `buildStatusText` and the lists
+ * of required fields. The files of each platform and what the Build dialog offers live in AppEditor/buildTypes.js.
  */
 
 export const buildUtilities = () => {
   const [, t] = useLanguage()
-  const [ordering] = useApi()
   const theme = useTheme()
 
-  const requieredFields = ['name', 'description', 'package', 'version']
-  const androidRequieredFields = [...requieredFields, 'key_alias', 'store_file']
-  const iosRequieredFields = [...requieredFields, 'apple_merchant_id', 'team_id', 'api_key_id', 'api_key_issuer_id', 'api_key_file']
-  const excludeMerchantId = ['app_driver_x', 'app_business_x', 'app_kiosk_x', 'app_business_26', 'app_driver_26']
+  // redesign my-products B1 (M-MP-0x): the lists live in AppEditor/buildReadiness.js (same values, same names).
+  const androidRequieredFields = ANDROID_REQUIRED_FIELDS
+  const iosRequieredFields = IOS_REQUIRED_FIELDS
+  const excludeMerchantId = IOS_NO_MERCHANT_CODES
 
   const textRequieredFields = {
     name: t('NAME', 'Name'),
@@ -52,30 +56,6 @@ export const buildUtilities = () => {
     return 1
   }
 
-  const buildButtons = [
-    { typ: 'android/ios', text: t('BUILD_PRO', 'Build PRO'), mode: { ios: 'app-store', android: 'release' }, type: 'assemble' },
-    { typ: 'android/ios', text: t('BUILD_TEST', 'Build Test'), mode: { ios: 'ad-hoc', android: 'debug' }, type: 'assemble' },
-    { typ: 'android', text: t('BUILD_AAB_PRO', 'Build AAB PRO'), mode: 'release', type: 'bundle' },
-    { typ: 'android', text: t('BUILD_AAB_DEBUG', 'Build AAB Debug'), mode: 'debug', type: 'bundle' }
-  ]
-
-  const getQRs = ({ platform, appId, builtApps }) => {
-    const urlToDownload = `${ordering.root}/builder/apps/${appId}/downloads`
-    const list = {
-      android: [
-        { url: `${urlToDownload}/android/release/apk`, type: 'pro', typeText: t('MODE_PRO', 'Mode Pro'), ext: '.apk', zip: builtApps?.android?.release?.assemble?.zip, qr: builtApps?.android?.release?.assemble?.apk },
-        { url: `${urlToDownload}/android/debug/apk`, type: 'test', typeText: t('MODE_TEST', 'Mode Test'), ext: '.apk', zip: builtApps?.android?.debug?.assemble?.zip, qr: builtApps?.android?.debug?.assemble?.apk },
-        { url: `${urlToDownload}/android/release/aab`, text: t('DOWNLOAD_ANDROID_AAB', 'Download .AAB'), type: 'aabpro', ext: '.aab', zip: builtApps?.android?.release?.bundle?.zip, qr: builtApps?.android?.release?.bundle?.aab },
-        { url: `${urlToDownload}/android/debug/aab`, text: t('DOWNLOAD_ANDROID_AAB', 'Download .AAB'), type: 'aabdebug', ext: '.aab', zip: builtApps?.android?.debug?.bundle?.zip, qr: builtApps?.android?.debug?.bundle?.aab }
-      ],
-      ios: [
-        { url: `${urlToDownload}/ios/app-store/ipa`, type: 'iospro', typeText: t('MODE_PRO', 'Mode Pro'), ext: '.ipa', qr: builtApps?.ios?.['app-store']?.ipa, zip: builtApps?.ios?.['app-store']?.ipa },
-        { url: `${urlToDownload}/ios/ad-hoc/ipa`, type: 'iostest', typeText: t('MODE_TEST', 'Mode Test'), ext: '.ipa', qr: builtApps?.ios?.['ad-hoc']?.ipa, zip: builtApps?.ios?.['ad-hoc']?.ipa }
-      ]
-    }
-    return list[platform]
-  }
-
   const buildStatus = (val) => {
     if (!val) return null
 
@@ -95,18 +75,19 @@ export const buildUtilities = () => {
     }
   }
 
+  // The subtitle names the one Build button of the platform: `_button_` is filled with the button's own label (BuildsSection).
   const buildStatusText = (val) => {
     const appV = val !== 1 && val !== 0 ? val : 0
     const status = {
       1: {
         color: theme.colors.success,
         title: t('YOUR_APP_IS_UPDATED', 'Your app is updated'),
-        subtitle: t('CLICK_OPTIONS_BUILD', 'Click Build Pro, Build Test or Store to re-build.')
+        subtitle: t('BUILD_CLICK_TO_REBUILD', 'Click _button_ to rebuild.')
       },
       0: {
         color: theme.colors.warning,
         title: t('NEW_VERSION_AVAILABLE', 'New version (:version) is available:').replace(':version', appV),
-        subtitle: t('CLICK_OPTIONS_BUILD', 'Click Build Pro, Build Test or Store to re-build.')
+        subtitle: t('BUILD_CLICK_TO_REBUILD', 'Click _button_ to rebuild.')
       }
     }
     return status[val] ?? status[0]
@@ -115,8 +96,6 @@ export const buildUtilities = () => {
   return {
     isAppUpdated,
     buildStatus,
-    buildButtons,
-    getQRs,
     buildStatusText,
     androidRequieredFields,
     iosRequieredFields,
@@ -174,24 +153,6 @@ export const credentialsUtilities = () => {
     roundSizeBToKB,
     formatPlatformName,
     extractFileExtensions
-  }
-}
-
-export const imagesUtilities = () => {
-  const base64ToBlob = ({ img }) => {
-    const base64String = img.split(',')[1]
-    const mimeString = img.split(',')[0].split(':')[1].split(';')[0]
-    const byteCharacters = atob(base64String)
-    const byteArrays = []
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteArrays.push(byteCharacters.charCodeAt(i))
-    }
-    const byteArray = new Uint8Array(byteArrays)
-    return new Blob([byteArray], { type: mimeString })
-  }
-
-  return {
-    base64ToBlob
   }
 }
 

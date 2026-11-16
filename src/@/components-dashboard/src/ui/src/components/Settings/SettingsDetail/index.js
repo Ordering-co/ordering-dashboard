@@ -159,12 +159,13 @@ export const SettingsDetail = (props) => {
         <DescriptionHeader>
           <HeaderIcons>
             {category?.support_url && (
-              <IconButton onClick={() => handleExtraOpen(true)}>
+              <IconButton aria-label={t('MORE_INFO', 'More info')} onClick={() => handleExtraOpen(true)}>
                 <InfoCircle />
               </IconButton>
             )}
             <IconButton
               color='black'
+              aria-label={t('CLOSE', 'Close')}
               onClick={handleClose}
             >
               <XLg />
@@ -189,6 +190,7 @@ export const SettingsDetail = (props) => {
               {width > 576 && !extraInfoOpen && !extraSubCatOpen && (
                 <IconButton
                   color='black'
+                  aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
                   onClick={expandSidebar}
                 >
                   {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -201,7 +203,9 @@ export const SettingsDetail = (props) => {
             }
             {category?.video && (
               <VideoContainer>
-                <MdcPlayCircle onClick={playVideo} />
+                <button type='button' className='od-glyph-overlay' aria-label={t('PLAY_VIDEO', 'Play video')} onClick={playVideo}>
+                  <MdcPlayCircle />
+                </button>
                 <video muted id='categoryVideo' className='w-100 custom-video' playsInline>
                   <source src={category.video} type='video/mp4' />
                   <source src={category.video} type='video/webm' />
@@ -222,6 +226,7 @@ export const SettingsDetail = (props) => {
             <CategoryExtraContent>
               <IconButton
                 color='black'
+                aria-label={t('CLOSE', 'Close')}
                 onClick={() => setExtraInfoOpen(false)}
               >
                 <XLg />
@@ -251,6 +256,7 @@ export const SettingsDetail = (props) => {
             <CategoryExtraContent>
               <IconButton
                 color='black'
+                aria-label={t('CLOSE', 'Close')}
                 onClick={onCloseSettingsList}
               >
                 <XLg />

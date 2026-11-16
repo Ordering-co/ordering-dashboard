@@ -5,16 +5,33 @@ import { useSession } from '../../../contexts/SessionContext'
 import { useSocketInstance, useWebsocket } from '../../../contexts/WebsocketContext'
 import {
   cancelBuilderBuild,
+  createBuilderInstallLink,
   getBuilderBuildDownload,
   getBuilderBuildLog,
   getBuilderLatestBuilds,
   getBuilderPageFailure,
+  listBuilderBuilds,
   requestBuilderBuild,
   retryBuilderBuild
 } from '../builderApi'
 
 /** Statuses after which the attempt no longer changes. */
 const FINISHED_STATUSES = ['successful', 'failed', 'cancelled']
+
+/**
+ * The Builds card shows the latest attempt of each file type (APK, AAB, ad
+ * hoc…), which `/latest` doesn't say: it reads the history, newest first, a
+ * page of 50 at a time, until every type has its attempt or the history ends.
+ * Past ATTEMPT_PAGES pages an older type is left out.
+ */
+const ATTEMPT_PAGE_SIZE = 50
+const ATTEMPT_PAGES = 4
+
+/** The types the card looks for: their latest attempt is somewhere in the history. */
+const ATTEMPT_TYPES = { ios: ['ad-hoc', 'app-store'], android: ['release|assemble', 'release|bundle', 'debug'] }
+const attemptTypeKey = (attempt) => attempt.platform === 'android'
+  ? (attempt.mode === 'debug' ? 'debug' : `release|${attempt.type === 'bundle' ? 'bundle' : 'assemble'}`)
+  : attempt.mode
 
 /** Refusals that mean the screen shows an old state of the builds. */
 const STALE_CODES = ['build.in_progress', 'build.not_latest', 'build.not_retryable', 'build.not_running', 'build.source_missing']
@@ -30,8 +47,10 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
   const socket = useWebsocket()
   const ioSocket = useSocketInstance(socket)
   const [latestState, setLatestState] = useState({ loading: false, platforms: null, error: false })
+  const [attemptsState, setAttemptsState] = useState({ loading: false, attempts: null, error: false })
   const [historyVersion, setHistoryVersion] = useState(0)
   const latestRequest = useRef(0)
+  const attemptsRequest = useRef(0)
   const platformsRef = useRef(null)
   const timers = useRef({})
 
@@ -59,9 +78,42 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
     setLatestState({ loading: false, platforms: response.result?.platforms || {}, error: false })
   }
 
+  /** The newest attempts of the app, enough to find the latest of each file type (ATTEMPT_PAGES). */
+  const getAttempts = async () => {
+    if (!enabled) return
+    const requestId = ++attemptsRequest.current
+    setAttemptsState(prev => ({ ...prev, loading: true, error: false }))
+    const attempts = []
+    const missing = new Set(Object.entries(ATTEMPT_TYPES).flatMap(([platform, types]) => types.map(type => `${platform}|${type}`)))
+    for (let page = 1; page <= ATTEMPT_PAGES && missing.size > 0; page++) {
+      const response = await listBuilderBuilds(ordering, token, productId, appId, { page, pageSize: ATTEMPT_PAGE_SIZE })
+      if (requestId !== attemptsRequest.current) return
+      if (response.error) {
+        const pageFailure = getBuilderPageFailure(response)
+        if (pageFailure) onPageFailure(pageFailure)
+        setAttemptsState(prev => ({ ...prev, loading: false, error: true }))
+        return
+      }
+      const rows = Array.isArray(response.result) ? response.result : []
+      rows.forEach(attempt => {
+        attempts.push(attempt)
+        missing.delete(`${attempt.platform}|${attemptTypeKey(attempt)}`)
+      })
+      const totalPages = Number(response.pagination?.total_pages) || 0
+      if (rows.length < ATTEMPT_PAGE_SIZE || page >= totalPages) break
+    }
+    setAttemptsState({ loading: false, attempts, error: false })
+  }
+
+  /** `/latest` and the attempts of each file type: the card's two sources. */
+  const reloadLatest = () => {
+    getLatest()
+    getAttempts()
+  }
+
   /** The latest state and the history, once a burst of changes settles. */
   const refreshSoon = () => later('refresh', () => {
-    getLatest()
+    reloadLatest()
     reloadHistory()
   }, 1000)
 
@@ -72,7 +124,12 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
   const noteConfigChanged = () => {
     const platforms = platformsRef.current
     if (!platforms) return
-    const mayChange = Object.values(platforms).some(item => item?.successful && item.pending_changes !== true)
+    // a file type whose successful build is still up to date (or the platform's, on an API without the list)
+    const mayChange = Object.values(platforms).some(item => item?.successful && (
+      Array.isArray(item.successful_by_type)
+        ? item.successful_by_type.some(entry => entry.pending_changes !== true)
+        : item.pending_changes !== true
+    ))
     if (mayChange) later('changes', getLatest, 1500)
   }
 
@@ -90,7 +147,7 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
     const pageFailure = getBuilderPageFailure(response)
     if (pageFailure) onPageFailure(pageFailure)
     if (response.errorCodes.some(code => STALE_CODES.includes(code))) {
-      getLatest()
+      reloadLatest()
       reloadHistory()
     }
     return { ok: false, result: null, errorCodes: response.errorCodes, checks: response.checks ?? null }
@@ -119,6 +176,10 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
 
   const getBuildDownload = async (attemptId) =>
     settle(await getBuilderBuildDownload(ordering, token, productId, appId, attemptId))
+
+  /** A link to install the attempt's file on a phone that lasts 24 hours. */
+  const createInstallLink = async (attemptId) =>
+    settle(await createBuilderInstallLink(ordering, token, productId, appId, attemptId))
 
   /**
    * `app_build_change` carries the platform and the changed columns of
@@ -167,23 +228,28 @@ export const useAppBuilds = ({ productId, appId, enabled, onPageFailure }) => {
   useEffect(() => {
     if (!enabled) {
       latestRequest.current++
+      attemptsRequest.current++
       setLatestState({ loading: false, platforms: null, error: false })
+      setAttemptsState({ loading: false, attempts: null, error: false })
       return
     }
-    getLatest()
+    reloadLatest()
   }, [enabled, appId])
 
   useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), [])
 
   return {
     latestState,
-    reloadLatest: getLatest,
+    reloadLatest,
+    attemptsState,
+    reloadAttempts: getAttempts,
     historyVersion,
     noteConfigChanged,
     requestBuild,
     retryBuild,
     cancelBuild,
     getBuildLog,
-    getBuildDownload
+    getBuildDownload,
+    createInstallLink
   }
 }

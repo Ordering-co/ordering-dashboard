@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useValidationFields as useValidationsFieldsController } from '../../contexts/ValidationsFieldsContext'
+import { confirmationPayload } from '../../utils/confirmationPayload'
 
 /**
  * Component to manage user form details behavior without UI component
@@ -86,24 +87,32 @@ export const UserFormDetails = (props) => {
 
   /**
    * Default fuction for user profile workflow
+   * `confirmationToken` is the ConfirmAdmin confirmation_token (action `user_admin_level`), only
+   * present when the save gives or takes level 0 (the caller confirmed it first); it rides on the save request,
+   * never on `formState.changes` (so a failed save never leaves it in the draft the person can still edit).
    */
-  const handleUpdateClick = async (changes, isImage, image) => {
+  const handleUpdateClick = async (changes, isImage, image, confirmationToken) => {
     if (handleButtonUpdateClick) {
-      return handleButtonUpdateClick(userState.result.result, formState.changes)
+      return handleButtonUpdateClick(userState.result.result, formState.changes, confirmationToken)
     }
+    // redesign (row 90, I#23): the merged changes live in a local object; `formState` (React state) is no longer assigned to
+    let currentChanges = formState.changes
+    const targetId = user?.id || userState.result.result.id
+    // P12: level 2 edits others through /professionals, but its own profile through /users/{id} (/professionals only finds level 8)
+    const viaProfessionals = session.user?.level === 2 && Number(targetId) !== Number(session.user?.id)
     try {
       let response
       let content = {}
       setFormState({ ...formState, loading: true })
       if (changes) {
-        formState.changes = { ...formState.changes, ...changes }
+        currentChanges = { ...formState.changes, ...changes }
         if (cellphoneStartZero) {
-          formState.changes.cellphone = cellphoneStartZero
+          currentChanges.cellphone = cellphoneStartZero
         }
       }
       if (isImage) {
-        if (session.user?.level !== 2) {
-          response = await ordering.users(user?.id || userState.result.result.id).save({ photo: image || formState.changes.photo }, {
+        if (!viaProfessionals) {
+          response = await ordering.users(user?.id || userState.result.result.id).save({ photo: image || currentChanges.photo }, {
             accessToken
           })
           content = response.content
@@ -114,23 +123,24 @@ export const UserFormDetails = (props) => {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${session.token}`
             },
-            body: JSON.stringify({ photo: image || formState.changes.photo })
+            body: JSON.stringify({ photo: image || currentChanges.photo })
           }
           const response = await fetch(`${ordering.root}/professionals/${(user?.id || userState.result.result.id)}`, requestOptions)
           content = await response.json()
         }
 
-        const { photo, ...changes } = formState.changes
+        const { photo, ...changes } = currentChanges
 
         setFormState({
           ...formState,
-          changes: content.error ? formState.changes : changes,
+          changes: content.error ? currentChanges : changes,
           result: content,
           loading: false
         })
       } else {
-        if (session.user?.level !== 2) {
-          response = await ordering.users(user?.id || userState.result.result.id).save(formState.changes, {
+        const requestChanges = { ...currentChanges, ...confirmationPayload(confirmationToken) }
+        if (!viaProfessionals) {
+          response = await ordering.users(user?.id || userState.result.result.id).save(requestChanges, {
             accessToken
           })
           content = response.content
@@ -141,7 +151,7 @@ export const UserFormDetails = (props) => {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${session.token}`
             },
-            body: JSON.stringify(formState.changes)
+            body: JSON.stringify(requestChanges)
           }
           const response = await fetch(`${ordering.root}/professionals/${(user?.id || userState.result.result.id)}`, requestOptions)
           content = await response.json()
@@ -149,7 +159,7 @@ export const UserFormDetails = (props) => {
 
         setFormState({
           ...formState,
-          changes: content.error ? formState.changes : {},
+          changes: content.error ? currentChanges : {},
           result: content,
           loading: false
         })
@@ -176,6 +186,7 @@ export const UserFormDetails = (props) => {
     } catch (err) {
       setFormState({
         ...formState,
+        changes: currentChanges,
         result: {
           error: true,
           result: err.message
@@ -323,10 +334,11 @@ export const UserFormDetails = (props) => {
    * @param {string} fieldName Field name
    */
   const showField = (fieldName) => {
+    // redesign UF-B1a (M-UF10): a failed validation-fields request leaves `fields` as `{}`; the field then counts as not configured
+    const field = validationFields.fields?.checkout?.[fieldName]
     return !useValidationFields ||
-      (!validationFields.loading && !validationFields.fields?.checkout[fieldName]) ||
-      (!validationFields.loading && validationFields.fields?.checkout[fieldName] &&
-        validationFields.fields?.checkout[fieldName].enabled)
+      (!validationFields.loading && !field) ||
+      (!validationFields.loading && field && field.enabled)
   }
 
   /**
@@ -334,11 +346,13 @@ export const UserFormDetails = (props) => {
    * @param {string} fieldName Field name
    */
   const isRequiredField = (fieldName) => {
+    // redesign UF-B1a (M-UF10): not configured (or no checkout map at all) is not required
+    const field = validationFields.fields?.checkout?.[fieldName]
     return useValidationFields &&
       !validationFields.loading &&
-      validationFields.fields?.checkout[fieldName] &&
-      validationFields.fields?.checkout[fieldName].enabled &&
-      validationFields.fields?.checkout[fieldName].required
+      !!field &&
+      field.enabled &&
+      field.required
   }
 
   const handleDriverGroupClick = (groupId) => {

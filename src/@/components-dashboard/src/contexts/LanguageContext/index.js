@@ -59,19 +59,16 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
     }
   }
 
+  // `fromSelector` is still accepted (the account selector passes it) but no longer changes anything.
   const setLanguage = async (language, fromSelector) => {
     if (!language || language.id === state.language?.id) return
     try {
-      const _localLanguage = await strategy.getItem('language', true)
-      const { content: { error, result } } = (_localLanguage && fromSelector) ? await ordering.languages().where([{ attribute: 'id', value: language.id }]).get() : await ordering.languages(language.id).save({ default: true })
+      // redesign (D4, M-02): the account selector changes only this user's language; the project default is set in Settings › Languages.
+      const { content: { error, result } } = await ordering.languages().where([{ attribute: 'id', value: language.id }]).get()
 
       if (!error) {
-        let defaultLanguage = {}
-        if (_localLanguage && fromSelector) {
-          defaultLanguage = { id: result[0].id, code: result[0].code, rtl: result[0].rtl }
-        } else {
-          defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
-        }
+        if (!result?.[0]) return
+        const defaultLanguage = { id: result[0].id, code: result[0].code, rtl: result[0].rtl }
         await strategy.setItem('language', defaultLanguage, true)
         const _languageList = state.languageList.filter(_language => {
           if (_language.id === language.id) {
@@ -113,16 +110,14 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
   }
 
   const updateLanguageListState = (updatedLanguage) => {
-    const _languageList = state.languageList.filter(language => {
-      if (language.id === updatedLanguage.id) {
-        Object.assign(language, updatedLanguage)
-      }
-      return true
-    })
-    setState({
-      ...state,
-      languageList: _languageList
-    })
+    // The API keeps a single default language: when one becomes the default, the rest stop being it.
+    setState(prevState => ({
+      ...prevState,
+      languageList: (prevState.languageList || []).map(language => {
+        if (language.id === updatedLanguage.id) return { ...language, ...updatedLanguage }
+        return updatedLanguage.default === true ? { ...language, default: false } : language
+      })
+    }))
   }
 
   /**

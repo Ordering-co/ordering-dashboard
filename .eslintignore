@@ -3,3 +3,5 @@ build
 dist
 env.js
 *.generated.js
+# local evidence written by the redesign tools
+.local/

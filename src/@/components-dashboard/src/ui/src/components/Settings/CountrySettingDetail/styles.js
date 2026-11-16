@@ -14,7 +14,7 @@ export const GeneralTitle = styled.div`
 
   p {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 6px;
   }
@@ -30,12 +30,12 @@ export const FormGroupText = styled.div`
   label {
     font-weight: 600;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
   }
 
   input[type='text'] {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     height: 44px;
     border: 1px solid #DEE2E6;
     box-sizing: border-box;
@@ -45,7 +45,7 @@ export const FormGroupText = styled.div`
 
 export const Required = styled.span`
   font-weight: 600;
-  font-size: 10px;
+  font-size: var(--od-type-secondary-size);
   color: #E63757;
 `
 

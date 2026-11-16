@@ -1,5 +1,4 @@
-import styled, { css } from 'styled-components'
-import { darken } from 'polished'
+import styled from 'styled-components'
 
 export const OrderDetailsHeaderContainer = styled.div`
   > div {
@@ -8,17 +7,19 @@ export const OrderDetailsHeaderContainer = styled.div`
     flex-direction: column-reverse;
     h1 {
       width: 100%;
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
       margin: 0px;
       font-weight: 700;
       word-break: break-word;
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     }
     h2 {
       width: 100%;
-      font-size: 18px;
+      font-size: var(--od-type-section-title-size);
       margin: 0px;
       font-weight: 700;
       word-break: break-word;
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     }
     > div {
       display: flex;
@@ -29,9 +30,18 @@ export const OrderDetailsHeaderContainer = styled.div`
   }
 
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 0px;
     padding: 5px 0;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.headingColor};
+  }
+
+  .order-identifier {
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 
   @media (min-width: 768px) {
@@ -48,24 +58,14 @@ export const OrderDetailsHeaderContainer = styled.div`
 `
 
 export const ButtonGroup = styled.div`
-  > button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+
+  > button,
+  > div {
     position: relative;
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 8px;
-    `
-: css`
-      margin-right: 8px;
-    `}
-    &:last-child {
-      ${props => props.theme?.rtl
-? css`
-        margin-left: 0px;
-      `
-: css`
-        margin-right: 0px;
-      `}
-    }
   }
 
   .clone {
@@ -75,127 +75,71 @@ export const ButtonGroup = styled.div`
 
 export const UreadMessageAlert = styled.span`
   position: absolute;
-  top: -9px;
-
-  ${props => props.theme?.rtl
-? css`
-    left: -13px;
-  `
-: css`
-    right: -13px;
-  `}
+  inset-block-start: -9px;
+  inset-inline-end: -13px;
   svg {
     font-size: 40px;
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
   }
 `
 export const StripeLink = styled.a`
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
   &:hover {
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.hover ?? props.theme.colors.primary};
   }
 `
 export const PrinterSelectContainer = styled.div`
   position: relative;
-  margin-right: 8px;
 `
 
 export const PrinterSelect = styled.div`
   position: absolute;
-  right: 0;
-  min-width: 220px;
+  inset-inline-end: 0;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  z-index: 100;
+  z-index: var(--od-x-layer-sticky);
   padding: 0.5rem 0;
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.12);
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0,0,0,0.12)'};
   z-index: 12;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.white};
 
   button {
-    height: auto;
+    min-height: 44px;
     padding: 0.25rem 1.5rem;
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     border-radius: 0px;
     font-weight: 400;
-    white-space: nowrap;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     &:hover {
-      background-color: #f5f5f5;
+      background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? '#f5f5f5'};
+    }
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+      outline-offset: -2px;
     }
   }
-`
-
-export const TicketSectionsFooter = styled.div`
-  border-top: 1px solid ${props => props.theme.colors.borderColor};
-  margin-top: 0.25rem;
-  padding-top: 0.25rem;
-
-  button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    text-align: start;
-
-    svg {
-      width: 14px;
-      height: 14px;
-      flex: 0 0 auto;
-    }
-  }
-`
-
-export const TicketSectionList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 4px 4px 8px;
-`
-
-export const TicketSectionRow = styled.label`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 0;
-  font-size: 14px;
-  color: ${props => props.theme.colors.headingColor};
-`
-
-export const TicketSectionActions = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-
-  button {
-    min-width: 220px;
-    padding-left: 28px;
-    padding-right: 28px;
-  }
-`
-
-export const TicketSectionHint = styled.p`
-  margin: 0 0 16px;
-  font-size: 13px;
-  color: ${props => props.theme.colors.lightGray};
 `
 
 export const ActionSelectorWrapper = styled.div`
   button {
-    height: 32px;
+    min-width: 44px;
+    height: 44px;
     background: transparent !important;
     border: none;
     padding: 0px 5px;
-    &:active,
-    &:focus {
+    &:active {
       border-color: unset !important;
       box-shadow: none !important;
     }
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary} !important;
+      outline-offset: 2px;
+      box-shadow: none !important;
+    }
     svg {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
       font-size: 20px;
     }
 
@@ -204,20 +148,21 @@ export const ActionSelectorWrapper = styled.div`
     }
 
     &:hover {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary} !important;
     }
     &:active {
-      background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary} !important;
     }
   }
 
   .show {
     button {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary} !important;
     }
     >div {
-      border: 1px solid ${props => props.theme.colors.borderColor};
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+      border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+      box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'};
+      background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.white};
     }
   }
 
@@ -225,14 +170,17 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
-        color: ${props => props.theme.colors.headingColor};
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        font-size: var(--od-type-control-size);
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
         &:active {
-          background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
+          background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary} !important;
         }
       }
       .dropdown-item:last-child {
-        color: #E63757;
+        color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'};
       }
     }
   }

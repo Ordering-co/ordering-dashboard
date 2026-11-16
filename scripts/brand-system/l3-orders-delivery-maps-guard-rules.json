@@ -1,0 +1,1184 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-orders-delivery-maps-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverieslocation-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesLocation/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverieslocation-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesLocation/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WrapperMap",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#EEE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperOnlineDrivers",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperOnlineDrivers",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperOnlineDrivers",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 3px 6px #00000029'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperOnlineDrivers",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapDriverInfo",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDriverImage",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDriverImage",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[1] ?? '0px 3px 6px #00000029'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliveriesmanager-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesManager/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "OrdersListControlProps /* binding-sha256:c192c92e6c1d029a4f70a00c839e088b70e9f9dba120939bd9adb13efc5d2043 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliveriesmanager-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesManager/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverydashboard-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveryDashboard/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "ordersDashboardListProps /* binding-sha256:272a8b035dae9a2dda35524d97cf9642d2e6c3a2c9d2e20a281586c2cdcc8429 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverydashboard-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveryDashboard/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "FilterContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrdersContainer",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverytypeselector-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveryTypeSelector/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-deliverytypeselector-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveryTypeSelector/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-drivermapmarkerandinfo-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverMapMarkerAndInfo/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-drivermapmarkerandinfo-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverMapMarkerAndInfo/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Text",
+            "property": "font",
+            "match": "({ fontWeight }) => fontWeight && css`\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "font",
+            "match": "markerStatusColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation is the shared marker status colour block (custom properties only) and carries no readable-text size; any change reopens classification.",
+            "evidence": "W1-2 (T1-2-4): the block declares only --od-marker-status values per data-status."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WrapperMapMarker",
+            "property": "color-block",
+            "match": "markerStatusColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "W1-2 (T1-2-4): the marker state colour is one shared product-token mapping (mapMarkerShared.js markerStatusColor, keyed by data-status); this exact interpolation is pinned and any change reopens review.",
+            "evidence": "Both markers read --od-marker-status from the same shared block, whose delayed, offline, busy and available values are var(--od-*) status tokens; the accessible name still carries the state in text."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-top",
+            "match": "solid 22px var(--od-marker-status)",
+            "context": "&:after",
+            "count": 1,
+            "reason": "W1-2 (T1-2-4): the marker state colour is one shared product-token mapping (mapMarkerShared.js markerStatusColor, keyed by data-status); this exact interpolation is pinned and any change reopens review.",
+            "evidence": "Both markers read --od-marker-status from the same shared block, whose delayed, offline, busy and available values are var(--od-*) status tokens; the accessible name still carries the state in text."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-left",
+            "match": "solid 22px transparent",
+            "context": "&:after",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-right",
+            "match": "solid 22px transparent",
+            "context": "&:after",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverInfo",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverInfo",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverInfo",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverInfo",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 2px 2px #00000029'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color-block",
+            "match": "({ fontWeight }) => fontWeight && css`\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driverselector-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverSelector/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "DriversControlProps /* binding-sha256:1ea2359127f39db2b2a38133e314551cdf9fc62de297495576b799fb88568be9 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driverselector-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverSelector/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "({ isPhoneView }) => isPhoneView && css`\n    width: 100%;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "({ isRemove }) => isRemove && css`\n    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};\n    padding: 3px 10px;\n    font-size: var(--od-type-control-size);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "({ small }) => small && css`\n    padding: ${({ padding }) => padding || '5px 0px'};\n    img {\n      width: 25px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "DriverName",
+            "property": "font",
+            "match": "({ small }) => small && css`\n    font-weight: 400;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapperDriverImage",
+            "property": "font",
+            "match": "({ small }) => small && css`\n    width: 24px;\n    height: 24px;\n    border-radius: 8px;\n    svg {\n      padding: 3px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "({ isPhoneView }) => isPhoneView && css`\n    width: 100%;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "({ isRemove }) => isRemove && css`\n    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};\n    padding: 3px 10px;\n    font-size: var(--od-type-control-size);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "({ small }) => small && css`\n    padding: ${({ padding }) => padding || '5px 0px'};\n    img {\n      width: 25px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverNameContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? '#263238'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverName",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverName",
+            "property": "color-block",
+            "match": "({ small }) => small && css`\n    font-weight: 400;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDriverImage",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDriverImage",
+            "property": "color-block",
+            "match": "({ small }) => small && css`\n    width: 24px;\n    height: 24px;\n    border-radius: 8px;\n    svg {\n      padding: 3px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversdashboard-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversDashboard/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversdashboard-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversDashboard/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversgrouptypeselector-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversGroupTypeSelector/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversgrouptypeselector-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversGroupTypeSelector/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driverslocation-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversLocation/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driverslocation-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversLocation/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WrapperMap",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#EEE'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversmanager-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversManager/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "DriversControlProps /* binding-sha256:629f597b64e55202c80f3f7e7ff5c5b16bd6b9f222ca5c9f114ade419e34784c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-driversmanager-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversManager/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-googlemapsapikeysettingbutton-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/GoogleMapsApiKeySettingButton/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-googlemapsapikeysettingbutton-style-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/GoogleMapsApiKeySettingButton/style.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 8px;\n  `\n    : css`\n    margin-right: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains only rtl margin composition and no readable-text size; any change reopens classification.",
+            "evidence": "Main (41497d0d..the dashboard,  settings hub) replaced the API-key modal with this banner; the guard pins main literals as shipped."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 8px;\n  `\n    : css`\n    margin-right: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact expression comes from main's Maps-key WarningBanner (, 5051998d); it is pinned as shipped by main and any change reopens review.",
+            "evidence": "Main (41497d0d..the dashboard,  settings hub) replaced the API-key modal with this banner; the guard pins main literals as shipped."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-interactordermarker-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/InterActOrderMarker/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-interactordermarker-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/InterActOrderMarker/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Text",
+            "property": "font",
+            "match": "({ fontWeight }) => fontWeight && css`\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The delivery and maps typography inventory pins expression, context and cardinality while readable sizes use central roles."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "font",
+            "match": "markerStatusColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation is the shared marker status colour block (custom properties only) and carries no readable-text size; any change reopens classification.",
+            "evidence": "W1-2 (T1-2-4): the block declares only --od-marker-status values per data-status."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WrapperMapMarker",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "color-block",
+            "match": "markerStatusColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "W1-2 (T1-2-4): the marker state colour is one shared product-token mapping (mapMarkerShared.js markerStatusColor, keyed by data-status); this exact interpolation is pinned and any change reopens review.",
+            "evidence": "Both markers read --od-marker-status from the same shared block, whose delayed, offline, busy and available values are var(--od-*) status tokens; the accessible name still carries the state in text."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-top",
+            "match": "solid 22px var(--od-marker-status)",
+            "context": "&:after",
+            "count": 1,
+            "reason": "W1-2 (T1-2-4): the marker state colour is one shared product-token mapping (mapMarkerShared.js markerStatusColor, keyed by data-status); this exact interpolation is pinned and any change reopens review.",
+            "evidence": "Both markers read --od-marker-status from the same shared block, whose delayed, offline, busy and available values are var(--od-*) status tokens; the accessible name still carries the state in text."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-left",
+            "match": "solid 22px transparent",
+            "context": "&:after",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperMapMarker",
+            "property": "border-right",
+            "match": "solid 22px transparent",
+            "context": "&:after",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MapMarkerImgStyled",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContainer",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContainer",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[2] ?? '0px 2px 2px #00000029'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Text",
+            "property": "color-block",
+            "match": "({ fontWeight }) => fontWeight && css`\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-logistics-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Logistics/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "logisticsProps /* binding-sha256:f23bc2196a118b15f29b0b4685b5a5d1a753bc8e846379efa01d5de01223fafc */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-orders-delivery-maps-orders-logistics-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Logistics/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BubbleConsole",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, status, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The delivery and maps semantic inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    }
+  ]
+}

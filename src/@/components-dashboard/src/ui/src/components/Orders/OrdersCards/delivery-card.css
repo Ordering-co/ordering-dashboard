@@ -1,0 +1,235 @@
+/*
+ * redesign deliveries F2-B1 (decisions 4, 5 and 8; DV-02, DV-03, DV-08, DV-10): the dispatch card of /deliveries, three lines.
+ *   1. identity and state: #number, status (P/Status), SLA in text (P/SlaBadge, from time_status), the delay figure, neutral.
+ *   2. the trip: store logo, store, city, arrow, the customer's destination; then the hour.
+ *   3. the driver (avatar, name, call) or «Unassigned» with «Assign»; «View details» at the end.
+ * Values come from --od-* and --od-x-* only (literal guard: src/__tests__/tools/productLiteralGuard.test.js). Logical
+ * properties only, so right-to-left needs no second set of rules. No fixed heights: the card is as tall as its three lines.
+ */
+.odc-dcard {
+  /* its own width decides the phone layout of its lines */
+  container: odc-dcard / inline-size;
+  position: relative;
+  display: grid;
+  gap: 0;
+  min-inline-size: 0;
+  margin-block-end: var(--od-space-2);
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  transition: background-color var(--od-duration-base) var(--od-ease-standard);
+}
+
+/* the mouse and the touch act on the card (OrdersCards handles the click), so its text can be selected and copied */
+.odc-dcard:not([data-skeleton]) { cursor: pointer; }
+
+@media (hover: hover) {
+  .odc-dcard:where(:not([data-skeleton], [data-active], [data-new])):hover { background: var(--od-x-hover); }
+}
+
+/* DV-08: a soft highlight for the 2 seconds after the order arrives by socket; no entrance animation */
+.odc-dcard[data-new] { background: var(--od-action-soft); }
+
+/* decision 5: the card chosen for the map. Not only colour: aria-pressed on its button says it, and so does the side indicator. */
+.odc-dcard[data-active] { background: var(--od-action-soft); }
+.odc-dcard[data-active]::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  background: var(--od-action);
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-dcard { transition: none; }
+}
+
+/* The selection for the map, for the keyboard and for assistive technology: a pressed button laid over the card that the
+   pointer goes through. Whatever acts on its own (the action controls) sits above it. */
+.odc-dcard-select {
+  position: absolute;
+  inset: 0;
+  z-index: var(--od-x-layer-raised);
+  inline-size: 100%;
+  min-block-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  pointer-events: none;
+}
+
+.odc-dcard-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-dcard-action {
+  position: relative;
+  z-index: calc(var(--od-x-layer-raised) + 1);
+}
+
+.odc-dcard-line {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Line 1 */
+.odc-dcard-l1 { min-block-size: var(--od-x-badge-height); }
+
+/* redesign deliveries R1 (finding 5): one row at every width, so the ETA figure never drops to a line of its own (the card stays ~76px at
+   1024, decision 4). It replaces F2 integration's wrap: what gives way in a narrow column is the status text (ellipsis, full text in title),
+   not the layout. The gap is the tighter one. */
+.odc-dcard-l1 { flex-wrap: nowrap; gap: var(--od-x-space-1-5); }
+
+.odc-dcard-l1 > .odc-status {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-dcard-l1 > .odc-status > :not(.odc-dot) {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-dcard-l1 > .odc-badge,
+.odc-dcard-l1 > .odc-sla,
+.odc-dcard-l1 > .odc-dcard-unread { flex: none; }
+
+.odc-dcard-id {
+  flex: none;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* the delay figure, neutral: the colour belongs to the SLA badge, which follows the server (decision 8) */
+.odc-dcard-eta {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  white-space: nowrap;
+}
+
+.odc-dcard-unread {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--od-x-count-height);
+  block-size: var(--od-x-count-height);
+  padding-inline: var(--od-x-space-1-5);
+  border-radius: var(--od-radius-control);
+  background: var(--od-action-soft);
+  /* a count is not the primary action: the product's action text colour, not the tenant's */
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* Line 2 */
+.odc-dcard-trip { min-block-size: var(--od-x-avatar); flex-wrap: wrap; }
+
+.odc-dcard-route {
+  display: flex;
+  /* half the line to start with: a regular order keeps the hour beside the trip, a catering order (two dates and a pod) sends it to a second row */
+  flex: 1 1 50%;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-dcard-store,
+.odc-dcard-city,
+.odc-dcard-dest,
+.odc-dcard-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* redesign deliveries R1 (finding 5): who gives way first when the route is short (1024: 400px column). The city yields first, then the
+   store; the destination does not shrink (its zipcode stays whole) and only stops at half the route when it is very long. */
+.odc-dcard-store { flex: 0 1 auto; font-weight: var(--od-font-weight-medium); }
+
+.odc-dcard-city { flex: 0 100 auto; color: var(--od-text-muted); }
+
+.odc-dcard-dest {
+  flex: 0 0 auto;
+  max-inline-size: 50%;
+  color: var(--od-text-muted);
+}
+
+.odc-dcard-route > .odc-icon { flex: none; color: var(--od-text-muted); }
+
+.odc-dcard-when {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--od-space-1) var(--od-space-3);
+  margin-inline-start: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* Line 3 */
+.odc-dcard-driver { min-block-size: var(--od-x-avatar); }
+
+.odc-dcard-who {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-dcard-name { flex: 0 1 auto; font-weight: var(--od-font-weight-medium); }
+
+.odc-dcard-company {
+  flex: 0 100 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dcard-unassigned { flex: none; color: var(--od-text-muted); }
+
+/* the call control is a link (tel:) drawn with the button classes of Product */
+.odc-dcard a.odc-btn { text-decoration: none; }
+
+/*  (review R2): on a phone line 1 in one row left the status at «Accept…» (55 of 138px at 390) and the trip cut the
+   store, and a phone cannot show `title`. Under 768px of viewport line 1 wraps (the ETA figure, pushed to the end, drops to its
+   own row) and the trip takes its whole row, the hour under it, as a catering order already does. The desktop column keeps
+   decision 4 and R1 finding 5. Review of : only a narrow card (under 480px) changes; a 735px card at 767px of viewport
+   keeps its three lines. */
+@media (max-width: 767px) {
+  @container odc-dcard (max-width: 479px) {
+    .odc-dcard-l1 { flex-wrap: wrap; row-gap: 0; }
+    .odc-dcard-route { flex-basis: 100%; }
+  }
+}
+
+/* loading: the same three lines, so the card does not jump when the orders arrive */
+.odc-dcard[data-skeleton] .odc-dcard-line { min-block-size: var(--od-x-avatar); }
+.odc-dcard[data-skeleton] .odc-dcard-l1 { min-block-size: var(--od-x-badge-height); }

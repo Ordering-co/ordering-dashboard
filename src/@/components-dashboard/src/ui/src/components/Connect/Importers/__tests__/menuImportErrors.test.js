@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mapMenuImportError } from '../menuImportErrors'
+import { mapMenuImportError, readableImportError, MENU_IMPORT_NETWORK_ERROR } from '../menuImportErrors'
 
 const ORDERING_REJECTION_PREFIXED =
   "Failed to send menu to Ordering API: {'error': True, 'result': ['options/3: The external id may not be greater than 255 characters', 'options/4: The external id may not be greater than 255 characters']}"
@@ -107,5 +107,21 @@ describe('mapMenuImportError', () => {
     ).toBe(
       'Ordering updated 2 stores, then reached its API limit. Try again in 45 seconds.'
     )
+  })
+})
+
+// redesign IM-C2 (IM-03, IM-04): a request that never reached the importer says so in words, not «Failed to fetch»
+describe('readableImportError', () => {
+  const t = (_key, fallback) => fallback
+
+  it('turns a network failure (fetch rejects with a TypeError) into a readable message', () => {
+    expect(readableImportError(new TypeError('Failed to fetch'), t, 'Import failed')).toBe(MENU_IMPORT_NETWORK_ERROR)
+    expect(readableImportError(new TypeError('NetworkError when attempting to fetch resource.'), t, 'Import failed')).toBe(MENU_IMPORT_NETWORK_ERROR)
+  })
+
+  it('keeps the message of an API error and falls back when there is none', () => {
+    expect(readableImportError(new Error('Store not found'), t, 'Import failed')).toBe('Store not found')
+    expect(readableImportError(new Error(''), t, 'Import failed')).toBe('Import failed')
+    expect(readableImportError(null, t, 'Import failed')).toBe('Import failed')
   })
 })

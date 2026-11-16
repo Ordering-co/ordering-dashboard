@@ -14,6 +14,13 @@ export const SETTINGS_MAPS_PATH = buildSettingsPath({
   category: 'google_maps'
 })
 
+// redesign (n.º 9, P-DB1): `notification_toast` is edited in Settings > Emails & notifications > Push notifications (rehomed there from dashboard_theme)
+export const SETTINGS_ORDER_ALERTS_PATH = buildSettingsPath({
+  group: 'notifications',
+  category: 'notification',
+  focus: 'notification_toast'
+})
+
 export const PAYMENT_GATEWAY_SETTINGS = {
   stripe: { group: 'payments', category: 'stripe' },
   computop: { group: 'developers', category: 'plugin_computop' }

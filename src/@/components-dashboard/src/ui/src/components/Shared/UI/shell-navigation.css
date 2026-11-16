@@ -1,0 +1,407 @@
+/* Scoped shell navigation. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-shell-layout) {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.od-ui:where(.od-shell-sidebar) {
+  position: fixed;
+  z-index: var(--od-x-layer-chrome);
+  box-sizing: border-box;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-surface);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+  transition: margin-inline-start var(--od-entity-selector-duration) var(--od-entity-selector-easing);
+}
+
+.od-ui:where(.od-shell-sidebar)[data-collapsed] {
+  margin-inline-start: -100vw;
+}
+
+.od-shell-sidebar-inner {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+.od-shell-sidebar-header {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+.od-shell-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.od-shell-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.od-shell-content {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-block: 1px solid var(--od-entity-selector-border);
+  transition: border-color var(--od-entity-selector-duration) var(--od-entity-selector-easing);
+}
+
+.od-shell-user-info {
+  flex-shrink: 0;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger,
+.od-ui:where(.od-shell-sidebar) .od-shell-submenu-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-inline: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+  color: var(--od-entity-selector-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--od-entity-selector-radius-component);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action:hover,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger:hover,
+.od-ui:where(.od-shell-sidebar) .od-shell-submenu-link:hover,
+.od-shell-language:hover {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action.btn-light,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger.btn-light {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+  border-color: var(--od-entity-selector-border);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action.btn-primary,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger.btn-primary,
+.od-ui:where(.od-shell-sidebar) .od-shell-submenu-link[data-active] {
+  color: var(--od-shell-action-foreground);
+  background: var(--od-entity-selector-action);
+  border-color: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action.btn-primary:hover,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger.btn-primary:hover,
+.od-ui:where(.od-shell-sidebar) .od-shell-submenu-link[data-active]:hover {
+  color: var(--od-shell-action-foreground);
+  background: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action svg,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-action > span,
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger > span {
+  margin-inline-start: 15px;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger:focus-visible,
+.od-ui:where(.od-shell-sidebar) .od-shell-action:focus-visible,
+.od-ui:where(.od-shell-sidebar) .od-shell-submenu-link:focus-visible,
+.od-ui:where(.od-shell-sidebar) .od-shell-logo-action:focus-visible,
+.od-ui:where(.od-shell-sidebar) .od-shell-collapse-action:focus-visible,
+.od-ui:where(.od-shell-logout):focus-visible {
+  outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus);
+  outline-offset: var(--od-entity-selector-focus-offset);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger[disabled],
+.od-ui:where(.od-shell-sidebar) .od-shell-action[aria-disabled='true'],
+.od-ui:where(.od-shell-menu-item)[data-disabled-feature],
+.od-ui:where(.od-shell-submenu-link)[data-disabled-feature] {
+  color: var(--od-entity-selector-muted);
+  background: var(--od-entity-selector-border);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger[data-panel-open] {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-menu-trigger.btn-primary[data-panel-open] {
+  color: var(--od-shell-action-foreground);
+  background: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) [data-slot='shell-menu-panel'][hidden] {
+  display: none;
+}
+
+.od-ui:where(.od-shell-sidebar) .upgrade-to-pro-button {
+  color: var(--od-entity-selector-action-content);
+  background: var(--od-entity-selector-action-soft);
+  border-color: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) .upgrade-to-pro-button:hover {
+  color: var(--od-shell-action-foreground);
+  background: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) .ai-agents-sidebar-button,
+.od-ui:where(.od-shell-sidebar) .ai-agents-sidebar-button:hover {
+  color: var(--od-shell-action-foreground);
+  background: var(--od-entity-selector-action);
+  border-color: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-shell-sidebar) .ai-agents-sidebar-button span,
+.od-ui:where(.od-shell-sidebar) .ai-agents-sidebar-button svg {
+  color: currentColor;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-logo-action {
+  width: 150px;
+  height: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  color: var(--od-entity-selector-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--od-entity-selector-radius-component);
+  cursor: pointer;
+}
+
+.od-ui:where(.od-shell-sidebar) .od-shell-logo-action > img {
+  width: 100%;
+  max-width: 150px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.od-ui.od-icon-button.od-shell-collapse-action {
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  padding-inline: 5px;
+  color: var(--od-entity-selector-muted);
+  background: transparent;
+  border-radius: var(--od-entity-selector-radius-component);
+}
+
+.od-ui.od-icon-button.od-shell-collapse-action:hover {
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+}
+
+.od-ui.od-icon-button.od-shell-collapse-action:active {
+  color: var(--od-entity-selector-action-content);
+  background: var(--od-entity-selector-action-soft);
+}
+
+.od-ui.od-icon-button.od-shell-collapse-action > svg {
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+}
+
+.od-shell-user-info > button:first-child,
+.od-shell-user-info > a:first-child,
+.od-shell-user-info > .sidebar-footer-link,
+.od-shell-user-info > .ai-agents-sidebar-button {
+  margin-block: 5px;
+  padding-inline-start: 8px;
+}
+
+.od-shell-user-info > button:first-child span,
+.od-shell-user-info > a:first-child span,
+.od-shell-user-info > .sidebar-footer-link span,
+.od-shell-user-info > .ai-agents-sidebar-button span {
+  max-width: calc(100% - 40px);
+  margin-inline-start: 10px;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.od-ui:where(.od-shell-menu-item) {
+  min-width: 0;
+  margin-block: 5px;
+}
+
+.od-ui:where(.od-shell-menu-item) > span {
+  display: block;
+  padding: 20px;
+  color: var(--od-entity-selector-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+.od-shell-menu-content {
+  padding-block: 5px;
+}
+
+.od-ui:where(.od-shell-submenu-link) {
+  padding-block: 5px;
+  padding-inline-start: 40px;
+  overflow: hidden;
+  color: var(--od-entity-selector-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.od-shell-language {
+  position: relative;
+  min-height: var(--od-entity-selector-touch-target);
+  border-radius: var(--od-entity-selector-radius-component);
+}
+
+.od-shell-language .options > div {
+  font-size: 14px;
+}
+
+/* Assistant footer link badges (AI / stage). Not spans: the footer link rules style every span. */
+.od-shell-ai-badge {
+  flex-shrink: 0;
+  align-self: center; /* main: badges centred vertically */
+  padding: 2px 6px;
+  margin-inline: auto 4px;
+  border-radius: 4px;
+  color: var(--od-shell-action-foreground);
+  font-size: var(--od-type-secondary-size);
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0.04em;
+  background-color: var(--od-entity-selector-action);
+}
+
+.od-shell-ai-badge[data-active] {
+  color: var(--od-entity-selector-action);
+  background-color: var(--od-shell-action-foreground);
+}
+
+.od-shell-stage-badge {
+  margin-inline: 0 8px;
+  color: #fff;
+  background-color: var(--od-shell-stage-color);
+}
+
+.od-shell-stage-badge[data-active] {
+  color: var(--od-shell-stage-color);
+  background-color: #fff;
+}
+
+.od-ui:where(.od-shell-logout) {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 8px);
+  min-height: var(--od-entity-selector-touch-target);
+  color: var(--od-entity-selector-text);
+  background: transparent;
+  border-color: transparent;
+  font: inherit;
+}
+
+.od-ui:where(.od-shell-logout) > span {
+  margin-inline-start: 15px;
+}
+
+.od-ui:where(.od-shell-sidebar) img[data-rounded] {
+  border-radius: 999px;
+}
+
+@media print {
+  .od-ui:where(.od-shell-sidebar) {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .od-ui:where(.od-shell-sidebar) {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    width: 240px;
+  }
+
+  .od-ui:where(.od-shell-sidebar)[data-collapsed] {
+    margin-inline-start: -240px;
+  }
+
+  .od-shell-sidebar-inner {
+    position: sticky;
+    top: 0;
+    border-inline-end: 1px solid var(--od-entity-selector-border);
+  }
+}
+
+@media (max-height: 520px) {
+  .od-ui:where(.od-shell-sidebar) {
+    overflow-y: hidden;
+  }
+
+  .od-shell-main {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .od-shell-content {
+    flex: 0 0 auto;
+    min-height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .od-shell-user-info {
+    flex: 0 0 auto;
+    padding-bottom: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-shell-sidebar),
+  .od-ui:where(.od-shell-sidebar) *,
+  .od-ui:where(.od-shell-logout) {
+    transition-duration: 0s !important;
+  }
+}

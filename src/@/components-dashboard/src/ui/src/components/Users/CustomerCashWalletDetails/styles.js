@@ -6,12 +6,12 @@ export const WalletBalaceContainer = styled.div`
   flex-direction: column;
   > span {
     &:first-child {
-      font-size: 24px;
+      font-size: var(--od-type-title-size);
       font-weight: 500;
       line-height: 36px;
     }
     &:last-child {
-      font-size: 14px;
+      font-size: var(--od-type-secondary-size);
     }
   }
 `
@@ -19,7 +19,7 @@ export const SectionContainer = styled.div`
   margin-top: 54px;
   margin-bottom: 30px;
   > p {
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 600;
     margin-top: 0;
     margin-bottom: 22px;
@@ -34,13 +34,13 @@ export const FormController = styled.div`
   margin-bottom: 26px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
 
   input,
   textarea {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   input::-webkit-outer-spin-button,

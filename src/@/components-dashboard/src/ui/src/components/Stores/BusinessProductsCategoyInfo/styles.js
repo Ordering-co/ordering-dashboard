@@ -35,7 +35,7 @@ export const BusinessEnableWrapper = styled.div`
 
   span {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-control-size);
 
     ${props => props.theme?.rtl
 ? css`
@@ -113,13 +113,13 @@ export const CategoryNameWrapper = styled.div`
 
   label {
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
     margin-bottom: 12px;
   }
 
   input, textarea {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     width: 100%;
   }
 `
@@ -134,7 +134,7 @@ export const ParentCategorySelectWrapper = styled.div`
   margin-top: 30px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 12px;
   }
   .select {
@@ -149,7 +149,7 @@ export const Option = styled.div`
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   color: ${props => props.theme.colors.secundaryContrast};
 `
 export const RightHeader = styled.div`
@@ -201,7 +201,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
@@ -215,7 +215,7 @@ export const InfoConatiner = styled.div`
   overflow-x: hidden;
   h1 {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
   }
   @media (min-width: 1000px) {
@@ -232,8 +232,13 @@ export const GenerateButtonWrapper = styled.div`
   }
 `
 export const SkipButton = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: 600;
   ${props => props.theme?.rtl
 ? css`
@@ -245,6 +250,17 @@ export const SkipButton = styled.div`
 
   &:hover {
     color: ${props => props.theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
   }
 `
 
@@ -321,7 +337,7 @@ export const SwitchWrapper = styled.div`
   margin-top: 35px;
 
   > span {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
 
     ${props => props.theme?.rtl
@@ -346,7 +362,7 @@ export const ColorWrapper = styled.div`
 
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 7px;
   }
 `
@@ -354,7 +370,7 @@ export const ColorWrapper = styled.div`
 export const ShapeWrapper = styled(ColorWrapper)`
   > label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 

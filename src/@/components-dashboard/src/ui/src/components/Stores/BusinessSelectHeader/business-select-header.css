@@ -1,0 +1,130 @@
+/*
+ * redesign  · BusinessSelectHeader (the store selector of /stores/products and /appointments) on Product.
+ * The panel is still the absolutely positioned dropdown at the start of its parent that the legacy styled panel was
+ * (it has no `top`: it sits where it falls, under the trigger), so both consumers lay out as before.
+ * Values are --od-* / --od-x-* tokens only (src/__tests__/tools/productLiteralGuard.test.js). Logical properties only (C17).
+ */
+
+.odc-bsh {
+  position: absolute;
+  inset-inline-start: 0;
+  /* 325px as before: the popover width (260px) and a quarter, the same width as the orders pickers (filter-popover.css) */
+  inline-size: calc(var(--od-x-popover) * 1.25);
+  padding: var(--od-space-2);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  /* Was 999: over the page and its sticky bars, under the app chrome (sidebar and its menus). */
+  z-index: calc(var(--od-x-layer-sticky) + 1);
+}
+
+.odc-bsh-content {
+  position: relative;
+  inline-size: 100%;
+}
+
+.odc-bsh-search {
+  display: block;
+  margin-block-end: var(--od-space-1);
+  padding: var(--od-x-space-1-5);
+}
+
+/* A bounded scroll region: 7.5 rows of an option (the 40px logo and 4px above and below), so the half row under the last one says there are more. */
+.odc-bsh-list {
+  display: flex;
+  flex-direction: column;
+  max-block-size: calc((var(--od-x-control-height-lg) + var(--od-space-1) * 2) * 7.5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The whole row is the target: 48px (the 40px logo and 4px above and below), over the 44px of a phone. */
+.odc-bsh-option {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-x-space-1-5);
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: inherit;
+  font-family: var(--od-font-sans);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bsh-option:hover { background: var(--od-x-hover); }
+
+.odc-bsh-option:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The P/ Avatar (business tile, with a placeholder when there is no logo) at the 40px the row always had. */
+.odc-bsh-logo.odc-avatar {
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+}
+
+.odc-bsh-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-bsh-name,
+.odc-bsh-city {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+
+.odc-bsh-name {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-bsh-city {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Loading: skeleton rows with the same box as an option so nothing moves when the businesses arrive (first load or a search: the
+   list; loading more: two or three under the rows already there). */
+.odc-bsh-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  box-sizing: border-box;
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+.odc-bsh-skeleton-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bsh .odc-bsh-add {
+  inline-size: 100%;
+  margin-block-start: var(--od-space-2);
+}

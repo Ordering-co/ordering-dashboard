@@ -26,16 +26,18 @@ export const buildInvoicePdfHtml = ({ bodyHtml, logoSrc }) => {
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:DejaVu Sans,sans-serif;color:#333}img{width:150px;height:auto;margin-bottom:15px}</style></head><body>${logoTag}${body}</body></html>`
 }
 
-export const downloadInvoicePdfFromHtml = async ({
+// the PDF without saving it, for the batch (which saves each one, or a .zip, when the person asks); `signal` cancels it
+export const requestInvoicePdf = async ({
   html,
   logoSrc,
   root,
   token,
   fetchFn = fetch,
-  saveBlob = saveInvoicePdfBlob
+  signal
 }) => {
   const response = await fetchFn(`${root}/pdf/html`, {
     method: 'POST',
+    signal,
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -64,5 +66,10 @@ export const downloadInvoicePdfFromHtml = async ({
     response.headers.get('Content-Disposition'),
     'invoice.pdf'
   )
+  return { blob, filename }
+}
+
+export const downloadInvoicePdfFromHtml = async ({ saveBlob = saveInvoicePdfBlob, ...request }) => {
+  const { blob, filename } = await requestInvoicePdf(request)
   saveBlob(blob, filename)
 }

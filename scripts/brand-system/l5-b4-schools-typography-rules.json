@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b4-schools-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b4-schools-schools-schoolstitle-root-20px-94f100",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "SchoolsTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-schools-schools-schoolsheaderactions-button-14px-57bff4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "SchoolsHeaderActions",
+      "property": "font-size",
+      "context": "> button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-textbutton-root-14px-718c49",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "TextButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-schoolmodulepaneltitle-root-22px-bdfd3a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "SchoolModulePanelTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "22px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-schools-schools-schoolmodulepaneltext-root-15px-c0bd2d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "SchoolModulePanelText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "15px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-schools-schools-schoolmodulepanelactions-button-14px-a4f6fa",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "SchoolModulePanelActions",
+      "property": "font-size",
+      "context": "> button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-tab-root-14px-0415a8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-toolbar-label-13px-a486f5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "Toolbar",
+      "property": "font-size",
+      "context": "label",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-toolbar-select-14px-4f4123",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "Toolbar",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b4-schools-schools-table-th-td-13px-302035",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th, td",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-schools-schools-formgrid-label-13px-46b98a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "FormGrid",
+      "property": "font-size",
+      "context": "label",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-formgrid-select-14px-138184",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "FormGrid",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b4-schools-schools-formactions-button-14px-9d32e2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "FormActions",
+      "property": "font-size",
+      "context": "button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-schools-schools-chip-root-12px-776553",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "Chip",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-schools-schools-reportcard-h3-15px-cb6d73",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "ReportCard",
+      "property": "font-size",
+      "context": "h3",
+      "match": "15px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b4-schools-schools-reportcard-p-13px-832f90",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Schools/styles.js",
+      "component": "ReportCard",
+      "property": "font-size",
+      "context": "p",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": []
+}

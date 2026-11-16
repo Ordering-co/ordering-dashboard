@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useLanguage } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { MultiSelect } from '../../../styles/MultiSelect'
+import { SelectOptionContent } from '../../Shared/UI/SelectOption'
+import { useSelectSurface } from '../../Shared/UI/selectPlacement'
 
 import {
   Option,
@@ -27,8 +29,11 @@ export const AdminsSelector = (props) => {
   const theme = useTheme()
   const [adminsMultiOptionList, setAdminsMultiOptionList] = useState([])
   const [searchValue, setSearchValue] = useState(null)
-  const adminsLoading = [{ value: 'default', content: <Option small={small}>{t('LOADING', 'loading')}...</Option> }]
-  const Placeholder = <PlaceholderTitle>{t('SELECT_ADMINISTRATOR', 'Select the administrator')}</PlaceholderTitle>
+  // redesign F2 (C18): inside the orders surfaces an administrator is a round picture of 20px and the name, in a
+  // list that scrolls instead of paging; outside them the legacy rows.
+  const c18 = !!useSelectSurface().fitTrigger
+  const adminsLoading = [{ value: 'default', content: c18 ? <span>{t('LOADING', 'loading')}...</span> : <Option small={small}>{t('LOADING', 'loading')}...</Option> }]
+  const Placeholder = c18 ? t('SELECT_ADMINISTRATOR', 'Select the administrator') : <PlaceholderTitle>{t('SELECT_ADMINISTRATOR', 'Select the administrator')}</PlaceholderTitle>
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pageSize: 5,
@@ -62,6 +67,15 @@ export const AdminsSelector = (props) => {
         _adminList = adminsList?.admins
       }
       const _adminsOptionListTemp = _adminList?.map((admin, i) => {
+        if (c18) {
+          const name = `${admin?.name ?? ''} ${admin?.lastname ?? ''}`.trim()
+          const media = { kind: 'person', name, src: admin.photo }
+          return {
+            value: admin.id,
+            showDisable: true,
+            content: <SelectOptionContent label={name} media={media} />
+          }
+        }
         return {
           value: admin.id,
           showDisable: true,
@@ -82,7 +96,7 @@ export const AdminsSelector = (props) => {
 
       setAdminsMultiOptionList(_adminsOptionListTemp)
     }
-  }, [adminsList, defaultValue, searchValue])
+  }, [adminsList, defaultValue, searchValue, c18])
 
   useEffect(() => {
     if (adminsMultiOptionList?.length) {
@@ -111,9 +125,9 @@ export const AdminsSelector = (props) => {
           searchValue={searchValue}
           handleChangeSearch={(val) => setSearchValue(val)}
           isHidePagecontrol
-          pagination={pagination}
-          handleChangePage={handleChangePage}
-          handleChangePageSize={handleChangePageSize}
+          pagination={c18 ? undefined : pagination}
+          handleChangePage={c18 ? undefined : handleChangePage}
+          handleChangePageSize={c18 ? undefined : handleChangePageSize}
         />
           )
         : (

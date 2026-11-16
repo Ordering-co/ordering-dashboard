@@ -1,0 +1,77 @@
+/*
+ * redesign stores 5.1a · Store details › Information on Product: groups with a heading, a visible label on every
+ * control, the save bar at the foot. Values: --od-* and --od-x-* only. Logical properties.
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick. It sticks at the foot
+ * of the editor panel that scrolls the section.
+ */
+
+.odc-bi-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-6);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-bi-form:focus { outline: none; }
+
+.odc-bi-group {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-bi-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Header image and logo side by side where there is room. */
+.odc-bi-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-control-height) * 9)), 1fr));
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* Phone and mobile side by side where there is room; one column on a phone. */
+.odc-bi-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--od-x-control-height) * 6)), 1fr));
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bi-select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  cursor: pointer;
+}
+
+/* A <select> matches `:read-only`, which paints Field inputs as read-only: an enabled one keeps the input's background. */
+.odc-bi-form .odc-bi-select:not(:disabled) { background: var(--od-bg); }
+.odc-bi-select:disabled { cursor: not-allowed; }
+
+/* The shape group has no frame of its own: its error borrows the Field's look (`.odc-field-error`) below the options. */
+.odc-bi-error {
+  margin-block-start: var(--od-x-space-1-5);
+}
+
+/* The price levels and the ribbon shapes wrap instead of overflowing at 390. */
+.odc-bi-form .odc-radiogroup-options { flex-wrap: wrap; }
+
+/* The browser scrolls a focused field into view without counting the sticky bar: every control keeps a margin at its foot that
+   clears the bar and a gap (the same rule as the Users profile form). */
+.odc-bi-form :is(input, select, textarea, button, [role='switch'], [role='radio']) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

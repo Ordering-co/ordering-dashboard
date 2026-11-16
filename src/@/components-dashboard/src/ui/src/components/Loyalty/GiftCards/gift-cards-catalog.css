@@ -1,0 +1,266 @@
+/*
+ * redesign GC-C (; D5, D6, D7 | GC-05, GC-18) · Gift cards for sale: the catalog in a Product Sheet.
+ * The list of products and the card of one product (GiftCardEditor) share this sheet. From 1100px both show at once (the two panes of
+ * `main`, side by side); below that the card replaces the list and «Back» returns.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+/* ── The sheet: wider only while a card is open next to the list, never more than the window ── */
+.odc-sheet.odc-gcc-sheet[data-side='end'] {
+  max-inline-size: 100vw;
+}
+
+@media (min-width: 1100px) {
+  .odc-sheet.odc-gcc-sheet--wide[data-side='end'] {
+    inline-size: min(calc(var(--od-x-sheet) * 2), 100vw);
+  }
+}
+
+/* The panes carry their own sticky foot, so the body keeps no bottom padding to leave a gap under it. */
+.odc-gcc-sheet .odc-overlay-body {
+  padding-block-end: 0;
+}
+
+/* ── The two panes ── */
+.odc-gcc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-block-size: 100%;
+}
+
+.odc-gcc[data-two-up] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--od-space-5);
+}
+
+.odc-gcc-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  min-block-size: 100%;
+}
+
+.odc-gcc[data-two-up] .odc-gcc-pane-detail {
+  padding-inline-start: var(--od-space-5);
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The foot of each pane stays at the bottom of the sheet while its content scrolls. */
+.odc-gcc-foot {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  margin-block-start: auto;
+  padding-block: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-x-dialog-bg);
+}
+
+.odc-gcc-foot-note {
+  flex: 1 1 100%;
+}
+
+/* ── The notice: Stripe is required, with the way to the settings ── */
+.odc-gcc-notice strong {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* redesign GC-D (R7): the link to the settings is inside the text of the notice, on a line of its own after it, so the text keeps the
+   whole width of the notice in the long languages (it was an `action` of `flex: none` that left the text 31-62px). It is Product's
+   link button (colour, underline, 44px reach on a phone come from `.odc-btn[data-variant='link']`); it may break if the translation
+   is longer than the line. */
+.odc-gcc-notice-link {
+  display: block;
+}
+
+.odc-gcc-link.odc-btn {
+  max-inline-size: 100%;
+  text-align: start;
+  white-space: normal;
+}
+
+/* ── The list of products ── */
+.odc-gcc-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-gcc-list > li {
+  margin: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* A native button across the whole row; the visible box is the row itself (the focus ring is inside it). */
+.odc-gcc-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-block-size: var(--od-x-row-comfortable);
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border: 0;
+  background: transparent;
+  color: var(--od-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-gcc-row:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-gcc-row[aria-current='true'] {
+  background: var(--od-x-selected);
+  box-shadow: inset var(--od-x-indicator) 0 0 var(--od-action);
+}
+
+[dir='rtl'] .odc-gcc-row[aria-current='true'] {
+  box-shadow: inset calc(var(--od-x-indicator) * -1) 0 0 var(--od-action);
+}
+
+.odc-gcc-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-gcc-thumb {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+}
+
+.odc-gcc-thumb img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-gcc-row-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-gcc-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-gcc-row-price {
+  flex: none;
+  color: var(--od-text);
+}
+
+.odc-gcc-chevron {
+  color: var(--od-text-muted);
+}
+
+/* Loading: five ghosts in the shape of a row */
+.odc-gcc-ghost {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+}
+
+.odc-gcc-ghost-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* ── The card of one product ── */
+.odc-gcc-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* : «Back» is the first thing in the sheet's scrolling body (`.odc-overlay-body`: overflow auto, no padding on top), so the part
+   of its 44×44 touch area (Product's `.odc-btn::after`, centred on the 32px button) that reaches above it was clipped and the area
+   measured 38px. With a coarse pointer (the media of Product's touch rule) the head leaves that room: half of what the target adds to the
+   control, from the tokens. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-gcc-detail-head {
+    padding-block-start: calc((var(--od-x-target-coarse) - var(--od-x-control-height)) / 2);
+  }
+}
+
+.odc-gcc-detail-title {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-gcc-detail-title:focus {
+  outline: none;
+}
+
+.odc-gcc-detail-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-gcc-editor {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-gcc-editor-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-gcc-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-gcc-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}

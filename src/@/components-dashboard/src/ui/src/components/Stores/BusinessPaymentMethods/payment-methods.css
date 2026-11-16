@@ -1,0 +1,229 @@
+/*
+ * redesign stores 5.9 · Payment methods: the list of the gateways of a store on P/SectionSplit, and the detail of the one that
+ * is open. The list is the section; the SectionSplit draws the detail's title, X / «‹ Back» and the «⋯» menu.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller, and a legacy fixed SideBar
+ * opened from the detail must not lose its containing block. Prefix: odc-pm-*.
+ */
+
+.odc-pm {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  color: var(--od-text);
+}
+
+/* The detail goes edge to edge of the section; what is above it and the list keep the section's inset */
+.odc-pm-title,
+.odc-paym-tools,
+.odc-pm-list {
+  padding-inline: var(--od-space-4);
+}
+
+.odc-pm-list {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-pm-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* The list side of the SectionSplit: the tools, then the rows */
+.odc-pm-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* Search and Select all */
+.odc-paym-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-paym-search {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+/* A refusal of the list that has no switch to say it under (a non-admin opening a global gateway without keys) */
+.odc-pm-notice {
+  min-inline-size: 0;
+}
+
+/* ── Rows ── */
+.odc-pm-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-pm-row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-pm-row:hover { background: var(--od-x-hover); }
+
+/* The row open in the detail. aria-current says it; the fill and the weight back it up (never colour alone). */
+.odc-pm-row[aria-current='true'] { background: var(--od-x-selected); }
+.odc-pm-row[aria-current='true'] .odc-pm-name-text { font-weight: var(--od-font-weight-semibold); }
+
+/* Above the name's click area (below), so the switch and its failure notice stay reachable */
+/* review F3 #5: the AsyncSwitch wrapper dissolves into the row, so its failure notice takes a line of its own under the row instead of
+   widening the switch and pushing the name. The switch itself stays above the name's full-row ::after. */
+.odc-pm-switch { display: contents; }
+
+.odc-pm-switch > .odc-switch {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  flex: none;
+}
+
+.odc-pm-switch > .odc-async-switch-notice {
+  flex-basis: 100%;
+  order: 1;
+  max-inline-size: none;
+}
+
+/* The name: a native button. Its ::after covers the whole row, so a click anywhere on it opens the detail, as in main. */
+/* redesign IM-15: `odc-paym-` and not `odc-pm-` for name, search and tools: Connect/PosMenu uses those three names too
+   and CSS is global (Connect/PosMenu/__tests__/cssCollisions.test.js). */
+.odc-paym-name {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-paym-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Inside a row the ring is inset so the list never clips it */
+.odc-paym-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* A name that does not open anything (the tutorial, a catalog row) */
+.odc-pm-label {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A long name gives way to the badges and Install with an ellipsis, as in main (the full name is its title) */
+.odc-pm-name-text {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-pm-badges {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-pm-chevron {
+  flex: none;
+  color: var(--od-x-text-subtle);
+  pointer-events: none;
+}
+
+.odc-pm-install {
+  flex: none;
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+}
+
+/* A catalog row has no switch: its name starts where the others' switch does */
+.odc-pm-lead {
+  flex: none;
+  inline-size: var(--od-x-control-height);
+}
+
+/* ── Groups ── */
+.odc-pm-group {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pm-group-title {
+  margin: 0;
+  padding-block-start: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Loading and empty ── */
+.odc-pm-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-pm-empty {
+  margin: 0;
+  padding-block: var(--od-space-4);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Detail ── */
+.odc-pm-detail {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}

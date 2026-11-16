@@ -1,0 +1,195 @@
+/* : the legacy-upgrade offer Dialog. Tokens only, logical properties (no px/hex of its
+   own — see the test). The accent blue/green/gray of the offer email map to the closest release
+   tokens: --od-action (#266DF0, exact), --od-green-700 (#087A4B), --od-x-text-subtle (#6B6E75) and
+   --od-surface-subtle (#F6F7F7). */
+
+.odc-upgrade-offer-pill {
+  display: inline-block;
+  margin: 0 0 var(--od-space-3);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-3);
+  border-radius: var(--od-radius-round);
+  background: var(--od-action-soft);
+  color: var(--od-action);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-offer-lead {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+}
+
+.odc-upgrade-offer-strip {
+  margin: 0 0 var(--od-space-4);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-upgrade-offer-card {
+  margin: 0 0 var(--od-space-4);
+  padding: var(--od-space-4);
+  border: calc(var(--od-x-hairline) * 2) solid var(--od-action);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-bg);
+}
+
+.odc-upgrade-offer-ribbon {
+  display: inline-block;
+  margin: 0 0 var(--od-space-2);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-action);
+  color: var(--od-action-foreground);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-offer-plan-name {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-upgrade-offer-period + .odc-upgrade-offer-period {
+  margin-block-start: var(--od-space-3);
+  padding-block-start: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-upgrade-offer-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-2);
+}
+
+.odc-upgrade-offer-strike {
+  color: var(--od-x-text-subtle);
+  text-decoration: line-through;
+}
+
+.odc-upgrade-offer-price {
+  color: var(--od-text);
+  font-size: var(--od-x-type-display-size);
+  font-weight: var(--od-font-weight-bold);
+}
+
+.odc-upgrade-offer-price-sm {
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-offer-price-unit,
+.odc-upgrade-offer-save-parens {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-upgrade-offer-permonth {
+  margin: var(--od-space-1) 0 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-upgrade-offer-saving {
+  margin: var(--od-space-1) 0 0;
+  color: var(--od-green-700);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-upgrade-offer-or {
+  margin: 0 0 var(--od-space-1);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-upgrade-offer-included-title {
+  margin: 0 0 var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-offer-included {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--od-space-4);
+  margin: 0 0 var(--od-space-4);
+}
+
+.odc-upgrade-offer-included ul {
+  margin: 0;
+  padding-inline-start: var(--od-space-4);
+}
+
+@media (min-width: 480px) {
+  .odc-upgrade-offer-included {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.odc-upgrade-offer-fineprint {
+  margin: 0 0 var(--od-space-4);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-upgrade-offer-others {
+  margin: 0 0 var(--od-space-4);
+}
+
+.odc-upgrade-offer-others-title {
+  margin: 0 0 var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-upgrade-offer-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-upgrade-offer-table th,
+.odc-upgrade-offer-table td {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  text-align: start;
+}
+
+.odc-upgrade-offer-table th {
+  color: var(--od-x-text-subtle);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-upgrade-offer-others-note {
+  margin: var(--od-space-2) 0 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-upgrade-offer-validuntil {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-upgrade-offer-cta-note {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  text-align: end;
+}

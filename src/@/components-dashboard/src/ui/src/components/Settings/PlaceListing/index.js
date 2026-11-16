@@ -223,6 +223,7 @@ const PlaceListingUI = (props) => {
             {isCollapse && !avoidExpand && (
               <IconButton
                 color='black'
+                aria-label={t('MENU', 'Menu')}
                 onClick={() => handleMenuCollapse(false)}
               >
                 <MenuIcon />

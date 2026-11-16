@@ -1,0 +1,32 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-d1-payment-methods-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "d1-paymentoptionstripelink-option-root-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/PaymentOptionStripeLink/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "13px",
+   "replace": "var(--od-type-control-value-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "d1-pres-paymentoptionstripedirect-taboption-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/PaymentOptionStripeDirect/styles.js",
+   "component": "TabOption",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The d1 typography inventory pins this declaration to an icon-only node. Checkbox-style icon of the tab option. The declaration lives in only these five files; nine other gateways import TabOption from PaymentOptionStripeDirect/styles."
+  }
+ ]
+}

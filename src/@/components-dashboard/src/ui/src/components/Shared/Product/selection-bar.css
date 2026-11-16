@@ -1,0 +1,130 @@
+/* C6 · Contextual selection bar: inverse surface, sticky at the foot of the list. */
+
+.odc-selbar {
+  position: sticky;
+  inset-block-end: var(--od-space-4);
+  z-index: calc(var(--od-x-layer-raised) + 2); /* redesign W0-5 (T0-17): was 3 */
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: max-content;
+  max-inline-size: calc(100% - 2 * var(--od-x-page-gutter));
+  margin-inline: auto;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-3-5) var(--od-x-space-1-5);
+  overflow-x: auto;
+  background: var(--od-surface-strong);
+  color: var(--od-text-inverse);
+  border-radius: var(--od-radius-panel);
+  box-shadow: var(--od-x-pop-shadow);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-selbar *,
+.odc-selbar *::before,
+.odc-selbar *::after {
+  box-sizing: border-box;
+}
+
+.odc-selbar-count {
+  flex: none;
+  font-weight: var(--od-font-weight-semibold);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.odc-selbar-link {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--od-x-target-fine);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-1-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+  cursor: pointer;
+}
+
+.odc-selbar-link:hover { background: var(--od-x-inverse-hover); }
+.odc-selbar-link[aria-disabled='true'] { opacity: 0.6; cursor: progress; }
+.odc-selbar-link[aria-disabled='true']:hover { background: none; }
+
+.odc-selbar-message {
+  flex: none;
+  color: var(--od-x-danger-on-inverse);
+  white-space: nowrap;
+}
+
+.odc-selbar-separator {
+  flex: none;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-icon-sm);
+  margin-inline: var(--od-x-space-half);
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.odc-selbar-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-selbar-actions:empty { display: none; }
+
+.odc-selbar .odc-btn {
+  flex: none;
+  border-color: transparent;
+  background: transparent;
+  color: inherit;
+}
+
+.odc-selbar .odc-btn:hover:not(:disabled) { background: var(--od-x-inverse-hover); color: inherit; }
+.odc-selbar .odc-btn[data-tone='danger'],
+.odc-selbar .odc-btn[data-tone='danger']:hover:not(:disabled) { color: var(--od-x-danger-on-inverse); }
+
+.odc-selbar-link:focus-visible,
+.odc-selbar .odc-btn:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+[data-ordering-brand][data-od-theme='dark'] .odc-selbar {
+  background: var(--od-surface);
+  color: var(--od-text);
+  border: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* Touch (C3): the link and the buttons reach 44px with a coarse pointer.
+   redesign W0 close-fixes-3 (W0-E-12, decision 12): the link is SEEN at 32 and its 44×44 area is a pseudo-element (the same
+   `inset` the buttons use), also below 768px with a mouse, where the 24px link had no area at all. The clear button is the last
+   thing in a bar with rounded ends: a 32px (here 28px) button there loses the corners of its area to the rounded end, so it keeps 44
+   visible (listed in W0-D-08). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-selbar-link {
+    position: relative;
+    min-block-size: var(--od-x-control-height);
+    justify-content: center;
+  }
+
+  .odc-selbar-link::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  .odc-selbar .odc-btn[data-selbar-clear][data-icon-only] {
+    block-size: var(--od-x-target-coarse);
+    inline-size: var(--od-x-target-coarse);
+  }
+}

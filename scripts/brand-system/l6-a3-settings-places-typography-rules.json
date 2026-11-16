@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-a3-settings-places-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a3-settings-places-citydetails-header-h1-20px-05d12c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CityDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-citydetails-inputwrapper-label-14px-116c9a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CityDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-citydetails-inputwrapper-div-14px-ca9309",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CityDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-settings-places-countrieslist-countryname-root-12px-afb72c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountriesList/styles.js",
+      "component": "CountryName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-countrieslist-actionscontainer-root-12px-03ce96",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountriesList/styles.js",
+      "component": "ActionsContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-countrieslist-enablewrapper-span-12px-033432",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountriesList/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-countrieslist-actionselectorwrapper-div-div-dropdown--213a0a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountriesList/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-countrydetails-header-h1-20px-12796d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountryDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-countrydetails-inputwrapper-label-14px-1dce91",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountryDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-countrydetails-inputwrapper-div-14px-9c03b6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountryDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-settings-places-countrysettingdetail-generaltitle-p-20px-d0463b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountrySettingDetail/styles.js",
+      "component": "GeneralTitle",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a3-settings-places-countrysettingdetail-formgrouptext-label-14px-2fb509",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountrySettingDetail/styles.js",
+      "component": "FormGroupText",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-countrysettingdetail-formgrouptext-input-type-text-14-42ba0f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountrySettingDetail/styles.js",
+      "component": "FormGroupText",
+      "property": "font-size",
+      "context": "input[type='text']",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-settings-places-countrysettingdetail-required-root-10px-731bf7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountrySettingDetail/styles.js",
+      "component": "Required",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "10px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a3-settings-places-insertvideo-insertlinkcontainer-h1-20px-450cf1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertVideo/styles.js",
+      "component": "InsertLinkContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-insertvideo-wrapperinput-label-14px-bf261b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/InsertVideo/styles.js",
+      "component": "WrapperInput",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-multicountrysettings-siteslistcontainer-h1-20px-055df5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/MultiCountrySettings/styles.js",
+      "component": "SitesListContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-multicountrysettings-siteitem-span-14px-a789ef",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/MultiCountrySettings/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-headerleft-h1-20px-969b13",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "HeaderLeft",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-tab-root-14px-368b72",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-cityname-root-12px-397df1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "CityName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-countryname-root-12px-cbf230",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "CountryName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-actionscontainer-root-12px-3c8cd5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "ActionsContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-enablewrapper-span-12px-d866a2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "EnableWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-placelisting-actionselectorwrapper-div-div-dropdown-i-3930e5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-settingscountryfilter-countryselectwrapper-label-14px-8c33fe",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCountryFilter/styles.js",
+      "component": "CountrySelectWrapper",
+      "property": "font-size",
+      "context": "> label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-settingscountryfilter-countryselectwrapper-p-14px-fe79a6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCountryFilter/styles.js",
+      "component": "CountrySelectWrapper",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a3-settings-places-settingscountryfilter-countrysearchinput-root-13px-500de4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCountryFilter/styles.js",
+      "component": "CountrySearchInput",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-settings-places-settingscountryfilter-countrylistitem-root-13px-50ea5e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCountryFilter/styles.js",
+      "component": "CountryListItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a3-settings-places-zonedropdowndetails-header-h1-20px-801ba3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ZoneDropdownDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a3-settings-places-zonedropdowndetails-inputwrapper-label-14px-1f3673",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ZoneDropdownDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a3-settings-places-zonedropdowndetails-inputwrapper-div-14px-a3d61b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/ZoneDropdownDetails/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a3-settings-places-pres-countrieslist-checkboxwrapper-svg-24px-5cd704",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountriesList/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "CheckboxWrapper svg: el glifo de la casilla de pais."
+    },
+    {
+      "id": "a3-settings-places-pres-countrysettingdetail-passwordinputwrapper-button-svg--ff6f6c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/CountrySettingDetail/styles.js",
+      "component": "PasswordInputWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "18px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "PasswordInputWrapper button > svg: el glifo de mostrar/ocultar contrasena."
+    },
+    {
+      "id": "a3-settings-places-pres-multicountrysettings-siteitem-root-inherit-9fdab3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/MultiCountrySettings/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This declaration declares no size of its own: it is the `font-size: inherit` of an accessibility conversion's reset. A `<button>` does NOT inherit its container's font size; it adopts the user agent's. Without this line the converted node detaches from the size its parent receives from the system, which is Z3 of the deferred wave, open against EVERY conversion L5 made.",
+      "evidence": "SiteItem de MultiCountrySettings pasa de `styled.div` a `styled.button.attrs({ type: 'button' })`, como los tres de a2."
+    },
+    {
+      "id": "a3-settings-places-pres-multicountrysettings-siteitem-svg-20px-3aad22",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/MultiCountrySettings/styles.js",
+      "component": "SiteItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "SiteItem svg: el galon de la fila de sitio."
+    },
+    {
+      "id": "a3-settings-places-pres-placelisting-cityadministrator-root-12px-4bbc72",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "CityAdministrator",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup that carries readable text: the only usage the product renders wraps a loading placeholder, and every usage that would carry text is commented out. Asserting a role over it would be asserting something unprovable.",
+      "evidence": "CityAdministrator: su UNICO uso sin comentar es `PlaceListing/index.js:341`, que envuelve un `<Skeleton>`. El uso de cabecera (linea 333) y el de fila de datos (lineas 372-377) estan los dos COMENTADOS. Este font-size no alcanza texto legible en ningun estado que el producto renderice hoy."
+    },
+    {
+      "id": "a3-settings-places-pres-placelisting-checkboxwrapper-svg-24px-8a2cfd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/PlaceListing/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "CheckboxWrapper svg: el glifo de la casilla de lugar."
+    },
+    {
+      "id": "a3-settings-places-pres-settingscountryfilter-searchiconwrapper-svg-16px-1101e9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/SettingsCountryFilter/styles.js",
+      "component": "SearchIconWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "SearchIconWrapper svg: el glifo de la lupa del buscador de paises."
+    }
+  ]
+}

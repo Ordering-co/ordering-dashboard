@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { ExclamationCircle, Image } from 'react-bootstrap-icons'
 
 import { BuilderAppSettings as BuilderAppSettingsController, ToastType, useLanguage, useToast } from '../../../../../index'
-import { Button } from '../../../styles'
-import { BuilderMessage } from '../BuilderShared'
+import { CircleAlert, Image } from '../../Shared/Icon'
+import { Button, EmptyState, Skeleton, TextField } from '../../Shared/Product'
 import {
   BUILDER_COLORS_GROUP,
   COLOR_PATTERN,
@@ -16,42 +13,28 @@ import {
   getSettingGroupLabel,
   getValueErrorMessage
 } from '../utils'
-import {
-  Chip,
-  ChipGroup,
-  FileActions,
-  FileCard,
-  FileGrid,
-  FileMeta,
-  FilePreview,
-  LinkButton,
-  MonoInput,
-  MutedText,
-  RowAside,
-  SettingList,
-  SettingName,
-  SettingRow,
-  Tag,
-  ValueEditor,
-  ValueField
-} from '../styles'
+import './builder-app-edit.css'
+
+// redesign B2: Appearance and Files on Product pieces (TextField, Buttons, Skeleton, EmptyState) and --od-* tokens. The
+// color keeps main's native picker beside the text (P/ColorField waits 750 ms and has no typed value). The group chips stay native
+// toggle buttons (aria-pressed). Same values, codes, toasts and texts as main.
 
 /** #RGB and #RRGGBBAA as the #RRGGBB the native picker takes. */
 const toPickerColor = (value) => {
   const hex = String(value || '').trim()
   if (/^#[0-9a-fA-F]{3}$/.test(hex)) return `#${hex.slice(1).split('').map(c => c + c).join('')}`
   if (/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(hex)) return hex.slice(0, 7)
-  return '#000000'
+  return '' // the native picker reads an empty value as black, as main's fallback
 }
 
 const SettingSource = ({ setting, t }) => (
-  <MutedText small>
+  <span className='odc-be-muted'>
     {setting.customized ? t('BUILDER_CUSTOM_VALUE', 'Custom value') : t('BUILDER_BASE_VALUE', 'Base value')}
-  </MutedText>
+  </span>
 )
 
 const PlatformTag = ({ platform, t }) => (
-  <Tag>{platform ? getPlatformLabel(platform) : t('BUILDER_ALL_PLATFORMS', 'All platforms')}</Tag>
+  <span className='odc-be-tag'>{platform ? getPlatformLabel(platform) : t('BUILDER_ALL_PLATFORMS', 'All platforms')}</span>
 )
 
 /** A color or text setting, saved on its own row. */
@@ -99,62 +82,57 @@ const ValueSettingRow = (props) => {
   }
 
   return (
-    <SettingRow>
-      <div>
-        <SettingName>
-          <label htmlFor={inputId} style={{ margin: 0 }}>{setting.name}</label>
-          {setting.required && <Tag>{t('BUILDER_REQUIRED', 'Required')}</Tag>}
+    <div className='odc-be-row'>
+      <div className='odc-be-row-name'>
+        <span className='odc-be-name'>
+          <label htmlFor={inputId}>{setting.name}</label>
+          {setting.required && <span className='odc-be-tag'>{t('BUILDER_REQUIRED', 'Required')}</span>}
           {setting.platform && <PlatformTag platform={setting.platform} t={t} />}
-        </SettingName>
+        </span>
         <SettingSource setting={setting} t={t} />
       </div>
-      <ValueEditor>
-        <ValueField invalid={!!error}>
-          <div>
-            {isColor && (
-              <input
-                type='color'
-                aria-label={t('BUILDER_PICK_COLOR', 'Pick _name_').replace('_name_', setting.name)}
-                value={toPickerColor(draft)}
-                onChange={(e) => { setDraft(e.target.value.toUpperCase()); setError(null) }}
-              />
-            )}
-            <MonoInput
-              id={inputId}
-              type='text'
-              mono={isColor}
-              wide={!isColor}
-              value={draft}
-              maxLength={isColor ? 9 : 255}
-              autoComplete='off'
-              aria-invalid={error ? 'true' : 'false'}
-              aria-describedby={error ? `${inputId}-error` : undefined}
-              onChange={(e) => { setDraft(e.target.value); setError(null) }}
-              onKeyDown={(e) => { if (e.key === 'Enter' && dirty) handleSave() }}
-            />
-          </div>
-          {error && <span id={`${inputId}-error`} role='alert'>{error}</span>}
-        </ValueField>
-      </ValueEditor>
-      <RowAside>
+      <div className='odc-be-value'>
+        {isColor && (
+          <input
+            type='color'
+            className='odc-be-swatch'
+            aria-label={t('BUILDER_PICK_COLOR', 'Pick _name_').replace('_name_', setting.name)}
+            value={toPickerColor(draft)}
+            onChange={(e) => { setDraft(e.target.value.toUpperCase()); setError(null) }}
+          />
+        )}
+        <TextField
+          id={inputId}
+          aria-label={setting.name}
+          fieldClassName={isColor ? 'odc-be-color' : undefined}
+          className={isColor ? 'odc-be-mono' : undefined}
+          value={draft}
+          maxLength={isColor ? 9 : 255}
+          autoComplete='off'
+          error={error || undefined}
+          onChange={(value) => { setDraft(value); setError(null) }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && dirty) handleSave() }}
+        />
+      </div>
+      <div className='odc-be-aside'>
         {dirty
           ? (
             <>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={() => { setDraft(setting.value ?? ''); setError(null) }}>
+              <Button onClick={() => { setDraft(setting.value ?? ''); setError(null) }}>
                 {t('CANCEL', 'Cancel')}
               </Button>
-              <Button type='button' color='primary' borderRadius='8px' disabled={saving} onClick={handleSave}>
+              <Button variant='primary' disabled={saving} onClick={handleSave}>
                 {saving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
               </Button>
             </>
             )
           : setting.customized && (
-            <LinkButton type='button' disabled={saving} onClick={handleReset}>
+            <Button variant='link' disabled={saving} onClick={handleReset}>
               {t('BUILDER_RESTORE_BASE_VALUE', 'Restore base value')}
-            </LinkButton>
+            </Button>
           )}
-      </RowAside>
-    </SettingRow>
+      </div>
+    </div>
   )
 }
 
@@ -196,70 +174,77 @@ const FileSettingCard = (props) => {
   }
 
   return (
-    <FileCard aria-busy={saving ? 'true' : 'false'}>
-      <FilePreview missing={!hasFile && setting.required}>
+    <div className='odc-be-file' aria-busy={saving ? 'true' : 'false'}>
+      <div className='odc-be-preview' data-missing={!hasFile && setting.required ? '' : undefined}>
         {hasFile && !previewFailed && (
           <img src={setting.file_url} alt={t('BUILDER_PREVIEW_OF', 'Preview of _name_').replace('_name_', setting.name)} onError={() => setPreviewFailed(true)} />
         )}
         {hasFile && previewFailed && (
-          <span><Image aria-hidden='true' size={28} /><br />{t('BUILDER_NO_PREVIEW', 'No preview for this file')}</span>
+          <span><Image className='odc-icon' aria-hidden='true' /><br />{t('BUILDER_NO_PREVIEW', 'No preview for this file')}</span>
         )}
         {!hasFile && (setting.required ? t('BUILDER_NO_FILE_REQUIRED', 'No file yet. Required.') : t('BUILDER_NO_FILE', 'No file yet'))}
-      </FilePreview>
-      <FileMeta>
-        <SettingName>
+      </div>
+      <div className='odc-be-file-meta'>
+        <span className='odc-be-name'>
           {setting.name}
           <PlatformTag platform={setting.platform} t={t} />
-        </SettingName>
+        </span>
         {formatFileRules(setting.file_rules, t) && <span>{formatFileRules(setting.file_rules, t)}</span>}
         {(setting.customized || hasFile) && (
           <span>{setting.customized ? t('BUILDER_YOUR_FILE', 'Your file') : t('BUILDER_BASE_FILE', 'Base file')}</span>
         )}
-        {error && <span role='alert'>{error}</span>}
-      </FileMeta>
-      <FileActions>
-        <Button type='button' color='primary' outline borderRadius='8px' disabled={saving} onClick={() => inputRef.current?.click()}>
+        {error && <span className='odc-be-error' role='alert'>{error}</span>}
+      </div>
+      <div className='odc-be-file-actions'>
+        <Button disabled={saving} onClick={() => inputRef.current?.click()}>
           {saving ? t('BUILDER_SAVING', 'Saving…') : (setting.customized || hasFile) ? t('BUILDER_REPLACE', 'Replace') : t('BUILDER_UPLOAD', 'Upload')}
         </Button>
         <input
           ref={inputRef}
           type='file'
+          hidden
           accept={accept || undefined}
           aria-label={t('BUILDER_UPLOAD_NAMED', 'Upload _name_').replace('_name_', setting.name)}
           onChange={handleFile}
         />
         {setting.customized && (
-          <LinkButton type='button' disabled={saving} onClick={handleReset}>
+          <Button variant='link' disabled={saving} onClick={handleReset}>
             {t('BUILDER_RESTORE_BASE_FILE', 'Restore base file')}
-          </LinkButton>
+          </Button>
         )}
-      </FileActions>
-    </FileCard>
+      </div>
+    </div>
   )
 }
 
 const SettingsStates = ({ settingsState, reloadSettings, empty, t }) => {
   if (settingsState.loading && !settingsState.settings.length) {
-    return <div aria-busy='true'><Skeleton height={64} count={4} style={{ marginBottom: 8 }} /></div>
+    return <LoadingRows />
   }
   if (settingsState.error) {
     return (
-      <BuilderMessage
-        role='alert'
+      <EmptyState
         tone='error'
-        icon={<ExclamationCircle aria-hidden='true' />}
+        icon={CircleAlert}
+        titleAs='h2'
         title={t('BUILDER_SETTINGS_LOAD_ERROR', 'We couldn’t load these settings')}
-        text={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
-      >
-        <Button color='primary' borderRadius='8px' onClick={reloadSettings}>{t('BUILDER_RETRY', 'Try again')}</Button>
-      </BuilderMessage>
+        description={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
+        action={<Button variant='primary' onClick={reloadSettings}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+      />
     )
   }
   if (empty) {
-    return <BuilderMessage icon={<Image aria-hidden='true' />} title={t('BUILDER_NOTHING_TO_EDIT', 'This base has nothing to edit here')} />
+    return <EmptyState icon={Image} titleAs='h2' title={t('BUILDER_NOTHING_TO_EDIT', 'This base has nothing to edit here')} />
   }
   return null
 }
+
+/** Four rows of main's 64px while the first load runs. */
+export const LoadingRows = ({ count = 4, block = 'var(--od-space-8)' }) => (
+  <div className='odc-be-skeletons' aria-busy='true'>
+    {Array.from({ length: count }, (_, index) => <Skeleton key={index} block={block} shape='box' />)}
+  </div>
+)
 
 const BuilderAppColorsUI = (props) => {
   const { settingsState, reloadSettings } = props
@@ -268,11 +253,11 @@ const BuilderAppColorsUI = (props) => {
   const state = <SettingsStates settingsState={settingsState} reloadSettings={reloadSettings} empty={!colors.length} t={t} />
   if (settingsState.error || !colors.length) return state
   return (
-    <SettingList aria-label={t('BUILDER_TAB_APPEARANCE', 'Appearance')}>
+    <div className='odc-be-list' role='group' aria-label={t('BUILDER_TAB_APPEARANCE', 'Appearance')}>
       {colors.map(setting => (
         <ValueSettingRow key={setting.id} {...props} setting={setting} saving={props.savingId === setting.id} />
       ))}
-    </SettingList>
+    </div>
   )
 }
 
@@ -296,26 +281,26 @@ const BuilderAppFilesUI = (props) => {
 
   return (
     <>
-      <ChipGroup role='group' aria-label={t('BUILDER_GROUP', 'Group')}>
+      <div className='odc-be-chips' role='group' aria-label={t('BUILDER_GROUP', 'Group')}>
         {groups.map(item => (
-          <Chip key={item} type='button' active={item === current} aria-pressed={item === current ? 'true' : 'false'} onClick={() => setGroup(item)}>
+          <button key={item} type='button' className='odc-be-chip' aria-pressed={item === current ? 'true' : 'false'} onClick={() => setGroup(item)}>
             {getSettingGroupLabel(item, t)}
-          </Chip>
+          </button>
         ))}
-      </ChipGroup>
+      </div>
       {values.length > 0 && (
-        <SettingList>
+        <div className='odc-be-list'>
           {values.map(setting => (
             <ValueSettingRow key={setting.id} {...props} setting={setting} saving={props.savingId === setting.id} />
           ))}
-        </SettingList>
+        </div>
       )}
       {files.length > 0 && (
-        <FileGrid>
+        <div className='odc-be-files'>
           {files.map(setting => (
             <FileSettingCard key={setting.id} {...props} setting={setting} saving={props.savingId === setting.id} />
           ))}
-        </FileGrid>
+        </div>
       )}
     </>
   )

@@ -6,7 +6,7 @@ export const Container = styled.div`
   > button {
     position: sticky;
     top: 100%;
-    height: 42px;
+    min-height: 44px;
     margin-top: 20px;
   }
 `
@@ -17,12 +17,17 @@ export const DateContainer = styled.div`
   padding: 5px 0;
 
   input {
-    border-radius: 20px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '20px'};
     width: auto;
     min-width: 220px;
     outline: none;
     padding: 3px 10px;
-    border: 1px solid #F2F2F2;
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#F2F2F2'};
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+      outline-offset: 2px;
+    }
   }
 
   ${props => props.theme?.rtl

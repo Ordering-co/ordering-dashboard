@@ -1,0 +1,39 @@
+/* Gallery layout only (not product code). Tokens so light/dark/RTL show the real wrappers. */
+/* redesign W0 close-fixes-5 (W0-E-11): the page keeps its theme when a lazy legacy field (ImageField, PhoneField, ColorField) loads its own CSS.
+   That CSS carries the Bootstrap reboot (`body { color: #212529; background-color: #fff }`), which arrives after this file (specificity 0,0,1 each) and
+   painted the whole gallery white with dark text under ?theme=dark: axe then measured the dark-theme tokens over the white body. `html body` (0,0,2) wins
+   whatever the load order, so the real background of every text of the gallery is the themed one. */
+html, html body { margin: 0; background: var(--od-surface-subtle); color: var(--od-text); font-family: var(--od-font-sans); font-size: var(--od-x-type-body-size); line-height: var(--od-x-leading-body); }
+.g-main { max-inline-size: 1280px; margin-inline: auto; padding: var(--od-space-5) var(--od-space-4) var(--od-space-8); }
+.g-main h1 { margin: 0 0 var(--od-space-1); font-size: var(--od-x-type-title-size); }
+.g-lead { margin: 0 0 var(--od-space-5); color: var(--od-text-muted); }
+.g-section { margin-block-end: var(--od-space-5); background: var(--od-bg); border: var(--od-x-hairline) solid var(--od-border); border-radius: var(--od-radius-panel); }
+.g-section > h2 { margin: 0; padding: var(--od-space-3) var(--od-space-4); font-size: var(--od-x-type-ui-size); font-weight: var(--od-font-weight-semibold); border-block-end: var(--od-x-hairline) solid var(--od-border); }
+.g-body { padding: var(--od-space-4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--od-space-4); } /* redesign tramo B r2 (W0-QB1-13): one shrinkable column, so the fixed g-w-* frames never widen the page on a phone */
+.g-body.flush { padding: 0; }
+/* Frames of a fixed width shrink to the page instead of widening the section (phone captures). */
+.g-body.fit { grid-template-columns: minmax(0, 1fr); }
+.g-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-space-3); }
+/* redesign W0 close-fixes-3 (W0-E-12, decision 12): a row of demo controls whose areas are 44×44 needs 12px between neighbours. The gallery's
+   html is the 14px body size, so --od-space-3 is 10.5px here (12px in the app); on touch the demo rows use --od-space-4 (14px here, 16px in the app). */
+@media (pointer: coarse), (max-width: 767px) {
+  .g-row { gap: var(--od-space-4); }
+}
+.g-label { inline-size: 100%; color: var(--od-x-text-subtle); font-size: var(--od-x-type-caption-size); }
+.g-table { block-size: 420px; display: flex; flex-direction: column; }
+.g-frame { border: var(--od-x-hairline) dashed var(--od-border); border-radius: var(--od-radius-component); }
+
+/* redesign W0-7 (T0-29): demo containers of the cross-family wrappers (widths and heights, so the demos need no inline style). */
+.g-w-320, .g-w-360, .g-w-520, .g-w-640, .g-w-900 { max-inline-size: 100%; box-sizing: border-box; }
+.g-w-320 { inline-size: 320px; }
+.g-w-360 { inline-size: 360px; }
+.g-w-520 { inline-size: 520px; }
+.g-w-640 { inline-size: 640px; }
+.g-w-900 { inline-size: 900px; }
+.g-record { block-size: 480px; }
+.g-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--od-space-4); align-items: start; }
+.g-map-fill { block-size: 100%; background: var(--od-surface-strong); }
+/* redesign stores 5.15b: the decorative preview of a RadioGroup card */
+.g-preview { display: block; block-size: 72px; border-radius: var(--od-radius-control); background: var(--od-surface-strong); }
+.g-stack { display: grid; gap: var(--od-space-2); justify-items: start; }
+.g-stack-fill { justify-items: stretch; } /* redesign : form fields as wide as their column (Select) */

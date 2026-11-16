@@ -1,0 +1,111 @@
+/*
+ * redesign stores 3.C · the Importers panel: the Sheet and its levels (ImportersPanes). The list, the import and the
+ * importer form bring their own rules (importers-list.css, importer-job.css, importer-form.css).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ */
+
+/* ── The Sheet: from 1100px, with a level open, the two last levels side by side (twice the sheet) ── */
+@media (min-width: 1100px) {
+  .odc-sheet.odc-imp-sheet[data-detail='true'] {
+    inline-size: calc(var(--od-x-sheet) * 2);
+  }
+}
+
+/* The levels scroll on their own, so the body of the Sheet does not */
+.odc-imp-sheet > .odc-overlay-body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.odc-imp-stack {
+  display: grid;
+  flex: 1 1 auto;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  min-block-size: 0;
+  color: var(--od-text);
+}
+
+.odc-imp-pane {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+  /* no bottom padding on the scroller: a sticky foot (the form's Save) would stop that far above the bottom and let the
+     content show under it; the space at the end of the content is the last child's */
+  padding-block: 0;
+  padding-inline: var(--od-space-5);
+}
+
+.odc-imp-pane > :last-child {
+  margin-block-end: var(--od-space-5);
+}
+
+.odc-imp-pane[hidden] {
+  display: none;
+}
+
+/* below 1100px only the last level is in view */
+@media (max-width: 1099px) {
+  .odc-imp-pane:not([data-pos='0']) {
+    display: none;
+  }
+
+  .odc-imp-close {
+    display: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .odc-imp-pane[data-pos='1'] + .odc-imp-pane[data-pos='0'] {
+    border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  }
+
+  .odc-imp-back {
+    display: none;
+  }
+}
+
+/* ── The head of a level: «‹ previous» (narrow) or an X (wide), and its title ── */
+.odc-imp-pane-head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--od-x-layer-raised);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-2) var(--od-space-3);
+  background: var(--od-x-dialog-bg);
+}
+
+.odc-imp-back {
+  flex: 0 0 100%;
+  justify-content: flex-start;
+  margin-inline-start: calc(var(--od-space-3) * -1);
+}
+
+.odc-imp-pane-title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-imp-pane-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.odc-imp-pane-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}

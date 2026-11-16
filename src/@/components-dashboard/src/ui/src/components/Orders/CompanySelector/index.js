@@ -4,6 +4,8 @@ import { useTheme } from 'styled-components'
 import { Select } from '../../../styles/Select'
 import { Select as FirstSelect } from '../../../styles/Select/FirstSelect'
 import { MultiSelect } from '../../../styles/MultiSelect'
+import { SelectOptionContent } from '../../Shared/UI/SelectOption'
+import { useSelectSurface } from '../../Shared/UI/selectPlacement'
 
 import { CompanySelectorContainer } from '../OrderContactInformation/styles'
 import {
@@ -47,13 +49,18 @@ const CompanySelectorUI = (props) => {
   const [companysOptionList, setCompanysOptionList] = useState([])
   const [companyssMultiOptionList, setCompanysMultiOptionList] = useState([])
   const [searchValue, setSearchValue] = useState(null)
-  const companysLoading = [{ value: 'default', content: <Option small={small}>{t('LOADING', 'loading')}...</Option> }]
+  // redesign F2 (C18): inside the orders surfaces the list is the single dropdown anatomy (a FirstSelect with
+  // brand rows) whatever `isFirstSelect` says; outside them it is the legacy select and rows.
+  const c18 = !!useSelectSurface().fitTrigger
+  const companysLoading = [{ value: 'default', content: c18 ? <span>{t('LOADING', 'loading')}...</span> : <Option small={small}>{t('LOADING', 'loading')}...</Option> }]
 
   useEffect(() => {
     const _companysOptionList = [
       {
         value: 'default',
-        content: (
+        content: c18
+          ? <span>{orderView ? t('NO_COMPANY', 'No Company') : t('SELECT_COMPANY', 'Select company')}</span>
+          : (
           <Option
             padding={orderView ? padding : '0px'}
           >
@@ -74,7 +81,7 @@ const CompanySelectorUI = (props) => {
               <span>{t('SELECT_COMPANY', 'Select company')}</span>
                 )}
           </Option>
-        ),
+            ),
         color: 'primary',
         disabled: !isFilterView,
         showDisable: true
@@ -83,10 +90,11 @@ const CompanySelectorUI = (props) => {
     if (!isFilterView) {
       _companysOptionList.push({
         value: 'remove',
-        content: (
-          <Option isRemove><span>{t('REMOVE_COMPANY', 'Remove assigned company')}</span></Option>
-        ),
-        disabled: defaultValue === 'default'
+        content: c18
+          ? <span>{t('REMOVE_COMPANY', 'Remove assigned company')}</span>
+          : <Option isRemove><span>{t('REMOVE_COMPANY', 'Remove assigned company')}</span></Option>,
+        disabled: defaultValue === 'default',
+        danger: c18 || undefined
       })
     }
     if (!companysList?.loading) {
@@ -101,7 +109,9 @@ const CompanySelectorUI = (props) => {
         return {
           value: company.id,
           showDisable: isFilterView ? true : !(isFilterView || !company?.busy),
-          content: (
+          content: c18
+            ? <SelectOptionContent label={company.name} media={{ kind: 'business', name: company.name, src: company.logo }} />
+            : (
             <Option small={small} isPhoneView={isPhoneView} padding={padding} isFilterView={isFilterView}>
               <WrapperCompanyImage small={small} className='driver-photo'>
                 <CompanyImage bgimage={company.logo || theme.images.icons?.noDriver} small={small} />
@@ -113,7 +123,7 @@ const CompanySelectorUI = (props) => {
                 </CompanyNameContainer>
               </OptionContent>
             </Option>
-          )
+              )
         }
       })
 
@@ -124,7 +134,7 @@ const CompanySelectorUI = (props) => {
       }
     }
     setCompanysOptionList(_companysOptionList)
-  }, [companysList, defaultValue, searchValue])
+  }, [companysList, defaultValue, searchValue, c18])
 
   const changeCompany = (companyId) => {
     if (isFilterView) {
@@ -180,6 +190,7 @@ const CompanySelectorUI = (props) => {
           <MultiSelect
             defaultValue={filterValues.companyIds}
             placeholder={Placeholder}
+            ariaLabel={t('COMPANY', 'Company')}
             options={companyssMultiOptionList}
             optionInnerMargin='10px'
             optionInnerMaxHeight='150px'
@@ -194,6 +205,7 @@ const CompanySelectorUI = (props) => {
           : (
           <MultiSelect
             defaultValue='default'
+            ariaLabel={t('COMPANY', 'Company')}
             options={companysLoading}
             optionInnerMargin='10px'
             optionInnerMaxHeight='150px'
@@ -230,10 +242,22 @@ const CompanySelectorUI = (props) => {
   let companyContent = (
     <span>{order?.driver_company?.name || t('DRIVER_COMPANY', 'Driver company')}</span>
   )
-  if (showPicker && isFirstSelect) {
-    companyContent = <FirstSelect {...pickerProps} />
+  if (showPicker && (isFirstSelect || c18)) {
+    // redesign F6h-4 (A2): the list is named with the label of the field (`pickerProps` is pinned by the L3 guard)
+    companyContent = <FirstSelect {...pickerProps} ariaLabel={t('DRIVER_COMPANY', 'Driver company')} />
   } else if (showPicker) {
     companyContent = <Select {...pickerProps} />
+  }
+
+  // C18: the field carries no container of the legacy select (it sized the trigger to 50px with its own rule);
+  // the label is the one of the driver field right below it.
+  if (c18) {
+    return (
+      <div>
+        <span className='odt-assign-label'>{t('DRIVER_COMPANY', 'Driver company')}</span>
+        {companyContent}
+      </div>
+    )
   }
 
   return (

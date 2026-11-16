@@ -1,0 +1,439 @@
+/* redesign AS-B (D3, M-AS1, M-AS3, M-AS7): the frame of the assistant (page and side panel), its header, the states of the chat,
+   the composer, the data notice and the launcher. Only var(--od-*) / var(--od-x-*), logical properties, prefix odc-as-.
+   The buttons, the page header, the empty state, the skeleton and the notices are Product wrappers; this file lays them out.
+   Physical properties stay only where the geometry is physical on purpose: the safe-area insets (env() are left, right,
+   top and bottom of the screen) and the side the panel and the launcher sit on (the launcher does not follow the
+   writing direction, as on main, so the support chat can sit on the opposite side). */
+
+/* ── The panel: a column on one side of the screen ── */
+.odc-as-panel {
+  position: fixed;
+  inset-block-start: var(--assistant-viewport-top, 0);
+  right: 0;
+  z-index: calc(var(--od-x-layer-chrome) + 10);
+  display: flex;
+  flex-direction: column;
+  inline-size: var(--odc-as-panel-width);
+  max-inline-size: 100vw;
+  block-size: var(--assistant-viewport-height, 100dvh);
+  padding-block-start: env(safe-area-inset-top);
+  overflow: hidden;
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* In a right-to-left language the panel sits on the left, as it did. */
+.odc-as-panel[dir='rtl'] {
+  right: auto;
+  left: 0;
+}
+
+/* The shadow only when it floats over the page; docked it is a column of the layout. */
+.odc-as-panel[data-floating] { box-shadow: var(--od-shadow-2); }
+
+/* ── The page: the same conversation at full width ── */
+.odc-as-page {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--assistant-viewport-height, calc(var(--vh, 1vh) * 100));
+  overflow: hidden;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* ── Header ── */
+.odc-as-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4) var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-as-head[data-page] {
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-as-head[data-panel] { gap: var(--od-space-1); }
+
+/* The decorative icon before the title, the one of «Mia» in the menu. */
+.odc-as-head .odc-as-head-icon {
+  flex: none;
+  color: var(--od-action);
+}
+
+.odc-as-head[data-panel] .odc-as-head-icon { margin-inline-end: var(--od-space-1); }
+
+/* The page row (D-AS1): its own width decides when «New conversation» keeps only its icon, like P/PageHeader does
+   with data-collapse-label; the text is clipped, not removed, so the accessible name stays. */
+.odc-as-head[data-page] { container-type: inline-size; }
+
+.odc-as-head[data-page] .odc-as-title { font-size: var(--od-x-type-title-size); }
+
+@container (max-width: 599px) {
+  .odc-as-head[data-page] .odc-as-title { font-size: var(--od-x-type-section-size); }
+
+  .odc-as-head[data-page] [data-collapse-label] {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-as-head[data-page] .odc-as-head-icon { display: none; }
+}
+
+.odc-as-title {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-as-title-text {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The stage: a neutral pill, like the one beside «Mia» in the menu. */
+.odc-as-stage {
+  flex: none;
+  padding-inline: var(--od-x-space-1-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Body: the scroll of the conversation ── */
+.odc-as-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-block-size: 0;
+  padding: var(--od-space-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The page reads in a centered column; the width comes from the page (--odc-as-column). */
+.odc-as-body[data-page] {
+  align-items: center;
+  padding: var(--od-x-page-gutter);
+}
+
+.odc-as-body[data-page] > * {
+  inline-size: 100%;
+  max-inline-size: var(--odc-as-column);
+}
+
+/* What has no list under it (empty state, notice, loading) sits in the middle of the free height. */
+.odc-as-center {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  margin-block: auto;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-as-body .odc-state { margin-block: auto; }
+
+/* Skeleton lines with the announcement for screen readers (the lines are decorative). */
+.odc-as-loading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* ── Empty state ── */
+.odc-as-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-as-lead {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-as-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* A suggestion is a full-width secondary button whose text starts at the beginning and may take two lines. */
+.odc-as-body .odc-as-suggestion.odc-btn {
+  justify-content: flex-start;
+  inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-1-5);
+  text-align: start;
+  white-space: normal;
+}
+
+/* ── Data notice ── */
+.odc-as-legal-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+  color: var(--od-action);
+}
+
+.odc-as-legal-icon .odc-icon {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+.odc-as-point {
+  display: flex;
+  gap: var(--od-space-2);
+}
+
+.odc-as-point .odc-icon {
+  margin-block-start: var(--od-x-space-half);
+  color: var(--od-success-functional);
+}
+
+.odc-as-legal-text {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+  white-space: pre-line;
+}
+
+/* ── Composer ── */
+.odc-as-composer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-block-size: 0;
+  max-block-size: 60%;
+  padding-block: var(--od-space-3) max(var(--od-space-4), env(safe-area-inset-bottom));
+  padding-left: max(var(--od-space-4), env(safe-area-inset-left));
+  padding-right: max(var(--od-space-4), env(safe-area-inset-right));
+  overflow-y: auto;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-as-composer[data-page] {
+  align-items: center;
+  padding-left: max(var(--od-x-page-gutter), env(safe-area-inset-left));
+  padding-right: max(var(--od-x-page-gutter), env(safe-area-inset-right));
+}
+
+.odc-as-composer[data-page] > * {
+  inline-size: 100%;
+  max-inline-size: var(--odc-as-column);
+}
+
+.odc-as-composer .odc-notice { margin: 0; }
+
+.odc-as-composer .odc-notice[data-tone='warning'] .odc-icon { color: var(--od-warning-functional); }
+.odc-as-composer .odc-notice[data-tone='danger'] .odc-icon { color: var(--od-danger-functional); }
+
+.odc-as-limit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+}
+
+.odc-as-limit strong { font-weight: var(--od-font-weight-semibold); }
+
+.odc-as-accept { inline-size: 100%; }
+
+/* What the assistant is told about the page: «Context:» muted, each reference a neutral pill. */
+.odc-as-refs {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-block-size: 0;
+  overflow-y: auto;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-ref {
+  max-inline-size: 100%;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-x-space-2-5);
+  overflow-wrap: anywhere;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+/* The box: a strong border, the control radius of Product and the house focus ring while it holds the focus. */
+.odc-as-input {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  gap: var(--od-space-2);
+  margin: 0;
+  /* D-AS4: no block padding on the frame; the textarea carries it, so its own box fills the frame and a touch anywhere
+     on the field lands on it (the 44px reach of decision 12) without changing what the frame looks like */
+  padding-block: 0;
+  padding-inline: var(--od-space-3) var(--od-space-1);
+  border: var(--od-x-hairline) solid var(--od-border-strong);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-as-input:focus-within {
+  border-color: var(--od-focus-ring-color);
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-as-input[data-streaming] { background: var(--od-surface-subtle); }
+
+.odc-as-input > .odc-btn { flex: none; margin-block: var(--od-space-1); }
+
+.odc-as-input textarea {
+  flex: 1;
+  min-inline-size: 0;
+  /* grows with the text up to 4.375 controls (140px) or a fifth of the visible height, whichever is less */
+  max-block-size: min(calc(var(--od-x-control-height) * 4.375), calc(var(--assistant-viewport-height, 100vh) * 0.2));
+  margin: 0;
+  padding-block: calc(var(--od-space-2) + var(--od-space-1));
+  padding-inline: 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-as-input textarea::placeholder {
+  color: var(--od-x-text-subtle);
+  opacity: 1;
+}
+
+/* iOS zooms into a field under 16px: below 1200px and on touch screens the field takes the comfortable size (the same
+   breakpoint as main's InputBox). */
+@media (max-width: 1199px), (pointer: coarse) {
+  .odc-as-input textarea { font-size: var(--od-x-type-lead-size); }
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  .odc-as-input textarea { min-block-size: var(--od-x-target-coarse); }
+
+  /* The suggestions are 8px apart: each is 44px visible, so the areas do not overlap. */
+  .odc-as-body .odc-as-suggestion.odc-btn { min-block-size: var(--od-x-target-coarse); }
+
+  /* The buttons of the header (panel and page) are 32px with a 44px area: 12px apart so the areas do not overlap. */
+  .odc-as-head[data-panel] { gap: var(--od-space-3); }
+
+  .odc-as-head[data-page] {
+    gap: var(--od-space-3);
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-as-body[data-page] { padding: var(--od-x-page-gutter-mobile); }
+}
+
+/* ── Launcher ── */
+.odc-as-launcher {
+  position: fixed;
+  right: calc(var(--od-space-4) + var(--od-space-1) + env(safe-area-inset-right));
+  bottom: calc(var(--od-space-4) + var(--od-space-1) + env(safe-area-inset-bottom));
+  z-index: calc(var(--od-x-layer-chrome) - 10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--od-space-2);
+  min-block-size: calc(var(--od-x-target-coarse) + var(--od-space-2));
+  margin: 0;
+  padding-block: 0;
+  padding-inline: calc(var(--od-space-4) + var(--od-x-space-half));
+  border: var(--od-x-hairline) solid var(--od-x-tenant-action, var(--od-action));
+  border-radius: var(--od-radius-round);
+  background: var(--od-x-tenant-action, var(--od-action));
+  box-shadow: var(--od-shadow-2);
+  color: var(--od-action-foreground); /* decision 42: white on the tenant shade */
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+.odc-as-launcher:hover {
+  border-color: var(--od-x-tenant-action-hover, var(--od-action-hover));
+  background: var(--od-x-tenant-action-hover, var(--od-action-hover));
+}
+
+.odc-as-launcher:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* redesign J5 row 50 (assistant P-2, ): on a phone the launcher is a 48px circle with the icon only, so it covers less of the
+   lists (before/11 of the assistant page); its accessible name stays «Mia» (aria-label). */
+@media (max-width: 767px) {
+  .odc-as-launcher {
+    inline-size: calc(var(--od-x-target-coarse) + var(--od-space-1));
+    min-block-size: calc(var(--od-x-target-coarse) + var(--od-space-1));
+    padding-inline: 0;
+  }
+
+  .odc-as-launcher > .odc-as-launcher-label {
+    display: none;
+  }
+}
+
+@media print {
+  .odc-as-launcher { display: none; }
+}
+
+/* redesign J5 row 49, review J5 #2: the delete confirmation says when api-ai could not delete the conversation */
+.odc-as-delete-error {
+  margin-block: var(--od-space-2) 0;
+  color: var(--od-danger-functional);
+}

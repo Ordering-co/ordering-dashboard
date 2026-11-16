@@ -1,0 +1,55 @@
+/*
+ * redesign  C · The CNAME record (Type, Name, Value) of Builder's domains and of the website migration. It scrolls
+ * sideways in its frame when the row doesn't fit. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ */
+.odc-root.odc-cname {
+  overflow-x: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odc-cname table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-cname th {
+  padding: var(--od-space-2) var(--od-space-3);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.odc-cname td {
+  padding: var(--od-space-2) var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  vertical-align: middle;
+}
+
+.odc-cname-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-cname code {
+  padding: var(--od-x-space-half) var(--od-space-1);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-ui-size);
+  white-space: nowrap;
+}
+
+.odc-cname-hint {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}

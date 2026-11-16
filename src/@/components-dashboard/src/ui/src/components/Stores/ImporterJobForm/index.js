@@ -1,28 +1,33 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { HourglassSplit, CheckCircleFill, XCircleFill, ArrowClockwise } from 'react-bootstrap-icons'
+import React, { useEffect, useId, useRef, useState } from 'react'
 import { useLanguage, DragAndDrop, ExamineClick, ImporterJobForm as ImporterJobFormController } from '../../../../../index'
 import { isJobFailed, isJobSuccess } from '../../../../../components/ImporterJobForm'
-import { Modal, Alert, SideBar } from '../../Shared'
 import { bytesConverter } from '../../../utils'
-import { Button, Input } from '../../../styles'
+import { Button, ConfirmDialog, IconButton, InlineNotice, TextField } from '../../Shared/Product'
+import { CircleAlert, CircleCheck, Clock, FileText, RotateCw, Upload, X } from '../../Shared/Icon'
 import { ImporterForm } from '../ImporterForm'
-import { ImporterHelpContent } from '../ImporterHelpContent'
-import {
-  FormWrapper,
-  Header,
-  FormInput,
-  InputWrapper,
-  ActionsForm,
-  UploadCsvInputContainer,
-  AdvancedOptionsButton,
-  JobStatusWrapper,
-  JobStatusHeader,
-  JobStatusDetail,
-  JobStatusActions
-} from './styles'
+import { ImportersPane } from '../ImportersButton/ImportersPanes'
+import { focusWhenFree } from '../ImportersButton/ImportersPanes'
+import './importer-job.css'
 
-const ImporterJobFormUI = (props) => {
+// redesign stores 3.C: the import of one importer, level 1 of the Importers panel. It no longer lives in a SideBar:
+// the list mounts it inside `<ImportersPane title={importer.name}>`, which draws the level's title and its «‹ Back» / X, so this
+// form has no heading of its own, only the readable type of the importer as a caption.
+// What changed from the legacy form:
+//  - «Import» asks first (decision 25, C8): a ConfirmDialog names the file and what the import does; only «Import file» calls
+//    handleCreateImporterJob. Cancel does nothing else.
+//  - The file is a drop zone with a «Choose file» button (the drop still works). G1-18: `accept` is `.csv,.xls`, not `.xlsx`:
+//    handleFiles has always rejected it (type and size checks are the same as before).
+//  - The file-required check no longer needs react-hook-form: Import without a file shows the same message and opens nothing.
+//  - Errors and the invalid-file messages are inline notices in the panel, not a modal Alert.
+//  - The job status keeps its logic (pending / failed / success, polling, Check now, Close) with Product pieces.
+//  - «Advanced Options» opens a level 2 pane with ImporterForm (`isAdvanedOptions`). The legacy help modal is gone (G1-19).
+
+const toLines = (content) => {
+  if (Array.isArray(content)) return content.filter(line => typeof line === 'string' && line)
+  return typeof content === 'string' && content ? [content] : []
+}
+
+export const ImporterJobFormUI = (props) => {
   const {
     selectedImporter,
     formState,
@@ -31,16 +36,11 @@ const ImporterJobFormUI = (props) => {
     handleUploadCsv,
     handleCreateImporterJob,
     onClose,
-    handleOpenChildForm,
-    handleCloseChildForm,
-    openMappingDetails,
-    setOpenMappingDetails,
     handleSuccessUpdateImporter,
     jobStatus,
     handleCheckJobStatus
   } = props
   const [, t] = useLanguage()
-  const formMethods = useForm()
   const jobKind = !jobStatus?.job
     ? null
     : isJobSuccess(jobStatus.job.status)
@@ -49,10 +49,13 @@ const ImporterJobFormUI = (props) => {
         ? 'failed'
         : 'pending'
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [openImporterHelp, setOpenImporterHelp] = useState(false)
   const headerCsvInputRef = useRef(null)
+  const confirmedRef = useRef(false)
+  const statusRef = useRef(null)
   const [hasImportedFile, setImportedFile] = useState(false)
   const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const hintId = useId()
 
   const handleFiles = (files) => {
     if (files.length === 1) {
@@ -60,7 +63,7 @@ const ImporterJobFormUI = (props) => {
       if (type !== 'application/vnd.ms-excel' && type !== 'text/csv') {
         setAlertState({
           open: true,
-          content: [t('ERROR_ONLY_CSV', 'Only CSV can be accepted')]
+          content: [t('ERROR_ONLY_CSV_XLS', 'Only CSV or XLS files can be accepted')]
         })
         return
       }
@@ -71,6 +74,7 @@ const ImporterJobFormUI = (props) => {
         })
         return
       }
+      closeAlert()
       handleUploadCsv(files[0])
     }
   }
@@ -82,7 +86,22 @@ const ImporterJobFormUI = (props) => {
     })
   }
 
-  const onSubmit = () => {
+  // Import asks first. Without a file it says so (the check react-hook-form's `required` made on the file input) and opens nothing.
+  const onSubmit = (event) => {
+    event.preventDefault()
+    if (!fileState?.fileName) {
+      setAlertState({
+        open: true,
+        content: [t('VALIDATION_ERROR_CSV_FILE_REQUIRED', 'CSV file is required')]
+      })
+      return
+    }
+    setOpenConfirm(true)
+  }
+
+  const onConfirmImport = () => {
+    confirmedRef.current = true
+    setOpenConfirm(false)
     if (Object.keys(formState.changes).length > 0 || hasImportedFile) {
       handleCreateImporterJob(selectedImporter?.id)
     }
@@ -123,16 +142,6 @@ const ImporterJobFormUI = (props) => {
   }
 
   useEffect(() => {
-    if (Object.keys(formMethods.errors).length > 0) {
-      const content = Object.values(formMethods.errors).map(error => error.message)
-      setAlertState({
-        open: true,
-        content
-      })
-    }
-  }, [formMethods.errors])
-
-  useEffect(() => {
     if (formState.result?.error && Object.keys(formState.result).length > 0) {
       setAlertState({
         open: true,
@@ -147,251 +156,207 @@ const ImporterJobFormUI = (props) => {
     }
   }, [fileState])
 
-  return (
-    <>
-      <FormWrapper>
-        <Header>
-          {handleGetTitle(selectedImporter?.type)}
-        </Header>
-        <FormInput onSubmit={formMethods.handleSubmit(onSubmit)}>
-          <InputWrapper>
-            <label>{t('SEPARATOR', 'Separator (;)')}</label>
-            <Input
-              name='separator'
-              type='text'
-              placeholder=';'
-              maxLength='1'
-              defaultValue={formState?.changes?.separator}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <label>{t('ENCLOSURE', 'Enclosure (“) ')}</label>
-            <Input
-              name='enclosure'
-              type='text'
-              placeholder='"'
-              maxLength='1'
-              defaultValue={formState?.changes?.enclosure}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <label>{t('ESCAPE', 'Escape (|)')}</label>
-            <Input
-              name='escape'
-              type='text'
-              placeholder='\'
-              maxLength='1'
-              defaultValue={formState?.changes?.escape}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <label>{t('START_LINE', 'Start line')}</label>
-            <Input
-              name='start_line'
-              type='text'
-              maxLength='1'
-              defaultValue={formState?.changes?.start_line}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-            />
-          </InputWrapper>
-          <InputWrapper
-            onClick={() => headerCsvInputRef.current.click()}
-          >
-            <ExamineClick
-              onFiles={files => handleFiles(files)}
-              childRef={(e) => { headerCsvInputRef.current = e }}
-              accept='.csv,.xlsx,.xls'
-              disabled={formState.loading}
-            >
-              <DragAndDrop
-                onDrop={dataTransfer => handleFiles(dataTransfer.files)}
-                className='csvUpload'
-              >
-                <UploadCsvInputContainer>
-                  <label>{t('UPLOAD_FILE', 'Upload file')}</label>
-                  <Input
-                    name='CSVfile'
-                    placeholder={t('CSV', 'CSV')}
-                    autoComplete='off'
-                    defaultValue={
-                      fileState?.fileName
-                    }
-                    pattern='^.+\.(xlsx|xls|csv)$'
-                    readOnly
-                    ref={formMethods.register({
-                      required: t('VALIDATION_ERROR_CSV_FILE_REQUIRED', 'CSV file is required')
-                    })}
-                    onChange={handleChangeInput}
-                  />
-                  <Button
-                    name='upload'
-                    color='primary'
-                    borderRadius='7.6px'
-                    type='button'
-                  >
-                    {t('UPLOAD', 'Upload')}
-                  </Button>
-                </UploadCsvInputContainer>
-              </DragAndDrop>
-            </ExamineClick>
-          </InputWrapper>
-          <ActionsForm>
-            <Button
-              type='submit'
-              color='primary'
-              borderRadius='5px'
-              disabled={(!hasImportedFile && !(Object.keys(formState?.changes).length > 0)) || formState?.loading || !!jobStatus?.job}
-            >
-              {formState?.loading ? t('LOADING', 'Loading') : t('IMPORT', 'Import')}
-            </Button>
-            <AdvancedOptionsButton
-              onClick={() => {
-                handleOpenChildForm()
-                setOpenAdvancedOptions(true)
-              }}
-            >
-              {t('ADVANCED_OPTION', 'Advanced Options')}
-            </AdvancedOptionsButton>
-          </ActionsForm>
-        </FormInput>
+  const closeAdvanced = () => setOpenAdvancedOptions(false)
+  const alertLines = toLines(alertState.content)
+  const kindLabel = handleGetTitle(selectedImporter?.type)
+  const importerName = selectedImporter?.name
+  const confirmTitle = fileState?.fileName
+    ? t('IMPORTER_JOB_CONFIRM_TITLE', 'Import _file_?').replace('_file_', fileState.fileName)
+    : t('IMPORTER_JOB_CONFIRM_TITLE_NO_FILE', 'Run _name_?').replace('_name_', importerName ?? '')
+  const result = jobStatus?.job?.result_data
 
-        {jobStatus?.job && (
-          <JobStatusWrapper>
+  const optionField = (name, label, placeholder) => (
+    <TextField
+      name={name}
+      label={label}
+      maxLength={1}
+      defaultValue={formState?.changes?.[name]}
+      onChange={(value) => handleChangeInput({ target: { name, value } })}
+      disabled={formState.loading}
+      autoComplete='off'
+      placeholder={placeholder}
+    />
+  )
+
+  return (
+    <div className='odc-root odc-imp-job'>
+      {kindLabel && <p className='odc-imp-job-kind'>{kindLabel}</p>}
+
+      {alertState.open && alertLines.length > 0 && (
+        <InlineNotice
+          tone='danger'
+          icon={CircleAlert}
+          role='alert'
+          className='odc-imp-job-notice'
+          action={<IconButton icon={X} label={t('CLOSE', 'Close')} size='sm' onClick={closeAlert} />}
+        >
+          {alertLines.map((line, index) => (
+            <span key={index} className='odc-imp-job-notice-line'>{line}</span>
+          ))}
+        </InlineNotice>
+      )}
+
+      <form className='odc-imp-job-form' onSubmit={onSubmit} noValidate>
+        <div className='odc-imp-job-options'>
+          {/* bugs E row 8b: «Separator (;)» and «Escape (|)» named a character that is not the prefilled one (the
+              controller starts with «,» and «/»); the labels name the option and the placeholders are the prefilled values (Enclosure named a curly «“» for a straight «"») */}
+          {optionField('separator', t('IMPORTER_SEPARATOR', 'Separator'), ',')}
+          {optionField('enclosure', t('IMPORTER_ENCLOSURE', 'Enclosure'), '"')}
+          {optionField('escape', t('IMPORTER_ESCAPE', 'Escape character'), '/')}
+          {optionField('start_line', t('START_LINE', 'Start line'))}
+        </div>
+
+        <div className='odc-imp-job-file-block'>
+          <ExamineClick
+            onFiles={files => handleFiles(files)}
+            childRef={(e) => { headerCsvInputRef.current = e }}
+            accept='.csv,.xls'
+            disabled={formState.loading}
+          >
+            <DragAndDrop
+              onDrop={dataTransfer => handleFiles(dataTransfer.files)}
+              className='odc-imp-job-drop'
+              disabled={formState.loading}
+            >
+              <Upload className='odc-icon odc-imp-job-drop-icon' />
+              <span className='odc-imp-job-drop-text'>{t('IMPORTER_FILE_DROP', 'Drop a file here or choose one')}</span>
+              <Button
+                aria-describedby={hintId}
+                disabled={formState.loading}
+                onClick={() => headerCsvInputRef.current?.click()}
+              >
+                {t('CHOOSE_FILE', 'Choose file')}
+              </Button>
+              <span className='odc-imp-job-file' aria-live='polite'>
+                {fileState?.fileName && (
+                  <>
+                    <FileText className='odc-icon' />
+                    <span className='odc-imp-job-file-name'>{fileState.fileName}</span>
+                  </>
+                )}
+              </span>
+            </DragAndDrop>
+          </ExamineClick>
+          <p id={hintId} className='odc-imp-job-hint'>{t('IMPORTER_FILE_HINT', 'CSV or XLS, up to 2 MB')}</p>
+        </div>
+
+        <div className='odc-imp-job-actions'>
+          <Button
+            type='submit'
+            variant='primary'
+            busy={!!formState?.loading}
+            disabled={(!hasImportedFile && !(Object.keys(formState?.changes).length > 0)) || formState?.loading || !!jobStatus?.job}
+          >
+            {formState?.loading ? t('LOADING', 'Loading') : t('IMPORT', 'Import')}
+          </Button>
+          <Button onClick={() => setOpenAdvancedOptions(true)}>
+            {t('ADVANCED_OPTION', 'Advanced Options')}
+          </Button>
+        </div>
+      </form>
+
+      {jobStatus?.job && (
+        <div className='odc-imp-job-status' data-kind={jobKind} ref={statusRef} tabIndex={-1}>
+          <div className='odc-imp-job-status-live' role='status' aria-live='polite'>
             {jobKind === 'pending' && (
               <>
-                <JobStatusHeader $kind='pending' $spinning={jobStatus.checking}>
-                  {jobStatus.checking ? <ArrowClockwise /> : <HourglassSplit />}
+                <p className='odc-imp-job-status-head'>
+                  {jobStatus.checking
+                    ? <RotateCw className='odc-icon odc-imp-job-spin' />
+                    : <Clock className='odc-icon' />}
                   {t('IMPORTER_JOB_PENDING', 'Import in progress')}
-                </JobStatusHeader>
+                </p>
                 {jobStatus.polling && (
-                  <JobStatusDetail>
+                  <p className='odc-imp-job-status-detail'>
                     {t('IMPORTER_JOB_AUTO_CHECKING', "We'll check automatically — you can also check now")}
-                  </JobStatusDetail>
+                  </p>
                 )}
               </>
             )}
 
             {jobKind === 'failed' && (
               <>
-                <JobStatusHeader $kind='failed'>
-                  <XCircleFill /> {t('IMPORTER_JOB_FAILED', 'Import failed')}
-                </JobStatusHeader>
-                <JobStatusDetail>
-                  {typeof jobStatus.job.result_data?.error === 'string' ? jobStatus.job.result_data.error : t('ERROR', 'Error')}
-                </JobStatusDetail>
+                <p className='odc-imp-job-status-head'>
+                  <CircleAlert className='odc-icon' />
+                  {t('IMPORTER_JOB_FAILED', 'Import failed')}
+                </p>
+                <p className='odc-imp-job-status-detail'>
+                  {typeof result?.error === 'string' ? result.error : t('ERROR', 'Error')}
+                </p>
               </>
             )}
 
             {jobKind === 'success' && (
               <>
-                <JobStatusHeader $kind='success'>
-                  <CheckCircleFill /> {t('IMPORTER_JOB_SUCCESS', 'Import completed')}
-                </JobStatusHeader>
-                {jobStatus.job.result_data && (
-                  <JobStatusDetail>
-                    {t('CREATED', 'Created')}: {jobStatus.job.result_data.inserts ?? 0} · {t('UPDATED', 'Updated')}: {jobStatus.job.result_data.updates ?? 0}
-                    {(jobStatus.job.result_data.metafields_inserts > 0 || jobStatus.job.result_data.metafields_updates > 0) && (
-                      <> · {t('METAFIELDS', 'Metafields')}: {jobStatus.job.result_data.metafields_inserts ?? 0}/{jobStatus.job.result_data.metafields_updates ?? 0}</>
+                <p className='odc-imp-job-status-head'>
+                  <CircleCheck className='odc-icon' />
+                  {t('IMPORTER_JOB_SUCCESS', 'Import completed')}
+                </p>
+                {result && (
+                  <p className='odc-imp-job-status-detail'>
+                    {t('CREATED', 'Created')}: {result.inserts ?? 0} · {t('UPDATED', 'Updated')}: {result.updates ?? 0}
+                    {(result.metafields_inserts > 0 || result.metafields_updates > 0) && (
+                      <> · {t('METAFIELDS', 'Metafields')}: {result.metafields_inserts ?? 0}/{result.metafields_updates ?? 0}</>
                     )}
-                  </JobStatusDetail>
+                  </p>
                 )}
               </>
             )}
 
             {jobStatus.error && (
-              <JobStatusDetail>
+              <p className='odc-imp-job-status-detail'>
                 {t('IMPORTER_JOB_CHECK_ERROR', 'Could not check the import status, please try again')}
-              </JobStatusDetail>
+              </p>
             )}
+          </div>
 
-            <JobStatusActions>
-              {jobKind === 'pending'
-                ? (
-                <Button
-                  type='button'
-                  color='primary'
-                  outline
-                  borderRadius='5px'
-                  disabled={jobStatus.checking}
-                  onClick={() => handleCheckJobStatus()}
-                >
+          <div className='odc-imp-job-status-actions'>
+            {jobKind === 'pending'
+              ? (
+                <Button disabled={jobStatus.checking} onClick={() => handleCheckJobStatus()}>
                   {jobStatus.checking ? t('LOADING', 'Loading') : t('CHECK_NOW', 'Check now')}
                 </Button>
-                  )
-                : (
-                <Button
-                  type='button'
-                  color='primary'
-                  borderRadius='5px'
-                  onClick={() => onClose()}
-                >
+                )
+              : (
+                <Button variant='primary' onClick={() => onClose()}>
                   {t('CLOSE', 'Close')}
                 </Button>
-                  )}
-            </JobStatusActions>
-          </JobStatusWrapper>
-        )}
+                )}
+          </div>
+        </div>
+      )}
 
-        <Alert
-          title={t('CREATE_IMPORTER_JOB', 'Create importer job')}
-          content={alertState.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={alertState.open}
-          onClose={() => closeAlert()}
-          onAccept={() => closeAlert()}
-          closeOnBackdrop={false}
-        />
-        {openImporterHelp && (
-          <Modal
-            width='50%'
-            height='80vh'
-            padding='30px'
-            title=''
-            open={openImporterHelp}
-            onClose={() => setOpenImporterHelp(false)}
-          >
-            <ImporterHelpContent />
-          </Modal>
-        )}
-        {openAdvancedOptions && (
-          <SideBar
-            isBorderShow
-            open={openAdvancedOptions}
-            defaultSideBarWidth={openMappingDetails ? 1000 : 500}
-            moveDistance={openMappingDetails ? 500 : 0}
-            onClose={() => {
-              handleCloseChildForm()
-              setOpenMappingDetails(false)
-              setOpenAdvancedOptions(false)
-            }}
-          >
-            <ImporterForm
-              isAdvanedOptions
-              selectedImporter={selectedImporter}
-              openMappingDetails={openMappingDetails}
-              setOpenMappingDetails={setOpenMappingDetails}
-              handleSuccessUpdateImporter={handleSuccessUpdateImporter}
-              onClose={() => {
-                handleCloseChildForm()
-                setOpenMappingDetails(false)
-                setOpenAdvancedOptions(false)
-              }}
-            />
-          </SideBar>
-        )}
-      </FormWrapper>
-    </>
+      <ConfirmDialog
+        // review (3.C): after «Import file» the Import button is disabled while the job runs, so the focus goes to the job status
+        finalFocus={() => {
+          if (!confirmedRef.current) return true
+          confirmedRef.current = false
+          focusWhenFree(() => statusRef.current)
+          return false
+        }}
+        open={openConfirm}
+        tone='default'
+        title={confirmTitle}
+        confirmLabel={t('IMPORTER_JOB_CONFIRM', 'Import file')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={onConfirmImport}
+        onCancel={() => setOpenConfirm(false)}
+      >
+        {t('IMPORTER_JOB_CONFIRM_DESCRIPTION', "_name_ creates and updates records in your project with the rows of this file. It can't be undone from here.").replace('_name_', importerName ?? '')}
+      </ConfirmDialog>
+
+      {openAdvancedOptions && (
+        <ImportersPane title={t('ADVANCED_OPTION', 'Advanced Options')} onBack={closeAdvanced}>
+          <ImporterForm
+            isAdvanedOptions
+            selectedImporter={selectedImporter}
+            handleSuccessUpdateImporter={handleSuccessUpdateImporter}
+            onClose={closeAdvanced}
+          />
+        </ImportersPane>
+      )}
+    </div>
   )
 }
 

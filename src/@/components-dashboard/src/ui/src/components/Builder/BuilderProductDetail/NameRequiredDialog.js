@@ -1,10 +1,10 @@
-import React, { useId } from 'react'
-import { PencilSquare } from 'react-bootstrap-icons'
+import React from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Modal } from '../../Shared'
-import { DialogBody, DialogFooter, DialogIconTitle, MutedText } from '../styles'
+import { Button, Dialog } from '../../Shared/Product'
+import './builder-detail.css'
+
+// redesign B2: on P/Dialog, still an `alertdialog` named by its title and described by its text
 
 /**
  * Activating a website was refused because it has no name
@@ -14,28 +14,24 @@ import { DialogBody, DialogFooter, DialogIconTitle, MutedText } from '../styles'
 export const NameRequiredDialog = (props) => {
   const { onClose, onAddName } = props
   const [, t] = useLanguage()
-  const titleId = useId()
-  const bodyId = useId()
 
   return (
-    <Modal
+    <Dialog
       open
-      width='min(520px, calc(100vw - 32px))'
-      padding='24px'
-      onClose={onClose}
+      onOpenChange={(next) => { if (!next) onClose() }}
+      role='alertdialog'
+      size='sm'
+      title={t('BUILDER_NAME_REQUIRED_TITLE', 'Add a name to activate this website')}
+      closeLabel={t('CLOSE', 'Close')}
+      description={t('BUILDER_NAME_REQUIRED_TEXT', 'A website needs a name before it goes active. It’s the name you see in Ordering; your customers don’t see it.')}
+      footer={(
+        <>
+          <Button onClick={onClose}>{t('CLOSE', 'Close')}</Button>
+          <Button variant='primary' onClick={onAddName}>{t('BUILDER_ADD_NAME', 'Add a name')}</Button>
+        </>
+      )}
     >
-      <DialogBody role='alertdialog' aria-labelledby={titleId} aria-describedby={bodyId}>
-        <DialogIconTitle>
-          <span aria-hidden='true'><PencilSquare /></span>
-          <h2 id={titleId}>{t('BUILDER_NAME_REQUIRED_TITLE', 'Add a name to activate this website')}</h2>
-        </DialogIconTitle>
-        <p id={bodyId}>{t('BUILDER_NAME_REQUIRED_TEXT', 'A website needs a name before it goes active. It’s the name you see in Ordering; your customers don’t see it.')}</p>
-        <MutedText as='p'>{t('BUILDER_NAME_REQUIRED_NEXT', 'After you save it, activate the website again.')}</MutedText>
-        <DialogFooter>
-          <Button type='button' color='secundary' borderRadius='8px' onClick={onClose}>{t('CLOSE', 'Close')}</Button>
-          <Button type='button' color='primary' borderRadius='8px' onClick={onAddName}>{t('BUILDER_ADD_NAME', 'Add a name')}</Button>
-        </DialogFooter>
-      </DialogBody>
-    </Modal>
+      <p className='odc-bd-small'>{t('BUILDER_NAME_REQUIRED_NEXT', 'After you save it, activate the website again.')}</p>
+    </Dialog>
   )
 }

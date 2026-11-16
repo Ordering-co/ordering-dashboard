@@ -53,4 +53,50 @@ describe('CustomOrder', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Go to plugins' }))
     expect(push).toHaveBeenCalledWith('/settings?group=developers&category=developers&id=plugins')
   })
+
+  // a failed settings request used to leave an empty section with a loose Save.
+  const mockPlugin = (settingsResponses) => {
+    const queue = [...settingsResponses]
+    global.fetch = vi.fn((url) => {
+      if (url.includes('/plugins/key/')) {
+        return Promise.resolve({ json: async () => ({ error: false, result: { root: 'https://plugin.test/orderingv1' } }) })
+      }
+      const next = queue.length > 1 ? queue.shift() : queue[0]
+      return next instanceof Error ? Promise.reject(next) : Promise.resolve({ json: async () => next })
+    })
+  }
+  const SETTINGS_OK = {
+    error: false,
+    result: { settings: { max_weight: { name: 'Max weight', description: 'Heaviest order', type: 'float', value: 12 } } }
+  }
+
+  it.each([
+    ['the request fails', new Error('Network down')],
+    ['the plugin answers with an error', { error: true, result: ['Forbidden'] }],
+    ['the plugin answers without settings', { error: false, result: {} }]
+  ])('shows an error with Retry and no Save when %s', async (_name, response) => {
+    mockPlugin([response])
+
+    renderWithProviders(<CustomOrder hideHeader />, {
+      initialEntries: ['/settings?group=developers&category=custom_order']
+    })
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('The Custom Order settings could not be loaded. Try again.')
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+  })
+
+  it('loads the settings again on Retry', async () => {
+    mockPlugin([new Error('Network down'), SETTINGS_OK])
+
+    renderWithProviders(<CustomOrder hideHeader />, {
+      initialEntries: ['/settings?group=developers&category=custom_order']
+    })
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Retry' }))
+
+    expect(await screen.findByText('Max weight')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
 })

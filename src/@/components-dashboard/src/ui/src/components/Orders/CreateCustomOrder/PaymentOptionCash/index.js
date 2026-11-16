@@ -59,8 +59,9 @@ export const PaymentOptionCash = (props) => {
       <PaymentCashContainer>
         <FormCash>
           <WrapperInput>
-            <label>{t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}</label>
+            <label htmlFor='custom-order-cash'>{t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}</label>
             <Input
+              id='custom-order-cash'
               ref={el}
               name='cash'
               type='text'
@@ -73,7 +74,7 @@ export const PaymentOptionCash = (props) => {
             />
           </WrapperInput>
           {value && parseFloat(value) < orderTotal && (
-            <ErrorText>{t('VALUE_GREATER_THAN_TOTAL', 'This value must be greater than order total')}: {parsePrice(orderTotal)}</ErrorText>
+            <ErrorText role='alert'>{t('VALUE_GREATER_THAN_TOTAL', 'This value must be greater than order total')}: {parsePrice(orderTotal)}</ErrorText>
           )}
         </FormCash>
       </PaymentCashContainer>

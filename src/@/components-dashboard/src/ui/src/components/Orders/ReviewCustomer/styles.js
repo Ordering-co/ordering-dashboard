@@ -9,8 +9,9 @@ export const ReviewContainer = styled.div`
 
   > h1 {
     text-align: center;
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
     margin: 0 0 29px 0;
   }
 
@@ -28,8 +29,8 @@ export const PhotoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 7.6px;
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '7.6px'};
 
   svg {
     width: 100px;
@@ -64,7 +65,7 @@ export const Photo = (props) => {
   )
 }
 export const CustomerName = styled.span`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   font-weight: 500;
   line-height: 21px;
   margin-top: 15px;
@@ -76,12 +77,12 @@ export const ReviewsProgressWrapper = styled.div`
   p {
     margin-top: 0;
     margin-bottom: 17px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 export const ReviewsProgressContent = styled.div`
-  background: ${props => props.theme.colors.borderColor};
-  border-radius: 50px;
+  background: ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+  border-radius: ${props => props.theme?.ordering?.radius?.round ?? '50px'};
   width: 100%;
   height: 4px;
   position: relative;
@@ -90,20 +91,28 @@ export const ReviewsProgressContent = styled.div`
 export const ReviewsProgressBar = styled.div`
   height: 4px;
   border-radius: 50px;
-  background: ${props => props.theme.colors.primary};
+  background: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
   transition: all 0.2s linear;
 `
 
-export const ReviewsMarkPoint = styled.div`
+export const ReviewsMarkPoint = styled.button.attrs({ type: 'button' })`
   position: absolute;
   top: 15px;
-  font-size: 12px;
-  color: #CED4DA;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: var(--od-type-control-size);
+  color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? '#CED4DA'};
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+  }
 
   ${({ active }) => active && css`
     > span {
-      color: #344050;
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'};
     }
   `}
 
@@ -121,7 +130,7 @@ export const ReviewsMarkPoint = styled.div`
         height: 6px;
         top: -15px;
         width: 2px;
-        background: #CED4DA;
+        background: ${props => props.theme?.ordering?.semantic?.border?.strong ?? '#CED4DA'};
         transition: all 0.3s;
       }
     }
@@ -134,13 +143,18 @@ export const ReviewsMarkPoint = styled.div`
       }
     }
   `}
+
+  @media (pointer: coarse) {
+    min-width: 44px;
+    min-height: 44px;
+  }
 `
 export const CommentsList = styled.div`
   width: 100%;
   p {
     margin-top: 0;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 
   > button {
@@ -169,13 +183,13 @@ export const CommentsList = styled.div`
 `
 
 export const CommentButton = styled(Button)`
-  border-radius: 50px;
+  border-radius: ${props => props.theme?.ordering?.radius?.round ?? '50px'};
   margin-bottom: 18px;
   padding: 0 10px;
-  font-size: 12px;
-  color: #414954;
-  background: ${props => props.theme.colors.borderColor};
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  font-size: var(--od-type-control-size);
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#414954'};
+  background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.borderColor};
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   transition: all 0.3s linear;
   line-height: 26px;
 
@@ -190,9 +204,20 @@ export const CommentButton = styled(Button)`
   }
 
   ${({ active }) => active && css`
-    background: ${props => props.theme?.colors.primary};
-    border: 1px solid ${props => props.theme?.colors.primary};
-    color: white;
+    --od-ui-button-background: var(--od-ui-action);
+    --od-ui-button-foreground: var(--od-ui-action-foreground);
+    --od-ui-button-border: var(--od-ui-action);
+    --od-ui-button-hover-background: var(--od-ui-action-hover);
+    --od-ui-button-active-background: var(--od-ui-action-hover);
+    background: var(--od-ui-action);
+    border-color: var(--od-ui-action);
+    color: var(--od-ui-action-foreground);
+
+    &:hover,
+    &:active {
+      border-color: var(--od-ui-action-hover);
+      color: var(--od-ui-action-foreground);
+    }
   `}
 `
 
@@ -205,7 +230,7 @@ export const Comments = styled.div`
   p {
     margin-top: 0;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 
   textarea {

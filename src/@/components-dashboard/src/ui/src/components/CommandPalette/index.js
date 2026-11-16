@@ -1,30 +1,31 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Command } from 'cmdk'
+// redesign (R2): Lucide glyphs through the Shared/Icon wrapper, under the Bootstrap names the JSX below already uses
 import {
-  ArrowClockwise,
-  ArrowReturnLeft,
-  BarChartLine,
-  BoundingBox,
+  RotateCw as ArrowClockwise,
+  CornerDownLeft as ArrowReturnLeft,
+  ChartColumn as BarChartLine,
+  Plug as BoundingBox,
   Clock,
-  Gear,
-  GraphUp,
-  HouseDoor,
-  ListCheck,
-  Mortarboard,
-  People,
+  Settings as Gear,
+  TrendingUp as GraphUp,
+  House as HouseDoor,
+  ListChecks as ListCheck,
+  GraduationCap as Mortarboard,
+  Users as People,
   Search,
-  Shop,
-  Sliders,
+  Store as Shop,
+  SlidersHorizontal as Sliders,
   Truck,
-  BagCheck,
-  FileEarmarkText,
-  PersonFill,
+  ShoppingBag as BagCheck,
+  FileText as FileEarmarkText,
+  User as PersonFill,
   ChevronLeft,
-  BoxArrowInRight,
-  PlusCircle,
+  LogIn as BoxArrowInRight,
+  CirclePlus as PlusCircle,
   Phone
-} from 'react-bootstrap-icons'
+} from '../Shared/Icon'
 import { useLanguage, useAssistant, CommandPalette as CommandPaletteController } from '../../../../index'
 import { useCommandPalette } from '../../contexts/CommandPaletteContext'
 import { useDashboardNavigation } from '../../hooks/useDashboardNavigation'
@@ -333,8 +334,10 @@ export const CommandPalette = (props) => {
   const navigate = useDashboardNavigation({ closeCommandPalette: true })
   const { setOpen: setAssistantOpen } = useAssistant()
   const handleNavigate = useCallback((path, options) => {
-    if (initialRequest?.fromAssistant) setAssistantOpen(!window.innerWidth || window.innerWidth >= 768)
-    navigate(path, options)
+    navigate(path, {
+      ...options,
+      onNavigate: initialRequest?.fromAssistant ? () => setAssistantOpen(!window.innerWidth || window.innerWidth >= 768) : undefined
+    })
   }, [initialRequest, navigate, setAssistantOpen])
 
   const [, t] = useLanguage()

@@ -1,0 +1,141 @@
+/*
+ * redesign stores 5.2 · Categories (business types) of a store on P/SectionSplit: the search and «Add new», then one row
+ * per type (checkbox, image, name that opens the detail). The SectionSplit draws the detail's title, X / «‹ Back» and the «⋯» menu.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller. Prefix: odc-bt-*.
+ */
+
+.odc-bt {
+  min-inline-size: 0;
+  color: var(--od-text);
+}
+
+.odc-bt-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bt-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bt-search {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+/* «Add new business category» breaks at its spaces instead of leaving a narrow panel */
+.odc-bt-tools > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+}
+
+.odc-bt-notice {
+  min-inline-size: 0;
+}
+
+.odc-bt-empty {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Rows ── */
+.odc-bt-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bt-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-bt-row:hover { background: var(--od-x-hover); }
+
+/* The row open in the detail. aria-current says it; the fill and the weight back it up (never colour alone). */
+.odc-bt-row[aria-current='true'] { background: var(--od-x-selected); }
+.odc-bt-row[aria-current='true'] .odc-bt-name-text { font-weight: var(--od-font-weight-semibold); }
+
+/* Above the name's click area (below), so the checkbox stays its own control */
+.odc-bt-check {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  flex: none;
+}
+
+/* The name: a native button. Its ::after covers the whole row, so a click anywhere on it opens the detail, as in main. */
+.odc-bt-name {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bt-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Inside a row the ring is inset so the list never clips it */
+.odc-bt-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* Level 2: the name opens nothing */
+.odc-bt-label {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bt-name-text {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-bt-chevron {
+  flex: none;
+  color: var(--od-x-text-subtle);
+  pointer-events: none;
+}

@@ -162,6 +162,61 @@ export const SitesAuthSettings = (props) => {
     }
   }
 
+  /**
+   * n.1 (D-56 a): saves a batch of pending site configs, one PUT per config in the order given (the same endpoint and
+   * `{ value }` body as `handleChangeConfig`), with one «Loading» and, if all went well, one «Settings updated» toast for the
+   * whole batch. It stops at the first failure. What was stored becomes the base value of the loaded configs, so a later Discard
+   * restores it and not the value from before the save. The error is returned (not set in `actionState`): inside the hub the
+   * save bar shows it, so the legacy Alert must not open too. `handleChangeConfig` is untouched, for the screen outside the hub.
+   *
+   * @param {Array<{ id: number, value: any }>} changes
+   * @param {number} siteId
+   * @returns {Promise<{ savedCount: number, failedId: number | null, error: any }>} `error` is the API result (a list of messages) or null
+   */
+  const handleSaveConfigs = async (changes, siteId) => {
+    const saved = []
+    const applySaved = () => {
+      if (!saved.length) return
+      const valueOf = new Map(saved.map(change => [change.id, change.value]))
+      const withBase = (config) => valueOf.has(config?.id) ? { ...config, value: valueOf.get(config.id) } : config
+      setSiteConfigsState(current => ({ ...current, configs: (current.configs || []).map(withBase) }))
+      setSiteGroupConfigsState(current => ({
+        ...current,
+        categories: (current.categories || []).map(category => ({ ...category, configs: category.configs.map(withBase) }))
+      }))
+    }
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ loading: true, error: null })
+      for (const change of changes) {
+        const requestOptions = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ value: change.value })
+        }
+        const response = await fetch(`${ordering.root}/sites/${siteId}/configs/${change.id}`, requestOptions)
+        const { error, result } = await response.json()
+        if (error) {
+          applySaved()
+          setActionState({ loading: false, error: null })
+          return { savedCount: saved.length, failedId: change.id, error: result }
+        }
+        saved.push(change)
+      }
+      applySaved()
+      setActionState({ loading: false, error: null })
+      showToast(ToastType.Success, t('SETTINGS_UPDATE', 'Settings updated'))
+      return { savedCount: saved.length, failedId: null, error: null }
+    } catch (error) {
+      applySaved()
+      setActionState({ loading: false, error: null })
+      return { savedCount: saved.length, failedId: changes[saved.length]?.id ?? null, error: [error.message] }
+    }
+  }
+
   useEffect(() => {
     handleGetSitesList()
   }, [])
@@ -177,6 +232,7 @@ export const SitesAuthSettings = (props) => {
           actionState={actionState}
           handleGetSiteConfigs={handleGetSiteConfigs}
           handleChangeConfig={handleChangeConfig}
+          handleSaveConfigs={handleSaveConfigs}
         />
       )}
     </>

@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import VscTrash from '@meronex/icons/vsc/VscTrash'
-import IosRadioButtonOn from '@meronex/icons/ios/IosRadioButtonOn'
-import IosRadioButtonOff from '@meronex/icons/ios/IosRadioButtonOff'
-import {
-  Pencil,
-  HouseDoor,
-  Building,
-  SuitHeart,
-  PlusLg
-} from 'react-bootstrap-icons'
+import React, { useState, useEffect, useRef } from 'react'
 
 import {
   AddressList as AddressListController,
   useLanguage
 } from '../../../../../index'
 
-import {
-  AddressListContainer,
-  AddressListUl,
-  AddressItem,
-  AddressItemActions,
-  WrappNotAddresses,
-  FormActions,
-  ContinueButton,
-  WrapperAddressForm
-} from './styles'
-
-import { Confirm, NotFoundSource } from '../../Shared'
-import { Button } from '../../../styles/Buttons'
+import { Button as ProductButton, ConfirmDialog, EmptyState, IconButton as ProductIconButton, InlineNotice, Skeleton as ProductSkeleton } from '../../Shared/Product'
+import { House, MapPin, Plus, Star, Store, Trash2 } from '../../Shared/Icon'
 import { AddressForm } from '../AddressForm'
-import { useTheme } from 'styled-components'
 import { scrollTo } from '../../../utils'
+import '../../Orders/CreateCustomOrder/steps.css'
+
+// redesign fix-qa: E3. Icon of each address type in the embedded list; the type is also written next to it.
+const TAG_ICONS = { home: House, office: Store, favorite: Star }
+const TAG_LABELS = {
+  // redesign W0-4c (T0-15, decisión 19): address type uses HOME_ADDRESS; HOME is the menu.
+  home: ['HOME_ADDRESS', 'Home'],
+  office: ['OFFICE', 'Office'],
+  favorite: ['ADDRESS_TAG_FAVORITE', 'Favorite']
+}
+const SKELETON_ROWS = 3
 
 const AddressListUI = (props) => {
   const {
@@ -41,15 +28,10 @@ const AddressListUI = (props) => {
     handleDelete,
     setAddressList,
     handleSetDefault,
-    isModal,
     isSeletectedUserAddresses,
-    isPopover,
     isProductForm,
-    onCancel,
-    onAccept,
     userId,
     userCustomerSetup,
-    isEnableContinueButton,
     setCustomerModalOpen,
     setExtraOpen,
     userState,
@@ -62,7 +44,10 @@ const AddressListUI = (props) => {
   const [curAddress, setCurAddress] = useState(false)
   const [addressOpen, setAddressOpen] = useState(false)
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
-  const theme = useTheme()
+  // Redesign fix-qa E3: the button that opened the form, to give the focus back to it.
+  const rootRef = useRef(null)
+  const openerRef = useRef(null)
+  const wasFormOpen = useRef(false)
 
   const [uniqueAddressesList, setUniqueAddressesList] = useState([])
 
@@ -70,7 +55,9 @@ const AddressListUI = (props) => {
     setCurAddress(address)
     setAddressOpen(true)
     const container = window.document.getElementsByClassName('form_edit')[0]
-    container && scrollTo(container, 0, 500)
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (container && reduceMotion) container.scrollTop = 0
+    else if (container) scrollTo(container, 0, 500)
   }
 
   const handleSaveAddress = (address) => {
@@ -136,6 +123,15 @@ const AddressListUI = (props) => {
   }, [addressOpen])
 
   useEffect(() => {
+    if (addressOpen) {
+      wasFormOpen.current = true
+    } else if (wasFormOpen.current) {
+      wasFormOpen.current = false
+      rootRef.current?.querySelector(`[data-address-opener="${openerRef.current}"]`)?.focus()
+    }
+  }, [addressOpen])
+
+  useEffect(() => {
     if (addressList.loading) return
     const _uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
       (address, i, self) =>
@@ -157,141 +153,132 @@ const AddressListUI = (props) => {
     }
   }, [addressList])
 
-  return (
-    <>
-      <AddressListContainer id='address_control' isLoading={actionStatus?.loading}>
-        {
-          (!isPopover || !addressOpen) && (
-            <Button
-              borderRadius='8px'
-              className='add'
-              color={isEnableContinueButton && addressList?.addresses?.length > 0 ? 'secondary' : 'lightPrimary'}
-              onClick={() => openAddress({})}
-              disabled={actionStatus.loading}
-            >
-              {actionStatus.loading ? t('LOADING', 'Loading') : t('ADD_NEW_ADDRESS', 'Add new address')}
-            </Button>
-          )
-        }
+  const busy = Boolean(addressList.loading || actionStatus?.loading)
+  const listError = !busy && addressList.error?.length > 0 ? (addressList.error[0]?.message || addressList.error[0]) : null
+  const actionError = !busy && actionStatus?.error ? [].concat(actionStatus.error).filter(Boolean).join(' ') : null
+  const openFrom = (key, address) => {
+    openerRef.current = key
+    openAddress(address)
+  }
 
-        {
-          !addressList.loading &&
-          !actionStatus.loading &&
-          !addressList.error &&
-          addressList?.addresses?.length > 0 &&
-          ((!addressOpen && isPopover) || isModal || isSeletectedUserAddresses) && (
-            <AddressListUl id='list'>
-              {uniqueAddressesList.map(address => (
-                <AddressItem key={address?.id}>
-                  <div className='wrapAddress' onClick={() => handleSetAddress(address)}>
-                    <span className='radio'>
-                      {address?.default ? <IosRadioButtonOn color={theme.colors.primary} /> : <IosRadioButtonOff />}
-                    </span>
-                    <span className='tag'>
-                      {address?.tag === 'home' && <HouseDoor />}
-                      {address?.tag === 'office' && <Building />}
-                      {address?.tag === 'favorite' && <SuitHeart />}
-                      {(address?.tag === 'other' || !address?.tag) && <PlusLg />}
-                    </span>
-                    <div className='address'>
-                      <span>{address.address}</span>
-                      <span>{address.internal_number} {address.zipcode}</span>
-                    </div>
-                  </div>
-                  <AddressItemActions className='form'>
-                    <a className={actionStatus.loading ? 'disabled' : ''} onClick={() => openAddress(address)}>
-                      <Pencil />
-                    </a>
-                    <a className={actionStatus.loading || address.default ? 'disabled' : ''} onClick={() => handleDeleteClick(address)}>
-                      <VscTrash />
-                    </a>
-                  </AddressItemActions>
-                </AddressItem>
-              ))}
-              {isEnableContinueButton && uniqueAddressesList.map(address => address.default && (
-                <ContinueButton key={address.id}>
-                  <Button color='primary' onClick={() => handleSetAddress(address)}>
-                    {t('CONTINUE_WITH', 'Continue with')}: {address.address}
-                  </Button>
-                </ContinueButton>
-              ))}
-            </AddressListUl>
-          )
-        }
+  // Escape in the form goes back to the list, and only that: the view that holds the list takes the next one.
+  const handleFormKeyDown = (event) => {
+    if (event.key !== 'Escape' || event.defaultPrevented) return
+    if (!event.currentTarget.contains(event.target)) return
+    event.stopPropagation()
+    setAddressOpen(false)
+  }
 
-        {!(addressList.loading || actionStatus.loading) &&
-          !addressList.error &&
-          addressList?.addresses?.length === 0 &&
-          !isProductForm &&
-        (
-          <WrappNotAddresses>
-            <img src={theme.images?.general?.notFound} alt='Not Found' width='200px' height='112px' loading='lazy' />
-            <h1>{t('NOT_FOUND_ADDRESS', 'Sorry, You don\'t seem to have any addresses.')}</h1>
-          </WrappNotAddresses>
-        )}
-
-        {!(addressList.loading || actionStatus.loading) && addressList.error && (
-          addressList.error.length > 0 && (
-            <NotFoundSource
-              content={addressList.error[0]?.message || addressList.error[0]}
-            />
-          )
-        )}
-
-        {(addressList.loading || actionStatus.loading) && !isProductForm && (
-          <AddressListUl>
-            <Skeleton height={50} count={3} style={{ marginBottom: '10px' }} />
-          </AddressListUl>
-        )}
-
-        {onCancel && onAccept && (
-          <FormActions>
-            <Button
-              outline
-              type='button'
-              disabled={(addressList.loading || actionStatus.loading)}
-              onClick={() => onCancel()}
-            >
-              {t('CANCEL', 'Cancel')}
-            </Button>
-            <Button
-              disabled={(addressList.loading || actionStatus.loading)}
-              id='second-btn'
-              color='primary'
-              onClick={() => onAccept()}
-            >
-              {t('ACCEPT', 'Accept')}
-            </Button>
-          </FormActions>
-        )}
-
-        <Confirm
-          title={t('SEARCH', 'Search')}
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
+  if (addressOpen && isSeletectedUserAddresses) {
+    return (
+      <div ref={rootRef} className='odc-addr' onKeyDown={handleFormKeyDown}>
+        <AddressForm
+          isEmbedded
+          isSeletectedUserAddresses
+          userId={userId}
+          addressesList={addressList?.addresses}
+          useValidationFileds
+          address={curAddress}
+          onCancel={() => setAddressOpen(false)}
+          onSaveAddress={handleSaveAddress}
+          userCustomerSetup={userCustomerSetup}
         />
-      </AddressListContainer>
+      </div>
+    )
+  }
 
-      {addressOpen && isSeletectedUserAddresses && (
-        <WrapperAddressForm>
-          <AddressForm
-            isSeletectedUserAddresses
-            userId={userId}
-            addressesList={addressList?.addresses}
-            useValidationFileds
-            address={curAddress}
-            onCancel={() => setAddressOpen(false)}
-            onSaveAddress={handleSaveAddress}
-            userCustomerSetup={userCustomerSetup}
-          />
-        </WrapperAddressForm>
+  // No #address_control on this one: the sub view hides that id while the form is open, which would hide the button
+  // the focus returns to when it closes.
+  return (
+    <div ref={rootRef} className='odc-addr' aria-busy={busy || undefined}>
+      <div className='odc-addr-add'>
+        <ProductButton
+          variant='secondary'
+          icon={Plus}
+          data-address-opener='add'
+          disabled={busy}
+          onClick={() => openFrom('add', {})}
+        >
+          {t('ADD_NEW_ADDRESS', 'Add new address')}
+        </ProductButton>
+      </div>
+
+      {actionError && <InlineNotice tone='danger' role='alert'>{actionError}</InlineNotice>}
+      {listError && <InlineNotice tone='danger' role='alert'>{listError}</InlineNotice>}
+
+      {busy && (
+        <div role='group' aria-busy='true' aria-label={t('SELECT_CUSTOMER_ADDRESS', 'Select customer address')} className='odc-steps-list'>
+          {Array.from({ length: SKELETON_ROWS }, (_, index) => (
+            <div key={index} className='odc-steps-skeleton-row'><ProductSkeleton size='60%' /></div>
+          ))}
+        </div>
       )}
-    </>
+
+      {!busy && !addressList.error && addressList?.addresses?.length === 0 && !isProductForm && (
+        <EmptyState
+          icon={MapPin}
+          title={t('NOT_FOUND_ADDRESS', 'Sorry, You don\'t seem to have any addresses.')}
+        />
+      )}
+
+      {!busy && !addressList.error && addressList?.addresses?.length > 0 && (
+        // redesign UF-R1 (F5): a named list, not `role='radiogroup'`: the rows also hold the Edit and Delete buttons, which a
+        // radiogroup may not own (axe: list children / radiogroup content). The native radios are one group by their `name`.
+        <ul className='odc-steps-list odc-addr-list' aria-label={t('SELECT_CUSTOMER_ADDRESS', 'Select customer address')}>
+          {uniqueAddressesList.map(address => {
+            const TagIcon = TAG_ICONS[address?.tag] || MapPin
+            const tagLabel = TAG_LABELS[address?.tag] ? t(TAG_LABELS[address.tag][0], TAG_LABELS[address.tag][1]) : null
+            const detail = [tagLabel, [address.internal_number, address.zipcode].filter(Boolean).join(' ')].filter(Boolean).join(' · ')
+            return (
+              <li key={address?.id} className='odc-addr-row'>
+                <label className='odc-addr-main'>
+                  <input
+                    type='radio'
+                    className='odc-addr-radio'
+                    name='customer-address'
+                    checked={Boolean(address.default)}
+                    disabled={actionStatus?.loading}
+                    onChange={() => handleSetAddress(address)}
+                  />
+                  <TagIcon className='odc-icon odc-addr-tag' aria-hidden='true' />
+                  <span className='odc-steps-row-main'>
+                    <span className='odc-addr-name'>{address.address}</span>
+                    {detail && <span className='odc-steps-row-meta'>{detail}</span>}
+                  </span>
+                </label>
+                <ProductButton
+                  variant='ghost'
+                  data-address-opener={`edit-${address.id}`}
+                  disabled={actionStatus?.loading}
+                  aria-label={`${t('EDIT', 'Edit')} ${address.address}`}
+                  onClick={() => openFrom(`edit-${address.id}`, address)}
+                >
+                  {t('EDIT', 'Edit')}
+                </ProductButton>
+                <ProductIconButton
+                  icon={Trash2}
+                  label={`${t('DELETE', 'Delete')} ${address.address}`}
+                  disabled={actionStatus?.loading || address.default}
+                  onClick={() => handleDeleteClick(address)}
+                />
+              </li>
+            )
+          })}
+        </ul>
+      )}
+
+      <ConfirmDialog
+        open={confirm.open}
+        title={t('DELETE_ADDRESS', 'Delete address')}
+        confirmLabel={t('DELETE', 'Delete')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => confirm.handleOnAccept?.()}
+        onCancel={() => setConfirm({ ...confirm, open: false })}
+      >
+        {confirm.content}
+      </ConfirmDialog>
+    </div>
   )
 }
 

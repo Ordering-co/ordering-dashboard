@@ -2,7 +2,8 @@ import { useContext, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { usePostHog } from 'posthog-js/react'
 import { useSession } from '~components'
-import { ConfigFileContext, useProjectState } from '~ui'
+import { ConfigFileContext } from '~ui/src/contexts/ConfigFileContext'
+import { useProjectState } from '~ui/src/contexts/ProjectContext'
 import {
   captureDashboardEvent,
   captureDashboardOperation,

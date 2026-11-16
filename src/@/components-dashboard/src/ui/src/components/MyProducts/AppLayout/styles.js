@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusRing, coarseHitArea } from '../../../styles/touchTarget'
 
 export const Container = styled.div`
   flex: 1;
@@ -15,7 +16,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -151,12 +152,23 @@ export const ButtonWRapper = styled.div`
 export const DownLoadWrapper = styled.div`
   display: flex;
   align-items: center;
-  img {
-    cursor: pointer;
-    &:last-child {
-      margin: 0px 15px;
-    }
+`
+
+export const DownloadBadge = styled.button.attrs({ type: 'button' })`
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+  text-align: inherit;
+  line-height: 0;
+  cursor: pointer;
+  &:last-child {
+    margin: 0px 15px;
   }
+  ${brandFocusRing}
+  ${coarseHitArea}
 `
 
 export const HeaderInfoWrapper = styled.div`
@@ -187,14 +199,14 @@ export const HeaderInfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;

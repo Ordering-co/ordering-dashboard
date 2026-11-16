@@ -30,8 +30,6 @@ import {
   convertHMS,
   convertHoursToMinutes,
   disableReasons,
-  epaycoInputFields,
-  epaycoSplitRecieveInputs,
   fallbackLogisticEventsText,
   findExitingCode,
   findExitingCountryPhoneCode,
@@ -55,7 +53,6 @@ import {
   getOrderStatusPrefix,
   getOrderingSubdomains,
   getSeconds,
-  getStarWidth,
   getStorageItem,
   getUniqueId,
   getUserType,
@@ -105,6 +102,13 @@ describe('core UI utility helpers', () => {
     expect(publicAssetUrl('data:image/png;base64,abc')).toBe('data:image/png;base64,abc')
     expect(parseBillingNumber(1234.5)).toBe('1.234,50')
     expect(parseBillingNumber(10, { isTruncable: true, decimal: 2, separator: '.' })).toBe('10.00')
+    // redesign (row 66): the minus sign of a negative is not a digit to group («-.123» before)
+    expect(parseBillingNumber(-123)).toBe('-123')
+    expect(parseBillingNumber(-1234)).toBe('-1.234')
+    expect(parseBillingNumber(-1234567)).toBe('-1.234.567')
+    expect(parseBillingNumber(-1234.5)).toBe('-1.234,50')
+    expect(parseBillingNumber(1234567)).toBe('1.234.567')
+    expect(parseBillingNumber(123)).toBe('123')
     expect(parseBillingPrice(1234.5, { decimal: 1, separator: '.', thousand: ',', currency: '€', currencyPosition: 'right' }))
       .toBe('1,234.5€')
     expect(parseBillingPrice(10, { currencyPosition: 'left', currency: '$' })).toBe('$10')
@@ -155,10 +159,10 @@ describe('core UI utility helpers', () => {
     expect(firstLetterCapital('aDA')).toBe('Ada')
     expect(stringToSlug('  Café Niño!  ')).toBe('cafe_nino')
     expect(bytesConverter(2048)).toBe(2)
-    expect(getStarWidth(0)).toBe('0%')
-    expect(getStarWidth(4)).toBe('80%')
     expect(getHours(7200)).toBe(2)
     expect(getHours(100)).toBe(0)
+    expect(getHours(3600)).toBe(1) // exactly one hour is 1 h, not 0 h
+    expect(getHours(3599)).toBe(0)
     expect(getMinutes(3661)).toBe(1)
     expect(getSeconds(3661)).toBe(1)
     expect(verifyDecimals(4, v => v.toFixed(2))).toBe(4)
@@ -168,10 +172,10 @@ describe('core UI utility helpers', () => {
     expect(shape.rectangle).toBe('rectangle')
     expect(ribbonValues.enabled).toBe(false)
     expect(widgetURL).toContain('orderingweb')
+    // redesign ordering-website B1 (OW-04): the widget host is orderingweb.ordering.co, not the dead orderingplus one
+    expect(widgetURL).toBe('https://orderingweb.ordering.co/')
     expect(TwelveHours).toHaveLength(24)
     expect(TwentyFourHours).toHaveLength(24)
-    expect(epaycoInputFields[0].name).toBe('receiver_id')
-    expect(epaycoSplitRecieveInputs[0].name).toBe('id')
   })
 
   it('formats common display and time values', () => {
@@ -227,6 +231,9 @@ describe('core UI utility helpers', () => {
     expect(getAttributeName('enabled')).toBe('Enabled')
     expect(getAttributeName('unknown_key')).toBe('unknown_key')
     expect(getAttributeName('2020-01-01', { parseDate: (v) => `parsed:${v}` })).toContain('parsed:')
+    // tanda P: it called useLanguage() (a hook) and ChangeLogView calls it once per change while it renders, so the
+    // number of hooks followed the data. The caller hands its own `t`; the function calls no hook.
+    expect(getAttributeName('enabled', { t: (key) => `T:${key}` })).toBe('T:ENABLED')
     expect(Object.keys(disableReasons()).length).toBeGreaterThan(10)
     expect(reviewCommentList(1)[5].title).toBe('What went well?')
     expect(fallbackLogisticEventsText('LOG_LOGISTIC_STARTED')).toContain('Process started')
@@ -266,6 +273,11 @@ describe('core UI utility helpers', () => {
     expect(learnOptionsValues([], t)).toEqual([])
     expect(learnOptionsValues(['order_details', 'store_menu'], t).map(o => o.value))
       .toEqual(['order_details', 'store_menu'])
+    // Messages and Sales channels open their docs.ordering.co pages, not the old help center
+    expect(learnOptionsValues(['message_general_view', 'store_sales_channels'], t).map(o => o.url)).toEqual([
+      'https://docs.ordering.co/docs/products/dashboard/orders/messages-overview/',
+      'https://docs.ordering.co/docs/products/dashboard/connect/sales-channels/'
+    ])
 
     const Probe = () => {
       const empty = getUserType()

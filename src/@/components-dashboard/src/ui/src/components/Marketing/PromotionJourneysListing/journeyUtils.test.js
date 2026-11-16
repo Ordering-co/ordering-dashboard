@@ -1,10 +1,11 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 import { JOURNEY_TEMPLATES, getJourneyTemplate } from './journeyTemplates'
 import {
   buildJourneyPayload,
   buildJourneySummary,
   buildJourneyUpdatePayload,
+  formatDescriptionStamps,
   getInitialJourneyForm,
   getJourneyChannelsStatus,
   getJourneyFormFromPromotion,
@@ -275,6 +276,59 @@ describe('promotion journey templates', () => {
     expect(summary).toContain('1 of those eligible items become free at the selected store')
   })
 
+  // redesign PE-B4 (decision 7; PE-02): the dates of the generated text go through the host's `formatDate`; without it nothing changes
+  describe('summary dates', () => {
+    const pretty = (value, type) => `${type === 'start' ? 'From' : 'Until'} <${value.replace('T', ' ')}>`
+
+    test('with formatDate the start and the end come out formatted, and no raw ISO stamp reaches the text', () => {
+      const summary = buildJourneySummary({ template: getJourneyTemplate('second_order'), form: validForm('second_order'), formatDate: pretty })
+      expect(summary).toContain('from From <2026-09-01 09:00> to Until <2026-09-30 22:00>.')
+      expect(summary).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/)
+      expect(summary).not.toContain('T09:00')
+    })
+
+    test('the Buy X, get Y text formats its dates too', () => {
+      const summary = buildJourneySummary({ template: getJourneyTemplate('buy_x_get_y'), form: validForm('buy_x_get_y'), formatDate: pretty })
+      expect(summary).toContain('from From <2026-09-01 09:00> to Until <2026-09-30 22:00>.')
+      expect(summary).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/)
+    })
+
+    test('a missing date keeps its placeholder and is never sent to formatDate', () => {
+      const formatDate = vi.fn(pretty)
+      const summary = buildJourneySummary({
+        template: getJourneyTemplate('second_order'),
+        form: { ...validForm('second_order'), start: '', end: '' },
+        formatDate
+      })
+      expect(summary).toContain('from ___ to ___.')
+      expect(formatDate).not.toHaveBeenCalled()
+    })
+
+    test('without formatDate the text is what it was (the other callers do not change)', () => {
+      const summary = buildJourneySummary({ template: getJourneyTemplate('second_order'), form: validForm('second_order') })
+      expect(summary).toContain('from 2026-09-01T09:00 to 2026-09-30T22:00.')
+    })
+
+    test('the payload falls back to a formatted summary when the description is empty, and to the old one without formatDate', () => {
+      const form = validForm('second_order')
+      const formatted = buildJourneyPayload({ template: getJourneyTemplate('second_order'), form, formatDate: pretty })
+      expect(formatted.description).toContain('from From <2026-09-01 09:00> to Until <2026-09-30 22:00>.')
+      const raw = buildJourneyPayload({ template: getJourneyTemplate('second_order'), form })
+      expect(raw.description).toContain('from 2026-09-01T09:00 to 2026-09-30T22:00.')
+    })
+
+    test('an edited description is saved as it is, whatever formatDate is', () => {
+      const form = { ...validForm('second_order'), description: '  My own words  ' }
+      expect(buildJourneyPayload({ template: getJourneyTemplate('second_order'), form, formatDate: pretty }).description).toBe('My own words')
+    })
+
+    test('the dates sent to the API stay machine dates', () => {
+      const payload = buildJourneyPayload({ template: getJourneyTemplate('second_order'), form: validForm('second_order'), formatDate: pretty })
+      expect(payload.start).toBe('2026-09-01 09:00:00')
+      expect(payload.end).toBe('2026-09-30 22:00:59')
+    })
+  })
+
   test('maps an existing promotion back into the Journeys editor', () => {
     const { template, form } = getJourneyFormFromPromotion({
       promotion: {
@@ -468,5 +522,77 @@ describe('promotion journey templates', () => {
 
     expect(template.key).toBe('minimum_purchase')
     expect(buildJourneyPayload({ template, form })).toMatchObject({ target: 2, rate_type: 2 })
+  })
+})
+
+// descriptions saved by an older version carry raw stamps; they are written as dates when drawn, the stored text is not rewritten
+describe('formatDescriptionStamps', () => {
+  const formatDate = vi.fn((value, type) => `<${type}:${value}>`)
+
+  test('writes the first stamp as the start and the next one as the end, leaving the rest of the text as it is', () => {
+    formatDate.mockClear()
+    expect(formatDescriptionStamps('Customers receive 20% off, from 2026-09-01T16:57 to 2026-09-30T16:57.', formatDate))
+      .toBe('Customers receive 20% off, from <start:2026-09-01T16:57> to <end:2026-09-30T16:57>.')
+    expect(formatDate).toHaveBeenCalledTimes(2)
+  })
+
+  test('hands the formatter the stamp normalised to minutes, so a stamp with seconds still reads as the end of the day', () => {
+    expect(formatDescriptionStamps('from 2026-09-01T00:00:00 to 2026-09-30T23:59:59', formatDate))
+      .toBe('from <start:2026-09-01T00:00> to <end:2026-09-30T23:59>')
+  })
+
+  test('returns a text with no stamp byte-identical and never calls the formatter', () => {
+    formatDate.mockClear()
+    const text = 'Weekend 15% off, 2026-09-01 to 2026-09-30 (no time)'
+    expect(formatDescriptionStamps(text, formatDate)).toBe(text)
+    expect(formatDate).not.toHaveBeenCalled()
+  })
+
+  test('without a formatter the text is unchanged', () => {
+    const text = 'from 2026-09-01T16:57 to 2026-09-30T16:57'
+    expect(formatDescriptionStamps(text)).toBe(text)
+    expect(formatDescriptionStamps(text, null)).toBe(text)
+  })
+
+  test('null, undefined and empty come back as they are', () => {
+    expect(formatDescriptionStamps(null, formatDate)).toBeNull()
+    expect(formatDescriptionStamps(undefined, formatDate)).toBeUndefined()
+    expect(formatDescriptionStamps('', formatDate)).toBe('')
+  })
+
+  test('keeps a stamp that is not a real date', () => {
+    expect(formatDescriptionStamps('from 2026-13-45T10:00 to 2026-09-30T10:00', formatDate))
+      .toBe('from 2026-13-45T10:00 to <end:2026-09-30T10:00>')
+  })
+
+  test('an existing promotion opens with the stamps of its description written as dates, and the untouched description is not sent on save', () => {
+    const stored = 'Customers with exactly 0 orders receive 20% off, from 2026-09-01T16:57 to 2026-09-30T16:57.'
+    const { template, form } = getJourneyFormFromPromotion({
+      promotion: {
+        name: 'Legacy welcome',
+        description: stored,
+        condition_type: 1,
+        target: 1,
+        rate: 20,
+        rate_type: 1,
+        minimum: 20,
+        user_order_count: 0,
+        user_order_count_condition: '=',
+        start: '2026-09-01 16:57:00',
+        end: '2026-09-30 16:57:00',
+        businesses: [{ id: 10 }]
+      },
+      allSiteIds: [3],
+      allBusinessIds: [10],
+      formatDate
+    })
+    expect(form.description).toBe('Customers with exactly 0 orders receive 20% off, from <start:2026-09-01T16:57> to <end:2026-09-30T16:57>.')
+    expect(form.descriptionEdited).toBe(true)
+    // nothing was touched (or only another field was): the description is not part of the update
+    const payload = buildJourneyPayload({ template, form })
+    expect(buildJourneyUpdatePayload({ payload, dirtyFields: {}, descriptionEdited: form.descriptionEdited })).toEqual({})
+    expect(buildJourneyUpdatePayload({ payload, dirtyFields: { rate: true }, descriptionEdited: form.descriptionEdited })).not.toHaveProperty('description')
+    // only when the person edits the textarea, what they see is what goes
+    expect(buildJourneyUpdatePayload({ payload, dirtyFields: { description: true }, descriptionEdited: true })).toEqual({ description: form.description })
   })
 })

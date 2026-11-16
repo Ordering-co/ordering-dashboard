@@ -128,7 +128,7 @@ export const CheckboxWrapper = styled.div`
   `}
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 15px;
@@ -145,7 +145,7 @@ export const FieldContainer = styled.div`
   margin-bottom: 25px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 12px;
   }
 

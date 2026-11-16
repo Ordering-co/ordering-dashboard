@@ -1,0 +1,153 @@
+/*
+ * redesign  (D1 A) · /profile: one column of cards (760px at most), the account card and the Google Calendar card.
+ * The sessions card is Sessions/profile-sessions.css and shares `.odc-profile-card` below.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Breakpoint as a literal only in @media (phone < 768).
+ * Logical properties (C17).
+ */
+
+/* The root takes the height the shell gives and scrolls on its own, as the page of main did; the column is its children */
+.odc-profile {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  padding: var(--od-space-6);
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-profile > * {
+  flex: none;
+  inline-size: min(100%, var(--od-x-profile-column));
+}
+
+/* : the menu button is PageHeader's `leading`; the page header is a child of the column like the cards */
+
+/* ── Cards ── */
+.odc-profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-5);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+}
+
+.odc-profile-card-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* the error state of the sessions sits inside the card, not in a page-sized hole */
+.odc-profile-card .odc-state { padding-block: var(--od-space-5); }
+
+/* ── Account ── */
+.odc-profile-account {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--od-space-4);
+}
+
+/* the account photo: --od-x-profile-avatar instead of the 216px box of main (and over the avatar's own `lg`, which is why it is doubled) */
+.odc-avatar.odc-profile-avatar[data-size='lg'] {
+  inline-size: var(--od-x-profile-avatar);
+  block-size: var(--od-x-profile-avatar);
+  font-size: var(--od-x-type-section-size);
+}
+
+/* «Edit profile» ( P12) at the end of the account row */
+.odc-profile-edit {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+/* its form in the dialog: one column, the save button at the end */
+.odc-profile-form {
+  display: grid;
+  gap: var(--od-space-4);
+}
+
+.odc-profile-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.odc-profile-identity {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-profile-name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-profile-name {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+/* the role and «Read only»: discreet tags beside the name */
+.odc-profile-tag {
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-profile-line {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+/* ── Google Calendar (level 8) ── */
+.odc-profile-google-text {
+  margin: 0;
+  max-inline-size: var(--od-x-measure);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-profile-google-action {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-3);
+}
+
+.odc-profile-google-icon {
+  flex: none;
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+}
+
+@media (max-width: 767px) {
+  .odc-profile { padding: var(--od-space-4); }
+
+  .odc-profile-card { padding: var(--od-space-4); }
+}

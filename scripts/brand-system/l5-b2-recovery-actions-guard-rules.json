@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b2-recovery-actions-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l5-b2-recovery-actions-recoveryactionlisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/RecoveryActionListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "recoveryActionsProps /* binding-sha256:6f0a7632d1de0e4a075efcda81eee90a8eecbfccaf2ac4f9150fa79e4243d2cb */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-recovery-actions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

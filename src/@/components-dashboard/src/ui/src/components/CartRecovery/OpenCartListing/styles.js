@@ -1,34 +1,18 @@
 import styled from 'styled-components'
 
-export const OpenCartsContainer = styled.div`
-  flex: 1;
-  padding: 20px;
+// redesign OC-B: the page frame is the only own style left. The header, filters, table, foot and panel are Product
+// pieces (Shared/Product, OpenCartsQueue, OpenCartPanel); the split view's height, the phone gutter and print are in
+// OpenCartsQueue/open-carts.css (the literal guard reads breakpoints only in CSS).
+// Every value is a var(--od-*) token.
+
+export const ListFrame = styled.div`
   box-sizing: border-box;
-  transition: all 0.5s;
-  overflow: hidden;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
 `
 
-export const OpenCartsContent = styled.div``
-
-export const OpenCartsInnerContent = styled.div``
-
-export const WrapItemView = styled.div`
-  width: 100%;
-`
-
-export const WrapperIndicator = styled.div`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 100px;
-  height: 50px;
-  border-radius: 5px;
-  background: #151824;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${props => props.theme.colors.white};
-  font-weight: 500;
-  font-size: 24px;
+// The line that says the list is a window of what exists (Follow up and Live now ask for a capped number of carts).
+export const Foot = styled.div`
+  display: grid;
+  gap: var(--od-space-2);
 `

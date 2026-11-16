@@ -1,0 +1,747 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-orders-list-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "admins-selector-driver-name-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/AdminsSelector/styles.js",
+      "component": "DriverName",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "admins-selector-driver-text-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/AdminsSelector/styles.js",
+      "component": "DriverText",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "admins-selector-placeholder-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/AdminsSelector/styles.js",
+      "component": "PlaceholderTitle",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "businesses-selector-option-name-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/BusinessesSelector/styles.js",
+      "component": "OptionName",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "businesses-selector-option-category-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/BusinessesSelector/styles.js",
+      "component": "OptionCategory",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "company-selector-remove-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CompanySelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "company-selector-option-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CompanySelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "company-selector-name-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CompanySelector/styles.js",
+      "component": "CompanyName",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "company-selector-text-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CompanySelector/styles.js",
+      "component": "CompanyText",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "company-selector-placeholder-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/CompanySelector/styles.js",
+      "component": "PlaceholderTitle",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "sla-controls-option-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersDashboardSLAControls/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "order-notification-heading-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "ModalContainer",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "order-notification-copy-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "ModalContainer",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "order-notification-toast-title-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "ToastWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "order-notification-toast-detail-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "ToastWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "order-notification-checkbox-label-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "order-status-filter-tab-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusFilterBar/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "order-status-subfilter-button-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusSubFilter/styles.js",
+      "component": "SubFilterContainer",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "order-status-type-option-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusTypeSelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-cards-order-number-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "OrderCard",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-cards-date-time-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "OrderHeader",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-cards-status-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "OrderHeader",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-cards-timer-value-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "Timer",
+      "property": "font-size",
+      "match": "10px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-cards-timer-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "Timer",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "orders-cards-view-details-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "ViewDetails",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "orders-cards-info-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "InfoItemContainer",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "orders-cards-entity-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "InfoItemContainer",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-cards-unread-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersCards/styles.js",
+      "component": "UnreadMessageCounter",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-content-header-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersContentHeader/styles.js",
+      "component": "HeaderTitle",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "orders-export-result-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersExportCSV/styles.js",
+      "component": "ExportCSVResult",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "orders-export-tabs-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersExportCSV/styles.js",
+      "component": "TabsSelectContainer",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "orders-filter-group-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "FilterGroupListContainer",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "orders-filter-group-wrapper-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "WrapperRow",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-filter-group-add-meta-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "AddMetaFiled",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "orders-filter-group-select-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-filter-group-option-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-filter-group-warning-copy-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "orders-filter-group-clear-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "orders-filter-group-root-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "@media (min-width: 768px)",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-listing-empty-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersListing/styles.js",
+      "component": "InnerNoneOrdersContainer",
+      "property": "font-size",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-listing-info-copy-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersListing/styles.js",
+      "component": "InfoMessage",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "orders-listing-info-link-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersListing/styles.js",
+      "component": "InfoMessage",
+      "property": "font-size",
+      "context": "a",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "orders-listing-info-root-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersListing/styles.js",
+      "component": "InfoMessage",
+      "property": "font-size",
+      "context": "@media (min-width: 768px)",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-manager-selection-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersManager/styles.js",
+      "component": "WrapperIndicator",
+      "property": "font-size",
+      "match": "24px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-table-cells-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th,\n  td",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-table-metadata-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "div.info > p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "orders-table-strong-values-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "div.info > p.bold",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-table-driver-option-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "DriversInfo",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-table-delivery-type-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "OrderType",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-table-status-selector-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "WrapOrderStatusSelector",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-table-timer-value-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "Timer",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "orders-table-timer-label-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "Timer",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-table-count-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "OrdersCountWrapper",
+      "property": "font-size",
+      "match": "9px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "review-customer-heading-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "ReviewContainer",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "review-customer-name-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "CustomerName",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "review-customer-question-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "ReviewsProgressWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "review-customer-mark-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "ReviewsMarkPoint",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "review-customer-comments-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "CommentsList",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "review-customer-comment-button-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "CommentButton",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "review-customer-textarea-label-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ReviewCustomer/styles.js",
+      "component": "Comments",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "websocket-date-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "DateWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "websocket-info-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "websocket-heading-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "DetailContainer",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "websocket-last-update-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "DetailContainer",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "websocket-intro-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "DetailContainer",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "websocket-status-description-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "StatusItemWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "websocket-troubleshooting-heading-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "TroubleshootingSection",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "websocket-troubleshooting-body-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "TroubleshootingSection",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "websocket-support-button-control",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WebsocketStatus/styles.js",
+      "component": "TroubleshootingSection",
+      "property": "font-size",
+      "context": "button",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "wizard-orders-step-number-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WizardOrders/styles.js",
+      "component": "HelperContent",
+      "property": "font-size",
+      "match": "20px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "wizard-orders-copy-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WizardOrders/styles.js",
+      "component": "HelperContent",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "orders-header-filter-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersHeaderFilterGroup/styles.js",
+      "component": "WrapperRow",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "orders-header-filter-option-control-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersHeaderFilterGroup/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "order-notification-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderNotification/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size controls the inherited checkbox SVG geometry, not readable text.",
+      "evidence": "CheckBoxWrapper applies the declaration only inside its svg selector; the adjacent span carries the readable label typography."
+    },
+    {
+      "id": "order-status-subfilter-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderStatusSubFilter/styles.js",
+      "component": "SubFilterContainer",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size controls the inherited button SVG geometry, not readable text.",
+      "evidence": "SubFilterContainer scopes the declaration to button svg while the button declaration separately governs its text size."
+    },
+    {
+      "id": "orders-filter-warning-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersFilterGroup/styles.js",
+      "component": "WarningMessage",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This font-size controls the inherited warning SVG geometry, not readable text.",
+      "evidence": "WarningMessage scopes the 20px declaration to svg; its span and link have separate reviewed text declarations."
+    },
+    {
+      "id": "orders-listing-info-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersListing/styles.js",
+      "component": "InfoMessage",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This font-size controls the inherited information SVG geometry, not readable text.",
+      "evidence": "InfoMessage scopes the 20px declaration to svg; its span and link have separate reviewed text declarations."
+    },
+    {
+      "id": "orders-table-checkbox-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/styles.js",
+      "component": "CheckBox",
+      "property": "font-size",
+      "context": "svg",
+      "match": "24px",
+      "reason": "This font-size controls the inherited checkbox SVG geometry, not readable text.",
+      "evidence": "CheckBox contains the declaration only inside svg and has no readable text sized by this property."
+    },
+    {
+      "id": "wizard-orders-stars-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/WizardOrders/styles.js",
+      "component": "HelperContent",
+      "property": "font-size",
+      "context": "> svg",
+      "match": "30px",
+      "reason": "This font-size controls the inherited decorative stars SVG geometry, not readable text.",
+      "evidence": "HelperContent scopes the 30px declaration to its direct svg child while step and paragraph text use separate declarations."
+    }
+  ]
+}

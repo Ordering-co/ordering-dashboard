@@ -29,14 +29,16 @@ export const buildDashboardDestinationCatalog = ({
   settingsHub = null,
   integrations = [],
   deliveryCompanies = [],
-  builderApps = []
+  builderApps = [],
+  // the project shows Order with Google (its Connect page and its store section are offered)
+  googleActionsVisible = false
 } = {}) => {
   const { level } = getDashboardRoleFlags(user)
-  const navSections = getDashboardNavSections({ t, user, configs, sites })
+  const navSections = getDashboardNavSections({ t, user, configs, sites, googleActionsVisible })
   const can = (url) => canOpenNavDestination({ sections: navSections, url, level })
   const canMyProducts = !!navSections.myProducts?.visible && canOpenDashboardRoute('/my-products', level)
   const settingsAllowed = canOpenSettings(user)
-  const navigationEntries = buildNavigationEntries({ t, user, configs, sites })
+  const navigationEntries = buildNavigationEntries({ t, user, configs, sites, googleActionsVisible })
   const baseSettings = settingsAllowed ? buildStaticSettingsEntries({ t }) : []
   const hubEntries = settingsAllowed && settingsHub
     ? buildSettingsHubEntries({ t, hub: settingsHub })
@@ -55,7 +57,7 @@ export const buildDashboardDestinationCatalog = ({
     canMyProducts
   })
   const actionEntries = [
-    ...buildOpenActionEntries({ t, user, configs, sites, project }),
+    ...buildOpenActionEntries({ t, user, configs, sites, project, googleActionsVisible }),
     ...integrationEntries
   ]
   const entries = [...navigationEntries, ...settingsEntries, ...actionEntries].map(entry => ({

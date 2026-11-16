@@ -1,0 +1,99 @@
+/* Scoped column visibility popover. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-column-popover-header) {
+  @apply od-flex od-justify-end;
+}
+
+.od-ui:where(.od-column-popover-header) > button {
+  min-width: var(--od-column-popover-touch-target);
+  min-height: var(--od-column-popover-touch-target);
+}
+
+.od-ui:where(.od-column-popover-panel) {
+  position: fixed !important;
+  z-index: calc(var(--od-x-layer-chrome) + 1);
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(250px, calc(100vw - 16px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  white-space: normal;
+  padding: 15px;
+  color: var(--od-column-popover-text);
+  background: var(--od-column-popover-surface);
+  border: 1px solid var(--od-column-popover-border);
+  border-radius: var(--od-column-popover-radius);
+  box-shadow: var(--od-column-popover-shadow);
+}
+
+.od-ui:where(.od-column-popover-item) {
+  @apply od-flex od-w-full od-items-center;
+  min-height: var(--od-column-popover-touch-target);
+  padding: 7px;
+  color: var(--od-column-popover-text);
+  background: transparent !important;
+  border: 0;
+  border-radius: var(--od-column-popover-radius);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: start;
+  transition:
+    background-color var(--od-column-popover-duration) var(--od-column-popover-easing),
+    color var(--od-column-popover-duration) var(--od-column-popover-easing);
+}
+
+/*
+ * Hosts style their own trigger with a bare `button` descendant rule (for example
+ * the Orders list pins its trigger with `position: absolute`). That rule also
+ * reaches these rows, which are buttons: it takes them out of flow, collapses the
+ * panel and stacks every row on top of the next. Two classes outrank any such
+ * `.host button` rule and keep the rows in normal flow. The base Button centres
+ * its content; the rows read as a start-aligned list.
+ */
+.od-ui.od-column-popover-item {
+  position: static;
+  inset: auto;
+  z-index: auto;
+  justify-content: flex-start;
+  padding: 7px;
+  transform: none;
+}
+
+.od-ui:where(.od-column-popover-item):hover {
+  background: var(--od-column-popover-subtle) !important;
+}
+
+.od-ui:where(.od-column-popover-item):focus-visible {
+  outline: var(--od-column-popover-focus-width) solid var(--od-column-popover-focus);
+  outline-offset: var(--od-column-popover-focus-offset);
+}
+
+.od-ui:where(.od-column-popover-item) svg {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.od-ui:where(.od-column-popover-item)[aria-pressed='true'] svg {
+  color: var(--od-column-popover-action);
+}
+
+.od-ui:where(.od-column-popover-item) span {
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-column-popover-title) {
+  padding: 0 7px;
+  color: var(--od-column-popover-text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-column-popover-item) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

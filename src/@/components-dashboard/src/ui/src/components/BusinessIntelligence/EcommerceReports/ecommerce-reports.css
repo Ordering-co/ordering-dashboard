@@ -1,0 +1,51 @@
+/*
+ * /intelligence/ecommerce_reports (redesign ecommerce FC): the clicks report. The page, its header, its bar and its period line are the
+ * classes of /intelligence/reports (odc-rp-*, reports.css); this sheet has only what the clicks cards add.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-ec-*. Breakpoints are literals in @media: phone < 768, the dialog from 768, two columns in the card from 1024.
+ */
+
+/* redesign ecommerce FC (D6): the body of a card, the figures above and the top 10 under them */
+.odc-ec-clicks-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* redesign ecommerce FC (D10): while the hook updates the old rows stay in place, dimmed (as the blocks of the other reports) */
+.odc-ec-clicks-body[data-stale] {
+  opacity: 0.6;
+}
+
+.odc-ec-clicks-summary {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign  (n.º 20, P1): the card has no chart, so the top 10 (or every row, after «Show all N») takes the whole width */
+.odc-ec-clicks-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-ec-clicks-top-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* «Show all N» / «Show less»: at the start of the line, under the list */
+.odc-ec-clicks-more {
+  display: flex;
+  justify-content: flex-start;
+}

@@ -21,7 +21,7 @@ export const FormGroup = styled.div`
 export const FormControl = styled.div`
   margin-bottom: 15px;
   > label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   > input {
@@ -34,7 +34,7 @@ export const FormControl = styled.div`
     height: 54px;
     background-color: ${props => props.theme.colors.secundary};
     border: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     border-radius: 8px;
   }
 
@@ -61,7 +61,7 @@ export const RangeSelectWrapper = styled.div`
       padding-top: 4px;
       padding-bottom: 4px;
       background-color: ${props => props.theme.colors.secundary};
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       border-radius: 8px;
     }
     .list {
@@ -81,7 +81,7 @@ export const RangeSelectWrapper = styled.div`
 
 export const Option = styled.div`
   color: ${props => props.theme.colors.secundaryContrast};
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   white-space: nowrap;
 `
 
@@ -92,7 +92,7 @@ export const SwitchWrapper = styled.div`
   width: 100%;
   label {
     margin-bottom: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 

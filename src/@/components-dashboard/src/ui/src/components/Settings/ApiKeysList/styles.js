@@ -26,7 +26,7 @@ export const Header = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }
@@ -64,7 +64,7 @@ export const ApiKeysListTable = styled.table`
     width: 100%;
     th,
     td {
-      font-size: 12px;
+      font-size: var(--od-type-content-size);
       word-break: break-all;
 
       &:last-child {
@@ -102,10 +102,17 @@ export const DropdownButtonWrapper = styled.div`
     border-left: 1px solid ${props => props.theme.colors.borderColor};
   `}
   padding: 5px 20px;
+  position: relative;
   button {
     background: transparent !important;
     border: none;
     padding: 0px;
+    /* 44x44 touch area for the three-dots button */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     &:active,
     &:focus {
       border-color: unset !important;
@@ -136,12 +143,31 @@ export const DropdownButtonWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
         color: #E63757;
       }
     }
+  }
+`
+
+// Owner decision 25 B: the ending of a key and its Show and Copy, on one line that wraps on a phone
+export const KeyCell = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+
+  .odc-api-key-value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .odc-api-key-actions {
+    display: inline-flex;
+    gap: var(--od-space-2);
   }
 `

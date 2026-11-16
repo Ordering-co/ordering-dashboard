@@ -4,6 +4,12 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+
+// The first message of an API error: a string, a list of strings or of { message }.
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 export const BusinessSchedule = (props) => {
   const {
@@ -18,12 +24,24 @@ export const BusinessSchedule = (props) => {
   const [, t] = useLanguage()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
+  // redesign stores 1.A (G2-28): a schedule that is not saved says why, in the place of the "Loading" toast, and
+  // stays pending. Returns `{ ok: true }` or `{ ok: false, error }`.
+  const showSaveError = (error) => {
+    showToast(ToastType.Error, translateApiMessage(t, firstMessage(error), t('STORES_CHANGE_FAILED', "We couldn't save the change.")))
+  }
+
   /**
    * Method to update the business from the API
    */
-  const handleUpdateSchedule = async () => {
+  // redesign stores 5.4: `options.inlineError` is for a screen that paints the failure itself (the store editor's
+  // SaveBar): no «Loading» or error toast on top of it. The tutorial has no bar and keeps both.
+  // redesign stores: `options.silentSuccess` also drops the «Schedule updated» toast (the SaveBar says «Saved»).
+  const handleUpdateSchedule = async (options = {}) => {
+    const inline = !!options?.inlineError
+    // `silentSuccess`: the caller already says «Saved» itself (the SaveBar); only the success toast is left out, errors stay.
+    const silentSuccess = !!options?.silentSuccess
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = { ...formState.changes }
       if (changes?.schedule) {
@@ -39,17 +57,19 @@ export const BusinessSchedule = (props) => {
           result: { error: false }
         })
         handleSuccessUpdate && handleSuccessUpdate(result)
-        showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
-      } else {
-        setFormState({
-          changes: formState.changes,
-          result: {
-            error: false,
-            result
-          },
-          loading: false
-        })
+        if (!silentSuccess) showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
+        return { ok: true }
       }
+      setFormState({
+        changes: formState.changes,
+        result: {
+          error: true,
+          result
+        },
+        loading: false
+      })
+      if (!inline) showSaveError(result)
+      return { ok: false, error: result }
     } catch (err) {
       setFormState({
         ...formState,
@@ -59,17 +79,22 @@ export const BusinessSchedule = (props) => {
         },
         loading: false
       })
+      if (!inline) showSaveError(err.message)
+      return { ok: false, error: [err.message] }
     }
   }
 
+  // (P-3): a week equal to the saved one is not a change (K/Schedule reports it when the user puts the week back).
   const handleChangeScheduleState = (scheduleChanges) => {
+    const isSaved = Array.isArray(business?.schedule) && JSON.stringify(scheduleChanges) === JSON.stringify(business.schedule)
     setFormState({
       ...formState,
-      changes: {
-        schedule: scheduleChanges
-      }
+      changes: isSaved ? {} : { schedule: scheduleChanges }
     })
   }
+
+  // Throws away what was edited and not saved.
+  const handleDiscardSchedule = () => setFormState(prev => ({ ...prev, changes: {}, result: { error: false } }))
 
   return (
     <>
@@ -80,6 +105,7 @@ export const BusinessSchedule = (props) => {
             formState={formState}
             handleChangeScheduleState={handleChangeScheduleState}
             handleUpdateSchedule={handleUpdateSchedule}
+            handleDiscardSchedule={handleDiscardSchedule}
           />
         )
       }

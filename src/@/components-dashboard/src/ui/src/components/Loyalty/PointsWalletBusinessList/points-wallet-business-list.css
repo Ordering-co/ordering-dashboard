@@ -1,0 +1,171 @@
+/*
+ *  · The wallet rules per store: search, one row per store (avatar and name, status switch, redeem and accumulation
+ * checkboxes, chevron) and the pagination. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ */
+
+.pwbl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.pwbl-search {
+  max-inline-size: calc(var(--od-x-control-height) * 10);
+}
+
+/* A narrow panel scrolls the table sideways instead of crushing it. */
+.pwbl-table-wrap {
+  overflow-x: auto;
+}
+
+.pwbl-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-ui-size);
+}
+
+.pwbl-table th {
+  padding: var(--od-space-2) var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-medium);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.pwbl-table td {
+  padding: var(--od-space-2) var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  vertical-align: middle;
+}
+
+.pwbl-store {
+  inline-size: 100%;
+}
+
+.pwbl-row {
+  cursor: pointer;
+  transition: background-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.pwbl-row:hover,
+.pwbl-row[data-active] {
+  background: var(--od-surface-subtle);
+}
+
+.pwbl-open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.pwbl-open:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-width);
+}
+
+/* break-word, not anywhere: a name breaks between words, and only a word longer than the line breaks inside */
+.pwbl-name {
+  overflow-wrap: break-word;
+  font-weight: var(--od-font-weight-medium);
+}
+
+.pwbl-chevron-cell {
+  text-align: end;
+}
+
+.pwbl-chevron {
+  color: var(--od-x-text-subtle);
+}
+
+[dir='rtl'] .pwbl-chevron { transform: scaleX(-1); }
+
+.pwbl-loading {
+  display: flex;
+  flex-direction: column;
+}
+
+.pwbl-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding: var(--od-space-2) var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The column names inside the cells are for the card layout only. */
+.pwbl-cell-label {
+  display: none;
+}
+
+/* Phone (below 768px): each store is a card: avatar and name on top, the three controls with their names below. */
+@media (max-width: 767px) {
+  .pwbl-table,
+  .pwbl-table tbody {
+    display: block;
+  }
+
+  .pwbl-table thead {
+    display: none;
+  }
+
+  .pwbl-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    align-items: start;
+    gap: var(--od-space-2) var(--od-space-3);
+    padding: var(--od-space-3) 0;
+    border-block-end: var(--od-x-hairline) solid var(--od-border);
+  }
+
+  .pwbl-table .pwbl-row > td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  .pwbl-row > .pwbl-store {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    align-self: center;
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+
+  .pwbl-row > .pwbl-chevron-cell {
+    grid-column: 4;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .pwbl-table .pwbl-row > .pwbl-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--od-space-1);
+  }
+
+  .pwbl-cell-label {
+    display: block;
+    color: var(--od-text-muted);
+    font-size: var(--od-x-type-caption-size);
+    line-height: var(--od-x-leading-ui);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwbl-row { transition: none; }
+}

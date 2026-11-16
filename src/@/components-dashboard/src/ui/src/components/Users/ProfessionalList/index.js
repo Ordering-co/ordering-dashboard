@@ -45,7 +45,7 @@ export const ProfessionalList = (props) => {
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
 
-  const [confirmAdmin, setConfirmAdmin] = useState({ open: false, handleOnConfirm: null })
+  const [confirmAdmin, setConfirmAdmin] = useState({ open: false, targetId: undefined, handleOnConfirm: null })
 
   const [openPopover, setOpenPopover] = useState(false)
   const [isAllChecked, setIsAllChecked] = useState(false)
@@ -109,9 +109,10 @@ export const ProfessionalList = (props) => {
     } else {
       setConfirmAdmin({
         open: true,
-        handleOnConfirm: () => {
+        targetId: user.id,
+        handleOnConfirm: (token) => {
           setConfirmAdmin({ ...confirmAdmin, open: false })
-          handleChangeActiveUser({ id: user.id, enabled })
+          handleChangeActiveUser({ id: user.id, enabled, confirmationToken: token })
         }
       })
     }
@@ -165,6 +166,11 @@ export const ProfessionalList = (props) => {
                   <th>
                     <AllCheckWrapper>
                       <CheckBoxWrapper
+                        as='button'
+                        type='button'
+                        role='checkbox'
+                        aria-checked={!usersList?.loading && isAllChecked}
+                        aria-label={t('SELECT_ALL', 'Select all')}
                         className='user_checkbox'
                         isChecked={!usersList?.loading && isAllChecked}
                         onClick={() => handleSelecteAllUser()}
@@ -250,6 +256,11 @@ export const ProfessionalList = (props) => {
                       <td>
                         <UserMainInfo>
                           <CheckBoxWrapper
+                            as='button'
+                            type='button'
+                            role='checkbox'
+                            aria-checked={selectedUsers.includes(user.id)}
+                            aria-label={t('SELECT_USER', 'Select a user')}
                             className='user_checkbox'
                             isChecked={selectedUsers.includes(user.id)}
                             onClick={() => handleSelectedUsers(user.id)}
@@ -348,6 +359,8 @@ export const ProfessionalList = (props) => {
 
       <ConfirmAdmin
         open={confirmAdmin.open}
+        action='user_enabled'
+        targetId={confirmAdmin.targetId}
         onClose={() => setConfirmAdmin({ ...confirmAdmin, open: false })}
         onConfirm={confirmAdmin.handleOnConfirm}
       />

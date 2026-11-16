@@ -1,0 +1,28 @@
+/*
+ * redesign stores 5.5a · Channels of a menu: search, select all / none, one checkbox per site and the save bar.
+ * Values: --od-* and --od-x-* only, logical properties only.
+ */
+
+.odc-bmc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bmc:focus { outline: none; }
+
+.odc-bmc-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block-end: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bmc-list {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}

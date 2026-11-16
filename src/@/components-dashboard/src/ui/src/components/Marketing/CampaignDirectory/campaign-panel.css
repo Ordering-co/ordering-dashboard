@@ -1,0 +1,186 @@
+/*
+ * redesign CA-B6 (decisions 1 and 4) · The campaign panel and the read-only view of a created campaign.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-campaign-.
+ * The message facsimile is a simulation of another surface and is NOT restyled here (adoption: preserve it whole); only its frame is.
+ */
+
+/* ── The view: blocks with a hairline on top and one rhythm; the first one has none ── */
+.odc-campaign-view {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The notice belongs to the view, not to a page bar: no page gutter around it */
+.odc-campaign-view .odc-notice {
+  margin-inline: 0;
+  margin-block: 0 var(--od-space-4);
+}
+
+.odc-campaign-view-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-campaign-view .odc-notice + .odc-campaign-view-block {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odc-campaign-view-block:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odc-campaign-view-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-view-value {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odc-campaign-view-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-view-reach {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-view-reach .odc-figure {
+  color: var(--od-text);
+}
+
+/* ── The rules, as chips: a plain list, wrapping ── */
+.odc-campaign-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-campaign-chip {
+  min-inline-size: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* ── The message: only the frame of the facsimile ── */
+.odc-campaign-view-message {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* The webhook has no facsimile: its three values as read-only text (term muted, value body) */
+.odc-campaign-webhook-preview {
+  display: grid;
+  gap: var(--od-x-space-half) 0;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-campaign-webhook-preview dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-webhook-preview dd {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ── Results: label over value; the figures wrap to a second row rather than squeeze (a revenue can be long) ── */
+.odc-campaign-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--od-x-type-title-size) * 6), 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+}
+
+.odc-campaign-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-campaign-result dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-campaign-result dd {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  color: var(--od-text);
+}
+
+.odc-campaign-na {
+  color: var(--od-text-muted);
+}
+
+/* ── The panel: states and the legacy body ── */
+.odc-campaign-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-campaign-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+.odc-campaign-legacy {
+  min-inline-size: 0;
+}
+
+/* In a narrow panel the status drops under the title row, where «Back» ends; the switch's own 44px area would reach into it */
+@container odc-record (max-width: 480px) {
+  .odc-campaign-panel-status {
+    margin-block-start: var(--od-space-3);
+  }
+
+  .odc-campaign-results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

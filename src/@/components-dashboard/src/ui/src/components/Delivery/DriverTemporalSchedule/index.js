@@ -47,6 +47,7 @@ export const DriverTemporalSchedule = (props) => {
           ref={datePickerRef}
           locale={getLocale(state?.language?.code, locales)}
           selected={selectedDate}
+          aria-label={t('SCHEDULE', 'Schedule')}
           minDate={new Date()}
           onChange={handleSelect}
           onCalendarClose={onClose}

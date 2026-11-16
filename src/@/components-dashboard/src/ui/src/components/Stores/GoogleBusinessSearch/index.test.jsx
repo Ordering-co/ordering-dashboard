@@ -193,19 +193,6 @@ describe('GoogleBusinessSearch', () => {
     expect(await screen.findByText('Is this your business?')).toBeInTheDocument()
   })
 
-  it('hands the confirmed business to the caller instead of applying it in the add-store modal', async () => {
-    mockPlaces.fetchGoogleBusiness.mockResolvedValue(business)
-    const onConfirm = vi.fn()
-    const onChange = vi.fn()
-    renderSearch({ onConfirm, onChange })
-
-    fireEvent.click(screen.getByText('pick business'))
-    fireEvent.click(await screen.findByText('Yes, use this data'))
-
-    expect(onConfirm).toHaveBeenCalledWith(business)
-    expect(onChange).not.toHaveBeenCalled()
-  })
-
   it('applies a business confirmed elsewhere as soon as it mounts', async () => {
     const onChange = vi.fn()
     renderSearch({ initialBusiness: business, onChange })

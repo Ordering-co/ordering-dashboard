@@ -47,7 +47,7 @@ const PaymentOptionWalletUI = (props) => {
 
   const walletName = {
     cash: {
-      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+      name: t('PAY_WITH_CASH_WALLET_TEXT', 'Pay with cash wallet'),
       isActive: isWalletCashEnabled && isBusinessWalletCashEnabled
     },
     credit_point: {
@@ -115,7 +115,9 @@ const PaymentOptionWalletUI = (props) => {
                   <SectionLeftText>
                     <label
                       style={{
-                        color: (cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0 ? theme.colors.darkGray : 'black'
+                        color: (cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0
+                          ? theme?.ordering?.semantic?.text?.muted ?? theme.colors.darkGray
+                          : theme?.ordering?.semantic?.text?.default ?? 'black'
                       }}
                       htmlFor={`custom-checkbox-${idx}`}
                     >
@@ -129,7 +131,7 @@ const PaymentOptionWalletUI = (props) => {
                   )}
                   {wallet.type === 'credit_point' && (
                     <span>
-                      <span style={{ color: theme.colors.primary }}>{`${wallet?.balance} ${t('POINTS', 'Points')}`}</span> {wallet?.balance > 0 && `= ${parsePrice(wallet?.balance / wallet?.redemption_rate)}`}
+                      <span style={{ color: theme?.ordering?.semantic?.action?.default ?? theme.colors.primary }}>{`${wallet?.balance} ${t('POINTS', 'Points')}`}</span> {wallet?.balance > 0 && `= ${parsePrice(wallet?.balance / wallet?.redemption_rate)}`}
                     </span>
                   )}
                 </div>

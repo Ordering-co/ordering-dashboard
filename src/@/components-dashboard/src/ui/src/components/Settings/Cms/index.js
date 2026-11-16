@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useLanguage, PagesList as PagesListController } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { Button, IconButton, Switch, LinkButton } from '../../../styles'
-import { Modal, Pagination, SearchBar } from '../../Shared'
-import { Dropdown, DropdownButton } from 'react-bootstrap'
-import FiMoreVertical from '@meronex/icons/fi/FiMoreVertical'
-import { useTheme } from 'styled-components'
+import { Modal } from '../../Shared'
+import { Ellipsis, Menu as MenuIcon } from '../../Shared/Icon'
+import {
+  Button,
+  ConfirmDialog,
+  DataTable,
+  EmptyState,
+  IconButton,
+  Menu,
+  Pagination,
+  SearchField,
+  Switch
+} from '../../Shared/Product'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
-import { List as MenuIcon } from 'react-bootstrap-icons'
 import { PageForm } from '../PageForm'
 import { addQueryToUrl } from '../../../utils'
+import './cms.css'
 
-import {
-  StaticPageListContainer,
-  Header,
-  HeaderLeft,
-  HeaderRight,
-  PageListTable,
-  PageTbody,
-  ActionsContainer,
-  EnableWrapper,
-  ActionSelectorWrapper,
-  PagesBottomContainer
-} from './styles'
+const PAGE_SIZES = [10, 25, 50]
+
+// «Showing _from_–_to_ of _total_» with the numbers as figures (decision 11)
+const fillTemplate = (template, values, figure) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{figure(values[name])}</React.Fragment> : part
+})
 
 const CmsUI = (props) => {
   const {
@@ -36,12 +37,12 @@ const CmsUI = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const theme = useTheme()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [searchValue, setSearchValue] = useState(null)
 
   const [openModal, setOpenModal] = useState(false)
   const [curPageId, setCurPageId] = useState(null)
+  const [confirm, setConfirm] = useState({ open: false, pageId: null })
 
   const query = new URLSearchParams(useLocation().search)
   const defaultPage = query.get('page') || 1
@@ -53,6 +54,7 @@ const CmsUI = (props) => {
   // Get current products
   const [currentPages, setCurrentPages] = useState([])
   const [totalPages, setTotalPages] = useState(null)
+  const [totalItems, setTotalItems] = useState(0)
 
   const handleChangePage = (page) => {
     setCurrentPage(page)
@@ -62,12 +64,6 @@ const CmsUI = (props) => {
     const expectedPage = Math.ceil(((currentPage - 1) * pagesPerPage + 1) / pageSize)
     setCurrentPage(expectedPage)
     setPagesPerPage(pageSize)
-  }
-
-  const onClickPage = (e, pageId) => {
-    const isInvalid = e.target.closest('.page-enabled') || e.target.closest('.page-actions')
-    if (isInvalid) return
-    handleEditPage(pageId)
   }
 
   useEffect(() => {
@@ -83,8 +79,20 @@ const CmsUI = (props) => {
     const indexOfFirstPost = indexOfLastPost - pagesPerPage
     const _currentProducts = pages.slice(indexOfFirstPost, indexOfLastPost)
     setTotalPages(_totalPages)
+    setTotalItems(pages.length)
     setCurrentPages(_currentProducts)
   }, [pagesListState, currentPage, pagesPerPage, searchValue])
+
+  // Delete asks first.
+  const onClickDeletePage = (pageId) => {
+    setConfirm({ open: true, pageId })
+  }
+
+  const handleAcceptDelete = () => {
+    const { pageId } = confirm
+    setConfirm({ open: false, pageId: null })
+    handleDeletePage(pageId)
+  }
 
   const handleEditPage = (pageId) => {
     setCurPageId(pageId)
@@ -99,125 +107,117 @@ const CmsUI = (props) => {
     })
   }, [currentPage, pagesPerPage, totalPages])
 
+  const columns = [
+    {
+      id: 'name',
+      header: t('STATIC_PAGE', 'Static page'),
+      rowHeader: true,
+      wrap: true,
+      cell: page => <span dir='auto'>{page?.name}</span>
+    },
+    {
+      id: 'enabled',
+      header: t('ENABLE', 'Enable'),
+      className: 'odc-cms-shrink',
+      cell: page => (
+        <Switch
+          defaultChecked={page?.enabled}
+          label={`${t('ENABLE', 'Enable')}: ${page?.name ?? ''}`}
+          onCheckedChange={(enabled) => handleChangeState(page.id, 'enabled', enabled)}
+        />
+      )
+    },
+    {
+      id: 'actions',
+      header: null,
+      srHeader: t('ACTIONS', 'Actions'),
+      align: 'end',
+      className: 'odc-cms-shrink',
+      // The menu items live in a portal: their clicks still bubble (React) to the row and would open the editor.
+      cell: page => (
+        <span data-odc-no-open='' onClick={event => event.stopPropagation()}>
+          <Menu
+            icon={Ellipsis}
+            label={t('PAGE_ROW_ACTIONS', 'Actions for _name_').replace('_name_', page?.name ?? '')}
+            items={[
+              { key: 'edit', label: t('EDIT', 'Edit'), onSelect: () => handleEditPage(page.id) },
+              { key: 'delete', label: t('DELETE', 'Delete'), tone: 'danger', onSelect: () => onClickDeletePage(page.id) }
+            ]}
+          />
+        </span>
+      )
+    }
+  ]
+
   return (
     <>
-      <StaticPageListContainer>
-        <Header>
-          <HeaderLeft>
-            {isCollapse && !avoidExpand && (
-              <IconButton
-                color='black'
-                onClick={() => handleMenuCollapse(false)}
-              >
-                <MenuIcon />
-              </IconButton>
+      <div className='odc-root odc-cms'>
+        {!avoidExpand && (
+          <div className='odc-cms-title'>
+            {isCollapse && (
+              <IconButton icon={MenuIcon} label={t('MENU', 'Menu')} onClick={() => handleMenuCollapse(false)} />
             )}
             <h1>{t('PAGES_MANAGER', 'Static Pages Manager')}</h1>
-          </HeaderLeft>
-          <HeaderRight>
-            <Button
-              borderRadius='8px'
-              color='lightPrimary'
-              onClick={() => handleEditPage(null)}
-            >
-              {t('ADD_PAGE', 'Add page')}
-            </Button>
-            <SearchBar
-              lazyLoad
-              placeholder={t('SEARCH', 'Search')}
-              searchValue={searchValue}
-              onSearch={val => setSearchValue(val)}
-            />
-          </HeaderRight>
-        </Header>
-        <PageListTable>
-          <thead>
-            <tr>
-              <th>{t('STATIC_PAGE', 'Static page')}</th>
-              <th>{t('ACTIONS', 'Actions')}</th>
-            </tr>
-          </thead>
-          {pagesListState.loading
-            ? (
-                [...Array(pagesPerPage).keys()].map(i => (
-              <PageTbody key={i}>
-                <tr>
-                  <td><Skeleton width={100} /></td>
-                  <td>
-                    <ActionsContainer>
-                      <EnableWrapper>
-                        <Skeleton width={50} />
-                      </EnableWrapper>
-                      <ActionSelectorWrapper>
-                        <Skeleton width={15} />
-                      </ActionSelectorWrapper>
-                    </ActionsContainer>
-                  </td>
-                </tr>
-              </PageTbody>
-                ))
-              )
-            : (
-                currentPages.map(page => (
-              <PageTbody
-                key={page.id}
-                onClick={e => onClickPage(e, page.id)}
-              >
-                <tr>
-                  <td>
-                    {page?.name}
-                  </td>
-                  <td>
-                    <ActionsContainer>
-                      <EnableWrapper className='page-enabled'>
-                        <span>{t('ENABLE', 'Enable')}</span>
-                        <Switch
-                          defaultChecked={page?.enabled}
-                          onChange={(enabled) => handleChangeState(page.id, 'enabled', enabled)}
-                        />
-                      </EnableWrapper>
-                      <ActionSelectorWrapper className='page-actions'>
-                        <DropdownButton
-                          menuAlign={theme?.rtl ? 'left' : 'right'}
-                          title={<FiMoreVertical />}
-                          id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
-                        >
-                          <Dropdown.Item
-                            onClick={() => handleEditPage(page.id)}
-                          >
-                            {t('EDIT', 'Edit')}
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            onClick={() => handleDeletePage(page.id)}
-                          >
-                            {t('DELETE', 'Delete')}
-                          </Dropdown.Item>
-                        </DropdownButton>
-                      </ActionSelectorWrapper>
-                    </ActionsContainer>
-                  </td>
-                </tr>
-              </PageTbody>
-                ))
-              )}
-        </PageListTable>
-        {!pagesListState.loading && (
-          <PagesBottomContainer>
-            <LinkButton onClick={() => handleEditPage(null)}>
-              {t('ADD_NEW_STATIC_PAGE', 'Add new static page')}
-            </LinkButton>
-            {currentPages?.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                handleChangePage={handleChangePage}
-                defaultPageSize={pagesPerPage}
-                handleChangePageSize={handleChangePageSize}
-              />
-            )}
-          </PagesBottomContainer>
+          </div>
         )}
-      </StaticPageListContainer>
+        <div className='odc-cms-toolbar'>
+          <SearchField
+            className='odc-cms-search'
+            value={searchValue ?? ''}
+            onChange={val => setSearchValue(val)}
+            label={t('SEARCH', 'Search')}
+            placeholder={t('SEARCH', 'Search')}
+            clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+          />
+          <Button variant='primary' onClick={() => handleEditPage(null)}>
+            {t('ADD_PAGE', 'Add page')}
+          </Button>
+        </div>
+        <DataTable
+          label={t('STATIC_PAGE', 'Static page')}
+          columns={columns}
+          rows={currentPages}
+          getRowId={page => page.id}
+          onOpenRow={page => handleEditPage(page.id)}
+          loading={pagesListState.loading}
+          loadingLabel={t('LOADING', 'Loading')}
+          skeletonRows={pagesPerPage}
+          empty={searchValue ? <EmptyState role='status' title={t('NO_RESULTS_FOUND', 'No results found')} /> : null}
+        />
+        {!pagesListState.loading && (
+          <div className='odc-cms-foot'>
+            <Button variant='link' onClick={() => handleEditPage(null)}>
+              {t('ADD_NEW_STATIC_PAGE', 'Add new static page')}
+            </Button>
+            <Pagination
+              page={currentPage}
+              pageSize={pagesPerPage}
+              total={totalItems}
+              pageSizeOptions={PAGE_SIZES}
+              onPageChange={handleChangePage}
+              onPageSizeChange={(size) => handleChangePageSize(size)}
+              showPageInput
+              label={t('PAGINATION', 'Pagination')}
+              previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+              nextLabel={t('NEXT_PAGE', 'Next page')}
+              pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+              pageLabel={t('PAGE', 'Page')}
+              pageOfLabel={(total, figure) => fillTemplate(t('PAGE_OF_TOTAL', 'of _total_'), { total }, figure)}
+              rangeLabel={(from, to, total, figure) => fillTemplate(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from, to, total }, figure)}
+              pageStatusLabel={(current, total) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(total))}
+            />
+          </div>
+        )}
+      </div>
+      <ConfirmDialog
+        open={confirm.open}
+        title={t('QUESTION_DELETE_PAGE', 'Are you sure that you want to delete this page?')}
+        confirmLabel={t('DELETE_PAGE', 'Delete page')}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={handleAcceptDelete}
+        onCancel={() => setConfirm({ open: false, pageId: null })}
+      />
       {openModal && (
         <Modal
           width='70%'

@@ -83,6 +83,19 @@ describe('WhatsApp bot connection', () => {
     expect(screen.getByLabelText('WhatsApp Business Account ID').value).toBe('2233445566')
   })
 
+  it('clears the access token field and leaves it empty', () => {
+    renderConnection(manualConnection)
+
+    const token = screen.getByLabelText('Access token')
+    expect(token.value).toBe('•'.repeat(40))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear' }))
+    expect(token.value).toBe('')
+
+    fireEvent.change(token, { target: { value: 'EAAnew' } })
+    expect(token.value).toBe('EAAnew')
+  })
+
   it('keeps the test link out of the panel and offers disconnect on the connection', () => {
     window.localStorage.setItem('token', SESSION_TOKEN)
     renderConnection(businessConnection)
@@ -268,7 +281,8 @@ describe('WhatsApp bot connection', () => {
     const toast = document.querySelector('.toast-bar')
     expect(toast.textContent).toContain('The connection could not be repaired.')
     expect(toast.textContent).toContain('Doctor is only available for business_login auth type')
-    expect(screen.queryByRole('alert')).toBeNull()
+    // redesign (Shared/UI/Toast): an error toast is itself role=alert, so the one alert on screen is the toast, not a box in the panel
+    expect(screen.getAllByRole('alert')).toEqual([toast])
   })
 
   it('sends only the changed manual credentials', () => {

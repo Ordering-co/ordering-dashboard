@@ -1,0 +1,209 @@
+/* Scoped ImageCrop surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-image-crop) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-image-crop-canvas) {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 400px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: var(--od-entity-selector-subtle);
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: var(--od-entity-selector-radius);
+}
+
+.od-ui:where(.od-image-crop-canvas) > div:not(.od-image-crop-loading) {
+  overflow: hidden;
+  border-radius: var(--od-entity-selector-radius);
+}
+
+.od-ui:where(.od-image-crop-canvas) img {
+  display: block;
+  max-width: 100%;
+}
+
+.od-ui:where(.od-image-crop-loading) {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--od-x-layer-raised) + 19);
+  width: 100%;
+  height: 100%;
+  background: var(--od-entity-selector-surface);
+}
+
+.od-ui:where(.od-image-crop-loading) > span,
+.od-ui:where(.od-image-crop-loading) .react-loading-skeleton {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.od-ui:where(.od-image-crop-loading) .react-loading-skeleton {
+  --base-color: var(--od-entity-selector-border);
+  --highlight-color: var(--od-entity-selector-surface);
+}
+
+.od-ui:where(.od-image-crop-actions) {
+  @apply od-flex od-flex-col od-items-stretch od-justify-between;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.od-ui:where(.od-image-crop-range) {
+  @apply od-flex od-w-full od-items-center;
+  min-width: 0;
+}
+
+.od-ui:where(.od-image-crop-range) > label,
+.od-ui:where(.od-image-crop-range) > output {
+  flex: 0 0 auto;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-image-crop-range) > label {
+  margin-inline-end: 5px;
+}
+
+.od-ui:where(.od-image-crop-range) > output {
+  margin-inline-start: 5px;
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range'] {
+  position: relative;
+  z-index: calc(var(--od-x-layer-raised) + 9);
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  min-width: 44px;
+  height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 8px;
+  border: 0;
+  border-radius: 10px;
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range']:focus-visible {
+  outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus);
+  outline-offset: var(--od-entity-selector-focus-offset);
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range']::-webkit-slider-runnable-track {
+  height: 8px;
+  background: transparent;
+  border-radius: 10px;
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range']::-webkit-slider-thumb {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin-top: -6px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #FFF;
+  border: 5px solid var(--od-entity-selector-action);
+  border-radius: 50%;
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range']::-moz-range-track {
+  height: 8px;
+  background: transparent;
+  border-radius: 10px;
+}
+
+.od-ui:where(.od-image-crop-range) input[type='range']::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #FFF;
+  border: 5px solid var(--od-entity-selector-action);
+  border-radius: 50%;
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+}
+
+.od-ui:where(.od-image-crop-rotate) {
+  @apply od-flex od-items-center;
+}
+
+.od-ui:where(.od-image-crop-rotate) > .od-icon-button {
+  width: auto;
+  min-width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  padding-inline: 10px;
+  gap: 5px;
+  color: var(--od-entity-selector-text);
+}
+
+.od-ui:where(.od-image-crop-rotate) > .od-icon-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.od-ui:where(.od-image-crop-aspect) {
+  @apply od-flex od-items-center;
+  min-height: var(--od-entity-selector-touch-target);
+  color: var(--od-entity-selector-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.od-ui:where(.od-image-crop-aspect) > span {
+  min-width: 0;
+  margin-inline-start: 15px;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-image-crop-submit) {
+  @apply od-flex od-justify-center;
+}
+
+.od-ui:where(.od-image-crop-submit) > .od-button {
+  min-height: var(--od-entity-selector-touch-target);
+  margin-top: 20px;
+}
+
+@media (min-width: 576px) {
+  .od-ui:where(.od-image-crop-actions) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .od-ui:where(.od-image-crop-range) {
+    flex: 1 1 auto;
+    width: auto;
+  }
+
+  .od-ui:where(.od-image-crop-rotate) > .od-icon-button {
+    margin-inline-start: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-image-crop) *,
+  .od-ui:where(.od-image-crop) *::before,
+  .od-ui:where(.od-image-crop) *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+}

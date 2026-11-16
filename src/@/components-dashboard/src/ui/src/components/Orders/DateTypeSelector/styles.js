@@ -6,27 +6,15 @@ export const Option = styled.div`
   padding: 5px 10px;
 
   svg {
-    margin-right: 5px;
-    ${props => props.theme?.rtl && css`
-      margin-left: 5px;
-      margin-right: 0px;
-    `} 
+    margin-inline-end: 5px;
   }
 
   ${({ isDateOption }) => isDateOption && css`
     max-width: calc(100vw - 60px);
     overflow: auto;
-    ${props => props.theme?.rtl
-? css`
-      > div:first-child {
-        margin-left: 10px;
-      }
-    `
-: css`
-      > div:first-child {
-        margin-right: 10px;
-      }
-    `}
+    > div:first-child {
+      margin-inline-end: 10px;
+    }
   `}
 `
 
@@ -40,24 +28,21 @@ export const DateContainer = styled.div`
   padding: 5px 0;
 
   input {
-    border-radius: 20px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '20px'};
     width: 140px;
     outline: none;
     padding: 3px 10px;
-    border: 1px solid #F2F2F2;
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#F2F2F2'};
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors?.primary};
+      outline-offset: 2px;
+    }
   }
 
-  ${props => props.theme?.rtl
-? css`
-    span {
-      margin-left: 10px;
-    }
-  `
-: css`
-    span {
-      margin-right: 10px;
-    }
-  `}
+  span {
+    margin-inline-end: 10px;
+  }
 
   @media (min-width: 768px) {
     padding: 0;

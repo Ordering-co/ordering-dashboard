@@ -5,22 +5,10 @@ export const OrdersDashboardSLAControlsContainer = styled.div`
 
   button {
     height: 42px;
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 14px;
-    `
-: css`
-      margin-right: 14px;
-    `}
+    margin-inline-end: 14px;
 
     svg {
-      ${props => props.theme?.rtl
-? css`
-        margin-right: 5px;
-      `
-: css`
-        margin-left: 5px;
-      `}
+      margin-inline-start: 5px;
     }
   }
 
@@ -35,7 +23,7 @@ export const OrderTimeStatusSelectWrapper = styled.div`
     height: 43px;
     line-height: 43px;
     border: none;
-    background: #F8F9FA;
+    background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#F8F9FA'};
     margin: 0 10px;
     >div:first-child {
       height: 100%;
@@ -50,7 +38,7 @@ export const OrderTimeStatusSelectWrapper = styled.div`
     padding: 7px 11px;
     width: 100%;
     input {
-      border-radius: 7.6px;
+      border-radius: ${props => props.theme?.ordering?.radius?.control ?? '7.6px'};
       width: 100%;
     }
   }
@@ -74,9 +62,9 @@ export const Option = styled.div`
   p {
     margin: 0px;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     line-height: 26px;
-    color: ${props => props.theme.colors.secundaryContrast};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryContrast};
   }
 
   ${({ noPadding }) => noPadding && css`
@@ -86,19 +74,15 @@ export const Option = styled.div`
 export const Timestatus = styled.div`
   width: 4px;
   height: 22px;
-  border-radius: 20px 20px 20px 20px;
-  margin-right: 5px;
-  ${props => props.theme?.rtl && css`
-    margin-left: 5px;
-    margin-right: 0;
- `}
+  border-radius: ${props => props.theme?.ordering?.radius?.round ?? '20px'};
+  margin-inline-end: 5px;
   ${({ timeState }) => timeState === 'in_time' && css`
-    background-color: #00D27A;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.success?.signal ?? '#00D27A'};
   `}
   ${({ timeState }) => timeState === 'at_risk' && css`
-    background-color: #FFC700;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? '#FFC700'};
   `}
   ${({ timeState }) => timeState === 'delayed' && css`
-    background-color: #E63757;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'};
   `}
 `

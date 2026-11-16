@@ -30,7 +30,7 @@ export const TransactionHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   position: relative;
   svg {
     color: ${props => props.theme.colors.lightGray};
@@ -54,7 +54,7 @@ export const Transaction = styled.div`
 `
 export const TransactionDescription = styled.p`
   color: ${props => props.theme.colors.lightGray};
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   margin: 0;
   ${props => props.theme?.rtl
 ? css`
@@ -71,7 +71,9 @@ export const Amount = styled.span`
   `}
 `
 export const TransactionCode = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
   color: ${props => props.theme.colors.lightGray};
   ${props => props.theme?.rtl
 ? css`

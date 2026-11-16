@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { ToastType, useLanguage, useToast } from '../../../../../index'
-import { Confirm } from '../../Shared'
-import { getBuildActionError, getBuildModeLabel, getPlatformLabel } from '../utils'
+import { ConfirmDialog } from '../../Shared/Product'
+import { getBuildActionError, getBuildModeLabel, getBuildOptionValue, getPlatformLabel } from '../utils'
 import { BuildDialog, BuildLogDialog, RetryDialog } from './BuildDialogs'
+import { useInstallLinks } from './useInstallLinks'
 
 /**
  * The build actions of the app detail, shared by the Builds card and the
- * history: the Build dialog, the log, retry and cancel (both confirmed) and
- * downloads. Returns the handlers and the dialogs to render once.
+ * history: the Build dialog (`openBuild(platform, option)` opens it on the
+ * file type of the tab its button is on), the log, retry and cancel (both
+ * confirmed) and downloads. Returns the handlers and the dialogs to render once.
  */
 export const useBuildActions = (props) => {
   const {
@@ -17,6 +19,7 @@ export const useBuildActions = (props) => {
     cancelBuild,
     getBuildLog,
     getBuildDownload,
+    createInstallLink,
     latestPlatforms,
     productStatus,
     versions,
@@ -28,12 +31,23 @@ export const useBuildActions = (props) => {
 
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
+  // the Build dialog that is open: `{ platform, option }`, `option` being the file type it starts on (null: its default)
   const [buildFor, setBuildFor] = useState(null)
   const [logFor, setLogFor] = useState(null)
   const [retryFor, setRetryFor] = useState(null)
   const [cancelFor, setCancelFor] = useState(null)
   const [busy, setBusy] = useState(false)
   const [downloadingId, setDownloadingId] = useState(null)
+  // a download link is being asked for (read on click, not from the render the click was made in)
+  const downloading = useRef(false)
+  // the install link of each attempt, by its id: { loading, link, errorCodes }
+  const { installLinks, requestInstallLink } = useInstallLinks(
+    createInstallLink && ((attempt) => createInstallLink(attempt.id)),
+    (attempt) => attempt.id
+  )
+  // the attempt the cancel confirmation names, kept while it closes
+  const cancelShown = useRef(null)
+  if (cancelFor) cancelShown.current = cancelFor
 
   const platformText = (text, platform) => text.replace('_platform_', getPlatformLabel(platform))
 
@@ -72,7 +86,7 @@ export const useBuildActions = (props) => {
     }
     // The dialog lists what is missing and lets the customer fix it
     if (answer.errorCodes.includes('build.blocked')) {
-      setBuildFor(attempt.platform)
+      setBuildFor({ platform: attempt.platform, option: getBuildOptionValue(attempt) })
       return
     }
     showToast(ToastType.Error, getBuildActionError('build', answer.errorCodes, { platform: attempt.platform }, t))
@@ -89,31 +103,54 @@ export const useBuildActions = (props) => {
     showToast(ToastType.Error, getBuildActionError('cancel', answer.errorCodes, { platform: attempt.platform }, t))
   }
 
-  /** The link lasts 15 minutes, so it is asked for on click. */
+  /**
+   * Downloads the attempt's file through a link of 15 minutes, asked for on click. One download at a time: a click while a link is
+   * being asked for is ignored.
+   *
+   * The link is followed in this tab on purpose, as My Products does (`downloadApp`, components/BuildApps). The storage answers it
+   * as an attachment (api-core signs it with `ResponseContentDisposition`, `ProductBuildController::download`), so the browser
+   * downloads the file and the Dashboard stays. The other ways are not better:
+   * - a new tab (`target='_blank'` or `window.open`) asked for once the link arrives is outside the click, and Safari and other
+   *   pop-up blockers drop it: nothing was downloaded and nothing said so. Opened in the click, before the request, it stays there
+   *   empty once the file is downloaded;
+   * - a hidden frame keeps the Dashboard when the storage answers an error instead of the file, but then nobody sees that error
+   *   (the page cannot read a frame of another origin): the button would do nothing, with no way to say why.
+   * What is left is a storage that answers an error page to a link signed a moment ago: the browser shows it in place of the
+   * Dashboard, and Back returns to it.
+   */
   const download = async (attempt) => {
-    if (downloadingId) return
+    if (downloading.current) return
+    downloading.current = true
     setDownloadingId(attempt.id)
-    const answer = await getBuildDownload(attempt.id)
+    let answer
+    try {
+      answer = await getBuildDownload(attempt.id)
+    } catch (err) {
+      answer = { ok: false, errorCodes: [] }
+    }
+    downloading.current = false
     setDownloadingId(null)
-    if (answer.ok && answer.result?.url) {
-      const link = document.createElement('a')
-      link.href = answer.result.url
-      link.target = '_blank'
-      link.rel = 'noopener noreferrer'
-      link.click()
+    const url = answer?.ok ? answer.result?.url : null
+    if (!url) {
+      showToast(ToastType.Error, getBuildActionError('download', answer?.errorCodes || [], { platform: attempt.platform, mode: getBuildModeLabel(attempt, t) }, t))
       return
     }
-    showToast(ToastType.Error, getBuildActionError('download', answer.errorCodes, { platform: attempt.platform, mode: getBuildModeLabel(attempt, t) }, t))
+    const link = document.createElement('a')
+    link.href = url
+    // the storage is not told which page of the Dashboard asked for the file
+    link.rel = 'noopener noreferrer'
+    link.click()
   }
 
   const dialogs = (
     <>
       {buildFor && (
         <BuildDialog
-          platform={buildFor}
-          latest={latestPlatforms?.[buildFor]?.latest ?? null}
+          platform={buildFor.platform}
+          initial={buildFor.option}
+          latest={latestPlatforms?.[buildFor.platform]?.latest ?? null}
           productStatus={productStatus}
-          version={versions?.[buildFor]}
+          version={versions?.[buildFor.platform]}
           checkProblems={checkProblems}
           guides={guides}
           onSubmit={submitBuild}
@@ -134,28 +171,31 @@ export const useBuildActions = (props) => {
           onClose={() => setRetryFor(null)}
         />
       )}
-      <Confirm
+      {/* redesign B2: P/ConfirmDialog (alertdialog, the focus starts on Keep building) */}
+      <ConfirmDialog
         open={!!cancelFor}
-        width='min(440px, calc(100vw - 72px))'
-        title={cancelFor ? platformText(t('BUILDER_CANCEL_TITLE', 'Cancel this _platform_ build?'), cancelFor.platform) : ''}
-        acceptText={t('BUILDER_CANCEL_BUILD', 'Cancel build')}
-        cancelText={t('BUILDER_KEEP_BUILDING', 'Keep building')}
-        onAccept={runCancel}
+        title={cancelShown.current ? platformText(t('BUILDER_CANCEL_TITLE', 'Cancel this _platform_ build?'), cancelShown.current.platform) : ''}
+        confirmLabel={t('BUILDER_CANCEL_BUILD', 'Cancel build')}
+        cancelLabel={t('BUILDER_KEEP_BUILDING', 'Keep building')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={runCancel}
         onCancel={() => setCancelFor(null)}
-        onClose={() => setCancelFor(null)}
       >
-        <p>{t('BUILDER_CANCEL_HELP', 'It stops now and leaves no file. You can build again at any time.')}</p>
-      </Confirm>
+        {t('BUILDER_CANCEL_HELP', 'It stops now and leaves no file. You can build again at any time.')}
+      </ConfirmDialog>
     </>
   )
 
   return {
-    openBuild: setBuildFor,
+    // `option`: the file type of the tab the button is on, which the dialog starts on
+    openBuild: (platform, option = null) => setBuildFor({ platform, option }),
     openLog: setLogFor,
     askRetry: setRetryFor,
     askCancel: setCancelFor,
     download,
     downloadingId,
+    installLinks,
+    requestInstallLink,
     dialogs
   }
 }

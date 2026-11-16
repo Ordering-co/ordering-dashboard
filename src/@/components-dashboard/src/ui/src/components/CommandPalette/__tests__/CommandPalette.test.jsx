@@ -1,3 +1,4 @@
+// redesign 5.1 copy: labels in sentence case (C14), approved with the catalog sync on 2026-10-06.
 import React from 'react'
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -201,6 +202,31 @@ describe('CommandPalette', () => {
     await waitFor(() => expect(location()).toBe('/settings?group=payments&category=stripe&focus=stripe_publishable'))
   })
 
+  // (2): an action named exactly as the query comes first, ahead of a setting that only contains its words
+  it('puts the exact «Add business owner» action first, ahead of a setting with the same words', async () => {
+    const base = global.fetch
+    const ownerSetting = {
+      id: 12,
+      key: 'business_owners',
+      name: 'Business owners',
+      parent_category_id: 10,
+      configs: [{ key: 'allow_business_owner_register_business', name: 'Allow Business Owner to Register Business', description: 'Business owners can add their own stores' }]
+    }
+    global.fetch = vi.fn((url, options) => String(url).includes('/config_categories')
+      ? Promise.resolve({ json: () => Promise.resolve({ error: false, result: [...settingsCatalog, ownerSetting] }) })
+      : base(url, options))
+    const { user } = renderPalette()
+    const dialog = await openWithShortcut()
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/config_categories'), expect.anything()))
+    await user.type(within(dialog).getByRole('combobox'), 'add business owner')
+    // the setting is found too, just below the action
+    expect(await within(dialog).findByText('Allow Business Owner to Register Business')).toBeInTheDocument()
+    const options = within(dialog).getAllByRole('option')
+    expect(options[0]).toHaveTextContent('Add business owner')
+    await user.keyboard('{Enter}')
+    await waitFor(() => expect(location()).toBe('/users/business-owners?add=1'))
+  })
+
   it('searches stores on the server and opens the detail', async () => {
     const { user } = renderPalette()
     const dialog = await openWithShortcut()
@@ -238,10 +264,88 @@ describe('CommandPalette', () => {
     expect(await within(dialog).findByText('Pizza Planet')).toBeInTheDocument()
     await user.keyboard('{Escape}')
     expect(within(dialog).queryByRole('button', { name: /Back: Schedule/ })).not.toBeInTheDocument()
-    await user.type(input, 'horario')
+    // back to the results of what was typed, not to an empty palette
+    expect(input).toHaveValue('horario')
     await user.click(await within(dialog).findByText('Schedule'))
     await user.click(await within(dialog).findByText('Pizza Planet'))
     await waitFor(() => expect(location()).toBe('/stores/list?id=1&section=schedule'))
+  })
+
+  // «tax» → Enter on a store setting asks for a store; going back (Backspace on the empty field, Escape or the chip) returns to the
+  // results of «tax» with the search in the field, as docs/COMMAND_PALETTE.md says, instead of the empty palette (Recent and Suggestions)
+  it.each([
+    ['Backspace on the empty field', '{Backspace}'],
+    ['Escape', '{Escape}']
+  ])('goes back from the store step to the results of the search with %s', async (_name, key) => {
+    const { user } = renderPalette()
+    const dialog = await openWithShortcut()
+    const input = within(dialog).getByRole('combobox')
+    await user.type(input, 'tax')
+    expect(await within(dialog).findByText('Tax & fees')).toBeInTheDocument()
+    await user.keyboard('{Enter}')
+    expect(await within(dialog).findByRole('button', { name: /Back: Tax & fees/ })).toBeInTheDocument()
+    expect(input).toHaveValue('')
+    await user.keyboard(key)
+    expect(within(dialog).queryByRole('button', { name: /Back:/ })).not.toBeInTheDocument()
+    expect(screen.getByTestId('command-palette')).toBeInTheDocument()
+    expect(input).toHaveValue('tax')
+    expect(within(dialog).getByText('Tax & fees')).toBeInTheDocument()
+    expect(within(dialog).queryByText('Suggestions')).not.toBeInTheDocument()
+    // a second round trip keeps working, and what was typed in the store step is not carried back
+    await user.keyboard('{Enter}')
+    await user.type(input, 'piz')
+    await user.click(await within(dialog).findByRole('button', { name: /Back: Tax & fees/ }))
+    expect(input).toHaveValue('tax')
+  })
+
+  it('goes back to an empty field when the store step was opened without a search (Mia)', async () => {
+    const { user } = renderPalette()
+    await user.click(screen.getByRole('button', { name: 'Mia store picker' }))
+    const dialog = await screen.findByTestId('command-palette')
+    const input = within(dialog).getByRole('combobox')
+    await user.keyboard('{Escape}')
+    expect(within(dialog).queryByRole('button', { name: /Back:/ })).not.toBeInTheDocument()
+    expect(input).toHaveValue('')
+  })
+
+  // a title that is the query, or starts with it, goes ahead of a typo match (the alias «cargos» for «carlos») and of a
+  // match on a hidden key; also between groups, where the best match decides the order
+  it('puts the stores called «Carlos» ahead of «Business fees» (typo of the alias «cargos»)', async () => {
+    // the API order of the stores is kept: the point is that they come ahead of «Business fees»
+    state.businessResponse = () => Promise.resolve({ content: { error: false, result: [{ id: 31, name: 'Carlos Tacos', enabled: true }, { id: 32, name: 'Carlos Pizza', enabled: true }] } })
+    const { user } = renderPalette()
+    const dialog = await openWithShortcut()
+    await user.type(within(dialog).getByRole('combobox'), 'carlos')
+    expect(await within(dialog).findByText('Carlos Tacos')).toBeInTheDocument()
+    const texts = () => within(dialog).getAllByRole('option').map(option => option.textContent)
+    await waitFor(() => {
+      expect(texts()[0]).toMatch(/^Carlos T/)
+      expect(texts()[1]).toMatch(/^Carlos P/)
+    })
+    // nothing is removed: the typo match is still there, below
+    expect(texts().some(text => /^Business fees/.test(text))).toBe(true)
+  })
+
+  it('puts «Cancelled orders» ahead of a setting that only matches «cancelled» in its hidden key', async () => {
+    const base = global.fetch
+    const walletSetting = {
+      id: 13,
+      key: 'cash_wallet',
+      name: 'Cash wallet',
+      parent_category_id: 10,
+      configs: [{ key: 'cash_wallet_cancelled_orders_refund', name: 'Enable Cash Wallet Refunds' }]
+    }
+    global.fetch = vi.fn((url, options) => String(url).includes('/config_categories')
+      ? Promise.resolve({ json: () => Promise.resolve({ error: false, result: [...settingsCatalog, walletSetting] }) })
+      : base(url, options))
+    const { user } = renderPalette()
+    const dialog = await openWithShortcut()
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/config_categories'), expect.anything()))
+    await user.type(within(dialog).getByRole('combobox'), 'cancelled')
+    expect(await within(dialog).findByText('Enable Cash Wallet Refunds')).toBeInTheDocument()
+    const texts = within(dialog).getAllByRole('option').map(option => option.textContent)
+    expect(texts[0]).toMatch(/^Cancelled orders/)
+    expect(texts.findIndex(text => /Enable Cash Wallet Refunds/.test(text))).toBeGreaterThan(0)
   })
 
   it('opens a store that arrived after typing with Enter', async () => {
@@ -392,19 +496,30 @@ describe('CommandPalette', () => {
     await user.type(within(dialog).getByRole('combobox'), 'ana')
     expect(await within(dialog).findByText('Search “ana” in Orders')).toBeInTheDocument()
     expect(within(dialog).queryByText('Search “ana” in Users')).not.toBeInTheDocument()
-    // Owners only see POS & Menu Sync in Connect: no Settings catalog, no delivery companies
+    // Owners only see POS & menu sync in Connect: no Settings catalog, no delivery companies
     expect(global.fetch).not.toHaveBeenCalledWith(expect.stringContaining('/config_categories'), expect.anything())
     expect(global.fetch).not.toHaveBeenCalledWith(expect.stringContaining('/driver_companies'), expect.anything())
   })
 
   it('remounts the page when opening a destination on the current page', async () => {
+    const { user } = renderPalette({ path: '/stores/list?active=true' })
+    expect(mounts).toBe(1)
+    const dialog = await openWithShortcut()
+    await user.type(within(dialog).getByRole('combobox'), 'inactive stores')
+    await user.click(await within(dialog).findByText('Inactive stores'))
+    await waitFor(() => expect(location()).toBe('/stores/list?active=false'))
+    expect(mounts).toBe(2)
+  })
+
+  // redesign stores 1.C, G1-25: the list follows `?id=` and the editor `?section=`, so a store keeps the list as it is
+  it('opens another store from the stores list without remounting it', async () => {
     const { user } = renderPalette({ path: '/stores/list?id=3' })
     expect(mounts).toBe(1)
     const dialog = await openWithShortcut()
     await user.type(within(dialog).getByRole('combobox'), 'pizza')
     await user.click(await within(dialog).findByText('Pizza Planet'))
     await waitFor(() => expect(location()).toBe('/stores/list?id=1'))
-    expect(mounts).toBe(2)
+    expect(mounts).toBe(1)
   })
 
   it('remembers recent destinations', async () => {

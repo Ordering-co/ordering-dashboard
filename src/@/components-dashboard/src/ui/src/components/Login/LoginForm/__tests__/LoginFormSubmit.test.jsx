@@ -77,10 +77,12 @@ describe('LoginFormUI submit dispatch', () => {
       </ConfigFileContext.Provider>
     )
 
-    fillCredentialsAndSubmit()
+    await act(async () => { fillCredentialsAndSubmit() })
     await waitFor(() => expect(dispatchLogin).toHaveBeenCalledTimes(1))
 
-    fireEvent.submit(screen.getByRole('button', { name: /^sign in$/i }).closest('form'))
+    await act(async () => {
+      fireEvent.submit(screen.getByRole('button', { name: /^sign in$/i }).closest('form'))
+    })
     await waitFor(() => expect(dispatchLogin).toHaveBeenCalledTimes(2))
 
     expect(screen.queryByRole('alert')).toBeNull()

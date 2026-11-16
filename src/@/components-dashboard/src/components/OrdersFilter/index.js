@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import { useSession } from '../../contexts/SessionContext'
+import { handleOrderIdKeyDown, sanitizeOrderId } from './orderIdInput'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -23,7 +24,8 @@ export const OrdersFilter = (props) => {
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeOrderId = (e) => {
-    const orderId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
+    const orderId = sanitizeOrderId(e.target.value)
+    if (orderId === null) return
     setFilterValues({ ...filterValues, orderId })
   }
 
@@ -357,6 +359,7 @@ export const OrdersFilter = (props) => {
         <UIComponent
           {...props}
           handleChangeOrderId={handleChangeOrderId}
+          handleOrderIdKeyDown={handleOrderIdKeyDown}
           handleChangeGroup={handleChangeGroup}
           handleChangeDateType={handleChangeDateType}
           handleChangeFromDate={handleChangeFromDate}

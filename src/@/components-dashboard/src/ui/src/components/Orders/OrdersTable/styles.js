@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { getOrderingAction } from '~/brand/adapter'
+
 export const OrdersContainer = styled.div`
   overflow: auto;
 
@@ -28,7 +30,7 @@ export const Table = styled.table`
   td {
     padding: 15px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
 
     &:first-child {
       padding-left: 0px;
@@ -43,16 +45,16 @@ export const Table = styled.table`
   thead {
     tr {
       width: 100%;
-      border-bottom: solid 1px ${props => props.theme.colors.disabled};
+      border-bottom: solid 1px ${props => props.theme?.ordering?.semantic?.border?.strong ?? props.theme.colors.disabled};
       th {
-        color: ${props => props.theme.colors?.headingColor};
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
         white-space: nowrap;
         ${({ noFixedHeader }) => !noFixedHeader && css`
           position: sticky;
           top: 0px;
-          z-index: 100;
+          z-index: var(--od-x-layer-sticky);
         `}
-        background: ${props => props.theme.colors.backgroundPage};
+        background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.backgroundPage};
       }
     }
   }
@@ -67,67 +69,67 @@ export const Table = styled.table`
     svg {
       width: 18px;
       height: 18px;
-      color: ${props => props.theme.colors.green};
+      color: ${props => props.theme?.ordering?.semantic?.state?.success?.functional ?? props.theme.colors.green};
     }
   }
   .orderPrice {
     div.info {
       p {
-        ${props => props.theme?.rtl
-? css`
-          text-align: left;
-        `
-: css`
-          text-align: right;
-        `}
+        text-align: end;
       }
     }
+  }
+
+  thead th.orderPrice.total {
+    text-align: end;
+    /* the floating manage-columns button (44px touch target) sits over the end of this header */
+    padding-inline-end: calc(15px + 44px);
   }
 
   div.info {
     p {
       margin: 0px;
-      color: ${props => props.theme.colors?.lightGray};
-      font-size: 12px;
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
+      font-size: var(--od-type-secondary-size);
     }
     p.date {
-      color: ${props => props.theme.colors?.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     }
     p.bold {
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       font-weight: 600;
-      color: ${props => props.theme.colors?.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     }
   }
 `
 
 export const OrderTbody = styled.tbody`
   tr {
-    border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
     cursor: pointer;
 
     &[data-status="delayed"] {
-      background-color: ${props => props.theme.colors.danger100};
+      background-color: ${props => props.theme?.ordering?.semantic?.state?.danger?.soft ?? props.theme.colors.danger100};
       td {
-        border-top: 1px solid ${props => props.theme.colors.danger} !important;
-        border-bottom: 1px solid ${props => props.theme.colors.danger} !important;
+        border-top: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger} !important;
+        border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? props.theme.colors.danger} !important;
       }
     }
     &[data-status="at_risk"] {
-      background-color: ${props => props.theme.colors.warning100};
+      background-color: ${props => props.theme?.ordering?.semantic?.state?.warning?.soft ?? props.theme.colors.warning100};
       td {
-        border-top: 1px solid ${props => props.theme.colors.warning} !important;
-        border-bottom: 1px solid ${props => props.theme.colors.warning} !important;
+        border-top: 1px solid ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? props.theme.colors.warning} !important;
+        border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? props.theme.colors.warning} !important;
       }
     }
     &:hover {
-      background-color: ${props => props.theme.colors.lightPrimary};
+      background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.lightPrimary};
     }
     &.active {
-      background-color: ${props => props.theme.colors.lightPrimary};
+      background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.lightPrimary};
       td {
-        border-top: 1px solid ${props => props.theme.colors.primary} !important;
-        border-bottom: 1px solid ${props => props.theme.colors.primary} !important;
+        border-top: 1px solid ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary} !important;
+        border-bottom: 1px solid ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary} !important;
       }
     }
   }
@@ -141,32 +143,39 @@ export const OrderNumberContainer = styled.div`
     max-width: 180px;
   }
 
-  ${props => props.theme?.rtl
-? css`
-    border-left: 1px solid #E9ECEF;
-    padding-left: 15px;
-  `
-: css`
-    border-right: 1px solid #E9ECEF;
-    padding-right: 15px;
-  `}
+  border-inline-end: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E9ECEF'};
+  padding-inline-end: 15px;
 `
 
-export const CheckBox = styled.span`
+export const CheckBox = styled.button.attrs({ type: 'button' })`
   cursor: pointer;
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 10px;
-  `
-: css`
-    margin-right: 10px;
-  `}
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  margin-inline-end: 10px;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? getOrderingAction(props.theme)};
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
   svg {
     font-size: 24px;
-    color: #B1BCCC;
+    color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? '#B1BCCC'};
 
     ${({ isChecked }) => isChecked && css`
-      color: ${props => props.theme.colors?.primary};
+      color: ${props => getOrderingAction(props.theme) ?? props.theme.colors?.primary};
     `}
   }
 `
@@ -178,13 +187,7 @@ export const BusinessInfo = styled.div`
     max-width: 125px;
   }
   div.info {
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 10px;
-    `
-: css`
-      margin-left: 10px;
-    `}
+    margin-inline-start: 10px;
   }
 `
 
@@ -216,12 +219,20 @@ export const EtaInfo = styled.div`
     font-weight: 600;
     margin: 0;
   }
+
+  .empty {
+    margin: 0;
+  }
 `
 
 export const PodInfo = styled.div`
   .bold {
     max-width: 150px;
     font-weight: 600;
+    margin: 0;
+  }
+
+  .empty {
     margin: 0;
   }
 `
@@ -243,8 +254,8 @@ export const DriversInfo = styled.div`
         }
         .driver-info {
           p {
-            color: ${props => props.theme.colors?.headingColor};
-            font-size: 14px;
+            color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
+            font-size: var(--od-type-control-value-size);
             font-weight: 600;
           }
           span {
@@ -264,7 +275,7 @@ export const WrapperImage = styled.div`
   max-height: 45px;
   height: 45px;
   width: 45px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
   border-radius: 7.6px;
   position: relative;
 
@@ -299,26 +310,20 @@ export const OrderType = styled.div`
   }
 
   span {
-    color: ${props => props.theme.colors.headingColor};
-    font-size: 14px;
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 5px;
-    `
-: css`
-      margin-left: 5px;
-    `}
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
+    font-size: var(--od-type-content-size);
+    margin-inline-start: 5px;
   }
 `
 
 export const WrapOrderStatusSelector = styled.div`
   > div {
     p {
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
     }
     > div:first-child {
       p {
-        color: ${props => props.theme.colors?.headingColor};
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
         max-width: 140px;
       }
     }
@@ -334,13 +339,7 @@ export const LogisticStatusDot = styled.span`
   border-radius: 50%;
   display: inline-block;
 
-  ${props => props.theme?.rtl
-? css`
-    margin-right: 6px;
-  `
-: css`
-    margin-left: 6px;
-  `}
+  margin-inline-start: 6px;
 
   ${({ status }) => status === 0 && css`
     background-color: ${props => props.theme.colors.orange};
@@ -364,13 +363,7 @@ export const PriorityDot = styled.span`
   border-radius: 50%;
   display: inline-block;
 
-  ${props => props.theme?.rtl
-? css`
-    margin-right: 6px;
-  `
-: css`
-    margin-left: 6px;
-  `}
+  margin-inline-start: 6px;
 
   ${({ priority }) => priority === -1 && css`
     background-color: ${props => props.theme.colors.secundaryLight};
@@ -388,41 +381,49 @@ export const PriorityDot = styled.span`
 export const Timestatus = styled.div`
   width: 4px;
   height: 37px;
-  border-radius: 20px 20px 20px 20px;
+  border-radius: ${props => props.theme?.ordering?.radius?.round ?? '20px'};
   ${({ timeState }) => timeState === 'in_time' && css`
-    background-color: #00D27A;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.success?.signal ?? '#00D27A'};
   `}
   ${({ timeState }) => timeState === 'at_risk' && css`
-    background-color: #FFC700;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.warning?.signal ?? '#FFC700'};
   `}
   ${({ timeState }) => timeState === 'delayed' && css`
-    background-color: #E63757;
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.danger?.signal ?? '#E63757'};
   `}
 `
 export const Timer = styled.div`
   min-width: 65px;
   p {
     margin: 0px;
-    color: ${props => props.theme.colors?.lightGray};
-    font-size: 12px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 
   .bold {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     font-weight: 600;
-    color: ${props => props.theme.colors?.headingColor};
+    font-family: inherit;
+    font-variant-ligatures: normal;
+    direction: inherit;
+    unicode-bidi: normal;
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
 
   .in_time{
-    color: #00D27A;
+    color: ${props => props.theme?.ordering?.semantic?.state?.success?.functional ?? '#00D27A'};
   }
 
   .at_risk {
-    color: #FFC700;
+    color: ${props => props.theme?.ordering?.semantic?.state?.warning?.functional ?? '#FFC700'};
   }
 
   .delayed {
-    color: #E63757;
+    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'};
   }
 `
 
@@ -431,41 +432,33 @@ export const OrdersCountWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50px;
-  background-color: ${props => props.theme.colors.backgroundInfo};
-  color: ${props => props.theme.colors.primary};
+  border-radius: ${props => props.theme?.ordering?.radius?.round ?? '50px'};
+  background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.backgroundInfo};
+  color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
   font-weight: 400;
-  font-size: 9px;
+  font-size: var(--od-type-identifier-size);
+  font-family: var(--od-type-identifier-font);
+  font-variant-ligatures: var(--od-type-identifier-ligatures);
   line-height: 12px;
   padding: 2px 5px;
   position: absolute;
   top: -9px;
-  right: -5px;
-  ${props => props.theme.rtl && css`
-    left: -5px;
-    right: initial;
-  `}
+  inset-inline-end: -5px;
 
   ${({ isNew }) => isNew && css`
-    background-color: ${props => props.theme.colors.lightGreen};
-    color: ${props => props.theme.colors.success};
+    background-color: ${props => props.theme?.ordering?.semantic?.state?.success?.soft ?? props.theme.colors.lightGreen};
+    color: ${props => props.theme?.ordering?.semantic?.state?.success?.functional ?? props.theme.colors.success};
   `}
 `
 export const DragTh = styled.th`
   cursor: pointer;
   ${({ selectedDragOver }) => selectedDragOver && css`
-    border: 1px solid ${props => props.theme.colors.primary};
+    border: 1px solid ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
   `}
 `
 export const InfoWrapper = styled.div`
   position: relative;
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 4px;
-  `
-: css`
-    margin-right: 4px;
-  `}
+  margin-inline-end: 4px;
 
   .bold {
     max-width: 150px;

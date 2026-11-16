@@ -7,7 +7,7 @@ export const Container = styled.div`
   box-sizing: border-box;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 5px;
     margin-bottom: 20px;
@@ -35,13 +35,14 @@ export const SectionHeader = styled.div`
 
 export const SectionTitle = styled.h2`
   margin: 0;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   color: ${props => props.theme.colors?.headingColor};
 `
 
 export const EmptyState = styled.p`
   margin-top: 25px;
-  font-size: 14px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-content-size);
+  /* redesign bugs F row 37: the theme's lightGray (#909ba9) was 2.81:1 on white; the muted brand text token passes AA */
+  color: var(--od-text-muted);
 `

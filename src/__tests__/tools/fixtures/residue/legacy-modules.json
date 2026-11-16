@@ -1,0 +1,4 @@
+[
+  { "id": "legacy-button", "match": "@/components-dashboard/src/ui/styles/Buttons/index.js", "reason": "fixture: legacy button" },
+  { "id": "pkg-legacy", "match": "legacy-pkg", "reason": "fixture: third-party package" }
+]

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   cancelBuilderBuild,
-  getBuilderAdHocInstallUrl,
+  createBuilderInstallLink,
   getBuilderBuildDownload,
   getBuilderBuildLog,
   getBuilderLatestBuilds,
@@ -71,6 +71,7 @@ describe('builderApi builds', () => {
     ['latest', () => getBuilderLatestBuilds(ordering, 'tok', 41, 310), `${BUILDS}/latest`, 'GET'],
     ['log', () => getBuilderBuildLog(ordering, 'tok', 41, 310, 9), `${BUILDS}/9/log`, 'GET'],
     ['download', () => getBuilderBuildDownload(ordering, 'tok', 41, 310, 9), `${BUILDS}/9/download`, 'GET'],
+    ['install link', () => createBuilderInstallLink(ordering, 'tok', 41, 310, 9), `${BUILDS}/9/install-link`, 'POST'],
     ['retry', () => retryBuilderBuild(ordering, 'tok', 41, 310, 9), `${BUILDS}/9/retry`, 'POST'],
     ['cancel', () => cancelBuilderBuild(ordering, 'tok', 41, 310, 9), `${BUILDS}/9/cancel`, 'POST']
   ])('calls %s on its route', async (_name, call, path, method) => {
@@ -79,9 +80,5 @@ describe('builderApi builds', () => {
     expect(url.pathname).toBe(path)
     expect(options.method).toBe(method)
     expect(options.headers.Authorization).toBe('Bearer tok')
-  })
-
-  it('installs ad hoc builds from the public route of My Products', () => {
-    expect(getBuilderAdHocInstallUrl(ordering, 310)).toBe('http://localhost:8080/v400/en/development/builder/apps/310/downloads/ios/ad-hoc/ipa')
   })
 })

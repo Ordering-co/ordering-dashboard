@@ -1,0 +1,693 @@
+/*
+ * Order detail panel · Activity, Chat and Custom fields tabs (batch 5.3-C).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; guard:
+ * src/__tests__/tools/productLiteralGuard.test.js. Logical properties only (C17). The dark mode
+ * is the tokens' own. Prefix `odt-` (order detail tabs) keeps these apart from `odc-` wrappers.
+ */
+
+/* ── Shared: focus on native controls ── */
+.odt-chat-input:focus-visible,
+.odt-chat-chip:focus-visible,
+.odt-fld-control:focus-visible,
+.odt-chat-thumb:focus-visible,
+.odt-act-photo:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ═════════ Activity (C9) ═════════ */
+
+.odt-activity { min-inline-size: 0; }
+
+.odt-act-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+/* The segmented control measures the width it is given: it needs a block with a definite width. */
+.odt-act-seg {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odt-act-title {
+  overflow-wrap: anywhere;
+}
+
+.odt-act-title b,
+.odt-act-title strong { font-weight: var(--od-font-weight-semibold); }
+
+.odt-act-title a {
+  color: var(--od-action-content);
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odt-act-title p { margin: 0; }
+
+.odt-act-reason {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-act-photo {
+  display: inline-block;
+  max-inline-size: var(--od-x-popover);
+  margin-block-start: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  overflow: hidden;
+}
+.odt-act-photo img { display: block; max-inline-size: 100%; }
+
+.odt-act-more { margin-block: var(--od-space-2) 0; }
+
+.odt-act-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-act-skeleton {
+  display: grid;
+  gap: var(--od-space-4);
+}
+.odt-act-skeleton-row {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+}
+
+/* Technical facts, inside the fold: label, then value, mono. */
+.odt-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--od-x-space-half) var(--od-space-3);
+  margin: 0;
+}
+.odt-facts dt { color: var(--od-text-muted); }
+.odt-facts dd {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+.odt-facts-map {
+  display: block;
+  max-inline-size: 100%;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+/* Logistics information: sections and cards. */
+.odt-info { display: grid; gap: var(--od-space-3); margin-block-start: var(--od-space-4); }
+
+.odt-info-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+.odt-info-title:not(:first-child) { margin-block-start: var(--od-space-3); }
+
+.odt-info-value {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odt-info-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odt-info-card {
+  display: grid;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+.odt-info-card-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.odt-kv {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--od-x-space-half) var(--od-space-4);
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+.odt-kv dt { color: var(--od-text-muted); }
+.odt-kv dd { margin: 0; color: var(--od-text); overflow-wrap: anywhere; }
+
+.odt-info-orders,
+.odt-info-attempts {
+  margin: 0;
+  padding-inline-start: var(--od-space-5);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ═════════ Chat ═════════ */
+
+.odt-chat {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+  min-inline-size: 0;
+}
+
+.odt-chat-log {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odt-chat-msg {
+  display: grid;
+  gap: var(--od-x-space-half);
+  max-inline-size: 85%;
+  min-inline-size: 0;
+}
+.odt-chat-msg[data-from='me'] { align-self: flex-end; }
+.odt-chat-msg[data-from='other'] { align-self: flex-start; }
+.odt-chat-msg[data-from='system'] { align-self: stretch; max-inline-size: 100%; }
+
+.odt-chat-bubble {
+  display: grid;
+  gap: var(--od-x-space-half);
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+.odt-chat-msg[data-from='me'] .odt-chat-bubble {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+}
+/* redesign messages B1 (B1-5): a message the customer does not see is an internal note. */
+.odt-chat-msg[data-note='internal'] .odt-chat-bubble {
+  border-style: dashed;
+  border-color: var(--od-warning-signal);
+  background: var(--od-warning-soft);
+}
+
+.odt-chat-sender {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-chat-text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.odt-chat-meta {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+.odt-chat-msg[data-from='me'] .odt-chat-meta { text-align: end; }
+
+.odt-chat-thumb {
+  display: block;
+  inline-size: max-content;
+  max-inline-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  cursor: zoom-in;
+}
+.odt-chat-thumb img {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: var(--od-x-popover);
+  border-radius: var(--od-radius-control);
+}
+
+/* The order's own events (placed, status changes): centered by the line, muted, no bubble. */
+.odt-chat-msg[data-from='system'] .odt-chat-bubble {
+  border-color: transparent;
+  background: transparent;
+  padding-inline: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+.odt-chat-msg[data-from='system'] b,
+.odt-chat-msg[data-from='system'] strong {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+.odt-chat-msg[data-from='system'] .odc-feed-details { margin-block-start: 0; }
+
+/*
+ * Composer: sticks to the foot of the panel's scroll area. The body of the panel (order-details.css,
+ * .odc-od-body) pads its end with --od-space-6 and sticky stops inside that padding, which let the log
+ * show through under the composer (a stray «Technical details» below the ended notice). The composer
+ * cancels that padding: it sticks to the very edge and takes the space back as its own padding.
+ */
+.odt-chat-composer {
+  position: sticky;
+  inset-block-end: calc(-1 * var(--od-space-6));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* redesign messages FASE 3: the column shrinks, so nothing in it overflows a 320px screen */
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-4);
+  margin-block-end: calc(-1 * var(--od-space-6));
+  padding-block: var(--od-space-3) calc(var(--od-space-3) + var(--od-space-6));
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odt-chat-recipients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* redesign messages R1 (Q-06, decision 5A): the visible «Send to» label, in the muted caption style, before the chips */
+.odt-chat-recipients-label {
+  flex: none;
+  align-self: center;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-chat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  max-inline-size: 100%;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-x-space-1-5) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+.odt-chat-chip:hover { background: var(--od-x-hover); }
+.odt-chat-chip[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-action-soft);
+  color: var(--od-text);
+}
+/* redesign messages B1 (B1-4, decision 5A): the state of the recipient is drawn in the chip, a box with a check when chosen. */
+.odt-chat-chip-check {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+  color: var(--od-action-foreground);
+}
+.odt-chat-chip-check[data-checked='true'] {
+  border-color: var(--od-action);
+  background: var(--od-action);
+}
+.odt-chat-chip-check .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+  stroke-width: var(--od-x-indicator);
+}
+.odt-chat-recipient-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+.odt-chat-chip-name {
+  display: grid;
+  min-inline-size: 0;
+}
+.odt-chat-chip-name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.odt-chat-chip-role {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odt-chat-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+/* redesign F6c (Q2-12): the fold button only exists on a phone (the media query below) */
+.odt-chat-composer .odt-chat-quick-toggle { display: none; }
+.odt-chat-quick .odc-btn {
+  max-inline-size: 100%;
+  white-space: normal;
+  text-align: start;
+}
+
+.odt-chat-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+/* redesign messages FASE 3: the field gives way on a narrow screen; the attach and Send buttons keep their size */
+.odt-chat-row > .odc-btn { flex: none; }
+
+.odt-chat-input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  block-size: var(--od-x-control-height-lg);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+.odt-chat-input::placeholder { color: var(--od-x-text-subtle); }
+.odt-chat-input[readonly] { background: var(--od-surface-subtle); }
+
+.odt-chat-file { display: none; }
+
+.odt-chat-attachment {
+  position: relative;
+  inline-size: max-content;
+  max-inline-size: 100%;
+}
+.odt-chat-attachment img {
+  display: block;
+  max-inline-size: var(--od-x-popover);
+  max-block-size: var(--od-x-popover);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+.odt-chat-attachment .odc-btn {
+  position: absolute;
+  inset-block-start: var(--od-space-1);
+  inset-inline-end: var(--od-space-1);
+  background: var(--od-bg);
+}
+
+.odt-chat-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-chat-ended {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: var(--od-space-3);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-chat-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+/* ═════════ Custom fields ═════════ */
+
+.odt-fld {
+  display: grid;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odt-fld-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+.odt-fld-table th {
+  padding-block: var(--od-space-2);
+  padding-inline: 0 var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+}
+.odt-fld-table td {
+  padding-block: var(--od-space-2);
+  padding-inline: 0 var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text);
+  vertical-align: top;
+}
+/* The value gives way first: «anywhere» lets its column shrink to nothing, so the key keeps its width. */
+.odt-fld-table td:not(.odt-fld-key) { overflow-wrap: anywhere; }
+/* The key breaks only when the whole word cannot fit the column, never in the middle of a word that does. */
+.odt-fld-key { overflow-wrap: break-word; }
+.odt-fld-table td:last-child,
+.odt-fld-table th:last-child { padding-inline-end: 0; }
+.odt-fld-type { color: var(--od-text-muted); font-size: var(--od-x-type-ui-size); }
+.odt-fld-actions { inline-size: var(--od-x-control-height); text-align: end; }
+
+.odt-fld-skeleton { display: grid; gap: var(--od-space-4); }
+
+.odt-fld-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  gap: var(--od-space-3);
+  align-items: end;
+}
+.odt-fld-form-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-fld-field {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+.odt-fld-field > label,
+.odt-fld-field > .odt-fld-label {
+  margin: 0; /* redesign F3: Bootstrap's label margin-bottom put Key and Value 8px off their boxes, Type (a span) not */
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+.odt-fld-field[data-wide] { grid-column: 1 / -1; }
+
+.odt-fld-control {
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odt-fld .odt-fld-select {
+  display: block;
+  inline-size: 100%;
+}
+
+.odt-fld-json {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow: auto;
+}
+
+.odt-fld-alert {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/*
+ * redesign messages B1 (B1-3): the chat mounted outside the panel (/messages) fills its parent. The log is the scroll area and
+ * the composer sits below it, never over it (no sticky, no negative margins: those belong to the panel's scroll body).
+ */
+.odt-chat[data-layout='standalone'] {
+  block-size: 100%;
+  min-block-size: 0;
+  container: odt-chat / inline-size; /* redesign messages integration: the quick replies fold by the chat's own width */
+}
+/* An unfolded quick reply grows to fit its text instead of overflowing its fixed-height box. */
+.odt-chat[data-layout='standalone'] .odt-chat-quick .odc-btn {
+  block-size: auto;
+  min-block-size: var(--od-x-control-height-sm);
+  padding-block: var(--od-space-1);
+}
+/* redesign messages integration (live 1024): a narrow /messages pane folds the quick replies behind their button, as a phone
+   does, so the conversation keeps the height. In the order panel nothing changes (it is not a standalone container). */
+@container odt-chat (max-width: 719px) {
+  .odt-chat-composer .odt-chat-quick-toggle {
+    display: inline-flex;
+    justify-self: start;
+  }
+  .odt-chat-composer .odt-chat-quick:not([data-open]) { display: none; }
+}
+.odt-chat[data-layout='standalone'] > :first-child {
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+.odt-chat[data-layout='standalone'] .odt-chat-log {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-block: var(--od-space-4) var(--od-space-3);
+  padding-inline: var(--od-space-4); /* redesign messages integration: the pane has no padding of its own */
+}
+.odt-chat[data-layout='standalone'] .odt-chat-composer {
+  position: static;
+  flex: none;
+  margin-block: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+}
+/* redesign messages ronda 2 (owner: «el botón de Mía tapa lo del botón de enviar»): in /messages the field row is the bottom end
+   corner of the page, where Mia's floating button sits. While the button is on screen (the open assistant replaces it and docks the
+   page instead), the row keeps room at its right for it. Physical right on purpose: the button is anchored to the right edge in RTL
+   too, but right to left the composer is not in that corner. The thread keeps its height; on a phone (below) the room goes under
+   the composer instead, as the order panel's foot does. */
+/* Right to left the composer is at the left of the page (the sidebar is under the button), so the row keeps its width (R2.4). */
+:root:not([dir='rtl']):has(button[aria-controls='assistant_panel'][aria-expanded='false']) .odt-chat[data-layout='standalone'] .odt-chat-row {
+  padding-right: var(--od-x-launcher-inline-clearance);
+}
+@media (max-width: 767px) {
+  :root:has(button[aria-controls='assistant_panel'][aria-expanded='false']) .odt-chat[data-layout='standalone'] .odt-chat-row {
+    padding-right: 0;
+  }
+  :root:has(button[aria-controls='assistant_panel'][aria-expanded='false']) .odt-chat[data-layout='standalone'] .odt-chat-composer {
+    padding-block-end: calc(var(--od-space-3) + var(--od-x-launcher-clearance));
+  }
+}
+
+/* ═════════ Touch (C3) and motion ═════════ */
+
+@media (pointer: coarse) {
+  .odt-chat-chip,
+  .odt-chat-input { min-block-size: var(--od-x-target-coarse); }
+  .odt-chat-input { font-size: var(--od-x-type-lead-size); }
+  .odt-act-photo { min-block-size: var(--od-x-target-coarse); }
+}
+
+/* redesign W0-3d (T0-12, decisión 12): the thumbnail of a picture keeps its own size (it is never shorter than the
+   picture) and its 44px area is a centered pseudo-element, never smaller than the button. It is a lone button. */
+/* redesign F3 (C3): the custom field inputs reach 44px below 768px of screen too, not only on a coarse pointer (an input
+   cannot carry a pseudo-element hit area, so it keeps the 44px box) */
+@media (pointer: coarse), (max-width: 767px) {
+  .odt-fld-control { min-block-size: var(--od-x-target-coarse); font-size: var(--od-x-type-lead-size); }
+
+  .odt-chat-thumb { position: relative; }
+
+  .odt-chat-thumb::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+
+  /* In the chat the fold «Technical details» sits 2px under the picture and its own area (Product's timeline.css)
+     reaches 10px up: it would cover the foot of the picture and open the fold instead of the preview. Under a picture
+     the fold keeps its 24px box and gives up the area. */
+  .odt-chat-thumb + .odc-feed-details .odc-feed-summary::after { content: none; }
+}
+
+
+@media (max-width: 575px) {
+  .odt-chat-msg { max-inline-size: 92%; }
+}
+
+/* redesign F6c (Q2-12): on a phone the conversation gets the height. The recipients are one line that scrolls and the
+   quick replies fold behind a button, so the composer is the field, the toggle and the status selector. */
+@media (max-width: 767px) {
+  .odt-chat-recipients {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .odt-chat-chip { flex: 0 0 auto; }
+  .odt-chat-composer .odt-chat-quick-toggle {
+    display: inline-flex;
+    justify-self: start;
+    min-block-size: var(--od-x-target-coarse);
+  }
+  .odt-chat-composer .odt-chat-quick:not([data-open]) { display: none; }
+}
+
+/* Image preview dialog of the chat. */
+.odt-chat-preview {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-3);
+}
+.odt-chat-preview img {
+  display: block;
+  max-inline-size: 100%;
+  border-radius: var(--od-radius-component);
+}
+.odt-chat-preview a {
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-ui-size);
+}

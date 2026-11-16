@@ -1,50 +1,45 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useLanguage, DragAndDrop, ExamineClick, BusinessFormDetails as BusinessFormDetailsController, useConfig, useSession } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { Alert, Modal, ImageCrop, ColorPicker } from '../../Shared'
-import { bytesConverter, shape, ribbonValues, disableReasons } from '../../../utils'
-import BiImage from '@meronex/icons/bi/BiImage'
-import { Button, Input, Switch, SecondSelect } from '../../../styles'
-import { RecordCircleFill, Circle, Facebook, Instagram, Tiktok, Pinterest, Whatsapp, Snapchat } from 'react-bootstrap-icons'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLanguage, BusinessFormDetails as BusinessFormDetailsController, useConfig, useSession, useToast, ToastType } from '../../../../../index'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { AsyncSwitch, Field, RadioGroup, SaveBar, Switch, TextField, useLeaveGuard } from '../../Shared/Product'
+import { ImageField } from '../../Shared/Product/ImageField'
+import { ColorField } from '../../Shared/Product/ColorField'
+import { bytesConverter, shape, ribbonValues } from '../../../utils'
 import { BUSINESS_VERTICALS } from '../../../../../constants/school'
-
 import {
-  FormInput,
-  HeaderImage,
-  SkeletonWrapper,
-  UploadImageIcon,
-  InputWrapper,
-  ActionsForm,
-  UploadImageIconContainer,
-  LogoImage,
-  PhoneWrapper,
-  SwitchWrapper,
-  ColorShapeWrapper,
-  ColorWrapper,
-  ShapeWrapper,
-  ShapeContentWrapper,
-  ShapeBoxWrapper,
-  RibbonSwitchWrapper,
-  PriceFilterWrapper,
-  PriceFilterListWrapper,
-  PriceFilterItem,
-  SocialWrapper,
-  SocialItemWrapper,
-  SocialItemHeader,
-  SocialItemContent,
-  Option,
-  VerticalField
-} from './styles'
+  SOCIAL_NETWORKS,
+  FIELD_ORDER,
+  changedFieldNames,
+  disabledReasonOptions,
+  effectiveRibbon,
+  priceLevels,
+  socialHandle,
+  socialValue,
+  validateInformation,
+  valueOf
+} from './informationModel'
+import './business-information.css'
+
+// redesign stores 5.1a (decision 4 of Stores): Information on Product. One way to save: every field waits for the
+// sticky «Save» of P/SaveBar, and leaving with unsaved work asks (P/LeaveGuard). The two export switches (Eatstreet, Restaurant
+// Direct) still save at once, as P/AsyncSwitch, controlled by the stored value. Same fields, conditions and request as main
+// (`ordering.businesses(id).save(changes)` through BusinessFormDetails); the rules live in informationModel.js.
+
+const SAVED_NOTICE_MS = 4000
+const MAX_IMAGE_KB = 2048
+
+// The first text of an API error: a string, `{ message }`, or a list of either.
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 const BusinessInformationUI = (props) => {
   const {
     formState,
     businessState,
-    handlechangeImage,
     handleChangeInput,
     handleButtonUpdateClick,
+    handleDiscardChanges,
     handleChangeSwtich,
     handleChangeRibbon,
     handleChangeSelectedOption,
@@ -52,764 +47,500 @@ const BusinessInformationUI = (props) => {
     googleRedirectPluginRoot,
     googleRedirectPluginLoading,
     feedInclusionLoading,
-    feedInclusionSaving,
     isSecondaryIncluded,
     onGoogleFeedToggle,
-    feedPrimarySaving,
     isPrimaryIncluded,
     onGoogleFeedPrimaryToggle
   } = props
 
-  const formMethods = useForm()
   const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
   const [{ configs }] = useConfig()
   const [{ user }] = useSession()
-  const headerImageInputRef = useRef(null)
-  const logoImageInputRef = useRef(null)
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [cropState, setCropState] = useState({ name: null, data: null, open: false })
-  const priceSymbol = configs?.format_number_currency?.value?.trim()
-  const disableReasonDictionary = disableReasons()
   const isAdmin = user?.level === 0
-  const isRibbonEnabled = formState?.changes?.ribbon?.enabled ?? businessState?.business?.ribbon?.enabled ?? false
-  const ribbonColor = formState?.changes?.ribbon?.color ?? businessState?.business?.ribbon?.color ?? ''
-  const ribbonShape = formState?.changes?.ribbon?.shape ?? businessState?.business?.ribbon?.shape ?? ''
+  const business = businessState?.business || {}
+  const changes = formState?.changes || {}
+  const loading = !!formState?.loading
 
-  const priceList = [
-    { key: '1', value: `${priceSymbol}` },
-    { key: '2', value: `${Array(2).fill(priceSymbol).join('')}` },
-    { key: '3', value: `${Array(3).fill(priceSymbol).join('')}` },
-    { key: '4', value: `${Array(4).fill(priceSymbol).join('')}` },
-    { key: '5', value: `${Array(5).fill(priceSymbol).join('')}` }
-  ]
+  const [errors, setErrors] = useState({})
+  const [imageErrors, setImageErrors] = useState({})
+  const [socialDrafts, setSocialDrafts] = useState({})
+  const [saved, setSaved] = useState(false)
+  // review F7: the bar stays «saving» from the press to the answer, so it never goes away for a render in between (it would hand
+  // the focus to the form) and «Saved» arrives in the same render the saving ends
+  const [submitting, setSubmitting] = useState(false)
+  // review F6: Discard also clears what the image fields hold of their own (a «one image at a time» message)
+  const [resetKey, setResetKey] = useState(0)
+  const formRef = useRef(null)
+  const mounted = useRef(true)
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
 
-  const reasonOptionList = [
-    {
-      value: 'default',
-      content: <Option padding='0px'><span>{t('SELECT_OPTION', 'Select option')}</span></Option>,
-      color: 'primary',
-      disabled: true,
-      showDisable: true
-    },
-    {
-      value: disableReasonDictionary.SALE_DIVIATION,
-      content: <Option padding='0px'><span>{disableReasonDictionary.SALE_DIVIATION}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.MOTORCYCLE_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.MOTORCYCLE_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.NO_DRIVERS,
-      content: <Option padding='0px'><span>{disableReasonDictionary.NO_DRIVERS}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.EXCESS_ORDERS,
-      content: <Option padding='0px'><span>{disableReasonDictionary.EXCESS_ORDERS}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.OVEN_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.OVEN_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.NO_ELECTRIC_POWER,
-      content: <Option padding='0px'><span>{disableReasonDictionary.NO_ELECTRIC_POWER}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.NO_GAS,
-      content: <Option padding='0px'><span>{disableReasonDictionary.NO_GAS}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.CONECTION_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.CONECTION_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.NO_WATER,
-      content: <Option padding='0px'><span>{disableReasonDictionary.NO_WATER}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.SYSTEM_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.SYSTEM_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.STREETS_CLOSED,
-      content: <Option padding='0px'><span>{disableReasonDictionary.STREETS_CLOSED}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.NO_SERVICE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.NO_SERVICE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.UNSAFETY,
-      content: <Option padding='0px'><span>{disableReasonDictionary.UNSAFETY}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.MAINTENANCE_IN_STORE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.MAINTENANCE_IN_STORE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.RAINING,
-      content: <Option padding='0px'><span>{disableReasonDictionary.RAINING}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.STORE_EVENT,
-      content: <Option padding='0px'><span>{disableReasonDictionary.STORE_EVENT}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.PROBLEM_WITH_POWER,
-      content: <Option padding='0px'><span>{disableReasonDictionary.PROBLEM_WITH_POWER}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.DRIVER_ACCIDENT,
-      content: <Option padding='0px'><span>{disableReasonDictionary.DRIVER_ACCIDENT}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.MAINTENANCE_SYSTEM_IN_STORE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.MAINTENANCE_SYSTEM_IN_STORE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.PROBLEM_WITH_GAS,
-      content: <Option padding='0px'><span>{disableReasonDictionary.PROBLEM_WITH_GAS}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.ROLLER_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.ROLLER_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.WEATHER,
-      content: <Option padding='0px'><span>{disableReasonDictionary.WEATHER}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.GAS_LEAK,
-      content: <Option padding='0px'><span>{disableReasonDictionary.GAS_LEAK}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.MANIFESTATION,
-      content: <Option padding='0px'><span>{disableReasonDictionary.MANIFESTATION}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.LACK_OF_STAFF,
-      content: <Option padding='0px'><span>{disableReasonDictionary.LACK_OF_STAFF}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.MIXER_FAILURE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.MIXER_FAILURE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.AUTOMATICS,
-      content: <Option padding='0px'><span>{disableReasonDictionary.AUTOMATICS}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.PRODUCT_SHORTAGE,
-      content: <Option padding='0px'><span>{disableReasonDictionary.PRODUCT_SHORTAGE}</span></Option>,
-      color: 'primary'
-    },
-    {
-      value: disableReasonDictionary.TERMINAL_FAILURES,
-      content: <Option padding='0px'><span>{disableReasonDictionary.TERMINAL_FAILURES}</span></Option>,
-      color: 'primary'
-    }
-  ]
+  const clearError = (...keys) => setErrors(current => {
+    if (!keys.some(key => key in current)) return current
+    const next = { ...current }
+    keys.forEach(key => { delete next[key] })
+    return next
+  })
 
-  const socialOriginalURL = {
-    facebook: 'https://www.facebook.com/',
-    instagram: 'https://www.instagram.com/',
-    tiktok: 'https://www.tiktok.com/',
-    snap_chat: 'https://www.snapchat.com/add/',
-    pinterest: 'https://www.pinterest.com/',
-    whatsapp: 'https://wa.me/'
+  const change = (name, value) => {
+    handleChangeInput({ target: { name, value } })
+    clearError(name)
   }
 
-  const handleClickImage = (type) => {
-    if (type === 'header') {
-      headerImageInputRef.current.click()
-    }
+  // ---- labels (the save bar names the changed fields with them) ----------------------------------------------------------------
+  const labels = {
+    header: t('STORE_HEADER_IMAGE', 'Header image'),
+    logo: t('LOGO', 'Logo'),
+    name: t('NAME', 'Name'),
+    vertical: t('VERTICAL', 'Vertical'),
+    // redesign tanda AB (S-4b): own key; the live catalogue's EXTERNAL_ID reads «External Id»
+    external_id: t('STORE_EXTERNAL_ID', 'External ID'),
+    description: t('SHORT_DESCRIPTION', 'Short description'),
+    phone: t('PHONE_NUMBER', 'Phone number'),
+    cellphone: t('MOBILE_NUMBER', 'Mobile number'),
+    featured: t('FEATURED', 'Featured'),
+    disabled_reason: t('DISABLED_REASON', 'Disabled reason'),
+    price_level: t('PRICE_FILTER', 'Price filter'),
+    ribbon: t('RIBBON', 'Ribbon'),
+    ...Object.fromEntries(SOCIAL_NETWORKS.map(network => [network.key, t(network.labelKey, network.label)]))
+  }
+  const names = changedFieldNames(changes, key => labels[key], business)
+  const count = names.length
+  const dirty = count > 0
 
-    if (type === 'logo') {
-      logoImageInputRef.current.click()
-    }
+  // ---- images (G2-05: nothing is pending until the crop is accepted; G2-26: several files are refused) --------------------------
+  const validateImage = (name) => (file) => {
+    let message = null
+    if (file?.type?.split('/')[0] !== 'image') message = t('ERROR_ONLY_IMAGES', 'Only images can be accepted')
+    else if (bytesConverter(file.size) > MAX_IMAGE_KB) message = t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')
+    setImageErrors(current => ({ ...current, [name]: message }))
+    return message == null
   }
 
-  const handleFiles = (files, name) => {
-    if (files.length === 1) {
-      const type = files[0].type.split('/')[0]
-      if (type !== 'image') {
-        setAlertState({
-          open: true,
-          content: [t('ERROR_ONLY_IMAGES', 'Only images can be accepted')]
-        })
-        return
-      }
-
-      if (bytesConverter(files[0]?.size) > 2048) {
-        setAlertState({
-          open: true,
-          content: [t('IMAGE_MAXIMUM_SIZE', 'The maximum image size is 2 megabytes')]
-        })
-        return
-      }
-      const reader = new window.FileReader()
-      reader.readAsDataURL(files[0])
-      reader.onload = () => {
-        setCropState({ name, data: reader.result, open: true })
-      }
-      handlechangeImage(files[0], name)
-    }
-  }
-
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-  }
-
-  const onSubmit = () => {
-    if (Object.keys(formState.changes).length > 0) {
-      if (formState?.changes?.whatsapp_number && formState?.changes?.whatsapp_number.search(/^https:\/\/wa\.me\/\+?\d+$/) === -1) {
-        setAlertState({
-          open: true,
-          content: t('WHATS_APP_NUMBER_NOT_VALID', 'Whatsapp number is not valid')
-        })
-        return
-      }
-      if (formState?.changes?.tiktok_profile && formState?.changes?.tiktok_profile.search(/^https:\/\/www\.tiktok\.com\/@.+$/) === -1) {
-        setAlertState({
-          open: true,
-          content: t('TIKTOK_USERNAME_NOT_VALID', 'TikTok user name is not valid')
-        })
-        return
-      }
-      handleButtonUpdateClick()
-    }
-  }
-
-  const handleChangePhoto = (croppedImg) => {
-    handleChangeSwtich(cropState?.name, croppedImg)
-    setCropState({ name: null, data: null, open: false })
-  }
-
-  const handleChangeEnable = (value) => {
-    if (!businessState?.business?.ribbon) {
-      handleChangeRibbon({ ...ribbonValues, ...formState?.changes?.ribbon, enabled: value })
+  // ---- ribbon (main's handler: a store with no ribbon gets main's defaults when it is switched) ----------------------------------
+  const ribbon = effectiveRibbon(changes, business)
+  const ribbonOn = !!ribbon.enabled
+  const handleRibbonSwitch = (value) => {
+    clearError('ribbon_text', 'ribbon_color', 'ribbon_shape')
+    // (main): a store with no ribbon takes main's defaults on either switch, keeping what was already chosen before
+    // saving, so the first enable shows a valid color, text and shape
+    if (!business?.ribbon) {
+      handleChangeRibbon({ ...ribbonValues, ...changes?.ribbon, enabled: value })
       return
     }
     handleChangeRibbon({ enabled: value })
   }
+  const shapeOptions = [
+    { value: shape.rectangle, label: t('RIBBON_SHAPE_RECTANGLE', 'Rectangle') },
+    { value: shape.rectangleRound, label: t('RIBBON_SHAPE_ROUNDED_RECTANGLE', 'Rounded rectangle') },
+    { value: shape.capsuleShape, label: t('RIBBON_SHAPE_CAPSULE', 'Capsule') }
+  ]
 
-  useEffect(() => {
-    if (Object.keys(formMethods.errors).length > 0) {
-      const content = Object.values(formMethods.errors).map(error => error.message)
-      setAlertState({
-        open: true,
-        content
-      })
+  // ---- social networks: the field keeps what is typed; the store gets `base + user` (D4) ----------------------------------------
+  const socialText = (network) => socialDrafts[network.key] ?? socialHandle(valueOf(changes, business, network.key))
+  const changeSocial = (network, typed) => {
+    setSocialDrafts(current => ({ ...current, [network.key]: typed }))
+    handleChangeSwtich(network.key, socialValue(network.base, typed))
+    clearError(network.key)
+  }
+  const settleSocial = (network) => setSocialDrafts(current => {
+    if (!(network.key in current)) return current
+    const { [network.key]: _gone, ...rest } = current
+    return rest
+  })
+
+  // ---- save, discard and the leave guard --------------------------------------------------------------------------------------
+  // review F11: from the leave dialog the page is inert for a few frames and the dialog gives the focus back to what opened it, so
+  // the focus is put on the first invalid control as soon as it can take it (for up to 60 frames)
+  const focusFirstError = (found) => {
+    const first = FIELD_ORDER.find(key => key in found)
+    let frames = 0
+    const attempt = () => {
+      const control = formRef.current?.querySelector(`[data-bi-field="${first}"] :is(input, select, button):not([disabled])`)
+      if (!control) return
+      control.focus()
+      if (document.activeElement === control) {
+        control.scrollIntoView?.({ block: 'nearest' })
+        return
+      }
+      if (frames++ < 60) window.requestAnimationFrame(attempt)
     }
-  }, [formMethods.errors])
+    attempt()
+  }
 
-  useEffect(() => {
-    if (formState?.result?.error) {
-      setAlertState({
-        open: true,
-        content: formState?.result?.result
-      })
+  const save = async () => {
+    if (loading || submitting) return { ok: false }
+    const found = validateInformation(changes, business, t)
+    setErrors(found)
+    if (Object.keys(found).length > 0) {
+      focusFirstError(found)
+      return { ok: false }
     }
-  }, [formState?.result])
-
-  useEffect(() => {
-    if (isRibbonEnabled) {
-      formMethods.register('colorhex', {
-        required: t(
-          'VALIDATION_RIBBON_COLOR_ERROR_REQUIRED',
-          'The _attribute_ field is required'
-        ).replace('_attribute_', t('RIBBON_COLOR', 'Ribbon color'))
-      })
-      formMethods.register('shape', {
-        required: t(
-          'VALIDATION_RIBBON_SHAPE_ERROR_REQUIRED',
-          'The _attribute_ field is required'
-        ).replace('_attribute_', t('RIBBON_SHAPE', 'Ribbon shape'))
-      })
+    setSaved(false)
+    setSubmitting(true)
+    const result = await handleButtonUpdateClick()
+    if (!mounted.current) {
+      // review F9: «Save and continue» (or a way out while it saved) left the form: the answer is told where it can still be seen
+      if (result?.ok) showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+      else showToast(ToastType.Error, translateApiMessage(t, firstMessage(result?.error), t('STORE_INFORMATION_SAVE_FAILED', 'The store could not be saved.')))
+      return result
     }
-
-    return () => {
-      formMethods.unregister('colorhex')
-      formMethods.unregister('shape')
+    setSubmitting(false)
+    if (result?.ok) {
+      setSocialDrafts({})
+      setSaved(true)
     }
-  }, [isRibbonEnabled])
+    return result
+  }
 
+  const discard = () => {
+    handleDiscardChanges()
+    setErrors({})
+    setImageErrors({})
+    setSocialDrafts({})
+    setResetKey(key => key + 1)
+  }
+
+  // review F9: «Save and continue» leaves right after a save that worked, so its answer is a toast (the bar goes with the form);
+  // when it fails the user stays and the bar says why
+  const saveAndLeave = async () => {
+    const result = await save()
+    if (result?.ok) showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+    return result
+  }
+
+  useLeaveGuard({ dirty: () => dirty && !loading, count, save: saveAndLeave, discard })
+
+  // «Saved» for a few seconds after a save that ended well.
   useEffect(() => {
-    if (!isRibbonEnabled) return
-    formMethods.setValue('colorhex', ribbonColor)
-    formMethods.setValue('shape', ribbonShape)
-  }, [isRibbonEnabled, ribbonColor, ribbonShape])
+    if (!saved) return undefined
+    const timer = setTimeout(() => setSaved(false), SAVED_NOTICE_MS)
+    return () => clearTimeout(timer)
+  }, [saved])
+
+  const withCount = (text, n) => text.replace('_count_', String(n))
+  const invalidCount = Object.keys(errors).length
+  let errorText = null
+  if (invalidCount > 0) {
+    errorText = withCount(invalidCount === 1
+      ? t('SETTINGS_FIX_FIELDS_ONE', 'Fix _count_ field to save.')
+      : t('SETTINGS_FIX_FIELDS_OTHER', 'Fix _count_ fields to save.'), invalidCount)
+  } else if (formState?.result?.error && !loading) {
+    // review F10: also when nothing is pending any more (the second ribbon request failed after the first one was stored)
+    errorText = translateApiMessage(t, firstMessage(formState.result.result), t('STORE_INFORMATION_SAVE_FAILED', 'The store could not be saved.'))
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (dirty) save()
+  }
+
+  // ---- values -----------------------------------------------------------------------------------------------------------------
+  const text = (key) => valueOf(changes, business, key) ?? ''
+  const reasons = disabledReasonOptions(t, valueOf(changes, business, 'disabled_reason'))
+  const prices = priceLevels(configs?.format_number_currency?.value)
+  const showExport = isGoogleRedirectPluginActive && googleRedirectPluginRoot && business?.id && isAdmin
+  const exportLoading = googleRedirectPluginLoading || feedInclusionLoading
+  const requiredLabel = t('REQUIRED', 'Required')
+  const cropTitle = t('IMAGE_CROP', 'Image crop')
+  const closeLabel = t('CLOSE', 'Close')
+  const changeText = t('CHANGE', 'Change')
+  const imageHint = t('STORE_IMAGE_HINT', 'PNG or JPG, up to 2 MB. Drag an image here or choose one.')
+  const tooManyFilesText = t('IMAGE_ONE_AT_A_TIME', 'Drop one image at a time.')
 
   return (
-    <>
-      <FormInput onSubmit={formMethods.handleSubmit(onSubmit)}>
-        <HeaderImage
-          onClick={() => handleClickImage('header')}
-        >
-          <ExamineClick
-            onFiles={files => handleFiles(files, 'header')}
-            childRef={(e) => { headerImageInputRef.current = e }}
-            accept='image/png, image/jpeg, image/jpg'
-            disabled={formState.loading}
-          >
-            <DragAndDrop
-              onDrop={dataTransfer => handleFiles(dataTransfer.files, 'header')}
-              accept='image/png, image/jpeg, image/jpg'
-              disabled={formState.loading}
-            >
-              {formState.loading
-                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
-                : ((!formState.changes?.header || formState.result?.result === 'Network Error' || formState.result.error)
-                    ? businessState?.business?.header &&
-                  (<img src={businessState?.business?.header} alt='header image' loading='lazy' />)
-                    : formState?.changes?.header &&
-                  <img src={formState?.changes?.header} alt='header image' loading='lazy' />
-                  )}
-              <UploadImageIconContainer>
-                <UploadImageIcon>
-                  <BiImage />
-                  <span>{t('DRAG_DROP_IMAGE_HERE', 'Put your image here')}</span>
-                </UploadImageIcon>
-              </UploadImageIconContainer>
-            </DragAndDrop>
-          </ExamineClick>
-        </HeaderImage>
+    <form ref={formRef} className='odc-bi-form' tabIndex={-1} noValidate onSubmit={handleSubmit}>
+      <section className='odc-bi-group' aria-labelledby='odc-bi-images'>
+        <h2 id='odc-bi-images' className='odc-bi-heading'>{t('IMAGES', 'Images')}</h2>
+        <div className='odc-bi-images'>
+          <ImageField
+            cropTitle={cropTitle}
+            closeLabel={closeLabel}
+            changeText={changeText}
+            hint={imageHint}
+            droppable
+            tooManyFilesText={tooManyFilesText}
+            disabled={loading}
+            key={`header-${resetKey}`}
+            data-bi-field='header'
+            label={labels.header}
+            changeLabel={t('STORE_CHANGE_HEADER_IMAGE', 'Change header image')}
+            value={valueOf(changes, business, 'header')}
+            previewAlt={labels.header}
+            validateFile={validateImage('header')}
+            error={imageErrors.header}
+            onChange={(image) => handleChangeSwtich('header', image)}
+          />
+          <ImageField
+            cropTitle={cropTitle}
+            closeLabel={closeLabel}
+            changeText={changeText}
+            hint={imageHint}
+            droppable
+            tooManyFilesText={tooManyFilesText}
+            disabled={loading}
+            key={`logo-${resetKey}`}
+            data-bi-field='logo'
+            label={labels.logo}
+            changeLabel={t('STORE_CHANGE_LOGO', 'Change logo')}
+            value={valueOf(changes, business, 'logo')}
+            previewAlt={labels.logo}
+            validateFile={validateImage('logo')}
+            error={imageErrors.logo}
+            onChange={(image) => handleChangeSwtich('logo', image)}
+          />
+        </div>
+      </section>
 
-        <LogoImage
-          onClick={() => handleClickImage('logo')}
-        >
-          <ExamineClick
-            onFiles={files => handleFiles(files, 'logo')}
-            childRef={(e) => { logoImageInputRef.current = e }}
-            accept='image/png, image/jpeg, image/jpg'
-            disabled={formState.loading}
+      {showExport && (
+        <section className='odc-bi-group' aria-labelledby='odc-bi-export'>
+          <h2 id='odc-bi-export' className='odc-bi-heading'>{t('STORE_EXPORT', 'Export')}</h2>
+          <AsyncSwitch
+            checked={exportLoading ? false : !!isPrimaryIncluded}
+            disabled={exportLoading}
+            onToggle={(next) => onGoogleFeedPrimaryToggle?.(next)}
+            failureText={t('STORE_EXPORT_FAILED', 'The export could not be changed.')}
           >
-            <DragAndDrop
-              onDrop={dataTransfer => handleFiles(dataTransfer.files, 'logo')}
-              accept='image/png, image/jpeg, image/jpg'
-              disabled={formState.loading}
+            {t('EXPORT_TO_EATSTREET', 'Export to Eatstreet')}
+          </AsyncSwitch>
+          <AsyncSwitch
+            checked={exportLoading ? false : !!isSecondaryIncluded}
+            disabled={exportLoading}
+            onToggle={(next) => onGoogleFeedToggle?.(next)}
+            failureText={t('STORE_EXPORT_FAILED', 'The export could not be changed.')}
+          >
+            {t('EXPORT_TO_RESTAURANT_DIRECT', 'Export to Restaurant Direct')}
+          </AsyncSwitch>
+        </section>
+      )}
+
+      <section className='odc-bi-group' aria-labelledby='odc-bi-store'>
+        <h2 id='odc-bi-store' className='odc-bi-heading'>{t('STORE_NAME_AND_CONTACT', 'Name and contact')}</h2>
+        <div data-bi-field='name'>
+          <TextField
+            label={labels.name}
+            required
+            requiredLabel={requiredLabel}
+            value={text('name')}
+            onChange={(value) => change('name', value)}
+            error={errors.name}
+            disabled={loading}
+            autoComplete='off'
+          />
+        </div>
+        <div data-bi-field='vertical'>
+          <Field label={labels.vertical} disabled={loading}>
+            <select
+              className='odc-field-input odc-bi-select'
+              value={valueOf(changes, business, 'vertical') ?? 'store'}
+              disabled={loading}
+              onChange={(event) => handleChangeSelectedOption('vertical', event.target.value)}
             >
-              {formState.loading
-                ? (<SkeletonWrapper><Skeleton /></SkeletonWrapper>)
-                : ((!formState.changes?.logo || formState.result?.result === 'Network Error' || formState.result.error)
-                    ? businessState?.business?.logo &&
-                  (<img src={businessState?.business?.logo} alt='logo image' loading='lazy' />)
-                    : formState?.changes?.logo &&
-                  <img src={formState?.changes?.logo} alt='logo image' loading='lazy' />
-                  )}
-              <UploadImageIconContainer small>
-                <UploadImageIcon small>
-                  <BiImage />
-                </UploadImageIcon>
-              </UploadImageIconContainer>
-            </DragAndDrop>
-          </ExamineClick>
-        </LogoImage>
-        {isGoogleRedirectPluginActive && googleRedirectPluginRoot && businessState?.business?.id && isAdmin && (
+              {BUSINESS_VERTICALS.map(vertical => (
+                <option key={vertical.value} value={vertical.value}>
+                  {t(`BUSINESS_VERTICAL_${vertical.value.toUpperCase()}`, vertical.name)}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </div>
+        <div data-bi-field='external_id'>
+          <TextField
+            label={labels.external_id}
+            value={text('external_id')}
+            onChange={(value) => change('external_id', value)}
+            // redesign bugs C: any text, as the API keeps it (main took digits only while typing, so a stored ID with
+            // letters could not be typed again)
+            disabled={loading}
+            autoComplete='off'
+          />
+        </div>
+        <div data-bi-field='description'>
+          <TextField
+            label={labels.description}
+            placeholder={t('TYPE_BUSINESS_SHORT_DESCRIPTION', 'Write a little description')}
+            value={text('description')}
+            onChange={(value) => change('description', value)}
+            disabled={loading}
+            autoComplete='off'
+          />
+        </div>
+        <div className='odc-bi-pair'>
+          <div data-bi-field='phone'>
+            <TextField
+              type='tel'
+              label={labels.phone}
+              placeholder='(000) 0000 000'
+              value={text('phone')}
+              onChange={(value) => change('phone', value)}
+              disabled={loading}
+              autoComplete='off'
+            />
+          </div>
+          <div data-bi-field='cellphone'>
+            <TextField
+              type='tel'
+              label={labels.cellphone}
+              hint={t('OPTIONAL', 'Optional')}
+              placeholder='(000) 0000 000'
+              value={text('cellphone')}
+              onChange={(value) => change('cellphone', value)}
+              disabled={loading}
+              autoComplete='off'
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className='odc-bi-group' aria-labelledby='odc-bi-listing'>
+        <h2 id='odc-bi-listing' className='odc-bi-heading'>{t('STORE_LISTING', 'Listing')}</h2>
+        {/* main: only an administrator features a store */}
+        {isAdmin && (
+          <div data-bi-field='featured'>
+            <Switch
+              checked={!!valueOf(changes, business, 'featured')}
+              disabled={loading}
+              onCheckedChange={(value) => handleChangeSwtich('featured', value)}
+            >
+              {labels.featured}
+            </Switch>
+          </div>
+        )}
+        {business?.enabled === false && (
+          <div data-bi-field='disabled_reason'>
+            <Field label={labels.disabled_reason} disabled={loading}>
+              <select
+                className='odc-field-input odc-bi-select'
+                value={reasons.selected}
+                disabled={loading}
+                onChange={(event) => handleChangeSelectedOption('disabled_reason', event.target.value)}
+              >
+                {reasons.selected === '' && <option value='' disabled>{t('SELECT_OPTION', 'Select an option')}</option>}
+                {reasons.options.map(option => <option key={option.key} value={option.value}>{option.label}</option>)}
+              </select>
+            </Field>
+          </div>
+        )}
+        <div data-bi-field='price_level'>
+          <RadioGroup
+            // review F1: mounted again once the store arrives, so the tab stop is the stored level, not the first one
+            key={`price-${business?.id ?? 'none'}`}
+            label={labels.price_level}
+            orientation='horizontal'
+            options={prices}
+            value={valueOf(changes, business, 'price_level') ?? null}
+            disabled={loading}
+            onValueChange={(value) => handleChangeSwtich('price_level', value)}
+          />
+        </div>
+      </section>
+
+      <section className='odc-bi-group' aria-labelledby='odc-bi-ribbon'>
+        <h2 id='odc-bi-ribbon' className='odc-bi-heading'>{labels.ribbon}</h2>
+        <div data-bi-field='ribbon'>
+          <Switch checked={ribbonOn} disabled={loading} onCheckedChange={handleRibbonSwitch}>
+            {t('STORE_SHOW_RIBBON', 'Show a ribbon on the store')}
+          </Switch>
+        </div>
+        {ribbonOn && (
           <>
-            <SwitchWrapper switchCustomStyle>
-              <span>{t('EXPORT_TO_EATSTREET', 'Export to Eatstreet')}</span>
-              {googleRedirectPluginLoading || feedInclusionLoading
-                ? (
-                  <Switch
-                    defaultChecked={false}
-                    disabled
-                  />
-                  )
-                : (
-                  <Switch
-                    defaultChecked={isPrimaryIncluded}
-                    disabled={feedPrimarySaving}
-                    onChange={onGoogleFeedPrimaryToggle}
-                  />
-                  )}
-            </SwitchWrapper>
-            <SwitchWrapper switchCustomStyle>
-              <span>{t('EXPORT_TO_RESTAURANT_DIRECT', 'Export to Restaurant Direct')}</span>
-              {googleRedirectPluginLoading || feedInclusionLoading
-                ? (
-                  <Switch
-                    defaultChecked={false}
-                    disabled
-                  />
-                  )
-                : (
-                  <Switch
-                    defaultChecked={isSecondaryIncluded}
-                    disabled={feedInclusionSaving}
-                    onChange={onGoogleFeedToggle}
-                  />
-                  )}
-            </SwitchWrapper>
+            <div data-bi-field='ribbon_text'>
+              <TextField
+                label={t('TEXT', 'Text')}
+                required
+                requiredLabel={requiredLabel}
+                value={ribbon.text ?? ''}
+                onChange={(value) => {
+                  handleChangeRibbon({ text: value })
+                  clearError('ribbon_text')
+                }}
+                error={errors.ribbon_text}
+                disabled={loading}
+                autoComplete='off'
+              />
+            </div>
+            <div data-bi-field='ribbon_color'>
+              <ColorField
+                label={t('COLOR', 'Color')}
+                required
+                requiredLabel={requiredLabel}
+                value={ribbon.color}
+                error={errors.ribbon_color}
+                disabled={loading}
+                onChange={(color) => {
+                  handleChangeRibbon({ color })
+                  clearError('ribbon_color')
+                }}
+              />
+            </div>
+            <div data-bi-field='ribbon_shape'>
+              <RadioGroup
+                label={t('SHAPE', 'Shape')}
+                // redesign bugs F row 38: informationModel requires the shape while the ribbon is on, as its neighbours say
+                required
+                requiredLabel={requiredLabel}
+                orientation='horizontal'
+                options={shapeOptions}
+                value={ribbon.shape ?? null}
+                disabled={loading}
+                aria-invalid={errors.ribbon_shape ? true : undefined}
+                aria-describedby={errors.ribbon_shape ? 'odc-bi-shape-error' : undefined}
+                onValueChange={(value) => {
+                  handleChangeRibbon({ shape: value })
+                  clearError('ribbon_shape')
+                }}
+              />
+              {errors.ribbon_shape && <p id='odc-bi-shape-error' className='odc-field-error odc-bi-error' role='alert'>{errors.ribbon_shape}</p>}
+            </div>
           </>
         )}
-        <InputWrapper>
-          <label>{t('NAME', 'Name')}</label>
-          <Input
-            name='name'
-            placeholder={t('Name', 'name')}
-            defaultValue={formState?.changes?.name ?? businessState?.business?.name}
-            onChange={handleChangeInput}
-            ref={formMethods.register({
-              required: t('BUSINESS_NAME_REQUIRED', 'Business name is required')
-            })}
-            disabled={formState.loading}
-            autoComplete='off'
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <label>{t('VERTICAL', 'Vertical')}</label>
-          <VerticalField>
-            <SecondSelect
-              defaultValue={formState?.changes?.vertical ?? businessState?.business?.vertical ?? 'store'}
-              options={BUSINESS_VERTICALS.map((vertical) => ({
-                value: vertical.value,
-                content: <Option padding='0px'><span>{t(`BUSINESS_VERTICAL_${vertical.value.toUpperCase()}`, vertical.name)}</span></Option>,
-                color: 'primary'
-              }))}
-              onChange={(value) => handleChangeSelectedOption('vertical', value)}
-            />
-          </VerticalField>
-        </InputWrapper>
-        <InputWrapper>
-          <label>{t('EXTERNAL_ID', 'External Id')}</label>
-          <Input
-            name='external_id'
-            placeholder={t('EXTERNAL_ID', 'External Id')}
-            defaultValue={formState?.changes?.external_id ?? businessState?.business?.external_id}
-            onChange={handleChangeInput}
-            disabled={formState.loading}
-            autoComplete='off'
-            onKeyPress={(e) => {
-              if (!/^[0-9]$/.test(e.key)) {
-                e.preventDefault()
-              }
-            }}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <label>{t('SHORT_DESCRIPTION', 'Short description')}</label>
-          <Input
-            name='description'
-            placeholder={t('TYPE_BUSINESS_SHORT_DESCRIPTION', 'Write a little description')}
-            defaultValue={formState?.changes?.description ?? businessState?.business?.description}
-            onChange={handleChangeInput}
-            disabled={formState.loading}
-            autoComplete='off'
-          />
-        </InputWrapper>
-        <PhoneWrapper>
-          <InputWrapper>
-            <label>{t('PHONE_NUMBER', 'Phone number')}</label>
-            <Input
-              name='phone'
-              placeholder='(000) 0000 000'
-              defaultValue={formState?.changes?.phone ?? businessState?.business?.phone}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
+      </section>
+
+      <section className='odc-bi-group' aria-labelledby='odc-bi-social'>
+        <h2 id='odc-bi-social' className='odc-bi-heading'>{t('SOCIAL_NETWORKS', 'Social networks')}</h2>
+        {SOCIAL_NETWORKS.map(network => (
+          <div key={network.key} data-bi-field={network.key}>
+            <TextField
+              label={labels[network.key]}
+              hint={network.base}
+              placeholder={network.key === 'whatsapp_number' ? t('PHONE_NUMBER', 'Phone number') : t('USER_OR_URL', 'User or url')}
+              value={socialText(network)}
+              onChange={(value) => changeSocial(network, value)}
+              onBlur={() => settleSocial(network)}
+              error={errors[network.key]}
+              disabled={loading}
               autoComplete='off'
+              inputMode={network.key === 'whatsapp_number' ? 'tel' : undefined}
             />
-          </InputWrapper>
-          <InputWrapper>
-            <label>{t('MOBILE_NUMBER', 'Mobile number')} <span>{t('OPTIONAL', 'Optional')}</span></label>
-            <Input
-              name='cellphone'
-              placeholder='(000) 0000 000'
-              defaultValue={formState?.changes?.cellphone ?? businessState?.business?.cellphone}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-            />
-          </InputWrapper>
-        </PhoneWrapper>
-        {isAdmin && (
-          <SwitchWrapper>
-            <span>{t('FEATURED', 'Featured')}</span>
-            <Switch
-              defaultChecked={businessState?.business?.featured || false}
-              onChange={(val) => handleChangeSwtich('featured', val)}
-            />
-          </SwitchWrapper>
-        )}
-        <RibbonSwitchWrapper>
-          <span>{t('RIBBON', 'Ribbon')}</span>
-          <Switch
-            defaultChecked={businessState?.business?.ribbon?.enabled || false}
-            onChange={val => handleChangeEnable(val)}
-          />
-        </RibbonSwitchWrapper>
-        {
-          isRibbonEnabled && (
-            <>
-              <InputWrapper>
-                <label>{t('TEXT', 'Text')}</label>
-                <Input
-                  name='text'
-                  placeholder={t('TEXT', 'Text')}
-                  defaultValue={formState?.changes?.ribbon?.text ?? businessState?.business?.ribbon?.text}
-                  onChange={(e) => handleChangeRibbon({ text: e.target.value })}
-                  disabled={formState.loading}
-                  autoComplete='off'
-                  ref={formMethods.register({
-                    required:
-                      isRibbonEnabled
-                        ? t(
-                          'VALIDATION_RIBBON_ERROR_REQUIRED',
-                          'The _attribute_ text field is required'
-                        ).replace('_attribute_', t('RIBBON', 'Ribbon'))
-                        : false
-                  })}
-                />
-              </InputWrapper>
-              <ColorShapeWrapper>
-                <ColorWrapper>
-                  <label>{t('COLOR', 'Color')}</label>
-                  <ColorPicker
-                    defaultColor={ribbonColor}
-                    debounce={false}
-                    onChangeColor={(color) => {
-                      formMethods.setValue('colorhex', color)
-                      handleChangeRibbon({ color })
-                    }}
-                  />
-                </ColorWrapper>
-                <ShapeWrapper>
-                  <label>{t('SHAPE', 'Shape')}</label>
-                  <ShapeContentWrapper>
-                    {shape && Object.keys(shape).map((key, i) => (
-                      <ShapeBoxWrapper
-                        key={i}
-                        shapeRect={shape[key] === shape?.rectangleRound}
-                        round={shape[key] === shape?.capsuleShape}
-                        active={ribbonShape === shape[key]}
-                        onClick={() => {
-                          formMethods.setValue('shape', shape[key])
-                          handleChangeRibbon({ shape: shape[key] })
-                        }}
-                      >
-                        <div />
-                        {ribbonShape === shape[key]
-                          ? <RecordCircleFill />
-                          : <Circle />}
-                      </ShapeBoxWrapper>
-                    ))}
-                  </ShapeContentWrapper>
-                </ShapeWrapper>
-              </ColorShapeWrapper>
-            </>
-          )
-        }
-        {(businessState?.business?.enabled === false) && (
-          <InputWrapper>
-            <label>{t('DISABLED_REASON', 'Disabled reason')}</label>
-            {/* <span>({t('MAX_60_CHAR', 'Max 60 Characters')})</span> */}
-            {/* <Input
-              name='disabled_reason'
-              defaultValue={formState?.changes?.disabled_reason ?? businessState?.business?.disabled_reason}
-              onChange={handleChangeInput}
-              disabled={formState.loading}
-              autoComplete='off'
-              maxLength={60}
-            /> */}
-            <SecondSelect
-              defaultValue={formState?.changes?.disabled_reason ?? businessState?.business?.disabled_reason ?? 'default'}
-              options={reasonOptionList}
-              optionInnerMaxHeight='200px'
-              onChange={(value) => handleChangeSelectedOption('disabled_reason', value)}
-            // isShowSearchBar
-            // searchBarPlaceholder={t('SEARCH', 'Search')}
-            // searchValue={searchValue}
-            // handleChangeSearch={handleSearch}
-            />
-          </InputWrapper>
-        )}
-        <PriceFilterWrapper>
-          <label>{t('PRICE_FILTER', 'Price filter')}</label>
-          <PriceFilterListWrapper>
-            {priceList.map((item, i) => (
-              <PriceFilterItem
-                key={i}
-                onClick={() => handleChangeSwtich('price_level', item.key)}
-                active={(formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key}
-              >
-                {((formState?.changes?.price_level ?? businessState?.business?.price_level) === item.key) ? <RecordCircleFill /> : <Circle />}
-                <span>{item.value}</span>
-              </PriceFilterItem>
-            ))}
-          </PriceFilterListWrapper>
-        </PriceFilterWrapper>
-        <SocialWrapper>
-          <h2>{t('SOCIAL_NETWORKS', 'Social networks')}</h2>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Facebook />
-              </div>
-              <span>{t('FACEBOOK', 'Facebook')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.facebook_profile ?? businessState?.business?.facebook_profile}
-                handleChangeValue={(val) => handleChangeSwtich('facebook_profile', val)}
-                originalURL={socialOriginalURL.facebook}
-                placeholder={t('USER_OR_URL', 'User or url')}
-                name='facebook_profile'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Instagram />
-              </div>
-              <span>{t('INSTAGRAM', 'Instagram')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.instagram_profile ?? businessState?.business?.instagram_profile}
-                handleChangeValue={(val) => handleChangeSwtich('instagram_profile', val)}
-                originalURL={socialOriginalURL.instagram}
-                placeholder={t('USER_OR_URL', 'User or url')}
-                name='instagram_profile'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Tiktok />
-              </div>
-              <span>{t('TIK_TOK', 'Tik tok')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.tiktok_profile ?? businessState?.business?.tiktok_profile}
-                handleChangeValue={(val) => handleChangeSwtich('tiktok_profile', val)}
-                originalURL={socialOriginalURL.tiktok}
-                placeholder={t('USER_OR_URL', 'User or url')}
-                name='tiktok_profile'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Pinterest />
-              </div>
-              <span>{t('PINTEREST', 'Pinterest')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.pinterest_profile ?? businessState?.business?.pinterest_profile}
-                handleChangeValue={(val) => handleChangeSwtich('pinterest_profile', val)}
-                originalURL={socialOriginalURL.pinterest}
-                placeholder={t('USER_OR_URL', 'User or url')}
-                name='pinterest_profile'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Whatsapp />
-              </div>
-              <span>{t('WHATSAPP', 'Whatsapp')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.whatsapp_number ?? businessState?.business?.whatsapp_number}
-                handleChangeValue={(val) => handleChangeSwtich('whatsapp_number', val)}
-                originalURL={socialOriginalURL.whatsapp}
-                placeholder={t('PHONE_NUMBER', 'Phone number')}
-                name='whatsapp_number'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-          <SocialItemWrapper>
-            <SocialItemHeader>
-              <div>
-                <Snapchat />
-              </div>
-              <span>{t('SNAPCHAT', 'Snapchat')}</span>
-            </SocialItemHeader>
-            <SocialItemContent>
-              <ConvertInput
-                value={formState?.changes?.snapchat_profile ?? businessState?.business?.snapchat_profile}
-                handleChangeValue={(val) => handleChangeSwtich('snapchat_profile', val)}
-                originalURL={socialOriginalURL.snap_chat}
-                placeholder={t('USER_OR_URL', 'User or url')}
-                name='snapchat_profile'
-              />
-            </SocialItemContent>
-          </SocialItemWrapper>
-        </SocialWrapper>
-        <ActionsForm>
-          <Button
-            type='submit'
-            color='primary'
-            borderRadius='8px'
-            disabled={formState.loading || Object.keys(formState?.changes).length === 0}
-          >
-            {t('SAVE', 'Save')}
-          </Button>
-        </ActionsForm>
-      </FormInput>
-      <Alert
-        title={t('BUSINESS', 'Business')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
+          </div>
+        ))}
+      </section>
+
+      <SaveBar
+        className='odc-bi-savebar'
+        formSelector='.odc-bi-form'
+        label={t('SAVE_CHANGES', 'Save changes')}
+        count={count}
+        countText={withCount(count === 1
+          ? t('SETTINGS_UNSAVED_CHANGES_ONE', '_count_ unsaved change')
+          : t('SETTINGS_UNSAVED_CHANGES_OTHER', '_count_ unsaved changes'), count)}
+        names={names}
+        moreText={(n) => withCount(t('SETTINGS_UNSAVED_MORE', '+_count_'), n)}
+        saving={loading || submitting}
+        errorText={errorText}
+        onRetry={invalidCount === 0 && errorText && dirty ? () => save() : undefined}
+        retryLabel={t('TRY_AGAIN', 'Try again')}
+        saved={saved}
+        savedText={t('SAVED', 'Saved')}
+        discardLabel={t('DISCARD', 'Discard')}
+        saveLabel={t('SAVE_CHANGES', 'Save changes')}
+        saveType='submit'
+        onDiscard={discard}
       />
-      {cropState?.open && (
-        <Modal
-          width='700px'
-          height='80vh'
-          padding='30px'
-          title={t('IMAGE_CROP', 'Image crop')}
-          open={cropState?.open}
-          onRemove={() => setCropState({ ...cropState, open: false })}
-        >
-          <ImageCrop
-            photo={cropState?.data}
-            handleChangePhoto={handleChangePhoto}
-          />
-        </Modal>
-      )}
-    </>
+    </form>
   )
 }
 
@@ -818,50 +549,6 @@ export const BusinessInformation = (props) => {
     ...props,
     UIComponent: BusinessInformationUI
   }
-  return <BusinessFormDetailsController {...businessInformationProps} />
-}
-
-export const ConvertInput = (props) => {
-  const { value, handleChangeValue, originalURL, placeholder, name } = props
-
-  const inputRef = useRef()
-  let timeout1 = null
-
-  const handleChangeConvert = (e) => {
-    clearTimeout(timeout1)
-    const inputValue = convertValue(e.target.value)
-    const update = inputValue ? (originalURL + inputValue) : ''
-    timeout1 = setTimeout(() => {
-      handleChangeValue(update)
-      inputRef.current.value = inputValue
-    }, 750)
-  }
-
-  const convertValue = (value) => {
-    if (!value) return ''
-    const splitValue = value.split('/')
-    const updatedValue = splitValue[splitValue.length - 1] === '' ? splitValue[splitValue.length - 2] : splitValue[splitValue.length - 1]
-    return updatedValue
-  }
-
-  const checkKeyDown = (e) => {
-    const keyCode = e.keyCode ? e.keyCode : e.which
-    if (keyCode === 8 || keyCode === 46) {
-      setTimeout(() => {
-        if (inputRef.current.value === '') handleChangeValue('')
-      }, 1)
-    }
-  }
-
-  return (
-    <Input
-      name={name}
-      ref={inputRef}
-      placeholder={placeholder}
-      defaultValue={convertValue(value)}
-      onKeyDown={checkKeyDown}
-      onChange={handleChangeConvert}
-      autoComplete='off'
-    />
-  )
+  // D7: the save bar is the feedback, so the controller's «Loading» and «Business updated» toasts are off here
+  return <BusinessFormDetailsController {...businessInformationProps} silentToasts />
 }

@@ -1,7 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConfig, DashboardOrdersList as OrdersListController } from '../../../../../index'
 import { OrdersListing } from '../OrdersListing'
+
+// (owner decision 2 of the parity audit, 2026-10-27): on /orders the reader chooses the order of in progress, the
+// earliest delivery (the default of the redesign) or the newest first of main. The choice is remembered on this browser only.
+const IN_PROGRESS_SORT_KEY = 'odc-orders-in-progress-sort'
+const IN_PROGRESS_SORTS = ['delivery', 'newest']
+const readInProgressSort = () => {
+  try {
+    const saved = window.localStorage.getItem(IN_PROGRESS_SORT_KEY)
+    return IN_PROGRESS_SORTS.includes(saved) ? saved : 'delivery'
+  } catch {
+    return 'delivery'
+  }
+}
+const writeInProgressSort = (sort) => {
+  try {
+    window.localStorage.setItem(IN_PROGRESS_SORT_KEY, sort)
+  } catch {
+    // storage blocked: the choice lasts for this visit only
+  }
+}
 
 export const OrdersDashboardList = (props) => {
   const {
@@ -9,7 +29,9 @@ export const OrdersDashboardList = (props) => {
     isMessagesView,
     orderByOption,
     setOrdersAmountByStatus,
-    isUseQuery
+    isUseQuery,
+    isSelectedOrders,
+    canSelectAllMatching
   } = props
 
   const [configState] = useConfig()
@@ -19,6 +41,18 @@ export const OrdersDashboardList = (props) => {
   const defaultStatus = query.get('status')
   const defaultPage = query.get('page') || 1
   const defaultPageSize = query.get('pageSize') || 10
+
+  // redesign 5.2 / fix-qa E7: «In progress» goes by the earliest delivery only on /orders, the page that asks
+  // for «Select all N» (OrdersManager sets `canSelectAllMatching` for it and for no lateral list). The lists of a
+  // customer or a driver and /all-in-one keep the newest-first order they always had.
+  const canSortInProgress = !!canSelectAllMatching && !isSelectedOrders
+  const [inProgressSort, setInProgressSort] = useState(readInProgressSort)
+  const handleInProgressSortChange = (sort) => {
+    if (!IN_PROGRESS_SORTS.includes(sort)) return
+    setInProgressSort(sort)
+    writeInProgressSort(sort)
+  }
+  const sortsInProgressByDelivery = canSortInProgress && inProgressSort === 'delivery'
 
   const OrdersCommonControlProps = {
     ...props,
@@ -71,6 +105,11 @@ export const OrdersDashboardList = (props) => {
           <OrdersListController
             groupStatus='inProgress'
             {...OrdersCommonControlProps}
+            // redesign 5.2: on /orders in progress lists the earliest delivery first; the other tabs keep -id
+            orderBy={sortsInProgressByDelivery ? 'delivery_datetime' : 'id'}
+            orderDirection={sortsInProgressByDelivery ? 'asc' : 'desc'}
+            inProgressSort={canSortInProgress ? inProgressSort : undefined}
+            onInProgressSortChange={canSortInProgress ? handleInProgressSortChange : undefined}
             paginationSettings={{
               initialPage: isUseQuery && defaultStatus === 'inProgress' && !isNaN(defaultPage) ? Number(defaultPage) : 1,
               pageSize: isUseQuery && defaultStatus === 'inProgress' && !isNaN(defaultPage) ? Number(defaultPageSize) : 10,

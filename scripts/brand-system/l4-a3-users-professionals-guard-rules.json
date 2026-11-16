@@ -1,0 +1,1642 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-a3-users-professionals-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-a3-users-occupationselector-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "occupationSelectorProps /* binding-sha256:8297c4927d56b68bd9ca529b5d72a3acef3249b57ba13f45974ca90489b8fcad */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-occupationselector-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "SelectWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "SelectWrapper",
+      "property": "border-top",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "SelectWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-occupationsfilter-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationsFilter/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "selectedOccupation === occupation.id ? 'primary' : 'secundaryDark'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "selectedOccupation ? 'secundaryDark' : 'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-occupationsfilter-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationsFilter/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 30px;\n    `\n: css`\n      margin-right: 30px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "SkeletonWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 30px;\n    `\n: css`\n      margin-right: 30px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "SkeletonWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionaladdform-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalAddForm/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "UserAddProps /* binding-sha256:06f616133d9d5f6c20a4e25f919b6661f55dc96cfbd90028b586c8e3d324cfde */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalbusinessservice-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalBusinessService/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'secundaryDark'",
+      "context": "JSXAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "professionalBusinessServiceProps /* binding-sha256:30d7ab03e0e62de0bfb5e0de63c59c58a437bdae511ce60d3401a2d1a9634d21 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalbusinessservice-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalBusinessService/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "BusinessItemContainer",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "font",
+      "match": "({ notAllow }) => notAllow && css`\n    cursor: not-allowed;\n    * {\n      cursor: not-allowed;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "font-size",
+      "match": "18px",
+      "context": "> svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "BusinessName",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "context": "span > svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 16px;\n    `\n: css`\n      margin-right: 16px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "BusinessItemContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundInfo",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    background: ${props => props.theme.colors.backgroundInfo};\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessItemContainer",
+      "property": "color-block",
+      "match": "({ notAllow }) => notAllow && css`\n    cursor: not-allowed;\n    * {\n      cursor: not-allowed;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "BusinessName",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "SelectButtonGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 16px;\n    `\n: css`\n      margin-right: 16px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "box-shadow",
+      "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: 12px;\n  `\n: css`\n    margin-left: 12px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalcategorytreenode-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalCategoryTreeNode/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalcategorytreenode-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalCategoryTreeNode/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "AccordionSection",
+      "property": "font",
+      "match": "({ isParent }) => isParent && css`\n  border-top: 1px solid ${props => props.theme.colors.borderColor};\n`",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "AccordionStyled",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: auto;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "font",
+      "match": "({ active }) => active && css`\n      color: ${props => props.theme.colors.primary};\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "match": "18px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "inline-style",
+      "property": "font",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "({ isProduct }) => isProduct && css`\n    > div {\n      span {\n        font-weight: 400;\n      }\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "AccordionItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-right: ${({ margin }) => `${margin}px` || '0px'};\n  `\n: css`\n    margin-left: ${({ margin }) => `${margin}px` || '0px'};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "AccordionSection",
+      "property": "border-top",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "AccordionSection",
+      "property": "color-block",
+      "match": "({ isParent }) => isParent && css`\n  border-top: 1px solid ${props => props.theme.colors.borderColor};\n`",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "AccordionStyled",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: auto;\n      margin-left: initial;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "AccordionStyled",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a3-users-professionals turned four div-with-onClick surfaces into native buttons: both ProfessionalList checkboxes, the ProfessionalCategoryTreeNode accordion toggle and its product checkbox."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.disabled",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n      color: ${props => props.theme.colors.primary};\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckboxWrapper",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a3-users-professionals turned four div-with-onClick surfaces into native buttons: both ProfessionalList checkboxes, the ProfessionalCategoryTreeNode accordion toggle and its product checkbox."
+     },
+     {
+      "component": "inline-style",
+      "property": "color-block",
+      "match": "style /* binding-sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a */",
+      "context": "JSXAttribute:reference",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionaldetail-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'black'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'lightPrimary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "userDetailsControlProps /* binding-sha256:f7463c6dc10739e59ce9c3e67c7f2f83b00b3b96f6e4eef6cbc837af1d3d0dca */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionaldetail-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 25px;\n  `\n: css`\n    margin-right: 25px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "match": "20px",
+      "context": "button > svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "CalendarSyncWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 8px;\n      `\n: css`\n        margin-right: 8px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "UserName",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 10px;\n      margin-left: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.04, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "background",
+      "match": "props => darken(0.1, props.theme.colors.secundary)",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+      "context": ".show > >div",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color",
+      "match": "#E63757",
+      "context": "> div > > div > .dropdown-item.delete",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ActionSelectorWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 25px;\n  `\n: css`\n    margin-right: 25px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CalendarSyncWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 8px;\n      `\n: css`\n        margin-right: 8px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserName",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserName",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 10px;\n      margin-left: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionallist-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-a3-users-professionallist-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "CheckBoxWrapper",
+      "property": "font",
+      "match": "({ isChecked }) => isChecked && css`\n    svg {\n      color: ${props => props.theme.colors?.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "match": "16px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "UserEnableWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "UserMainInfo",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 20px;\n    padding-left: 10px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 20px;\n    padding-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "UserTypeWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 20px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 3px;\n    `\n: css`\n      margin-right: 3px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "font-size",
+      "match": "12px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The a3-users-professionals typography inventory pins this declaration to an icon-only selector. The 24 readable sizes migrated to the central roles and the second migration pass reports 0 outputs and 0 skips."
+     },
+     {
+      "component": "VerifiedItemsContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    left: 10px;\n  `\n: css`\n    right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "CheckBoxWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors?.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "color",
+      "match": "#B1BCCC",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "color-block",
+      "match": "({ isChecked }) => isChecked && css`\n    svg {\n      color: ${props => props.theme.colors?.primary};\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "CheckBoxWrapper",
+      "property": "outline",
+      "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This is the governed focus ring of an accessibility correction made in this batch: the semantic action.focus token with the documented legacy primary fallback.",
+      "evidence": "a3-users-professionals turned four div-with-onClick surfaces into native buttons: both ProfessionalList checkboxes, the ProfessionalCategoryTreeNode accordion toggle and its product checkbox."
+     },
+     {
+      "component": "InfoBlock",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "InfoBlock",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserEnableWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserMainInfo",
+      "property": "border-left",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserMainInfo",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserMainInfo",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 20px;\n    padding-left: 10px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 20px;\n    padding-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserTypeWrapper",
+      "property": "border-left",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserTypeWrapper",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UserTypeWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 20px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightPrimary",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.disabled",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "border-top",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "UsersTable",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "background-color",
+      "match": "props => props.theme.colors.lightGreen",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "color",
+      "match": "props => props.theme.colors.green",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "VerifiedItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n      margin-left: 3px;\n    `\n: css`\n      margin-right: 3px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "VerifiedItemsContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    left: 10px;\n  `\n: css`\n    right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "border",
+      "match": "1px solid #E3E3E3",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WrapperImage",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionallisting-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalListing/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'lightPrimary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "usersListingProps /* binding-sha256:f2f177c4cacc8371748cd66b1918edff2d6077892adba37026af09ee8d2548f9 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "Cierre 2026-10 (Parte 1, ola 1.4; evidencia corregida tras la auditoría de la 1.5, P2-3). Binding re-pinned to the current source after the coordinator read it: main changed the props object (804768e2, f828021a: searchSeed / filterSeed for the command palette); grep of the binding shows no colour, font or size key (only pageSize)."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionallisting-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalListing/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "ActionButtonsGroup",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 15px;\n      `\n: css`\n        margin-right: 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "ActionButtonsGroup",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n        margin-left: 15px;\n      `\n: css`\n        margin-right: 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "WarningText",
+      "property": "color",
+      "match": "props => props.theme.colors.danger",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalschedule-schedule-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/Schedule/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalschedule-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "professionalScheduleProps /* binding-sha256:a52bfc92305b544b1e2fc56c59463c5b608648e08105189073b3d2da644accdc */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalschedule-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "RangeItem",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n      margin-left: 12px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration. Regenerated against the final wave A source, after the ProfessionalList focus block was moved out of the isChecked conditional."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "DateRangeWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "RangeItem",
+      "property": "color",
+      "match": "props => props.theme.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "RangeItem",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "RangeItem",
+      "property": "color",
+      "match": "#000",
+      "context": "> label > &:hover",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "RangeItem",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n      margin-left: 12px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     },
+     {
+      "component": "ScheduleContentWrapper",
+      "property": "border-top",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalservices-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalServices/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "professionalServices /* binding-sha256:a53c1886557d8815c90701610fc9363ca1d9200fb1e1cccc2e95bbe85d877ec8 */",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-a3-users-professionalservices-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalServices/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "Divider",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The a3-users-professionals semantic inventory pins the full expression. L4 changes no existing colour in this batch. Regenerated against the final wave A source."
+     }
+    ]
+   }
+  }
+ ]
+}

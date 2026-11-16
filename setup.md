@@ -83,3 +83,14 @@ The app can be hosted with Cloudflare Workers and static assets from `dist/`. Se
 ## Open Source Code
 
 See [public source code](docs/public-source-code.md) for repository links, setup guidance and access requirements.
+Optional project allowlists live in `src/config.json` under
+`dashboard_project_allowlists`: `backoffice_businesses`, `white_label_sites`,
+and `driver_plate`. They are empty by default. Add only tenant slugs your
+deployment may use; role and permission checks still apply.
+
+An optional previous-dashboard notice can be enabled in `src/config.json` with
+`legacy_dashboard.enabled`, its date, source hosts and an HTTPS destination.
+The link opens without a session by default. Set
+`VITE_DASHBOARD_LEGACY_SESSION_ORIGIN` to the exact trusted HTTPS origin you
+control (without a trailing slash) only if that deployment needs session
+transfer and is configured to accept it.

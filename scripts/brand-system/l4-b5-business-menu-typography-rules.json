@@ -1,0 +1,644 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b5-business-menu-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b5-businessmenucategorytreenode-accordionitem-div-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCategoryTreeNode/styles.js",
+   "component": "AccordionItem",
+   "property": "font-size",
+   "context": "> div > span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessmenucustomfields-metatitle-root-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "MetaTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businessmenucustomfields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b5-businessmenucustomfields-metaaddcontainer-input-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "16px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessmenucustomfields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b5-businessmenucustomfields-nometafield-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "NoMetaField",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-forminput-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "FormInput",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-selectwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-selectwrapper-div-div-first-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": "> div > > div:first-child",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-uploadimageicon-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-skipbutton-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "SkipButton",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductaddform-timeblock-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductAddForm/styles.js",
+   "component": "TimeBlock",
+   "property": "font-size",
+   "context": "> select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductlist-businessproductlisttable-th-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductList/styles.js",
+   "component": "BusinessProductListTable",
+   "property": "font-size",
+   "context": "th",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b5-businessproductlist-wrappernotfound-root-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductList/styles.js",
+   "component": "WrapperNotFound",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "16px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "b5-businessproductscategories-headercontainer-h1-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "HeaderContainer",
+   "property": "font-size",
+   "context": "h1",
+   "match": "14px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "b5-businessproductscategories-categoryenablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "CategoryEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategories-categoryenablewrapper-span-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "CategoryEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b5-businessproductscategories-selectedcategorieswrapper-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "SelectedCategoriesWrapper",
+   "property": "font-size",
+   "context": "p",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategories-searchwrapper-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "SearchWrapper",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-businessenablewrapper-span-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "BusinessEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-categorynamewrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "CategoryNameWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-categorynamewrapper-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "CategoryNameWrapper",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-parentcategoryselectwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "ParentCategorySelectWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategoydetails-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-businessenablewrapper-span-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "BusinessEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "20px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-categorynamewrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "CategoryNameWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-categorynamewrapper-input-textarea-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "CategoryNameWrapper",
+   "property": "font-size",
+   "context": "input, textarea",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-parentcategoryselectwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ParentCategorySelectWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-infoconatiner-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "InfoConatiner",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-skipbutton-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "SkipButton",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-switchwrapper-span-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "SwitchWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "16px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-colorwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ColorWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductscategoyinfo-shapewrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ShapeWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businessproductslisting-productheader-h1-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "ProductHeader",
+   "property": "font-size",
+   "context": "h1",
+   "match": "14px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "b5-businessproductslisting-businessnamewrapper-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "BusinessNameWrapper",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businessproductslisting-breadcrumb-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "Breadcrumb",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-detailscontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "DetailsContainer",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-switchwrapper-label-first-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "SwitchWrapper",
+   "property": "font-size",
+   "context": "label > &:first-child",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-searchbarwrapper-label-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "SearchbarWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-productextrawrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "ProductExtraWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-productoptionwrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "ProductOptionWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproductdetails-productsuboptionwrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProductDetails/styles.js",
+   "component": "ProductSuboptionWrapper",
+   "property": "font-size",
+   "context": "> span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b5-businesssharedmenuproducts-productitem-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProducts/styles.js",
+   "component": "ProductItem",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "b5-pres-businessmenucategorytreenode-checkboxwrapper-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCategoryTreeNode/styles.js",
+   "component": "CheckboxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "18px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessmenucustomfields-header-media-svg-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "@media (min-width: 1000px) > > svg",
+   "match": "24px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node. This selector is additionally an orphan: Header renders only MetaTitle and has no svg child today."
+  },
+  {
+   "id": "b5-pres-businessmenucustomfields-metacontainer-meta-value-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCustomFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductscategories-searchwrapper-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategories/styles.js",
+   "component": "SearchWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "18px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductscategoydetails-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductscategoyinfo-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductscategoyinfo-shapeboxwrapper-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsCategoyInfo/styles.js",
+   "component": "ShapeBoxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductslisting-viewmethodbutton-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "ViewMethodButton",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductslisting-viewmethodbutton-batch-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "ViewMethodButton",
+   "property": "font-size",
+   "context": "&.batch > svg",
+   "match": "18px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "b5-pres-businessproductslisting-businessnamewrapper-h1-svg-0.7em",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessProductsListing/styles.js",
+   "component": "BusinessNameWrapper",
+   "property": "font-size",
+   "context": "h1 > svg",
+   "match": "0.7em",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "This one is declared in em, not px, so it sizes the icon RELATIVE to its parent heading. Migrating it to an absolute role would destroy exactly the relationship the em expresses. Preserved as declared."
+  },
+  {
+   "id": "b5-pres-businesssharedmenuproducts-productitem-svg-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessSharedMenuProducts/styles.js",
+   "component": "ProductItem",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "13px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b5-business-menu typography inventory pins this declaration to an icon-only node: the element contains an icon and no text node."
+  },
+  {
+   "id": "l4-b5-business-menu-typography-pres-closing-checkboxwrapper-font-size-inherit",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCategoryTreeNode/styles.js",
+   "component": "CheckboxWrapper",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "inherit",
+   "reason": "This is an `inherit` value set as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+   "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+  },
+  {
+   "id": "l4-b5-business-menu-typography-pres-closing-accordiontoggle-font-size-inherit",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessMenuCategoryTreeNode/styles.js",
+   "component": "AccordionToggle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "inherit",
+   "reason": "This is an `inherit` value set as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+   "evidence": "Cierre 2026-10 (Parte 1, ola 1.5). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+  }
+ ]
+}

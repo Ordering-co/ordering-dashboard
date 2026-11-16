@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-details-d3-print-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "bill-table-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "OrderBillContainer",
+      "property": "font-size",
+      "context": "table",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "bill-total-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "OrderBillContainer",
+      "property": "font-size",
+      "context": "table.total > tr",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "bill-payments-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "OrderBillContainer",
+      "property": "font-size",
+      "context": "table.payments > thead > th",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "bill-delivery-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "OrderBillContainer",
+      "property": "font-size",
+      "context": "table.delivery_option > thead > th",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "refund-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundContainer",
+      "property": "font-size",
+      "context": "h2",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "refund-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "refund-radio-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RadioItemContainer",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "refund-reason-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundReasonContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "refund-option-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "refund-select-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "refund-error",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "refund-product-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundProductLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "refund-suboption-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundSuboptionLabel",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "refund-all-disabled-note",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderBill/styles.js",
+      "component": "RefundAllDisabledNote",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "product-name-mobile",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-price-mobile",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "> .mobile-product-summary > p",
+      "match": "14px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "product-accordion-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "AccordionText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-comment",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductComment",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-info-heading",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductInfo",
+      "property": "font-size",
+      "context": "h1,\n  h3",
+      "match": "15px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-info-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductInfo",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "product-error",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductError",
+      "property": "font-size",
+      "context": "span",
+      "match": "18px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-price-identifier",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductPrice",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "product-select-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductSelect",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "17px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "product-option-group",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductOptionsList",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "product-option-item",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductOptionsList",
+      "property": "font-size",
+      "context": "li span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "product-schedule-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ScheduleInfoWrapper",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "product-schedule-time",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ScheduleInfo",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "product-quantity-identifier-role",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductQuantity",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-type-identifier-size)",
+      "reason": "The standalone product quantity already consumes the central identifier role.",
+      "evidence": "Quantity remains mono and bidi-isolated while its surrounding product label uses content typography."
+    },
+    {
+      "id": "product-action-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/ProductItemAccordion/styles.js",
+      "component": "ProductActionsEdit",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This font-size controls edit and delete SVG geometry and not readable text.",
+      "evidence": "Named Ordering.co IconButton owners provide the action semantics and touch target."
+    },
+    {
+      "id": "normal-print-title-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrint/styles.js",
+      "component": "PrintContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "reason": "This fixed print size is part of the established physical invoice layout.",
+      "evidence": "Real PDF rendering verifies the title remains legible without changing page breaks or print dimensions."
+    },
+    {
+      "id": "ticket-print-title-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "component": "PrintContainer",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "20px",
+      "reason": "This fixed print size is part of the established thermal-ticket layout.",
+      "evidence": "Real PDF rendering verifies the title within the preserved 420px ticket width."
+    },
+    {
+      "id": "ticket-print-copy-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "component": "PrintTextContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "This fixed print size preserves thermal-ticket readability.",
+      "evidence": "Real PDF rendering verifies long customer data and page flow."
+    },
+    {
+      "id": "ticket-print-comments-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "component": "ProdcutCommentsContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "This fixed print size preserves product-option readability on the thermal ticket.",
+      "evidence": "Real PDF rendering verifies wrapped options remain with their product."
+    },
+    {
+      "id": "ticket-print-label-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "component": "InsideInfo",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "This fixed print size preserves the thermal-ticket label column.",
+      "evidence": "Real PDF rendering verifies the 70 percent label and 30 percent value columns."
+    },
+    {
+      "id": "ticket-print-value-physical",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderToPrintTicket/styles.js",
+      "component": "InsideInfo2",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "reason": "This fixed print size preserves the thermal-ticket value column.",
+      "evidence": "Real PDF rendering verifies totals remain legible and aligned."
+    }
+  ]
+}

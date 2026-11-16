@@ -4,6 +4,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { isNetworkFailure } from '../../utils/networkFailure'
 import { mergePosIntegrationsWithCatalog, findInstalledIntegration, waitForInstalledIntegration } from '../../utils/posPluginCatalog'
 import {
   attachPendingPluginInstalls,
@@ -30,13 +31,21 @@ export const PosMenuBusinessList = (props) => {
     noActiveStatusCondition,
     defaultActive,
     integrationType,
-    installPolling
+    skipIntegrations,
+    installPolling,
+    defaultChannel,
+    salesChannelsFilterEnabled
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
+
+  // redesign bugs-d row 80: a request that never reached the API says so in words, not the browser's «Failed to fetch»
+  const readableError = (err) => isNetworkFailure(err?.message)
+    ? t('INTEGRATION_REQUEST_FAILED', 'The integration did not respond. Please try again.')
+    : err.message
 
   const allowCodes = ['us', 'usa', 'united states', 'united states of american', 'ca', 'canada']
 
@@ -55,6 +64,10 @@ export const PosMenuBusinessList = (props) => {
   const [searchValue, setSearchValue] = useState(null)
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(defaultActive ?? true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
+  // the id of the sales channel chosen in the header's Channel filter (/connect/sales-channels; the page turns it on
+  // with salesChannelsFilterEnabled, see PosMenu/index.js). It needs api-core #3629: an older API drops the whole `where`
+  // (search, status, type) when this one is present. Off (other kinds) it stays null and getBusinesses never adds it.
+  const [channelFilterSelected, setChannelFilterSelected] = useState(salesChannelsFilterEnabled ? (defaultChannel ?? null) : null)
   const [businessIds, setBusinessIds] = useState([])
   const [filterValues, setFilterValues] = useState({})
   const [inActiveBusinesses, setInActiveBusinesses] = useState({ loading: true, businesses: [] })
@@ -95,6 +108,17 @@ export const PosMenuBusinessList = (props) => {
         conditions: [{
           attribute: 'id',
           value: businessTypeSelected
+        }]
+      })
+    }
+
+    // salesChannelsFilterEnabled gates it even if a stale channelFilterSelected is somehow set
+    if (salesChannelsFilterEnabled && channelFilterSelected) {
+      conditions.push({
+        attribute: 'third_party_integrations',
+        conditions: [{
+          attribute: 'third_party_integration_id',
+          value: [channelFilterSelected]
         }]
       })
     }
@@ -436,7 +460,7 @@ export const PosMenuBusinessList = (props) => {
   const refreshBusinesses = async () => {
     const page = pagination.currentPage || 1
     const pageSize = pagination.pageSize
-    getIntegrations()
+    if (!skipIntegrations) getIntegrations() // redesign bugs-d row 57: the importers page reads no integration
     const response = await getPageBusinesses(pageSize, page)
     if (!response || response.content.error) return
     const fallbackPage = getRefreshFallbackPage(page, response.content.pagination, response.content.result?.length || 0)
@@ -498,7 +522,7 @@ export const PosMenuBusinessList = (props) => {
       firstRender.current = false
     } catch (err) {
       if (err?.constructor?.name !== 'Cancel') {
-        setBusinessList({ ...businessList, loading: false, error: [err.message] })
+        setBusinessList({ ...businessList, loading: false, error: [readableError(err)] })
       }
     }
   }
@@ -545,7 +569,7 @@ export const PosMenuBusinessList = (props) => {
       }
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
-        setBusinessList({ ...businessList, loading: false, error: [err.message] })
+        setBusinessList({ ...businessList, loading: false, error: [readableError(err)] })
       }
     }
   }
@@ -576,7 +600,7 @@ export const PosMenuBusinessList = (props) => {
       return response
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
-        setBusinessList({ ...businessList, loading: false, error: [err.message] })
+        setBusinessList({ ...businessList, loading: false, error: [readableError(err)] })
       }
     }
   }
@@ -617,7 +641,7 @@ export const PosMenuBusinessList = (props) => {
         showToast(ToastType.Error, content?.result)
       }
     } catch (err) {
-      showToast(ToastType.Error, err.message)
+      showToast(ToastType.Error, readableError(err))
     }
   }
 
@@ -649,7 +673,7 @@ export const PosMenuBusinessList = (props) => {
         showToast(ToastType.Error, content?.result)
       }
     } catch (err) {
-      showToast(ToastType.Error, err.message)
+      showToast(ToastType.Error, readableError(err))
     }
   }
 
@@ -673,6 +697,20 @@ export const PosMenuBusinessList = (props) => {
       })
       setBusinessTypeSelected(businessType)
     }
+  }
+
+  /**
+   * change the Channel filter of /connect/sales-channels; resets to page 1 like handleChangeBusinessType
+   * @param {Number|null} channelId third_party_integration id, or null for every channel
+   */
+  const handleChangeChannelFilter = (channelId) => {
+    if (channelId === channelFilterSelected) return
+    setBusinessList({
+      ...businessList,
+      businesses: [],
+      loading: true
+    })
+    setChannelFilterSelected(channelId)
   }
 
   /**
@@ -764,11 +802,12 @@ export const PosMenuBusinessList = (props) => {
     } else {
       loadBusinesses()
     }
-  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected, filterValues])
+  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected, filterValues, channelFilterSelected])
 
   useEffect(() => {
     getCountries()
-    getIntegrations()
+    // redesign bugs-d row 57 (IM-09): the importers page reads no integration and asks not to load them
+    if (!skipIntegrations) getIntegrations()
   }, [])
 
   useEffect(() => {
@@ -803,6 +842,8 @@ export const PosMenuBusinessList = (props) => {
             handleChangeBusinessIds={handleChangeBusinessIds}
             handleEnableAllBusiness={handleEnableAllBusiness}
             handleChangeBusinessType={handleChangeBusinessType}
+            channelFilterSelected={channelFilterSelected}
+            handleChangeChannelFilter={handleChangeChannelFilter}
             handleSucessRemoveBusiness={handleSucessRemoveBusiness}
             handleSucessUpdateBusiness={handleSucessUpdateBusiness}
             handleDeleteMultiBusinesses={handleDeleteMultiBusinesses}

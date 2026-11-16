@@ -1,0 +1,109 @@
+/*
+ * redesign DG-B5 (decision 1 | M-DG1) · Delivery groups page: the frame of the list beside the group panel (split view), its header
+ * and its foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The table and the panel have their own files (groups-table.css, group-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders, /users/customers and /delivery/drivers-list). */
+.odc-split.odc-dgp-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header and search, selection bar, table and foot, one under the other. */
+.odc-dgp-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-dgp-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-dgp-frame {
+    display: none;
+  }
+}
+
+/* ── Header: the page header, the search and the notice, one under the other ── */
+.odc-dgp-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* : `.odc-dgp-head` is the page header's own class (the opener is its `leading`); it only scopes the rules below. */
+
+/* The header stays on ONE line when the list is narrow (beside the panel, on a phone), as the drivers list: under 768px of the header's
+   own width (the page header is its container) Learn keeps only its icon, and «Add driver group» does under 600px by the page header's
+   own rule (its label is marked `data-collapse-label`). The words are clipped, not removed: the accessible name stays. */
+@container (max-width: 767px) {
+  .odc-dgp-head .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-dgp-head .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+}
+
+/* ── Search ── */
+.odc-dgp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dgp-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-dgp-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* ── Foot: the pagination ── */
+.odc-dgp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dgp-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The add panel: the form of main inside the record panel's body ── */
+.odc-dgp-add {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-ops-trial-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "ops-trial-scheduleform-headerwrapper-h2-16px-e5c42d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "HeaderWrapper",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "ops-trial-scheduleform-checkboxcontainer-p-14px-fc5e4e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "CheckboxContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "ops-trial-scheduleform-description-root-12px-d54cce",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "ops-trial-scheduleform-inputwrapper-label-14px-26e0bc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "ops-trial-scheduleform-inputwrapper-select-14px-ac2f79",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".select",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "ops-trial-scheduleform-inputwrapper-list-wrapper-12px-36a462",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/ScheduleForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".list-wrapper",
+      "match": "12px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "ops-trial-businessconfigs-container-h1-20px-fb9f2d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessConfigs/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "ops-trial-businessconfigs-sectiontitle-root-16px-717aea",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessConfigs/styles.js",
+      "component": "SectionTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "ops-trial-businessconfigs-emptystate-root-14px-258ac7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessConfigs/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "ops-trial-calendlyinlineembed-statustext-root-14px-3a0265",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/TrialExtension/CalendlyInlineEmbed/styles.js",
+      "component": "StatusText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "ops-trial-calendlyinlineembed-secondarylink-root-13px-cd8b06",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/TrialExtension/CalendlyInlineEmbed/styles.js",
+      "component": "SecondaryLink",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "ops-trial-trialextensionhomecard-title-root-18px-5fd242",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/TrialExtension/TrialExtensionHomeCard/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "18px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "ops-trial-trialextensionhomecard-description-root-14px-801438",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/TrialExtension/TrialExtensionHomeCard/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": []
+}

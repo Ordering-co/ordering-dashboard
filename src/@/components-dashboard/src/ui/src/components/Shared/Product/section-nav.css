@@ -1,0 +1,176 @@
+/*
+ * W0-7 (T0-27) · Section navigation: a vertical list of sections (owner decision 35), a selector when narrow.
+ * 32px rows, 2px indicator on the current one, inset focus ring. Values: --od-* and --od-x-* only.
+ */
+
+.odc-sectionnav {
+  min-inline-size: 0;
+}
+
+.odc-sectionnav-list {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.odc-sectionnav-items {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Group header: caption in the third text level, aligned with the row text. */
+.odc-sectionnav-group {
+  margin: 0;
+  padding-block: var(--od-x-space-half) var(--od-space-1);
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sectionnav-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-x-space-2-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+/* Two-line row (a description): the density floor for two lines, not the 32px of one. */
+.odc-sectionnav-row[data-has-description] {
+  min-block-size: var(--od-x-control-height-lg);
+}
+
+/* Words are never broken: a label wraps at its spaces, and the row grows. */
+.odc-sectionnav-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+
+.odc-sectionnav-description {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-sectionnav-row:hover:not(:disabled) {
+  background: var(--od-x-hover);
+  color: var(--od-text);
+}
+
+/* The current section: soft action fill, action text and a 2px indicator. State is never color alone: aria-current
+   says it, and the weight changes. */
+.odc-sectionnav-row[data-current] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-sectionnav-row[data-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action-content);
+}
+
+/* Inside a row the ring is inset so the list never clips it. */
+.odc-sectionnav-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-sectionnav-row:disabled {
+  color: var(--od-x-text-subtle);
+  cursor: not-allowed;
+}
+
+/* redesign settings 0 · Collapsible groups (opt-in `groups`). The group row is a section row (same
+   class, ring and height); it adds a chevron and, when open, the stronger text level. State lives in
+   aria-expanded / data-expanded, never in color alone. */
+.odc-sectionnav-run[data-collapsible] {
+  display: grid;
+  gap: var(--od-x-space-half);
+}
+
+.odc-sectionnav-run[data-collapsible] > .odc-sectionnav-items {
+  padding-inline-start: var(--od-space-2);
+}
+
+.odc-sectionnav-row[data-kind='group'] {
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* Chevron: points toward the reading direction when folded, down when open. */
+.odc-sectionnav-row[data-kind='group']::after {
+  content: '';
+  flex: none;
+  inline-size: var(--od-x-space-1-5);
+  block-size: var(--od-x-space-1-5);
+  border-inline-end: var(--od-x-indicator) solid currentcolor;
+  border-block-end: var(--od-x-indicator) solid currentcolor;
+  rotate: -0.125turn;
+  transition: rotate var(--od-duration-fast) var(--od-ease-standard);
+}
+
+[dir='rtl'] .odc-sectionnav-row[data-kind='group']::after,
+.odc-rtl .odc-sectionnav-row[data-kind='group']::after {
+  rotate: 0.125turn;
+}
+
+.odc-sectionnav-row[data-kind='group'][data-expanded]::after {
+  rotate: 0.125turn;
+}
+
+[dir='rtl'] .odc-sectionnav-row[data-kind='group'][data-expanded]::after,
+.odc-rtl .odc-sectionnav-row[data-kind='group'][data-expanded]::after {
+  rotate: -0.125turn;
+}
+
+/* Narrow: the selector takes the width of its column. */
+.odc-sectionnav-trigger {
+  inline-size: 100%;
+  justify-content: space-between;
+}
+
+/* Touch (C3, decision 12): stacked rows touch each other, so a 44px hit area around a 32px row would cross its
+   neighbours. On a coarse pointer or below 768px the rows themselves are 44px visible. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-sectionnav-row,
+  .odc-sectionnav-row[data-has-description] {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-sectionnav-row { transition: none; }
+  .odc-sectionnav-row[data-kind='group']::after { transition: none; }
+}

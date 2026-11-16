@@ -1,0 +1,46 @@
+/*
+ * redesign  F2 (N-SU2) · ProjectCode: the static note with a sentence, the project code and Copy. Written once from the note
+ * that /support and /free-downloads carried (the same rules). Tokens only (--od-* and --od-x-*; guard: productLiteralGuard.test.js);
+ * logical properties, so right-to-left needs no second set of rules.
+ */
+
+/* The frame of the page already has the gutter, so the notice takes none of its own (two classes: it must win over .odc-notice's margin). */
+.odc-notice.odc-project-code {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+/* ── The sentence and the code share a row and wrap together; the text wraps, the code never overflows ── */
+.odc-project-code .odc-notice-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-space-1);
+}
+
+.odc-project-code-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-project-code-label {
+  color: var(--od-text-muted);
+}
+
+.odc-project-code-code {
+  min-inline-size: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text);
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-ui-size);
+  /* a long project code wraps instead of running out of the note at 320px */
+  overflow-wrap: anywhere;
+}

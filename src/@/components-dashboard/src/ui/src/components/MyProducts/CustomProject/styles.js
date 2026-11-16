@@ -16,7 +16,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -71,14 +71,14 @@ export const TextWrapper = styled.div`
   }
   > h4 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0;
     margin-bottom: 4px;
   }
   > p {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin: 0;
   }

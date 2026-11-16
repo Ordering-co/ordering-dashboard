@@ -1,0 +1,110 @@
+/*
+ * redesign reviews FD2 (D1, D2, D6, D7, D9; RV-01, RV-07, RV-10, RV-11, RV-15): the page of /intelligence/reviews (the list beside the panel in
+ * a split view, as /users/customers) and the CSV dialog. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical
+ * properties only. Classes use the `odc-rv-` prefix. The table, the panels and the pickers have their own files.
+ */
+
+/* The page height, shared by the list and the panel (as /orders and /users/customers). */
+.odc-split.odc-rv-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, tabs, bar and list, one under the other. */
+.odc-rv-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+@media (max-width: 767px) {
+  .odc-rv-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-rv-frame {
+    display: none;
+  }
+}
+
+/* ── Head: , the opener is PageHeader's `leading`; `odc-rv-pagehead` is not `odc-rv-head`, which is the record panel's ── */
+/* Beside the panel the list is narrow: under 768px of the header's own width (the page header is its container) Learn and Export CSV keep
+   only their icon. The words are clipped, not removed (the accessible name stays) and the button carries its `title`. */
+@container (max-width: 767px) {
+  .odc-rv-pagehead .od-learn-label,
+  .odc-rv-pagehead [data-collapse-label] {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-rv-pagehead .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+
+  .odc-rv-pagehead .odc-rv-export-button {
+    gap: 0;
+    inline-size: var(--od-x-control-height);
+    padding-inline: 0;
+  }
+}
+
+/* Under the panel the title keeps its size from 768px up, so opening or closing the detail moves nothing (as the customers page) */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-rv-pagehead .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* ── The bar: the search (and, in Products, the business pill) with the page's own gutter ── */
+.odc-rv-bar {
+  min-inline-size: 0;
+}
+
+/* Products with no business: the list says what to do */
+.odc-rv-empty {
+  min-inline-size: 0;
+}
+
+/* ── The CSV dialog ── */
+.odc-rv-export {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-rv-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-rv-field-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-rv-field-control {
+  display: flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}

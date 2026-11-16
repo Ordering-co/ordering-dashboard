@@ -4,11 +4,11 @@ export const FormContainer = styled.div`
   width: 100%;
 
   h1 {
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     font-weight: 600;
     width: 100%;
     margin-bottom: 0px;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
 `
 
@@ -34,8 +34,8 @@ export const InputWrapper = styled.div`
     padding-top: 4px;
     padding-bottom: 4px;
     border: none;
-    background-color: ${props => props.theme.colors.secundary};
-    font-size: 14px;
+    background-color: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary};
+    font-size: var(--od-type-control-value-size);
 
     ${({ isTimezone }) => isTimezone && css`
       > div:first-child {
@@ -44,7 +44,7 @@ export const InputWrapper = styled.div`
         }
       }
       .list-wrapper {
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
       }
     `}
   }
@@ -56,10 +56,10 @@ export const Image = styled.div`
   height: 90px;
   border-radius: 8px;
   overflow: hidden;
-  background: ${({ isImage, theme }) => isImage ? '#FFF' : `${theme.colors.backgroundPage}`};
+  background: ${({ isImage, theme }) => isImage ? (theme?.ordering?.semantic?.surface?.default ?? '#FFF') : (theme?.ordering?.semantic?.background ?? theme.colors.backgroundPage)};
   cursor: -webkit-grab;
   cursor: grab;
-  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'});
 
   img,
   div {
@@ -126,7 +126,7 @@ export const FormInput = styled.form`
     width: 100%;
   }
   input {
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
   input.form {
     padding: 10px 15px;
@@ -218,15 +218,28 @@ export const DriverGroupListContainer = styled.div`
   margin: 15px 0;
 `
 
-export const DriverGroupItem = styled.div`
+export const DriverGroupItem = styled.button`
   display: flex;
+  width: 100%;
   align-items: center;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  background: transparent;
+  color: inherit;
+  text-align: start;
   padding: 12px 0;
+  min-height: 44px;
   cursor: pointer;
 
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
+    outline-offset: 2px;
+  }
+
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     ${props => props.theme?.rtl
 ? css`
       margin-right: 15px;
@@ -240,12 +253,12 @@ export const DriverGroupItem = styled.div`
 export const CheckboxWrapper = styled.div`
   svg {
     font-size: 20px;
-    color: ${props => props.theme.colors.lightGray};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
   }
 
   ${({ active }) => active && css`
     svg {
-      color: ${props => props.theme.colors.primary};
+      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
     }
   `}
 `

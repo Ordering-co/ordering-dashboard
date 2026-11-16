@@ -29,7 +29,7 @@ export const HeaderTitleContainer = styled.div`
 
   h1 {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     text-transform: capitalize;
@@ -80,7 +80,7 @@ export const BusinessFilterWrapper = styled.div`
     background: #F8F9FA;
     border-radius: 7.6px;
     padding: 7px 12px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: #748194;
     border: none;
   }

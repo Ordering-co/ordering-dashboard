@@ -1,0 +1,45 @@
+/* Scoped SelectLoyaltyLevels surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-select-loyalty-levels) {
+  box-sizing: border-box;
+  margin-top: 27px;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-select-loyalty-levels) > .od-button {
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+  margin-top: 20px;
+}
+
+.od-ui:where(.od-entity-selector-search) {
+  margin-bottom: 15px;
+}
+
+.od-ui:where(.od-entity-selector-actions) {
+  @apply od-flex od-items-center od-gap-4;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--od-entity-selector-border);
+}
+
+.od-ui:where(.od-entity-selector-actions) > .od-button {
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui:where(.od-entity-selector-row) {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--od-entity-selector-border);
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-select-loyalty-levels-row) > span {
+  min-width: 0;
+  margin-inline-start: 14px;
+  overflow-wrap: anywhere;
+}

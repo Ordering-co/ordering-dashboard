@@ -1,0 +1,1206 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b2-analytics-charts-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-b2-analytics-charts-analyticscustomersatisfaction-index-js-b4e5f8",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticscustomersatisfaction-styles-js-e6d13f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsCustomerSatisfaction/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "StarContent",
+            "property": "font-size",
+            "match": "14px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "StarContent svg: los glifos de estrella llena y vacia de la puntuacion."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomerSatisfactionHeader",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ScoreDiv",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ScoreDiv",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "StarContent",
+            "property": "color",
+            "match": "#B1BCCC",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsdriverorders-index-js-feed49",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsdriverorders-styles-js-cb88b1",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsDriverOrders/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartFooterContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartFooterContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsmap-index-js-dddb19",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsMap/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsmap-styles-js-4f7882",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsMap/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsordersacceptspend-index-js-454f4a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsordersacceptspend-styles-js-54d02c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersAcceptSpend/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ReviewBlock",
+            "property": "font-size",
+            "match": "32px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ReviewBlock svg: el glifo del reloj dentro de la insignia circular."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "font-size",
+            "match": "52px",
+            "context": "h1",
+            "count": 1,
+            "reason": "Ningun rol de la escala gobernada cubre esta cifra, y migrarla seria rediseniarla en vez de gobernarla.",
+            "evidence": "TimeContentWrapper h1: la cifra protagonista de la tarjeta, a 52px."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "TimeContentWrapper p: ningun <p> se renderiza dentro de TimeContentWrapper, ni en la rama de carga ni en la cargada."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrdersAcceptSpendHeader",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBlock",
+            "property": "background",
+            "match": "#FFF4CC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBlock",
+            "property": "fill",
+            "match": "#FFC700",
+            "context": "svg > path",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewContentWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsordersstatus-index-js-74d379",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsordersstatus-styles-js-e1a403",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsOrdersStatus/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderStatusFooter",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderStatusFooter",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderStatusHeader",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsspendlist-index-js-c39cf3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsspendlist-styles-js-b138c0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ReviewBlock",
+            "property": "font-size",
+            "match": "32px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ReviewBlock svg: el glifo del reloj dentro de la insignia circular."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "font-size",
+            "match": "52px",
+            "context": "h1",
+            "count": 1,
+            "reason": "Ningun rol de la escala gobernada cubre esta cifra, y migrarla seria rediseniarla en vez de gobernarla.",
+            "evidence": "TimeContentWrapper h1: la cifra protagonista de la tarjeta, a 52px."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "TimeContentWrapper p: ningun <p> se renderiza dentro de TimeContentWrapper, ni en la rama de carga ni en la cargada."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AnalyticsSpendListHeader",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBlock",
+            "property": "background",
+            "match": "#FFF4CC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBlock",
+            "property": "fill",
+            "match": "#FFC700",
+            "context": "svg > path",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewContentWrapper",
+            "property": "color",
+            "match": "#909BA9",
+            "context": "p",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TimeContentWrapper",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsspendtimes-index-js-752b41",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticsspendtimes-styles-js-9fd7db",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n        margin-right: 15px;\n        margin-left: 0;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ChartHeaderContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticstoporders-index-js-67f499",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b2-analytics-charts-analyticstoporders-styles-js-b8c620",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsTopOrders/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ActionBlock svg: los glifos de expandir y descargar de la tarjeta."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "font",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "font",
+            "match": "({ percent }) => percent < 30 && css`\n    color: ${props => props.theme.colors.danger};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "font",
+            "match": "({ percent }) => percent > 50 && css`\n    color: ${props => props.theme.colors.green};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "font",
+            "match": "({ percent }) => percent < 30 && css`\n    color: ${props => props.theme.colors.danger};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "font",
+            "match": "({ percent }) => percent > 50 && css`\n    color: ${props => props.theme.colors.green};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ValueWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b2-analytics-charts: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "({ disabled }) => disabled && css`\n    svg {\n      color: ${props => props.theme?.colors.disabled};\n      cursor: not-allowed;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color-block",
+            "match": "glyphButtonReset",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "props => props.theme?.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionBlock",
+            "property": "color",
+            "match": "#212121",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "AnalyticsTopOrdersHeader",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "color-block",
+            "match": "({ percent }) => percent < 30 && css`\n    color: ${props => props.theme.colors.danger};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "color-block",
+            "match": "({ percent }) => percent > 50 && css`\n    color: ${props => props.theme.colors.green};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PercentContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.green",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TopOrdersContent",
+            "property": "border-bottom",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TopOrdersContent",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "color-block",
+            "match": "({ percent }) => percent < 30 && css`\n    color: ${props => props.theme.colors.danger};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "color-block",
+            "match": "({ percent }) => percent > 50 && css`\n    color: ${props => props.theme.colors.green};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.green",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ValueWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b2-analytics-charts semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

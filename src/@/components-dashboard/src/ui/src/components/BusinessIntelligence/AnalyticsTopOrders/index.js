@@ -49,7 +49,9 @@ export const AnalyticsTopOrders = (props) => {
       <AnalyticsTopOrdersHeader>
         <p>{t('TOP_ORDERS', 'Top Orders')}</p>
         <ActionBlock disabled={dataList?.data.length === 0}>
-          <BsDownload onClick={downloadCSV} />
+          <button type='button' aria-label={t('DOWNLOAD_CSV', 'Download CSV')} onClick={downloadCSV}>
+            <BsDownload />
+          </button>
         </ActionBlock>
       </AnalyticsTopOrdersHeader>
       {
@@ -86,7 +88,7 @@ export const AnalyticsTopOrders = (props) => {
                 </ProductCategoryContainer>
                   )
                 : (
-                <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+                <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                   )
             }
           </TopOrdersContainerWrapper>

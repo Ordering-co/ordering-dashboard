@@ -6,6 +6,8 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useEvent } from '../../contexts/EventContext'
 import { useAssistantRecordChanges } from '../../contexts/AssistantContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+import { saveAssignment } from '../../utils/saveAssignment'
 
 const STREAM_ORDERS_STATUS_URL = 'https://stream-orders.plugins.orderingplus.com'
 const VISIBLE_STREAM_STATUSES = ['connected', 'paused', 'disconnected']
@@ -22,6 +24,11 @@ const mapStreamStatus = (result) => {
   if (VISIBLE_STREAM_STATUSES.includes(status)) return status
   return null
 }
+
+// The first message of an API error: a string, a list of strings or of { message }.
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 export const BusinessDetails = (props) => {
   props = { ...defaultProps, ...props }
@@ -47,7 +54,7 @@ export const BusinessDetails = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const [, { showToast }] = useToast()
+  const [, { showToast, hideToast }] = useToast()
   const [, t] = useLanguage()
   const [events] = useEvent()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
@@ -112,6 +119,8 @@ export const BusinessDetails = (props) => {
    * Method to change business enable/disable or featured/not featured
    * @param {Boolean} enabled business enable state
    * @param {Boolean} isFeatured state to check enable or featured
+   * @returns {Promise<{ok: boolean, error?: *}>} redesign SL-F1 (A3): `{ ok: true }` once saved; `{ ok: false, error }` on an API error
+   * or an exception. Other consumers ignore it.
    */
 
   const handleChangeActiveBusiness = async (enabled, isFeatured = false) => {
@@ -135,9 +144,16 @@ export const BusinessDetails = (props) => {
           }
         })
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+        return { ok: true }
       }
+      // redesign SL-F1 (A3): the list switches (StoreRowSwitch) read this to go back to the stored value and say why
+      // redesign bugs F row 19: no error toast replaces «Loading» here (the caller says why, inline), so hide it
+      hideToast?.()
+      return { ok: false, error: result }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      hideToast?.() // redesign bugs F row 19: same as the API error above
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -175,8 +191,14 @@ export const BusinessDetails = (props) => {
 
   /**
    * Method to duplicate business from API
+   * @returns {Promise<{ok: boolean, result?: object, error?: *, busy?: boolean}>} redesign stores 4.B (decision 6, G1-27):
+   * `{ ok: true, result }` (the copy) once created; `{ ok: false, error }` on an API error or an exception (also in `actionStatus`);
+   * `{ ok: false, busy: true }` without a request while the previous one is on its way, so two clicks make one copy.
    */
+  const duplicatingRef = useRef(false)
   const handleDuplicateBusiness = async () => {
+    if (duplicatingRef.current) return { ok: false, busy: true }
+    duplicatingRef.current = true
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
@@ -198,10 +220,58 @@ export const BusinessDetails = (props) => {
 
       if (!content.error) {
         handleSucessAddBusiness && handleSucessAddBusiness(content?.result)
-        showToast(ToastType.Success, t('BUSINESS_DUPLICATED', 'Business duplicated'))
+        // the copy by its name, when the API gives it
+        const copyName = content?.result?.name
+        showToast(ToastType.Success, copyName
+          ? t('STORE_DUPLICATED_AS', 'Created «_name_»').replace('_name_', copyName)
+          : t('BUSINESS_DUPLICATED', 'Business duplicated'))
+        return { ok: true, result: content?.result }
       }
+      return { ok: false, error: content.result }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] }
+    } finally {
+      duplicatingRef.current = false
+    }
+  }
+
+  // redesign stores 5.2 (G2-06): one fixed, translated toast per kind of person and action (they were dynamic keys
+  // with an uppercase English default, «OWNERS deleted», and the agent ones were in no catalog)
+  const ownerToast = (type, action) => {
+    if (type === 'agents') {
+      return action === 'added' ? t('BUSINESS_AGENT_ADDED', 'Agent added') : t('BUSINESS_AGENT_REMOVED', 'Agent removed')
+    }
+    return action === 'added' ? t('BUSINESS_OWNER_ADDED', 'Business owner added') : t('BUSINESS_OWNER_REMOVED', 'Business owner removed')
+  }
+
+  /**
+   * Saves the owners or agents (`type`) of the store as the list of ids `owners`.
+   * redesign stores 5.2 (G2-07): the store changes only once the API accepts it, from the latest state (functional
+   * update), and the caller learns how it went: `{ ok: true }` or `{ ok: false, error }`. A failure is the caller's to show (the
+   * section says why), so it no longer goes to `actionStatus` (the editor's Alert) as well.
+   * it sends only who changed (`ids`, added or removed per `assign`), so two people saving the same store keep
+   * each other's changes.
+   */
+  const saveBusinessPeople = async (type, nextPeople, { ids, assign }) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionStatus(prev => ({ ...prev, loading: true }))
+      let error, result
+      for (const id of ids) {
+        ({ error, result } = await saveAssignment(ordering, session.token, `business/${businessId}/${type}/${id}`, assign))
+        if (error) break
+      }
+      setActionStatus(prev => ({ ...prev, loading: false }))
+      if (error) return { ok: false, error: result }
+      setBusinessState(prev => ({
+        ...prev,
+        business: { ...prev?.business, [type]: nextPeople(prev?.business?.[type] ?? []) }
+      }))
+      return { ok: true }
+    } catch (err) {
+      setActionStatus(prev => ({ ...prev, loading: false }))
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -209,68 +279,63 @@ export const BusinessDetails = (props) => {
    * Method to delete the business owner
    */
   const handleDeleteBusinessOwner = async (owners, { type = 'owners' } = {}) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionStatus({ ...actionStatus, loading: true })
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ [type]: owners })
-      setActionStatus({
-        ...actionStatus,
-        loading: false,
-        error: error ? result : null
-      })
-      if (!error) {
-        const _business = {
-          ...businessState?.business,
-          [type]: businessState?.business?.[type]?.filter(owner => owners.includes(owner.id))
-        }
-        setBusinessState({
-          ...businessState,
-          business: _business
-        })
-        showToast(ToastType.Success, t(`BUSINESS_${type.toUpperCase()}_DELETED`, `${type.toUpperCase()} deleted`))
-      }
-    } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    // decision 12c: a store keeps at least one owner (agents may go down to none, as before)
+    if (type === 'owners' && owners.length === 0) {
+      return { ok: false, error: [t('STORE_NEEDS_ONE_OWNER', 'A store needs at least one owner.')] }
     }
+    const removedIds = (businessState?.business?.[type] ?? []).map(person => person?.id).filter(id => !owners.includes(id))
+    const outcome = await saveBusinessPeople(type, people => people.filter(owner => owners.includes(owner.id)), { ids: removedIds, assign: false })
+    if (outcome.ok) showToast(ToastType.Success, ownerToast(type, 'removed'))
+    return outcome
   }
 
   /**
    * Method to add the business owner
    */
   const handleAddBusinessOwner = async (owners, newOwner, { type = 'owners' } = {}) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionStatus({ ...actionStatus, loading: true })
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ [type]: owners })
-      setActionStatus({
-        ...actionStatus,
-        loading: false,
-        error: error ? result : null
-      })
-      if (!error) {
-        const _owners = [...businessState?.business?.[type], newOwner]
-        const _business = {
-          ...businessState?.business,
-          [type]: _owners
-        }
-        setBusinessState({
-          ...businessState,
-          business: _business
-        })
-        showToast(ToastType.Success, t(`BUSINESS_${type.toUpperCase()}_ADDED`, `${type.toUpperCase()} added`))
-      }
-    } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
-    }
+    // a store without `agents` (or `owners`) in its record starts from an empty list instead of throwing after the save
+    const outcome = await saveBusinessPeople(type, people => (
+      people.some(person => person?.id === newOwner?.id) ? people : [...people, newOwner]
+    ), { ids: [newOwner?.id], assign: true })
+    if (outcome.ok) showToast(ToastType.Success, ownerToast(type, 'added'))
+    return outcome
+  }
+
+  // redesign stores 2.F: `changes` without the saved keys; the same object when none of them was pending, because
+  // `useSaveOnChange` compares `formState.changes` by reference.
+  const withoutKeys = (changes = {}, keys) => {
+    if (!keys.some(key => key in changes)) return changes
+    const rest = { ...changes }
+    keys.forEach(key => { delete rest[key] })
+    return rest
+  }
+
+  // redesign stores 1.A (G2-01, G4-10): a failed save says why, in the place of the "Loading" toast. The API sends
+  // its reason as text (translated by its slug) or nothing; then the generic text.
+  const showSaveError = (error) => {
+    showToast(ToastType.Error, translateApiMessage(t, firstMessage(error), t('STORES_CHANGE_FAILED', "We couldn't save the change.")))
   }
 
   /**
    * Method to update the business from the API
+   * @returns {Promise<{ok: boolean, error?: *}>} redesign stores 1.A: `{ ok: true }` once saved; `{ ok: false, error }`
+   * on an API error or an exception, after the error toast. What failed stays in `formState.changes`.
+   * redesign stores 2.F: `options.keepPendingChanges` (the Snooze dialog) sends ONLY the given `changes`; the other
+   * pending edits are neither sent nor lost, and `formState.result` is left alone (the dialog shows the error itself).
+   * redesign stores 5.18 (from 5.15b): with `keepPendingChanges` there is no «Loading» toast: the caller shows its own
+   * busy state, and on a failure (said by the caller, inline) no error toast replaced it, so it stayed. «Business updated» stays
+   * (review F3): after «Save and continue» of the leave dialog the section is gone, and a category tick has nothing else to say it.
+   * redesign bugs F row 12: `options.inlineError` (Location, which saves the whole form) skips the «Loading» toast and
+   * the error toast: the caller says the failure in its own save bar. Everything pending is still sent; «Business updated» stays.
    */
-  const handleUpdateBusinessClick = async (changes = {}) => {
+  const handleUpdateBusinessClick = async (changes = {}, options = {}) => {
+    const keepPending = !!options?.keepPendingChanges && Object.keys(changes).length > 0 && !changes.target
+    // redesign bugs F row 12: the caller shows a failure inline; no «Loading» toast and no error toast on top of it
+    const inlineError = !!options?.inlineError
     try {
-      setFormState({ ...formState, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (keepPending) setFormState(prev => ({ ...prev, loading: true }))
+      else setFormState({ ...formState, loading: true })
+      if (!keepPending && !inlineError) showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changesToSend = Object.keys(changes).length > 0 && !changes.target ? changes : formState.changes
 
       let responseContent
@@ -292,12 +357,20 @@ export const BusinessDetails = (props) => {
         responseContent = response.content
       }
 
-      setFormState({
-        ...formState,
-        changes: responseContent.error ? changesToSend : {},
-        result: responseContent,
-        loading: false
-      })
+      if (keepPending) {
+        setFormState(prev => ({
+          ...prev,
+          changes: responseContent.error ? prev.changes : withoutKeys(prev.changes, Object.keys(changesToSend)),
+          loading: false
+        }))
+      } else {
+        setFormState({
+          ...formState,
+          changes: responseContent.error ? changesToSend : {},
+          result: responseContent,
+          loading: false
+        })
+      }
 
       if (!responseContent.error) {
         setBusinessState({
@@ -308,25 +381,37 @@ export const BusinessDetails = (props) => {
           }
         })
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+        return { ok: true }
       }
+      // redesign stores 2.F: with keepPendingChanges the Snooze dialog says why inline; no toast on top of it
+      if (!keepPending && !inlineError) showSaveError(responseContent.result)
+      return { ok: false, error: responseContent.result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      if (keepPending) {
+        setFormState(prev => ({ ...prev, loading: false }))
+      } else {
+        setFormState({
+          ...formState,
+          result: {
+            error: true,
+            result: err.message
+          },
+          loading: false
+        })
+      }
+      if (!keepPending && !inlineError) showSaveError(err.message)
+      return { ok: false, error: [err.message] }
     }
   }
 
   /**
    * Method to set Spoonity key
+   * redesign stores 5.16 (G2-36): answers `{ ok, result | error }` so the section can tell whether the key was stored.
+   * Main showed the success toast for any body, even `error: true`. The key itself never goes into a toast.
    */
   const handleUpdateSpoonityKey = async (key, config) => {
     try {
-      setSpoonityKeyState({ ...spoonityKeyState, loading: true })
+      setSpoonityKeyState(prev => ({ ...prev, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
 
       const requestOptions = {
@@ -342,25 +427,35 @@ export const BusinessDetails = (props) => {
       const response = await fetch(`${ordering.root}/business/${businessId}/configs/${config}`, requestOptions)
       const content = await response.json()
 
-      if (content) {
-        showToast(ToastType.Success, t('SPOONITY_KEY_UPDATED', 'Spoonity key updated'))
-        setSpoonityKeyState({
-          ...spoonityKeyState,
-          key: content.result.value,
-          result: content.result,
+      if (!content || content.error) {
+        showToast(ToastType.Error, t('SPOONITY_KEY_ERROR', 'Spoonity key error'))
+        setSpoonityKeyState(prev => ({
+          ...prev,
+          result: { error: true, result: content?.result },
           loading: false
-        })
+        }))
+        return { ok: false, error: content?.result }
       }
+
+      showToast(ToastType.Success, t('SPOONITY_KEY_UPDATED', 'Spoonity key updated'))
+      setSpoonityKeyState(prev => ({
+        ...prev,
+        key: content.result?.value,
+        result: content.result,
+        loading: false
+      }))
+      return { ok: true, result: content.result }
     } catch (err) {
       showToast(ToastType.Error, t('SPOONITY_KEY_ERROR', 'Spoonity key error'))
-      setSpoonityKeyState({
-        ...spoonityKeyState,
+      setSpoonityKeyState(prev => ({
+        ...prev,
         result: {
           error: true,
           result: err.message
         },
         loading: false
-      })
+      }))
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -403,10 +498,17 @@ export const BusinessDetails = (props) => {
     })
   }
 
-  const handleUpdateBusinessConfigs = async (params, configId) => {
+  /**
+   * Saves one config of the store. Returns `{ ok: true, result }` or `{ ok: false, error }`.
+   * redesign stores 5.4: `options.inlineError` is for a caller that paints the failure itself (a section's SaveBar, an
+   * AsyncSwitch): no «Loading» toast, and the error is not left in `actionStatus`, so the editor does not open its alert on top of it.
+   */
+  const handleUpdateBusinessConfigs = async (params, configId, options = {}) => {
+    const failWith = (error) => setActionStatus({ loading: false, error: options?.inlineError ? null : error })
     try {
       setActionStatus({ ...actionStatus, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      // the inline caller shows its own busy state (the bar's spinner, the switch's): a «Loading» toast outlives a failure
+      if (!options?.inlineError) showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -419,22 +521,22 @@ export const BusinessDetails = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionStatus({ loading: false, error: null })
-        setBusinessState({
-          ...businessState,
+        // Functional update: several saves in a row with the same handler must not overwrite each other.
+        setBusinessState(prev => ({
+          ...prev,
           business: {
-            ...businessState.business,
-            configs: businessState.business.configs.map(config => config.id === configId ? content.result : config)
+            ...prev.business,
+            configs: prev.business.configs.map(config => config.id === configId ? content.result : config)
           }
-        })
+        }))
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-      } else {
-        setActionStatus({ loading: false, error: content.result })
+        return { ok: true, result: content.result }
       }
+      failWith(content.result)
+      return { ok: false, error: content.result }
     } catch (err) {
-      setActionStatus({
-        loading: false,
-        error: [err.message]
-      })
+      failWith([err.message])
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -495,6 +597,10 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  // main 4b7ff4f9 + owner decision 1A: the store no longer installs or connects Clover (nor asks for the
+  // integration list to do it); Clover is connected from Connect › POS.
+
+  // redesign stores 5.12: an emptied order-type rate is stored as `null` (parseFloat('') is NaN).
   const handleChangeTax = (name, value, orderType) => {
     if (value === null) {
       const _formTaxChanges = { ...formTaxChanges }
@@ -503,13 +609,14 @@ export const BusinessDetails = (props) => {
       return
     }
     if (orderType) {
+      const isEmpty = value === '' || value === null || value === undefined
       setFormTaxChanges((prev) => ({
         ...prev,
         order_type_rates: {
           ...prev.order_type_rates,
           [orderType]: {
             ...prev.order_type_rates?.[orderType],
-            [name]: parseFloat(value)
+            [name]: isEmpty ? null : parseFloat(value)
           }
         }
       }))
@@ -521,12 +628,17 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  // redesign stores 5.12: a successful GET frees `formTaxState.loading` (it stayed true); an API error or a thrown
+  // request lands in `formTaxState.result` and leaves `taxes` as they were.
+  // (main #478): the catalog has its own state (`taxCatalogState`, with a retry in the UI); a newer request aborts the one
+  // before, only the latest one applies, and an answer that is not a list of taxes with ids is an error, never an empty catalog.
   const getTaxes = useCallback(async () => {
     taxRequest.current?.abort()
     const request = new AbortController()
     taxRequest.current = request
     const isCurrent = () => taxRequest.current === request && !request.signal.aborted
     setTaxCatalogState(prev => ({ ...prev, loading: true, error: null }))
+    setFormTaxState(prev => ({ ...prev, loading: true }))
     try {
       const response = await fetch(`${ordering.root}/taxes`, {
         method: 'GET',
@@ -536,167 +648,107 @@ export const BusinessDetails = (props) => {
         },
         signal: request.signal
       })
-      if (!response.ok) throw new Error(`Unable to load taxes (HTTP ${response.status})`)
       const { error, result } = await response.json()
-      if (error || !Array.isArray(result) || result.some(tax => !tax || tax.id == null)) {
+      if (error) {
+        if (!isCurrent()) return
+        setTaxCatalogState(prev => ({ ...prev, loading: false, error: 'Unable to load taxes' }))
+        setFormTaxState(prev => ({ ...prev, loading: false, result: { error: true, result } }))
+        return
+      }
+      if (response.ok === false || !Array.isArray(result) || result.some(tax => !tax || tax.id == null)) {
         throw new Error('Invalid taxes response')
       }
       if (!isCurrent()) return
       setTaxes(Object.fromEntries(result.map(tax => [`id:${tax.id}`, tax])))
       setTaxCatalogState({ loading: false, loaded: true, error: null })
+      setFormTaxState(prev => ({ ...prev, loading: false, result: { error: false } }))
     } catch (err) {
       if (!isCurrent()) return
       setTaxCatalogState(prev => ({ ...prev, loading: false, error: err?.message || 'Unable to load taxes' }))
+      setFormTaxState(prev => ({ ...prev, loading: false, result: { error: true, result: [err.message] } }))
     }
   }, [ordering.root, session.token])
 
-  const handleSaveTax = async (id, action, _data) => {
+  const pickTax = (data) => ({
+    name: data.name,
+    description: data.description,
+    id: data.id,
+    rate: data.rate,
+    type: data.type,
+    recipient: data.recipient,
+    apply_to_fees: data.apply_to_fees,
+    order_type_rates: data.order_type_rates || null
+  })
+
+  const pickFee = (data) => ({
+    name: data.name,
+    description: data.description,
+    id: data.id,
+    fixed: data.fixed,
+    percentage: data.percentage,
+    taxable: data.taxable,
+    recipient: data.recipient,
+    target: data.target
+  })
+
+  /**
+   * Save (PUT with `id`, POST without) a tax or a fee.
+   * redesign stores 5.12: returns `{ ok: true, result: <saved record> }` on success (and clears the pending editor
+   * changes) or `{ ok: false, error }` (the pending changes stay). `options.inlineError` skips the "Loading" and error toasts: the
+   * caller shows the error inline. The success toast stays.
+   */
+  const handleSaveTax = async (id, action, _data, options = {}) => {
+    const inline = options?.inlineError === true
     try {
-      setFormTaxState({
-        ...formState,
-        loading: true
+      setFormTaxState(prev => ({ ...prev, loading: true }))
+      if (!inline) showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const response = await fetch(id ? `${ordering.root}/${action}/${id}` : `${ordering.root}/${action}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        },
+        body: JSON.stringify({
+          ...formTaxChanges,
+          ..._data,
+          ...(action === 'taxes' ? { target: 'product' } : {})
+        })
       })
-      let result
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      if (id) {
-        const response = await fetch(`${ordering.root}/${action}/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.auth}`
-          },
-          body: JSON.stringify({
-            ...formTaxChanges,
-            ..._data,
-            ...(action === 'taxes' ? { target: 'product' } : {})
-          })
-        })
-        const { result: data } = await response.json()
-        result = data
-        if (action === 'taxes') {
-          setTaxes({
-            ...taxes,
-            [`id:${data.id}`]: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              rate: data.rate,
-              type: data.type,
-              recipient: data.recipient,
-              apply_to_fees: data.apply_to_fees,
-              order_type_rates: data.order_type_rates || null
-            }
-          })
-          events.emit('tax_changed', {
-            tax: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              rate: data.rate,
-              type: data.type,
-              recipient: data.recipient,
-              apply_to_fees: data.apply_to_fees,
-              order_type_rates: data.order_type_rates || null
-            }
-          })
-          showToast(ToastType.Success, t('TAX_SAVED', 'Tax saved'))
-        } else {
-          setFees({
-            ...fees,
-            [`id:${data.id}`]: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              fixed: data.fixed,
-              percentage: data.percentage,
-              taxable: data.taxable,
-              recipient: data.recipient,
-              target: data.target
-            }
-          })
-          events.emit('fee_changed', {
-            fee: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              fixed: data.fixed,
-              percentage: data.percentage,
-              taxable: data.taxable,
-              recipient: data.recipient,
-              target: data.target
-            }
-          })
-          showToast(ToastType.Success, t('FEE_SAVED', 'Fee saved'))
-        }
-      } else {
-        const response = await fetch(`${ordering.root}/${action}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.auth}`
-          },
-          body: JSON.stringify({
-            ...formTaxChanges,
-            ..._data,
-            ...(action === 'taxes' ? { target: 'product' } : {})
-          })
-        })
-        const { result: data } = await response.json()
-        if (action === 'taxes') {
-          setTaxes({
-            ...taxes,
-            [`id:${data.id}`]: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              rate: data.rate,
-              type: data.type,
-              recipient: data.recipient,
-              apply_to_fees: data.apply_to_fees,
-              order_type_rates: data.order_type_rates || null
-            }
-          })
-          showToast(ToastType.Success, t('TAX_SAVED', 'Tax saved'))
-        } else {
-          setFees({
-            ...fees,
-            [`id:${data.id}`]: {
-              name: data.name,
-              description: data.description,
-              id: data.id,
-              fixed: data.fixed,
-              percentage: data.percentage,
-              taxable: data.taxable,
-              recipient: data.recipient,
-              target: data.target
-            }
-          })
-          showToast(ToastType.Success, t('FEE_SAVED', 'Fee saved'))
-        }
-        return data
+      const { error, result: data } = await response.json()
+      if (error) {
+        if (!inline) showSaveError(data)
+        return { ok: false, error: data }
       }
-      if (result?.error) return
-      setTaxToEdit({ action: null, payload: null })
+      if (action === 'taxes') {
+        setTaxes(prev => ({ ...prev, [`id:${data.id}`]: pickTax(data) }))
+        if (id) events.emit('tax_changed', { tax: pickTax(data) })
+        showToast(ToastType.Success, t('TAX_SAVED', 'Tax saved'))
+      } else {
+        setFees(prev => ({ ...prev, [`id:${data.id}`]: pickFee(data) }))
+        if (id) events.emit('fee_changed', { fee: pickFee(data) })
+        showToast(ToastType.Success, t('FEE_SAVED', 'Fee saved'))
+      }
+      setFormTaxChanges({})
+      if (id) setTaxToEdit({ action: null, payload: null })
+      return { ok: true, result: data }
     } catch (err) {
-      setFormTaxState({
-        ...formTaxState,
-        loading: false
-      })
+      if (!inline) showSaveError(err.message)
+      return { ok: false, error: [err.message] }
     } finally {
-      setFormTaxState({
-        ...formTaxState,
-        loading: false
-      })
+      setFormTaxState(prev => ({ ...prev, loading: false }))
     }
   }
 
-  const handleDeleteTax = async (id, action) => {
-    setFormTaxState({
-      ...formTaxState,
-      loading: true
-    })
-    showToast(ToastType.Info, t('LOADING', 'Loading'))
-    if (id) {
+  // redesign stores 1.A (G4-10): a delete that fails says why (it used to look like nothing happened) and keeps the
+  // tax; returns `{ ok: true }` or `{ ok: false, error }`.
+  // redesign stores 5.12: builds a NEW object without the key (it mutated the state in place); a missing id answers
+  // `{ ok: false }` without a request; `options.inlineError` skips the "Loading" and error toasts (the caller shows the error).
+  const handleDeleteTax = async (id, action, options = {}) => {
+    if (!id) return { ok: false, error: [t('STORES_CHANGE_FAILED', "We couldn't save the change.")] }
+    const inline = options?.inlineError === true
+    setFormTaxState(prev => ({ ...prev, loading: true }))
+    if (!inline) showToast(ToastType.Info, t('LOADING', 'Loading'))
+    try {
       const response = await fetch(`${ordering.root}/${action}/${id}`, {
         method: 'DELETE',
         headers: {
@@ -704,27 +756,33 @@ export const BusinessDetails = (props) => {
           Authorization: `Bearer ${session.auth}`
         }
       })
-      const { error } = await response.json()
-      if (!error) {
-        if (action === 'taxes') {
-          const newTaxes = taxes
-          events.emit('tax_deleted', { tax: newTaxes[`id:${id}`], isRemove: true })
-          delete newTaxes[`id:${id}`]
-          setTaxes(newTaxes)
-          showToast(ToastType.Success, t('TAX_DELETED', 'tax deleted'))
-        } else {
-          const newFees = fees
-          events.emit('fee_deleted', { tax: newFees[`id:${id}`], isRemove: true })
-          delete newFees[`id:${id}`]
-          setFees(newFees)
-          showToast(ToastType.Success, t('FEE_DELETED', 'Fee deleted'))
-        }
+      const { error, result } = await response.json()
+      if (error) {
+        if (!inline) showSaveError(result)
+        return { ok: false, error: result }
       }
+      const key = `id:${id}`
+      const without = (list) => {
+        const next = { ...list }
+        delete next[key]
+        return next
+      }
+      if (action === 'taxes') {
+        events.emit('tax_deleted', { tax: taxes[key], isRemove: true })
+        setTaxes(without)
+        showToast(ToastType.Success, t('TAX_DELETED', 'tax deleted'))
+      } else {
+        events.emit('fee_deleted', { tax: fees[key], isRemove: true })
+        setFees(without)
+        showToast(ToastType.Success, t('FEE_DELETED', 'Fee deleted'))
+      }
+      return { ok: true }
+    } catch (err) {
+      if (!inline) showSaveError(err.message)
+      return { ok: false, error: [err.message] }
+    } finally {
+      setFormTaxState(prev => ({ ...prev, loading: false }))
     }
-    setFormTaxState({
-      ...formTaxState,
-      loading: false
-    })
   }
 
   useEffect(() => {
@@ -917,5 +975,5 @@ BusinessDetails.propTypes = {
 }
 
 const defaultProps = {
-  propsToFetch: ['id', 'vertical', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'site_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'agents', 'tax_id', 'taxes', 'custom_tax']
+  propsToFetch: ['id', 'vertical', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'site_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'agents', 'tax_id', 'taxes', 'custom_tax', 'snooze_until']
 }

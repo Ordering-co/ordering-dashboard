@@ -1,0 +1,171 @@
+/*
+ * redesign settings B · Rows and save bar of the Settings hub forms.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * `.odc-hub-form` is a size container: a row is one line (label and hint at the start, control at the end) from 600px of
+ * its OWN width, whatever the window or the side menu do. Switches, short text, numbers and selects go in one line;
+ * checkboxes, tables, images and colors stack. Below 600px every row stacks.
+ */
+
+.odc-hub-form {
+  container-type: inline-size;
+  container-name: odc-hub-form;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-hub-form:focus { outline: none; }
+
+/* Saving: the form stays mounted (no skeleton) but inert, so an edit cannot race the serial PUTs. */
+.odc-hub-form[aria-busy='true'] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* ── Rows ── */
+.odc-hub-row {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-hub-row:last-child { border-block-end: 0; }
+
+.odc-hub-label {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A named group (checkboxes, the table of a type 6 config): label, hint, then the controls. */
+.odc-hub-group {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-hub-checks {
+  display: grid;
+  gap: var(--od-space-1);
+  margin-block-start: var(--od-x-space-1-5);
+}
+
+/* The option texts come from the API as identifiers (`eat_in`): main drew them capitalized. */
+.odc-hub-check-text { text-transform: capitalize; }
+
+/* The switch row: text at the start, the switch at the end. */
+.odc-hub-switch-row {
+  display: grid;
+  gap: var(--od-space-2);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-hub-switch-text {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+/* Type 6: the compact table of today, with a number field per row. */
+.odc-hub-table-wrap {
+  margin-block-start: var(--od-x-space-1-5);
+  overflow-x: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-hub-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+}
+
+.odc-hub-table th,
+.odc-hub-table td {
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  text-align: start;
+  vertical-align: middle;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-hub-table tr:last-child td { border-block-end: 0; }
+
+.odc-hub-table th {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-table td {
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-hub-table td:last-child { inline-size: 40%; }
+
+/* A secret cell (input + «Show» + «Ends in»): on a phone the table scrolls in its wrap instead of squeezing the input
+   behind the button (review of batch S, ) */
+.odc-hub-table .odc-hub-secret-cell { min-inline-size: calc(var(--od-x-control-height-lg) * 6); }
+
+/* The Custom row of a select: the value typed in the trigger. */
+.odc-hub-custom-input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+/* ── One line from 600px of the form's own width ── */
+@container odc-hub-form (min-width: 600px) {
+  .odc-hub-row[data-layout='inline'] > .odc-field {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-areas:
+      'label control'
+      'hint control'
+      '. error';
+    column-gap: var(--od-space-6);
+    align-items: start;
+  }
+
+  .odc-hub-row[data-layout='inline'] > .odc-field > .odc-field-label { grid-area: label; }
+  .odc-hub-row[data-layout='inline'] > .odc-field > .odc-field-control { grid-area: control; align-self: center; }
+  .odc-hub-row[data-layout='inline'] > .odc-field > .odc-field-hint { grid-area: hint; }
+  .odc-hub-row[data-layout='inline'] > .odc-field > .odc-field-error { grid-area: error; }
+
+  .odc-hub-switch-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--od-space-6);
+  }
+}
+
+/* redesign UF-B1b: the save bar rules (.odc-hub-savebar*) moved to Shared/Product/save-bar.css (.odc-savebar*). */
+
+/* redesign settings R-03: the wrapper only gives the label a way to find the C18 trigger; it adds no box. */
+.odc-hub-select { display: contents; }

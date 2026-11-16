@@ -9,6 +9,9 @@ import { USER_LEVEL_DESTINATIONS } from './commandPaletteRecords'
  * `?q=`; the listing applies it to its own search box or filters. The palette
  * also shows the first matching orders and users (commandPaletteRecords.js);
  * these hand-offs stay the way to see every result.
+ *
+ * redesign stores 3.A: Stores joins Orders and Users with the
+ * same contract (`/stores/list?q=`), offered only where `/stores/list` opens.
  */
 
 export const LISTING_SEARCH_PARAM = 'q'
@@ -27,6 +30,7 @@ const withSearch = (path, query) => {
 
 export const buildOrdersSearchPath = (query) => withSearch('/orders', query)
 export const buildUsersSearchPath = (query) => withSearch('/users/customers', query)
+export const buildStoresSearchPath = (query) => withSearch('/stores/list', query)
 
 const PHONE_PATTERN = /^\+?[\d\s().-]+$/
 const EMAIL_PATTERN = /@/
@@ -70,6 +74,14 @@ export const RECORD_HANDOFFS = [
     labelKey: 'COMMAND_PALETTE_SEARCH_IN_USERS',
     label: 'Search “_query_” in Users',
     buildPath: buildUsersSearchPath
+  },
+  {
+    key: 'stores',
+    sectionKey: 'stores',
+    route: '/stores/list',
+    labelKey: 'COMMAND_PALETTE_SEARCH_IN_STORES',
+    label: 'Search “_query_” in Stores',
+    buildPath: buildStoresSearchPath
   }
 ]
 

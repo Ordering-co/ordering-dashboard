@@ -3,9 +3,10 @@ import { ArrowsAngleContract, ArrowsAngleExpand } from 'react-bootstrap-icons'
 import { useHistory, useLocation } from 'react-router-dom'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import BsChevronRight from '@meronex/icons/bs/BsChevronRight'
+import { ChevronRight } from '../../Shared/Icon'
 import { useLanguage, AddressFieldsSetting as AddressFieldsSettingController } from '../../../../../index'
 import { getCodeNames } from '../../../utils'
+import { validationFieldLabel } from '../../../utils/validationFieldLabel'
 import { Switch, IconButton } from '../../../styles'
 import { SideBar, Alert } from '../../Shared'
 import { useWindowSize } from '../../../hooks/useWindowSize'
@@ -84,6 +85,7 @@ const AddressFieldsSettingUI = (props) => {
           {!avoidExpand && width > 576 && !selectedSiteId && (
             <IconButton
               color='black'
+              aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
               onClick={expandSideBar}
             >
               {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -109,7 +111,7 @@ const AddressFieldsSettingUI = (props) => {
                 onClick={() => handleOpenSiteSettingDetails(site.id)}
               >
                 <span>{getCodeNames(site.code, t)}</span>
-                <BsChevronRight />
+                <ChevronRight />
               </SiteItem>
             ))}
           </SitesWrapper>
@@ -156,7 +158,7 @@ const AddressFieldsSettingUI = (props) => {
                   })
                   .map(field => (
                     <FieldContainer key={field.id}>
-                      <div className='name'>{t(field?.validation_field?.code.toUpperCase(), field?.validation_field?.name)}</div>
+                      <div className='name'>{validationFieldLabel(t, field?.validation_field)}</div>
                       <div className='required'>
                         <Switch
                           defaultChecked={field.required}

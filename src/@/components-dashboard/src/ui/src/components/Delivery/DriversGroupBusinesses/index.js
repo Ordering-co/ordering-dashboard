@@ -1,23 +1,13 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../../../../index'
-import { useForm } from 'react-hook-form'
 
-import { Checkbox, Button } from '../../../styles'
-import { Pagination, SearchBar } from '../../Shared'
+import { Avatar, Button, Pagination } from '../../Shared/Product'
+import { DriversGroupPickList, DriversGroupPickRow } from '../DriversGroupPickList'
+import './drivers-group-businesses.css'
 
-import {
-  Container,
-  SearchBarWrapper,
-  ButtonGroup,
-  BusinessesContainer,
-  BusinessWrapper,
-  WrapperImage,
-  Image,
-  SkeletonWrapper,
-  SkeletonContainer
-} from './styles'
-import Skeleton from 'react-loading-skeleton'
-import { PaginationWrapper } from '../../../styles/MultiSelect/styles'
+// redesign (AD-5): the rows per page of main's pagination, and the wait main's SearchBar (lazyLoad) gave the API search
+const PAGE_SIZES = [10, 25, 50]
+const SEARCH_DEBOUNCE_MS = 300
 
 export const DriversGroupBusinesses = (props) => {
   const {
@@ -39,9 +29,22 @@ export const DriversGroupBusinesses = (props) => {
   } = props
 
   const [, t] = useLanguage()
-  const { handleSubmit } = useForm()
+  // redesign (AD-4): the field shows what is typed at once; the API search (server side, as main) runs after a pause
+  const [search, setSearch] = useState('')
+  const searchTimer = useRef(null)
+  const searchRef = useRef(searchBusinesses)
+  searchRef.current = searchBusinesses
+  useEffect(() => () => clearTimeout(searchTimer.current), [])
 
-  const onSubmit = () => {
+  const onSearch = (value) => {
+    setSearch(value)
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => searchRef.current?.(value ?? ''), SEARCH_DEBOUNCE_MS)
+  }
+
+  const onSubmit = (event) => {
+    event.preventDefault()
+    if (actionState?.loading) return // redesign (AD-1): a busy Save does not send twice
     if (driversGroupState.driversGroup) {
       handleUpdateDriversGroup(changesState)
     } else {
@@ -49,97 +52,84 @@ export const DriversGroupBusinesses = (props) => {
     }
   }
 
+  const count = selectedBusinessIds.length
+  const rows = businesses ?? []
+  const saving = Boolean(actionState?.loading)
+  const pagination = businessesPaginationProps
+  const total = pagination?.totalItems ?? null
+
   return (
-    <Container
+    <form
+      className='gpb-root'
       data-tour='tour_select_business'
-      onSubmit={handleSubmit(onSubmit)}
-      disabled={actionDisabled}
+      data-disabled={actionDisabled ? '' : undefined}
+      onSubmit={onSubmit}
     >
-      <SearchBarWrapper>
-        <SearchBar
-          placeholder={t('SEARCH', 'Search')}
-          isCustomLayout
-          lazyLoad
-          onSearch={val => searchBusinesses?.(val ?? '')}
-        />
-      </SearchBarWrapper>
-      <ButtonGroup>
-        <Button
-          type='button'
-          color='secundaryDark'
-          onClick={() => handleSelectAllBusiness(true)}
-        >
-          {t('SELECT_ALL', 'Select all')}
-        </Button>
-        <Button
-          type='button'
-          color='secundaryDark'
-          onClick={() => handleSelectAllBusiness(false)}
-        >
-          {t('SELECT_NONE', 'Select none')}
-        </Button>
-      </ButtonGroup>
-      <BusinessesContainer>
-        {businessesLoading
-          ? (
-          <>
-            {
-              [...Array(9).keys()].map(i => (
-                <SkeletonWrapper key={i}>
-                  <tr>
-                    <td>
-                      <SkeletonContainer>
-                        <Skeleton width={18} height={18} />
-                        <Skeleton width={35} height={35} style={{ margin: '0px 5px', borderRadius: '100%' }} />
-                      </SkeletonContainer>
-                    </td>
-                    <td>
-                      <Skeleton width={250} />
-                    </td>
-                  </tr>
-                </SkeletonWrapper>
-              ))
-            }
-          </>
-            )
-          : (
-          <>
-            {businesses?.map(business => (
-              <BusinessWrapper
-                key={business.id}
-                isDisabed={actionState.loading}
-              >
-                <Checkbox
-                  checked={selectedBusinessIds.includes(business.id)}
-                  onChange={e => handleSelectBusiness(business.id, e.target.checked)}
-                />
-                <WrapperImage>
-                  <Image bgimage={business?.logo} alt='logo' />
-                </WrapperImage>
-                <p>{business?.name}</p>
-              </BusinessWrapper>
-            ))}
-          </>
-            )}
-        {businessesPaginationProps && businessesPaginationProps?.totalPages > 1 && (
-          <PaginationWrapper>
-            <Pagination
-              currentPage={businessesPaginationProps?.currentPage}
-              totalPages={businessesPaginationProps?.totalPages}
-              handleChangePage={handleChangeBusinessPage}
-              handleChangePageSize={handleChangeBusinessPageSize}
-              defaultPageSize={businessesPaginationProps?.pageSize}
-            />
-          </PaginationWrapper>
+      <DriversGroupPickList
+        legend={t('BUSINESSES', 'Businesses')}
+        search={search}
+        onSearch={onSearch}
+        searchLabel={t('DRIVERS_GROUPS_SEARCH_STORES', 'Search stores')}
+        clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+        placeholder={t('SEARCH', 'Search')}
+        onSelectAll={() => handleSelectAllBusiness(true)}
+        onSelectNone={() => handleSelectAllBusiness(false)}
+        selectAllLabel={t('SELECT_ALL', 'Select all')}
+        selectNoneLabel={t('SELECT_NONE', 'Select none')}
+        // redesign D-12 (owner, 2026-10-19): the total of the selection, all pages, announced politely
+        status={(
+          <span role='status'>
+            {count === 1
+              ? t('STORES_N_SELECTED_ONE', '_count_ store selected').replace('_count_', '1')
+              : t('STORES_N_SELECTED_OTHER', '_count_ stores selected').replace('_count_', String(count))}
+          </span>
         )}
-      </BusinessesContainer>
+        loading={Boolean(businessesLoading)}
+        loadingLabel={t('LOADING', 'Loading')}
+        empty={!businessesLoading && rows.length === 0}
+        emptyTitle={t('DRIVERS_GROUPS_NO_STORES', 'No stores yet')}
+        noMatchTitle={t('DRIVERS_GROUPS_LIST_NO_MATCH', 'Nothing matches your search')}
+        footer={pagination?.totalPages > 1 && (
+          <Pagination
+            page={pagination.currentPage}
+            pageSize={pagination.pageSize}
+            total={total ?? undefined}
+            hasMore={total == null && pagination.currentPage < pagination.totalPages}
+            itemCount={rows.length}
+            pageSizeOptions={PAGE_SIZES}
+            onPageChange={page => handleChangeBusinessPage(page)}
+            onPageSizeChange={size => handleChangeBusinessPageSize(size)}
+            busy={Boolean(businessesLoading)}
+            label={t('PAGINATION', 'Pagination')}
+            previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+            nextLabel={t('NEXT_PAGE', 'Next page')}
+            pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+            rangeLabel={(from, to, all) => all == null
+              ? `${from}–${to}`
+              : t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_').replace('_from_', String(from)).replace('_to_', String(to)).replace('_total_', String(all))}
+            pageStatusLabel={(current, totalPages) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(totalPages))}
+          />
+        )}
+      >
+        {rows.map(business => (
+          <DriversGroupPickRow
+            key={business.id}
+            media={<Avatar kind='business' name={business.name} src={business.logo} />}
+            title={business.name}
+            checked={selectedBusinessIds.includes(business.id)}
+            disabled={saving}
+            onCheckedChange={next => handleSelectBusiness(business.id, next)}
+          />
+        ))}
+      </DriversGroupPickList>
       <Button
-        borderRadius='8px'
-        color='primary'
+        variant='primary'
+        type='submit'
         disabled={Object.keys(changesState).length === 0}
+        busy={saving}
       >
         {driversGroupState.driversGroup ? t('SAVE', 'Save') : t('ADD', 'Add')}
       </Button>
-    </Container>
+    </form>
   )
 }

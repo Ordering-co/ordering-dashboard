@@ -1,0 +1,201 @@
+/*
+ * redesign UC-B4: the panel of a customer (RecordPanel with sections) and its Overview. Values come from --od-* (release)
+ * and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `ucp-` prefix; the wrappers keep `odc-`.
+ */
+
+.ucp-body {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A section that is kept mounted for its draft is hidden, not removed */
+.ucp-section[hidden] { display: none; }
+
+.ucp-section { min-inline-size: 0; }
+
+/* ── Overview: blocks with a hairline on top, one rhythm; the first one has none ── */
+.ucp-overview {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.ucp-sec {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.ucp-sec:first-child,
+.ucp-photo + .ucp-sec {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+/* redesign UC-R2 (parity with main): the customer's photo opens the Overview; 40px is the large control height, not a size of its own */
+.ucp-photo {
+  display: flex;
+  padding-block-end: var(--od-space-4);
+}
+
+.ucp-photo .ucp-avatar {
+  inline-size: var(--od-x-control-height-lg);
+  block-size: var(--od-x-control-height-lg);
+}
+
+.ucp-sec > h3 {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign UC-R1 (I-05): the list owns the tracks and each row takes them (subgrid), so every value starts in the same column. Each row
+   was its own grid: its `auto` track was as wide as ITS shortcut («View orders», «Adjust balance»), so a row without one (Loyalty
+   level, Member since) gave the 2fr track more room and its value started ~37px further right. Now the `auto` track is the widest
+   shortcut of the list, for every row.
+   redesign UC-R2 (M3-1): a row is `div > dt + dd` and the shortcut lives INSIDE the dd (a `div` of a `dl` admits only dt and dd), so the
+   dd is a subgrid of the row's last two tracks: the value in the first, the shortcut in the `auto` one.
+   redesign  (row 92): the label track is a share of the list's width, not a `fr`. Contact (copy buttons) and Account («View orders»,
+   «Adjust balance») are two lists, each with its own `auto` track, and the fr tracks split what that track left: the values of one list
+   started further right than the other's. Both lists are as wide as the panel, so 30% is the same label column in both. */
+.ucp-rows {
+  display: grid;
+  grid-template-columns: 30% minmax(0, 1fr) auto;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* label, then the value with the shortcut (or the copy button) at the end */
+.ucp-row {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+.ucp-row > dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.ucp-row > dd {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 2 / -1;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+/* two shortcuts in one row (points: «Adjust balance», «Add points»): they wrap, and stay in the shortcut column */
+.ucp-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0 var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* apply-list row 20: with «Add points» the shortcut track is wider than one link; a lone shortcut keeps to its end, as the pair does */
+.ucp-row > dd > .odc-btn {
+  justify-self: end;
+}
+
+.ucp-val {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-x-space-half) var(--od-space-2);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.ucp-value { unicode-bidi: isolate; }
+
+.ucp-muted { color: var(--od-text-muted); }
+
+/* The check is a graphic (signal), the word stays the muted text colour: the state is never colour alone */
+.ucp-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-half);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.ucp-verified .odc-icon { color: var(--od-success-signal); }
+
+/* «Copied»: a live status that keeps its line, so the block does not jump when it appears */
+.ucp-note {
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+  margin: var(--od-space-2) 0 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* In a narrow panel the label sits over the value and the shortcut at the end, so nothing is squeezed */
+@container odc-record (max-width: 480px) {
+  /* the list's tracks change (the rows follow them: subgrid), so the shortcut column stays one column here too */
+  .ucp-rows {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .ucp-row {
+    row-gap: var(--od-x-space-half);
+  }
+
+  .ucp-row > dt { grid-column: 1 / -1; }
+
+  .ucp-row > dd { grid-column: 1 / -1; }
+
+  /* two shortcuts would squeeze the value: they take the line under it, at its end like every other shortcut */
+  .ucp-shortcuts {
+    grid-column: 1 / -1;
+  }
+
+  /* redesign UC-R2 (M3-4): on a phone the status drops under the title row, where «Back» (32px, 44px area) ends; the switch's own 44px
+     area would reach into it. The status row keeps its distance. */
+  .ucp-status {
+    margin-block-start: var(--od-space-3);
+  }
+}
+
+/* ── Orders: main's table fitted to a column (it was 100% of a side bar) ── */
+.ucp-orders,
+.ucp-addresses {
+  min-inline-size: 0;
+}
+
+.ucp-orders #orderTable table {
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+/* ── Loading ── */
+.ucp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.ucp-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}

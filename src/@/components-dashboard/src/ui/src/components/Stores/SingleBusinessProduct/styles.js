@@ -60,7 +60,7 @@ export const BusinessGeneralInfo = styled.div`
   div.product_name {
     flex: 1;
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0 10px;
     white-space: nowrap;
@@ -85,12 +85,12 @@ export const WrapperImage = styled.div`
 
 export const InfoBlock = styled.div`
   div {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.headingColor};
     transition: all 0.3s;
     &.product_description {
       word-break: break-word;
-      font-size: 10px;
+      font-size: var(--od-type-secondary-size);
       color: ${props => props.theme.colors.lightGray};
       resize: none;
       width: 100%;
@@ -114,7 +114,7 @@ export const BusinessEnableWrapper = styled.div`
   align-items: center;
   width: fit-content;
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     ${props => props.theme?.rtl
 ? css`
       padding-left: 10px;

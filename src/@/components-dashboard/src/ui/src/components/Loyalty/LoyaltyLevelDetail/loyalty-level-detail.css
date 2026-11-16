@@ -1,0 +1,64 @@
+/*
+ *  · The editor of one level of the points-based loyalty program: the title with its «⋯» menu, then one column of
+ * Product fields and Save at the foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ */
+
+.lld {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/*
+ * The hosts (Shared/UI SideBar and Modal) draw their close button absolutely at the inline end of the first line, as far from the
+ * panel's edge as this padding and up to a 44px target wide: the head keeps that room free, so «⋯» sits beside the close, never under it.
+ */
+.lld-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding-inline-end: calc(var(--od-x-target-coarse) + var(--od-space-2));
+}
+
+.lld-title {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--od-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.lld-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The image keeps a card's width; it does not stretch across a wide panel. */
+.lld-image {
+  max-inline-size: calc(var(--od-x-control-height) * 12);
+}
+
+.lld-expiration {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.lld-days {
+  max-inline-size: calc(var(--od-x-control-height) * 6);
+}
+
+.lld-foot {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-start: var(--od-space-2);
+}

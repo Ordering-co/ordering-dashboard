@@ -19,7 +19,7 @@ export const UserName = styled.div`
   align-items: center;
   flex: 1;
   > span {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     color: ${props => props.theme.colors.headingColor};
     margin: 0;
@@ -81,7 +81,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         &:active {
           background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
@@ -100,7 +100,7 @@ export const SideBarWrapper = styled.div`
   padding: 35px 20px;
   width: 100%;
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 25px;
   }

@@ -1,0 +1,84 @@
+/*
+ *  · The wallet rules (the general ones in the hub, or one store's in its side panel): redemption, accumulation, the
+ * maximum and the expiration, then Save. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ */
+
+.pwbd {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-6);
+  inline-size: 100%;
+  box-sizing: border-box;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* One store's rules sit in a side panel or a modal: they keep the panel's padding. */
+.pwbd[data-business] {
+  padding: var(--od-space-5);
+}
+
+/* The panel's close button (Shared/UI SideBar or Modal, up to a 44px target) sits at the inline end of the first line. */
+.pwbd-title {
+  margin: 0;
+  padding-inline-end: calc(var(--od-x-target-coarse) + var(--od-space-2));
+  overflow-wrap: anywhere;
+  font-size: var(--od-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.pwbd-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+}
+
+.pwbd-section > h3 {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.pwbd-help {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* «Value = $1» and «$1 = Value»: the text sits on the line of the control, not of the label. */
+.pwbd-rate {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--od-space-2);
+  max-inline-size: 100%;
+}
+
+/* On a phone the field gives way, so its equivalence stays on its line. */
+.pwbd-rate-field {
+  flex: 0 1 calc(var(--od-x-control-height) * 7);
+  min-inline-size: 0;
+}
+
+.pwbd-field {
+  inline-size: calc(var(--od-x-control-height) * 7);
+  max-inline-size: 100%;
+}
+
+.pwbd-rate-text {
+  flex: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-block-size: var(--od-x-control-height);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.pwbd-foot {
+  display: flex;
+  justify-content: flex-end;
+}

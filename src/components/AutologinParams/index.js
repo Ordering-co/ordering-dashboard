@@ -1,8 +1,9 @@
 import React, { cloneElement, useEffect, useRef, useState } from 'react'
 
-import { AppBootLoader } from '~ui'
+import { AppBootLoader } from '~ui/src/components/Shared/AppBootLoader'
 import settings from '../../config'
 import { WebStrategy } from '../../@/components-dashboard/src/webStrategy'
+import { fetchProjectCode } from '../../@/components-dashboard/src/utils/resolveProjectCode'
 import { AUTOLOGIN_STASH_KEY, isHandoffPath, readAutologinParams } from '../../utils/stripAutologinQuery'
 import {
   exchangeHandoffCode,
@@ -63,10 +64,13 @@ export const AutologinParams = (props) => {
 
   const persistUserSession = async ({ sessionToken, user, providerProject, previousSession }) => {
     const strategy = new WebStrategy(props.configFile)
+    // providerProject is only set to queryProject once persistSession is true (see autologinSession.js).
+    // A pin already names the internal project code: resolving it would just repeat the same request.
+    const project = pinnedProject ? providerProject : (await fetchProjectCode(buildApiRoot(queryProject))) || providerProject
     await strategy.setItem('token', sessionToken)
     await strategy.setItem('user', user, true)
-    await strategy.setItem('project', queryProject)
-    setAppliedProject(providerProject)
+    await strategy.setItem('project', project)
+    setAppliedProject(project)
     if (queryCode && previousSession?.token && previousSession.token !== sessionToken) {
       revokeReplacedSession({
         apiRoot: buildApiRoot(previousSession.project || fallbackProject),

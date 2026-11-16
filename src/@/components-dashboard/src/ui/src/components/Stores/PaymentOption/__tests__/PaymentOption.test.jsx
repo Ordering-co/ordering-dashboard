@@ -1,64 +1,39 @@
+/* eslint-disable import/first */
+// main on the redesign's PaymentOption (ProviderPanel): rewritten for
 import React from 'react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, screen } from '@testing-library/react'
-import { defaultTheme, renderWithProviders } from '~/__tests__/helpers/testUtils'
-
-const addQueryToUrl = vi.fn()
-const removeQueryToUrl = vi.fn()
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
+import { renderWithProviders } from '~/__tests__/helpers/testUtils'
+import theme from '~/theme.json'
 
 vi.mock('../../../../../../index', () => ({
   useLanguage: () => [{}, (_key, fallback) => fallback]
 }))
 
-vi.mock('../../../../hooks/useWindowSize', () => ({
-  useWindowSize: () => ({ width: 1400 })
-}))
-
-vi.mock('../../../Shared', () => ({
-  Confirm: () => null
-}))
-
-vi.mock('../../../../styles', () => ({
-  Button: ({ children, color, borderRadius, ...props }) => <button type='button' {...props}>{children}</button>,
-  IconButton: ({ children, color, ...props }) => <button type='button' {...props}>{children}</button>
-}))
-
-vi.mock('../../../../utils', () => ({
-  addQueryToUrl: (...args) => addQueryToUrl(...args),
-  removeQueryToUrl: (...args) => removeQueryToUrl(...args)
-}))
-
 import { PaymentOption } from '../index'
 
-// The panel darkens this color for its menu
-const theme = { ...defaultTheme, colors: { ...defaultTheme.colors, secundary: '#f8f9fa' } }
+const CASH = { id: 1, gateway: 'cash', name: 'Cash' }
 
-const handleSaveClick = vi.fn()
-const handleChangeBusinessPaymentState = vi.fn()
+const baseProps = () => ({
+  paymethod: CASH,
+  businessPaymethod: { id: 77, paymethod_id: 1, enabled: true, allowed_order_types: [1], sites: [], devices: [] },
+  gatewayName: 'Cash',
+  storeName: 'Burger Hub',
+  sites: [{ id: 5, name: 'Website' }],
+  devices: [],
+  orderTypes: [{ value: 1, text: 'Delivery' }, { value: 2, text: 'Pickup' }]
+})
 
-const props = {
-  open: true,
-  onClose: vi.fn(),
-  businessPaymethod: {
-    id: 77,
-    allowed_order_types: [1],
-    sites: [],
-    paymethod: { id: 1, gateway: 'cash', name: 'Cash' }
-  },
-  orderTypes: [{ value: 1, text: 'Delivery' }, { value: 2, text: 'Pickup' }],
-  sitesState: { sites: [{ id: 5, name: 'Website' }] },
-  deviceState: { devices: [] },
-  changesState: {},
-  actionState: { loading: false },
-  cleanChangesState: vi.fn(),
-  handleChangeBusinessPaymentState,
-  handleSaveClick,
-  handleDeletePaymethod: vi.fn(),
-  selectedPaymethodGateway: 'cash'
+const setup = (props = {}) => {
+  const user = userEvent.setup()
+  const onSave = vi.fn().mockResolvedValue({ ok: true })
+  const onTabChange = vi.fn()
+  const utils = renderWithProviders(<PaymentOption {...baseProps()} onSave={onSave} onTabChange={onTabChange} {...props} />, { theme })
+  return { user, onSave, onTabChange, ...utils }
 }
 
-const renderPanel = (overrides = {}, options = {}) =>
-  renderWithProviders(<PaymentOption {...props} {...overrides} />, { theme, ...options })
+const tabNames = () => screen.getAllByRole('tab').map(tab => tab.textContent)
 
 /**
  * The panel of the payment methods with no panel of their own (cash, card on
@@ -66,76 +41,76 @@ const renderPanel = (overrides = {}, options = {}) =>
  * fixes what it does for everybody else, who pass none.
  */
 describe('PaymentOption without tabs of the gateway', () => {
-  beforeEach(() => {
-    addQueryToUrl.mockReset()
-    removeQueryToUrl.mockReset()
-    handleSaveClick.mockReset()
-    handleChangeBusinessPaymentState.mockReset()
-  })
-
   it('names the payment method and opens on Channels, the first tab', () => {
-    renderPanel()
+    const { onTabChange } = setup()
 
-    expect(screen.getByRole('heading', { name: 'Cash' })).toBeInTheDocument()
-    expect(screen.getByText('Channels')).toBeInTheDocument()
-    expect(screen.getByText('Order type')).toBeInTheDocument()
-    expect(screen.getByText('All')).toBeInTheDocument()
-    expect(screen.queryByText('Delivery')).not.toBeInTheDocument()
-    expect(addQueryToUrl).toHaveBeenCalledWith({ paymethod_tab: 0 })
+    expect(screen.getByRole('tablist', { name: 'Cash' })).toBeInTheDocument()
+    expect(tabNames()).toEqual(['Channels', 'Order type', 'Devices'])
+    expect(screen.getByRole('tab', { name: 'Channels' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('checkbox', { name: 'All' })).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: 'Delivery' })).not.toBeInTheDocument()
+    expect(onTabChange).not.toHaveBeenCalled()
   })
 
-  it('falls back to a generic name when the payment method is not known', () => {
-    renderPanel({ businessPaymethod: { id: 77, allowed_order_types: [1], sites: [] } })
+  // main also fell back to a generic «Paymethod» name when the payment method was unknown. The wrapper has no such fallback: the list
+  // always passes `gatewayName`, and the panel falls back to `paymethod.name` and then to nothing, which is what is checked here.
+  it('falls back to the name of the payment method when no gatewayName comes', () => {
+    setup({ gatewayName: undefined })
 
-    expect(screen.getByRole('heading', { name: 'Paymethod' })).toBeInTheDocument()
+    expect(screen.getByRole('tablist', { name: 'Cash' })).toBeInTheDocument()
   })
 
-  it('opens on the tab the URL names, as a number, without rewriting it', () => {
-    renderPanel({}, { initialEntries: ['/stores/list?paymethod_tab=1'] })
+  it('opens on the tab initialTab names, as a number, without reporting it', () => {
+    const { onTabChange } = setup({ initialTab: 1 })
 
-    expect(screen.getByText('Delivery')).toBeInTheDocument()
-    expect(screen.queryByText('All')).not.toBeInTheDocument()
-    expect(addQueryToUrl).not.toHaveBeenCalled()
+    expect(screen.getByRole('tab', { name: 'Order type' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('checkbox', { name: 'Delivery' })).toBeInTheDocument()
+    expect(screen.queryByRole('checkbox', { name: 'All' })).not.toBeInTheDocument()
+    expect(onTabChange).not.toHaveBeenCalled()
   })
 
-  it('keeps the tab that is chosen in the URL and never takes the param away', () => {
-    renderPanel()
-    addQueryToUrl.mockReset()
+  it('reports the tab that is chosen as its number, never null', async () => {
+    const { user, onTabChange } = setup()
 
-    fireEvent.click(screen.getByText('Order type'))
+    await user.click(screen.getByRole('tab', { name: 'Order type' }))
+    expect(screen.getByRole('checkbox', { name: 'Pickup' })).toBeInTheDocument()
+    await user.click(screen.getByRole('tab', { name: 'Devices' }))
+    await user.click(screen.getByRole('tab', { name: 'Channels' }))
 
-    expect(screen.getByText('Pickup')).toBeInTheDocument()
-    expect(addQueryToUrl).toHaveBeenCalledWith({ paymethod_tab: 1 })
-    expect(removeQueryToUrl).not.toHaveBeenCalled()
+    expect(onTabChange.mock.calls).toEqual([[1], [2], [0]])
   })
 
-  it('reports the order types that are checked', () => {
-    renderPanel({}, { initialEntries: ['/stores/list?paymethod_tab=1'] })
+  it('reports the order types that are checked, when it is saved', async () => {
+    const { user, onSave } = setup({ initialTab: 1 })
 
-    fireEvent.click(screen.getByText('Pickup'))
+    await user.click(screen.getByRole('checkbox', { name: 'Pickup' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
 
-    expect(handleChangeBusinessPaymentState).toHaveBeenCalledWith({ allowed_order_types: [1, 2] })
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onSave).toHaveBeenCalledWith({ allowed_order_types: [1, 2] })
   })
 
   it('offers Devices only to the payment methods that take them', () => {
-    const { unmount } = renderPanel()
-    expect(screen.getByText('Devices')).toBeInTheDocument()
+    const { unmount } = setup()
+    expect(screen.getByRole('tab', { name: 'Devices' })).toBeInTheDocument()
     unmount()
 
-    renderPanel({ selectedPaymethodGateway: 'izipay' })
-    expect(screen.queryByText('Devices')).not.toBeInTheDocument()
+    const { unmount: unmountCard } = setup({ paymethod: { ...CASH, gateway: 'card_delivery' } })
+    expect(screen.getByRole('tab', { name: 'Devices' })).toBeInTheDocument()
+    unmountCard()
+
+    setup({ paymethod: { ...CASH, gateway: 'izipay' } })
+    expect(tabNames()).toEqual(['Channels', 'Order type'])
   })
 
-  it('always shows Save, disabled until something changes', () => {
-    const { unmount } = renderPanel()
-    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled()
-    unmount()
+  it('shows Save only once something changed', async () => {
+    const { user, onSave } = setup({ initialTab: 1 })
+    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
 
-    renderPanel({ changesState: { allowed_order_types: [1, 2] } })
-    const save = screen.getByRole('button', { name: 'Save' })
-    expect(save).not.toBeDisabled()
+    await user.click(screen.getByRole('checkbox', { name: 'Pickup' }))
+    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
 
-    fireEvent.click(save)
-    expect(handleSaveClick).toHaveBeenCalledWith(77)
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(onSave).toHaveBeenCalledTimes(1)
   })
 })

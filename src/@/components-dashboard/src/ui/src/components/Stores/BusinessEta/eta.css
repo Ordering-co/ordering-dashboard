@@ -1,0 +1,67 @@
+/*
+ * redesign stores 5.7 · Estimated times by status in the store editor: one form (heading, list switch, 24 number
+ * fields, save bar). Values: --od-* and --od-x-* only, logical properties only. The fields sit in a grid: one column under 768px
+ * (so 24 fields never overflow at 390px), two from 768px and three from 1100px.
+ */
+
+.odc-store-eta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding-inline: var(--od-space-5);
+  padding-block-start: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-store-eta:focus {
+  outline: none;
+}
+
+/* redesign stores 5.18: the clip of P/SegmentedControl's measuring copy is gone; the piece keeps it out of the flow. */
+.odc-store-eta-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-store-eta-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-store-eta-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@media (min-width: 768px) {
+  .odc-store-eta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .odc-store-eta-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-store-eta {
+    padding-inline: var(--od-space-4);
+  }
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar: every control keeps a margin at its foot that
+   clears the bar and a gap (the same rule as Store details and the Users profile form; review 5.7 #6). */
+.odc-store-eta :is(input, select, textarea, button, [role='radio']) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

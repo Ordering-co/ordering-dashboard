@@ -1,27 +1,29 @@
 import styled, { css } from 'styled-components'
 
+import { getOrderingAction } from '~/brand/adapter'
+
 export const ModalContainer = styled.div`
   padding: 10px;
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
+  background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'};
   display: flex;
   flex-direction: column;
   align-items: center;
   animation: fadeIn 200ms;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     margin: 0px;
   }
 
   p {
     text-align: center;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     margin-top: 0px;
     margin-bottom: 22px;
 
     span {
-      color: ${props => props.theme.colors.primary};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
       font-weight: 600;
     }
   }
@@ -61,23 +63,17 @@ export const ToastWrapper = styled.div`
   > div {
     display: flex;
     flex-direction: column;
-    color: #344050;
-    ${props => props.theme?.rtl
-? css`
-      margin-right: 15px;
-    `
-: css`
-      margin-left: 15px;
-    `}
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#344050'};
+    margin-inline-start: 15px;
     span {
       &:first-child {
-        font-size: 14px;
+        font-size: var(--od-type-content-size);
         line-height: 21px;
         font-weight: 500;
         margin-bottom: 2px;
       }
       &:last-child {
-        font-size: 12px;
+        font-size: var(--od-type-secondary-size);
         line-height: 18px;
       }
     }
@@ -88,7 +84,7 @@ export const AlarmContent = styled.div`
   button {
     height: 44px;
     width: 100%;
-    border-radius: 8px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '8px'};
     margin-top: 20px;
   }
   > span {
@@ -96,29 +92,37 @@ export const AlarmContent = styled.div`
   }
 `
 
-export const CheckBoxWrapper = styled.div`
+export const CheckBoxWrapper = styled.button.attrs({ type: 'button' })`
   display: flex;
   align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
   margin-top: 10px;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? getOrderingAction(props.theme)};
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
   svg {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 10px;
-    `
-: css`
-      margin-right: 10px;
-    `}
+    margin-inline-end: 10px;
     font-size: 16px;
-    color: ${props => props.theme.colors.secundaryLight};
+    color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.secundaryLight};
   }
 
   ${({ isChecked }) => isChecked && css`
     svg {
-      color: ${props => props.theme.colors?.primary};
+      color: ${props => getOrderingAction(props.theme) ?? props.theme.colors?.primary};
     }
   `}
 `

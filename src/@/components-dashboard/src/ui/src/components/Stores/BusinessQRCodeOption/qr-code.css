@@ -1,0 +1,85 @@
+/*
+ * redesign stores 5.15a · The detail of one QR code: the number field, Generate code and Print, the reason when it cannot
+ * be generated, the code and the link it opens. Values: --od-* and --od-x-* only, logical properties only.
+ * `.odc-qr-print` is the printed page: it carries no style of its own, so the QR prints at the page's width, as in main; J2 row 18 (O1)
+ * adds the caption under it (the store, and the table or spot), centred.
+ */
+
+.odc-qr-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-qr-intro,
+.odc-qr-reason {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-qr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+/* On screen the code is at most the size main drew it (256px), and never wider than the detail */
+.odc-qr-code {
+  inline-size: 100%;
+  max-inline-size: calc(var(--od-space-10) * 2); /* 16rem, 256px */
+}
+
+.odc-qr-print-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  margin: var(--od-space-2) 0 0;
+  text-align: center;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-qr-print-store {
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-qr-link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-qr-link-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-qr-link-url {
+  align-self: stretch;
+  min-inline-size: 0;
+  padding: var(--od-space-2) var(--od-space-3);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+/* redesign bugs F row 36 (, review R-4): the outdated-code notice lines up with the field and the buttons; the notice's own
+   margin is the page gutter of a filter bar */
+.odc-qr-detail .odc-notice { margin: 0; }

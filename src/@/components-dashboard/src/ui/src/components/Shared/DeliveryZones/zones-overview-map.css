@@ -1,0 +1,15 @@
+/*
+ * redesign DG-B2a (decisión 3): the element Google draws the zones overview map in. The height is the one P/MapFrame gives its slot
+ * (it fills 100% of it); the shapes take their colors from the tokens in ZonesOverviewMap.jsx. Values come from --od-* and --od-x-*
+ * only; the literal guard fails on anything else.
+ */
+
+.dg-zones-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  overflow: hidden;
+  background: var(--od-surface-subtle);
+}

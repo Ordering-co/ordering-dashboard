@@ -1,0 +1,453 @@
+/*
+ * redesign RA-B3 (decisions 3, 4, 5 and 6) · The panel of a recovery rule: the form (When, Details, Messages, the first message), the wait
+ * field, the Messages cards and the message facsimile.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-ra-.
+ * The facsimile (odc-ra-preview-*) simulates another surface (the customer's inbox or phone): it keeps the shapes of main, with token values.
+ * The panel sits in a RecordPanel: its footer is pinned by the panel (`.odc-record-foot`), this file only lays out what goes inside it.
+ */
+
+/* ── The form: sections with a hairline on top and one rhythm; the first one has none ── */
+.odc-ra-form {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* The notices belong to the form, not to a page bar: no page gutter around them */
+.odc-ra-form .odc-notice {
+  margin-inline: 0;
+  margin-block: 0 var(--od-space-4);
+}
+
+.odc-ra-section,
+.odc-ra-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-ra-form > .odc-ra-section:first-child,
+.odc-ra-form > .odc-notice + .odc-ra-section {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odc-ra-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-ra-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-field-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* An error under a control that is not a Field (the unit group, the channel, the editor): the look of the Field's own */
+.odc-ra-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-field-error-icon {
+  flex: none;
+  margin-block-start: var(--od-x-space-half);
+}
+
+.odc-ra-channel,
+.odc-ra-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── The wait: «Send after», the amount and the unit on one row, the equivalence under them ── */
+.odc-ra-wait {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-ra-wait-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-wait-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* A number is short: the field takes room for five digits, not the width of the panel */
+.odc-ra-wait-amount {
+  flex: none;
+  inline-size: calc(var(--od-x-control-height) * 3);
+  max-inline-size: 100%;
+}
+
+/* The fieldset only disables its buttons; it draws nothing */
+.odc-ra-wait-unit {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-ra-wait-equals {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-wait-equals .odc-figure {
+  color: var(--od-text);
+}
+
+/* ── Messages: a head with the title and «Add message», then one card per message ── */
+.odc-ra-messages-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-ra-messages-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+}
+
+.odc-ra-message-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-ra-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-ra-message-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-ra-message-name {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* «Edit» sits at the end of the head */
+.odc-ra-message-edit {
+  margin-inline-start: auto;
+}
+
+.odc-ra-messages-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-ra-message-skeleton {
+  gap: var(--od-space-2);
+}
+
+/* ── The panel states ── */
+.odc-ra-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-ra-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+.odc-ra-state-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+/* The header switch: a failed save says why under it, floating, so the header does not grow and push its buttons */
+.odc-ra-header-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* redesign R2-G1 (F2 of the mechanical measure): on a phone the switch (32 x 24) keeps a 44px reach and «More actions» sits 2px away, so the
+   reach went 3px into that button. The space token sets them apart so the two 44px areas do not cross. */
+@media (max-width: 767px) {
+  /* redesign R2-I5 (live check): 2px of the row + 12px keep the two 44px reaches (6px each side of a 32px control) apart */
+  .odc-ra-header-switch {
+    margin-inline-end: var(--od-space-3);
+  }
+}
+
+/* ── Foot: the notes, then «Cancel» and the one button ── */
+.odc-ra-foot {
+  display: grid;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+}
+
+.odc-ra-foot .odc-notice {
+  margin-inline: 0;
+  margin-block: 0;
+}
+
+.odc-ra-foot-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.odc-ra-foot-note {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-foot-note .odc-figure {
+  color: var(--od-text);
+}
+
+/* In the edit footer the wait's reason is its own line above the buttons */
+.odc-ra-foot > .odc-ra-foot-note {
+  flex: none;
+}
+
+.odc-ra-foot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+}
+
+/* ── The facsimile: a simulation of the customer's surface ── */
+.odc-ra-preview {
+  margin: 0;
+  min-inline-size: 0;
+}
+
+/* Email: a window with three dots, the title and the HTML of the body, scaled down as main does */
+.odc-ra-preview-window {
+  max-inline-size: var(--od-x-dialog-sm);
+  margin-inline: auto;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odc-ra-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  block-size: var(--od-x-count-height);
+  padding-inline: var(--od-space-2);
+  background: var(--od-surface-subtle);
+}
+
+.odc-ra-preview-dot {
+  inline-size: var(--od-x-dot);
+  block-size: var(--od-x-dot);
+  border-radius: var(--od-radius-round);
+  background: var(--od-text-muted);
+  opacity: 0.5;
+}
+
+.odc-ra-preview-mail {
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+}
+
+.odc-ra-preview-mail-title {
+  margin-block: 0 var(--od-space-2);
+  margin-inline: 0;
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  text-align: center;
+}
+
+.odc-ra-preview-mail-body {
+  zoom: 0.4;
+  max-block-size: var(--od-x-map-height);
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+/* SMS and push: the silhouette of a phone, its screen over the mask image of the theme (set inline) */
+.odc-ra-preview-phone {
+  inline-size: min(100%, var(--od-x-popover));
+  margin-inline: auto;
+  padding-block: var(--od-space-4) 0;
+  padding-inline: var(--od-space-3);
+  background: var(--od-surface-subtle);
+  border-start-start-radius: var(--od-radius-panel);
+  border-start-end-radius: var(--od-radius-panel);
+}
+
+.odc-ra-preview-phone-screen {
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--od-x-map-height-compact);
+  max-block-size: var(--od-x-map-height-compact);
+  padding: var(--od-space-2);
+  overflow: auto;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.odc-ra-preview-phone-message {
+  align-self: flex-start;
+  inline-size: 100%;
+  min-inline-size: 0;
+  margin-block-start: var(--od-space-5);
+  padding: var(--od-space-2);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odc-ra-preview-phone-title {
+  margin-block: 0 var(--od-x-space-half);
+  margin-inline: 0;
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-preview-phone-body {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  white-space: pre-wrap;
+}
+
+/* On a phone the foot follows the Product rule of the record panel's foot: the notes at the start, then every button takes the full row,
+   44px tall (record-panel.css `.odc-record-foot > .odc-btn`). */
+@media (max-width: 767px) {
+  .odc-ra-foot-note { flex: 1 1 100%; }
+
+  .odc-ra-foot-actions {
+    flex: 1 1 100%;
+    margin-inline-start: 0;
+  }
+
+  .odc-ra-foot-actions > .odc-btn {
+    flex: 1 1 100%;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* ── Results: three figures side by side, each under its label ── */
+.odc-ra-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--od-x-type-title-size) * 6), 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+}
+
+.odc-ra-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-ra-result-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-ra-result-figure {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+/* The failure replaces the figures: a line and its «Retry» */
+.odc-ra-results-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

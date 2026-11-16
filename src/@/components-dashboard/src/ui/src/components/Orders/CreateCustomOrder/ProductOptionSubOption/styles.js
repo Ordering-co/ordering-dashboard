@@ -4,8 +4,8 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   padding: 10px 0px;
-  cursor: pointer;
 
   -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -15,7 +15,7 @@ export const Container = styled.div`
             user-select: none;
 `
 
-export const IconControl = styled.div`
+export const IconControl = styled.span`
   display: flex;
   color: ${props => props.theme.colors.primary};
   margin-right: 5px;
@@ -31,8 +31,9 @@ export const IconControl = styled.div`
     color: ${props => props.theme.colors.lightGray};
   }
 `
-export const Text = styled.div`
+export const Text = styled.span`
   flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   font-weight: 300;
   color: #555;
@@ -40,14 +41,14 @@ export const Text = styled.div`
   text-overflow: ellipsis;
   margin: 0 8px;
 
-  div {
+  span.name {
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme.colors.darkGray};
   }
 
-  span {
+  span:not(.name) {
     margin-left: 10px;
     font-weight: 500;
     color: ${props => props.theme.colors.primary};
@@ -67,7 +68,7 @@ export const Text = styled.div`
   `}
 `
 
-export const SubOptionThumbnail = styled.div`
+export const SubOptionThumbnail = styled.span`
   display: inline-block;
   border-radius: 8px;
   background-image: url(${({ src }) => src});
@@ -88,8 +89,25 @@ export const QuantityControl = styled.div`
   color: ${props => props.theme.colors.darkGray};
   align-items: center;
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--od-type-control-value-size);
   margin: 0 5px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
 
   svg {
     color: ${props => props.theme.colors.primary};
@@ -112,7 +130,7 @@ export const QuantityControl = styled.div`
     color: #CBCBCB;
   }
 
-  svg:last-child {
+  button:last-child svg {
     margin-left: 6px;
     margin-right: 0;
     ${props => props.theme?.rtl && css`
@@ -135,8 +153,21 @@ export const PositionControl = styled.div`
   align-items: center;
   color: #CBCBCB;
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--od-type-control-value-size);
   margin: 0 5px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
 
   svg {
     font-size: 20px;
@@ -153,12 +184,13 @@ export const PositionControl = styled.div`
       color: ${props => props.theme.colors.primary};
     }
 
-    &:last-child {
-      margin-right: 0;
-      ${props => props.theme?.rtl && css`
-        margin-left: 0;
-      `}
-    }
+  }
+
+  button:last-child svg {
+    margin-right: 0;
+    ${props => props.theme?.rtl && css`
+      margin-left: 0;
+    `}
   }
 `
 
@@ -166,7 +198,7 @@ export const SuboptionPrice = styled.div`
   display: flex;
   white-space: nowrap;
   font-weight: 300;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   color: ${props => props.theme.colors.darkGray};
   margin-left: 5px;
   min-width: 60px;
@@ -179,13 +211,23 @@ export const SuboptionPrice = styled.div`
 export const LeftOptionContainer = styled.div`
   display: flex;
   width: 70%;
+  min-width: 0;
   align-items: center;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
 `
 
 export const RightOptionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25%;
+  width: auto;
+  min-width: 0;
   align-items: center;
   justify-content: space-between;
 

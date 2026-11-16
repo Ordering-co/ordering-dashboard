@@ -1,7 +1,6 @@
 @import 'tailwindcss/theme.css' layer(theme) prefix(mia);
 @import 'tailwindcss/utilities.css' layer(utilities) prefix(mia) source(none);
 @source './button.jsx';
-@source '../../components/Assistant/AssistantDestinations.js';
 
 @theme inline {
   --color-primary: var(--od-action);

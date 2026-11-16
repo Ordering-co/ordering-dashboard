@@ -97,6 +97,8 @@ for (const key of Object.keys(existing)) {
 for (const key of Object.keys(legacyMap)) {
   if (catalog[key]) continue
   if (!/^[A-Z0-9_]+$/.test(key) && !/^\d+$/.test(key)) continue
+  // a key with the app prefix never reaches the screen (i18n:verify rejects it); the legacy dump must not bring it back
+  if (config.prefix && key.startsWith(config.prefix)) continue
   const entry = { [sourceLang]: String(legacyMap[key] || '') }
   for (const loc of locales) entry[loc] = ''
   catalog[key] = entry

@@ -40,8 +40,9 @@ const LogisticsUI = (props) => {
         </>
           )
         : (
-        <WraaperLogs>
+        <WraaperLogs role='log' aria-live='polite'>
           <Button
+            type='button'
             rectangle
             color='primary'
             onClick={() => getLogistics()}

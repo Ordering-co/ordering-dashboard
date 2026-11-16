@@ -78,3 +78,35 @@ describe('validateOrderingForm host allowlist', () => {
     }).valid).toBe(true)
   })
 })
+
+const segmentInvalid = {
+  valid: false,
+  error: 'IMPORTER_VALIDATION_ORDERING_SEGMENT_INVALID'
+}
+
+describe('validateOrderingForm business segment', () => {
+  it('rejects a store name in the segment field', () => {
+    expect(validateOrderingForm({
+      url: '',
+      orderingPlusProjectId: 'demo',
+      orderingBusinessSegment: 'la avenida'
+    })).toEqual(segmentInvalid)
+  })
+
+  it('rejects a store name in the business URL', () => {
+    expect(validateOrderingForm({
+      url: orderingUrl('api.orderingplus.com', 'la%20avenida')
+    })).toEqual(segmentInvalid)
+  })
+
+  it.each(['la_avenida', '1264', 'shop-1'])('accepts %s', (segment) => {
+    expect(validateOrderingForm({
+      url: '',
+      orderingPlusProjectId: 'demo',
+      orderingBusinessSegment: segment
+    }).valid).toBe(true)
+    expect(validateOrderingForm({
+      url: orderingUrl('api.orderingplus.com', segment)
+    }).valid).toBe(true)
+  })
+})

@@ -50,7 +50,7 @@ const PickerExpressUI = (props) => {
   }
 
   const handleGoToLink = (link) => {
-    window.open(link, '_blank')
+    window.open(link, '_blank', 'noopener,noreferrer')
   }
 
   const expandSidebar = () => {
@@ -107,6 +107,7 @@ const PickerExpressUI = (props) => {
       <CategoryExtraContent>
         <IconButton
           color='black'
+          aria-label={t('CLOSE', 'Close')}
           onClick={() => handleCloseDescription()}
         >
           <XLg />
@@ -183,6 +184,7 @@ const PickerExpressUI = (props) => {
             {width > 576 && !settingsOpen && (
               <IconButton
                 color='black'
+                aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
                 onClick={expandSidebar}
               >
                 {isExpand ? <ArrowsAngleContract /> : <ArrowsAngleExpand />}
@@ -190,6 +192,7 @@ const PickerExpressUI = (props) => {
             )}
             <IconButton
               color='black'
+              aria-label={t('CLOSE', 'Close')}
               onClick={onClose}
             >
               <XLg />

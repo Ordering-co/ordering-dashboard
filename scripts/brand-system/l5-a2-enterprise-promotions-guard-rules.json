@@ -1,0 +1,2388 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-a2-enterprise-promotions-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionconditions-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 8,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionconditions-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionConditions/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CheckboxWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "CheckboxWrapper svg: the check glyph of the include-options selector."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "({ active }) => active\n? css`\n    /* cursor: pointer; */\n    background: ${props => props.theme.colors.primary};\n  `\n: css`\n    border: 1px solid #B1BCCC;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "({ isCursorAllowed }) => !isCursorAllowed && css`\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ConditionItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 20px;\n      `\n: css`\n        margin-left: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "EditButton",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "EditButton svg: the pencil glyph that opens the condition editor."
+          },
+          {
+            "component": "EditButton",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "EditButton",
+            "property": "font",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ConditionCheckButton",
+            "property": "font",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ConditionCheckButton",
+            "property": "font",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CheckboxWrapper",
+            "property": "border",
+            "match": "1px solid #B1BCCC",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "({ active }) => active\n? css`\n    /* cursor: pointer; */\n    background: ${props => props.theme.colors.primary};\n  `\n: css`\n    border: 1px solid #B1BCCC;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "({ isCursorAllowed }) => !isCursorAllowed && css`\n    cursor: not-allowed;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckboxWrapper",
+            "property": "color",
+            "match": "#FFF",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ConditionItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ConditionItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 20px;\n      `\n: css`\n        margin-left: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EditButton",
+            "property": "background-color",
+            "match": "#1507261a",
+            "context": "&:active",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EditButton",
+            "property": "background-color",
+            "match": "#1507260a",
+            "context": "&:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EditButton",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Header",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EditButton",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "EditButton",
+            "property": "color-block",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ConditionCheckButton",
+            "property": "color-block",
+            "match": "brandFocusOutline",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusOutline} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "ConditionCheckButton",
+            "property": "color-block",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiondeliveryzones-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDeliveryzones/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "deliveryzonesProps /* binding-sha256:c70bea2c98d33352503a7c4e45506dbcfedeb870199aad4fa6d22b3b0f9651f5 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiondeliveryzones-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDeliveryzones/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ZoneNameWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 25px;\n    `\n: css`\n      margin-left: 25px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ZoneNameWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 25px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "DeliveryzonesTable",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DeliveryzonesTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SingleDeliveryzoneTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ZoneNameWrapper",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ZoneNameWrapper",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ZoneNameWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 25px;\n    `\n: css`\n      margin-left: 25px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ZoneNameWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    border-left: 1px solid ${props => props.theme.colors.borderColor};\n    margin-left: 25px;\n  `\n: css`\n    border-right: 1px solid ${props => props.theme.colors.borderColor};\n    margin-right: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiondetails-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "promotionProps /* binding-sha256:e37f855ad29be4018d32b8a3a7a7cfad7f05138b98ad49a9d4aa59958abc9af1 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "discard /* binding-sha256:63cb35ade2806f9a85085c6c7c68c0a205f4dbf6cd53fc83dcffd1e2298db804 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Redesign  (2026-10-10): pinned after reading it: the four translated texts of the RecordPanel discard guard (discardTitle, discardDescription, discardConfirmLabel, keepEditingLabel); no colour, token or state. The legacy color='black' IconButton is gone (exception removed). Checked with verifyMigration."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiondetails-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors?.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "font-size",
+            "match": "20px",
+            "context": "button > svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "WrapperActionSelector button > svg: the kebab action-menu glyph."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 35px;\n  `\n: css`\n    margin-right: 35px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors?.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 2px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "TabsContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors?.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "background",
+            "match": "props => darken(0.04, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "background",
+            "match": "props => darken(0.1, props.theme.colors.secundary)",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": ".show > >div",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperActionSelector",
+            "property": "color",
+            "match": "#E63757",
+            "context": "> div > > div > .dropdown-item:last-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotioneditcondition-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionEditCondition/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotioneditcondition-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionEditCondition/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiongeneraldetails-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotiongeneraldetails-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionGeneralDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CalendarContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "font",
+            "match": "({ notSelected }) => notSelected\n? css`\n        .rdrStartEdge,\n        .rdrEndEdge,\n        .rdrInRange {\n          color: transparent !important;\n        }\n      `\n: css`\n        .rdrStartEdge,\n        .rdrEndEdge,\n        .rdrInRange {\n          color: ${props => props.theme.colors.lightPrimary} !important;\n        }\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    right: 0px;\n  `\n: css`\n    left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "OrderPriorityContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 2px;\n    `\n: css`\n      margin-right: 2px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "StackableContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "font-size",
+            "match": "25px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "UploadImageIcon svg: the upload glyph of the image drop zone."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CalendarContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 10px;\n      `\n: css`\n        margin-left: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "color-block",
+            "match": "({ notSelected }) => notSelected\n? css`\n        .rdrStartEdge,\n        .rdrEndEdge,\n        .rdrInRange {\n          color: transparent !important;\n        }\n      `\n: css`\n        .rdrStartEdge,\n        .rdrEndEdge,\n        .rdrInRange {\n          color: ${props => props.theme.colors.lightPrimary} !important;\n        }\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    right: 0px;\n  `\n: css`\n    left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Image",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderPriorityContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderPriorityContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 2px;\n    `\n: css`\n      margin-right: 2px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "StackableContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color",
+            "match": "#ADB5BD",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "rgba(0,0,0,0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionlist-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionlist-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "DragImageWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DummyImageWrapper",
+            "property": "font-size",
+            "match": "18px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+            "evidence": "DummyImageWrapper svg: the placeholder image glyph shown when a promotion has no image."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PromotionListBottom",
+            "property": "font",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PromotionListContainer",
+            "property": "font",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PromotionListTable",
+            "property": "font",
+            "match": "({ noFixedHeader }) => !noFixedHeader && css`\n          position: sticky;\n          top: 0px;\n          z-index: var(--od-x-layer-sticky);\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "font",
+            "match": "({ isAccept }) => css`\n      border-top: 1px solid ${props => isAccept ? props.theme.colors.primary : props.theme.colors.disabled};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "font",
+            "match": "({ isAccept }) => isAccept && css`\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    background-color: ${props => props.theme.colors.secundary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "font",
+            "match": "({ isPromotionBottom }) => css`\n      border-bottom: 1px solid ${props => isPromotionBottom ? props.theme.colors.primary : props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "DragImageWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DummyImageWrapper",
+            "property": "background-color",
+            "match": "rgb(0 0 0 / 20%)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DummyImageWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "EnableWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      padding-left: 10px;\n    `\n: css`\n      padding-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionListBottom",
+            "property": "color-block",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionListContainer",
+            "property": "color-block",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    pointer-events: none;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionListTable",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionListTable",
+            "property": "color-block",
+            "match": "({ noFixedHeader }) => !noFixedHeader && css`\n          position: sticky;\n          top: 0px;\n          z-index: var(--od-x-layer-sticky);\n        `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionListTable",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "border-bottom",
+            "match": "props => isPromotionBottom ? props.theme.colors.primary : props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "border-top",
+            "match": "props => isAccept ? props.theme.colors.primary : props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "color-block",
+            "match": "({ isAccept }) => css`\n      border-top: 1px solid ${props => isAccept ? props.theme.colors.primary : props.theme.colors.disabled};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "color-block",
+            "match": "({ isAccept }) => isAccept && css`\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    background-color: ${props => props.theme.colors.secundary};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SinglePromotionTbody",
+            "property": "color-block",
+            "match": "({ isPromotionBottom }) => css`\n      border-bottom: 1px solid ${props => isPromotionBottom ? props.theme.colors.primary : props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "VerticalLine",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionlisting-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "enterprisePromotionsProps /* binding-sha256:e6479a411c7dd7cdffa94d158356c604e41327d0d8263f031c7f09c59f5ebd9a */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 3,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionlisting-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionListing/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionsWrapper",
+            "property": "font",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    cursor: not-allowed;\n    opacity: 0.4;\n    > * {\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ActionsWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WorkspaceTab",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native button reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's.",
+            "evidence": "WorkspaceTab is a styled.button and `font: inherit` is its reset. The size that matters on this component is the declaration on the next line, which does take a role."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionsWrapper",
+            "property": "color-block",
+            "match": "({ eventDisabled }) => eventDisabled && css`\n    cursor: not-allowed;\n    opacity: 0.4;\n    > * {\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionWorkspace",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFFFFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PromotionWorkspace",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#0B0C0D'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WorkspaceHeader",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor || '#0B0C0D'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WorkspaceTab",
+            "property": "background",
+            "match": "props => props.$active ? (props.theme.colors?.primary || '#266DF0') : 'transparent'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WorkspaceTab",
+            "property": "color",
+            "match": "props => props.$active ? (props.theme.colors?.primary || '#266DF0') : (props.theme.colors?.headingColor || '#3F4145')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WorkspaceTab",
+            "property": "outline",
+            "match": "props => props.theme.colors?.primary || '#266DF0'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "WorkspaceTabs",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors?.borderColor || '#DEE0E3'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionmaxorders-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionmaxorders-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionMaxOrders/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionordertypes-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionOrderTypes/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionordertypes-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionOrderTypes/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "OrderTypeItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 20px;\n    `\n: css`\n      margin-left: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "OrderTypeItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderTypeItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 20px;\n    `\n: css`\n      margin-left: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "OrderTypesContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionpaymethods-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionPaymethods/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionpaymethods-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionPaymethods/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PaymethodItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 20px;\n    `\n: css`\n      margin-left: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "PaymethodItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaymethodItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 20px;\n    `\n: css`\n      margin-left: 20px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "PaymethodsContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionrules-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch. Redesign  (2026-10-10): Conditions opens in its Modal at every width inside the editor panel; the second legacy SideBar and its {...props} spread are gone (2 -> 1). Checked with verifyMigration."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionrules-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionRules/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AutomaticEnableWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n    background-color: ${props => props.theme.colors.lightPrimary};\n    > div {\n      svg {\n        color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 13px;\n      `\n: css`\n        margin-left: 13px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CouponCodeContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 30px;\n  `\n: css`\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 13px;\n    `\n: css`\n      margin-left: 13px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DiscountContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: 20px;\n      `\n: css`\n        margin-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShowInCartContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShowInCartContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 30px;\n  `\n: css`\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). `inherit` is part of a native button reset: it declares no size of its own and keeps the surrounding typography instead of the user agent's."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AutomaticEnableWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-top: 1px solid ${props => props.theme.colors.primary};\n    border-bottom: 1px solid ${props => props.theme.colors.primary};\n    background-color: ${props => props.theme.colors.lightPrimary};\n    > div {\n      svg {\n        color: ${props => props.theme.colors.primary};\n      }\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-right: 13px;\n      `\n: css`\n        margin-left: 13px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CondtionItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponCodeContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 30px;\n  `\n: css`\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    svg {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 13px;\n    `\n: css`\n      margin-left: 13px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DiscountContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DiscountContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: 20px;\n      `\n: css`\n        margin-right: 20px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "DiscountOption",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShowInCartContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-right: 10px;\n    `\n: css`\n      margin-left: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShowInCartContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 30px;\n  `\n: css`\n    margin-left: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShowInCartContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "CouponHeader",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionschedule-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSchedule/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionschedule-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSchedule/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ScheduleContainer",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionspecficcategory-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionspecficcategory-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficCategory/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "box-shadow",
+            "match": "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.textBlack",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.textGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionspecficproducts-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l5-a2-enterprise-promotions-enterprisepromotionspecficproducts-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/EnterprisePromotionSpecficProducts/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of a2-enterprise-promotions: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Option",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "box-shadow",
+            "match": "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-right: 0px;\n      margin-left: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.textBlack",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.textGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The a2-enterprise-promotions semantic inventory pins the full expression. L5 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

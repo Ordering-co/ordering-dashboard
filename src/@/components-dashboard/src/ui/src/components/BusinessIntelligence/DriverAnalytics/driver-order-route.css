@@ -1,0 +1,137 @@
+/*
+ * «Driver route by order» (, port of ), the last card of /intelligence/drivers. The frame is the kit's card
+ * (AnalyticsKit/analytics-kit.css), the field and the button are P/TextField and P/Button, the map sits in P/MapFrame and the table is
+ * P/DataTable; this file only lays them out. Values come from --od-* and --od-x-* only (the literal guard governs this file), logical
+ * properties only (RTL), classes odc-bi-route-*, and the breakpoints of C/utils/breakpoints.js as literals in @media.
+ */
+
+.odc-bi-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bi-route-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* the field takes the row and the button keeps its size, so nothing overflows at 390: the label sits above the field, and the button
+   lines up with the bottom of the control */
+.odc-bi-route-search {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bi-route-search > .odc-field {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-bi-route-search > .odc-btn {
+  flex: none;
+}
+
+@media (min-width: 768px) {
+  .odc-bi-route-search {
+    max-inline-size: 50%;
+  }
+}
+
+/* redesign : the P/ field is 32px with a 44px area on its frame, but «Order number» is the only control of its card and measured 32px at
+   390 (main: 43). With a coarse pointer or under 768px the row takes the touch target as its control height: the field (.odc-field-input) and
+   the «Search» button (.odc-btn) both read --od-x-control-height, so one variable makes both 44px and they stay level. Same query as field.css. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-bi-route-search {
+    --od-x-control-height: var(--od-x-target-coarse);
+  }
+}
+
+/* order, driver and status: label and value side by side, the group wraps instead of overflowing */
+.odc-bi-route-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-5);
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bi-route-summary > div {
+  display: flex;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bi-route-summary dt {
+  color: var(--od-text-muted);
+}
+
+.odc-bi-route-summary dd {
+  margin: 0;
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-bi-route-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bi-route-legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* the numbered dot of a status change, and the B and C pins of the map; the colors are the ones the markers get (MARKER_TOKENS) */
+.odc-bi-route-mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  padding-inline: var(--od-x-space-half);
+  border-radius: 50%;
+  background: var(--od-action);
+  color: var(--od-action-foreground);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bi-route-mark[data-kind='business'] {
+  min-inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  background: var(--od-success-functional);
+}
+
+.odc-bi-route-mark[data-kind='customer'] {
+  min-inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon-lg);
+  background: var(--od-danger-signal);
+}
+
+.odc-bi-route-distance {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-body);
+}

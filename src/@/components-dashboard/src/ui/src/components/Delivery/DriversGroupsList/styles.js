@@ -12,31 +12,31 @@ export const TableWrapper = styled.div`
 export const GroupsTable = styled.table`
   width: calc(100% - 10px);
   min-width: 900px;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 
   td, th {
     padding: 13px 0;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
   thead {
     tr {
-      border-bottom: solid 1px ${props => props.theme.colors.disabled};
+      border-bottom: solid 1px ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.disabled};
     }
   }
 
   tbody {
-    border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
     ${({ disabled }) => !disabled && css`
       cursor: pointer;
       &:hover {
-        background-color: ${props => props.theme.colors.lightPrimary};
+        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};
       }
       &.active {
-        background-color: ${props => props.theme.colors.lightPrimary};
+        background-color: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors?.lightPrimary};
         td {
-          border-top: 1px solid ${props => props.theme.colors.primary};
-          border-bottom: 1px solid ${props => props.theme.colors.primary};
+          border-top: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
+          border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
         }
       }
     `}
@@ -44,7 +44,7 @@ export const GroupsTable = styled.table`
 `
 
 export const BorderWrapper = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   ${({ isHeader }) => isHeader
 ? css`
     font-weight: 700;
@@ -57,12 +57,12 @@ export const BorderWrapper = styled.div`
 ? css`
       margin-left: 20px;
       padding-left: 10px;
-      border-left: 1px solid ${props => props.theme.colors.borderColor};
+      border-left: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
     `
 : css`
       margin-right: 20px;
       padding-right: 10px;
-      border-right: 1px solid ${props => props.theme.colors.borderColor};
+      border-right: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
     `}  
   `}
 `
@@ -72,29 +72,46 @@ export const GroupNameContainer = styled(BorderWrapper)`
   align-items: center;
 
   > p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
   }
 `
 
-export const CheckBoxWrapper = styled.div`
+export const CheckBoxWrapper = styled.button`
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
   cursor: pointer;
   svg {
     font-size: 24px;
-    color: #B1BCCC;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? '#B1BCCC'};
   }
 
   ${({ isChecked }) => isChecked && css`
     svg {
-      color: ${props => props.theme.colors?.primary};
+      color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
     }
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
+    outline-offset: 2px;
+  }
 `
 
 export const DriverManagerContainer = styled(BorderWrapper)`
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   font-weight: 700;
 
   > div:first-child {
@@ -114,7 +131,7 @@ export const WrapperImage = styled.div`
   height: 45px;
   width: 45px;
   ${({ isSkeleton }) => !isSkeleton && css`
-    border: 1px solid #E3E3E3;
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};
   `}
   border-radius: 10px;
 
@@ -162,14 +179,14 @@ export const Image = (props) => {
 export const InfoBlock = styled.div`
   p {
     margin: 5px 0 0 0;
-    font-size: 12px;
-    color: ${props => props.theme.colors.lightGray};
+    font-size: var(--od-type-secondary-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
   }
   p.bold {
     margin: 0px;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
-    color: ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
 `
 
@@ -193,8 +210,8 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
-    color: ${props => props.theme.colors.headingColor};
+    font-size: var(--od-type-secondary-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 
     ${props => props.theme?.rtl
 ? css`

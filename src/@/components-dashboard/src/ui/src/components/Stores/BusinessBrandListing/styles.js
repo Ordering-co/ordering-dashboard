@@ -42,7 +42,7 @@ export const HeaderTitleContainer = styled.div`
   display: flex;
   align-items: center;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0;
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};
@@ -95,7 +95,7 @@ export const BrandListTable = styled.table`
     border-bottom: 1px solid ${props => props.theme.colors.secundaryLight};
     th {
       padding: 10px 0;
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
     }
   }
 
@@ -129,7 +129,7 @@ export const BrandBody = styled.tbody`
 
   td {
     padding: 7px 0;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
     input {
       border: none;
       width: 100%;
@@ -174,7 +174,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -236,7 +236,7 @@ export const BrandGeneralInfo = styled.div`
 
 export const InfoBlock = styled.div`
   p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin: 0;
     color: ${props => props.theme?.colors.headingColor};
   }
@@ -277,7 +277,7 @@ export const DetailHeder = styled.div`
     align-items: center;
     > span {
       font-weight: bold;
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
     }
     label {
       margin: 0 20px;
@@ -292,8 +292,13 @@ export const TabContainer = styled.div`
 `
 
 export const Tab = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   padding: 10px 0px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   cursor: pointer;
   color: ${props => props.theme.colors?.headingColor};
   white-space: nowrap;
@@ -312,8 +317,19 @@ export const Tab = styled.div`
 
   ${({ active }) => !active && css`
     color: ${props => props.theme?.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
 `
 
 export const ActionSelectorWrapper = styled.div`
@@ -339,7 +355,7 @@ export const ActionSelectorWrapper = styled.div`
     .list {
       .list-wrapper {
         > div {
-          font-size: 14px;
+          font-size: var(--od-type-control-size);
           color: #E63757;
           padding-top: 0;
           padding-bottom: 0;

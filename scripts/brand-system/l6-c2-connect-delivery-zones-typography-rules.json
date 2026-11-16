@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c2-connect-delivery-zones-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "c2-connect-delivery-zones-driversgroupautoassignservice-checkboxwrapper--585793",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "c2-connect-delivery-zones-driversgroupautoassignservice-fieldcontainer-l-30c4a5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "c2-connect-delivery-zones-pres-driversgroupautoassignservice-autoassigncontai-ef9bc5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "AutoassignContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "AutoassignContainer h1: el componente esta VIVO y envuelve todo, pero su index.js no renderiza ningun <h1> en ninguna rama."
+    },
+    {
+      "id": "c2-connect-delivery-zones-pres-driversgroupautoassignservice-autoassignitem-p-e7e368",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "AutoassignItem",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "AutoassignItem p: sin importar en esa fila."
+    },
+    {
+      "id": "c2-connect-delivery-zones-pres-driversgroupautoassignservice-forcedassignsett-f23b6f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "ForcedAssignSettingWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "ForcedAssignSettingWrapper p: sin importar en esa fila."
+    },
+    {
+      "id": "c2-connect-delivery-zones-pres-driversgroupautoassignservice-maxdistancecusto-307e70",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "MaxDistanceCustomerContainer",
+      "property": "font-size",
+      "context": "> div:first-child > p > &:first-child",
+      "match": "14px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "MaxDistanceCustomerContainer: sin importar en esa fila."
+    },
+    {
+      "id": "c2-connect-delivery-zones-pres-driversgroupautoassignservice-maxdistancecusto-564274",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/DriversGroupAutoassignService/styles.js",
+      "component": "MaxDistanceCustomerContainer",
+      "property": "font-size",
+      "context": "> div:first-child > p > &:not(:first-child)",
+      "match": "12px",
+      "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+      "evidence": "MaxDistanceCustomerContainer, segundo contexto del mismo export sin importar."
+    }
+  ]
+}

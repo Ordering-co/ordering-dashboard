@@ -1,25 +1,23 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
+
+import { getOrderingAction } from '~/brand/adapter'
 
 export const HelperContent = styled.div`
   display: flex;
   align-items: center;
 
   > span {
-    color: ${props => props.theme.colors.primary};
-    font-size: 20px;
+    color: ${props => getOrderingAction(props.theme) ?? props.theme.colors.primary};
+    font-size: var(--od-type-identifier-size);
+    font-family: var(--od-type-identifier-font);
+    font-variant-ligatures: var(--od-type-identifier-ligatures);
     line-height: 30px;
     font-weight: 600;
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 13px;
-    `
-: css`
-      margin-right: 13px;
-    `}
+    margin-inline-end: 13px;
   }
   p {
     flex: 1;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin: 0;
 
@@ -31,6 +29,6 @@ export const HelperContent = styled.div`
   > svg {
     color: #FFC700;
     font-size: 30px;
-    margin-right: 20px;
+    margin-inline-end: 20px;
   }
 `

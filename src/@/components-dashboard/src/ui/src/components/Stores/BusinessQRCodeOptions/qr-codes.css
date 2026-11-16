@@ -1,0 +1,103 @@
+/*
+ * redesign stores 5.15a · QR codes of a store on P/SectionSplit: the title and one row per order type; the SectionSplit
+ * draws the detail's title and its X / «‹ Back». Values: --od-* and --od-x-* only, logical properties only.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (stores-2-b-section-split/decisions.md, instructions 3 and 3b): the detail is sticky to that scroller. Prefix: odc-qr-*.
+ */
+
+.odc-qr {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (min-width: 576px) {
+  .odc-qr {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-qr-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-qr-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* ── Rows ── */
+.odc-qr-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-qr-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-3) var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-qr-row:hover { background: var(--od-x-hover); }
+
+/* The row open in the detail. aria-current says it; the fill and the weight back it up (never colour alone). */
+.odc-qr-row[aria-current='true'] { background: var(--od-x-selected); }
+.odc-qr-row[aria-current='true'] .odc-qr-name-text { font-weight: var(--od-font-weight-semibold); }
+
+/* The name: a native button whose ::after covers the row, so a click anywhere on it opens the detail, as in main. */
+.odc-qr-name {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-qr-name::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Inside a row the ring is inset so the list never clips it */
+.odc-qr-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-qr-name-text {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-qr-chevron.odc-icon {
+  flex: none;
+  color: var(--od-text-muted);
+}

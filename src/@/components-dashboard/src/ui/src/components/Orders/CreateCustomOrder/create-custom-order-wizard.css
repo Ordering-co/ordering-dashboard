@@ -1,0 +1,80 @@
+/*
+ * Create custom order, the parts of the wizard that only exist for this form (redesign W0-2c): the
+ * Sheet that hosts it, the slot for its footer, and the classes the four steps put on their panels,
+ * notices, map and fields. The generic frame (steps, step title, summary, footer) is
+ * Shared/Product/Wizard/wizard.css. Values come from --od-* and --od-x-* only. Logical properties only (C17).
+ * What goes inside each step is drawn by ./steps.css (batch 5.5-B).
+ */
+
+/* ── Sheet: 760px from 1024px, the whole width below (C8) ── */
+.odc-sheet.odc-wizard-sheet[data-side='end'] {
+  inline-size: var(--od-x-wizard);
+}
+
+@media (max-width: 1023px) {
+  .odc-sheet.odc-wizard-sheet[data-side='end'] {
+    inline-size: 100%;
+  }
+}
+
+.odc-wizard-sheet .odc-overlay-title {
+  font-size: var(--od-x-type-title-size);
+}
+
+.odc-wizard-sheet .odc-overlay-body {
+  color: var(--od-text);
+}
+
+/* The Sheet foot is a slot for the wizard footer. */
+.odc-wizard-foot-slot {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odc-wizard-panel[hidden] {
+  display: none;
+}
+
+/* redesign fix-qa E9: a notice at the top of a step keeps air from the content below it */
+.odc-wizard-notice {
+  margin-block-end: var(--od-space-3);
+}
+
+/* redesign F6e (P5-01): the options failure and the order type failure are two notices, one above the other */
+.odc-wizard-notices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+/* redesign fix-qa E9: the business map is a contained box: token height, hairline and brand radius */
+.odc-wizard-map {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-wizard-map > * {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: var(--od-x-wizard-map);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-wizard-field + .odc-wizard-field,
+.odc-wizard-block-gap {
+  margin-block-start: var(--od-space-4);
+}
+
+.odc-wizard-payment-line {
+  display: flex;
+  gap: var(--od-space-2);
+  margin: 0 0 var(--od-space-2);
+  color: var(--od-text);
+}
+
+.odc-wizard-payment-line > span:first-child {
+  color: var(--od-text-muted);
+}

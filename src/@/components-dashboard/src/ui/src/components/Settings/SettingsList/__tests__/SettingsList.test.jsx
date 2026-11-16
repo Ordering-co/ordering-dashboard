@@ -1,6 +1,6 @@
 import React from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
@@ -356,7 +356,8 @@ describe('SettingsListUI', () => {
         category: { key: 'addon_catering' }
       })
 
-      expect(screen.getByText('Set Minimum Preorder Days')).toBeTruthy()
+      // redesign (owner decision 32 A): the hub names this key as settingsConfigNames.js does, whatever the API sends
+      expect(screen.getByText('Set minimum preorder days')).toBeTruthy()
       expect(screen.getByText('Order type')).toBeTruthy()
       expect(screen.getByText('Days')).toBeTruthy()
       expect(screen.getByText('Delivery')).toBeTruthy()
@@ -390,7 +391,7 @@ describe('SettingsListUI', () => {
         category: { key: 'addon_multi_business_checkout' }
       })
 
-      const master = screen.getByText('Enable Multi-Business Checkout')
+      const master = screen.getByText('Enable multi-business checkout') // (decision 32 A): the dashboard's name
       const block = screen.getByText('Delivery fee discount by cart')
       expect(master.compareDocumentPosition(block) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     })
@@ -418,9 +419,131 @@ describe('SettingsListUI', () => {
         category: { key: 'store_reservation' }
       })
 
-      const master = screen.getByText('Reservation Enabled')
+      const master = screen.getByText('Reservation enabled') // (decision 32 A): the dashboard's name
       const block = screen.getByText('Reservation setting')
       expect(master.compareDocumentPosition(block) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+  })
+
+  // redesign stores 5.12 (ceded by the coordinator): the default text of VALIDATION_ERROR_NUMERIC is the catalog's
+  // («The _attribute_ must be a number.»), filled with the field's name; a template literal there became the catalog's English.
+  it('names the field when a platform fee is not a number', async () => {
+    const handleClickUpdate = vi.fn()
+    const fee = { id: 20, key: 'platform_fee_percentage', name: 'Platform fee percentage', type: 1, value: 'abc' }
+    const props = listProps({
+      configs: [fee],
+      focus: '',
+      category: { key: 'platform_fees' },
+      settingsState: { loading: false, error: null, API: false, changes: [fee] },
+      handleClickUpdate
+    })
+    renderWithProviders(<SettingsListUI {...props} formState={{ changes: [fee] }} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }))
+    // (decision 32 A): the dashboard's name of platform_fee_percentage
+    expect(await screen.findByText(/The Percentage platform fee must be a number\./)).toBeTruthy()
+    expect(screen.queryByText(/_attribute_|\$\{/)).toBeNull()
+    expect(handleClickUpdate).not.toHaveBeenCalled()
+  })
+
+  // redesign D-81 (R-3, owner, 2026-10-19): the optional `leaveGuard` registers this form in a page's leave host.
+  describe('leaveGuard (a page that asks before a way out with unsaved work)', () => {
+    const title = { id: 301, key: 'dashboard_title', name: 'Title', type: 1, value: 'Acme Admin-EU' }
+    const hiddenDependent = { id: 2, key: 'facebook_id', name: 'Facebook Application ID', type: 1, value: 'x' }
+    const master = { id: 1, key: 'facebook_login_enabled', name: 'Enable Facebook Login', type: 2, value: '0', options: yesNo }
+
+    const setup = (overrides = {}) => {
+      const holder = { entry: null }
+      const register = vi.fn((ref) => { holder.entry = ref; return () => { holder.entry = null } })
+      const onCountChange = vi.fn()
+      const handleClickUpdate = vi.fn()
+      const handleDiscardChanges = vi.fn()
+      const build = ({ changes = [], result } = {}, extra = {}) => (
+        <SettingsListUI
+          {...listProps({
+            configs: [title],
+            focus: '',
+            category: { key: 'dashboard_theme' },
+            settingsState: { loading: false, error: null, API: false, changes, result },
+            handleClickUpdate
+          })}
+          formState={{ changes }}
+          handleDiscardChanges={handleDiscardChanges}
+          leaveGuard={{ register, onCountChange }}
+          {...overrides}
+          {...extra}
+        />
+      )
+      return { holder, register, onCountChange, handleClickUpdate, handleDiscardChanges, build }
+    }
+
+    it('registers one entry, clean until a change is pending, and counts the changes', () => {
+      const { holder, register, onCountChange, build } = setup()
+      const view = renderWithProviders(build())
+      expect(register).toHaveBeenCalledTimes(1)
+      expect(holder.entry.current.isDirty()).toBe(false)
+      expect(holder.entry.current.count()).toBe(0)
+      view.rerender(build({ changes: [title] }))
+      expect(holder.entry.current.isDirty()).toBe(true)
+      expect(holder.entry.current.count()).toBe(1)
+      expect(onCountChange).toHaveBeenLastCalledWith(1)
+      view.unmount()
+      expect(onCountChange).toHaveBeenLastCalledWith(0)
+      expect(holder.entry).toBeNull()
+    })
+
+    it('does not count a change to a dependent hidden by its master (it is never sent)', () => {
+      const { holder, build } = setup()
+      renderWithProviders(build({ changes: [{ ...hiddenDependent, value: 'y' }] }, { configs: [master, hiddenDependent] }))
+      expect(holder.entry.current.isDirty()).toBe(false)
+    })
+
+    it('without a leaveGuard nothing is registered and nothing is reported', () => {
+      const { register, onCountChange, build } = setup()
+      renderWithProviders(build({ changes: [title] }, { leaveGuard: undefined }))
+      expect(register).not.toHaveBeenCalled()
+      expect(onCountChange).not.toHaveBeenCalled()
+    })
+
+    it('Discard is the controller\'s handleDiscardChanges', () => {
+      const { holder, handleDiscardChanges, build } = setup()
+      renderWithProviders(build({ changes: [title] }))
+      holder.entry.current.discard()
+      expect(handleDiscardChanges).toHaveBeenCalledTimes(1)
+    })
+
+    it('Save runs the same submit as the Save button, and answers {ok: true} once the chain of PUTs is over', async () => {
+      const { holder, handleClickUpdate, build } = setup()
+      const view = renderWithProviders(build({ changes: [title] }))
+      let answer
+      act(() => { holder.entry.current.save().then(value => { answer = value }) })
+      expect(handleClickUpdate).toHaveBeenCalledTimes(1)
+      view.rerender(build({ changes: [title] }, { saving: true, settingsState: { loading: false, error: null, API: true, changes: [title] } }))
+      await act(async () => {})
+      expect(answer).toBeUndefined()
+      view.rerender(build({ changes: [], result: { error: false, result: 'ok' } }))
+      await act(async () => {})
+      expect(answer).toEqual({ ok: true })
+    })
+
+    it('Save answers {ok: false} when the API refused (the person stays with the changes)', async () => {
+      const { holder, build } = setup()
+      const view = renderWithProviders(build({ changes: [title] }))
+      let answer
+      act(() => { holder.entry.current.save().then(value => { answer = value }) })
+      view.rerender(build({ changes: [title] }, { saving: true, settingsState: { loading: false, error: null, API: true, changes: [title] } }))
+      view.rerender(build({ changes: [title], result: { error: true, result: ['Title taken'] } }))
+      await act(async () => {})
+      expect(answer).toEqual({ ok: false })
+    })
+
+    it('Save answers {ok: false} at once when a rule stops it, and sends nothing', async () => {
+      const { holder, handleClickUpdate, build } = setup()
+      const fee = { id: 20, key: 'platform_fee_percentage', name: 'Platform fee percentage', type: 1, value: 'abc' }
+      renderWithProviders(build({ changes: [fee] }, { configs: [fee] }))
+      let answer
+      await act(async () => { answer = await holder.entry.current.save() })
+      expect(answer).toEqual({ ok: false })
+      expect(handleClickUpdate).not.toHaveBeenCalled()
     })
   })
 })

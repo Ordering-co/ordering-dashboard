@@ -24,7 +24,7 @@ export const PropertyOption = styled.div`
 
   label:first-child {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     width: calc(100% - 50px);
   }
 `
@@ -45,7 +45,7 @@ export const EmptyWrapper = styled.div`
 `
 
 export const Option = styled.div`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   /* white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -63,7 +63,7 @@ export const OptionCenter = styled.div`
   justify-content: center;
   align-items: center;
   flex: 1;
-  font-size: 16px;
+  font-size: var(--od-type-control-value-size);
   font-weight: 600;
   ${({ padding }) => padding && css`
     padding: 5px 0;
@@ -76,7 +76,7 @@ export const OptionCenter = styled.div`
 export const LabelCustom = styled.label`
   margin-top: 30px;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
 `
 
 export const ButtonGroup = styled.div`
@@ -131,7 +131,7 @@ export const WrapperRow = styled.div`
   }
 
   .date-filter-container {
-    z-index: 100;
+    z-index: var(--od-x-layer-sticky);
   }
 
   > input {
@@ -210,7 +210,7 @@ export const WeightWrapper = styled.div`
   .select {
     width: 40%;
     padding-top: 3.5px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
 
     .list {
       padding-top: 7px;
@@ -229,7 +229,7 @@ export const PricePerUnit = styled.div`
   align-items: center;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin: 0;
     margin-right: 15px;
     ${props => props.theme?.rtl && css`
@@ -239,7 +239,7 @@ export const PricePerUnit = styled.div`
   }
   
   .select {
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     padding: 3.5px;
     .list {
       padding-top: 7px;

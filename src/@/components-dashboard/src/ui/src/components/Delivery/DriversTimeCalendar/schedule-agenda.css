@@ -1,0 +1,170 @@
+/*
+ * The phone agenda of the drivers' time calendar (redesign DT-B3): a card per driver and a row per day under it. Nothing scrolls
+ * sideways: the rows stack and the text wraps. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no
+ * second set of rules.
+ */
+
+.odc-sa { min-inline-size: 0; }
+
+.odc-sa-list,
+.odc-sa-days,
+.odc-sa-blocks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sa-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+/* ── The card of a driver ── */
+.odc-sa-card {
+  min-inline-size: 0;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sa-person {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-3);
+}
+
+.odc-sa-ident {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-sa-name {
+  display: block;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  overflow-wrap: anywhere;
+}
+
+.odc-sa-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-sa-email {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ── A row per day ── */
+.odc-sa-day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-sa-day[aria-current='date'] { background: var(--od-surface-subtle); }
+
+.odc-sa-date {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-sa-day[aria-current='date'] .odc-sa-date {
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-sa-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sa-blocks {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sa-none {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-sa-add { flex: none; }
+
+/* A block: the name and hours, and the break under them, wrapping as it needs */
+.odc-sa-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-x-space-half);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-action-content);
+  border-radius: var(--od-radius-control);
+  background: var(--od-action-soft);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-sa-block:hover { border-color: var(--od-action); }
+
+.odc-sa-block-main { overflow-wrap: anywhere; }
+.odc-sa-block-name { font-weight: var(--od-font-weight-medium); }
+
+.odc-sa-break {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-sa-block:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/*
+ * Touch (decision 12): the block is seen at its size and reached at 44×44 by a centred pseudo-element that never shrinks a control
+ * already larger. «Add block» is a Product button, which does the same.
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-sa-block::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}

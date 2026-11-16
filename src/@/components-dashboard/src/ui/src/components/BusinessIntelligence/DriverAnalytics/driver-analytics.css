@@ -1,0 +1,39 @@
+/*
+ * /intelligence/drivers (redesign drivers FC2): what this page needs that business-analytics.css does not give it.
+ * The page, controls, sections, grid, summary and map block are the classes of Business (odc-bi-page (its head is P/PageHeader),
+ * odc-bi-controls, odc-bi-section, odc-bi-grid, odc-bi-summary, odc-bi-map*), imported by index.js; the cards are the kit's
+ * (AnalyticsKit/analytics-kit.css) and the figures are P/Metric. Nothing is copied (D10), and nothing is needed on top yet:
+ * the seven figures take the four columns of P/MetricGrid, the five charts and the ranking sit in the two-column grid.
+ * Rules that this page adds go here, with --od-* and --od-x-* only (the literal guard governs this file), logical properties only
+ * (RTL), classes odc-bi-*, and the breakpoints of C/utils/breakpoints.js as literals in @media (phone < 768, two columns from 1024).
+ */
+
+/* redesign drivers FC2 (live check a1): on a phone the four-column figures sit two by two, so their value takes the title size; at
+   display size a price («$ 2,846.94») and a duration («1 h 17 min») broke into two lines at 390, as Business saw with six */
+@media (max-width: 767px) {
+  .odc-bi-drivers-summary .odc-metric-value {
+    font-size: var(--od-x-type-title-size);
+  }
+}
+
+/* redesign drivers FC2 (live check a1): the Drivers section has three cards in two columns; the last one takes the whole row
+   instead of leaving half of it empty */
+@media (min-width: 1024px) {
+  .odc-bi-drivers-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* redesign drivers R1 (F2): «Expand» must enlarge. The `lg` dialog (720) and its chart (the card's height) were smaller than the card; `main`
+   opened a modal of 70% of the width. From 768 the dialog takes 70vw (never more than the viewport minus its gaps) and its chart 60vh (the
+   height comes from the variable of P/chart.css). `[data-size]` keeps this rule above `.odc-dialog[data-size='lg']` whatever the CSS order. */
+@media (min-width: 768px) {
+  .odc-dialog.odc-bi-chart-dialog[data-size] {
+    inline-size: 70vw;
+    max-inline-size: calc(100vw - 2 * var(--od-x-viewport-gap));
+  }
+
+  .odc-bi-chart-dialog .odc-chart {
+    --odc-chart-height: 60vh;
+  }
+}

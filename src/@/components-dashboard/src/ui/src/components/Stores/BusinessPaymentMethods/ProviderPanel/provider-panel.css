@@ -1,0 +1,88 @@
+/*
+ * redesign stores 5.9 · ProviderPanel: the body of the detail of one payment gateway (tabs, credentials, channels, order
+ * types, devices and the save bar). It sits inside P/SectionSplit's detail, which owns the scroll and the sticky box: so no overflow,
+ * no size container and no transform here (instructions 3 and 3b of stores-2-b-section-split/decisions.md).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * Prefix: odc-pp-*.
+ */
+
+.odc-pp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+}
+
+/* The content of the tab that is open */
+.odc-pp-body {
+  display: grid;
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+}
+
+/* The mode and its one-line hint */
+.odc-pp-mode {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-pp-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A group of credentials (Live, Sandbox) or the fields of the active mode */
+.odc-pp-group {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-pp-group-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Channels, order types and devices: one checkbox per line */
+.odc-pp-list {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-pp-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign stores 5.10a: `generalAfter`, the configs that save by themselves (Stripe Link's Twilio options); a select with a
+   visible label that names its trigger (the legacy select is not a labelable control, so the label is a span and aria-labelledby). */
+.odc-pp-configs {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-pp-config {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-pp-config-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}

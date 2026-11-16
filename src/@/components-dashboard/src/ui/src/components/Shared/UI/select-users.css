@@ -1,0 +1,40 @@
+/* Scoped SelectUsers surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-select-users) {
+  box-sizing: border-box;
+  margin-top: 27px;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-select-users) > .od-button {
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+  margin-top: 20px;
+}
+
+.od-ui:where(.od-entity-selector-search) {
+  margin-bottom: 15px;
+}
+
+.od-ui:where(.od-entity-selector-row) {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--od-entity-selector-border);
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-select-users-row) > span.name {
+  min-width: 0;
+  margin-inline-start: 14px;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-select-users-pagination) {
+  @apply od-flex od-justify-end;
+  margin-top: 15px;
+}

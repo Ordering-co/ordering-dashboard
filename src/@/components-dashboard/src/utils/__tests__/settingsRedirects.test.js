@@ -5,7 +5,8 @@ import {
   SETTINGS_LEGACY_REDIRECTS,
   buildSettingsPath,
   getSettingsRedirectPath,
-  isSettingsHubPath
+  isSettingsHubPath,
+  resolveSettingsCategoryAlias
 } from '../settingsRedirects'
 
 describe('buildSettingsPath', () => {
@@ -41,8 +42,22 @@ describe('getSettingsRedirectPath', () => {
   it('keeps an incoming category or group from the old URL', () => {
     expect(getSettingsRedirectPath('/all-settings', '?category=user_information'))
       .toBe('/settings?category=user_information')
-    expect(getSettingsRedirectPath('/settings/basic', '?category=12'))
-      .toBe('/settings?group=platform&category=12')
+    expect(getSettingsRedirectPath('/settings/basic', '?group=locations&category=12'))
+      .toBe('/settings?group=locations&category=12')
+  })
+
+  // the default group of the old page is a guess; the hub fills in the group of the named category
+  it('does not pair the old page default group with a category the old URL named', () => {
+    expect(getSettingsRedirectPath('/settings/enterprise', '?category=enterprise_orders_slas'))
+      .toBe('/settings?category=enterprise_orders_slas')
+    expect(getSettingsRedirectPath('/settings/basic', '?category=12')).toBe('/settings?category=12')
+    expect(getSettingsRedirectPath('/settings/enterprise')).toBe('/settings?group=drivers')
+  })
+
+  it('sends the empty basic_maps folder to google_maps, where Maps lives', () => {
+    expect(resolveSettingsCategoryAlias('basic_maps')).toBe('google_maps')
+    expect(resolveSettingsCategoryAlias('stripe')).toBeNull()
+    expect(getSettingsRedirectPath('/settings/basic', '?category=basic_maps')).toBe('/settings?category=google_maps')
   })
 })
 

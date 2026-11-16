@@ -124,6 +124,11 @@ What still needs a decision is new UI. `utils/__tests__/commandPaletteSurfaces.t
 
 When it fails, run `pnpm palette:coverage`, then either add the palette entry and mark the surface `indexed` with its `proof`, or mark it `record` / `list` / `excluded` with the reason. A new page, panel, tab or create form can't ship without that decision.
 
+In store selection mode, Escape or Backspace on an empty input returns to the
+previous query. Only offer the Stores search hand-off when the user can open
+`/stores/list`; pass its query as `q` so the list applies the same search. Classify
+new surfaces with the existing coverage test.
+
 ## Add a destination
 
 - **A new page:** add it to the sidebar section in `getDashboardNavSections` (or `getDashboardFooterLinks`), add its guard to `DASHBOARD_ROUTE_LEVELS`, and add aliases in `NAV_ALIASES`.

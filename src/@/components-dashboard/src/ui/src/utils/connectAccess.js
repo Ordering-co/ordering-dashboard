@@ -6,6 +6,13 @@ export const POS_SETUP_CALL_PROVIDERS = [
   { name: 'Deliverect', logoKey: 'deliverect', aliases: ['deliverect'] }
 ]
 
+export const SALES_CHANNEL_CONTACT_URL = 'https://www.ordering.co/contact/'
+
+export const SALES_CHANNEL_CONTACT_PROVIDERS = [
+  { name: 'Rappi', aliases: ['rappi'] },
+  { name: 'Uber Eats', aliases: ['ubereats'] }
+]
+
 export const CONNECT_BUSINESS_OWNER_PAGES = ['pos_menu']
 
 export const getConnectAllowedLevels = (pageName) =>
@@ -42,16 +49,22 @@ const normalizeIdentifier = (value) =>
     .toLowerCase()
     .replace(/[\s_-]+/g, '')
 
-export const isSetupCallIntegration = (integration) => {
+const matchesProvider = (integration, providers) => {
   const identifiers = [
     integration?.plugin?.key,
     integration?.plugin_root,
     integration?.name
   ].map(normalizeIdentifier)
 
-  return POS_SETUP_CALL_PROVIDERS.some((provider) =>
+  return providers.some((provider) =>
     identifiers.some((id) =>
       provider.aliases.some((alias) => id === alias || id.includes(alias))
     )
   )
 }
+
+export const isSetupCallIntegration = (integration) =>
+  matchesProvider(integration, POS_SETUP_CALL_PROVIDERS)
+
+export const isContactUsSalesChannel = (integration) =>
+  matchesProvider(integration, SALES_CHANNEL_CONTACT_PROVIDERS)

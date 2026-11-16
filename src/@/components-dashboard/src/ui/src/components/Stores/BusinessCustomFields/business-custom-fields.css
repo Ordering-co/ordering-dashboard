@@ -1,0 +1,25 @@
+/*
+ * redesign stores 5.16 (; G2-31, G2-32) · The custom fields of a store: an h1 over S/MetaFieldsEditor, which owns the list, the
+ * add form and the delete confirmation (and its own CSS). Values: --od-* and --od-x-* only, logical properties only. The title is the
+ * one of the other sections of the store editor (QR codes, Sales channels, Notifications, Front layout: same size, leading, tracking
+ * and semibold weight). Prefix: odc-bcf-*.
+ */
+
+.odc-bcf {
+  display: grid;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-bcf-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}

@@ -13,7 +13,7 @@ export const DriversGroupOrders = (props) => {
   const [maxTimeBetweenDelivery, setMaxTimeBetweenDelivery] = useState({})
 
   const getHours = (seconds) => {
-    return (seconds * 1) / 3600 > 1 ? Math.floor((seconds * 1) / 3600) : 0
+    return (seconds * 1) / 3600 >= 1 ? Math.floor((seconds * 1) / 3600) : 0 // 3600 s is 1 h, not 0 h
   }
   const getMinutes = (seconds) => {
     return Math.floor((seconds - Math.floor(seconds / 3600) * 3600) / 60)

@@ -1,0 +1,678 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-a1-campaigns-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "a1-campaigns-campaignamountoption-title-root-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignAmountOption/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignamountoption-radiocheckwrapper-div-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignAmountOption/styles.js",
+      "component": "RadioCheckWrapper",
+      "property": "font-size",
+      "context": "> button > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignamountoption-subtitle-root-16px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignAmountOption/styles.js",
+      "component": "SubTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetail-campaigndetailcontainer-info-campaign-ended-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "CampaignDetailContainer",
+      "property": "font-size",
+      "context": ".info-campaign-ended > > p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetail-campaignname-root-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "CampaignName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetail-actionselectorwrapper-div-div-dropdown-item-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetail-tab-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetail-contactwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "ContactWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-selectwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-selectwrapper-div-div-first-child-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "SelectWrapper",
+      "property": "font-size",
+      "context": "> div > > div:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-option-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-audiencewrapper-h2-16px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "AudienceWrapper",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-radiocheckwrapper-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "RadioCheckWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-switchwrapper-campaign-enabled-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "SwitchWrapper",
+      "property": "font-size",
+      "context": "> .campaign-enabled",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-dynamiccontentwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "DynamicContentWrapper",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-fixedcontent-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "FixedContent",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-fixedcontent-h3-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "FixedContent",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-fixedstatuswrapper-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "FixedStatusWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-ruleswrapper-h2-16px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "RulesWrapper",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-ruleswrapper-p-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "RulesWrapper",
+      "property": "font-size",
+      "context": "> p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-checkboxwrapper-div-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "CheckBoxWrapper",
+      "property": "font-size",
+      "context": "> div > p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaigndetailgeneral-enddatewrapper-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetailGeneral/styles.js",
+      "component": "EndDateWrapper",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignemail-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "> label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignemail-inputwrapper-container-title-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": ".container-title > > label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignemail-description-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignemail-contactwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "ContactWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignheader-headertitle-root-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignHeader/styles.js",
+      "component": "HeaderTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignheader-infocontent-root-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignHeader/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignlist-table-th-td-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignList/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th,\n  td",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignlist-table-th-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignList/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignlist-switchwrapper-campaign-enabled-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignList/styles.js",
+      "component": "SwitchWrapper",
+      "property": "font-size",
+      "context": "> .campaign-enabled",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignlist-statuswrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignList/styles.js",
+      "component": "StatusWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignnotification-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignNotification/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignnotification-description-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignNotification/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignnotification-contactwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignNotification/styles.js",
+      "component": "ContactWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignpopup-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignsms-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSMS/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignsms-description-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSMS/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignsms-contactwrapper-p-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSMS/styles.js",
+      "component": "ContactWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignsignupoption-title-root-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSignUpOption/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignsignupoption-radiocheckwrapper-div-span-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSignUpOption/styles.js",
+      "component": "RadioCheckWrapper",
+      "property": "font-size",
+      "context": "> button > span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignuserslist-title-h1-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignUsersList/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignuserslist-table-th-td-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignUsersList/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "th,\n  td",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignuserslist-thead-tr-th-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignUsersList/styles.js",
+      "component": "THead",
+      "property": "font-size",
+      "context": "tr > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignwebhook-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignWebHook/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignwebhook-description-root-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignWebHook/styles.js",
+      "component": "Description",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "a1-campaigns-campaignwhatsapp-inputwrapper-label-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignWhatsapp/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "a1-campaigns-pres-campaignamountoption-arrowiconswrapper-svg-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignAmountOption/styles.js",
+      "component": "ArrowIconsWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "12px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "ArrowIconsWrapper svg: the up/down arrow glyphs of the amount stepper."
+    },
+    {
+      "id": "a1-campaigns-pres-campaigndetail-actionselectorwrapper-button-svg-20px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignDetail/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "ActionSelectorWrapper button > svg: the kebab action-menu glyph."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignemail-emailpreviewcontent-h2-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "EmailPreviewContent",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "14px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "EmailPreviewContent > h2 renders contact_data.title, the subject line of the email that will be sent."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignemail-emailpreviewcontent-p-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "EmailPreviewContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "EmailPreviewContent p styles the paragraphs of contact_data.body, injected through dangerouslySetInnerHTML: it is the author's email copy, not dashboard text."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignemail-wrappereditor-note-editor-note-dropdown-menu-h1-36px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignEmail/styles.js",
+      "component": "WrapperEditor",
+      "property": "font-size",
+      "context": ".note-editor > .note-dropdown-menu > h1",
+      "match": "36px",
+      "reason": "This font-size is the summernote editor's own sample of a text format, shown so the author can see what the format looks like; it is authored-content styling, not interface typography.",
+      "evidence": "The declaration lives under .note-editor > .note-dropdown-menu inside WrapperEditor, which is the third-party editor's format menu."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignnotification-smspreviewcontent-h2-10px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignNotification/styles.js",
+      "component": "SmsPreviewContent",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "10px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "SmsPreviewContent > h2 renders the campaign title inside the miniature phone mock of the push notification."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignnotification-smspreviewcontent-p-7px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignNotification/styles.js",
+      "component": "SmsPreviewContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "7px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "SmsPreviewContent p renders the campaign body inside the miniature phone mock of the push notification."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignpopup-emailpreviewcontent-h2-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "EmailPreviewContent",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "EmailPreviewContent > h2 requires a direct h2 child, and CampaignPopup/index.js renders only PopupContent there. It also sits inside the popup preview mock."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignpopup-emailpreviewcontent-p-12px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "EmailPreviewContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "EmailPreviewContent p styles the popup body paragraph inside the browser-chrome preview mock."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignpopup-popupcontent-p-10px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "PopupContent",
+      "property": "font-size",
+      "context": "> p",
+      "match": "10px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "PopupContent > p renders contact_data.body, the popup copy the customer will see."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignpopup-headerwrapper-h1-14px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "HeaderWrapper",
+      "property": "font-size",
+      "context": "> h1",
+      "match": "14px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "HeaderWrapper > h1 renders contact_data.title inside the popup preview mock."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignpopup-headerwrapper-svg-16px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignPopup/styles.js",
+      "component": "HeaderWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "HeaderWrapper svg: the CloseIcon glyph of the previewed popup. Two preservation reasons coincide here and the icon one is the narrower of the two: the node is an icon glyph, and it also sits inside the outgoing-message preview mock. Classified as icon-glyph because that is the established class and the one that survives if the preview mock is ever restructured."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignsms-smspreviewcontent-h2-10px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSMS/styles.js",
+      "component": "SmsPreviewContent",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "10px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "SmsPreviewContent > h2 renders the campaign title inside the miniature phone mock of the SMS. Byte-identical twin of CampaignNotification."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignsms-smspreviewcontent-p-7px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignSMS/styles.js",
+      "component": "SmsPreviewContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "7px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "SmsPreviewContent p renders the campaign body inside the miniature phone mock of the SMS. Byte-identical twin of CampaignNotification."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignuserslist-title-h1-span-16px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignUsersList/styles.js",
+      "component": "Title",
+      "property": "font-size",
+      "context": "h1 > > span",
+      "match": "16px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "Title h1 > span requires a span child of the h1; both call sites in CampaignList/index.js pass title={t(...)}, a plain string, so the span never renders."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignwhatsapp-whatsappmessagecontent-h2-10px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignWhatsapp/styles.js",
+      "component": "WhatsAppMessageContent",
+      "property": "font-size",
+      "context": "> h2",
+      "match": "10px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "WhatsAppMessageContent > h2 renders the campaign title inside the WhatsApp chat mock."
+    },
+    {
+      "id": "a1-campaigns-pres-campaignwhatsapp-whatsappmessagecontent-p-7px",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/CampaignWhatsapp/styles.js",
+      "component": "WhatsAppMessageContent",
+      "property": "font-size",
+      "context": "p",
+      "match": "7px",
+      "reason": "This font-size belongs to a facsimile of the message the recipient receives, not to the dashboard interface; migrating it would misrepresent what the campaign will actually send.",
+      "evidence": "WhatsAppMessageContent p renders the campaign body inside the WhatsApp chat mock."
+    }
+  ]
+}

@@ -42,11 +42,11 @@ export const GroupWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
 
   p {
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     ${props => props.theme?.rtl
 ? css`
       padding-right: 15px;

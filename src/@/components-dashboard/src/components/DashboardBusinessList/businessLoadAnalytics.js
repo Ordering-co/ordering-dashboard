@@ -10,10 +10,12 @@ export const getBusinessLoadOperation = ({ content, error, isInitialLoad = true 
   return { status: 'succeeded', ...BUSINESS_LOAD_OPERATION }
 }
 
+// redesign bugs C: a failed request is an error of the list (by a key the list translates, never the raw message: it
+// can carry private data); it used to be `error: null`, which the list read as «no stores». A cancelled one keeps the rows.
 export const getCaughtBusinessListState = ({ previousBusinesses = [], error } = {}) => ({
   loading: isCancellation(error),
   businesses: isCancellation(error) ? previousBusinesses : [],
-  error: null
+  error: isCancellation(error) ? null : ['NETWORK_ERROR']
 })
 
 export const getBusinessLoadStartedOperation = ({ isInitialLoad = true } = {}) => (

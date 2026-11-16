@@ -19,11 +19,13 @@ describe('business list load analytics', () => {
     expect(analytics.getBusinessLoadStartedOperation({ isInitialLoad: false })).toBeNull()
   })
 
-  it('preserves the public caught-error contract', () => {
+  // redesign bugs C: a request that failed said `error: null`, so the list read «no stores». It says there was an error
+  // now, by a key the list translates, never with the raw message.
+  it('a failed request is an error of the list (never its raw message); a cancelled one keeps the rows', () => {
     expect(analytics.getCaughtBusinessListState({
       previousBusinesses: [{ id: 1 }],
       error: new Error('private')
-    })).toEqual({ loading: false, businesses: [], error: null })
+    })).toEqual({ loading: false, businesses: [], error: ['NETWORK_ERROR'] })
     expect(analytics.getCaughtBusinessListState({
       previousBusinesses: [{ id: 1 }],
       error: { constructor: { name: 'Cancel' } }

@@ -402,7 +402,7 @@ export const ProductExtraOptions = (props) => {
     event.dataTransfer.setData('transferOptionId', option.id)
     const ghostElement = document.createElement('div')
     ghostElement.classList.add('ghostDragging')
-    ghostElement.innerHTML = option.name
+    ghostElement.textContent = option.name
     document.body.appendChild(ghostElement)
     event.dataTransfer.setDragImage(ghostElement, 0, 0)
     setIsOptionsBottom(false)

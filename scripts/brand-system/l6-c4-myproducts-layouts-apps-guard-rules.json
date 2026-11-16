@@ -1,0 +1,2685 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-c4-myproducts-layouts-apps-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-c4-myproducts-layouts-apps-advancedlayouts-index-js-34d728",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedLayouts/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-advancedlayouts-styles-js-016afa",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AdvancedLayouts/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "BoxLayout",
+            "property": "font-size",
+            "match": "16px",
+            "context": "h1, h2",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "BoxLayout",
+            "property": "font-size",
+            "match": "14px",
+            "context": "h3",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "DropShadow",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DropShadowWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 35px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FormControl",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> label",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "FormControlWithCheck",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font",
+            "match": "({ isBottom }) => isBottom && css`\n    margin-bottom: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "font",
+            "match": "({ isBig }) => isBig && css`\n    width: 100%;\n    height: 190px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ImgInfoWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "h4",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ImgInfoWrapper",
+            "property": "font-size",
+            "match": "12px",
+            "context": "p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Option",
+            "property": "font-size",
+            "match": "14px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> div > > div:first-child",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font-size",
+            "match": "12px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 7px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font-size",
+            "match": "12px",
+            "context": "input",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font-size",
+            "match": "12px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 5px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ bgimage }) => bgimage && css`\n    background: transparent;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "BoxLayout",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadow",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadow",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DropShadowWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 0px;\n      margin-right: 35px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FontWeightListWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color-block",
+            "match": "({ isBottom }) => isBottom && css`\n    margin-bottom: 25px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HideCheckWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HomeImageFullScreenWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageBoxContainer",
+            "property": "color-block",
+            "match": "({ isBig }) => isBig && css`\n    width: 100%;\n    height: 190px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImgInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "background",
+            "match": "props => props.theme.colors.gray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerShadow",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 13px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "#f2f5f7",
+            "context": "> div > .list > .list-wrapper > > div > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 7px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.gray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 0px;\n      margin-left: 5px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ShadowInputControl",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 0px;\n    margin-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ bgimage }) => bgimage && css`\n    background: transparent;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.white",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-applayout-index-js-de929c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AppLayout/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 5,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-applayout-styles-js-6132b9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/AppLayout/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "AppInfoContainer",
+            "property": "font-size",
+            "match": "32px",
+            "context": "@media (min-width: 1024px) > h2",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "AppInfoContainer",
+            "property": "font-size",
+            "match": "16px",
+            "context": "@media (min-width: 1024px) > p",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "AppInfoContainer",
+            "property": "font-size",
+            "match": "24px",
+            "context": "h2",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "AppInfoContainer",
+            "property": "font-size",
+            "match": "14px",
+            "context": "p",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "ContentWrapper",
+            "property": "font-size",
+            "match": "32px",
+            "context": "@media (min-width: 1024px) > > h1",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "ContentWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "@media (min-width: 1024px) > > p",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "ContentWrapper",
+            "property": "font-size",
+            "match": "24px",
+            "context": "> h1",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "ContentWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> p",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "HeaderInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ImageWrapper",
+            "property": "font",
+            "match": "({ isDriver }) => isDriver && css`\n    img {\n      max-width: 500px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "DownloadBadge",
+            "property": "font",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "DownloadBadge",
+            "property": "font",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "AppInfoContainer",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImageWrapper",
+            "property": "color-block",
+            "match": "({ isDriver }) => isDriver && css`\n    img {\n      max-width: 500px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DownloadBadge",
+            "property": "color-block",
+            "match": "brandFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${brandFocusRing} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          },
+          {
+            "component": "DownloadBadge",
+            "property": "color-block",
+            "match": "coarseHitArea",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Cierre 2026-10 (Parte 1, ola 1.4). The interpolation ${coarseHitArea} is a closed helper of ui/src/styles (touchTarget.js / glyphButton.js) for the brand focus ring, coarse-pointer hit area or glyph overlay. It declares no readable-text size and no colour of its own outside the focus token."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-boxlayout-index-js-b02005",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/BoxLayout/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-boxlayout-styles-js-02d61f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/BoxLayout/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 50px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font-size",
+            "match": "36px",
+            "context": "@media (min-width: 1440px) > > h2",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font-size",
+            "match": "18px",
+            "context": "@media (min-width: 1440px) > > p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font-size",
+            "match": "32px",
+            "context": "> h2",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "> p",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 45px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 20px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 50px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-right: 45px;\n      margin-left: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    margin-right: 20px;\n    margin-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-callcenterapp-index-js-42677c",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/CallCenterApp/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-customdomain-index-js-ed249d",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/CustomDomain/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "customDomainProps /* binding-sha256:4beeb368f0b1bb3c0ce814a105db4a3b3b826eac47639b941c04bdd043999692 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 4,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-customdomain-styles-js-d34e2a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/CustomDomain/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+            "evidence": "Z3 esta abierta contra todas las conversiones de L5 por no haberlo puesto. Tres sitios en c4. La cuarta conversion, `OrderingWebsite Tab`, ya declaraba tamano propio en su raiz y no lo necesita, igual que el Tab de AppUI en c3."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c3 lo repitieron sin excepcion. En c4 incluye `UploadAudio PdfIconBox svg` a 150px: pese al nombre del componente, el nodo que se renderiza ahi es `<FileMusicFill />`, un icono, no tipografia de documento impreso."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Option",
+            "property": "font-size",
+            "match": "14px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "font-size",
+            "match": "14px",
+            "context": "> div > > div:first-child",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Veinticinco sitios. Veintitres son dos filas enteras que no importa nadie, establecido por cuatro vias independientes con testigo. Los otros dos son `CustomDomain SelectWrapper` y `Option`, que no importa ninguno de los dos consumidores de ese styles.js."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 15px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CnameNotifyRow",
+            "property": "color",
+            "match": "#22c55e",
+            "context": "> button > &.copied svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfo",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background-color",
+            "match": "#f2f5f7",
+            "context": "> div > .list > .list-wrapper > > div > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-customproject-index-js-f4e284",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/CustomProject/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-customproject-styles-js-5a32e0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/CustomProject/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TextWrapper",
+            "property": "font-size",
+            "match": "32px",
+            "context": "> h2",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ContentLayout",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-kioskapp-index-js-95ae38",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/KioskApp/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-orderingwebsite-index-js-abad1e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/OrderingWebsite/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "orderingWebsiteProps /* binding-sha256:2f73ba4f04c7c3af3fa411be913385d7a1e97d4d987ddf233f3a062a4ae835d0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "settingsFilterProps /* binding-sha256:e3f5aaba7e87a0773a7cbdbe82a6db35fa153e040c3ea447ff1d62da37e0eb0c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 8,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": " (ordering-website): the opt-in dispatcher OrderingWebsiteUI hands the controller props unchanged to LegacyOrderingWebsiteUI or, with layout='sections', to OrderingWebsiteSections; it adds no color."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-orderingwebsite-styles-js-9481da",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/OrderingWebsite/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+            "evidence": "Z3 esta abierta contra todas las conversiones de L5 por no haberlo puesto. Tres sitios en c4. La cuarta conversion, `OrderingWebsite Tab`, ya declaraba tamano propio en su raiz y no lo necesita, igual que el Tab de AppUI en c3."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c3 lo repitieron sin excepcion. En c4 incluye `UploadAudio PdfIconBox svg` a 150px: pese al nombre del componente, el nodo que se renderiza ahi es `<FileMusicFill />`, un icono, no tipografia de documento impreso."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderInfoWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoContent",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font-size",
+            "match": "32px",
+            "context": "h1",
+            "count": 1,
+            "reason": "Ningun rol de texto describe este nodo, o la escala no puede expresarlo.",
+            "evidence": "Diez sitios. Ocho son cuatro parejas responsive de AppLayout: un rol resuelve a un solo tamano en todos los anchos --- el CSS de tokens tiene una unica media query y es prefers-reduced-motion --- asi que migrarlas aplastaria la escalada. Los otros dos son headings a 32px, un tamano sin UN SOLO precedente en las 1435 reglas de las capas cerradas."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 40px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InnerBlock",
+            "property": "font",
+            "match": "props => props?.isDashboard && css`\n    margin-bottom: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MoreSettingsHeader",
+            "property": "font",
+            "match": "props => !props?.isDashboard && !props?.compact && css`\n    margin-top: 70px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "MoreSettingsHeader",
+            "property": "font",
+            "match": "props => props?.compact && css`\n    margin-top: 0;\n    margin-bottom: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Option",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RadioItem",
+            "property": "font-size",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "Este `font-size: inherit` lo pone la conversion a boton nativo. No es una decision tipografica: impide que el nodo deje de heredar y adopte la fuente del agente de usuario.",
+            "evidence": "Z3 esta abierta contra todas las conversiones de L5 por no haberlo puesto. Tres sitios en c4. La cuarta conversion, `OrderingWebsite Tab`, ya declaraba tamano propio en su raiz y no lo necesita, igual que el Tab de AppUI en c3."
+          },
+          {
+            "component": "RadioItem",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c3 lo repitieron sin excepcion. En c4 incluye `UploadAudio PdfIconBox svg` a 150px: pese al nombre del componente, el nodo que se renderiza ahi es `<FileMusicFill />`, un icono, no tipografia de documento impreso."
+          },
+          {
+            "component": "RadioItem",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    font-weight: 600;\n    font-size: var(--od-type-control-size);\n    line-height: 21px;\n    padding-bottom: 13px;\n    color: ${props => props.theme.colors.headingColor};\n    border-bottom: 1px solid ${props => props.theme.colors.headingColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "font",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n    color: ${props => props.theme.colors.disabled};\n    > a {\n      color: ${props => props.theme.colors.disabled};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "font",
+            "match": "({ marginBottom }) => marginBottom && css`\n    margin-bottom: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "font",
+            "match": "({ isMargin }) => isMargin && css`\n    margin-bottom: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ bgimage }) => bgimage && css`\n    background: transparent;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "font",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WebsiteWrapper",
+            "property": "font",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 50px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CheckBoxWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfo",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CustomDomainInfoContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "background",
+            "match": "props => darken(0.07, props.theme.colors.danger500 || props.theme.colors.danger || '#dc3545')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "background",
+            "match": "props => darken(0.12, props.theme.colors.danger500 || props.theme.colors.danger || '#dc3545')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "background",
+            "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "border-color",
+            "match": "props => darken(0.12, props.theme.colors.danger500 || props.theme.colors.danger || '#dc3545')",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "border-color",
+            "match": "props => props.theme.colors.danger500 || props.theme.colors.danger || '#dc3545'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "color",
+            "match": "#fff",
+            "context": "&& > &:active",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "color",
+            "match": "#fff",
+            "context": "&& > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "DangerOutlineButton",
+            "property": "color",
+            "match": "props => props.theme.colors.danger500 || props.theme.colors.danger || '#dc3545'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderInfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: -8px;\n    margin-right: 8px;\n  `\n: css`\n    margin-right: -8px;\n    margin-left: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ImgInfoWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundInfo",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      right: 0px;\n      left: initial;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 40px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InnerBlock",
+            "property": "color-block",
+            "match": "props => props?.isDashboard && css`\n    margin-bottom: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InputFormWrapper",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MoreSettingsHeader",
+            "property": "color-block",
+            "match": "props => !props?.isDashboard && !props?.compact && css`\n    margin-top: 70px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MoreSettingsHeader",
+            "property": "color-block",
+            "match": "props => props?.compact && css`\n    margin-top: 0;\n    margin-bottom: 12px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "MoreSettingsHeader",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "box-shadow",
+            "match": "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "context": "img",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Option",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n    `\n: css`\n      margin-right: 8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioItem",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 20px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioItem",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "RadioItem",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "SelectWrapper",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    font-weight: 600;\n    font-size: var(--od-type-control-size);\n    line-height: 21px;\n    padding-bottom: 13px;\n    color: ${props => props.theme.colors.headingColor};\n    border-bottom: 1px solid ${props => props.theme.colors.headingColor};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tabs",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "color-block",
+            "match": "({ isDisabled }) => isDisabled && css`\n    pointer-events: none;\n    color: ${props => props.theme.colors.disabled};\n    > a {\n      color: ${props => props.theme.colors.disabled};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "color-block",
+            "match": "({ marginBottom }) => marginBottom && css`\n    margin-bottom: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TemporalDomail",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "color-block",
+            "match": "({ isMargin }) => isMargin && css`\n    margin-bottom: 20px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIcon",
+            "property": "color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "background",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "border",
+            "match": "props => props.theme.colors.secundaryDarkContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ bgimage }) => bgimage && css`\n    background: transparent;\n    svg, span {\n      color: ${props => props.theme.colors.white};\n    }\n    border: 1px dashed ${props => props.theme.colors.secundaryDarkContrast};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color-block",
+            "match": "({ small }) => small\n? css`\n    padding: 4px;\n  `\n: css`\n    padding: 8px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadImageIconContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.white",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WebsitePriviewImageWrapper",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0,0,0,0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WebsiteWrapper",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WebsiteWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.rtl && css`\n      margin-left: 50px;\n      margin-right: 0px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-orderingwidgets-index-js-73b748",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/OrderingWidgets/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'black'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-orderingwidgets-styles-js-0e18d4",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/OrderingWidgets/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "font",
+            "match": "({ hideSideBar }) => !hideSideBar && css`\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of c4-myproducts-layouts-apps: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Container",
+            "property": "color-block",
+            "match": "({ hideSideBar }) => !hideSideBar && css`\n    overflow: auto;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderTitleContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-posapp-index-js-3779b6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/PosApp/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-uploadaudio-index-js-64ba26",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/UploadAudio/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "uploadAudioProps /* binding-sha256:ab4393d7a6f42b35ab53133cfe79bc823e85145eb12788ff0d7ca525fd573d83 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-uploadaudio-styles-js-92321b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/UploadAudio/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "PdfIconBox",
+            "property": "font-size",
+            "match": "150px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c3 lo repitieron sin excepcion. En c4 incluye `UploadAudio PdfIconBox svg` a 150px: pese al nombre del componente, el nodo que se renderiza ahi es `<FileMusicFill />`, un icono, no tipografia de documento impreso."
+          },
+          {
+            "component": "UploadIconBox",
+            "property": "font-size",
+            "match": "40px",
+            "context": "> div > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c3 lo repitieron sin excepcion. En c4 incluye `UploadAudio PdfIconBox svg` a 150px: pese al nombre del componente, el nodo que se renderiza ahi es `<FileMusicFill />`, un icono, no tipografia de documento impreso."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "FileUploadBox",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "PdfIconBox",
+            "property": "color",
+            "match": "props => props.theme.colors.danger",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UploadIconBox",
+            "property": "color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-c4-myproducts-layouts-apps-whitelabelcustomdomain-index-js-87e17e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/WhiteLabelCustomDomain/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "whiteLabelCustomDomainProps /* binding-sha256:db78ed68cb7f5e9ecb4f722c154b46c0e98a48b5dd7ef60d9dc0691ef6e8a7c2 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The c4-myproducts-layouts-apps semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

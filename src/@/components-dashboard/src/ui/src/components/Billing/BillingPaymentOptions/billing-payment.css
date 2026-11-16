@@ -1,0 +1,124 @@
+/* redesign BM-C (D1, D2, D5, D6): the Billing dialog (pay an overdue subscription / upgrade to Pro). Only var(--od-*) /
+   var(--od-x-*), logical properties, prefix odc-bpay-. The dialog, the buttons, the notices, the badge, the segmented control and the
+   skeleton are Product wrappers; this file only lays out their content. */
+.odc-bpay {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+/* What is being paid comes first: a framed card with the plan, its recurring price and, when overdue, the badge. */
+.odc-bpay-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-bpay-plan-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bpay-plan-name {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bpay-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  margin: 0;
+}
+
+.odc-bpay-price .odc-figure {
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-bpay-unit { color: var(--od-text-muted); }
+
+.odc-bpay-note {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bpay-note .odc-figure { color: var(--od-text); }
+
+/* The Monthly | Annual control takes the width of the card (it measures its container). */
+.odc-bpay-period { min-inline-size: 0; }
+
+/* The description is HTML from the API (as main painted it): keep it inside the dialog whatever it contains. */
+.odc-bpay-html {
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odc-bpay-html > :first-child { margin-block-start: 0; }
+.odc-bpay-html > :last-child { margin-block-end: 0; }
+.odc-bpay-html img { max-inline-size: 100%; block-size: auto; }
+
+/* Plan Details / All features: plain lists, as in main, now real lists. */
+.odc-bpay-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-bpay-facts-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bpay-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-5) 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* Notices live inside the dialog body: they take its width, not the page gutter that FilterBar gives them. */
+.odc-bpay .odc-notice {
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+.odc-bpay .odc-notice-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  overflow-wrap: anywhere;
+}

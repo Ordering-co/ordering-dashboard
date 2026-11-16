@@ -1,0 +1,64 @@
+/*
+ * : the dialog of several invoices at once. The selection (P/SelectableList) and the results, one row per business or
+ * driver: its name and status, its reason when it failed, and its action at the end. Tokens only; logical properties only (RTL).
+ */
+
+.odc-iv-batch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-iv-batch-count {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-batch-results {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-iv-batch-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-iv-batch-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-1) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-iv-batch-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-iv-batch-reason {
+  grid-column: 1;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-iv-batch-actions {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  gap: var(--od-space-2);
+}

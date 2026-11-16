@@ -1,7 +1,16 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { publicAssetUrl } from '../publicAssetUrl'
 
 describe('publicAssetUrl', () => {
+  afterEach(() => vi.unstubAllEnvs())
+
+  it('applies a subpath exactly once to both public and already resolved assets', () => {
+    vi.stubEnv('BASE_URL', '/pilot/')
+    expect(publicAssetUrl('/brand/logo.svg')).toBe('/pilot/brand/logo.svg')
+    expect(publicAssetUrl('/pilot/brand/logo.svg')).toBe('/pilot/brand/logo.svg')
+    expect(publicAssetUrl('/pilot-other/logo.svg')).toBe('/pilot/pilot-other/logo.svg')
+    expect(publicAssetUrl('https://tenant.example/pilot/logo.svg')).toBe('https://tenant.example/pilot/logo.svg')
+  })
   it('returns empty values unchanged', () => {
     expect(publicAssetUrl('')).toBe('')
     expect(publicAssetUrl(null)).toBe(null)

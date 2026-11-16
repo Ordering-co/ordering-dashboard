@@ -1,0 +1,76 @@
+/*
+ * redesign SL-F1 (A1) · /stores/list: the head (title, actions, status tabs, view switch) and the filters (business types and
+ * the filter bar's popovers). A2 adds its rules for the table, the cards and the selection bar to this file.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ */
+
+/* ── Head: the page header, then the tabs and the view switch (: the opener is PageHeader's `leading`) ── */
+.odc-sl-head {
+  display: grid;
+  /* one track that may shrink below its content */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── Status tabs and the List / Card switch: one row; the switch drops under the tabs when both do not fit ── */
+.odc-sl-viewrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sl-tabs {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* SegmentedControl fills the width of its parent, so the parent gives it a definite one (it turns into a select if it does not fit).
+   redesign SL-Q2 (mechanical.md §2): the control keeps a hidden twin of its track (`.odc-seg-measure`, visibility hidden but still
+   laid out at its natural width) to measure what fits. In a long locale that twin is wider than the box and, being absolutely
+   placed, widened the page (pt: 92px of horizontal scroll) even though the control had already become a select. The switch clips
+   it. `overflow: clip` (no scroll container) with the padding and negative margin below keeps the focus ring of the buttons and
+   the select inside the clip. */
+.odc-sl-viewswitch {
+  /* border-box: the basis carries the padding that the negative margin gives back, so the switch is as wide as before (220px) */
+  flex: 0 1 calc(var(--od-x-type-title-size) * 10 + var(--od-x-space-1-5) * 2);
+  min-inline-size: 0;
+  overflow: clip;
+  padding: var(--od-x-space-1-5);
+  margin: calc(var(--od-x-space-1-5) * -1);
+  /* redesign deliveries-followups W1-D-25: on a phone each option's 44px area reaches 6px past it (segmented.css), and
+     the types row below, whose box rises 6px over its tabs (its padding and negative margin, above), is painted after it and took
+     the bottom of that area. Raised over that empty padding; the tabs themselves start below the area. */
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+}
+
+/* A phone: the switch takes what the tabs leave on the row, and when that is less than its basis it wraps to its own row and takes
+   the whole of it, so a long locale keeps the segmented control when the whole row fits it and becomes the select when it does not. */
+@media (max-width: 767px) {
+  .odc-sl-viewswitch { flex-grow: 1; }
+}
+
+/* ── Filters: the filter bar (redesign stores 3.A, : the row of business types is now its «Type» pill) ── */
+.odc-sl-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── The popovers of the Name, External ID and Featured pills (the popup itself is filter-popover.css) ── */
+.odc-sl-textfilter,
+.odc-sl-featured {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-sl-textfilter-actions {
+  display: flex;
+  justify-content: flex-end;
+}

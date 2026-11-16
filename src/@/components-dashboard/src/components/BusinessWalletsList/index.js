@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -20,6 +20,9 @@ export const BusinessWalletsList = (props) => {
   const [walletsListState, setWalletsListState] = useState({ wallets: business?.configs || [], loading: false, error: null })
   const [loyaltyPlanState, setLoyaltyPlanState] = useState({ loading: true, created: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
+  // the latest list of wallets, also between two answers that land before a render (review 5.11 F1)
+  const walletsRef = useRef(walletsListState.wallets)
+  walletsRef.current = walletsListState.wallets
 
   const getWalletsList = async () => {
     try {
@@ -97,10 +100,14 @@ export const BusinessWalletsList = (props) => {
     }
   }
 
+  // redesign stores 5.11: the wallets are edited in line now, so the control that saved hears how it went: `{ ok: true }`, or
+  // `{ ok: false, error }` (the API's messages, or the thrown message). It shows the error itself, so there is no error toast; `loading` is
+  // freed on every path.
+  // review 5.11 F1: two switches can save at once, so each answer builds on the list the previous one left (a ref, not the closure)
+  // review 5.11 F4: no «Loading» toast either: the switch is busy while it saves and says itself when it fails
   const handleUpdateWallet = async (walletId, params) => {
     try {
-      setActionState({ ...actionState, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState(previous => ({ ...previous, loading: true }))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -113,21 +120,24 @@ export const BusinessWalletsList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ loading: false, error: null })
-        const _wallets = walletsListState.wallets.map(wallet => {
+        const _wallets = (walletsRef.current || []).map(wallet => {
           if (wallet.id === content.result?.id) return content.result
           return wallet
         })
-        setWalletsListState({ ...walletsListState, wallets: _wallets })
+        walletsRef.current = _wallets
+        setWalletsListState(previous => ({ ...previous, wallets: _wallets }))
         handleSuccessUpdate && handleSuccessUpdate({ ...business, configs: _wallets })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-      } else {
-        setActionState({ loading: false, error: content.result })
+        return { ok: true }
       }
+      setActionState({ loading: false, error: content.result })
+      return { ok: false, error: content.result }
     } catch (err) {
       setActionState({
         loading: false,
         error: [err.message]
       })
+      return { ok: false, error: err.message }
     }
   }
 

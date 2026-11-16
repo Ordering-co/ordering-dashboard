@@ -1,0 +1,183 @@
+/*
+ * 5.3-A · Detail panel frame (prototype .panel, C8): header, tabs, one scrolling panel, footer.
+ * Inside a SplitView panel (/orders) or a Sheet (every other consumer). Values: --od-* and
+ * --od-x-* only (guard: productLiteralGuard.test.js). Logical properties (C17).
+ *
+ * The frame is a size container named `odc-order`: the tab contents (5.3-B, 5.3-C) lay out
+ * with @container odc-order instead of the window, so the same markup fits the 440px split
+ * panel, the 520px sheet and the expanded page.
+ */
+
+.odc-od {
+  container-type: inline-size;
+  container-name: odc-order;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-od-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+/* Tabs root: the list, the one panel and the footer that stays at the bottom. */
+.odc-od-tabs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-od-tabs > .odc-tabs-list {
+  margin-block-start: var(--od-space-3);
+  padding-inline: var(--od-space-5);
+}
+
+.odc-od-body {
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-block: var(--od-space-4) var(--od-space-6);
+  padding-inline: var(--od-space-5);
+}
+
+/* redesign fix-qa E6: the chat is mounted next to the visible tab and only hidden when it is not the one
+   on screen; shown, it takes no box of its own so the chat lays out exactly as the tab content did. */
+.odc-od-chat-pane { display: contents; }
+.odc-od-chat-pane[hidden] { display: none; }
+
+/* The Learn tour points at the driver while the panel must not move under it. */
+.odc-od-body[data-no-scroll] {
+  overflow-y: hidden;
+}
+
+/* ── Loading (F4, C20): the grid of the loaded panel. The frame, the header, the tab strip, the route and the footer
+   are the real ones (their own stylesheets); these are the placeholders that fill them. Each placeholder sits in a box
+   as tall as the text it stands for, so the loaded panel lands on the same lines. ── */
+.odc-od-sk-line {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+}
+
+/* The third item is the payment, which carries a badge: its line is the badge's, as in the real metadata line. */
+.odc-od-meta > .odc-od-sk-line:nth-child(3) { min-block-size: var(--od-x-badge-height); }
+
+.odc-od-sk-title {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(var(--od-x-type-title-size) * var(--od-x-leading-title));
+}
+
+/* The status badge of the header drops to its own line when the panel is narrow, as the real badge does (order-details-header.css). */
+@container odc-order (max-width: 480px) {
+  .odc-od-sk-badge {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* In the vertical route of a narrow panel the labels have no column to fill: they keep the width of a short word. */
+@container (width < 400px) {
+  .odc-route .odc-od-sk-line { inline-size: var(--od-x-sk-tab); }
+}
+
+.odc-od-sk-block {
+  display: grid;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-od-sk-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-od-sk-lines {
+  display: grid;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-od-sk-route { margin-block-start: var(--od-space-2); }
+.odc-od-body > .odc-route + .odc-od-sk-block { margin-block-start: var(--od-space-4); }
+.odc-od-body > .odc-od-sk-block + .odc-od-sk-block { margin-block-start: var(--od-space-4); }
+
+/* ── Split view: the list shares the page height with the panel ── */
+.odc-split.odc-orders-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* ── Overlay (Sheet): wider than the filters sheet, the content brings its own header ── */
+.odc-sheet.odc-order-sheet[data-side='end'] {
+  inline-size: var(--od-x-panel);
+  inset-inline-end: var(--assistant-offset, 0);
+}
+
+.odc-sheet.odc-order-sheet[data-side='end'][data-expanded] {
+  inline-size: var(--app-width, 100vw);
+}
+
+@media (max-width: 767px) {
+  .odc-sheet.odc-order-sheet[data-side='end'] {
+    inline-size: 100%;
+    inset-inline-end: 0;
+  }
+}
+
+/* The Sheet names itself (an h2 for the screen readers) but the panel draws the real
+   header, so its own title row is out of sight and its close button out of the way. */
+.odc-order-sheet > .odc-overlay-head {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.odc-order-sheet > .odc-overlay-head .odc-overlay-close {
+  display: none;
+}
+
+.odc-order-sheet > .odc-overlay-body {
+  display: grid;
+  overflow: hidden;
+  padding: 0;
+  color: var(--od-text);
+}
+
+.odc-sheet.odc-order-sheet {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* The empty state of a missing order, or of one that failed to load, keeps the panel's padding; it sits
+   under the head row with Close. */
+.odc-od > .odc-state,
+.odc-od-frame > .odc-state {
+  padding-block: var(--od-space-8);
+  padding-inline: var(--od-space-5);
+}

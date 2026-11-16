@@ -324,6 +324,109 @@ describe('WhatsAppBotsList', () => {
     expect(controller.botsState.bots[0].enabled).toBe(true)
     expect(controller.toggleState.error).toEqual({ id: 4, codes: ['Failed to fetch'] })
   })
+
+  it('loads chatbot translations by locale and saves only that locale patch', async () => {
+    const translationCatalog = {
+      welcome: {
+        value: 'Hello',
+        default: 'Hello',
+        maxLength: 20,
+        isCustom: false,
+        label: 'Welcome message',
+        group: 'greeting',
+        placeholders: []
+      }
+    }
+    fetchMock.mockImplementation((url, options = {}) => {
+      const parsed = new URL(url)
+      if (parsed.pathname.endsWith('/ai/agents/4/translations')) {
+        if (options.method === 'PATCH') {
+          return respond({ error: false, result: { message: 'Saved' } })
+        }
+        return respond({ error: false, result: translationCatalog })
+      }
+      if (parsed.pathname.endsWith('/ai/agents/4')) {
+        return respond({ error: false, result: { id: 4, settings: {} } })
+      }
+      if (isBrandRequest(url)) return respond(brands)
+      return respond({ error: false, result: [whatsappBot], pagination })
+    })
+
+    render(<WhatsAppBotsList UIComponent={UI} botId={4} />)
+    await waitFor(() => expect(controller.translationsState.catalog.welcome).toBeTruthy())
+
+    const getCall = fetchMock.mock.calls.find(([url]) => String(url).includes('/ai/agents/4/translations'))
+    const getUrl = new URL(getCall[0])
+    expect(getUrl.searchParams.get('catalog')).toBe('chatbot')
+    expect(getUrl.searchParams.get('locale')).toBe('en')
+
+    act(() => controller.updateTranslationDraft('welcome', 'Hi'))
+    act(() => controller.setTranslationLocale('es'))
+    await waitFor(() => expect(controller.translationsState.locale).toBe('es'))
+    await waitFor(() => expect(controller.translationsState.catalog.welcome).toBeTruthy())
+    expect(fetchMock.mock.calls.some(([url]) => (
+      String(url).includes('/translations') && new URL(url).searchParams.get('locale') === 'es'
+    ))).toBe(true)
+
+    act(() => controller.setTranslationLocale('en'))
+    await waitFor(() => expect(controller.translationsState.locale).toBe('en'))
+    expect(controller.translationsState.draft.welcome).toBe('Hi')
+    await act(async () => { await controller.saveBotTranslations() })
+
+    const patchCall = fetchMock.mock.calls.find(([, options]) => options?.method === 'PATCH')
+    expect(new URL(patchCall[0]).searchParams.get('catalog')).toBe('chatbot')
+    expect(JSON.parse(patchCall[1].body)).toEqual({ translations: { en: { welcome: 'Hi' } } })
+  })
+
+  it('does not request chatbot translations without a bot id', async () => {
+    render(<WhatsAppBotsList UIComponent={UI} />)
+    await waitFor(() => expect(controller.botsState.loading).toBe(false))
+
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/translations'))).toBe(false)
+    expect(controller.translationsState.catalog).toEqual({})
+  })
+
+  it('ignores a stale translation response after the selected bot changes', async () => {
+    let resolveOldTranslations
+    const oldTranslations = new Promise(resolve => { resolveOldTranslations = resolve })
+    const translation = (text) => ({
+      welcome: {
+        value: text,
+        default: text,
+        maxLength: 20,
+        isCustom: false,
+        label: 'Welcome message',
+        group: 'greeting',
+        placeholders: []
+      }
+    })
+    fetchMock.mockImplementation((url) => {
+      const parsed = new URL(url)
+      if (parsed.pathname.endsWith('/ai/agents/4/translations')) return oldTranslations
+      if (parsed.pathname.endsWith('/ai/agents/5/translations')) {
+        return respond({ error: false, result: translation('New bot') })
+      }
+      if (/\/ai\/agents\/(4|5)$/.test(parsed.pathname)) {
+        return respond({ error: false, result: { id: Number(parsed.pathname.split('/').pop()), settings: {} } })
+      }
+      if (isBrandRequest(url)) return respond(brands)
+      return respond({ error: false, result: [whatsappBot], pagination })
+    })
+
+    const view = render(<WhatsAppBotsList UIComponent={UI} botId={4} />)
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/4/translations'))).toBe(true))
+    view.rerender(<WhatsAppBotsList UIComponent={UI} botId={5} />)
+    await waitFor(() => expect(controller.translationsState.catalog.welcome?.default).toBe('New bot'))
+
+    await act(async () => {
+      resolveOldTranslations({
+        ok: true,
+        json: async () => ({ error: false, result: translation('Old bot') })
+      })
+      await oldTranslations
+    })
+    expect(controller.translationsState.catalog.welcome.default).toBe('New bot')
+  })
 })
 
 describe('toWhatsAppBot', () => {

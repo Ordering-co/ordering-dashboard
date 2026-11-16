@@ -1,0 +1,40 @@
+/* Scoped insert-video dialog. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-editor-insert-video) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-editor-insert-video) > h1 {
+  margin: 0 0 25px;
+  color: var(--od-entity-selector-text);
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-editor-insert-video) > .od-button {
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui:where(.od-editor-insert-video) .od-editor-field {
+  @apply od-flex od-flex-col;
+  min-width: 0;
+  margin-bottom: 25px;
+}
+
+.od-ui:where(.od-editor-insert-video) .od-editor-field > label {
+  margin: 0 0 4px;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+}
+
+.od-ui:where(.od-editor-insert-video) .od-editor-field > input {
+  width: 100%;
+  min-width: 0;
+}

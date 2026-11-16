@@ -1,0 +1,120 @@
+/*
+ * redesign DT-B4 (DT-05, DT-16, DT-17, decision 3 | auditor 5, 10) · Bar of the drivers' time calendar: the scope pills (ScopePills)
+ * and the dates (DateNav). They use Shared/Product (FilterPopover, DateRangePopover, SegmentedControl, IconButton, Pagination) and
+ * the popover classes of filter-popover.css and radio-group.css; this file is only what they lack. Values: --od-* and --od-x-* only
+ * (guard: productLiteralGuard.test.js). Logical properties; the phone cut is the 768 of utils/breakpoints.js.
+ */
+
+/* ── Driver group: one choice, the Product radio look (radio-group.css) in rows of the full width of the popover. A row holds the name
+   and «Drivers N» under it, so it is taller than a checkbox row: the list keeps room for twelve of the single-line rows instead of eight. ── */
+.odc-dt-choices {
+  position: relative;
+  max-block-size: min(60dvh, calc(var(--odc-picker-row) * 12));
+}
+
+.odc-dt-choice { inline-size: 100%; }
+
+/* ── Loading: rows with the final height of an option, so the list does not jump when the answer comes ── */
+.odc-dt-skeletons {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.odc-dt-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--odc-picker-row);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+/* ── The pager of a list, under the rows and above «Clear» ── */
+.odc-orders-picker > .odc-dt-picker-pager {
+  flex: none;
+  padding-block: var(--od-space-1);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* ── Dates ── */
+/* One line while it fits, then it wraps; the warning takes a line of its own, under the controls. */
+.odc-dt-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The segmented control is a block of 100% of its parent: here it takes the width its two options need (it falls to a select only
+   when the bar itself cannot hold that). */
+.odc-dt-nav-view {
+  flex: none;
+  inline-size: max-content;
+  max-inline-size: 100%;
+}
+
+/* The range says its dates on the button: it must not run past the screen. */
+.odc-dt-nav-range { max-inline-size: 100%; }
+
+/* redesign DT-B5 (live check at 390): ‹ dates › never split; the button shrinks before they do */
+.odc-dt-nav-step {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-dt-nav-step .odc-dt-nav-range { min-inline-size: 0; }
+
+.odc-dt-nav-notice { flex: 1 1 100%; }
+
+/* «Select a date» opens with no presets in it (the view buttons are Day · Week): the empty list of the panel would only add a gap
+   above the fields. */
+.odc-dr-presets:empty { display: none; }
+
+/* Touch: a button is seen at 32 and answers at 44 (decision 12), so the buttons need 12 px between them (44 - 32) for their areas
+   not to cross. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-dt-nav { gap: var(--od-space-3); }
+}
+
+/* A phone: the bar hides its tools (a list has nothing to act on there), but here they are the dates, the only way to change the day:
+   they stay, on a row of their own under the pills when the bar is as narrow as a phone's screen. */
+@media (max-width: 767px) {
+  .odc-filterbar-tools:has(> .odc-dt-nav) {
+    display: flex;
+    min-inline-size: 0;
+  }
+}
+
+@container (max-width: 599px) {
+  @media (max-width: 767px) {
+    .odc-filterbar-tools:has(> .odc-dt-nav) { grid-column: 1 / -1; }
+  }
+}
+
+/* redesign DT-B5 (live check at 390): on a phone the view and «Today» share the first row, and ‹ dates › take the second */
+@media (max-width: 767px) {
+  .odc-dt-nav {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    grid-template-areas: 'view today .' 'step step step';
+    justify-items: start;
+    /* review r1 R-10: «Today» keeps its own height instead of stretching to the row */
+    align-items: center;
+  }
+
+  .odc-dt-nav-view { grid-area: view; }
+  .odc-dt-nav-today { grid-area: today; }
+  .odc-dt-nav-step { grid-area: step; }
+  .odc-dt-nav-notice { grid-column: 1 / -1; }
+}
+
+/* review r1 R-09: on a phone the two scope pills wrap to a second line instead of sliding the second one off the screen */
+@media (max-width: 767px) {
+  .odc-dtd-bar .odc-filterbar-filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}

@@ -21,7 +21,7 @@ export const Header = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }
@@ -38,6 +38,18 @@ export const Header = styled.div`
 : css`
       margin-right: 65px;
     `}
+  }
+`
+
+// The table is wider than a phone and the hub clips what overflows its column: the table scrolls here instead, so the Time
+// column and the row menu stay reachable. The region is focusable so the keyboard can scroll it too.
+export const TableScroller = styled.div`
+  max-width: 100%;
+  overflow-x: auto;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-focus);
+    outline-offset: var(--od-focus-ring-offset);
   }
 `
 
@@ -75,7 +87,7 @@ export const WebhookListTable = styled.table`
         text-overflow: ellipsis;
       }
     }
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
     max-width: 200px;
   
     &:first-child {
@@ -144,10 +156,17 @@ export const WebhookListTable = styled.table`
 `
 
 export const DropdownButtonWrapper = styled.div`
+  position: relative;
   button {
     background: transparent !important;
     border: none;
     padding: 0px;
+    /* 44x44 touch area for the three-dots button */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     &:active,
     &:focus {
       border-color: unset !important;
@@ -178,7 +197,7 @@ export const DropdownButtonWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {

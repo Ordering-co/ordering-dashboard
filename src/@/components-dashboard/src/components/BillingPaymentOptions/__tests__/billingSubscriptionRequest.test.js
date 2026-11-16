@@ -34,6 +34,15 @@ describe('buildBillingSubscriptionRequest', () => {
     })
   })
 
+  // (billing-api#103): «Pay the pending payment» on an active subscription whose plan change by modify waits.
+  it('pays the pending charge of an active subscription through its retry route only when asked to', () => {
+    const subscription = { id: 501, status: 'active', data: { plan_change: { status: 'pending', kind: 'modify' } } }
+    expect(buildBillingSubscriptionRequest({ subscription, planId: 5, period: 'monthly', userPaymethodId: 789, payPending: true }))
+      .toEqual({ urlPath: '/billing/subscriptions/501', body: { user_paymethod_id: 789 } })
+    expect(buildBillingSubscriptionRequest({ subscription, planId: 12, period: 'annual', replace: true, userPaymethodId: 789 }).urlPath)
+      .toBe('/billing/subscriptions/plans')
+  })
+
   it('still sends the selected card when retrying an incomplete subscription', () => {
     expect(buildBillingSubscriptionRequest({
       subscription: { id: 55, status: 'past_due' },

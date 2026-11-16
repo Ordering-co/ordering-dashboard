@@ -118,7 +118,7 @@ export const Image = (props) => {
 }
 
 export const BusinessName = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   ${props => props.theme?.rtl
 ? css`
     margin-right: 12px;

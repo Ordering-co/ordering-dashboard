@@ -4,6 +4,8 @@ import { useLanguage } from '../../../../../index'
 
 import { Select as FirstSelect } from '../../../styles/Select/FirstSelect'
 import { useFilterValues } from '../../../contexts/FilterValuesContext'
+import { useLegacyPlanUpgrade } from '../../../contexts/LegacyPlanUpgradeContext'
+import { useIsPathHiddenByReadOnly } from '../../../hooks/useIsPathHiddenByReadOnly'
 import { SETTINGS_SLA_PATH } from '../../../../../utils/settingsExternalEditors'
 
 import {
@@ -16,19 +18,21 @@ import {
 export const OrdersDashboardSLAControls = (props) => {
   const { setTimeStatus } = props
   const history = useHistory()
+  const { requestUpgrade } = useLegacyPlanUpgrade()
   const [filterValues, { handleFilterValues }] = useFilterValues()
   const [defaultOptionValue, setDefaultOptionValue] = useState(filterValues?.timeStatus ?? 'default')
   const [filteredTimeStatus, setFilteredTimeStatus] = useState([])
   const [, t] = useLanguage()
+  const hideSlaSettings = useIsPathHiddenByReadOnly(SETTINGS_SLA_PATH)
 
   const timeStatus = [
     {
       value: 'default',
-      name: t('SLA_S', 'SLA’s'),
+      name: t('SLA_S', 'SLA'),
       content: (
         <Option noPadding>
           <Timestatus timeState='' />
-          <p>{t('SLA_S', 'SLA’s')}</p>
+          <p>{t('SLA_S', 'SLA')}</p>
         </Option>
       )
     },
@@ -44,11 +48,11 @@ export const OrdersDashboardSLAControls = (props) => {
     },
     {
       value: 'at_risk',
-      name: t('AT_RISK', 'At Risk'),
+      name: t('AT_RISK', 'At risk'),
       content: (
         <Option noPadding>
           <Timestatus timeState='at_risk' />
-          <p>{t('AT_RISK', 'At Risk')}</p>
+          <p>{t('AT_RISK', 'At risk')}</p>
         </Option>
       )
     },
@@ -62,20 +66,24 @@ export const OrdersDashboardSLAControls = (props) => {
         </Option>
       )
     },
-    {
-      value: 'sla_settings',
-      name: t('SLA_SETTING', 'SLA’s settings'),
-      content: (
-        <Option noPadding>
-          <p>{t('SLA_SETTING', 'SLA’s settings')}</p>
-        </Option>
-      )
-    }
+    // (R-4): a read-only admin cannot open Settings, so it is not offered the shortcut
+    ...(hideSlaSettings
+      ? []
+      : [{
+          value: 'sla_settings',
+          name: t('SLA_SETTING', 'SLA settings'),
+          content: (
+            <Option noPadding>
+              <p>{t('SLA_SETTING', 'SLA settings')}</p>
+            </Option>
+          )
+        }])
   ]
 
   const changeOrderTimeStatus = (val) => {
     if (val === 'sla_settings') {
-      history.push(SETTINGS_SLA_PATH)
+      const openSettings = () => history.push(SETTINGS_SLA_PATH)
+      if (!requestUpgrade(undefined, openSettings)) openSettings()
       return
     }
     setDefaultOptionValue(val)
@@ -107,7 +115,7 @@ export const OrdersDashboardSLAControls = (props) => {
       <OrderTimeStatusSelectWrapper>
         <FirstSelect
           searchBarIsCustomLayout
-          placeholder={<Option noPadding><p>{t('SLA_S', 'SLA’s')}</p></Option>}
+          placeholder={<Option noPadding><p>{t('SLA_S', 'SLA')}</p></Option>}
           options={filteredTimeStatus}
           defaultValue={defaultOptionValue}
           onChange={(timeState) => changeOrderTimeStatus(timeState)}

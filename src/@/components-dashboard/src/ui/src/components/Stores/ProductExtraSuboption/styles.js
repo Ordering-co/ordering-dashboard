@@ -101,7 +101,7 @@ export const InputWrapper = styled.div`
   }
   label {
     color: ${props => props.theme.colors.headingColor};
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 10px;
   }
   .default {
@@ -189,7 +189,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -243,7 +243,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {

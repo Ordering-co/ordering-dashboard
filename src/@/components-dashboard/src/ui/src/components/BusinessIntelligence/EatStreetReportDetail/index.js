@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import { Download as DownloadIcon } from 'react-bootstrap-icons'
 import { useLanguage, useSession, useApi } from '../../../../../index'
-import { SpinnerLoader } from '../../Shared'
-
-import {
-  LoadingWrapper,
-  ErrorWrapper
-} from '../BusinessPaymentInvoiceDetail/styles'
+import { CircleAlert, Download as DownloadIcon } from '../../Shared/Icon'
+import { Button, EmptyState, Skeleton } from '../../Shared/Product'
+import '../BusinessPaymentReports/panels.css'
 
 import {
   DetailWrapper,
   ActionBar,
-  ActionButton,
   IframeWrapper
 } from './styles'
 
@@ -28,12 +23,8 @@ export const EatStreetReportDetail = ({ reportId }) => {
   const [htmlState, setHtmlState] = useState({ loading: true, rawHtml: null, error: null })
   const iframeRef = useRef(null)
   const wrapperRef = useRef(null)
-  // Prevent scroll chaining: lock body scroll while sidebar is open.
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = prevOverflow }
-  }, [])
+  // redesign business-payments FD (D8): the lock of the scroll of the body (the old SideBar's scroll chaining) is gone;
+  // in a SplitView the panel has its own scroll.
 
   useEffect(() => {
     const el = wrapperRef.current
@@ -91,29 +82,37 @@ export const EatStreetReportDetail = ({ reportId }) => {
     iframe.contentWindow.print()
   }, [])
 
+  // redesign business-payments FD (D9): the box of the report while it loads, and an error with a way to ask again
   if (htmlState.loading) {
     return (
-      <LoadingWrapper>
-        <SpinnerLoader />
-      </LoadingWrapper>
+      <div className='bpp-skeleton' data-fill='' role='status' aria-busy='true'>
+        <span className='odc-sr-only'>{t('LOADING', 'Loading')}</span>
+        <Skeleton size='30%' block='var(--od-x-control-height)' />
+        <Skeleton className='bpp-skeleton-frame' />
+      </div>
     )
   }
 
   if (htmlState.error) {
     return (
-      <ErrorWrapper>
-        <p>{htmlState.error}</p>
-      </ErrorWrapper>
+      <div className='bpp-error'>
+        <EmptyState
+          tone='error'
+          icon={CircleAlert}
+          title={t('BUSINESS_PAYMENTS_REPORT_LOAD_ERROR', "We couldn't load this report.")}
+          description={htmlState.error}
+          action={<Button onClick={fetchHtmlReport}>{t('TRY_AGAIN', 'Try again')}</Button>}
+        />
+      </div>
     )
   }
 
   return (
     <DetailWrapper>
       <ActionBar>
-        <ActionButton onClick={handleDownloadPdf}>
-          <DownloadIcon />
+        <Button variant='secondary' icon={DownloadIcon} onClick={handleDownloadPdf}>
           {t('DOWNLOAD_PDF', 'Download PDF')}
-        </ActionButton>
+        </Button>
       </ActionBar>
       <IframeWrapper ref={wrapperRef}>
         <iframe

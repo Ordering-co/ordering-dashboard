@@ -1,0 +1,352 @@
+/*
+ * 5.2-A · Page head in one line (prototype .page-head): menu button, title, live status,
+ * space, Learn and the page actions. Plus the stack of inline notices under the tabs.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+
+/* F6b (D-18): one row at any width, so opening the order panel (which narrows the list) never wraps the actions
+ * under the title and pushes the table. What gives, in order: the title truncates, Learn goes to its icon under
+ * 700px of head, Export goes to its icon under 600px; Create keeps its text. */
+.odc-page-head {
+  /* The head's own width (not the viewport) decides when Learn and Export shrink to their icons. */
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-end: var(--od-space-3);
+}
+
+.odc-page-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  white-space: nowrap;
+  /* the one item that gives when the row is short; it carries its full text as `title` */
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The title is the page's start: focusPageStart gives it tabindex -1 and focuses it on arrival, so the browser drew its own default
+ * ring. It gets the brand ring when the focus comes from the keyboard (:focus-visible), and none for a plain programmatic focus; the
+ * same pair as PageHeader's title (page-header.css). */
+.odc-page-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-page-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Everything else on the row keeps its size. */
+.odc-page-head > :not(.odc-page-title):not(.odc-page-spacer) {
+  flex: none;
+}
+
+.odc-page-spacer {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+/* The embedded lists (customer, driver, business) have no title line: the connection indicator gets
+ * a row of its own at the end, above the filters. */
+.odc-page-live-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-block-end: var(--od-space-2);
+}
+
+/* Learn, the maps key button and the page actions: one group that ends the line. It no longer wraps
+ * under the title (F6b): the head collapses Learn and Export to icons instead. */
+.odc-page-actions {
+  display: flex;
+  align-items: center;
+  flex: none;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+  margin-inline-start: auto;
+  min-inline-size: 0;
+}
+
+/* The tutorial button keeps its legacy component; it only needs room next to the title. */
+.odc-page-head .tour_btn {
+  flex: none;
+}
+
+/* ── Page actions (OrdersDashboardControls variant="header") ──
+ * New order and Export keep their legacy components (the form and the export flow
+ * live in them); they are dressed here as Product buttons: Export secondary, New
+ * order primary and last. Three selectors deep so they outrank the legacy classes. */
+.odc-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: var(--od-space-2);
+}
+
+.odc-header-actions > [data-action] {
+  display: flex;
+  align-items: center;
+}
+
+/* Only each action's own trigger: the create-order panel and the export dialog mount
+ * inside [data-action], and their buttons keep their own sizes. `first-of-type`, not
+ * `first-child`: Base UI puts focus guards (span) before the trigger while its popup is
+ * open, and the trigger must not change size when it opens (audit 3). */
+.odc-header-actions > [data-action] > button:first-of-type,
+.odc-header-actions > [data-action] > div:first-child > button:first-of-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--od-x-space-1-5);
+  block-size: var(--od-x-control-height);
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.odc-header-actions > [data-action] > button:first-of-type:hover,
+.odc-header-actions > [data-action] > div:first-child > button:first-of-type:hover { background: var(--od-x-hover); }
+
+/* The primary look is New order's only while no order is open: with the panel open, its footer
+ * owns the primary action (C4) and `data-emphasis='secondary'` leaves this one as a secondary. */
+.odc-header-actions > [data-action='create']:not([data-emphasis='secondary']) > button:first-of-type,
+.odc-header-actions > [data-action='create']:not([data-emphasis='secondary']) > div:first-child > button:first-of-type {
+  /* redesign tramo B r2 (W0-PB1-02): the legacy button dressed as the primary reads the tenant accent, as .odc-btn[data-variant='primary'] does. */
+  background: var(--od-x-tenant-action, var(--od-action));
+  border-color: var(--od-x-tenant-action, var(--od-action));
+  color: var(--od-action-foreground); /* decision 42: white on the tenant shade */
+}
+
+.odc-header-actions > [data-action='create']:not([data-emphasis='secondary']) > button:first-of-type:hover,
+.odc-header-actions > [data-action='create']:not([data-emphasis='secondary']) > div:first-child > button:first-of-type:hover {
+  background: var(--od-x-tenant-action-hover, var(--od-action-hover));
+  border-color: var(--od-x-tenant-action-hover, var(--od-action-hover));
+}
+
+.odc-header-actions > [data-action] > button:first-of-type:disabled,
+.odc-header-actions > [data-action] > div:first-child > button:first-of-type:disabled {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+}
+
+.odc-header-actions > [data-action] > button:first-of-type:focus-visible,
+.odc-header-actions > [data-action] > div:first-child > button:first-of-type:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-header-actions > [data-action] > button:first-of-type svg,
+.odc-header-actions > [data-action] > div:first-child > button:first-of-type svg {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+  margin: 0;
+}
+
+/* ── Learn (shared LearnDropDown) ──
+ * Since audit 4 the trigger is a Product ghost Button (Menu), so it needs no dress here, only the
+ * head's own height (the control height, 44px with a coarse pointer, below) and no margin: the
+ * group's gap spaces it. Under ~700px of head Learn keeps only its icon: the text goes visually,
+ * the accessible name stays (the text is clipped, not removed) and the title shows «Learn». */
+.odc-page-head .od-ui.od-learn-menu .learn-drop-down {
+  margin: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+@container (max-width: 699px) {
+  .odc-page-head .learn-drop-down .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ── Export (F6b, D-18) ──
+ * Wide, the button reads «Export ▾» as it always did (its icon is not drawn). Under 600px of head it keeps
+ * the icon and the chevron: the text is clipped, not removed, so the accessible name stays, and the trigger
+ * carries a title. */
+.odc-page-head .odc-export-icon {
+  display: none;
+}
+
+@container (max-width: 599px) {
+  .odc-page-head .odc-export-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .odc-page-head .odc-export-icon {
+    display: inline-block;
+  }
+}
+
+/* redesign F6d (Q3-14): under 640px of head (the list beside a wide order panel on a laptop: ~550px at 1280 with the
+ * menu expanded) the live status keeps only its mark BEFORE the title truncates: the text is zero-size, not removed, so
+ * its name stays (and the button carries it as `title`; the phone row does the same under 320px). The title, the pill's
+ * text and the page actions at their widest need ~600px, so from 640px nothing has to give. */
+@container (max-width: 639px) {
+  .odc-page-head .odc-live-btn.odc-btn {
+    font-size: 0;
+  }
+}
+
+/* ── Inline notices under the tabs (connection lost, sound) ──
+ * F6b (D-16): the notices share ONE grid cell, so the region is as tall as the tallest notice and never the sum
+ * of both: the connection notice arriving after the page loaded (the socket failing) does not push the list
+ * from 40 to 88px. The notices carry no bottom margin: the list's own top margin is the gap, as it was when the
+ * margins collapsed.
+ * F6d (Q3-03): a notice that is not shown takes NO space. The sound notice used to be `visibility: hidden` in that
+ * cell while the connection notice was up, and its longer text kept the cell tall (+26px at 1280 with the panel,
+ * 58px of blank on a phone); and the connection notice replaced it under the pointer (Accept became Update). Now the
+ * sound notice, decided in the first frame (D-16), stays until the user answers it, and the connection notice waits
+ * out of the flow behind it (`display: none`: no height, out of the tab order); the pill in the head already says the
+ * state. When the sound notice is answered the connection notice takes its place, in the same one-line cell. */
+.odc-orders-notices {
+  display: grid;
+}
+
+.odc-orders-notices > * {
+  grid-area: 1 / 1;
+  align-self: start;
+  min-inline-size: 0;
+}
+
+.odc-orders-notices .odc-notice {
+  margin-inline: 0;
+  margin-block-end: 0;
+}
+
+.odc-orders-notices:has(.odc-sound-notice) .odc-connection-notice {
+  display: none;
+}
+
+/* F6c-5 (Q2-05): the list beside the order panel is narrow, and a notice that wraps to two lines pushes the table down
+ * (+14px at 1440, more at 1280). From a desktop width the text keeps one line and clips with an ellipsis; the action keeps
+ * its size and its place at the end. A phone keeps the wrap: there the notice is what there is to read. */
+@media (min-width: 768px) {
+  /* F6d (Q3-03): one line for every notice: the text takes what is left and clips, the actions never wrap under it. */
+  .odc-orders-notices .odc-notice-text {
+    flex: 1 1 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .odc-orders-notices .odc-notice {
+    flex-wrap: nowrap;
+  }
+
+  .odc-orders-notices .odc-notice-action {
+    flex: none;
+  }
+}
+
+/* Touch (C3): every action reaches 44px with a coarse pointer, and on a phone-width viewport (redesign fix-qa E8:
+   «+», «More actions», the live status and Learn measured 28-32px with a mouse at 390px). The icon-only ones get
+   the width as well. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-header-actions > [data-action] > button:first-of-type,
+  .odc-header-actions > [data-action] > div:first-child > button:first-of-type,
+  .odc-page-head .odc-btn,
+  .odc-page-head .od-ui.od-learn-menu .learn-drop-down {
+    min-block-size: var(--od-x-target-coarse);
+  }
+  .odc-page-head .odc-btn[data-icon-only] {
+    min-inline-size: var(--od-x-target-coarse);
+  }
+  /* e2e stage close: the live status keeps only its mark when the head is narrow (F6d, Q3-14, below), which on a phone
+     made it a 28px-wide target. It is as wide as an icon-only button there, its mark centred. */
+  .odc-page-head .odc-live-btn.odc-btn {
+    min-inline-size: var(--od-x-target-coarse);
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .odc-page-head { gap: var(--od-space-2); }
+}
+
+/* ── Phones (5.6-B) ──
+ * Under 768px of viewport the head is one row, like the prototype's `.m-top`: menu button, title, live
+ * status, then the page's actions («+» and «More actions», 44px with a coarse pointer). The row does not
+ * wrap: the title takes what is left and truncates (it carries its full text as `title`), everything else
+ * keeps its size. The component decides (`data-phone`, from the same viewport query as the order cards). */
+.odc-page-head[data-phone] {
+  flex-wrap: nowrap;
+  gap: var(--od-space-1);
+}
+
+.odc-page-head[data-phone] .odc-page-title {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  /* AC-F L2: like PageHeader's title (page-header.css), the phone title wraps by words to TWO lines and only the third is cut with
+   * «…» (line clamp): «Tableau de bord des livraisons» (fr), «Λίστα παραγγελιών» (el) no longer end in an ellipsis at 390px. A word
+   * longer than the line breaks (overflow-wrap). Two lines of the section size on the title leading are 43.2px, inside the 44px of
+   * the actions (centred on the row), so the head is as tall and the buttons stay where they were. Wider heads keep one line. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  /* inert with the clamp (it draws its own «…»); kept so a cut still ends in an ellipsis where the clamp is ignored */
+  text-overflow: ellipsis;
+  /* the prototype's phone title: the section size, not the 22px page title */
+  font-size: var(--od-x-type-section-size);
+}
+
+.odc-page-head[data-phone] .odc-page-spacer {
+  display: none;
+}
+
+.odc-page-head[data-phone] .odc-live {
+  flex: none;
+}
+
+.odc-page-head[data-phone] .odc-page-actions {
+  flex: none;
+  flex-wrap: nowrap;
+  margin-inline-start: 0;
+  gap: var(--od-space-1);
+}
+
+.odc-header-actions[data-phone] {
+  flex-wrap: nowrap;
+  gap: var(--od-space-1);
+}
+
+/* On a very narrow row (320px screens) the live status keeps only its dot and its name, as Learn keeps its
+ * icon: the text is zero-size, not removed, so the accessible name stays and the title is not squeezed. */
+@container (max-width: 319px) {
+  .odc-page-head[data-phone] .odc-live-btn.odc-btn {
+    font-size: 0;
+  }
+}

@@ -1,0 +1,57 @@
+/*
+ * redesign SB-B3 · General tab of a brand: logo, name, slug, ribbon (text, color, shape) and the save bar at the foot.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only. Prefix: odc-brand-*.
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as SEO, 5.1b).
+ */
+
+.odc-brand-general {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-brand-general:focus { outline: none; }
+
+/* The logo keeps a card's width; it does not stretch across a wide panel. */
+.odc-brand-general > .odc-image-field {
+  max-inline-size: calc(var(--od-x-control-height) * 12);
+}
+
+/* The ribbon fields hang from the switch that turns them on. */
+.odc-brand-ribbon {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+}
+
+.odc-brand-general > .odc-brand-savebar {
+  inset-block-end: 0;
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as SEO). */
+.odc-brand-general :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* ── Shapes: a decorative sample of the ribbon inside each card ── */
+.odc-brand-shape {
+  display: block;
+  inline-size: calc(var(--od-x-control-height) * 2);
+  max-inline-size: 100%;
+  block-size: var(--od-space-4);
+  margin-inline: auto;
+  background: var(--od-text-muted);
+}
+
+.odc-brand-shape[data-shape='rectangle'] { border-radius: 0; }
+
+.odc-brand-shape[data-shape='rectangle_round'] { border-radius: var(--od-radius-control); }
+
+.odc-brand-shape[data-shape='capsule_shape'] { border-radius: var(--od-radius-round); }

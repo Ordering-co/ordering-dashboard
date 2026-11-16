@@ -32,6 +32,13 @@ export const Schedule = (props) => {
   })
   const [openAddSchedule, setOpenAddSchedule] = useState({})
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
+  // (P-3): true once the user edits; the next state is then reported even if it equals `scheduleList`, so a consumer
+  // that compares with the saved week sees the user put it back. A state that comes from `scheduleList` is never reported.
+  const userEditedRef = useRef(false)
+  const commitScheduleState = (next) => {
+    userEditedRef.current = true
+    commitSchedule(next) // (main): every change goes through scheduleRef
+  }
   const selectedCopyDaysRef = useRef(selectedCopyDays)
 
   /**
@@ -77,7 +84,7 @@ export const Schedule = (props) => {
   const handleEnabledSchedule = (daysOfWeekIndex, checked) => {
     const _schedule = cloneSchedule(scheduleRef.current)
     _schedule[daysOfWeekIndex].enabled = checked
-    commitSchedule(_schedule)
+    commitScheduleState(_schedule)
   }
 
   /**
@@ -124,7 +131,7 @@ export const Schedule = (props) => {
       } else {
         _schedule[daysOfWeekIndex].lapses[lapseIndex] = changeScheduleTime
         _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-        commitSchedule(_schedule)
+        commitScheduleState(_schedule)
       }
     }
   }
@@ -137,7 +144,7 @@ export const Schedule = (props) => {
   const handleDeleteSchedule = (daysOfWeekIndex, index) => {
     const _schedule = cloneSchedule(scheduleRef.current)
     _schedule[daysOfWeekIndex].lapses.splice(index, 1)
-    commitSchedule(_schedule)
+    commitScheduleState(_schedule)
   }
 
   const handleOpenAddSchedule = (daysOfWeekIndex) => {
@@ -267,7 +274,7 @@ export const Schedule = (props) => {
     if (newTimeSlot) {
       _schedule[daysOfWeekIndex].lapses.push(newTimeSlot)
       _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-      commitSchedule(_schedule)
+      commitScheduleState(_schedule)
       setOpenAddSchedule({
         [daysOfWeekIndex]: false
       })
@@ -302,12 +309,14 @@ export const Schedule = (props) => {
       }
       return option
     })
-    commitSchedule(_schedule)
+    commitScheduleState(_schedule)
   }
 
   useEffect(() => {
     if (scheduleState.length === 0) return
-    if (schedulesEqual(scheduleState, scheduleList)) return
+    const userEdited = userEditedRef.current
+    userEditedRef.current = false
+    if (!userEdited && schedulesEqual(scheduleState, scheduleList)) return
     handleChangeScheduleState([...scheduleState])
   }, [scheduleState])
 

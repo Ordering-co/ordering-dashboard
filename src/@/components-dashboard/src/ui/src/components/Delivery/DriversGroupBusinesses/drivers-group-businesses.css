@@ -1,0 +1,18 @@
+/*
+ * redesign  (AD-1, AD-4, AD-5): the Businesses section of the delivery group panel. A vertical stack: the list of stores
+ * (DriversGroupPickList) and Save, aligned to the inline start. Values come from --od-* only; logical properties only.
+ */
+
+.gpb-root {
+  display: grid;
+  gap: var(--od-space-4);
+  justify-items: start;
+  min-inline-size: 0;
+}
+
+.gpb-root > .gpl-root { justify-self: stretch; }
+
+.gpb-root[data-disabled] {
+  opacity: 0.7;
+  pointer-events: none;
+}

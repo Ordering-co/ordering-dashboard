@@ -47,7 +47,7 @@ const BacCredomaticUI = (props) => {
   }
 
   const handleGoToLink = (link) => {
-    window.open(link, '_blank')
+    window.open(link, '_blank', 'noopener,noreferrer')
   }
 
   const expandSidebar = () => {
@@ -103,6 +103,7 @@ const BacCredomaticUI = (props) => {
     return (
       <CategoryExtraContent>
         <IconButton
+          aria-label={t('CLOSE', 'Close')}
           color='black'
           onClick={() => handleCloseDescription()}
         >
@@ -135,6 +136,7 @@ const BacCredomaticUI = (props) => {
           <HeaderIcons>
             {width > 576 && !settingsOpen && (
               <IconButton
+                aria-label={isExpand ? t('COLLAPSE', 'Collapse') : t('EXPAND', 'Expand')}
                 color='black'
                 onClick={expandSidebar}
               >
@@ -142,6 +144,7 @@ const BacCredomaticUI = (props) => {
               </IconButton>
             )}
             <IconButton
+              aria-label={t('CLOSE', 'Close')}
               color='black'
               onClick={onClose}
             >

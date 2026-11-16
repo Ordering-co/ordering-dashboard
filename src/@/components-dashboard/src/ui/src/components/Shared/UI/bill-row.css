@@ -1,0 +1,34 @@
+/* Scoped bill-row actions preserve caller table layout while providing a full target. */
+.od-ui:where(.od-bill-row) .od-bill-row-action-wrapper {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--od-ui-touch-target);
+  min-width: var(--od-ui-touch-target);
+  height: var(--od-ui-touch-target) !important;
+  margin-inline-start: 4px;
+  vertical-align: middle;
+}
+
+.od-ui.od-icon-button.od-bill-row-info-action {
+  flex: 0 0 var(--od-ui-touch-target);
+  width: var(--od-ui-touch-target);
+  min-width: var(--od-ui-touch-target);
+  height: var(--od-ui-touch-target);
+  min-height: var(--od-ui-touch-target);
+  color: var(--od-ui-action-content);
+}
+
+.od-ui.od-icon-button.od-bill-row-info-action > svg {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui.od-icon-button.od-bill-row-info-action {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

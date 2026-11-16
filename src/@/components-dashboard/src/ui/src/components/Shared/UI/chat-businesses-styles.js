@@ -1,0 +1,118 @@
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { Button } from './Button'
+import { entitySelectorStyle } from './entity-selector-theme'
+import './chat-businesses.css'
+
+export const Container = styled.div.attrs(props => ({ className: 'od-ui od-chat-businesses', dir: props.dir ?? (props.theme?.rtl ? 'rtl' : 'ltr'), 'data-slot': 'chat-businesses' }))`
+  ${props => entitySelectorStyle(props.theme)}
+  padding: 0px 12px 15px 12px;
+  height: calc(100% - 140px);
+`
+
+export const CustomersListConatainer = styled.div.attrs({ 'data-slot': 'chat-list-scrollport' })`
+  max-height: calc(100% - 50px);
+  overflow: auto;
+`
+
+export const Card = styled.div.attrs(props => ({ 'data-slot': 'chat-list-row', 'data-selected': props.active ? '' : undefined }))`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--od-entity-selector-border);
+  box-sizing: border-box;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+
+  &:hover {
+    background-color: var(--od-entity-selector-action-soft);
+  }
+
+  ${({ active }) => active && css`
+    background-color: var(--od-entity-selector-action-soft);
+    border: 1px solid var(--od-entity-selector-action-content);
+  `}
+`
+
+export const WrapperImage = styled.div`
+  max-width: 45px;
+  max-height: 45px;
+  height: 45px;
+  width: 45px;
+  ${({ isSkeleton }) => !isSkeleton && css`
+    border: 1px solid var(--od-entity-selector-border);
+  `}
+  border-radius: 8px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    padding: 7px;
+    box-sizing: border-box;
+    border-radius: 50%;
+  }
+`
+
+const ImageStyled = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  background-repeat: no-repeat, repeat;
+  background-size: cover;
+  object-fit: cover;
+  background-position: center;
+  border-radius: 10px;
+`
+export const Image = (props) => {
+  return (
+    <ImageStyled
+      {...props}
+      style={{ backgroundImage: `url(${props.bgimage})` }}
+    >
+      {props.children}
+    </ImageStyled>
+  )
+}
+
+export const InfoContainer = styled.div`
+  ${props => props.theme?.rtl
+? css`
+    margin-right: 15px;
+  `
+: css`
+    margin-left: 15px;
+  `}
+  > div:first-child {
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin: 0 5px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--od-entity-selector-text);
+      font-weight: 600;
+      margin: 0px;
+    }
+  }
+`
+
+export const AssignedOrdersCount = styled(Button).attrs({ className: 'od-chat-orders-action', type: 'button' })`
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--od-entity-selector-action-content);
+
+  ${({ disabled }) => disabled && css`
+    pointer-events: none;
+    opacity: 0.5;
+  `}
+`
+
+export const WrapperPagination = styled.div`
+  margin-top: 20px;
+`

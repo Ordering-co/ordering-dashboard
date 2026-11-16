@@ -1,0 +1,194 @@
+/*
+ *  (main ) · Store add › «Find your business on Google» on Product: the search, the businesses at an address, the
+ * «Is this your business?» card, the suggestions for fields already changed and the photos to copy. The frame is the lookup's
+ * (`.odc-sadd-lookup` in store-add.css). The photo grid wraps (no horizontal scroll at any width). Focus ring and 44px touch target are
+ * P/Button's, P/Checkbox's and P/Select's; the result rows draw their own. Values: --od-* and --od-x-* only. Logical properties.
+ */
+
+.odc-sadd-google-card,
+.odc-sadd-google-photos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sadd-google-card {
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface);
+}
+
+.odc-sadd-google-step:focus,
+.odc-sadd-google-heading:focus {
+  outline: none;
+}
+
+.odc-sadd-google-step:focus-visible,
+.odc-sadd-google-heading:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-sadd-google-heading {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-sadd-google-text {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-sadd-google-results,
+.odc-sadd-google-suggestions,
+.odc-sadd-google-grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-sadd-google-results,
+.odc-sadd-google-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-sadd-google-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--od-x-target-coarse);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-sadd-google-result span {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  overflow-wrap: anywhere;
+}
+
+.odc-sadd-google-result:hover:not(:disabled) {
+  background: var(--od-x-hover);
+}
+
+.odc-sadd-google-result:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-sadd-google-result:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.odc-sadd-google-summary,
+.odc-sadd-google-applied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-sadd-google-applied {
+  justify-content: space-between;
+}
+
+.odc-sadd-google-thumb {
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  border-radius: var(--od-radius-control);
+  object-fit: cover;
+}
+
+.odc-sadd-google-facts {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-sadd-google-facts span {
+  color: var(--od-text-muted);
+}
+
+.odc-sadd-google-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-sadd-google-suggestion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+}
+
+.odc-sadd-google-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 5)), 1fr));
+  gap: var(--od-space-3);
+}
+
+.odc-sadd-google-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-sadd-google-tile[data-selected] {
+  border-color: var(--od-action);
+}
+
+.odc-sadd-google-tile img {
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--od-radius-control);
+  object-fit: cover;
+}
+
+/* one photo per row on a phone: a wider frame keeps the three from taking the screen */
+@media (max-width: 767.98px) {
+  .odc-sadd-google-tile img { aspect-ratio: 16 / 9; }
+}
+
+.odc-sadd-google-credit,
+.odc-sadd-google-attribution {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,26 @@
+.od-ui:where(.od-progress-ring) {
+  @apply od-flex od-items-center od-justify-center od-relative;
+  font-family: var(--od-progress-ring-font);
+}
+
+.od-ui:where(.od-progress-ring) > svg[data-spin='true'] {
+  animation: animation-rotate 2s linear infinite;
+}
+
+.od-ui:where(.od-progress-ring) > .od-progress-ring-label {
+  position: absolute;
+  color: var(--od-progress-ring-label-color);
+  font-size: var(--od-progress-ring-label-size);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-progress-ring) > svg[data-spin='true'] {
+    animation: none;
+  }
+
+  .od-ui:where(.od-progress-ring) .od-progress-ring-progress {
+    transition-property: none !important;
+    transition-duration: 0s !important;
+  }
+}

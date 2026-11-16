@@ -1,0 +1,192 @@
+/*
+ * The staff list (redesign BO-B3): the cells of the table and the cards of a phone. Product's DataTable and RecordCard own the
+ * structure; this adds what an owner cell and a Stores cell are made of. Tokens only (--od-*, --od-x-*); logical properties
+ * only, so right-to-left needs no second set of rules.
+ */
+
+/* ── The owner cell ── */
+.odc-sd-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-sd-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-sd-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sd-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A datum and its verified mark stay on one line */
+.odc-sd-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-sd-email { unicode-bidi: isolate; }
+
+/* redesign  (B1b): the Email column and the Occupation / City cells break long words rather than push the table wider */
+td .odc-sd-email,
+td .odc-sd-clip { overflow-wrap: anywhere; }
+
+.odc-sd-clip { unicode-bidi: isolate; }
+
+/* The column manager's row above the table (professionals): its trigger at the end, as the promotions list */
+.odc-sd-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+}
+
+.odc-sd-verified {
+  display: inline-flex;
+  flex: none;
+  color: var(--od-success-signal);
+}
+
+.odc-sd-verified .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-sd-dash { color: var(--od-x-text-subtle); }
+
+/* «New»: no orders yet. A word, not a figure. «No stores»: the same tone. */
+.odc-sd-new,
+.odc-sd-muted { color: var(--od-text-muted); }
+
+/* ── The Stores cell: up to two names, then «+N» ── */
+.odc-sd-stores {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-sd-store-names {
+  min-inline-size: 0;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sd-more {
+  flex: none;
+  color: var(--od-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inside table cells the name and the second line wrap (long emails break anywhere) and stop at two lines */
+td .odc-sd-name,
+th .odc-sd-name,
+td .odc-sd-sub,
+th .odc-sd-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* : a phone and an id never split between two lines («· +1» / «7025556279 · #43») */
+.odc-sd-sub bdi { white-space: nowrap; }
+
+/* : while a record is open the table is narrow, so the store names stop at a fixed width (then «…»; the full list is in
+   the cell's title and the record's Stores tab) and two long names cannot take the owner column's room. Closed, they show whole. */
+.odc-sd-record-open td .odc-sd-store-names { max-inline-size: var(--od-space-10); }
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-sd-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-sd-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-sd-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-sd-contact {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-sd-card-id { color: var(--od-text-muted); }
+
+/* The professional's «occupation · city» line, first in the contact block */
+.odc-sd-card-where {
+  color: var(--od-text);
+  unicode-bidi: isolate;
+}
+
+.odc-sd-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-sd-metric-label { color: var(--od-text-muted); }
+
+.odc-sd-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-1);
+}
+
+/* redesign  R-4: your own card says why its checkbox and switch are disabled, on a line of its own under them (the Field hint
+   pattern; no tooltip on a phone) */
+.odc-sd-self-note {
+  flex: 1 0 100%;
+  color: var(--od-text-muted);
+}
+
+/* The shared checkbox only fades its box when disabled: on a white or active card that barely reads. Here a disabled one also takes the
+   disabled field's surface and border, as the Field family does. A checked box keeps the action colour. */
+.odc-sd-card-actions .odc-checkbox[data-disabled]:not([data-checked], [data-indeterminate]) .odc-checkbox-box {
+  border-color: var(--od-border);
+  background: var(--od-surface-subtle);
+}

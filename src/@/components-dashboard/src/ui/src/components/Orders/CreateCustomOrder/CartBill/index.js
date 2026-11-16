@@ -72,7 +72,7 @@ export const CartBill = (props) => {
   return (
     <CartBillContainer>
       <h3>{t('SUMMARY', '')}</h3>
-      <table>
+      <table aria-label={t('ORDER_BILL', 'Order bill')}>
         <tbody>
           <tr>
             <td>{t('SUBTOTAL', 'Subtotal')}</td>
@@ -102,9 +102,21 @@ export const CartBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                   <IconContainer>
-                    <BsInfoCircle size='20' color={theme.colors.primary} onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })} />
+                    <button
+                      type='button'
+                      aria-label={`${t('OFFER', 'Offer')} ${offer.name}`}
+                      onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}
+                    >
+                      <BsInfoCircle size='20' color={theme.colors.primary} aria-hidden='true' />
+                    </button>
                     {!!offer?.id && (
-                      <MdCloseCircle size='24' color={theme.colors.primary} onClick={() => onRemoveOffer(offer?.id)} />
+                      <button
+                        type='button'
+                        aria-label={`${t('DELETE', 'Delete')} ${offer.name}`}
+                        onClick={() => onRemoveOffer(offer?.id)}
+                      >
+                        <MdCloseCircle size='24' color={theme.colors.primary} aria-hidden='true' />
+                      </button>
                     )}
                   </IconContainer>
                 </td>
@@ -159,9 +171,21 @@ export const CartBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                   <IconContainer>
-                    <BsInfoCircle size='20' color={theme.colors.primary} onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })} />
+                    <button
+                      type='button'
+                      aria-label={`${t('OFFER', 'Offer')} ${offer.name}`}
+                      onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}
+                    >
+                      <BsInfoCircle size='20' color={theme.colors.primary} aria-hidden='true' />
+                    </button>
                     {!!offer?.id && (
-                      <MdCloseCircle size='24' color={theme.colors.primary} onClick={() => onRemoveOffer(offer?.id)} />
+                      <button
+                        type='button'
+                        aria-label={`${t('DELETE', 'Delete')} ${offer.name}`}
+                        onClick={() => onRemoveOffer(offer?.id)}
+                      >
+                        <MdCloseCircle size='24' color={theme.colors.primary} aria-hidden='true' />
+                      </button>
                     )}
                   </IconContainer>
                 </td>
@@ -206,9 +230,21 @@ export const CartBill = (props) => {
                     <span>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</span>
                   )}
                   <IconContainer>
-                    <BsInfoCircle size='20' color={theme.colors.primary} onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })} />
+                    <button
+                      type='button'
+                      aria-label={`${t('OFFER', 'Offer')} ${offer.name}`}
+                      onClick={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}
+                    >
+                      <BsInfoCircle size='20' color={theme.colors.primary} aria-hidden='true' />
+                    </button>
                     {!!offer?.id && (
-                      <MdCloseCircle size='24' color={theme.colors.primary} onClick={() => onRemoveOffer(offer?.id)} />
+                      <button
+                        type='button'
+                        aria-label={`${t('DELETE', 'Delete')} ${offer.name}`}
+                        onClick={() => onRemoveOffer(offer?.id)}
+                      >
+                        <MdCloseCircle size='24' color={theme.colors.primary} aria-hidden='true' />
+                      </button>
                     )}
                   </IconContainer>
                 </td>
@@ -251,7 +287,7 @@ export const CartBill = (props) => {
             />
           </CouponContainer>
         )}
-      <table className='total'>
+      <table className='total' aria-label={t('ORDER_TOTAL', 'Order total')}>
         <tbody>
           <tr>
             <td>{t('TOTAL', 'Total')}</td>

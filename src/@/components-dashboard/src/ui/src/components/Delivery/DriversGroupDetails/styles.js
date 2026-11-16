@@ -11,24 +11,23 @@ export const Header = styled.div`
   margin-bottom: 15px;
   display: flex;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   justify-content: space-between;
-
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 40px;
-  `
-: css`
-    margin-right: 40px;
-  `}
+  margin-inline-end: 40px;
 
   > div:first-child {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
     h1 {
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
       font-weight: 700;
       margin: 0px;
       flex: 1;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     label {
@@ -38,44 +37,71 @@ export const Header = styled.div`
 `
 
 export const MenusContainer = styled.div`
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
   margin-bottom: 35px;
 `
 
-export const Tab = styled.div`
+export const Tab = styled.button`
   padding: 10px 0px;
+  min-height: 44px;
   cursor: pointer;
-  color: ${props => props.theme.colors?.lightGray};
+  color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
+  border: 0;
+  background: transparent;
 
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 30px;
-  `
-: css`
-    margin-right: 30px;
-  `}
+  margin-inline-end: 30px;
 
   ${({ active }) => active && css`
-    color: ${props => props.theme.colors.headingColor};
-    border-bottom: 2px solid ${props => props.theme.colors.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
+    border-bottom: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.headingColor};
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+    outline-offset: 2px;
+  }
 `
+
+export const TabPanel = styled.div`
+  min-width: 0;
+`
+
 export const ActionSelectorWrapper = styled.div`
+  margin-inline-start: 5px;
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   button {
     background: transparent !important;
     border: none;
     padding: 0px 5px;
+    min-width: 44px;
+    min-height: 44px;
     &:active,
     &:focus {
       border-color: unset !important;
       box-shadow: none !important;
     }
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+      outline-offset: 2px;
+    }
     svg {
-      color: ${props => props.theme.colors.headingColor};
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
       font-size: 20px;
     }
 
@@ -84,32 +110,32 @@ export const ActionSelectorWrapper = styled.div`
     }
 
     &:hover {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? darken(0.04, props.theme.colors.secundary ?? '#F6F7F7')} !important;
     }
     &:active {
-      background: ${props => darken(0.1, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? darken(0.1, props.theme.colors.secundary ?? '#F6F7F7')} !important;
     }
   }
 
   .show {
     button {
-      background: ${props => darken(0.04, props.theme.colors.secundary)} !important;
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? darken(0.04, props.theme.colors.secundary ?? '#F6F7F7')} !important;
     }
     >div {
-      border: 1px solid ${props => props.theme.colors.borderColor};
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+      border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+      box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0px 4px 10px rgba(0, 0, 0, 0.12)'};
     }
   }
 
   > div {
     > div {
-      border-radius: 8px;
+      border-radius: ${props => props.theme?.ordering?.radius?.control ?? '8px'};
       .dropdown-item {
-        font-size: 12px;
-        color: ${props => props.theme.colors.headingColor};
+        font-size: var(--od-type-control-size);
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {
-        color: #E63757;
+        color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? '#E63757'};
       }
     }
   }
@@ -118,4 +144,5 @@ export const ActionSelectorWrapper = styled.div`
 export const RightHeader = styled.div`
   display: flex;
   align-items: center;
+  margin-inline-start: auto;
 `

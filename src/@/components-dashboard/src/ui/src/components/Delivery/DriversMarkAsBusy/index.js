@@ -77,7 +77,7 @@ export const DriversMarkAsBusy = (props) => {
           </StepItem>
           <StepItem>
             <div className='number'>2</div>
-            <span>{t('ORDER_STATUS_ACCEPTEDBYRESTAURANT', 'Accepted by Business')}</span>
+            <span>{t('ORDER_STATUS_ACCEPTEDBYRESTAURANT', 'Accepted by business')}</span>
             <Input
               name='autoassign_max_in_accepted_by_business'
               value={changesState?.autoassign_max_in_accepted_by_business ?? curDriversGroup?.autoassign_max_in_accepted_by_business ?? ''}
@@ -97,7 +97,7 @@ export const DriversMarkAsBusy = (props) => {
           </StepItem>
           <StepItem>
             <div className='number'>4</div>
-            <span>{t('ORDER_CONFIRMED_ACCEPTED_BY_DRIVER', 'Accepted by Driver')}</span>
+            <span>{t('ORDER_CONFIRMED_ACCEPTED_BY_DRIVER', 'Accepted by driver')}</span>
             <Input
               name='autoassign_max_in_accepted_by_driver'
               value={changesState?.autoassign_max_in_accepted_by_driver ?? curDriversGroup?.autoassign_max_in_accepted_by_driver ?? ''}
@@ -137,7 +137,7 @@ export const DriversMarkAsBusy = (props) => {
           </StepItem>
           <StepItem>
             <div className='number'>8</div>
-            <span>{t('ORDER_PICKUP_COMPLETED_BY_DRIVER', 'Pickup Completed By Driver')}</span>
+            <span>{t('ORDER_PICKUP_COMPLETED_BY_DRIVER', 'Pickup completed by driver')}</span>
             <Input
               name='autoassign_max_in_pickup_completed'
               value={changesState?.autoassign_max_in_pickup_completed ?? curDriversGroup?.autoassign_max_in_pickup_completed ?? ''}

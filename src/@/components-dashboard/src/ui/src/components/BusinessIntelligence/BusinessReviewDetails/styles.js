@@ -12,7 +12,7 @@ export const ReviewDetailsContainer = styled.div`
 export const Header = styled.div`
   margin-bottom: 30px;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 12px;
     ${props => props.theme?.rtl
@@ -145,7 +145,7 @@ export const ReviewQualityTextContainer = styled.div`
   p {
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 `
 
@@ -159,7 +159,7 @@ export const InfoBlock = styled.div`
   `}
   max-width: calc(100% - 60px);
   p {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
     overflow: hidden;
@@ -167,7 +167,7 @@ export const InfoBlock = styled.div`
     white-space: nowrap;
 
     &.bold {
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       font-weight: 500;
       color: ${props => props.theme.colors.headingColor};
     }
@@ -175,7 +175,7 @@ export const InfoBlock = styled.div`
 `
 
 export const Comment = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   margin: 25px 0;
 
   ${({ isEmpty }) => isEmpty && css`
@@ -185,5 +185,5 @@ export const Comment = styled.div`
 `
 
 export const NotReviewed = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react'
+import styled from 'styled-components'
 import {
   Switch,
   Route,
@@ -18,112 +19,140 @@ import {
   ASSISTANT_ALLOWED_LEVELS
 } from '~components'
 
-import {
-  NotNetworkConnectivity,
-  useOnlineStatus,
-  useWindowSize,
-  useProjectState,
-  SidebarMenu,
-  Layout,
-  Banners,
-  BannerStack,
-  WebsocketConnectionBanner,
-  TrialExtensionProvider,
-  TrialExtensionBanner,
-  TrialExtensionModal,
-  AppBootLoader,
-  resolveBootDensity,
-  resolveBootVariant,
-  ProtectedRoute,
-  QueryLogin,
-  Modal,
-  BillingPaymentOptions,
-  getConnectAllowedLevels,
-  getConnectVisualAccess,
-  useTheme,
-  getUserType,
-  SCHOOLS_ALLOWED_LEVELS,
-  AssistantPanel,
-  CommandPalette,
-  CommandPaletteProvider,
-  CommandPaletteRouteBoundary,
-  DashboardDestinationsProvider
-} from '~ui'
+// by file, not from the ~ui index, so the entry stylesheet carries only the shell's CSS (see src/index.js).
+import { NotNetworkConnectivity } from '~ui/src/components/NotNetworkConnectivity'
+import { useOnlineStatus } from '~ui/src/hooks/useOnlineStatus'
+import { useWindowSize } from '~ui/src/hooks/useWindowSize'
+import { useProjectState } from '~ui/src/contexts/ProjectContext'
+import { SidebarMenu } from '~ui/src/components/SidebarMenu'
+import { Layout } from '~ui/src/components/Layout'
+import { Banners, BannerStack, LegacyDashboardNotice, PhoneNotice } from '~ui/src/components/Banners'
+import { WebsocketConnectionBanner } from '~ui/src/components/WebsocketConnectionBanner'
+import { TrialExtensionProvider } from '~ui/src/contexts/TrialExtensionContext'
+import { TrialExtensionBanner, TrialExtensionModal } from '~ui/src/components/TrialExtension'
+import { UpgradeOfferProvider } from '~ui/src/contexts/UpgradeOfferContext'
+import { UpgradeOfferModal } from '~ui/src/components/Billing/UpgradeOfferModal'
+import { AppBootLoader, resolveBootDensity, resolveBootVariant } from '~ui/src/components/Shared/AppBootLoader'
+import { ProtectedRoute } from '~ui/src/components/Shared/ProtectedRoute'
+import { ChunkErrorBoundary } from '~ui/src/components/Shared/ChunkErrorBoundary'
+import { QueryLogin } from '~ui/src/components/Login/QueryLogin'
+import { BillingPaymentOptions } from '~ui/src/components/Billing'
+import { getConnectAllowedLevels, getConnectVisualAccess, SCHOOLS_ALLOWED_LEVELS } from '~ui/src/utils'
+import { useTheme } from '~ui/src/contexts/ThemeContext'
+import { AssistantPanel } from '~ui/src/components/Assistant'
+import { LegacyPlanUpgradeProvider } from '~ui/src/contexts/LegacyPlanUpgradeContext'
+import { CommandPalette } from '~ui/src/components/CommandPalette'
+import { CommandPaletteProvider, CommandPaletteRouteBoundary } from '~ui/src/contexts/CommandPaletteContext'
+import { DashboardDestinationsProvider } from '~ui/src/contexts/DashboardDestinationsContext'
 
-import { PageNotFound } from './pages/PageNotFound'
-import { Assistant } from './pages/Assistant'
-import { Home } from './pages/Home'
-import { Settings } from './pages/Settings'
-import { SettingsLegacyRedirect } from './pages/Settings/LegacyRedirect'
-import { Login } from './pages/Login'
-import { ForgotPassword } from './pages/ForgotPassword'
-import { OrdersList } from './pages/OrdersList'
-import { DeliveriesManager } from './pages/DeliveriesManager'
-import { DriversList } from './pages/DriversList'
-import { AllInOne } from './pages/AllInOne'
-import { CustomersList } from './pages/CustomersList'
-import { BusinessOwnersList } from './pages/BusinessOwnersList'
-import { CallcenterAgentsList } from './pages/CallcenterAgentsList'
-import { ManagersList } from './pages/ManagersList'
-import { BusinessesList } from './pages/BusinessesList'
-import { BrandManager } from './pages/BrandManager'
-import { BusinessProductsList } from './pages/BusinessProductsList'
-import { BusinessAnalytics } from './pages/BusinessAnalytics'
-import { MessagesList } from './pages/MessagesList'
-import { DriverAnalytics } from './pages/DriverAnalytics'
-import { DriverStoreStatus } from './pages/DriverStoreStatus'
-import { InvoiceManager } from './pages/InvoiceManager'
-import { ReviewsList } from './pages/ReviewsList'
-import { DeliveryDriversList } from './pages/DeliveryDriversList'
-import { DriversManagersList } from './pages/DriversManagersList'
-import { DriversCompaniesList } from './pages/DriversCompaniesList'
-import { DriversGroupsList } from './pages/DriversGroupsList'
-import { Support } from './pages/Support'
-import { AdvancedReports } from './pages/AdvancedReports'
-import { EnterprisePromotionList } from './pages/EnterprisePromotionList'
-import { CampaignListing } from './pages/CampaignListing'
-import { OpenCarts } from './pages/OpenCarts'
-import { RecoveryActionListing } from './pages/RecoveryActionListing'
-import { OrderingProducts } from './pages/OrderingProducts'
-import { Professionals } from './pages/Professionals'
-import { Appointments } from './pages/Appointments'
-import { Schools } from './pages/Schools'
-import { Builder } from './pages/Builder'
-import { BuilderProduct } from './pages/BuilderProduct'
-import { GiftCardsList } from './pages/GiftCardsList'
-import { Markups } from './pages/Markups'
-import { ResetPassword } from './pages/ResetPassword'
-import { Profile } from './pages/Profile'
-import { OrderingWebsite } from './pages/OrderingWebsite'
-import { FranchisesWebsite } from './pages/FranchisesWebsite'
-import { Dashboard } from './pages/Dashboard'
-import { ProductsBuilderList } from './pages/ProductsList'
-import { BusinessAdd } from './pages/BusinessAdd'
-import { AdBannersList } from './pages/AdBannersList'
-import { BusinessDevicesList } from './pages/BusinessDevicesList'
-import { DeliveryServices } from './pages/DeliveryServices'
-import { Importers } from './pages/Importers'
-import { PosMenu } from './pages/PosMenu'
-import { SalesChannels } from './pages/SalesChannels'
-import { WhatsAppBots } from './pages/WhatsAppBots'
-
+import { getDashboardStartPath, isHiddenByReadOnly } from '~components/utils/dashboardNavigation'
+import { getEcommerceReportsRedirectPath } from '~components/utils/ecommerceReports'
 import { ScrollToTop } from './components/ScrollToTop'
+import { ShellMain } from './components/ShellMain'
+import { OfflineRouteGate, useRoutesLocation } from './components/OfflineRouteGate'
 import { ListenPageChanges } from './components/ListenPageChanges'
 import { HelmetTags } from './components/HelmetTags'
 import { StoreOnboardingGate } from './components/StoreOnboardingGate'
+import { RegisterStoresGate } from './components/RegisterStoresGate'
 import { IntercomWrapper } from './components/IntercomWrapper'
 import settings from './config'
 import { firebasePushSetup, getFirebaseWebConfig, isFirebasePushEnabled, getOpenedPushOrderUuid } from './utils/firebaseWebPush'
 import { getDashboardFaviconUrl } from './utils/dashboardBranding'
 import { useDashboardBootReveal } from './utils/useDashboardBootReveal'
-import { SettingsLogs } from './pages/SettingsLogs'
-import { FreeProductsList } from './pages/FreeProductsList'
-import { OpenSourceCode } from './pages/OpenSourceCode'
-import { DriversTimeDisplay } from './pages/DriverTimeDisplay'
-import { EcommerceReports } from './pages/EcommerceReports'
-import { BusinessPaymentReports } from './pages/BusinessPaymentReports'
+import { lazyWithReload } from './utils/chunkReload'
 import { DocsConnection, docsConnectMode } from '~components/components/DocsConnection'
 import { DocsConnectionConsent } from '~ui/src/components/DocsConnectionConsent'
+import { BillingResultNotice } from '~ui/src/components/Billing/BillingResultNotice' // redesign BM-C (M-BM5)
+import { peekBillingResult } from '~ui/src/components/Billing/BillingPaymentOptions/billingModel' // redesign BM-C (M-BM20)
+
+// redesign W0-10b (T0-41, decision 33): every page is its own chunk, loaded when its route is first visited. The shell (Layout,
+// SidebarMenu, ProtectedRoute, providers, command palette, banners) stays static. One Suspense around the routes paints the boot
+// skeleton while a chunk is on its way. Written as `const X = lazy(() => lazyWithReload(() => import('./pages/…')).then(m => ({ default: m.X })))`: the
+// residue scan (scripts/redesign/residue-scan.mjs) reads that shape to map each route to its page.
+const PageNotFound = lazy(() => lazyWithReload(() => import('./pages/PageNotFound')).then(m => ({ default: m.PageNotFound })))
+const Assistant = lazy(() => lazyWithReload(() => import('./pages/Assistant')).then(m => ({ default: m.Assistant })))
+const Home = lazy(() => lazyWithReload(() => import('./pages/Home')).then(m => ({ default: m.Home })))
+const Settings = lazy(() => lazyWithReload(() => import('./pages/Settings')).then(m => ({ default: m.Settings })))
+const SettingsLegacyRedirect = lazy(() => lazyWithReload(() => import('./pages/Settings/LegacyRedirect')).then(m => ({ default: m.SettingsLegacyRedirect })))
+const Login = lazy(() => lazyWithReload(() => import('./pages/Login')).then(m => ({ default: m.Login })))
+const ForgotPassword = lazy(() => lazyWithReload(() => import('./pages/ForgotPassword')).then(m => ({ default: m.ForgotPassword })))
+const OrdersList = lazy(() => lazyWithReload(() => import('./pages/OrdersList')).then(m => ({ default: m.OrdersList })))
+const DeliveriesManager = lazy(() => lazyWithReload(() => import('./pages/DeliveriesManager')).then(m => ({ default: m.DeliveriesManager })))
+const DriversList = lazy(() => lazyWithReload(() => import('./pages/DriversList')).then(m => ({ default: m.DriversList })))
+const AllInOne = lazy(() => lazyWithReload(() => import('./pages/AllInOne')).then(m => ({ default: m.AllInOne })))
+const CustomersList = lazy(() => lazyWithReload(() => import('./pages/CustomersList')).then(m => ({ default: m.CustomersList })))
+const BusinessOwnersList = lazy(() => lazyWithReload(() => import('./pages/BusinessOwnersList')).then(m => ({ default: m.BusinessOwnersList })))
+const CallcenterAgentsList = lazy(() => lazyWithReload(() => import('./pages/CallcenterAgentsList')).then(m => ({ default: m.CallcenterAgentsList })))
+const ManagersList = lazy(() => lazyWithReload(() => import('./pages/ManagersList')).then(m => ({ default: m.ManagersList })))
+const BusinessesList = lazy(() => lazyWithReload(() => import('./pages/BusinessesList')).then(m => ({ default: m.BusinessesList })))
+const BrandManager = lazy(() => lazyWithReload(() => import('./pages/BrandManager')).then(m => ({ default: m.BrandManager })))
+const BusinessProductsList = lazy(() => lazyWithReload(() => import('./pages/BusinessProductsList')).then(m => ({ default: m.BusinessProductsList })))
+const BusinessAnalytics = lazy(() => lazyWithReload(() => import('./pages/BusinessAnalytics')).then(m => ({ default: m.BusinessAnalytics })))
+const MessagesList = lazy(() => lazyWithReload(() => import('./pages/MessagesList')).then(m => ({ default: m.MessagesList })))
+const DriverAnalytics = lazy(() => lazyWithReload(() => import('./pages/DriverAnalytics')).then(m => ({ default: m.DriverAnalytics })))
+const DriverStoreStatus = lazy(() => lazyWithReload(() => import('./pages/DriverStoreStatus')).then(m => ({ default: m.DriverStoreStatus })))
+const InvoiceManager = lazy(() => lazyWithReload(() => import('./pages/InvoiceManager')).then(m => ({ default: m.InvoiceManager })))
+const ReviewsList = lazy(() => lazyWithReload(() => import('./pages/ReviewsList')).then(m => ({ default: m.ReviewsList })))
+const DeliveryDriversList = lazy(() => lazyWithReload(() => import('./pages/DeliveryDriversList')).then(m => ({ default: m.DeliveryDriversList })))
+const DriversManagersList = lazy(() => lazyWithReload(() => import('./pages/DriversManagersList')).then(m => ({ default: m.DriversManagersList })))
+const DriversCompaniesList = lazy(() => lazyWithReload(() => import('./pages/DriversCompaniesList')).then(m => ({ default: m.DriversCompaniesList })))
+const DriversGroupsList = lazy(() => lazyWithReload(() => import('./pages/DriversGroupsList')).then(m => ({ default: m.DriversGroupsList })))
+const Support = lazy(() => lazyWithReload(() => import('./pages/Support')).then(m => ({ default: m.Support })))
+const AdvancedReports = lazy(() => lazyWithReload(() => import('./pages/AdvancedReports')).then(m => ({ default: m.AdvancedReports })))
+const EnterprisePromotionList = lazy(() => lazyWithReload(() => import('./pages/EnterprisePromotionList')).then(m => ({ default: m.EnterprisePromotionList })))
+const CampaignListing = lazy(() => lazyWithReload(() => import('./pages/CampaignListing')).then(m => ({ default: m.CampaignListing })))
+const OpenCarts = lazy(() => lazyWithReload(() => import('./pages/OpenCarts')).then(m => ({ default: m.OpenCarts })))
+const RecoveryActionListing = lazy(() => lazyWithReload(() => import('./pages/RecoveryActionListing')).then(m => ({ default: m.RecoveryActionListing })))
+const OrderingProducts = lazy(() => lazyWithReload(() => import('./pages/OrderingProducts')).then(m => ({ default: m.OrderingProducts })))
+const Professionals = lazy(() => lazyWithReload(() => import('./pages/Professionals')).then(m => ({ default: m.Professionals })))
+const Appointments = lazy(() => lazyWithReload(() => import('./pages/Appointments')).then(m => ({ default: m.Appointments })))
+const Schools = lazy(() => lazyWithReload(() => import('./pages/Schools')).then(m => ({ default: m.Schools })))
+const Builder = lazy(() => lazyWithReload(() => import('./pages/Builder')).then(m => ({ default: m.Builder })))
+const BuilderProduct = lazy(() => lazyWithReload(() => import('./pages/BuilderProduct')).then(m => ({ default: m.BuilderProduct })))
+const GiftCardsList = lazy(() => lazyWithReload(() => import('./pages/GiftCardsList')).then(m => ({ default: m.GiftCardsList })))
+const Markups = lazy(() => lazyWithReload(() => import('./pages/Markups')).then(m => ({ default: m.Markups })))
+const ResetPassword = lazy(() => lazyWithReload(() => import('./pages/ResetPassword')).then(m => ({ default: m.ResetPassword })))
+const Profile = lazy(() => lazyWithReload(() => import('./pages/Profile')).then(m => ({ default: m.Profile })))
+const OrderingWebsite = lazy(() => lazyWithReload(() => import('./pages/OrderingWebsite')).then(m => ({ default: m.OrderingWebsite })))
+const FranchisesWebsite = lazy(() => lazyWithReload(() => import('./pages/FranchisesWebsite')).then(m => ({ default: m.FranchisesWebsite })))
+const Dashboard = lazy(() => lazyWithReload(() => import('./pages/Dashboard')).then(m => ({ default: m.Dashboard })))
+const ProductsBuilderList = lazy(() => lazyWithReload(() => import('./pages/ProductsList')).then(m => ({ default: m.ProductsBuilderList })))
+const BusinessAdd = lazy(() => lazyWithReload(() => import('./pages/BusinessAdd')).then(m => ({ default: m.BusinessAdd })))
+const AdBannersList = lazy(() => lazyWithReload(() => import('./pages/AdBannersList')).then(m => ({ default: m.AdBannersList })))
+const BusinessDevicesList = lazy(() => lazyWithReload(() => import('./pages/BusinessDevicesList')).then(m => ({ default: m.BusinessDevicesList })))
+const DeliveryServices = lazy(() => lazyWithReload(() => import('./pages/DeliveryServices')).then(m => ({ default: m.DeliveryServices })))
+const Importers = lazy(() => lazyWithReload(() => import('./pages/Importers')).then(m => ({ default: m.Importers })))
+const PosMenu = lazy(() => lazyWithReload(() => import('./pages/PosMenu')).then(m => ({ default: m.PosMenu })))
+const SalesChannels = lazy(() => lazyWithReload(() => import('./pages/SalesChannels')).then(m => ({ default: m.SalesChannels })))
+const WhatsAppBots = lazy(() => lazyWithReload(() => import('./pages/WhatsAppBots')).then(m => ({ default: m.WhatsAppBots })))
+const OrderWithGoogle = lazy(() => lazyWithReload(() => import('./pages/OrderWithGoogle')).then(m => ({ default: m.OrderWithGoogle })))
+const SettingsLogs = lazy(() => lazyWithReload(() => import('./pages/SettingsLogs')).then(m => ({ default: m.SettingsLogs })))
+const FreeProductsList = lazy(() => lazyWithReload(() => import('./pages/FreeProductsList')).then(m => ({ default: m.FreeProductsList })))
+const OpenSourceCode = lazy(() => lazyWithReload(() => import('./pages/OpenSourceCode')).then(m => ({ default: m.OpenSourceCode })))
+const DriversTimeDisplay = lazy(() => lazyWithReload(() => import('./pages/DriverTimeDisplay')).then(m => ({ default: m.DriversTimeDisplay })))
+const BusinessPaymentReports = lazy(() => lazyWithReload(() => import('./pages/BusinessPaymentReports')).then(m => ({ default: m.BusinessPaymentReports })))
+
+// The boot skeleton, resolved from the path being opened (Home's or the shell's), so the screen does not change while the chunk loads.
+// The real SidebarMenu is already on screen around the routes, so the skeleton is asked for no sidebar column (`shell={false}`):
+// the content area is the boot's content area, and the sidebar is not drawn twice. Without a session the boot is the sign-in splash.
+const RouteFallbackFrame = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
+`
+
+const RouteFallback = ({ auth }) => {
+  const { pathname } = useLocation()
+  return (
+    <RouteFallbackFrame>
+      <AppBootLoader
+        variant={resolveBootVariant(auth)}
+        density={resolveBootDensity(auth)}
+        route={pathname}
+        shell={false}
+      />
+    </RouteFallbackFrame>
+  )
+}
 
 /**
  * docs.ordering.co connection popup (`/login?docs_connect=<nonce>`): a focused,
@@ -155,13 +184,25 @@ const DocsConnectApp = () => {
         loaded={loaded}
         purpose={docsConnectMode.purpose}
         signInElement={(
-          <Login
-            useLoginByEmail
-            notice={t('DOCS_CONNECT_SIGN_IN_NOTICE', 'Sign in to connect to docs.ordering.co')}
-            elementLinkToForgotPassword={<a href='/password/forgot' target='_blank' rel='noopener noreferrer'>{t('RESET_PASSWORD', 'Reset password')}</a>}
-            notificationState={notificationState}
-            setNotificationState={setNotificationState}
-          />
+          // redesign W0-PB1-03 (T0-50): Login is a lazy page drawn outside the routes, so it brings its own boundary and boot skeleton.
+          <ChunkErrorBoundary>
+            <Suspense
+              fallback={(
+                <AppBootLoader
+                  variant={resolveBootVariant(auth)}
+                  density={resolveBootDensity(auth)}
+                />
+              )}
+            >
+              <Login
+                useLoginByEmail
+                notice={t('DOCS_CONNECT_SIGN_IN_NOTICE', 'Sign in to connect to docs.ordering.co')}
+                elementLinkToForgotPassword={<a href='/password/forgot' target='_blank' rel='noopener noreferrer'>{t('RESET_PASSWORD', 'Reset password')}</a>}
+                notificationState={notificationState}
+                setNotificationState={setNotificationState}
+              />
+            </Suspense>
+          </ChunkErrorBoundary>
         )}
       />
       {!loaded && (
@@ -202,11 +243,13 @@ const DashboardApp = () => {
 
   const [, t] = useLanguage()
   const onlineStatus = useOnlineStatus()
+  // offline the routes keep the last location they had with the network (no page chunk is fetched without it)
+  const routesLocation = useRoutesLocation(onlineStatus)
 
   const franchiseSites = useMemo(() => sites?.filter(site => site?.type === 'franchiseweb') ?? [], [sites])
-  const readOnlyBusinessOwner = getUserType('readOnlyBusinessOwner') || getUserType('viewOnlyBusinessOwner')
-  const readOnlyDeliveryManager = getUserType('readOnlyDeliveryManager')
-  const readOnlyAdmin = getUserType('readOnlyAdmin')
+
+  // (#76b): where `/` and `/home` send this user (one answer, so the two routes cannot send it in a loop)
+  const startPath = getDashboardStartPath(user)
 
   const isPastDue = projectStatus.project?.current_status === 'past_due'
   const showBanner = auth && isPastDue && user?.user_system_id && !projectStatus.loading && !configLoading && !loading && !isShowBillingPayment?.open
@@ -337,8 +380,11 @@ const DashboardApp = () => {
     oneSignalSetup()
   }, [configLoading, events])
 
+  // redesign BM-C (M-BM20): a page that reloaded because a payment went through does not open the payment again by itself while the
+  // account still reads past due (the shell notice stays on screen). Read once at start: BillingResultNotice takes the mark later.
+  const [reloadedAfterPayment] = useState(() => peekBillingResult() === 'paid')
   useEffect(() => {
-    if (!showBanner) return
+    if (!showBanner || reloadedAfterPayment) return
     setShowBillingPayment((prevState) => ({ ...prevState, open: true, from: 'past_due' }))
   }, [configLoading, loading, projectStatus.loading])
 
@@ -388,6 +434,8 @@ const DashboardApp = () => {
 
   return (
     <TrialExtensionProvider config={settings?.trial_extension} isWhiteLabel={settings?.is_white_label}>
+    {/* (sidebar follow-up): one shared fetch for the sidebar card and the modal below. */}
+    <UpgradeOfferProvider>
       <ListenPageChanges />
       {
         !loaded && (
@@ -399,10 +447,9 @@ const DashboardApp = () => {
       }
       {
         loaded && (
-          <StoreOnboardingGate><IntercomWrapper>
+          <StoreOnboardingGate><IntercomWrapper><LegacyPlanUpgradeProvider>
             <CommandPaletteProvider enabled={!!auth}>
             <DashboardDestinationsProvider>
-            <NotNetworkConnectivity />
             {/* <GoogleTagManager tagId={configs?.google_tag_manager?.value ?? settings?.google_tag_manager} /> */}
             {(showBanner || auth) && (
               <BannerStack>
@@ -410,6 +457,8 @@ const DashboardApp = () => {
                   <Banners setShowBillingPayment={setShowBillingPayment} />
                 )}
                 {auth && <WebsocketConnectionBanner />}
+                {auth && <PhoneNotice />}
+                {auth && <LegacyDashboardNotice config={settings?.legacy_dashboard} />}
               </BannerStack>
             )}
             {/* In normal flow (not in the sticky BannerStack) so it never covers a modal. */}
@@ -418,17 +467,29 @@ const DashboardApp = () => {
               {auth && (
                 <SidebarMenu billingUrl={settings?.billing_url} setShowBillingPayment={setShowBillingPayment} />
               )}
-              {onlineStatus && (
+              {/* (#76a): the shell's one <main id='main-content'> (display: contents, so the flex layout is the same). The offline page
+                  (R1-03) lives inside Layout, next to the menu, instead of a loose block above it that pushed the menu below the fold. */}
+              <ShellMain>
+              <NotNetworkConnectivity />
+              {/* the routes stay mounted (hidden and inert) while there is no network, so a short cut does not erase what was typed; the offline page above shows in their place. */}
+              <OfflineRouteGate online={onlineStatus}>
                 <ScrollToTop>
                   <HelmetTags />
                   <CommandPaletteRouteBoundary>
-                  <Switch>
+                  {/* redesign tramo B r2 (W0-PB1-01): a page chunk that fails to load stays inside the content area (the menu stays) and offers «Reload»; it draws again when the path changes. */}
+                  <ChunkErrorBoundary resetKey={routesLocation.pathname}>
+                  <Suspense fallback={<RouteFallback auth={auth} />}>
+                  <Switch location={routesLocation}>
+                    {/* (D-68): a page the menu hides from readOnlyAdmin or readOnlyDeliveryManager is not reachable by URL or ⌘K either */}
+                    {auth && isHiddenByReadOnly({ path: routesLocation.pathname, user, configs, project: ordering?.project }) && (
+                      <Route>
+                        <PageNotFound />
+                      </Route>
+                    )}
                     <Route exact path='/'>
                       {
                         auth
-                          ? ((user?.level !== 5 && user?.level !== 8) && !(readOnlyAdmin || readOnlyDeliveryManager || readOnlyBusinessOwner))
-                              ? <Redirect to='/home' />
-                              : user?.level === 8 ? <Redirect to='/profile' /> : <Redirect to='/orders' />
+                          ? <Redirect to={startPath} />
                           : (queryProject && queryToken && (!settings.local_project_pin || queryProject === settings.local_project_pin))
                               ? <QueryLogin project={queryProject} token={queryToken} />
                               : <Redirect to='/login' />
@@ -492,9 +553,7 @@ const DashboardApp = () => {
                     <Route exact path='/home'>
                       {
                         auth
-                          ? ((user?.level !== 5 && user?.level !== 8) && !(readOnlyAdmin || readOnlyDeliveryManager || readOnlyBusinessOwner))
-                              ? <Home />
-                              : user?.level === 8 ? <Redirect to='/profile' /> : <Redirect to='/orders' />
+                          ? startPath === '/home' ? <Home /> : <Redirect to={startPath} />
                           : <Redirect to='/login' />
                       }
                     </Route>
@@ -527,7 +586,7 @@ const DashboardApp = () => {
                     </ProtectedRoute>
 
                     <ProtectedRoute path='/stores/list' allowedLevels={[0, 2]}>
-                      <BusinessesList setShowBillingPayment={setShowBillingPayment} />
+                      <BusinessesList />
                     </ProtectedRoute>
                     <ProtectedRoute path='/stores/products/:store?' allowedLevels={[0, 2]}>
                       <BusinessProductsList />
@@ -539,7 +598,9 @@ const DashboardApp = () => {
                       <BusinessDevicesList />
                     </ProtectedRoute>
                     <ProtectedRoute path='/stores/add' allowedLevels={[0, 2]}>
-                      <BusinessAdd setShowBillingPayment={setShowBillingPayment} />
+                      <RegisterStoresGate>
+                        <BusinessAdd />
+                      </RegisterStoresGate>
                     </ProtectedRoute>
 
                     <Route exact path='/connect/overview'><Redirect to='/connect/pos-menu' /></Route>
@@ -557,6 +618,9 @@ const DashboardApp = () => {
                     </ProtectedRoute>
                     <ProtectedRoute path='/connect/whatsapp-bots' allowedLevels={getConnectAllowedLevels('whatsapp_bots')}>
                       {showConnectTab ? <WhatsAppBots /> : <Redirect to='/home' />}
+                    </ProtectedRoute>
+                    <ProtectedRoute path='/connect/order-with-google' allowedLevels={[0, 2]}>
+                      <OrderWithGoogle />
                     </ProtectedRoute>
 
                     <ProtectedRoute path='/users/customers' allowedLevels={[0]}>
@@ -590,8 +654,9 @@ const DashboardApp = () => {
                     <ProtectedRoute path='/intelligence/reports' allowedLevels={[0]}>
                       <AdvancedReports />
                     </ProtectedRoute>
+                    {/* redesign (n.º 21, ecommerce P2): merged into Enterprise reports; ?id=1-3 keeps the report, ?id=4 (Clicks) is report 22 */}
                     <ProtectedRoute path='/intelligence/ecommerce_reports' allowedLevels={[0]}>
-                      <EcommerceReports />
+                      <Redirect to={getEcommerceReportsRedirectPath(search)} />
                     </ProtectedRoute>
                     <ProtectedRoute path='/intelligence/business-payments' allowedLevels={[0, 2]}>
                       <BusinessPaymentReports />
@@ -757,34 +822,36 @@ const DashboardApp = () => {
                       <PageNotFound />
                     </Route>
                   </Switch>
+                  </Suspense>
+                  </ChunkErrorBoundary>
                   </CommandPaletteRouteBoundary>
                 </ScrollToTop>
-              )}
+              </OfflineRouteGate>
+              </ShellMain>
             </Layout>
             {auth && <AssistantPanel />}
+            {/* redesign BM-C (D1, C-4): the legacy Modal is gone; the dialog is a Product Dialog and gives the focus back itself (it is unmounted in the render that closes it) */}
             {isShowBillingPayment?.open && !projectStatus.loading && (
-              <Modal
-                width='55%'
-                padding='30px'
-                title={t('PAYMENTS', 'Payments')}
+              <BillingPaymentOptions
                 open={isShowBillingPayment?.open}
                 onClose={() => setShowBillingPayment((prevState) => ({ ...prevState, open: false, from: '' }))}
-              >
-                <BillingPaymentOptions
-                  isUpgradeToPro={isShowBillingPayment?.from === 'upgrade_pro'}
-                  setShowBillingPayment={setShowBillingPayment}
-                  upgradeProPlanId={[projectStatus?.plan?.upgrade_plan_id]}
-                  showPlanInformation={isShowBillingPayment?.showInformation}
-                />
-              </Modal>
+                isUpgradeToPro={isShowBillingPayment?.from === 'upgrade_pro'}
+                setShowBillingPayment={setShowBillingPayment}
+                upgradeProPlanId={[projectStatus?.plan?.upgrade_plan_id]}
+                showPlanInformation={isShowBillingPayment?.showInformation}
+              />
             )}
+            {/* redesign BM-C (M-BM5): reads the one-shot mark the dialog leaves before its reload and says what happened, once */}
+            {auth && <BillingResultNotice />}
             {auth && <TrialExtensionModal />}
+            {auth && <UpgradeOfferModal />}
             {auth && <CommandPalette />}
             </DashboardDestinationsProvider>
             </CommandPaletteProvider>
-          </IntercomWrapper></StoreOnboardingGate>
+          </LegacyPlanUpgradeProvider></IntercomWrapper></StoreOnboardingGate>
         )
       }
+    </UpgradeOfferProvider>
     </TrialExtensionProvider>
   )
 }

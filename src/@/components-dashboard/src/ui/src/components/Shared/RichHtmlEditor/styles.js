@@ -185,6 +185,18 @@ export const VisualArea = styled.div`
       vertical-align: top;
     }
 
+    p.is-editor-empty::before {
+      content: attr(data-placeholder);
+      float: ${props => props.theme?.rtl ? 'right' : 'left'};
+      height: 0;
+      color: #909BA9;
+      pointer-events: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
     .selectedCell {
       background: #E9ECEF;
     }
@@ -204,4 +216,59 @@ export const CodeArea = styled.textarea`
   color: ${props => props.theme.colors.headingColor};
   font-family: monospace;
   font-size: 13px;
+`
+
+export const CodeTabs = styled.div`
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px 0;
+  border-bottom: 1px solid #CED4DA;
+  background: #F8F9FA;
+
+  button {
+    padding: 6px 14px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: #5E6B7D;
+    font-size: 13px;
+    cursor: pointer;
+
+    &[aria-selected='true'] {
+      border-bottom-color: ${props => props.theme?.colors?.primary || '#2C7BE5'};
+      color: ${props => props.theme.colors.headingColor};
+      font-weight: 600;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.colors?.primary || '#2C7BE5'};
+      outline-offset: -2px;
+    }
+  }
+`
+
+// The same box stands in for the editor while its chunk loads, so the shell keeps its height and the page doesn't jump.
+export const CodeHost = styled.div`
+  min-height: 240px;
+
+  .cm-editor {
+    min-height: 240px;
+  }
+`
+
+export const PreviewFrame = styled.iframe`
+  display: block;
+  width: 100%;
+  height: 360px;
+  border: 0;
+  background: #FFFFFF;
+`
+
+export const TabHint = styled.p`
+  margin: 0;
+  padding: 8px 14px;
+  border-top: 1px solid #CED4DA;
+  background: #F8F9FA;
+  color: #5E6B7D;
+  font-size: 12px;
 `

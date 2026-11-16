@@ -1,0 +1,123 @@
+/*
+ * redesign PE-B2 (decisions 1, 2, 5) · The promotions page: the header with the menu button, the tabs, the search row, the frame of the
+ * Advanced list beside its panel (split view), the link under the table and the error of a delete.
+ * Product's PageHeader, Tabs, SearchField, SplitView and ConfirmDialog own their own structure; this places them.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Class prefix odc-promo-.
+ */
+
+/* ── The page: a column. In Advanced it has the height of the screen, so the list and the panel scroll on their own; Quick offers is a page
+   that scrolls as it always did. ── */
+.odc-promo-page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: hidden;
+}
+
+.odc-promo-page[data-view='advanced_offers'] {
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* ── Head: the page margins on the page header itself (: the opener is PageHeader's `leading`) ── */
+.odc-promo-head {
+  padding-block-start: var(--od-x-page-gutter);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* Beside the panel the header is under 600px and the page header drops its title to the section size: on a screen that has a panel
+   (768px and up) the title keeps its size, so opening or closing the detail moves nothing (as the campaigns page). */
+@media (min-width: 768px) {
+  @container (max-width: 599px) {
+    .odc-promo-head .odc-pagehead-title {
+      font-size: var(--od-x-type-title-size);
+    }
+  }
+}
+
+/* ── Tabs: Quick offers | Advanced offers ── */
+.odc-promo-tabs {
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-2);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* ── Advanced: the list's frame beside the panel ── */
+.odc-promo-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+/* only where the page has the height of the screen does the body share it out; Quick offers takes the height of its content */
+.odc-promo-page[data-view='advanced_offers'] > .odc-promo-body {
+  flex-basis: 0;
+  min-block-size: 0;
+}
+
+.odc-split.odc-promo-split {
+  flex: 1 1 0;
+  block-size: auto;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-promo-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* ── The search row ── */
+.odc-promo-search {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-promo-search > .odc-search {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── «Add new promotion» under the table ── */
+.odc-promo-add {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* ── The reason a delete failed, inside its confirmation ── */
+.odc-promo-list-delete-error {
+  margin: var(--od-space-3) 0 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* On a phone the page takes the mobile gutter, as the other lists */
+@media (max-width: 767px) {
+  .odc-promo-head,
+  .odc-promo-tabs {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-promo-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-promo-frame {
+    display: none;
+  }
+}

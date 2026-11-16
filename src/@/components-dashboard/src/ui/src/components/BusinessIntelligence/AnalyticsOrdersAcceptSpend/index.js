@@ -59,7 +59,7 @@ export const AnalyticsOrdersAcceptSpend = (props) => {
                   )
                 : (
             <EmptyContent>
-              {t('NO_DATA', 'No Data')}
+              {t('NO_DATA', 'No data')}
             </EmptyContent>
                   )
             )

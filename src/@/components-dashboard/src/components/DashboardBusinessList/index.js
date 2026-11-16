@@ -11,6 +11,8 @@ import {
   getBusinessLoadStartedOperation,
   getCaughtBusinessListState
 } from './businessLoadAnalytics'
+import { confirmationPayload } from '../../utils/confirmationPayload'
+import { isBackofficeBusinessProject, shouldUseBackofficeBusinessSearch } from '../../utils/commandPaletteBusinesses'
 
 const BACKOFFICE_PROPS_TO_FETCH = ['disabled_reason', 'id', 'alcohol', 'delivery_price', 'distance', 'delivery_time', 'ribbon', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'external_id']
 
@@ -32,13 +34,17 @@ export const DashboardBusinessList = (props) => {
     isSearchByBusinessPhone,
     noActiveStatusCondition,
     defaultActive,
-    fetchGoogleRedirectPlugin
+    fetchGoogleRedirectPlugin,
+    fetchInactiveProbe,
+    fetchCountries,
+    defaultBusinessType,
+    defaultSearchValue
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const isEatstreetProject = ['eatstreet', 'eatstreetstaging'].includes(ordering?.project)
-  const useBackofficeEndpoint = isEatstreetProject && session?.user?.level === 0
+  const isEatstreetProject = isBackofficeBusinessProject(ordering?.project)
+  const useBackofficeEndpoint = shouldUseBackofficeBusinessSearch({ project: ordering?.project, level: session?.user?.level })
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
 
@@ -60,10 +66,13 @@ export const DashboardBusinessList = (props) => {
     pageSize: paginationSettings.pageSize ?? 10
   })
 
-  const [searchValue, setSearchValue] = useState(null)
+  // redesign bugs F row 22: opt-in start value, so `?q=` is the first request and not a second one after the load
+  const [searchValue, setSearchValue] = useState(defaultSearchValue ?? null)
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(defaultActive ?? true)
-  const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
+  const [businessTypeSelected, setBusinessTypeSelected] = useState(defaultBusinessType ?? null)
   const [businessIds, setBusinessIds] = useState([])
+  // redesign bugs F row 16 (review R-1): the last `enabled` the editor reported per store id (see handleSucessUpdateBusiness)
+  const reportedEnabled = useRef(new Map())
   const [filterValues, setFilterValues] = useState({})
   const [inActiveBusinesses, setInActiveBusinesses] = useState({ loading: true, businesses: [] })
   const [googleRedirectPlugin, setGoogleRedirectPlugin] = useState({ loading: true, active: false, root: null })
@@ -73,6 +82,9 @@ export const DashboardBusinessList = (props) => {
   const [googleFeedSavingChannel, setGoogleFeedSavingChannel] = useState(null)
   const [googleFeedExcludedBusinessIds, setGoogleFeedExcludedBusinessIds] = useState([])
   const firstRender = useRef(true)
+  // redesign stores 1.C, G1-07: every load of the list takes a number; an answer whose number is not the last one is
+  // dropped, so a filter or page change that answers late never overwrites the newer one
+  const loadRequest = useRef(0)
 
   /**
    * Save filter type values
@@ -309,10 +321,12 @@ export const DashboardBusinessList = (props) => {
     if (!session.token) return
     const isInitialLoad = firstRender.current
     captureBusinessLoadOperation(getBusinessLoadStartedOperation({ isInitialLoad }))
+    const request = ++loadRequest.current
     try {
       setBusinessList({ ...businessList, loading: true })
       const response = await getBusinesses((initialPageSize || pagination.pageSize), firstRender.current ? pagination.currentPage : 1)
       captureBusinessLoadOperation(getBusinessLoadOperation({ content: response.content, isInitialLoad }))
+      if (request !== loadRequest.current) return
 
       setBusinessList({
         loading: false,
@@ -333,6 +347,7 @@ export const DashboardBusinessList = (props) => {
       firstRender.current = false
     } catch (err) {
       captureBusinessLoadOperation(getBusinessLoadOperation({ error: err, isInitialLoad }))
+      if (request !== loadRequest.current) return
       setBusinessList(current => getCaughtBusinessListState({
         previousBusinesses: current.businesses,
         error: err
@@ -362,9 +377,11 @@ export const DashboardBusinessList = (props) => {
    * Method to get businesses more
    */
   const loadMoreBusinesses = async () => {
+    const request = ++loadRequest.current
     setBusinessList({ ...businessList, loading: true })
     try {
       const response = await getBusinesses(loadMorePageSize, Math.ceil(pagination?.to / loadMorePageSize) + 1)
+      if (request !== loadRequest.current) return
       setBusinessList({
         loading: false,
         businesses: response.content.error ? businessList.businesses : businessList.businesses.concat(response.content.result),
@@ -381,9 +398,13 @@ export const DashboardBusinessList = (props) => {
         })
       }
     } catch (err) {
-      setBusinessList(current => getCaughtBusinessListState({
-        previousBusinesses: current.businesses,
-        error: err
+      if (request !== loadRequest.current) return
+      // tanda AE: a failed «load more» keeps the rows already loaded (the selector of /stores/products and the cards of
+      // /stores/list append pages). Emptied, the list made the effect below ask for the current page alone and dropped the others.
+      setBusinessList(current => ({
+        ...getCaughtBusinessListState({ previousBusinesses: current.businesses, error: err }),
+        loading: false,
+        businesses: current.businesses
       }))
     }
   }
@@ -392,9 +413,11 @@ export const DashboardBusinessList = (props) => {
    * Method to get businesses for page and pageSize
    */
   const getPageBusinesses = async (pageSize, page) => {
+    const request = ++loadRequest.current
     setBusinessList({ ...businessList, loading: true })
     try {
       const response = await getBusinesses(pageSize, page)
+      if (request !== loadRequest.current) return
       setBusinessList({
         loading: false,
         businesses: response.content.error ? businessList.businesses : response.content.result,
@@ -411,6 +434,7 @@ export const DashboardBusinessList = (props) => {
         })
       }
     } catch (err) {
+      if (request !== loadRequest.current) return
       setBusinessList(current => getCaughtBusinessListState({
         previousBusinesses: current.businesses,
         error: err
@@ -441,14 +465,15 @@ export const DashboardBusinessList = (props) => {
       const response = await fetch(`${ordering.root}/business`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        const updatedBusinessList = isFeatured
-          ? businessList?.businesses.map(business => (businessIds.includes(business?.id)) ? { ...business, featured: enabled } : business)
-          : businessList?.businesses.filter(business => !businessIds.includes(business?.id))
-        setBusinessList({
-          ...businessList,
-          businesses: updatedBusinessList
-        })
-        if (!isFeatured) setBusinessIds([])
+        if (isFeatured) {
+          setBusinessList({
+            ...businessList,
+            businesses: businessList?.businesses.map(business => (businessIds.includes(business?.id)) ? { ...business, featured: enabled } : business)
+          })
+        } else {
+          applyBulkEnabled(enabled)
+          setBusinessIds([])
+        }
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       } else {
         showToast(ToastType.Error, content?.result)
@@ -459,9 +484,44 @@ export const DashboardBusinessList = (props) => {
   }
 
   /**
-   * Method to delete business list
+   * redesign stores 1.C, G1-24: after a bulk Enable / Disable, only the selected rows whose state really changed leave
+   * a list filtered by state (the Active or Inactive tab), and the total goes down by them; without that filter they change in place.
+   * A selection with stores that are not on this page (it survives page changes) asks for the page again: rows and total are then
+   * the server's.
+   * @param {Boolean} enabled the state the selected stores now have
    */
-  const handleDeleteMultiBusinesses = async () => {
+  const applyBulkEnabled = (enabled) => {
+    const rows = businessList?.businesses || []
+    if (businessIds.some(id => !rows.some(business => business?.id === id))) {
+      getPageBusinesses(pagination.pageSize, pagination.currentPage)
+      return
+    }
+    const leavesList = !noActiveStatusCondition && enabled !== selectedBusinessActiveState
+    let removed = 0
+    const businesses = rows.flatMap(business => {
+      if (!businessIds.includes(business?.id) || business?.enabled === enabled) return [business]
+      if (leavesList) {
+        removed += 1
+        return []
+      }
+      return [{ ...business, enabled }]
+    })
+    setBusinessList({ ...businessList, businesses })
+    if (removed > 0) {
+      setPagination(current => ({
+        ...current,
+        ...(Number.isFinite(current?.total) ? { total: current.total - removed } : {}),
+        ...(Number.isFinite(current?.to) ? { to: current.to - removed } : {})
+      }))
+    }
+  }
+
+  /**
+   * Method to delete business list
+   * `token` is the ConfirmAdmin confirmation_token (action `businesses_delete`), from the
+   * StoresBulkBar delete flow (StoresList, the only caller wired to ConfirmAdmin).
+   */
+  const handleDeleteMultiBusinesses = async (token) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
@@ -470,16 +530,31 @@ export const DashboardBusinessList = (props) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.token}`
         },
-        body: JSON.stringify({ businesses_id: businessIds })
+        body: JSON.stringify({ businesses_id: businessIds, ...confirmationPayload(token) })
       }
       const response = await fetch(`${ordering.root}/business`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        const updatedBusinessList = businessList?.businesses.filter(business => !businessIds.includes(business?.id))
-        setBusinessList({
-          ...businessList,
-          businesses: updatedBusinessList
-        })
+        // redesign bugs F row 18, SL-03: same accounting as applyBulkEnabled; the rows go, the total and the end of the
+        // page go down by them, and a selection with stores of other pages asks for the current page again
+        const rows = businessList?.businesses || []
+        if (businessIds.some(id => !rows.some(business => business?.id === id))) {
+          getPageBusinesses(pagination.pageSize, pagination.currentPage)
+        } else {
+          const updatedBusinessList = rows.filter(business => !businessIds.includes(business?.id))
+          const removed = rows.length - updatedBusinessList.length
+          setBusinessList({
+            ...businessList,
+            businesses: updatedBusinessList
+          })
+          if (removed > 0) {
+            setPagination(current => ({
+              ...current,
+              ...(Number.isFinite(current?.total) ? { total: current.total - removed } : {}),
+              ...(Number.isFinite(current?.to) ? { to: current.to - removed } : {})
+            }))
+          }
+        }
         setBusinessIds([])
         showToast(ToastType.Success, t('BUSINESS_DELETED', 'Business deleted'))
       } else {
@@ -558,12 +633,16 @@ export const DashboardBusinessList = (props) => {
       } else {
         handleSucessRemoveBusiness(business.id)
       }
-    } else {
-      if (selectedBusinessActiveState === business?.enabled) {
-        handleSucessAddBusiness(business)
-      } else {
-        handleSucessRemoveBusiness(business.id)
-      }
+    }
+    // redesign stores 1.C: a store that is not on the list and does not belong to it has nothing to leave; removing
+    // it took 1 off the total (the editor reports the store it opens, e.g. an active one from ⌘K in the Inactive tab)
+    // redesign bugs F row 16: nor does it join the list only because the editor opened it (that is not a new store of
+    // the tab: it was already counted). It joins when the editor CHANGES its state into this tab (review R-1: as in main): the
+    // state it had when it was last reported is remembered.
+    const previous = reportedEnabled.current.get(business?.id)
+    if (typeof business?.enabled === 'boolean') reportedEnabled.current.set(business.id, business.enabled)
+    if (!found && previous !== undefined && previous !== business?.enabled && selectedBusinessActiveState === business?.enabled) {
+      handleSucessAddBusiness(business)
     }
   }
 
@@ -604,7 +683,8 @@ export const DashboardBusinessList = (props) => {
   }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected, filterValues])
 
   useEffect(() => {
-    getCountries()
+    // redesign bugs F row 17: only /stores/list reads the countries and the cities; the others skip the request
+    if (fetchCountries) getCountries()
   }, [])
 
   useEffect(() => {
@@ -813,9 +893,12 @@ export const DashboardBusinessList = (props) => {
     }
   }
 
+  // redesign bugs F row 17, SL-09: opt-in, once per session token and again only when the list settles empty (the «no
+  // stores» dialog needs a fresh answer); it used to run on every change of the number of rows, i.e. twice per load
+  const listSettledEmpty = !businessList?.loading && businessList?.businesses?.length === 0 && !firstRender.current
   useEffect(() => {
-    getInActiveBusinesses()
-  }, [businessList?.businesses?.length])
+    if (fetchInactiveProbe) getInActiveBusinesses()
+  }, [fetchInactiveProbe, session?.token, listSettledEmpty])
 
   return (
     <>
@@ -887,12 +970,30 @@ DashboardBusinessList.propTypes = {
   /**
    * Array of user props to fetch
    */
-  propsToFetch: PropTypes.arrayOf(string)
+  propsToFetch: PropTypes.arrayOf(string),
+  /**
+   * redesign stores 3.A: opt-in business type id the list starts filtered by (one request on load)
+   */
+  defaultBusinessType: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * redesign bugs F row 22: opt-in search text the list starts with (one request on load)
+   */
+  defaultSearchValue: PropTypes.string,
+  /**
+   * redesign bugs F row 17: opt-in, fetch the inactive stores the `inActiveBusinesses` prop carries
+   */
+  fetchInactiveProbe: PropTypes.bool,
+  /**
+   * redesign bugs F row 17: opt-in, fetch the countries the `countriesState` and `citiesList` props carry
+   */
+  fetchCountries: PropTypes.bool
 }
 
 const defaultProps = {
   loadMorePageSize: 10,
   fetchGoogleRedirectPlugin: false,
+  fetchInactiveProbe: false,
+  fetchCountries: false,
   propsToFetch: ['disabled_reason', 'id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'ribbon', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'reviews'],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
 }

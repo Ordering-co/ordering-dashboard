@@ -1,0 +1,400 @@
+{
+  "name": "Ordering.co Design Guidelines",
+  "version": "1.3.0",
+  "company": "Ordering.co",
+  "status": "released",
+  "creativeIdea": "Operational Confidence",
+  "documentation": {
+    "model": "examples-first",
+    "sequence": [
+      "decision",
+      "real-specimen",
+      "human-rules",
+      "use-avoid",
+      "adaptation",
+      "technical-disclosure",
+      "related-guidance"
+    ],
+    "benchmark": "/foundations/color",
+    "interactiveComponentBoundary": "components/ui",
+    "specimenStatuses": [
+      "canonical",
+      "illustrative",
+      "pending"
+    ],
+    "technicalReferenceBehavior": "native-disclosure",
+    "illustrativeDataPolicy": "Visible labeling is inseparable from illustrative data and does not grant publication authority.",
+    "motionControls": [
+      "play",
+      "pause",
+      "replay"
+    ],
+    "reducedMotionPolicy": "Preserve the complete state, hierarchy, and meaning without animation."
+  },
+  "navigation": {
+    "primary": [
+      "/foundations",
+      "/voice",
+      "/visual-expression",
+      "/product"
+    ],
+    "governancePlacement": "contextual-and-footer",
+    "governance": [
+      "/governance",
+      "/governance/claims-proof"
+    ]
+  },
+  "positioning": {
+    "category": "Enterprise-proven multi-vendor marketplace platform",
+    "publicationStatus": "proof-gated",
+    "personality": [
+      "structured, not rigid",
+      "technical, not cold",
+      "dynamic, not playful",
+      "distinctive, not decorative"
+    ]
+  },
+  "implementation": {
+    "runtime": "Next.js App Router",
+    "language": "TypeScript",
+    "styling": "Tailwind CSS",
+    "componentSource": "shadcn/ui",
+    "primitiveBase": "@base-ui/react",
+    "iconLibrary": "lucide",
+    "command": "cmdk",
+    "motion": "motion",
+    "componentOwnership": "components/ui",
+    "consumerBoundary": "Applications consume Ordering.co wrappers and do not import Base UI directly."
+  },
+  "productDensity": {
+    "uiFontSize": 13,
+    "contentFontSize": 14,
+    "sidebarItemHeight": 28,
+    "compactControlHeight": 32,
+    "tableRowHeight": 36,
+    "touchTargetMinimum": 44,
+    "iconSize": 16,
+    "iconStrokeWidth": 1.75,
+    "radii": [
+      4,
+      6,
+      10
+    ],
+    "focus": {
+      "width": 2,
+      "offset": 2,
+      "colorRole": "action.focus"
+    }
+  },
+  "decisions": {
+    "typography": {
+      "status": "approved",
+      "sans": "Inter Variable",
+      "mono": "JetBrains Mono Variable",
+      "ligatures": "off by default",
+      "licenses": "SIL OFL 1.1",
+      "canonicalPage": "/foundations/typography"
+    },
+    "color": {
+      "status": "approved",
+      "direction": "C1 — Pure Cool",
+      "dominantVisualBase": "White and ink",
+      "primaryActionRole": "--od-action",
+      "primaryAction": "#266DF0",
+      "themePolicy": "Identity colors and operational signals remain fixed across Light and Dark. Interface neutrals, soft surfaces and readable state content may adapt by theme.",
+      "primitivePolicy": "Token primitives are implementation ingredients for system authors, not equally weighted creative choices.",
+      "canonicalPage": "/foundations/color",
+      "source": "tokens/ordering.tokens.json",
+      "documentationCoverage": "Every public color token is rendered from the DTCG source."
+    },
+    "iconography": {
+      "status": "approved-baseline",
+      "family": "Lucide",
+      "defaultSize": 16,
+      "defaultStroke": 1.75,
+      "mixLibraries": false,
+      "canonicalPage": "/foundations/iconography"
+    },
+    "logo": {
+      "status": "canonical-final",
+      "canonicalPage": "/foundations/logo",
+      "masterbrand": "Ordering.co",
+      "fullLockup": "Ordering.co",
+      "domainQualifier": ".co is required in the written brand name and complete logo; it is not a subbrand.",
+      "namingPolicy": "Write Ordering.co for every brand mention in English and Spanish. Preserve exact technical identifiers, addresses, legal names, and documentary evidence.",
+      "assetSelection": "Prefer the complete approved lockup. Use a symbol only for constrained or platform placements, or to teach symbol anatomy; never reconstruct the lockup from a symbol and typeset text.",
+      "symbol": {
+        "construction": "literal-geometric-circle",
+        "variant": "Regular 48",
+        "coordinateSystem": {
+          "width": 512,
+          "height": 512
+        },
+        "center": {
+          "x": 256,
+          "y": 256
+        },
+        "outerDiameter": 420,
+        "outerRadius": 210,
+        "innerDiameter": 324,
+        "innerRadius": 162,
+        "ringWidth": 48,
+        "crossGap": 26,
+        "rotationDegrees": 0,
+        "fillTreatment": "solid",
+        "pieces": [
+          {
+            "id": "top-left",
+            "position": "top-left",
+            "color": "green",
+            "fill": "#32B45F"
+          },
+          {
+            "id": "top-right",
+            "position": "top-right",
+            "color": "blue",
+            "fill": "#266DF0"
+          },
+          {
+            "id": "bottom-left",
+            "position": "bottom-left",
+            "color": "orange",
+            "fill": "#FF9418"
+          },
+          {
+            "id": "bottom-right",
+            "position": "bottom-right",
+            "color": "pink",
+            "fill": "#E91D63"
+          }
+        ]
+      },
+      "wordmark": {
+        "content": "Ordering.co",
+        "constructionSource": "Satoshi Medium",
+        "sourceWeight": 500,
+        "sourceVersion": "2.000",
+        "sourceSha256": "93330866d109f6b2e298748958ec6fa4010cacef586783f281a0b268cab7fc6e",
+        "delivery": "vector-curves-only",
+        "liveFontDependency": false,
+        "primaryTrackingEm": -0.01,
+        "domainTrackingEm": -0.0035,
+        "domainScale": 1,
+        "lightCanvasFill": "#17181A",
+        "darkCanvasFill": "#FFFFFF"
+      },
+      "lockup": {
+        "referenceWordmarkSizePx": 126,
+        "referenceSymbolSizePx": 145,
+        "symbolToWordGapPxAtReference": 18,
+        "symbolToWordGapEm": 0.142857,
+        "labSymbolToWordRatioPercent": 100,
+        "rotationDegrees": 0,
+        "domainScalePercent": 100
+      },
+      "clearSpace": {
+        "unit": "x",
+        "definition": "one symbol cross gap",
+        "unitInSymbolGeometry": 26,
+        "minimumOnEverySide": "2x"
+      },
+      "opaqueFieldAssets": {
+        "status": "canonical-utility",
+        "purpose": "ready-to-place artwork on a field carried by the asset",
+        "clearSpaceOnEverySide": "2x",
+        "backgrounds": {
+          "white": "#FFFFFF",
+          "dark": "#0B0C0D"
+        },
+        "lockupWidths": [
+          512,
+          1024,
+          2048
+        ],
+        "symbolWidths": [
+          16,
+          32,
+          48,
+          64,
+          180,
+          192,
+          512,
+          1024,
+          2048
+        ],
+        "alpha": false
+      },
+      "minimumSizes": {
+        "symbolColorDigitalPx": 28,
+        "symbolMonochromeDigitalPx": 20,
+        "lockupDigitalPx": 120,
+        "lockupPrintMm": 30
+      },
+      "containedSymbol": {
+        "status": "canonical-utility",
+        "purpose": [
+          "favicon",
+          "avatar",
+          "app-icon",
+          "uncontrolled-background"
+        ],
+        "canvas": 512,
+        "backgroundCircleDiameter": 496,
+        "transparentGuard": 8,
+        "symbolOuterDiameter": 420,
+        "variants": {
+          "light": {
+            "background": "#FFFFFF",
+            "symbol": "fixed-four-color"
+          },
+          "dark": {
+            "background": "#17181A",
+            "symbol": "fixed-four-color"
+          }
+        },
+        "pngWidths": [
+          16,
+          32,
+          48,
+          64,
+          180,
+          192,
+          512,
+          1024,
+          2048
+        ]
+      },
+      "digitalIcons": {
+        "status": "canonical-contract",
+        "assetManifest": "/assets/icons/asset-manifest.json",
+        "downloadBundle": "/assets/icons/ordering-brand-assets-v1.1.zip",
+        "browser": {
+          "lightSvg": "/assets/logos/ordering-symbol-contained-light.svg",
+          "darkSvg": "/assets/logos/ordering-symbol-contained-dark.svg",
+          "ico": "/assets/icons/favicon.ico",
+          "png": {
+            "16": "/assets/icons/ordering-favicon-16.png",
+            "32": "/assets/icons/ordering-favicon-32.png",
+            "48": "/assets/icons/ordering-favicon-48.png",
+            "64": "/assets/icons/ordering-favicon-64.png"
+          },
+          "specimenSizes": [
+            16,
+            24,
+            32,
+            48,
+            64
+          ],
+          "icoEmbeddedSizes": [
+            16,
+            32,
+            48
+          ]
+        },
+        "appleTouch": {
+          "status": "canonical-derivative",
+          "asset": "/assets/icons/ordering-apple-touch-icon-180.png",
+          "size": 180,
+          "background": "#FFFFFF",
+          "alpha": false
+        },
+        "webApp": {
+          "manifest": "/manifest.webmanifest",
+          "purpose": "any",
+          "icons": {
+            "192": "/assets/icons/ordering-app-icon-192.png",
+            "512": "/assets/icons/ordering-app-icon-512.png"
+          },
+          "maskable": {
+            "status": "not-approved",
+            "reason": "The current contained-symbol geometry is not certified for the maskable safe zone; do not declare purpose=maskable."
+          }
+        }
+      },
+      "colorBoundary": "The four-color palette remains fixed across Light and Dark and is not an interface state or action palette.",
+      "palette": {
+        "blue": "#266DF0",
+        "green": "#32B45F",
+        "orange": "#FF9418",
+        "pink": "#E91D63"
+      },
+      "print": {
+        "masterColorSpace": "sRGB",
+        "browserPrintProof": "simulation-only",
+        "productionFormat": "PDF/X-4",
+        "conversionPolicy": "Convert per job with the ICC profile supplied by the printer; no universal CMYK or Pantone values are canonical."
+      }
+    },
+    "voice": {
+      "status": "released-public",
+      "language": "en-US",
+      "model": "seasoned builder",
+      "canonicalPage": "/voice",
+      "publicationBoundary": "Voice alignment and publication authority are separate gates."
+    }
+  },
+  "themes": {
+    "axis": "data-od-theme",
+    "values": [
+      "light",
+      "dark"
+    ],
+    "default": "system",
+    "storageKey": "ordering.design-system.theme"
+  },
+  "expressions": {
+    "visual": "/visual-expression",
+    "product": "/product",
+    "globalThemeOverride": false
+  },
+  "canonical": {
+    "overview": "https://brand.ordering.co/",
+    "foundations": {
+      "overview": "/foundations",
+      "color": "/foundations/color",
+      "typography": "/foundations/typography",
+      "iconography": "/foundations/iconography",
+      "logo": "/foundations/logo",
+      "layoutSpacing": "/foundations/layout-spacing",
+      "motion": "/foundations/motion",
+      "accessibility": "/foundations/accessibility"
+    },
+    "voice": "https://brand.ordering.co/voice",
+    "visualExpression": "https://brand.ordering.co/visual-expression",
+    "letterhead": "https://brand.ordering.co/visual-expression/letterhead",
+    "product": "https://brand.ordering.co/product",
+    "governance": "https://brand.ordering.co/governance",
+    "claimsProof": "https://brand.ordering.co/governance/claims-proof",
+    "tokens": "tokens/ordering.tokens.json",
+    "generatedCss": "tokens/ordering.tokens.css",
+    "strategy": "BRAND-FOUNDATION.md",
+    "guidelines": "DESIGN-GUIDELINES.md",
+    "implementationStack": "IMPLEMENTATION-STACK.md"
+  },
+  "assets": {
+    "manifest": "https://brand.ordering.co/machine/asset-manifest.json",
+    "logoMasters": "https://brand.ordering.co/assets/logos/",
+    "iconKit": "https://brand.ordering.co/assets/icons/ordering-brand-assets-v1.1.zip"
+  },
+  "skill": {
+    "name": "ordering-brand-system",
+    "version": "1.3.0",
+    "guidelinesVersion": "1.3.0",
+    "manifest": "https://brand.ordering.co/machine/skill-manifest.json",
+    "distribution": "https://brand.ordering.co/skills/ordering-brand-system-v1.3.0.zip"
+  },
+  "constraints": {
+    "masterbrandOnly": true,
+    "allCapsButtons": false,
+    "inventCustomerProof": false,
+    "equalWeightSignalColors": false,
+    "minimumWcag": "2.2 AA",
+    "publicationAuthority": "Proof Ledger and canonical commercial sources"
+  },
+  "publication": {
+    "canonicalOrigin": "https://brand.ordering.co",
+    "contentSignal": "search=yes, ai-input=yes, ai-train=no",
+    "releasedAt": "2026-09-05",
+    "sourceSha256": "012378dc7d525ed057dc7660890ee1d51db8da864f8cd87cd1c4455bbfee4d6d"
+  }
+}

@@ -22,7 +22,7 @@ export const OrderStatusTypeSelectWrapper = styled.div`
     padding: 10px 11px;
     width: 100%;
     input {
-      border-radius: 7.6px;
+      border-radius: ${props => props.theme?.ordering?.radius?.control ?? '7.6px'};
       width: 100%;
     }
   }
@@ -37,29 +37,22 @@ export const Option = styled.div`
   p {
     margin: 0px;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   ${({ isSubTitle }) => !isSubTitle
 ? css`
-    ${props => props.theme?.rtl
-? css`
-      border-right: 1px solid ${props => props.theme.colors.borderColor};
-      margin-right: 5px;
-    `
-: css`
-      border-left: 1px solid ${props => props.theme.colors.borderColor};
-      margin-left: 5px;
-    `}
+    border-inline-start: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
+    margin-inline-start: 5px;
 
     p {
       padding: 0 10px;
-      color: ${props => props.theme.colors.secundaryContrast} !important;
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryContrast} !important;
     }
   `
 : css`
     p {
-      color: ${props => props.theme.colors.secundaryLight};
+      color: ${props => props.theme?.ordering?.semantic?.text?.subtle ?? props.theme.colors.secundaryLight};
     }
   `}
 

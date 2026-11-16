@@ -1,12 +1,30 @@
 import { useCallback, useState } from 'react'
 import { useApi, useLanguage, useSession, useToast, ToastType } from '~components'
-import { classifyMenuImportError } from './menuImportErrors'
+import { classifyMenuImportError, classifyStoreFailure } from './menuImportErrors'
 import { getMenuImportApiUrl } from './menuImportConfig'
 import { logMenuImportSync, resolveMenuImportSourceUrl } from './logMenuImportSync'
 import { saveRun } from './menuImportRuns'
 import { fetchBusinessMenuSnapshot } from './useBusinessMenuSnapshot'
 
 const nowIso = () => new Date().toISOString()
+
+// the service's 502 when Ordering refused every store (app.py `_execute_import`); any other 502 is about the source
+const ALL_STORES_FAILED = /^Failed to send menu to Ordering API: /
+const RATE_LIMITED = 'MENU_IMPORT_RATE_LIMITED'
+
+/**
+ * which stores of a multi-store import got the menu. The service sends the menu store by store, in the order of
+ * `businessIds`, and stops at a quota cut: the first `appliedCount + failures` stores were tried, the rest were left.
+ */
+export const splitStoreOutcome = (businessIds, { appliedCount = 0, partialFailures = [] } = {}) => {
+  const failedIds = partialFailures.map(({ businessId }) => businessId)
+  const tried = businessIds.slice(0, appliedCount + partialFailures.length)
+  return {
+    applied: tried.filter((id) => !failedIds.includes(id)),
+    failed: partialFailures,
+    pending: businessIds.slice(tried.length)
+  }
+}
 
 export const useMenuImport = (source = 'doordash') => {
   const [, t] = useLanguage()
@@ -58,34 +76,61 @@ export const useMenuImport = (source = 'doordash') => {
     setError(null)
     setResult(null)
 
-    const businessId = params.businessIds?.[0]
+    // each store keeps its own run (state, menu before and after), as one store did
+    const businessIds = (params.businessIds || []).filter((id) => id != null)
     const project = params.project || ordering?.project
-    const runRef = businessId != null && project ? { project, businessId, source } : null
-    let run = null
-    const persist = (patch) => {
-      if (!runRef) return
-      run = { ...run, ...patch }
-      saveRun(runRef, run)
+    const runs = new Map()
+    const persist = (ids, patch) => {
+      if (!project) return
+      ids.forEach((businessId) => {
+        const run = { ...runs.get(businessId), ...patch }
+        runs.set(businessId, run)
+        saveRun({ project, businessId, source }, run)
+      })
+    }
+    // one read at a time: a burst of reads spends the quota that would cut the import short
+    const snapshots = async (ids) => {
+      const menus = []
+      for (const businessId of ids) menus.push(project ? await fetchBusinessMenuSnapshot(ordering, businessId) : null)
+      return menus
     }
     const failRun = (verdict) => {
-      persist({ status: 'failed', finishedAt: nowIso(), errorMessage: verdict.message })
+      persist(businessIds, { status: 'failed', finishedAt: nowIso(), errorMessage: verdict.message })
       fail(verdict, onError)
     }
     const loseRun = () => {
-      persist({ status: 'unknown' })
+      persist(businessIds, { status: 'unknown' })
       loseConnection(onError)
     }
+    const finishRuns = async (ids, appliedCount) => {
+      const after = await snapshots(ids)
+      ids.forEach((businessId, index) => persist([businessId], { status: 'success', finishedAt: nowIso(), appliedCount, menuAfter: after[index] }))
+    }
 
-    persist({
+    const before = await snapshots(businessIds)
+    businessIds.forEach((businessId, index) => persist([businessId], {
       status: 'importing',
       startedAt,
       finishedAt: null,
       sourceUrl: resolveMenuImportSourceUrl(source, params),
       appliedCount: null,
       errorMessage: null,
-      menuBefore: runRef ? await fetchBusinessMenuSnapshot(ordering, businessId) : null,
+      menuBefore: before[index],
       menuAfter: null
-    })
+    }))
+
+    // a multi-store answer that says store by store what happened: the dialog lists the stores that failed, with Retry for them
+    const settleStores = async ({ applied, failed, pending }, quotaDetail, status) => {
+      const quotaMessage = quotaDetail ? classifyMenuImportError(source, quotaDetail, status, t).message : null
+      const failures = failed.map(({ businessId, error }) => ({ businessId, message: classifyStoreFailure(error, t) }))
+      await finishRuns(applied, applied.length)
+      failures.forEach(({ businessId, message }) => persist([businessId], { status: 'failed', finishedAt: nowIso(), errorMessage: message }))
+      persist(pending, { status: 'failed', finishedAt: nowIso(), errorMessage: quotaMessage })
+      if (applied.length) logMenuImportSync({ token, source, params: { ...params, businessIds: applied } })
+      setStatus('partial')
+      setResult({ appliedCount: applied.length, total: businessIds.length, failed: failures, pending, quotaMessage })
+    }
+    const multi = businessIds.length > 1
 
     try {
       const path = `/api/import/${source}`
@@ -123,22 +168,38 @@ export const useMenuImport = (source = 'doordash') => {
           loseRun()
           return
         }
+        if (multi && response.status === 429) {
+          await settleStores({ applied: [], failed: [], pending: businessIds }, detail, response.status)
+          return data
+        }
+        if (multi && response.status === 502 && ALL_STORES_FAILED.test(detail)) {
+          const error = String(detail).replace(ALL_STORES_FAILED, '')
+          await settleStores({ applied: [], failed: businessIds.map((businessId) => ({ businessId, error })), pending: [] }, null, response.status)
+          return data
+        }
         failRun(classifyMenuImportError(source, detail, response.status, t))
         return
       }
 
       if (data?.success === false) {
+        if (multi && data.appliedCount != null) {
+          const quotaDetail = String(data.error || '').includes(RATE_LIMITED) ? data.error : null
+          await settleStores(splitStoreOutcome(businessIds, data), quotaDetail, response.status)
+          return data
+        }
         failRun(classifyMenuImportError(source, data.error || data.message, response.status, t))
         return
       }
 
+      // a queued import (202 + jobId) or a count short of the stores is not a success yet: the runs stay importing, nothing is logged
+      if (multi && !(data?.success === true && data.appliedCount === businessIds.length)) {
+        setStatus('queued')
+        setResult({ jobId: data?.jobId ?? null, total: businessIds.length })
+        return data
+      }
+
       const appliedCount = data?.appliedCount ?? null
-      persist({
-        status: 'success',
-        finishedAt: nowIso(),
-        appliedCount,
-        menuAfter: runRef ? await fetchBusinessMenuSnapshot(ordering, businessId) : null
-      })
+      await finishRuns(businessIds, appliedCount)
       logMenuImportSync({ token, source, params })
       showToast(ToastType.Success, t('IMPORTER_STATUS_SUCCESS', 'Menu imported successfully'))
       setStatus('success')

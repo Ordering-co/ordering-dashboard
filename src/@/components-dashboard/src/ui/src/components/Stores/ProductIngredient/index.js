@@ -67,8 +67,11 @@ export const ProductIngredient = (props) => {
         </Header>
         {product?.ingredients && product?.ingredients.map(ingredient => (
           <IngredientOption
+            as='button'
+            type='button'
             key={ingredient.id}
             active={ingredient.id === currentIngredient?.id}
+            aria-pressed={ingredient.id === currentIngredient?.id}
             onClick={() => handleOpenIngredient(ingredient)}
           >
             <span>{ingredient?.name}</span>

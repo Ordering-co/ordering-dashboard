@@ -15,7 +15,7 @@ export const SelectWrapper = styled.div`
   margin-bottom: 20px;
   label {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 10px;
   }
@@ -29,9 +29,9 @@ export const SelectWrapper = styled.div`
       border: none;
       border-radius: 7.6px;
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 24px;
-      color: ${props => props.theme.colors.secundaryContrast};
+      color: var(--od-x-text-subtle);
     }
     .list {
       background-color: ${props => props.theme.colors.secundary};
@@ -51,9 +51,9 @@ export const SelectWrapper = styled.div`
 
 export const Option = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   line-height: 24px;
-  color: ${props => props.theme.colors.secundaryContrast};
+  color: var(--od-x-text-subtle);
   text-transform: lowercase;
   &::first-letter {
     text-transform: uppercase;
@@ -69,13 +69,13 @@ export const FieldContainer = styled.div`
     margin-bottom: 15px;
     > div {
       font-weight: 700;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
     }
   `}
 
   .name {
     flex: 1;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   .required {
@@ -114,7 +114,7 @@ export const TitleWrapper = styled.div`
 
   h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin-bottom: 0;
   }
 `
@@ -148,14 +148,14 @@ export const InfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;

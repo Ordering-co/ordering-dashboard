@@ -1,0 +1,3 @@
+[
+  { "route": "/good", "legacy": "legacy-button", "reason": "fixture: declared and reachable" }
+]

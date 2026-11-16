@@ -12,7 +12,8 @@ import {
 } from '../builderApi'
 
 /**
- * The saved themes of a Builder website (themes v2): up to
+ * The saved themes of a Builder product with themes (a website, or an app
+ * like the Marketplace App; themes v2): up to
  * BUILDER_THEMES_MAX, one of them active. A new theme starts inactive,
  * from scratch, from the current one or from a preset of the catalog.
  */

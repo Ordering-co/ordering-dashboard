@@ -1,0 +1,39 @@
+/*
+ * redesign stores 5.8 · zones of the Delivery tab: a titled section with the shared ZonesTable, a notice, an empty
+ * text and «Add delivery zone». Values: --od-* and --od-x-* only, logical properties only. The table and the notice own their look.
+ */
+
+.odc-delivery-zones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-delivery-zones-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* A notice here fills the section: the gap of the section is its only margin. */
+.odc-delivery-zones .odc-notice {
+  margin: 0;
+}
+
+.odc-delivery-zones-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Below the list, at the start */
+.odc-delivery-zones-add {
+  display: flex;
+  justify-content: flex-start;
+}

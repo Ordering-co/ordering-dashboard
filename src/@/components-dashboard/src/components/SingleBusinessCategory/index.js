@@ -4,6 +4,12 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
+
+// bugs E D11: the first text the API (or an exception) gives, to say why a re-order failed.
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(Boolean)
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -28,9 +34,11 @@ export const SingleBusinessCategory = (props) => {
   const [isEditMode, setIsEditMode] = useState(false)
   const [isCategoriesBottom, setIsCategoriesBottom] = useState(false)
 
+  // redesign SP-F2: returns what editCategory returns ({ ok, error }) so a caller that wants it (the switch of the
+  // catalog tree) can go back to the stored value and say why; the other callers ignore it.
   const handelChangeCategoryActive = (isChecked) => {
     const params = { enabled: isChecked }
-    editCategory(params)
+    return editCategory(params)
   }
 
   const handleUpdateClick = () => {
@@ -43,7 +51,7 @@ export const SingleBusinessCategory = (props) => {
         delete params[key]
       }
     }
-    editCategory(params)
+    return editCategory(params)
   }
 
   /**
@@ -84,7 +92,7 @@ export const SingleBusinessCategory = (props) => {
     event.dataTransfer.setData('transferCategoryId', category?.id)
     const ghostEle = document.createElement('div')
     ghostEle.classList.add('ghostDragging')
-    ghostEle.innerHTML = category.name
+    ghostEle.textContent = category.name
     document.body.appendChild(ghostEle)
     event.dataTransfer.setDragImage(ghostEle, 0, 0)
     setIsCategoriesBottom(false)
@@ -132,7 +140,7 @@ export const SingleBusinessCategory = (props) => {
   /**
    * Method to change the rank of transfer category
    */
-  const handleChangeCategoryRank = async (transferCategoryId, params) => {
+  const handleChangeCategoryRank = async (transferCategoryId, params, swap) => {
     if (loading) return
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -142,11 +150,18 @@ export const SingleBusinessCategory = (props) => {
         _categories.forEach(function iterate (category) {
           if (category.id === transferCategoryId) {
             category.rank = content.result.rank
+          } else if (swap && category.id === swap.id) {
+            // J2 row 9: a move is a swap; the neighbour takes the old rank of the moved category (the API renumbers it so)
+            category.rank = swap.rank
           }
           Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
         })
         handleUpdateBusinessState({ ...business, categories: _categories })
         showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
+      } else {
+        // bugs E D11: an API error used to leave the «Loading» toast and nothing else; the ranks are not touched
+        // (they only change on success) and the toast says why, like the save of the store details.
+        showRankError(content.result)
       }
     } catch (err) {
       setFormState({
@@ -157,7 +172,36 @@ export const SingleBusinessCategory = (props) => {
           result: err
         }
       })
+      // bugs E D11: same for an exception; the order stays as it was.
+      showRankError() // review (bugs E): an exception's text is not for the user, the generic text
     }
+  }
+
+  /**
+   * Move this category one place without the mouse (redesign J2, , row 9, D-43 (a)): «Move up» / «Move down» of the ⋯ menu.
+   * It is the request, the toasts and the state updates of the drag: `rank` is the rank of the previous (up) or the next (down)
+   * sibling, which the row works out with the reorder piece of Shared/Product.
+   * @param {number} rank
+   * @returns {Promise<void>} resolves when the move has ended (and the tree has its new ranks), so the row can put the focus back
+   */
+  const handleMoveCategory = (rank) => {
+    // the sibling (the list that holds this category) whose place it takes gets its old rank in the same update, so the tree is
+    // drawn in the new order
+    const siblingsOf = (list) => {
+      if (!Array.isArray(list)) return null
+      if (list.some(item => item?.id === category?.id)) return list
+      for (const item of list) {
+        const found = siblingsOf(item?.subcategories)
+        if (found) return found
+      }
+      return null
+    }
+    const neighbour = (siblingsOf(business?.categories) || []).find(item => item?.id !== category?.id && Number(item?.rank) === Number(rank))
+    return handleChangeCategoryRank(category?.id, { rank }, neighbour ? { id: neighbour.id, rank: category?.rank } : undefined)
+  }
+
+  const showRankError = (error) => {
+    showToast(ToastType.Error, translateApiMessage(t, firstMessage(error), t('STORES_CHANGE_FAILED', "We couldn't save the change.")))
   }
 
   /**
@@ -174,8 +218,9 @@ export const SingleBusinessCategory = (props) => {
   /**
    * Method to edit a category
    */
+  // redesign SP-F2: resolves `{ ok: true, result }` or `{ ok: false, error }`; `formState.result` is left as before.
   const editCategory = async (params) => {
-    if (loading) return
+    if (loading) return { ok: false }
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
@@ -206,6 +251,7 @@ export const SingleBusinessCategory = (props) => {
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
         showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
+        return { ok: true, result }
       } else {
         setFormState({
           ...formState,
@@ -215,6 +261,7 @@ export const SingleBusinessCategory = (props) => {
             result
           }
         })
+        return { ok: false, error: result }
       }
     } catch (err) {
       setFormState({
@@ -225,6 +272,7 @@ export const SingleBusinessCategory = (props) => {
           result: err
         }
       })
+      return { ok: false, error: err }
     }
   }
 
@@ -313,6 +361,7 @@ export const SingleBusinessCategory = (props) => {
           handleDragOver={handleDragOver}
           handleDrop={handleDrop}
           handleDragEnd={handleDragEnd}
+          handleMoveCategory={handleMoveCategory}
         />
       )}
     </>

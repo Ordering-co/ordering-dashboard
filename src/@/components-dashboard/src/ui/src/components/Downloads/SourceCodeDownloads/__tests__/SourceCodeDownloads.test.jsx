@@ -1,6 +1,6 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import theme from '~/theme.json'
@@ -73,6 +73,47 @@ describe('public repository presentation', () => {
     expect(within(article).getByRole('status', { name: 'Setup prompt' })).toHaveTextContent('Copied')
     expect(writeText).toHaveBeenCalledTimes(2)
   })
+  // the button is disabled while the copy is pending and a browser drops the focus of a control that becomes disabled
+  // (document.activeElement goes back to BODY); jsdom does not, so the clipboard double blurs it the way the browser does.
+  it.each([
+    ['fails', () => Promise.reject(new Error('denied'))],
+    ['succeeds', () => Promise.resolve()]
+  ])('returns keyboard focus to the copy button when the copy %s after the browser dropped it', async (_name, settle) => {
+    const user = userEvent.setup()
+    vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(() => { document.activeElement.blur(); return settle() })
+    renderUI()
+    const article = screen.getByRole('article', { name: 'Dashboard' })
+    const button = within(article).getByRole('button', { name: 'Copy setup prompt' })
+    button.focus()
+    await user.keyboard('{Enter}')
+    await within(article).findByText(/Copied|Copy failed/)
+    expect(button).toBeEnabled()
+    expect(document.activeElement).toBe(button)
+  })
+  it('does not steal focus from another control when the copy was started with the pointer elsewhere', async () => {
+    vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    renderUI()
+    const article = screen.getByRole('article', { name: 'Dashboard' })
+    const button = within(article).getByRole('button', { name: 'Copy setup prompt' })
+    const other = within(article).getByRole('link', { name: 'README' })
+    fireEvent.click(button)
+    other.focus()
+    await within(article).findByText('Copied')
+    expect(document.activeElement).toBe(other)
+  })
+  // the links of the actions rows (README, Setup instructions, View repository, Create a fork) were bare anchors of ~22px
+  it('gives every action link a 44px touch target without changing how it reads', async () => {
+    renderUI()
+    const links = screen.getAllByRole('link', { name: /^(README|Setup instructions|View repository|Create a fork)$/ })
+    expect(links.length).toBeGreaterThan(8)
+    for (const link of links) {
+      const style = window.getComputedStyle(link)
+      expect(style.minHeight).toBe('44px')
+      expect(style.display).toBe('inline-flex')
+      expect(style.alignItems).toBe('center')
+      expect(style.textDecoration).toContain('underline')
+    }
+  })
   it('opens the exact prompt for manual copying when the clipboard API is unavailable', async () => {
     const user = userEvent.setup()
     const clipboard = navigator.clipboard
@@ -126,13 +167,13 @@ describe('public repository presentation', () => {
   it.each(['es', 'ar'])('uses the bundled %s translations with no API labels', locale => {
     state.language = { code: locale }
     renderUI({}, { ...theme, rtl: locale === 'ar' })
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(labels.SOURCE_CODE_TITLE[locale])
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(labels.SOURCE_CODE_PAGE_TITLE[locale])
     expect(labels).toHaveProperty('SOURCE_CODE_OPTIONAL_TOOLS')
     expect(screen.getByRole('region', { name: labels.SOURCE_CODE_OPTIONAL_TOOLS[locale] })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: labels.SOURCE_CODE_COPY_PROMPT[locale] })).toHaveLength(8)
   })
   it('preserves nonempty namespaced API labels', () => {
-    state.apiLabels = { DASHBOARD_SOURCE_CODE_TITLE: 'Controlled title' }
+    state.apiLabels = { DASHBOARD_SOURCE_CODE_PAGE_TITLE: 'Controlled title' }
     renderUI()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Controlled title')
   })

@@ -1,17 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { useLanguage, CampaignEmail as CampaignEmailController } from '../../../../../index'
+import React, { useState, useEffect, useMemo, useId } from 'react'
+import { useLanguage } from '../../../../../index'
 import { Input, Button } from '../../../styles'
-import $ from 'jquery'
-import ReactSummernote from 'react-summernote'
-import 'react-summernote/dist/react-summernote.css'
-import 'bootstrap/js/dist/modal'
-import 'bootstrap/js/dist/dropdown'
-import 'bootstrap/js/dist/tooltip'
-import 'bootstrap/dist/css/bootstrap.css'
-import { Alert, Modal } from '../../Shared'
-import { InsertImage } from '../../Settings/InsertImage'
-import { InsertLink } from '../../Settings/InsertLink'
+import { Alert } from '../../Shared'
+import { RichHtmlEditor } from '../../Shared/RichHtmlEditor'
 import { getUtils } from './utils'
+import { EmailPreviewFrame } from '../../CartRecovery/RecoveryRules/EmailPreviewFrame'
 
 import {
   Container,
@@ -36,21 +29,17 @@ const CampaignEmailUI = (props) => {
     handleAddCampaign,
     formState,
     handleChangeContact,
-    imageListState,
-    insertImageState,
-    handleInsertImage,
-    handleDeleteImage,
-    selectedImageUrl,
-    setSelectedImageUrl,
-    categoryList
+    categoryList,
+    // redesign CA-B2 (decision 3|4): opt-in props, all default off
+    hideActions = false,
+    previewOnly = false,
+    onConfigStateChange
   } = props
 
   const [, t] = useLanguage()
+  const fieldId = useId() // redesign CA-R2 (P7): ties each visible label to its field
   const { defaultBodyContent, defaultSubjectContent } = getUtils()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [openModal, setOpenModal] = useState(null)
-  const [editorContext, setEditorContext] = useState(null)
-  const [emailBody, setEmailBody] = useState(null)
   const [category, setCategory] = useState()
 
   const generalList = [
@@ -66,11 +55,6 @@ const CampaignEmailUI = (props) => {
     return category?.configs?.filter(config => generalList.includes(config.key)).every(config => !!config?.value)
   }, [category])
 
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    setEditorContext(null)
-  }
-
   const closeAlert = () => {
     setAlertState({
       open: false,
@@ -80,7 +64,7 @@ const CampaignEmailUI = (props) => {
 
   const handleSetDefaultContent = () => {
     handleChangeData({ target: { value: defaultSubjectContent, name: 'title' } })
-    setEmailBody(defaultBodyContent)
+    handleChangeContact('body', defaultBodyContent)
   }
 
   const handleSaveEmail = () => {
@@ -124,43 +108,6 @@ const CampaignEmailUI = (props) => {
     }
   }
 
-  const handleRestoreEditor = () => editorContext.invoke('restoreRange')
-
-  const insertImage = (context) => {
-    const ui = $.summernote.ui
-    const button = ui.button({
-      contents: '<i class="note-icon-picture"/>',
-      tooltip: 'picture',
-      class: 'note-btn',
-      click: () => {
-        setEditorContext(context)
-        context.invoke('editor.saveRange')
-        setOpenModal('image')
-      }
-    })
-    return button.render()
-  }
-
-  const insertLink = (context) => {
-    const ui = $.summernote.ui
-    const button = ui.button({
-      contents: '<button style="background: #2C7BE5; border: none; font-size: 12px; color: white;">BUTTON</button>',
-      tooltip: 'link-button',
-      class: 'note-btn',
-      click: () => {
-        setEditorContext(context)
-        context.invoke('editor.saveRange')
-        setOpenModal('link')
-      }
-    })
-    return button.render()
-  }
-
-  useEffect(() => {
-    if (!emailBody) return
-    handleChangeContact('body', emailBody)
-  }, [emailBody])
-
   useEffect(() => {
     if (categoryList?.categories?.length > 0) {
       const selectedCategory = categoryList?.categories.find(item => item.key === 'pro_white_labeling')
@@ -168,6 +115,33 @@ const CampaignEmailUI = (props) => {
       setCategory({ ...selectedCategory, configs })
     }
   }, [categoryList])
+
+  // redesign CA-B2 (decision 4): tell the host whether the SMTP gate is satisfied (boolean, false while loading)
+  useEffect(() => {
+    if (typeof onConfigStateChange === 'function') onConfigStateChange(!!isEnableConfig)
+  }, [isEnableConfig])
+
+  const emailPreview = (
+    <EmailPreviewWrapper>
+      <EmailPreviewHeader>
+        <PointGroup>
+          <div />
+          <div />
+          <div />
+        </PointGroup>
+      </EmailPreviewHeader>
+      <EmailPreviewContent>
+        <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
+        {/* the body is painted in a sandboxed iframe (no scripts), never injected into the app */}
+        <Preview>
+          <EmailPreviewFrame body={contactState?.changes?.contact_data?.body || ''} />
+        </Preview>
+      </EmailPreviewContent>
+    </EmailPreviewWrapper>
+  )
+
+  // redesign CA-B2 (decision 3): facsimile only, read-only, no gate and no editor
+  if (previewOnly) return emailPreview
 
   return (
     <>
@@ -177,10 +151,10 @@ const CampaignEmailUI = (props) => {
             <>
               <ContactWrapper>
                 <p>{t('IF_YOU_NEED_HELP_WITH_SETUP_CONTACT_SUPPORT_TEAM', 'If you need help with your setup, contact our support team.')}</p>
-                <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
+                <Button color='primary' outline onClick={() => window.open('https://www.ordering.co/contact/', '_blank', 'noopener,noreferrer')}>{t('TECH_SUPPORT', 'Tech Support')}</Button>
               </ContactWrapper>
               <Description>
-                <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/white-label/')}>
+                <span onClick={() => window.open('https://docs.ordering.co/docs/products/dashboard/settings/pro/white-label/', '_blank', 'noopener,noreferrer')}>
                   {t('SMTP_SETTINGS_LINK_DESC', 'You need to complete SMTP configuration first')}
                 </span>
               </Description>
@@ -190,70 +164,35 @@ const CampaignEmailUI = (props) => {
             <>
               <InputWrapper>
                 <div className='container-title'>
-                  <label>{t('TITLE', 'Title')}</label>
+                  <label htmlFor={`${fieldId}-title`}>{t('TITLE', 'Title')}</label>
                   <Button color='primary' onClick={() => handleSetDefaultContent()}>{t('USE_DEFAULT_TEMPLATE', 'Use default template')}</Button>
                 </div>
                 <Input
                   name='title'
+                  id={`${fieldId}-title`}
                   placeholder={t('TITLE', 'Title')}
                   value={contactState?.changes?.contact_data?.title ?? ''}
                   onChange={handleChangeData}
                 />
               </InputWrapper>
               <InputWrapper>
-                <label>{t('MESSAGES', 'Messages')}</label>
-                <WrapperEditor>
-                  <ReactSummernote
-                    value={contactState?.changes?.contact_data?.body ?? '<p><br></p>'}
+                <label id={`${fieldId}-body-label`}>{t('MESSAGES', 'Messages')}</label>
+                <WrapperEditor role='group' aria-labelledby={`${fieldId}-body-label`}>
+                  <RichHtmlEditor
+                    linkAsButton
+                    video={false}
+                    label={t('MESSAGES', 'Messages')}
                     placeholder={t('EMAIL_CONTENT', 'Email content')}
-                    onInit={({ summernote }) => summernote('code', (contactState?.changes?.contact_data?.body ?? '<p><br></p>'))}
-                    options={{
-                      height: 350,
-                      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'],
-                      toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'italic', 'underline', 'clear']],
-                        ['fontsize', ['fontsize']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'paragraph']],
-                        ['table', ['table']],
-                        ['insert', ['insertLink', 'insertImage']],
-                        ['codeview', ['codeview']]
-                      ],
-                      buttons: {
-                        insertLink,
-                        insertImage
-                      },
-                      popover: {
-                        link: [
-                          ['link', ['linkDialogShow']]
-                        ]
-                      }
-                    }}
-                    onChange={content => setEmailBody(content)}
+                    value={contactState?.changes?.contact_data?.body ?? ''}
+                    onChange={html => handleChangeContact('body', html)}
                   />
                 </WrapperEditor>
               </InputWrapper>
-              <EmailPreviewWrapper>
-                <EmailPreviewHeader>
-                  <PointGroup>
-                    <div />
-                    <div />
-                    <div />
-                  </PointGroup>
-                </EmailPreviewHeader>
-                <EmailPreviewContent>
-                  <h2>{contactState?.changes?.contact_data?.title || ''}</h2>
-                  <Preview
-                    dangerouslySetInnerHTML={{ __html: contactState?.changes?.contact_data?.body || '' }}
-                  />
-                  {/* <p>{contactState?.changes?.contact_data?.body || ''}</p> */}
-                </EmailPreviewContent>
-              </EmailPreviewWrapper>
+              {emailPreview}
             </>
           )}
         </Container>
-        {isEnableConfig && (
+        {isEnableConfig && !hideActions && (
           <ButtonWrapper>
             <Button
               color='primary'
@@ -265,56 +204,19 @@ const CampaignEmailUI = (props) => {
           </ButtonWrapper>
         )}
       </>
-      {openModal === 'image' && (
-        <Modal
-          width='60%'
-          open={openModal === 'image'}
-          onClose={() => setOpenModal(null)}
-        >
-          <InsertImage
-            imageListState={imageListState}
-            editorContext={editorContext}
-            handleRestoreEditor={handleRestoreEditor}
-            onClose={() => handleCloseModal()}
-            insertImageState={insertImageState}
-            handleInsertImage={handleInsertImage}
-            handleDeleteImage={handleDeleteImage}
-            selectedImageUrl={selectedImageUrl}
-            setSelectedImageUrl={setSelectedImageUrl}
-          />
-        </Modal>
+      {!hideActions && (
+        <Alert
+          title={t('CAMPAIGN', 'Campaign')}
+          content={alertState.content}
+          acceptText={t('ACCEPT', 'Accept')}
+          open={alertState.open}
+          onClose={() => closeAlert()}
+          onAccept={() => closeAlert()}
+          closeOnBackdrop={false}
+        />
       )}
-      {openModal === 'link' && (
-        <Modal
-          width='60%'
-          open={openModal === 'link'}
-          onClose={() => setOpenModal(null)}
-        >
-          <InsertLink
-            editorContext={editorContext}
-            handleRestoreEditor={handleRestoreEditor}
-            onClose={() => handleCloseModal()}
-            isLinkButton
-          />
-        </Modal>
-      )}
-      <Alert
-        title={t('CAMPAIGN', 'Campaign')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
     </>
   )
 }
 
-export const CampaignEmail = (props) => {
-  const campaignEmailProps = {
-    ...props,
-    UIComponent: CampaignEmailUI
-  }
-  return <CampaignEmailController {...campaignEmailProps} />
-}
+export const CampaignEmail = CampaignEmailUI

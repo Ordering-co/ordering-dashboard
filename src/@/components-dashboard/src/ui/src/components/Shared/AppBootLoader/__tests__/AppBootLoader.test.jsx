@@ -222,4 +222,14 @@ describe('AppBootLoader', () => {
     expect(rules).toMatch(/#F8F9FA|rgb\(\s*248,\s*249,\s*250\s*\)/)
     expect(rules).not.toMatch(/#2C7BE5|rgb\(\s*44,\s*123,\s*229\s*\)/)
   })
+
+  // bugs H #76a: the route skeleton renders inside the shell's <main id='main-content'>
+  it('draws its own main landmark only when it draws its own shell', () => {
+    const { unmount } = renderWithProviders(<AppBootLoader variant='home' />)
+    expect(screen.getByRole('main')).toBeInTheDocument()
+    unmount()
+
+    renderWithProviders(<AppBootLoader variant='home' route='/orders' shell={false} />)
+    expect(screen.queryByRole('main')).not.toBeInTheDocument()
+  })
 })

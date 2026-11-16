@@ -1,0 +1,138 @@
+/*
+ * redesign DC-B3 (decisions 3, 4, 6): the panel of a driver company and the fields it shares with the add form. RecordPanel, the
+ * Fields, the SegmentedControl and the SaveBar own their look; this lays the sections out. Tokens only (--od-*, --od-x-*);
+ * logical properties only. The panel is the size container `odc-record` (RecordPanel), so the pair of fields follows its width.
+ */
+
+.odc-dc-section {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-dc-fields {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* Limit and Timezone side by side when the panel has the room, one over the other when it does not */
+.odc-dc-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@container odc-record (min-width: 520px) {
+  .odc-dc-pair { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+}
+
+/* The time zone list fills its column, as a text field does */
+.odc-dc-timezone .odc-field-control { min-inline-size: 0; }
+
+/* The priority group: its label over the segmented control (or the select it becomes) */
+.odc-dc-priority {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* redesign  (n.º 10, P-1): an integration is read only. The schedule sits in a disabled fieldset (it disables the time
+   selects with no change to P/ScheduleEditor): no box of its own. The notice that sends to Connect takes the section's width, not the
+   page gutter. */
+.odc-dc-readonly {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.odc-dc-section > .odc-notice { margin-inline: 0; }
+
+/* its link is long in Greek or Turkish («Άνοιγμα Connect › Υπηρεσίες παράδοσης»): it may wrap instead of widening the panel past a
+   390px phone (measured: up to 22px over in el, tr, bg) */
+.odc-dc-section > .odc-notice .odc-notice-action {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-dc-section > .odc-notice .odc-notice-action .odc-btn {
+  white-space: normal;
+  text-align: start;
+}
+
+/* The API key, read only, with its copy button at the end of the field's row */
+.odc-dc-apikey {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-dc-apikey > .odc-field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The header: «#id · Integration» and «Enabled» with the switch on one line ── */
+.odc-dc-panel-sub {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--od-space-1);
+}
+
+.odc-dc-panel-status {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  white-space: nowrap;
+}
+
+/* As the groups' panel (DG-R1, R1-06): the status takes its own line before the title runs out of room */
+@container odc-record (max-width: 600px) {
+  .odc-record-head-row:has(.odc-dc-panel-status) { flex-wrap: wrap; }
+  .odc-record-head-row > .odc-record-status:has(.odc-dc-panel-status) {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* ── Loading and a company that did not open ── */
+.odc-dc-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dc-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+.odc-dc-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+/* The save bar draws nothing until the first change: its empty footer would leave the panel's hairline under the body */
+.odc-dc-panel .odc-record-foot:empty { display: none; }
+
+/* redesign bugs-d row 63 (Q-04): the record foot already draws the frame (padding, hairline, surface); inside it the save bar drops its
+   own box and takes the full row, so at 390 the foot is one frame instead of a bar boxed inside another */
+.odc-dc-panel .odc-record-foot > .odc-savebar {
+  flex: 1 1 100%;
+  position: static;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}

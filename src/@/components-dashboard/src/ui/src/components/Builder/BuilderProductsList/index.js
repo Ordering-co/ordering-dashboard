@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import { BoxArrowUpRight, ExclamationCircle, Globe, InfoCircle, List as MenuIcon, Lock, Phone, Plus, Search } from 'react-bootstrap-icons'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { BuilderProductsList as BuilderProductsListController, useEvent, useLanguage, useUtils } from '../../../../../index'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
 import { useOpenFromQuery } from '../../../hooks/useOneShotQuery'
-import { Button, IconButton } from '../../../styles'
-import { Pagination, SearchBar } from '../../Shared'
+import { CircleAlert, ExternalLink, Globe, Info, LockKeyhole, Menu as MenuIcon, Phone, Plus, Search } from '../../Shared/Icon'
+import {
+  Button,
+  DataTable,
+  EmptyState,
+  FilterBar,
+  IconButton,
+  InlineNotice,
+  PageHeader,
+  Pagination,
+  SearchField,
+  SegmentedControl,
+  Status
+} from '../../Shared/Product'
 import { BuilderCreatePanel } from '../BuilderCreatePanel'
-import { BuilderMessage, PlatformBuildIcon } from '../BuilderShared'
 import {
   BUILDER_STATUS_OPTIONS,
   getDomainUrl,
@@ -20,32 +28,28 @@ import {
   getStatusLabel,
   getTypeLabel
 } from '../utils'
+import { PlatformBuildIcon } from './PlatformBuildIcon'
 import { TypeFilterMenu } from './TypeFilterMenu'
-import {
-  CreateButtonContent,
-  DomainLink,
-  FiltersRow,
-  HeaderContainer,
-  HeaderTitle,
-  BannerAction,
-  InfoBanner,
-  NameCell,
-  PageContainer,
-  PaginationWrapper,
-  Pill,
-  PlatformList,
-  SearchWrapper,
-  SegmentButton,
-  Segmented,
-  SkeletonRow,
-  Table,
-  TableCard,
-  MutedText
-} from '../styles'
+import './builder-list.css'
+
+// redesign B1: /builder on Product pieces (PageHeader, FilterBar + SearchField, SegmentedControl, DataTable, Pagination,
+// EmptyState, InlineNotice). Same controller, states, texts and actions as main; the search still waits 750 ms after the last key
+// and clearing it searches at once, as main's SearchBar.
 
 // The Builder only lists Marketplace websites for now (api-core), so the
 // type filter has nothing to choose: hidden until it offers more types
 const SHOW_TYPE_FILTER = false
+
+const SEARCH_DELAY_MS = 750 // main's SearchBar (lazyLoad)
+const SKELETON_ROWS = 5 // main drew 5 loading rows
+const PAGE_SIZES = [10, 25, 50] // main's page sizes
+const STATUS_FAMILIES = { draft: 'pending', active: 'done', archived: 'cancel' }
+
+// «Showing _from_–_to_ of _total_» with each number in its own node
+const fill = (template, values) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{values[name]}</React.Fragment> : part
+})
 
 const BuilderProductsListUI = (props) => {
   const {
@@ -71,10 +75,32 @@ const BuilderProductsListUI = (props) => {
   const [{ parseDate }] = useUtils()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
   const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [query, setQuery] = useState(filters.search)
+  const searchRef = useRef(null)
+  const searchTimer = useRef(null)
 
   const canCreate = !catalogState.loading && catalogState.canCreate
   const blockedKind = ['disabled', 'no_access'].includes(productsState.errorKind) ? productsState.errorKind : null
   const hasFilters = !!filters.search.trim() || filters.productTypes.length > 0 || filters.productStatus !== 'all'
+
+  // A search set from outside (Clear search and filters) shows, never while typing
+  useEffect(() => {
+    if (typeof document !== 'undefined' && document.activeElement === searchRef.current) return
+    clearTimeout(searchTimer.current)
+    setQuery(filters.search)
+  }, [filters.search])
+  useEffect(() => () => clearTimeout(searchTimer.current), [])
+
+  const changeQuery = (value) => {
+    setQuery(value)
+    clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => handleChangeSearch(value), SEARCH_DELAY_MS)
+  }
+
+  const clearQuery = () => {
+    clearTimeout(searchTimer.current)
+    handleChangeSearch('')
+  }
 
   const openCreate = () => {
     resetCreateState()
@@ -101,160 +127,166 @@ const BuilderProductsListUI = (props) => {
 
   const formatDate = (value) => value ? parseDate(value, { outputFormat: 'MMM D, YYYY' }) : ''
 
-  const renderBody = () => {
-    if (productsState.loading) {
+  const platformsCell = (product) => {
+    if (getProductKind(product) === 'web') {
+      const domain = getProductDomains(product)[0]
       return (
-        <TableCard aria-busy='true'>
-          {[...Array(5).keys()].map(i => (
-            <SkeletonRow key={i}><Skeleton height={28} /></SkeletonRow>
-          ))}
-        </TableCard>
+        <span className='odc-builder-web'>
+          <Globe className='odc-icon' />
+          {t('BUILDER_WEB', 'Web')}
+          {domain && (
+            <>
+              {' · '}
+              <a
+                className='odc-builder-domain'
+                href={getDomainUrl(domain.domain)}
+                target='_blank'
+                rel='noopener noreferrer'
+                onClick={(e) => e.stopPropagation()}
+              >
+                {domain.domain}
+                <ExternalLink className='odc-icon' />
+                <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+              </a>
+            </>
+          )}
+        </span>
       )
-    }
-    if (productsState.errorKind) {
-      return (
-        <BuilderMessage
-          role='alert'
-          tone='error'
-          icon={<ExclamationCircle aria-hidden='true' />}
-          title={t('BUILDER_LOAD_ERROR', 'We couldn’t load your apps')}
-          text={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
-        >
-          <Button color='primary' borderRadius='8px' onClick={reloadProducts}>{t('BUILDER_RETRY', 'Try again')}</Button>
-        </BuilderMessage>
-      )
-    }
-    if (!productsState.products.length) {
-      return hasFilters
-        ? (
-          <BuilderMessage icon={<Search aria-hidden='true' />} title={t('BUILDER_NO_MATCHES', 'Nothing matches your search')}>
-            <Button color='secundary' borderRadius='8px' onClick={handleClearFilters}>
-              {t('BUILDER_CLEAR_FILTERS', 'Clear search and filters')}
-            </Button>
-          </BuilderMessage>
-          )
-        : (
-          <BuilderMessage
-            icon={<Phone aria-hidden='true' />}
-            title={t('BUILDER_NO_PRODUCTS', 'Nothing here yet')}
-            text={canCreate ? t('BUILDER_NO_PRODUCTS_HELP', 'Create an app or a website. It starts as a free draft.') : null}
-          >
-            {canCreate && (
-              <Button color='primary' borderRadius='8px' onClick={openCreate}>{t('BUILDER_CREATE', 'Create')}</Button>
-            )}
-          </BuilderMessage>
-          )
     }
     return (
-      <TableCard>
-        <Table>
-          <thead>
-            <tr>
-              <th scope='col'>{t('NAME', 'Name')}</th>
-              <th scope='col'>{t('TYPE', 'Type')}</th>
-              <th scope='col'>{t('BUILDER_PLATFORMS', 'Platforms')}</th>
-              <th scope='col'>{t('STATUS', 'Status')}</th>
-              <th scope='col'>{t('CREATED', 'Created')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productsState.products.map(product => {
-              const app = getProductApp(product)
-              const domain = getProductDomains(product)[0]
-              return (
-                <tr key={product.id} onClick={() => goToProduct(product.id)}>
-                  <td>
-                    <NameCell>
-                      <a href={`/builder/${product.id}`} onClick={(e) => handleProductLink(e, product.id)}>{product.name}</a>
-                      <span>{product.code}</span>
-                    </NameCell>
-                  </td>
-                  <td>{getTypeLabel(product.product_type, t)}</td>
-                  <td>
-                    {getProductKind(product) === 'web'
-                      ? (
-                        <MutedText small style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                          <Globe aria-hidden='true' />
-                          {t('BUILDER_WEB', 'Web')}
-                          {domain && (
-                            <>
-                              {' · '}
-                              <DomainLink
-                                href={getDomainUrl(domain.domain)}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {domain.domain}
-                                <BoxArrowUpRight aria-hidden='true' />
-                                <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
-                              </DomainLink>
-                            </>
-                          )}
-                        </MutedText>
-                        )
-                      : (
-                        <PlatformList>
-                          {getPlatformBuilds(app).map(item => (
-                            <PlatformBuildIcon key={item.platform} platform={item.platform} status={item.status} />
-                          ))}
-                        </PlatformList>
-                        )}
-                  </td>
-                  <td><Pill status={product.product_status}>{getStatusLabel(product.product_status, t)}</Pill></td>
-                  <td><MutedText>{formatDate(product.created_at)}</MutedText></td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
-        {pagination.totalPages > 0 && (
-          <PaginationWrapper>
-            <Pagination
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
-              handleChangePage={handleChangePage}
-              defaultPageSize={pagination.pageSize}
-              handleChangePageSize={handleChangePageSize}
-            />
-          </PaginationWrapper>
-        )}
-      </TableCard>
+      <span className='odc-builder-platforms'>
+        {getPlatformBuilds(getProductApp(product)).map(item => (
+          <PlatformBuildIcon key={item.platform} platform={item.platform} status={item.status} />
+        ))}
+      </span>
     )
   }
 
-  return (
-    <PageContainer>
-      <HeaderContainer>
-        <HeaderTitle>
-          {isCollapse && (
-            <IconButton color='black' aria-label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)}>
-              <MenuIcon />
-            </IconButton>
-          )}
-          <div>
-            <h1>{t('BUILDER', 'Builder')}</h1>
-            <p>{t('BUILDER_SUBTITLE_WEBSITES', 'Create your apps and websites, edit them and follow their builds.')}</p>
-          </div>
-        </HeaderTitle>
-        {canCreate && !blockedKind && (
-          <Button color='primary' borderRadius='8px' onClick={openCreate}>
-            <CreateButtonContent>
-              <Plus aria-hidden='true' />
-              {t('BUILDER_CREATE', 'Create')}
-            </CreateButtonContent>
-          </Button>
+  const columns = [
+    {
+      id: 'name',
+      header: t('NAME', 'Name'),
+      rowHeader: true,
+      wrap: true,
+      skeleton: { lines: 2 },
+      cell: product => (
+        <span className='odc-builder-name'>
+          <a href={`/builder/${product.id}`} dir='auto' onClick={(e) => handleProductLink(e, product.id)}>{product.name}</a>
+          <span className='odc-builder-code'>{product.code}</span>
+        </span>
+      )
+    },
+    { id: 'type', header: t('TYPE', 'Type'), cell: product => getTypeLabel(product.product_type, t) },
+    { id: 'platforms', header: t('BUILDER_PLATFORMS', 'Platforms'), wrap: true, cell: platformsCell },
+    {
+      id: 'status',
+      header: t('STATUS', 'Status'),
+      cell: product => (
+        <Status family={STATUS_FAMILIES[product.product_status] || 'cancel'} label={getStatusLabel(product.product_status, t)} />
+      )
+    },
+    { id: 'created', header: t('CREATED', 'Created'), cell: product => <span className='odc-builder-muted'>{formatDate(product.created_at)}</span> }
+  ]
+
+  const renderBody = () => {
+    if (productsState.errorKind && !productsState.loading) {
+      return (
+        <EmptyState
+          tone='error'
+          icon={CircleAlert}
+          titleAs='h2'
+          title={t('BUILDER_LOAD_ERROR', 'We couldn’t load your apps')}
+          description={t('BUILDER_LOAD_ERROR_HELP', 'Check your connection and try again.')}
+          action={<Button variant='primary' onClick={reloadProducts}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+        />
+      )
+    }
+    if (!productsState.loading && !productsState.products.length) {
+      return hasFilters
+        ? (
+          <EmptyState
+            icon={Search}
+            titleAs='h2'
+            title={t('BUILDER_NO_MATCHES', 'Nothing matches your search')}
+            action={<Button onClick={handleClearFilters}>{t('BUILDER_CLEAR_FILTERS', 'Clear search and filters')}</Button>}
+          />
+          )
+        : (
+          <EmptyState
+            icon={Phone}
+            titleAs='h2'
+            title={t('BUILDER_NO_PRODUCTS', 'Nothing here yet')}
+            description={canCreate ? t('BUILDER_NO_PRODUCTS_HELP', 'Create an app or a website. It starts as a free draft.') : null}
+            action={canCreate ? <Button variant='primary' onClick={openCreate}>{t('BUILDER_CREATE', 'Create')}</Button> : null}
+          />
+          )
+    }
+    return (
+      <>
+        <DataTable
+          label={t('BUILDER', 'Builder')}
+          columns={columns}
+          rows={productsState.loading ? [] : productsState.products}
+          getRowId={product => product.id}
+          onOpenRow={product => goToProduct(product.id)}
+          loading={productsState.loading}
+          loadingLabel={t('LOADING', 'Loading')}
+          skeletonRows={SKELETON_ROWS}
+        />
+        {!productsState.loading && pagination.totalPages > 0 && (
+          <Pagination
+            page={pagination.currentPage}
+            pageSize={pagination.pageSize}
+            // a total that can't fill the pages the API counts (the controller falls back to the rows when the API sends none):
+            // page by the pages instead, never by a made-up total
+            {...(pagination.total > (pagination.totalPages - 1) * pagination.pageSize
+              ? { total: pagination.total }
+              : { hasMore: pagination.currentPage < pagination.totalPages, itemCount: productsState.products.length })}
+            pageSizeOptions={PAGE_SIZES}
+            onPageChange={handleChangePage}
+            onPageSizeChange={(size) => handleChangePageSize(size)}
+            label={t('PAGINATION', 'Pagination')}
+            previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+            nextLabel={t('NEXT_PAGE', 'Next page')}
+            pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+            // main's numbered pages let you jump to any page: the page field keeps that
+            showPageInput
+            pageLabel={t('PAGE', 'Page')}
+            pageOfLabel={(totalPages, figureOf) => fill(t('PAGE_OF_TOTAL', 'of _total_'), { total: figureOf(totalPages) })}
+            rangeLabel={(from, to, total, figureOf) => fill(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from: figureOf(from), to: figureOf(to), total: figureOf(total) })}
+            pageStatusLabel={(current, totalPages) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(totalPages))}
+          />
         )}
-      </HeaderContainer>
+      </>
+    )
+  }
+
+  const createLabel = t('BUILDER_CREATE', 'Create')
+
+  return (
+    <div className='odc-root odc-builder-list'>
+      <PageHeader
+        leading={isCollapse && <IconButton icon={MenuIcon} label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)} />}
+        title={t('BUILDER', 'Builder')}
+        description={t('BUILDER_SUBTITLE_WEBSITES', 'Create your apps and websites, edit them and follow their builds.')}
+        primaryAction={canCreate && !blockedKind
+          ? (
+            <Button variant='primary' icon={Plus} title={createLabel} onClick={openCreate}>
+              <span data-collapse-label=''>{createLabel}</span>
+            </Button>
+            )
+          : undefined}
+      />
 
       {blockedKind
         ? (
-          <BuilderMessage
-            icon={<Lock aria-hidden='true' />}
+          <EmptyState
+            icon={LockKeyhole}
+            titleAs='h2'
             title={blockedKind === 'disabled'
               ? t('BUILDER_DISABLED', 'Builder isn’t available here')
               : t('BUILDER_NO_ACCESS', 'You don’t have access to Builder')}
-            text={blockedKind === 'disabled'
+            description={blockedKind === 'disabled'
               ? t('BUILDER_DISABLED_HELP', 'Builder is turned off for this installation.')
               : t('BUILDER_NO_ACCESS_HELP', 'Only admins with edit permissions can create and manage apps. Ask a project owner for access.')}
           />
@@ -262,52 +294,55 @@ const BuilderProductsListUI = (props) => {
         : (
           <>
             {!catalogState.loading && catalogState.unavailableReason === 'not_enabled' && (
-              <InfoBanner>
-                <InfoCircle aria-hidden='true' />
-                <span>{t('BUILDER_CREATE_UNAVAILABLE', 'Creating apps from the dashboard isn’t turned on for this project yet. Contact Ordering support to turn it on.')}</span>
-              </InfoBanner>
+              <InlineNotice tone='info' icon={Info} live={false}>
+                {t('BUILDER_CREATE_UNAVAILABLE', 'Creating apps from the dashboard isn’t turned on for this project yet. Contact Ordering support to turn it on.')}
+              </InlineNotice>
             )}
             {!catalogState.loading && catalogState.unavailableReason === 'empty' && (
-              <InfoBanner>
-                <InfoCircle aria-hidden='true' />
-                <span>{t('BUILDER_CATALOG_EMPTY', 'There’s nothing to create right now. New app types will appear here when they’re available.')}</span>
-              </InfoBanner>
+              <InlineNotice tone='info' icon={Info} live={false}>
+                {t('BUILDER_CATALOG_EMPTY', 'There’s nothing to create right now. New app types will appear here when they’re available.')}
+              </InlineNotice>
             )}
             {!catalogState.loading && catalogState.unavailableReason === 'error' && (
-              <InfoBanner role='alert'>
-                <ExclamationCircle aria-hidden='true' />
-                <span>{t('BUILDER_CATALOG_ERROR', 'We couldn’t check what you can create.')}</span>
-                <BannerAction type='button' onClick={reloadCatalog}>{t('BUILDER_RETRY', 'Try again')}</BannerAction>
-              </InfoBanner>
+              <InlineNotice
+                tone='danger'
+                icon={CircleAlert}
+                role='alert'
+                action={<Button size='sm' variant='ghost' onClick={reloadCatalog}>{t('BUILDER_RETRY', 'Try again')}</Button>}
+              >
+                {t('BUILDER_CATALOG_ERROR', 'We couldn’t check what you can create.')}
+              </InlineNotice>
             )}
 
-            <FiltersRow>
-              <SearchWrapper>
-                <SearchBar
-                  lazyLoad
-                  search={filters.search}
-                  onSearch={handleChangeSearch}
+            <FilterBar
+              flush
+              label={t('FILTERS', 'Filters')}
+              search={(
+                <SearchField
+                  value={query}
+                  onChange={changeQuery}
+                  onClear={clearQuery}
+                  inputRef={searchRef}
+                  label={t('BUILDER_SEARCH', 'Search by name')}
                   placeholder={t('BUILDER_SEARCH', 'Search by name')}
+                  clearLabel={t('CLEAR_SEARCH', 'Clear search')}
                 />
-              </SearchWrapper>
-              {SHOW_TYPE_FILTER && <TypeFilterMenu value={filters.productTypes} onChange={handleChangeType} />}
-              <Segmented role='group' aria-label={t('STATUS', 'Status')}>
-                <SegmentButton type='button' active={filters.productStatus === 'all'} aria-pressed={filters.productStatus === 'all'} onClick={() => handleChangeStatus('all')}>
-                  {t('ALL', 'All')}
-                </SegmentButton>
-                {BUILDER_STATUS_OPTIONS.map(option => (
-                  <SegmentButton
-                    key={option.value}
-                    type='button'
-                    active={filters.productStatus === option.value}
-                    aria-pressed={filters.productStatus === option.value}
-                    onClick={() => handleChangeStatus(option.value)}
-                  >
-                    {option.label(t)}
-                  </SegmentButton>
-                ))}
-              </Segmented>
-            </FiltersRow>
+              )}
+              filters={(
+                <>
+                  {SHOW_TYPE_FILTER && <TypeFilterMenu value={filters.productTypes} onChange={handleChangeType} />}
+                  <SegmentedControl
+                    label={t('STATUS', 'Status')}
+                    value={filters.productStatus}
+                    onValueChange={handleChangeStatus}
+                    options={[
+                      { value: 'all', label: t('ALL', 'All') },
+                      ...BUILDER_STATUS_OPTIONS.map(option => ({ value: option.value, label: option.label(t) }))
+                    ]}
+                  />
+                </>
+              )}
+            />
 
             {renderBody()}
           </>
@@ -322,7 +357,7 @@ const BuilderProductsListUI = (props) => {
           onClose={() => setIsCreateOpen(false)}
         />
       )}
-    </PageContainer>
+    </div>
   )
 }
 

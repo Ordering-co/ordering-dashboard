@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { translateApiMessage } from '../../utils/translateApiMessage'
 
 /**
  * Component to manage product extras behavior without UI component
@@ -125,6 +126,9 @@ export const ProductExtras = (props) => {
    * Method to save the new ingredient from API
    * @param {Number} extraId
    * @param {Object} params updated parameters
+   * redesign stores 2.F: returns `{ ok: true }` / `{ ok: false, error }`, and an API error or a throw clears
+   * `extrasState.loading`. The request sends only `params`, so there are no pending changes to keep.
+   * @returns {Promise<{ ok: true } | { ok: false, error }>}
    */
   const handleUpdateExtraState = async (extraId, params) => {
     try {
@@ -160,9 +164,14 @@ export const ProductExtras = (props) => {
 
         handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('EXTRA_SAVED', 'Extra saved'))
+        return { ok: true }
       }
+      setExtrasState(prev => ({ ...prev, loading: false }))
+      return { ok: false, error: content.result }
     } catch (err) {
+      setExtrasState(prev => ({ ...prev, loading: false }))
       setProductState({ ...productState, loading: false, error: err.message })
+      return { ok: false, error: err.message }
     }
   }
 
@@ -257,7 +266,12 @@ export const ProductExtras = (props) => {
           handleUpdateBusinessState(updatedBusiness)
         }
         showToast(ToastType.Success, t('EXTRA_ADDED', 'Extra added'))
+        return
       }
+      // bugs E (review E2-4): a refusal used to leave `loading` on for good (the add field read-only, «Add» off)
+      setExtrasState(prev => ({ ...prev, loading: false }))
+      const message = Array.isArray(content.result) ? content.result[0] : content.result
+      showToast(ToastType.Error, translateApiMessage(t, message, t('ERROR', 'Error')))
     } catch (err) {
       setExtrasState({ ...extrasState, loading: false, error: err.message })
     }
@@ -270,7 +284,7 @@ export const ProductExtras = (props) => {
     event.dataTransfer.setData('transferExtraId', extra.id)
     const ghostElement = document.createElement('div')
     ghostElement.classList.add('ghostDragging')
-    ghostElement.innerHTML = extra.name
+    ghostElement.textContent = extra.name
     document.body.appendChild(ghostElement)
     event.dataTransfer.setDragImage(ghostElement, 0, 0)
     setIsExtrasBottom(false)

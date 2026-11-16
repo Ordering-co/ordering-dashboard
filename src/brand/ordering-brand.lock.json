@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "1.0.0",
+  "brand": "Ordering.co",
+  "canonicalOrigin": "https://brand.ordering.co",
+  "guidelinesVersion": "1.3.0",
+  "skillVersion": "1.3.0",
+  "tokensVersion": "1.0.0",
+  "releasedAt": "2026-09-05",
+  "retrievedAt": "2026-09-13",
+  "allowlist": {
+    "sources": [
+      "/machine/ordering.tokens.json",
+      "/machine/design-system.json",
+      "/machine/asset-manifest.json",
+      "/machine/skill-manifest.json"
+    ],
+    "assets": [
+      "/assets/fonts/inter/InterVariable.woff2",
+      "/assets/fonts/inter/OFL.txt",
+      "/assets/fonts/jetbrains-mono/JetBrainsMono[wght].woff2",
+      "/assets/fonts/jetbrains-mono/OFL.txt",
+      "/assets/logos/ordering-lockup-color.svg",
+      "/assets/logos/ordering-lockup-color-reversed.svg",
+      "/assets/logos/ordering-lockup-color-on-white.svg",
+      "/assets/logos/ordering-lockup-color-on-dark.svg",
+      "/assets/logos/png/ordering-lockup-color-512.png",
+      "/assets/logos/ordering-symbol-contained-light.svg",
+      "/assets/logos/ordering-symbol-contained-dark.svg",
+      "/assets/icons/ordering-app-icon-192.png",
+      "/assets/icons/ordering-app-icon-512.png",
+      "/assets/icons/favicon.ico",
+      "/assets/icons/ordering-favicon-32.png",
+      "/assets/icons/ordering-apple-touch-icon-180.png"
+    ]
+  },
+  "upstreamSourceChecksums": {
+    "designSystem": "012378dc7d525ed057dc7660890ee1d51db8da864f8cd87cd1c4455bbfee4d6d",
+    "tokens": "6f3c9cef8a96f0b823f4636f4542a33df398a32ab0b30e62f8ee3a85fa54c481",
+    "digitalBrandAssets": "b56477937fa601b29712d18e4b4e16834eaf8234a17fee01ac675a65c49aca40"
+  },
+  "sources": {
+    "src/brand/sources/1.3.0/ordering.tokens.json": {
+      "url": "https://brand.ordering.co/machine/ordering.tokens.json",
+      "bytes": 40700,
+      "sha256": "4a31e2f09c7549893360675f87ba471df298b7e16e3d03c426fa55ad915016ec",
+      "verification": {
+        "method": "skill-manifest",
+        "expectedSha256": "4a31e2f09c7549893360675f87ba471df298b7e16e3d03c426fa55ad915016ec"
+      }
+    },
+    "src/brand/sources/1.3.0/design-system.json": {
+      "url": "https://brand.ordering.co/machine/design-system.json",
+      "bytes": 12597,
+      "sha256": "b33d9568d60e1e14086dcb4634a84987923df0770d6cfed030be2112e1479fec",
+      "verification": {
+        "method": "skill-manifest",
+        "expectedSha256": "b33d9568d60e1e14086dcb4634a84987923df0770d6cfed030be2112e1479fec"
+      }
+    },
+    "src/brand/sources/1.3.0/asset-manifest.json": {
+      "url": "https://brand.ordering.co/machine/asset-manifest.json",
+      "bytes": 32041,
+      "sha256": "2fabfca991718fe4e82e577b1717e8d0aa42f62adb44662ad7d39a817375eece",
+      "verification": {
+        "method": "skill-manifest",
+        "expectedSha256": "2fabfca991718fe4e82e577b1717e8d0aa42f62adb44662ad7d39a817375eece"
+      }
+    },
+    "src/brand/sources/1.3.0/skill-manifest.json": {
+      "url": "https://brand.ordering.co/machine/skill-manifest.json",
+      "bytes": 5289,
+      "sha256": "2820bb53bac321e63e1d60e3cc22fc073fbc8bfa5863063eb271b95cc3d3a82c",
+      "verification": {
+        "method": "audited-root",
+        "expectedSha256": null
+      }
+    }
+  },
+  "managedOutputs": {
+    "public/brand/ordering/1.3.0/assets/fonts/inter/InterVariable.woff2": {
+      "kind": "asset",
+      "source": "/assets/fonts/inter/InterVariable.woff2",
+      "bytes": 352240,
+      "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+      "upstreamSha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/fonts/inter/OFL.txt": {
+      "kind": "asset",
+      "source": "/assets/fonts/inter/OFL.txt",
+      "bytes": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+      "upstreamSha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/fonts/jetbrains-mono/JetBrainsMono[wght].woff2": {
+      "kind": "asset",
+      "source": "/assets/fonts/jetbrains-mono/JetBrainsMono[wght].woff2",
+      "bytes": 113504,
+      "sha256": "fe7b565a583febc11ec94fa9aacf8a8180c21efe601f174a33c71a0b596346b7",
+      "upstreamSha256": "fe7b565a583febc11ec94fa9aacf8a8180c21efe601f174a33c71a0b596346b7",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/fonts/jetbrains-mono/OFL.txt": {
+      "kind": "asset",
+      "source": "/assets/fonts/jetbrains-mono/OFL.txt",
+      "bytes": 4399,
+      "sha256": "30f0c136e3c88e422d0791acd97238870f9054a9729bc34cf2ff0d4ed8cac4ad",
+      "upstreamSha256": "30f0c136e3c88e422d0791acd97238870f9054a9729bc34cf2ff0d4ed8cac4ad",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-lockup-color.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-lockup-color.svg",
+      "bytes": 4816,
+      "sha256": "aaf2820e52e52b5e82af79b9f9dae5d3327813f6b0dab444593ea29139d69778",
+      "upstreamSha256": "aaf2820e52e52b5e82af79b9f9dae5d3327813f6b0dab444593ea29139d69778",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-lockup-color-reversed.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-lockup-color-reversed.svg",
+      "bytes": 4826,
+      "sha256": "efd721f5b4c43a87fc6305d8d2c0afaa12f322fc14d8669c2476e62f2482eeda",
+      "upstreamSha256": "efd721f5b4c43a87fc6305d8d2c0afaa12f322fc14d8669c2476e62f2482eeda",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-lockup-color-on-white.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-lockup-color-on-white.svg",
+      "bytes": 4929,
+      "sha256": "dda87ebf756ea9d2982a3c746e38ff282ccac55f192b24142800fd6a1ec72a1d",
+      "upstreamSha256": "dda87ebf756ea9d2982a3c746e38ff282ccac55f192b24142800fd6a1ec72a1d",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-lockup-color-on-dark.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-lockup-color-on-dark.svg",
+      "bytes": 4927,
+      "sha256": "992a7a737878e37a9bd0f23329bd19a66ae89f581a42a3c9f0fed90e1ac380b4",
+      "upstreamSha256": "992a7a737878e37a9bd0f23329bd19a66ae89f581a42a3c9f0fed90e1ac380b4",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/png/ordering-lockup-color-512.png": {
+      "kind": "asset",
+      "source": "/assets/logos/png/ordering-lockup-color-512.png",
+      "bytes": 13461,
+      "sha256": "67f932d96f716146c953fb61e50ab91c520d4476729846c62fbf4e807c499c80",
+      "upstreamSha256": "67f932d96f716146c953fb61e50ab91c520d4476729846c62fbf4e807c499c80",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-symbol-contained-light.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-symbol-contained-light.svg",
+      "bytes": 926,
+      "sha256": "0ab6501814188e2442bf3238d91d52100873bbc47e6278172891653ee771e61d",
+      "upstreamSha256": "0ab6501814188e2442bf3238d91d52100873bbc47e6278172891653ee771e61d",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/logos/ordering-symbol-contained-dark.svg": {
+      "kind": "asset",
+      "source": "/assets/logos/ordering-symbol-contained-dark.svg",
+      "bytes": 924,
+      "sha256": "c07c0351eb831216dedad436f68e7275b9afaf4d00cbadf268a047e743e6503c",
+      "upstreamSha256": "c07c0351eb831216dedad436f68e7275b9afaf4d00cbadf268a047e743e6503c",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/icons/ordering-app-icon-192.png": {
+      "kind": "asset",
+      "source": "/assets/icons/ordering-app-icon-192.png",
+      "bytes": 8922,
+      "sha256": "3737a8233ddd257369b998dbea9e9b6c49b67a64133f291da09582164ed7b106",
+      "upstreamSha256": "3737a8233ddd257369b998dbea9e9b6c49b67a64133f291da09582164ed7b106",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/icons/ordering-app-icon-512.png": {
+      "kind": "asset",
+      "source": "/assets/icons/ordering-app-icon-512.png",
+      "bytes": 25214,
+      "sha256": "3ea7d63af013b75da04c1d6d2a782f7dffa8c1bc6fba24c5d832568b355b4240",
+      "upstreamSha256": "3ea7d63af013b75da04c1d6d2a782f7dffa8c1bc6fba24c5d832568b355b4240",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/icons/favicon.ico": {
+      "kind": "asset",
+      "source": "/assets/icons/favicon.ico",
+      "bytes": 4314,
+      "sha256": "ac1a41a4aa79fe2c1110c24a9f4ad2e998db949ec8230918e4ba5f3c99efa889",
+      "upstreamSha256": "ac1a41a4aa79fe2c1110c24a9f4ad2e998db949ec8230918e4ba5f3c99efa889",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/icons/ordering-favicon-32.png": {
+      "kind": "asset",
+      "source": "/assets/icons/ordering-favicon-32.png",
+      "bytes": 1460,
+      "sha256": "c022c02dca1c5810ca1b64b2de930b427d412889382fa0010d2e5d13352e8ea2",
+      "upstreamSha256": "c022c02dca1c5810ca1b64b2de930b427d412889382fa0010d2e5d13352e8ea2",
+      "upstreamImmutable": false
+    },
+    "public/brand/ordering/1.3.0/assets/icons/ordering-apple-touch-icon-180.png": {
+      "kind": "asset",
+      "source": "/assets/icons/ordering-apple-touch-icon-180.png",
+      "bytes": 4161,
+      "sha256": "7b5e93226a9d457be3be8b3937523882a118fa2947ea45d44f57c752c4e17829",
+      "upstreamSha256": "7b5e93226a9d457be3be8b3937523882a118fa2947ea45d44f57c752c4e17829",
+      "upstreamImmutable": false
+    },
+    "src/brand/ordering.tokens.generated.js": {
+      "kind": "generated",
+      "source": "src/brand/sources/1.3.0/ordering.tokens.json",
+      "bytes": 13385,
+      "sha256": "7b09d37ef51d5c94f03d2a94344f485bff455af09dce1002cb1f3054eaf51e7c"
+    },
+    "src/brand/ordering.tokens.generated.css": {
+      "kind": "generated",
+      "source": "src/brand/sources/1.3.0/ordering.tokens.json",
+      "bytes": 7077,
+      "sha256": "67c818124cec9746c0db86c6b70a6a439e6430a01ed0b4808197fe63a38ad662"
+    }
+  }
+}

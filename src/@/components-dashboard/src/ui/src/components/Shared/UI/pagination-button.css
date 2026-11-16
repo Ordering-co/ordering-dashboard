@@ -1,0 +1,67 @@
+.od-ui:where(.od-compact-pagination) {
+  @apply od-flex od-items-center;
+  margin-top: 5px;
+}
+
+.od-ui:where(.od-compact-pagination-state) {
+  @apply od-flex;
+  min-width: 140px;
+  color: var(--od-compact-pagination-text);
+  font-family: var(--od-compact-pagination-font);
+  font-size: var(--od-compact-pagination-font-size);
+}
+
+.od-ui:where(.od-compact-pagination-button) {
+  @apply od-flex od-items-center od-justify-center;
+  width: var(--od-compact-pagination-compact-height);
+  height: var(--od-compact-pagination-compact-height);
+  min-width: var(--od-compact-pagination-compact-height);
+  min-height: var(--od-compact-pagination-compact-height);
+  margin: 0 5px;
+  padding: 0;
+  color: var(--od-compact-pagination-text);
+  background: transparent;
+  border: 1px solid var(--od-compact-pagination-border);
+  border-radius: var(--od-compact-pagination-radius-round);
+  cursor: pointer;
+  outline: none;
+  transition:
+    background-color var(--od-compact-pagination-duration) var(--od-compact-pagination-easing),
+    color var(--od-compact-pagination-duration) var(--od-compact-pagination-easing);
+}
+
+.od-ui:where(.od-compact-pagination-button):hover:not(:disabled) { background: transparent; }
+
+.od-ui:where(.od-compact-pagination-button):active:not(:disabled) {
+  color: var(--od-compact-pagination-action-foreground);
+  background: var(--od-compact-pagination-action);
+}
+
+.od-ui:where(.od-compact-pagination-button):disabled {
+  cursor: no-drop;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.od-ui:where(.od-compact-pagination-button):focus-visible {
+  outline: var(--od-compact-pagination-focus-width) solid var(--od-compact-pagination-focus);
+  outline-offset: var(--od-compact-pagination-focus-offset);
+}
+
+.od-ui:where(.od-compact-pagination-button) svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-compact-pagination-button) {
+    width: var(--od-compact-pagination-touch-target);
+    height: var(--od-compact-pagination-touch-target);
+    min-width: var(--od-compact-pagination-touch-target);
+    min-height: var(--od-compact-pagination-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-compact-pagination-button) { transition-property: none; transition-duration: 0s; }
+}

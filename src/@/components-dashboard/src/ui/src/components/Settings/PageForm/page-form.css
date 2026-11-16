@@ -1,0 +1,69 @@
+/*
+ * Settings › Website pages › page editor: heading and Enable, Name and Slug, SEO fields and SEO image, the rich text
+ * editor (legacy frame, styles.js › WrapperEditor) and Accept/Cancel. Values come from --od-* / --od-x-* only; logical properties only.
+ */
+.odc-pf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-5);
+}
+
+.odc-pf-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-4);
+}
+
+.odc-pf-title {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+/* Two columns side by side; one under the other on a phone */
+.odc-pf-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+  align-items: start;
+}
+
+.odc-pf-row[data-add] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.odc-pf-seo {
+  display: grid;
+  gap: var(--od-space-4);
+}
+
+.odc-pf-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-pf-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-pf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+@media (max-width: 767px) {
+  .odc-pf-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

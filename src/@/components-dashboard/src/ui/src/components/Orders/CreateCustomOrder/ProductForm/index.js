@@ -109,6 +109,9 @@ const ProductOptionsUI = (props) => {
   const unaddressedTypes = configs?.unaddressed_order_types_allowed?.value.split('|').map(value => Number(value)) || []
   const hideProductDescription = theme?.business_view?.components?.products?.components?.product?.components?.description?.hidden
 
+  const isDecrementDisabled = Boolean(productCart?.quantity === 1 || !productCart?.quantity || isSoldOut || ((productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order))
+  const isIncrementDisabled = Boolean(maxProductQuantity <= 0 || (productCart?.quantity + productAddedToCartLength) >= maxProductQuantity || ((productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && product?.maximum_per_order) || isSoldOut)
+
   const handleChangeFavorite = () => {
     handleFavoriteProduct && handleFavoriteProduct(product, !product?.favorite)
   }
@@ -398,9 +401,15 @@ const ProductOptionsUI = (props) => {
                   <span>{product?.name}</span>
                 </ProductName>
                 {!isCustomerMode && (
-                  <span className='favorite' onClick={() => handleChangeFavorite()}>
-                    {product?.favorite ? <Like /> : <DisLike />}
-                  </span>
+                  <button
+                    type='button'
+                    className='favorite'
+                    aria-pressed={Boolean(product?.favorite)}
+                    aria-label={t('FAVORITE_PRODUCT', 'Favorite product')}
+                    onClick={() => handleChangeFavorite()}
+                  >
+                    {product?.favorite ? <Like aria-hidden='true' /> : <DisLike aria-hidden='true' />}
+                  </button>
                 )}
               </TitleWrapper>
               <Properties>
@@ -584,14 +593,23 @@ const ProductOptionsUI = (props) => {
                     {
                       productCart && !isSoldOut && maxProductQuantity > 0 && (
                         <div className={isHaveWeight ? 'incdec-control show-weight-unit' : 'incdec-control'}>
-                          <FiMinusCircle
+                          <button
+                            type='button'
+                            className='qty-step'
+                            aria-label={t('DECREMENT_QUANTITY', 'Decrease quantity')}
+                            disabled={isDecrementDisabled}
                             onClick={decrement}
-                            className={`${productCart.quantity === 1 || !productCart.quantity || isSoldOut || ((productCart?.quantity + productAddedToCartLength) <= product?.minimum_per_order) ? 'disabled' : ''}`}
-                          />
+                          >
+                            <FiMinusCircle
+                              aria-hidden='true'
+                              className={`${isDecrementDisabled ? 'disabled' : ''}`}
+                            />
+                          </button>
                           {
                             qtyBy?.pieces && (
                               <Input
                                 className='qty'
+                                aria-label={t('QUANTITY', 'Quantity')}
                                 value={productCart?.quantity || ''}
                                 onChange={e => onChangeProductCartQuantity(parseInt(e.target.value))}
                                 onKeyPress={(e) => {
@@ -603,16 +621,45 @@ const ProductOptionsUI = (props) => {
                             )
                           }
                           {qtyBy?.weight_unit && (
-                            <Input className='qty' value={(productCart.quantity * product?.weight).toFixed(2)} />
+                            <Input
+                              className='qty'
+                              aria-label={t('QUANTITY', 'Quantity')}
+                              readOnly
+                              value={(productCart.quantity * product?.weight).toFixed(2)}
+                            />
                           )}
-                          <FiPlusCircle
+                          <button
+                            type='button'
+                            className='qty-step'
+                            aria-label={t('INCREMENT_QUANTITY', 'Increase quantity')}
+                            disabled={isIncrementDisabled}
                             onClick={increment}
-                            className={`${maxProductQuantity <= 0 || (productCart?.quantity + productAddedToCartLength) >= maxProductQuantity || ((productCart?.quantity + productAddedToCartLength) >= product?.maximum_per_order && product?.maximum_per_order) || isSoldOut ? 'disabled' : ''}`}
-                          />
+                          >
+                            <FiPlusCircle
+                              aria-hidden='true'
+                              className={`${isIncrementDisabled ? 'disabled' : ''}`}
+                            />
+                          </button>
                           {isHaveWeight && (
                             <WeightUnitSwitch>
-                              <WeightUnitItem onClick={() => handleSwitchQtyUnit('pieces')} active={qtyBy?.pieces}>{t('PIECES', 'pcs')}</WeightUnitItem>
-                              <WeightUnitItem onClick={() => handleSwitchQtyUnit('weight_unit')} active={qtyBy?.weight_unit}>{product?.weight_unit}</WeightUnitItem>
+                              <WeightUnitItem
+                                as='button'
+                                type='button'
+                                aria-pressed={Boolean(qtyBy?.pieces)}
+                                onClick={() => handleSwitchQtyUnit('pieces')}
+                                active={qtyBy?.pieces}
+                              >
+                                {t('PIECES', 'pcs')}
+                              </WeightUnitItem>
+                              <WeightUnitItem
+                                as='button'
+                                type='button'
+                                aria-pressed={Boolean(qtyBy?.weight_unit)}
+                                onClick={() => handleSwitchQtyUnit('weight_unit')}
+                                active={qtyBy?.weight_unit}
+                              >
+                                {product?.weight_unit}
+                              </WeightUnitItem>
                             </WeightUnitSwitch>
                           )}
                         </div>

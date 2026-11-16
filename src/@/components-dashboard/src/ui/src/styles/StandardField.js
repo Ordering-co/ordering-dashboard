@@ -1,29 +1,7 @@
 import styled from 'styled-components'
 
-export const StandardField = styled.div`
-  .select {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 14px;
-  }
+import { StandardField as SharedStandardField } from '../components/Shared/UI/StandardField'
 
-  .select > div:first-child {
-    width: 100%;
-    min-height: 43px;
-    justify-content: space-between;
-  }
-
-  .multi-select {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 14px;
-  }
-
-  .multi-select > div:first-child {
-    width: 100%;
-    min-height: 43px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-`
+// Preserve the public styled identity and polymorphic extension surface while
+// Shared/UI owns the layout implementation.
+export const StandardField = styled(SharedStandardField)``

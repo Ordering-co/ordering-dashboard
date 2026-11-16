@@ -84,6 +84,7 @@ export const CardFormCustom = (props) => {
           <Input
             type='tel'
             name='number'
+            aria-label={t('CARD_NUMBER', 'Card number')}
             placeholder={t('CARD_NUMBER', 'Card number')}
             inputMode='numeric'
             onChange={handleInputChange}
@@ -104,6 +105,7 @@ export const CardFormCustom = (props) => {
           <Input
             type='text'
             name='name'
+            aria-label={t('NAME', 'Name')}
             placeholder={t('NAME', 'Name')}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
@@ -120,6 +122,7 @@ export const CardFormCustom = (props) => {
             type='text'
             name='expiry'
             pattern='\d\d/\d\d'
+            aria-label={t('EXPIRY', 'Expiry')}
             placeholder={t('EXPIRY', 'Expiry')}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
@@ -134,6 +137,7 @@ export const CardFormCustom = (props) => {
           <Input
             type='text'
             name='cvc'
+            aria-label={t('CVC', 'CVC')}
             placeholder={t('CVC', 'CVC')}
             pattern='\d{3,4}'
             onChange={handleInputChange}

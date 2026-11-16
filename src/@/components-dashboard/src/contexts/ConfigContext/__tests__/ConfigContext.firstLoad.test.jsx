@@ -120,7 +120,7 @@ describe('ConfigProvider first_load hydrate', () => {
   it('ignores __FIRST_LOAD__ from another project and waits for the API', async () => {
     let resolveConfigs
     mocks.languageLoading = false
-    mocks.project = 'luisv4plus'
+    mocks.project = 'exampletenant'
     mocks.configsGet.mockImplementation(() => new Promise(resolve => {
       resolveConfigs = resolve
     }))

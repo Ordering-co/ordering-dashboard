@@ -13,7 +13,7 @@ export const DriversGroupAutoassign = (props) => {
   const [autoRejectOrderGroup, setAutoRejectOrderGroup] = useState({})
 
   const getHours = (seconds) => {
-    return (seconds * 1) / 3600 > 1 ? Math.floor((seconds * 1) / 3600) : 0
+    return (seconds * 1) / 3600 >= 1 ? Math.floor((seconds * 1) / 3600) : 0 // 3600 s is 1 h, not 0 h
   }
   const getMinutes = (seconds) => {
     return Math.floor((seconds - Math.floor(seconds / 3600) * 3600) / 60)
@@ -121,7 +121,10 @@ export const DriversGroupAutoassign = (props) => {
 
   useEffect(() => {
     let _autoAssign
-    if (!curDriversGroup) return
+    if (!curDriversGroup) {
+      setAutoRejectOrderGroup({ hour: 0, minute: 0, second: 0 }) // without it editing one field made undefined * 3600 = NaN
+      return
+    }
     if (curDriversGroup.autoassign_initial_radius * 1 === 500 && curDriversGroup.autoassign_amount_drivers * 1 === 1) _autoAssign = 1
     else if (curDriversGroup.autoassign_initial_radius * 1 === 15000 && curDriversGroup.autoassign_amount_drivers * 1 === 1000) _autoAssign = 2
     else if (curDriversGroup.autoassign_initial_radius * 1 === 100 && curDriversGroup.autoassign_amount_drivers * 1 === 1) _autoAssign = 3

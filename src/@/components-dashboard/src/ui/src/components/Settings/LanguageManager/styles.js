@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusRing, coarseHitArea } from '../../../styles/touchTarget'
 
 export const LanguageManagerContainer = styled.div`
   flex: 1;
@@ -40,7 +41,7 @@ export const HeaderTitleContainer = styled.div`
   display: flex;
   align-items: center;
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0;
     font-weight: bold;
     color: ${props => props.theme.colors.headingColor};
@@ -93,8 +94,19 @@ export const ActionGroup = styled.div`
   align-items: center;
 `
 
-export const ViewIconWrapper = styled.span`
+// The view switch is two icon-only buttons now. The reset keeps each one the bare icon box
+// the span was; the hit area grows to 44px only for a coarse pointer, without moving it.
+export const ViewIconWrapper = styled.button.attrs({ type: 'button' })`
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: inherit;
+  color: inherit;
+  text-align: inherit;
   cursor: pointer;
+  ${coarseHitArea}
+  ${brandFocusRing}
 
   &.table-mode {
     ${props => props.theme?.rtl
@@ -136,7 +148,7 @@ export const SelectContent = styled.div`
       padding: 8px 15px;
       border-radius: 7.6px;
       border: 1px solid ${props => props.theme.colors.borderColor};
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
     }
 
     .list {
@@ -150,7 +162,7 @@ export const Option = styled.div`
   display: flex;
   align-items: center;
   column-gap: 10px;
-  font-size: 13px;
+  font-size: var(--od-type-control-value-size);
   line-height: 2;
   font-weight: 500;
 `
@@ -167,7 +179,7 @@ export const LanguageSelectorContainer = styled.div`
 
   .options {
     > div {
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       max-height: fit-content;
     }
   }

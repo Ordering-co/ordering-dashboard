@@ -10,6 +10,6 @@ export const Container = styled.div`
     position: sticky;
     top: 100%;
     margin-top: 30px;
-    height: 44px;
+    min-height: 44px;
   }
 `

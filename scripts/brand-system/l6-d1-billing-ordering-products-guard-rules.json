@@ -1,0 +1,931 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-d1-billing-ordering-products-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-d1-billing-ordering-products-cardform-index-js-972a17",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/CardForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "cardFormProps /* binding-sha256:59f41fa05dfae76bbccbb84cbed0a36302fedad49317f083109feff266d9d51d */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "isFocus ? 'primary' : 'secundaryLight'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-cardform-styles-js-ca55ea",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/CardForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin: 10px 10px 0px 0px\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "FormRow",
+            "property": "font-size",
+            "match": "18px",
+            "context": "input",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin: 10px 10px 0px 0px\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormRow",
+            "property": "background",
+            "match": "white",
+            "context": "input",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormRow",
+            "property": "box-shadow",
+            "match": "rgba(50, 50, 93, 0.14902) 0px 1px 3px,\n      rgba(0, 0, 0, 0.0196078) 0px 1px 0px",
+            "context": "input",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormRow",
+            "property": "color",
+            "match": "#aab7c4",
+            "context": "input::placeholder",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormRow",
+            "property": "color",
+            "match": "#424770",
+            "context": "input",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormStripe",
+            "property": "background",
+            "match": "white",
+            "context": ".StripeElement,\n  .StripeElementIdeal",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormStripe",
+            "property": "box-shadow",
+            "match": "rgba(50, 50, 93, 0.109804) 0px 4px 6px,\n      rgba(0, 0, 0, 0.0784314) 0px 1px 3px",
+            "context": ".StripeElement--focus,\n  .StripeElementIdeal--focus",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormStripe",
+            "property": "box-shadow",
+            "match": "rgba(50, 50, 93, 0.14902) 0px 1px 3px,\n      rgba(0, 0, 0, 0.0196078) 0px 1px 0px",
+            "context": ".StripeElement,\n  .StripeElementIdeal",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-elementsform-index-js-1d9900",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/ElementsForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-elementsform-styles-js-b930c7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/ElementsForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "font-size",
+            "match": "24px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ErrorMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-methodform-index-js-f0cd4e",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/MethodForm/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "propsController /* binding-sha256:5d143ed55733190839a035f0d332cfc4a975f98f5a388f9a8296cba61cb0303c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-methodform-styles-js-266075",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/MethodForm/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-stripe-index-js-c1e7de",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "paymentOptionStripeProps /* binding-sha256:3041fddc0808a722e5a94a27e7e395cff93949915786078b4ffc53597caceecf */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-stripe-styles-js-4c00c7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/Stripe/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ActionsContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 0;\n  `\n: css`\n    right: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "AddNewCard",
+            "property": "font-size",
+            "match": "14px",
+            "context": "span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "font-size",
+            "match": "12px",
+            "context": "> span",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 20px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "> button > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c4 lo repitieron. Incluye `PlanDescription #action > span#switch`, un span que envuelve UNICAMENTE el svg `ToggleOn` y ningun nodo de texto. Context moved in  (row 82): the ⋮ span and the menu div became real buttons (keyboard access); same declaration, same value."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 13px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CardItem",
+            "property": "font",
+            "match": "({ isCursor }) => isCursor && css`\n    cursor: pointer;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "CardItem",
+            "property": "font",
+            "match": "({ isSelected }) => isSelected && css`\n    background-color: ${props => props.theme.colors.gray200};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    margin: 10px 10px 0px 0px\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "OptionStripeContainer",
+            "property": "font-size",
+            "match": "12px",
+            "context": "a.Link > svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "El contexto `svg` tomo PRESERVED 207 de 207 veces en L3+L4+L5 y la Ola A y los lotes b1 a c4 lo repitieron. Incluye `PlanDescription #action > span#switch`, un span que envuelve UNICAMENTE el svg `ToggleOn` y ningun nodo de texto."
+          },
+          {
+            "component": "WarningMessage",
+            "property": "font-size",
+            "match": "24px",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This declaration matches no node in the component's current markup: the selector reaches nothing that the product renders, so asserting a role over it would be asserting something unprovable.",
+            "evidence": "Doce sitios, de tres formas distintas y cazadas por metodos distintos: exports que nadie importa (7, barrido de imports con testigo); selectores anidados que el marcado no produce (4, lectura de fuente de las pasadas, verificada); y uno que ningun CSS puede alcanzar porque el nodo vive dentro del iframe de Stripe."
+          },
+          {
+            "component": "WarningMessage",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of d1-billing-ordering-products: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "ActionsContent",
+            "property": "background",
+            "match": "#FFFFFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "background",
+            "match": "#f8f9fa",
+            "context": "button > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch. Context moved in  (row 82): the ⋮ span and the menu div became real buttons (keyboard access); same declaration, same value."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "border",
+            "match": "1px solid #E9ECEF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "box-shadow",
+            "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    left: 0;\n  `\n: css`\n    right: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "color",
+            "match": "#E63757",
+            "context": "button > &.delete",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch. Context moved in  (row 82): the ⋮ span and the menu div became real buttons (keyboard access); same declaration, same value."
+          },
+          {
+            "component": "AddNewCard",
+            "property": "color",
+            "match": "props => props.theme?.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardInputWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.gray300",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 20px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemActions",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "background",
+            "match": "#F8F9FA",
+            "context": "> button > &:hover",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch. Context moved in  (row 82): the ⋮ span and the menu div became real buttons (keyboard access); same declaration, same value."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "color",
+            "match": "#212121",
+            "context": "> button > svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch. Context moved in  (row 82): the ⋮ span and the menu div became real buttons (keyboard access); same declaration, same value."
+          },
+          {
+            "component": "CardItem",
+            "property": "background-color",
+            "match": "props => props.theme.colors.gray200",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItem",
+            "property": "border",
+            "match": "props => props.theme.colors.gray200",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItem",
+            "property": "color-block",
+            "match": "({ isCursor }) => isCursor && css`\n    cursor: pointer;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItem",
+            "property": "color-block",
+            "match": "({ isSelected }) => isSelected && css`\n    background-color: ${props => props.theme.colors.gray200};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      margin-left: 13px;\n      margin-right: 0;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemContent",
+            "property": "color",
+            "match": "props => props.theme?.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    margin: 10px 10px 0px 0px\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionStripeContainer",
+            "property": "color",
+            "match": "hsla(0,0%,10%,.5)",
+            "context": "a.Link > span.Text",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionStripeContainer",
+            "property": "color",
+            "match": "hsla(0,0%,10%,.5)",
+            "context": "a.Link > svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionStripeContainer",
+            "property": "color",
+            "match": "#0074d4",
+            "context": "a.Link",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "OptionStripeContainer",
+            "property": "fill",
+            "match": "hsla(0,0%,10%,.4)",
+            "context": "a.Link > svg",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WarningMessage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n    padding-right: 10px;\n    padding-left: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WarningMessage",
+            "property": "color",
+            "match": "#D81212",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CardItemActionsWrapper",
+            "property": "outline",
+            "match": "var(--od-focus-ring-width) solid var(--od-focus-ring-color)",
+            "context": "> button > &:focus-visible",
+            "count": 1,
+            "reason": "The keyboard focus ring of a control that became a real button ( row 82): Ordering.co focus-ring tokens only.",
+            "evidence": "Same ring as Billing/PaymentMethodPicker (payment-method-picker.css) with --od-focus-ring-width and --od-focus-ring-color; no literal colour."
+          },
+          {
+            "component": "ActionsContent",
+            "property": "outline",
+            "match": "var(--od-focus-ring-width) solid var(--od-focus-ring-color)",
+            "context": "button > &:focus-visible",
+            "count": 1,
+            "reason": "The keyboard focus ring of a control that became a real button ( row 82): Ordering.co focus-ring tokens only.",
+            "evidence": "Same ring as Billing/PaymentMethodPicker (payment-method-picker.css) with --od-focus-ring-width and --od-focus-ring-color; no literal colour."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-billingpaymentoptions-index-js-b336fc",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/BillingPaymentOptions/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "billingPaymentOptionsProps /* binding-sha256:004e7e85dde94eb410fb0270476b3607b0a7c30b44003580669f77e6e70fbabc */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-billing-index-js-8df0c0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Billing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-orderingproductdetails-index-js-46b60f",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/OrderingProducts/OrderingProductDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productDetailsProps /* binding-sha256:6b922946b0a32d095129303eeee85a6319a2b9b9a50128e9f20c06b222a2aa94 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-orderingproductgeneraldetails-index-js-e3ae09",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/OrderingProducts/OrderingProductGeneralDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-orderingproductslisting-index-js-934027",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/OrderingProducts/OrderingProductsListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "sitesProps /* binding-sha256:a4768594e7b4e17ef4b0d361a6e4ed93d153acfbf7d33c3c93b95a04241b72bc */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-sitetheme-index-js-d1c1bf",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/OrderingProducts/SiteTheme/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "siteThemeProps /* binding-sha256:5515d39da9b424c0d6cf58ca398aaf1a83b53a2034c4854d0cef293fa2b9e04b */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The d1-billing-ordering-products semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-d1-billing-ordering-products-orderingproducts-index-js-24b716",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/OrderingProducts/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useLanguage } from '../../../../../index'
 import { Pencil, Check2 } from 'react-bootstrap-icons'
 import { Button } from '../../../styles'
@@ -16,8 +16,10 @@ import {
   ConditionsContainer,
   Header,
   ConditionItem,
+  ConditionRow,
   EditButton,
-  CheckboxWrapper
+  CheckboxWrapper,
+  ConditionCheckButton
 } from './styles'
 
 export const EnterprisePromotionConditions = (props) => {
@@ -38,6 +40,9 @@ export const EnterprisePromotionConditions = (props) => {
   const [openMultipleModal, setOpenMultipleModal] = useState(null)
   const [selectedCondition, setSelectedCondition] = useState(null)
   const [selectedTitle, setSelectedTitle] = useState(null)
+  // El lápiz de cada fila, por atributo: al quitar la condición con su casilla, esta se
+  // desmonta y el foco caería a <body>; se lleva al lápiz de la misma fila, que sigue montado.
+  const editButtonRefs = useRef({})
 
   const singleConditions = [
     'limit', 'limit_per_user', 'max_discount', 'minimum', 'valid_from_after_user_last_order_minutes', 'valid_until_after_user_last_order_minutes'
@@ -109,7 +114,7 @@ export const EnterprisePromotionConditions = (props) => {
         </Header>
 
         {conditions.filter(condition => condition.enabled).map((condition, index) => (
-          <ConditionItem
+          <ConditionRow
             key={index}
             onClick={e => handlePromotionEdit(e, condition.attribute, condition.title)}
           >
@@ -121,25 +126,43 @@ export const EnterprisePromotionConditions = (props) => {
                     ? promotionState.promotion[condition.attribute]?.length
                     : promotionState.promotion[condition.attribute])
                   ? (
-                    <CheckboxWrapper
+                    <ConditionCheckButton
+                      as='button'
+                      type='button'
+                      role='checkbox'
+                      aria-checked='true'
+                      aria-label={condition.title}
                       className='condition-checkbox'
                       active
                       isCursorAllowed
-                      onClick={() => handleChangeItem({ [condition.attribute]: null })}
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleChangeItem({ [condition.attribute]: null })
+                        editButtonRefs.current[condition.attribute]?.focus()
+                      }}
                     >
-                      <Check2 />
-                    </CheckboxWrapper>
+                      <Check2 aria-hidden='true' />
+                    </ConditionCheckButton>
                     )
-                  : <CheckboxWrapper className='condition-checkbox' />
+                  : <CheckboxWrapper className='condition-checkbox' aria-hidden='true' />
               }
               <span>{condition.title}</span>
             </div>
-            <EditButton>
-              <Pencil />
+            <EditButton
+              ref={el => { editButtonRefs.current[condition.attribute] = el }}
+              aria-label={`${t('EDIT', 'Edit')}: ${condition.title}`}
+              onClick={e => {
+                e.stopPropagation()
+                handlePromotionEdit(e, condition.attribute, condition.title)
+              }}
+            >
+              <Pencil aria-hidden='true' />
             </EditButton>
-          </ConditionItem>
+          </ConditionRow>
         ))}
         <ConditionItem
+          as='button'
+          type='button'
           onClick={() => handleIncludeOptions()}
         >
           <div>

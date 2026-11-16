@@ -52,18 +52,19 @@ export const normalizeIntegrationSetupStatus = (status) => {
 
 /**
  * What to show for a business integration row: no row is not connected, a
- * row without a reported status is pending.
+ * row without a reported status is connected (D1).
  * @param {object|null} integration row of business.third_party_integrations
  * @param {function} t translate function from useLanguage()
  * @returns {{ state: string, label: string, tone: string, message: string|null }}
  */
 export const getIntegrationSetupStatus = (integration, t) => {
   const reported = integration ? normalizeIntegrationSetupStatus(integration.setup_status) : INTEGRATION_SETUP_STATES.NOT_CONNECTED
-  // The row exists once the connection is started (the Connect button
-  // creates it empty), so a row the plugin has not reported on yet is a
-  // setup in progress, not a business without a POS.
+  // D1 (option C): a row with no reported status reads as
+  // connected. The rows made before api-core#3587 never got one and their
+  // plugins kept syncing; reading them as a setup in progress turned their
+  // syncs off. A reported pending or failed state is shown as such.
   const state = integration && reported === INTEGRATION_SETUP_STATES.NOT_CONNECTED
-    ? INTEGRATION_SETUP_STATES.PENDING
+    ? INTEGRATION_SETUP_STATES.CONNECTED
     : reported
   const message = state !== INTEGRATION_SETUP_STATES.NOT_CONNECTED && typeof integration?.setup_message === 'string' && integration.setup_message.trim()
     ? integration.setup_message.trim()

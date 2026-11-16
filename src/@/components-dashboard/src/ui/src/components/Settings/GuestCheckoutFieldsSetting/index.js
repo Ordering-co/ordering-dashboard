@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { InfoCircle } from 'react-bootstrap-icons'
 import { getSettingsGuestOrderTypeValues } from '../../../utils'
+import { validationFieldLabel } from '../../../utils/validationFieldLabel'
 
 import {
   CheckoutFieldsDetailsContainer,
@@ -45,12 +46,13 @@ const GuestCheckoutFieldsSettingUI = (props) => {
         <TitleWrapper>
           <h1>{disableGuestColumns || (!disableGuestColumns && !disableUserColumns)
             ? t('CHECKOUT_FIELDS_BY_ORDER_TYPE', 'Checkout by order type')
-            : t('GUEST_CHECKOUT_FIELDS', 'Guest Checkout fields')}
+            : t('GUEST_CHECKOUT_FIELDS', 'Guest checkout fields')}
           </h1>
           {!disableGuestColumns && (
             <InfoWrapper>
               <IconButton
                 color='primary'
+                aria-label={t('INFORMATION', 'Information')}
               >
                 <InfoCircle />
               </IconButton>
@@ -109,7 +111,7 @@ const GuestCheckoutFieldsSettingUI = (props) => {
               })
               .map(field => !hideSettingList.includes(field?.validation_field.code) && !(typesNoDriverTip.includes(field?.order_type_id) && field?.validation_field.code === 'driver_tip') && (
                 <FieldContainer key={field.id}>
-                  <div className='name'>{t(field?.validation_field.code.toUpperCase(), field?.validation_field.name)}</div>
+                  <div className='name'>{validationFieldLabel(t, field?.validation_field)}</div>
                   {!disableUserColumns && (
                     <>
                       <div className='required'>

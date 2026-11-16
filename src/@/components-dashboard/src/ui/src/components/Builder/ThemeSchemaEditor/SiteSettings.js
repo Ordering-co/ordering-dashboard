@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { useLanguage } from '../../../../../index'
-import { Button } from '../../../styles'
-import { NoticeRow } from '../BuilderWebTheme/styles'
+import { Info, TriangleAlert } from '../../Shared/Icon'
+import { Button, InlineNotice } from '../../Shared/Product'
+import '../BuilderWebSite/builder-site.css'
 import { EditorErrorBoundary } from './EditorErrorBoundary'
 import { GroupCard } from './SchemaGroup'
 import { PathList } from './PathList'
@@ -72,34 +73,44 @@ export const SiteSettingsEditor = ({ schema, format, site }) => {
   const clamped = Object.values(ctx.storedErrors).filter(isClamped).length
   const dropped = Object.keys(ctx.storedErrors).length - clamped
   const lost = Array.isArray(site.product?.settings_upgrade_dropped) ? site.product.settings_upgrade_dropped : []
+  // redesign B3a: the notice and the notices of what the API dropped are P/InlineNotice (the first one not live,
+  // as before), Discard and Save P/Button; the error lines keep role=alert and the dropped and clamped lines role=status
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className='odc-bs-page'>
       {/* The notice is a card of its own: no card around it */}
-      <NoticeRow style={{ alignItems: 'center', justifyContent: 'space-between', padding: '8px 16px 8px 20px', position: 'sticky', top: 0, zIndex: 2 }}>
-        <span style={{ flex: '1 1 260px' }}>{t('BUILDER_THEME_SITE_SAVED_APART', 'These settings are the website’s: they apply whatever theme is active, and save on their own.')}</span>
-        <span style={{ display: 'flex', gap: 8, flex: 'none' }}>
-          <Button type='button' color='secundary' borderRadius='8px' disabled={!site.hasEdits || site.saving} onClick={site.discard}>{t('DISCARD', 'Discard')}</Button>
-          <Button type='button' color='primary' borderRadius='8px' disabled={!site.hasEdits || site.saving} onClick={site.save}>{site.saving ? t('BUILDER_THEME_SAVING', 'Saving…') : t('SAVE', 'Save')}</Button>
-        </span>
-      </NoticeRow>
-      {[...new Set(errors)].map(error => <p key={error} role='alert' style={{ margin: 0, color: '#B0213D', fontSize: 13 }}>{error}</p>)}
+      {/* main the notice with Discard and Save stays on top while the settings scroll */}
+      <InlineNotice
+        tone='info'
+        icon={Info}
+        live={false}
+        className='odc-bs-savebar'
+        action={
+          <span className='odc-bs-actions'>
+            <Button disabled={!site.hasEdits || site.saving} onClick={site.discard}>{t('DISCARD', 'Discard')}</Button>
+            <Button variant='primary' disabled={!site.hasEdits || site.saving} onClick={site.save}>{site.saving ? t('BUILDER_THEME_SAVING', 'Saving…') : t('SAVE', 'Save')}</Button>
+          </span>
+        }
+      >
+        {t('BUILDER_THEME_SITE_SAVED_APART', 'These settings are the website’s: they apply whatever theme is active, and save on their own.')}
+      </InlineNotice>
+      {[...new Set(errors)].map(error => <p key={error} role='alert' className='odc-bs-line' data-tone='danger'>{error}</p>)}
       {lost.length > 0 && (
-        <NoticeRow role='status'>
-          <div style={{ flex: '1 1 260px', minWidth: 0 }}>
-            <p style={{ margin: 0 }}>{t('BUILDER_THEME_SITE_UPGRADE_DROPPED', 'Converting the settings to this version of the website dropped these, which take their default:')}</p>
+        <InlineNotice tone='warning' icon={TriangleAlert}>
+          <div>
+            <p className='odc-bs-notice-text'>{t('BUILDER_THEME_SITE_UPGRADE_DROPPED', 'Converting the settings to this version of the website dropped these, which take their default:')}</p>
             <PathList t={t} schema={schema} items={lost.map(path => ({ path }))} />
           </div>
-        </NoticeRow>
+        </InlineNotice>
       )}
       {dropped > 0 && (
-        <p role='status' style={{ margin: 0, color: '#B0213D', fontSize: 13 }}>
+        <p role='status' className='odc-bs-line' data-tone='danger'>
           {dropped === 1
             ? t('BUILDER_THEME_SITE_ONE_DROPPED', '1 saved setting isn’t valid in this version of the website: it’s dropped when you save. It’s marked below.')
             : t('BUILDER_THEME_SITE_N_DROPPED', '_count_ saved settings aren’t valid in this version of the website: they’re dropped when you save. They’re marked below.').replace('_count_', dropped)}
         </p>
       )}
       {clamped > 0 && (
-        <p role='status' style={{ margin: 0, fontSize: 13 }}>
+        <p role='status' className='odc-bs-line'>
           {clamped === 1
             ? t('BUILDER_THEME_SITE_ONE_CLAMPED', '1 saved setting is outside the range this version of the website takes: it was set to the closest limit, and it’s saved like that when you save. It’s marked below.')
             : t('BUILDER_THEME_SITE_N_CLAMPED', '_count_ saved settings are outside the range this version of the website takes: they were set to the closest limit, and they’re saved like that when you save. They’re marked below.').replace('_count_', clamped)}
@@ -108,7 +119,7 @@ export const SiteSettingsEditor = ({ schema, format, site }) => {
       <EditorErrorBoundary t={t}>
         {sections.map(section => (
           <React.Fragment key={section.key}>
-            {sections.length > 1 && <h2 style={{ margin: '8px 0 0', fontSize: 18 }}>{formatText(t, section.label, { fallback: section.key })}</h2>}
+            {sections.length > 1 && <h2 className='odc-bs-section'>{formatText(t, section.label, { fallback: section.key })}</h2>}
             {(section.groups || []).map(group => <GroupCard key={group.key} ctx={ctx} group={siteOnly(group)} />)}
           </React.Fragment>
         ))}

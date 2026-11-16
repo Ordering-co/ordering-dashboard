@@ -1,0 +1,144 @@
+/* redesign W0-7 (T0-22) · RadioGroup: a named radiogroup that wraps only its title and its radios. */
+
+.odc-radiogroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-radiogroup-title {
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-radiogroup-options {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-radiogroup[data-orientation='horizontal'] .odc-radiogroup-options {
+  flex-flow: row wrap;
+  column-gap: var(--od-space-4);
+}
+
+.odc-radio {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-1-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-radio:hover { background: var(--od-x-hover); }
+
+.odc-radio:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The circle sits on the first line of text, whatever the leading. */
+.odc-radio-box {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  margin-block-start: calc((var(--od-x-leading-ui) * var(--od-x-type-ui-size) - var(--od-x-checkbox-box)) / 2);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+}
+
+/* Chosen: the filled dot is the shape cue, the action border the colour cue. */
+.odc-radio[data-checked] .odc-radio-box { border-color: var(--od-action); }
+
+.odc-radio-dot {
+  inline-size: var(--od-x-dot-lg);
+  block-size: var(--od-x-dot-lg);
+  border-radius: var(--od-radius-round);
+  background: var(--od-action);
+}
+
+.odc-radio-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-radio-label { overflow-wrap: break-word; }
+
+.odc-radio-description {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+}
+
+.odc-radio[data-disabled] { cursor: not-allowed; }
+.odc-radio[data-disabled]:hover { background: transparent; }
+.odc-radio[data-disabled] .odc-radio-box { opacity: 0.55; }
+.odc-radio[data-disabled] .odc-radio-label { color: var(--od-x-text-subtle); }
+
+/* redesign stores 5.15b (, G5-15) · OPT-IN cards (`variant='cards'`): a grid of framed options, each with an optional
+   decorative preview above its circle and label. The frame is the target; chosen = the action border plus a second hairline
+   (shape and colour), never colour alone, since the filled dot stays. */
+.odc-radiogroup[data-variant='cards'] { gap: var(--od-space-2); }
+
+.odc-radiogroup[data-variant='cards'] .odc-radiogroup-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--od-x-control-height) * 7.5)), 1fr));
+  gap: var(--od-space-4);
+}
+
+.odc-radiogroup[data-variant='cards'] .odc-radio {
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--od-space-2) var(--od-space-2);
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+}
+
+.odc-radiogroup[data-variant='cards'] .odc-radio-text { flex: 1 1 0; }
+
+.odc-radiogroup[data-variant='cards'] .odc-radio[data-checked] {
+  border-color: var(--od-action);
+  box-shadow: 0 0 0 var(--od-x-hairline) var(--od-action);
+}
+
+.odc-radiogroup[data-variant='cards'] .odc-radio:focus-visible { outline-offset: var(--od-focus-ring-width); }
+
+.odc-radiogroup[data-variant='cards'] .odc-radio[data-disabled]:hover { background: var(--od-bg); }
+
+.odc-radio-media {
+  display: block;
+  flex: 1 0 100%;
+  min-inline-size: 0;
+  pointer-events: none;
+}
+
+/* Touch (C3, decision 12). Redesign tramo B r2 (W0-QB1-06): the rows are stacked 2px apart (< 12px), so two 44px areas made
+   by a pseudo-element would overlap by 12px and a tap near the edge would choose the neighbour. Each row is 44px VISIBLE instead
+   (as SectionNav), the text centred on that height; the circle stays on the first line. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-radio {
+    min-block-size: var(--od-x-target-coarse);
+    padding-block: calc((var(--od-x-target-coarse) - var(--od-x-leading-ui) * var(--od-x-type-ui-size)) / 2);
+  }
+}

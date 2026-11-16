@@ -27,7 +27,7 @@ const containerStyle = {
   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
   fontFamily: 'Arial, sans-serif',
   overflow: 'hidden',
-  zIndex: 100000
+  zIndex: 'calc(var(--od-x-layer-notice) - 5)'
 }
 
 const itemStyle = {

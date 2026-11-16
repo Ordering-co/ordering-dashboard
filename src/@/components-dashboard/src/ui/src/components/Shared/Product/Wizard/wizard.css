@@ -1,0 +1,382 @@
+/*
+ * Wizard frame (Product, redesign W0-2c): steps, step title, fixed summary and pinned footer.
+ * It has no knowledge of what a step holds. Values come from --od-* and --od-x-* only (guard:
+ * src/__tests__/tools/productLiteralGuard.test.js). Logical properties only (C17).
+ * The Sheet that hosts the create-order wizard and the classes of its steps are in
+ * Orders/CreateCustomOrder/create-custom-order-wizard.css.
+ */
+
+/* ── Frame ── */
+.odc-wizard {
+  display: grid;
+  gap: var(--od-space-4);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-wizard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  align-items: start;
+}
+
+.odc-wizard-main {
+  min-inline-size: 0;
+}
+
+/* Below 1024px the summary is on top and folds. */
+.odc-wizard-aside {
+  order: -1;
+  min-inline-size: 0;
+}
+
+@media (min-width: 1024px) {
+  .odc-wizard-layout {
+    grid-template-columns: minmax(0, 1fr) var(--od-x-wizard-summary);
+    gap: var(--od-space-5);
+  }
+
+  .odc-wizard-aside {
+    order: 0;
+    position: sticky;
+    inset-block-start: 0;
+  }
+}
+
+.odc-wizard-step-title {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.odc-wizard-step-title:focus {
+  outline: none;
+}
+
+.odc-wizard-step-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* ── Steps ── */
+.odc-wizard-steps-list {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-wizard-step-item {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-wizard-step-item + .odc-wizard-step-item::before {
+  content: '';
+  flex: none;
+  inline-size: var(--od-space-4);
+  block-size: var(--od-x-hairline);
+  background: var(--od-border-strong);
+}
+
+.odc-wizard-step-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-target-fine);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+button.odc-wizard-step-link {
+  cursor: pointer;
+}
+
+button.odc-wizard-step-link:hover .odc-wizard-step-label {
+  color: var(--od-text);
+  text-decoration: underline;
+}
+
+button.odc-wizard-step-link:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-wizard-step-marker {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-avatar);
+  block-size: var(--od-x-avatar);
+  border: var(--od-x-hairline) solid var(--od-border-strong);
+  border-radius: var(--od-radius-round);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-wizard-step-marker .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-wizard-step-item[data-state='done'] .odc-wizard-step-marker {
+  border-color: var(--od-text);
+  color: var(--od-text);
+}
+
+.odc-wizard-step-item[data-state='current'] .odc-wizard-step-marker {
+  border-color: var(--od-text);
+  background: var(--od-text);
+  color: var(--od-bg);
+}
+
+.odc-wizard-step-item[data-state='current'] .odc-wizard-step-link,
+.odc-wizard-step-item[data-state='done'] .odc-wizard-step-link {
+  color: var(--od-text);
+}
+
+.odc-wizard-step-item[data-state='current'] .odc-wizard-step-label {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* redesign W0-3d (T0-12, decision 12): a done step is a loose control. It keeps its box (the marker, 24px, or marker and name)
+   and its 44×44 touch area is a centered pseudo-element, on a coarse pointer or below 768px. The next step is 32px away
+   (8 gap + 16 connector + 8 gap), the areas take 10px each. */
+@media (pointer: coarse), (max-width: 767px) {
+  button.odc-wizard-step-link {
+    position: relative;
+    min-block-size: var(--od-x-control-height); /*  (W0-E-13, decision 12): SEEN at 32 (24 with a mouse) */
+  }
+
+  button.odc-wizard-step-link::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* Narrow: only the current step keeps its name on screen; the others keep it for assistive tech. */
+@media (max-width: 599px) {
+  .odc-wizard-step-item:not([data-state='current']) .odc-wizard-step-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* ── Summary ── */
+.odc-wizard-summary {
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  /* redesign F6g-2: the page body says `left`; the summary's heading, labels and values follow the reading direction */
+  text-align: start;
+}
+
+.odc-wizard-summary-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-lg);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-wizard-summary-toggle:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* redesign W0-3d (T0-12, decision 12): the toggle keeps its box (40px, the large control) and takes the centered 44px area (2px
+   above and below). Below it the body starts 12px later (padding), where the first «Edit» area takes 8px. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-wizard-summary-toggle {
+    position: relative;
+  }
+
+  .odc-wizard-summary-toggle::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+.odc-wizard-summary-title {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.odc-wizard-summary-title[data-total]::after {
+  content: ' · ' attr(data-total);
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-wizard-summary-chevron {
+  flex: none;
+  transition: rotate var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-wizard-summary[data-open='true'] .odc-wizard-summary-chevron {
+  rotate: 180deg;
+}
+
+.odc-wizard-summary-heading {
+  display: none;
+  margin: 0;
+  padding-block: var(--od-space-3) 0;
+  padding-inline: var(--od-space-3);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-wizard-summary-body {
+  display: grid;
+  gap: var(--od-space-3);
+  padding: var(--od-space-3);
+}
+
+.odc-wizard-summary[data-open='false'] .odc-wizard-summary-body {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .odc-wizard-summary-toggle {
+    display: none;
+  }
+
+  .odc-wizard-summary-heading {
+    display: block;
+  }
+
+  .odc-wizard-summary[data-open] .odc-wizard-summary-body {
+    display: grid;
+  }
+}
+
+.odc-wizard-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.odc-wizard-block-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-wizard-block-line {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-wizard-block-empty {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-wizard-total {
+  padding-block-start: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-wizard-total-value {
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* ── Inline messages ── */
+.odc-wizard .odc-notice {
+  margin-inline: 0;
+  margin-block: var(--od-space-3) 0;
+}
+
+/* ── Footer (C7) ── */
+.odc-wizard-foot {
+  display: grid;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+}
+
+.odc-wizard-foot-inline {
+  position: sticky;
+  inset-block-end: 0;
+  padding-block: var(--od-space-3);
+  background: var(--od-x-dialog-bg);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-wizard-reason {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-wizard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.odc-wizard-primary {
+  margin-inline-start: auto;
+}
+
+/* Mobile: full-width buttons (C3, C8). redesign W0-3d (T0-12, decision 12): they keep their size (lg, 40px); the 44px is the
+   centered area of `.odc-btn` (product.css). They share a row 8px apart, but they are wider than 44px, so the area only grows
+   in height (2px) and never reaches the neighbour; above them is the reason, a text. */
+@media (max-width: 767px) {
+  .odc-wizard-actions > .odc-btn {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-wizard-summary-chevron {
+    transition: none;
+  }
+}

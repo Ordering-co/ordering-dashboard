@@ -7,13 +7,19 @@ export const CheckPassword = (props) => {
   props = { ...defaultProps, ...props }
   const {
     UIComponent,
-    defaultConfirmTab
+    defaultConfirmTab,
+    // when the caller names the server action to confirm (and, for user-targeted actions, the
+    // target user id), the password/code typed here is checked server-side at /users/confirm_action instead
+    // of the legacy /users/check_password; a caller that gives no `action` keeps today's behavior untouched.
+    action,
+    targetId
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
 
   const [checkPasswordStatus, setCheckPasswordStatus] = useState({ result: null, loading: false, error: null })
   const [checkCodeState, setCheckCodeState] = useState({ loading: false, result: { error: false } })
+  const [confirmActionStatus, setConfirmActionStatus] = useState({ result: null, loading: false, error: null })
   const [credentials, setCredentials] = useState({ email: '', cellphone: '', password: '' })
 
   const [confirmTab, setConfirmTab] = useState(defaultConfirmTab)
@@ -51,9 +57,47 @@ export const CheckPassword = (props) => {
   }
 
   /**
+   * checks the password or a 6-digit code against POST /users/confirm_action for the given
+   * `action` (and `targetId`). With a `code` the code is sent; without one, the password typed in the form.
+   * On success `confirmActionStatus.result` holds `{ confirmation_token, expires_in }`; on error, the API's
+   * error list.
+   */
+  const confirmAction = async (code) => {
+    try {
+      setConfirmActionStatus({ result: null, loading: true, error: null })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action,
+          target_id: targetId,
+          ...(code ? { code } : { password: credentials?.password })
+        })
+      }
+      const response = await fetch(`${ordering.root}/users/confirm_action`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setConfirmActionStatus({ result: content.result, loading: false, error: null })
+      } else {
+        setConfirmActionStatus({ result: null, loading: false, error: content.result })
+      }
+    } catch (err) {
+      setConfirmActionStatus({ result: null, loading: false, error: err.message ? [err.message] : err })
+    }
+  }
+
+  /**
    * Method to confirm password from API
    */
   const getCheckPassword = async () => {
+    // an `action` means the dialog protects a server action; the password goes to confirm_action
+    // instead of the legacy check_password, and ConfirmAdmin reads the outcome off confirmActionStatus.
+    if (action) {
+      return confirmAction()
+    }
     try {
       setCheckPasswordStatus({ ...checkPasswordStatus, loading: true })
       const requestOptions = {
@@ -136,6 +180,8 @@ export const CheckPassword = (props) => {
           otpState={otpState}
           generateOtpCode={generateOtpCode}
           checkCodeState={checkCodeState}
+          confirmActionStatus={confirmActionStatus}
+          confirmAction={confirmAction}
           credentials={credentials}
           handleChangeInput={handleChangeInput}
           handleChangeCredentials={handleChangeCredentials}

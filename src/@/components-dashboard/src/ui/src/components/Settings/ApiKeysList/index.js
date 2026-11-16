@@ -7,13 +7,22 @@ import { Dropdown, DropdownButton } from 'react-bootstrap'
 import { ThreeDotsVertical } from 'react-bootstrap-icons'
 import { useTheme } from 'styled-components'
 import { Alert, Confirm } from '../../Shared'
+import { Button as ProductButton, CopyButton } from '../../Shared/Product'
+import { SECRET_ENDING_MIN_LENGTH } from '../../Shared/Product/SecretField'
 
 import {
   ApiKeysListContainer,
   Header,
   ApiKeysListTable,
-  DropdownButtonWrapper
+  DropdownButtonWrapper,
+  KeyCell
 } from './styles'
+
+// Owner decision 25 B (2026-10-21, , security): a key reads «Ends in …k3Fz» with «Copy» (the whole key) and «Show», by the
+// P/SecretField criterion of hidden by default, the last four characters only from 12 characters on. main showed every key
+// whole (and named the row menu with it). The whole key is in the page only while its row is shown.
+const ELLIPSIS = '…'
+const keyEnding = (key) => typeof key === 'string' && key.length >= SECRET_ENDING_MIN_LENGTH ? `${ELLIPSIS}${key.slice(-4)}` : null
 
 const ApiKeysListUI = (props) => {
   const {
@@ -27,6 +36,18 @@ const ApiKeysListUI = (props) => {
   const theme = useTheme()
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  const [shownId, setShownId] = useState(null)
+  const [endsBefore, endsAfter] = t('SECRET_ENDS_IN', 'Ends in _ending_').split('_ending_')
+  // The row's name, for its buttons: the ending, or its position when the key is too short to show one
+  const keyName = (apiKey, index) => {
+    const ending = keyEnding(apiKey?.key)
+    return ending
+      ? t('API_KEY_ENDING', 'API key ending in _ending_').replace('_ending_', () => ending)
+      : t('API_KEY_N', 'API key _n_').replace('_n_', () => String(index + 1))
+  }
+
+  // The three-dots button has no text of its own: its name carries the row it belongs to.
+  const rowActionsLabel = (name) => t('STORES_ROW_ACTIONS', 'Actions for _name_').replace('_name_', name ?? '')
 
   const onClickDeleteApiKey = (keyId) => {
     setConfirm({
@@ -79,16 +100,52 @@ const ApiKeysListUI = (props) => {
                 ))
               )
             : (
-                apiKeysList?.keys?.map(apiKey => (
+                apiKeysList?.keys?.map((apiKey, index) => {
+                  const ending = keyEnding(apiKey?.key)
+                  const name = keyName(apiKey, index)
+                  const shown = shownId === apiKey.id
+                  return (
               <tbody key={apiKey.id}>
                 <tr>
-                  <td>{apiKey?.key}</td>
+                  <td>
+                    <KeyCell>
+                      <span className='odc-api-key-value'>
+                        {shown
+                          ? <bdi className='odc-figure' dir='ltr'>{apiKey?.key}</bdi>
+                          : ending
+                            ? <>{endsBefore}<bdi className='odc-figure' dir='ltr'>{ending}</bdi>{endsAfter}</>
+                            : <span aria-hidden='true'>••••••••</span>}
+                      </span>
+                      <span className='odc-api-key-actions'>
+                        <ProductButton
+                          variant='secondary'
+                          aria-label={`${shown ? t('HIDE', 'Hide') : t('SHOW', 'Show')} ${name}`}
+                          onClick={() => setShownId(shown ? null : apiKey.id)}
+                        >
+                          {shown ? t('HIDE', 'Hide') : t('SHOW', 'Show')}
+                        </ProductButton>
+                        <CopyButton
+                          variant='secondary'
+                          text={apiKey?.key}
+                          label={`${t('COPY_BUTTON', 'Copy')} ${name}`}
+                          copyLabel={t('COPY_BUTTON', 'Copy')}
+                          copiedLabel={t('COPIED', 'Copied')}
+                          failedLabel={t('API_KEY_COPY_FAILED', "We couldn't copy the key. Show it and copy it by hand.")}
+                        />
+                      </span>
+                    </KeyCell>
+                  </td>
                   <td>
                     <DropdownButtonWrapper>
                       <DropdownButton
                         menuAlign={theme?.rtl ? 'left' : 'right'}
-                        title={<ThreeDotsVertical />}
-                        id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
+                        title={(
+                          <>
+                            <ThreeDotsVertical aria-hidden='true' />
+                            <span className='odc-sr-only'>{rowActionsLabel(name)}</span>
+                          </>
+                        )}
+                        id={`api-key-actions-${apiKey.id}`}
                       >
                         <Dropdown.Item
                           onClick={() => navigator.clipboard.writeText(apiKey.key)}
@@ -105,7 +162,8 @@ const ApiKeysListUI = (props) => {
                   </td>
                 </tr>
               </tbody>
-                ))
+                  )
+                })
               )}
         </ApiKeysListTable>
         <Button

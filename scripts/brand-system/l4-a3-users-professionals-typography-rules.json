@@ -1,0 +1,287 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-a3-users-professionals-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "a3-occupationselector-selectwrapper-select-wrapper-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": ".select-wrapper > .select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a3-occupationselector-selectwrapper-select-wrapper-select-header-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": ".select-wrapper > .select > .header",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a3-occupationselector-selectwrapper-select-wrapper-list-option-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": ".select-wrapper > .list .option",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-occupationselector-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationSelector/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "a3-occupationsfilter-container-button-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/OccupationsFilter/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "button",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-professionalbusinessservice-businessname-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalBusinessService/styles.js",
+   "component": "BusinessName",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a3-professionalcategorytreenode-accordionitem-div-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalCategoryTreeNode/styles.js",
+   "component": "AccordionItem",
+   "property": "font-size",
+   "context": "> div > span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-professionaldetail-username-span-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/styles.js",
+   "component": "UserName",
+   "property": "font-size",
+   "context": "> span",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a3-professionaldetail-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-professionaldetail-sidebarwrapper-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/styles.js",
+   "component": "SideBarWrapper",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "a3-professionallist-userstable-td-th-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "UsersTable",
+   "property": "font-size",
+   "context": "td, th",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a3-professionallist-infoblock-p-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "InfoBlock",
+   "property": "font-size",
+   "context": "p",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a3-professionallist-infoblock-p-bold-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "InfoBlock",
+   "property": "font-size",
+   "context": "p.bold",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a3-professionallist-usertypewrapper-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "UserTypeWrapper",
+   "property": "font-size",
+   "context": "> p",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "a3-professionallist-userenablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "UserEnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-professionallist-verifieditem-root-10px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "10px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a3-professionalschedule-daterangewrapper-h1-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/styles.js",
+   "component": "DateRangeWrapper",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a3-professionalschedule-daterangewrapper-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/styles.js",
+   "component": "DateRangeWrapper",
+   "property": "font-size",
+   "context": "> p",
+   "match": "14px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "a3-professionalschedule-rangeitem-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/styles.js",
+   "component": "RangeItem",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "a3-professionalschedule-schedulewrapper-h1-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalSchedule/styles.js",
+   "component": "ScheduleWrapper",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "16px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "a3-professionalservices-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalServices/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "a3-pres-professionalbusinessservice-businessitemcontainer-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalBusinessService/styles.js",
+   "component": "BusinessItemContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "18px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "BusinessItemContainer scopes the declaration to the item chevron svg; BusinessName carries the readable business label."
+  },
+  {
+   "id": "a3-pres-professionalbusinessservice-checkwrapper-span-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalBusinessService/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "span > svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "CheckWrapper scopes the declaration to the checkbox glyph; BusinessName carries the readable business label."
+  },
+  {
+   "id": "a3-pres-professionalcategorytreenode-checkboxwrapper-svg-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalCategoryTreeNode/styles.js",
+   "component": "CheckboxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "18px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "CheckboxWrapper contains only the checkbox glyph; the adjacent AccordionItem span carries the readable label."
+  },
+  {
+   "id": "a3-pres-professionaldetail-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalDetail/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "ActionSelectorWrapper scopes 20px to the button svg; the dropdown item text has its own reviewed declaration."
+  },
+  {
+   "id": "a3-pres-professionallist-checkboxwrapper-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "CheckBoxWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "CheckBoxWrapper applies the declaration only inside its svg selector; the adjacent InfoBlock carries the readable label typography."
+  },
+  {
+   "id": "a3-pres-professionallist-verifieditem-svg-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Users/ProfessionalList/styles.js",
+   "component": "VerifiedItem",
+   "property": "font-size",
+   "context": "svg",
+   "match": "12px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "VerifiedItem scopes the declaration to its svg; the badge label text is governed by the reviewed root declaration."
+  }
+ ]
+}

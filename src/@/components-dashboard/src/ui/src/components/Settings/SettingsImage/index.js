@@ -14,9 +14,13 @@ import {
 } from './styles'
 
 export const SettingsImage = (props) => {
+  // `onPick(image)` and `onRestore()` are opt-in (the Settings hub, n.º 1, D-56 a): with them the image is a pending change and
+  // nothing is saved here; without them the image saves at once, as before.
   const {
     config,
-    saveConfig
+    saveConfig,
+    onPick,
+    onRestore
   } = props
 
   const [, t] = useLanguage()
@@ -28,9 +32,13 @@ export const SettingsImage = (props) => {
   const configImageRef = useRef()
 
   const handleChangePhoto = (croppedImg) => {
-    saveConfig(config.id, {
-      image: croppedImg
-    })
+    if (onPick) {
+      onPick(croppedImg)
+    } else {
+      saveConfig(config.id, {
+        image: croppedImg
+      })
+    }
     setCropState({ ...cropState, data: croppedImg, open: false })
     setBaseData(croppedImg)
   }
@@ -40,7 +48,8 @@ export const SettingsImage = (props) => {
   const hasImage = !!(baseData || config?.value)
   const handleReset = () => {
     setConfirmReset(false)
-    saveConfig(config.id, { value: '' })
+    if (onRestore) onRestore()
+    else saveConfig(config.id, { value: '' })
     setBaseData(null)
   }
 
@@ -71,12 +80,24 @@ export const SettingsImage = (props) => {
     }
   }
 
+  // the box is a button of the Tab order; Enter and Space open the file chooser as a click does
+  const handleUploadKeyDown = (event) => {
+    if (event.target !== event.currentTarget) return
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    configImageRef.current.click()
+  }
+
   return (
     <>
       <ImageContainer>
         <p>{config?.name}</p>
         <ConfigImage
+          role='button'
+          tabIndex={0}
+          aria-label={`${config?.name ?? ''}: ${t('DRAG_DROP_IMAGE_HERE', 'Put your image here')}`.replace(/^: /, '')}
           onClick={() => configImageRef.current.click()}
+          onKeyDown={handleUploadKeyDown}
         >
           <ExamineClick
             onFiles={files => handleFiles(files)}

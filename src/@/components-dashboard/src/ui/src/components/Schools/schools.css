@@ -1,0 +1,83 @@
+/*
+ * redesign SC-B1 · /schools: the pieces the tabs share (chips, the day bar, the row of actions, the gap under the bar).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js, and schools.css.test.js for this file). Logical properties.
+ * Class prefix odc-school-.
+ */
+
+/* ── Chips (M-SC05): allergens and dietary tags, as words ── */
+.odc-school-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.odc-school-chip {
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  /* redesign SC-B1 (live check): the neutral of P/ badges, not the inverted (near black) strong surface */
+  background: var(--od-x-info-soft);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+}
+
+/* an allergen asks for attention: the warning tone of the brand (soft fill, the text keeps its contrast) */
+.odc-school-chip[data-tone='warning'] {
+  background: var(--od-warning-soft);
+}
+
+/* no values: a quiet dash (or the label the tab gives), no list */
+.odc-school-chip-empty {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The day bar (decisions 3A and 13): date, grade and classroom, one row that wraps ── */
+.odc-school-daybar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-3) var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-school-daybar > .odc-field {
+  flex: 0 1 var(--od-x-popover);
+  min-inline-size: var(--od-x-menu-min);
+}
+
+/* a phone: every control the full width */
+@media (max-width: 767px) {
+  .odc-school-daybar > .odc-field {
+    flex: 1 1 100%;
+    min-inline-size: 0;
+  }
+}
+
+/* ── The row of actions of a tab (the buttons above its table) ── */
+.odc-school-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── A tab: the gap between the bar and the table (or the state that replaces it) ── */
+.odc-school-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}

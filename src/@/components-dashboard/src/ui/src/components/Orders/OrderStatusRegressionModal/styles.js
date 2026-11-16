@@ -3,9 +3,10 @@ import styled from 'styled-components'
 export const RegressionContainer = styled.form`
   display: flex;
   flex-direction: column;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 
   h2 {
-    font-size: 20px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 700;
     text-align: center;
     margin: 0 0 30px 0;
@@ -13,7 +14,7 @@ export const RegressionContainer = styled.form`
 
   p {
     margin: 4px 0;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 
   button {
@@ -25,7 +26,7 @@ export const StatusTransition = styled.p`
   font-weight: 600;
 
   span {
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
   }
 `
 
@@ -35,7 +36,7 @@ export const ReasonContainer = styled.div`
   margin: 30px 0;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-bottom: 7px;
   }
 `

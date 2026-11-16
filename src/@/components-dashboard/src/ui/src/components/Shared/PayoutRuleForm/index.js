@@ -19,6 +19,8 @@ import {
 import { Alert, Confirm } from '../Confirm'
 import { Button } from '../../../styles'
 import { Select } from '../../../styles/Select'
+import { useLeaveGuard, useSectionSplit } from '../Product'
+import { useHubFormReport } from '../../Settings/SettingsHubForm/useHubFormReport'
 import {
   RuleActions,
   RuleCard,
@@ -64,6 +66,7 @@ const PayoutRuleFormUI = (props) => {
   const [alertState, setAlertState] = useState({ open: false, content: [] })
   const [isOverriding, setIsOverriding] = useState(false)
   const [confirmInherit, setConfirmInherit] = useState(false)
+  const [resetKey, setResetKey] = useState(0)
 
   const isPlatform = scope === 'platform'
   // With an owner the form is its own rule: it follows the global one until it is given one ("Override")
@@ -183,14 +186,35 @@ const PayoutRuleFormUI = (props) => {
   const handleSubmit = async () => {
     const invalid = validatePayoutRuleForm(scope, values)
     setErrors(invalid)
-    if (Object.keys(invalid).length) return
+    if (Object.keys(invalid).length) return { ok: false }
     const { error, result } = await handleSaveRule(values)
     if (error) {
       if (result?.length) setAlertState({ open: true, content: result })
-      return
+      return { ok: false }
     }
     showToast(ToastType.Success, t('PAYOUT_RULE_SAVED', 'Payout rule saved'))
+    return { ok: true }
   }
+
+  // a rule that was never saved shows Save at its defaults; only an edit away from them is unsaved work to ask about
+  const isDirty = hasChanges && !ruleState.loading && !ruleState.error &&
+    (isOwner || !!ruleState.rule || !isSamePayoutRule(scope, values, toPayoutRuleForm(scope, null)))
+
+  const handleDiscard = () => {
+    setValues(toPayoutRuleForm(scope, ruleState.rule))
+    setErrors({})
+    setIsOverriding(!!ruleState.override)
+    setResetKey(key => key + 1)
+  }
+
+  useLeaveGuard({
+    dirty: isDirty,
+    count: 1,
+    save: handleSubmit,
+    discard: handleDiscard,
+    registerCloseGuard: useSectionSplit().registerCloseGuard
+  })
+  useHubFormReport(`payout-rule:${scope}:${ownerId ?? 'global'}`, { dirty: isDirty, saving: !!actionState.loading })
 
   const handleChooseInherit = () => {
     if (!isOverriding) return
@@ -302,6 +326,7 @@ const PayoutRuleFormUI = (props) => {
                     {row.unit
                       ? (
                         <Select
+                          key={`${row.key}-${resetKey}`}
                           defaultValue={row.unit.value}
                           options={row.unit.options}
                           onChange={row.unit.onChange}

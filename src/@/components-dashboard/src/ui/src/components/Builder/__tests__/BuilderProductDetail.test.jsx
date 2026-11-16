@@ -1,9 +1,10 @@
 import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 
-const state = vi.hoisted(() => ({ props: {}, emit: vi.fn(), showToast: vi.fn() }))
+const state = vi.hoisted(() => ({ props: {}, emit: vi.fn(), showToast: vi.fn(), isCollapse: false, handleMenuCollapse: vi.fn() }))
 
 vi.mock('../../../../../index', () => ({
   BuilderProductDetail: ({ UIComponent, ...props }) => <UIComponent {...props} {...state.props} />,
@@ -15,14 +16,10 @@ vi.mock('../../../../../index', () => ({
   useUtils: () => [{ parseDate: (value) => `date:${value}` }]
 }))
 vi.mock('../../../contexts/InfoShareContext', () => ({
-  useInfoShare: () => [{ isCollapse: false }, { handleMenuCollapse: vi.fn() }]
+  useInfoShare: () => [{ isCollapse: state.isCollapse }, { handleMenuCollapse: state.handleMenuCollapse }]
 }))
-vi.mock('../../../styles', () => ({
-  Button: ({ color, borderRadius, outline, ...props }) => <button {...props} />,
-  IconButton: ({ color, ...props }) => <button {...props} />,
-  Input: (props) => <input {...props} />,
-  TextArea: (props) => <textarea {...props} />
-}))
+// redesign B2: the detail shell no longer imports `../../../styles` nor `../../Shared`; the children of other slices it
+// mounts (builds card, app general, build dialogs) render their real pieces here.
 vi.mock('../BuilderAppSettings', () => ({
   BuilderAppColors: () => <div>colors tab</div>,
   BuilderAppFiles: ({ focusGroup }) => <div>files tab {focusGroup}</div>
@@ -39,18 +36,6 @@ vi.mock('../BuilderWebTheme', () => ({
 }))
 vi.mock('../BuilderWebSite', () => ({ BuilderWebSiteSettings: () => <div>website settings tab</div> }))
 vi.mock('../BuilderAppCredentials', () => ({ BuilderAppCredentialsForm: () => <div>credentials tab</div> }))
-vi.mock('../../Shared', () => ({
-  Modal: ({ open, children }) => open ? <div>{children}</div> : null,
-  Confirm: ({ open, title, acceptText, onAccept, onCancel, children }) => open
-    ? (
-      <div role='dialog' aria-label={title}>
-        {children}
-        <button onClick={onCancel}>Cancel</button>
-        <button onClick={onAccept}>{acceptText}</button>
-      </div>
-      )
-    : null
-}))
 
 import { BuilderProduct } from '../BuilderProductDetail'
 
@@ -80,10 +65,19 @@ const renderDetail = (productState, extra = {}) => {
 
 const withStatus = (productStatus) => ({ loading: false, product: { ...product, product_status: productStatus }, errorKind: null })
 
+// redesign B2: «More actions» is a P/Menu: its items are menuitems in a popup that opens on a real press
+const openMore = async () => {
+  const user = userEvent.setup()
+  await user.click(screen.getByRole('button', { name: 'More actions' }))
+  return screen.findByRole('menu')
+}
+
 describe('BuilderProduct detail', () => {
   beforeEach(() => {
     state.emit.mockReset()
     state.showToast.mockReset()
+    state.handleMenuCollapse.mockReset()
+    state.isCollapse = false
   })
 
   it('shows the app without a My products hand-off', () => {
@@ -91,6 +85,37 @@ describe('BuilderProduct detail', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Repartidores' })).toBeTruthy()
     expect(screen.getByText('Driver app · Code a8k2m · Created date:2026-10-07 17:02:11')).toBeTruthy()
     expect(screen.queryByText(/My products/)).toBeNull()
+  })
+
+  // redesign B2: the header on Product pieces
+  it('draws the header with Product pieces: rename button, status badge and status actions', () => {
+    renderDetail(withStatus('draft'))
+    const rename = screen.getByRole('button', { name: 'Rename' })
+    expect(rename.classList.contains('odc-btn')).toBe(true)
+    expect(rename.getAttribute('title')).toBe('Rename')
+    const badge = screen.getByText('Draft').closest('.odc-badge')
+    expect(badge?.getAttribute('data-family')).toBe('pending')
+    const activate = screen.getByRole('button', { name: 'Activate' })
+    expect(activate.classList.contains('odc-btn')).toBe(true)
+    expect(activate.getAttribute('data-variant')).toBe('primary')
+    expect(screen.getByRole('button', { name: 'More actions' }).getAttribute('aria-haspopup')).toBe('menu')
+  })
+
+  it('opens the menu from the header when it is collapsed', () => {
+    state.isCollapse = true
+    renderDetail(withStatus('draft'))
+    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }))
+    expect(state.handleMenuCollapse).toHaveBeenCalledWith(false)
+  })
+
+  it('goes back to the list from the breadcrumb', () => {
+    renderDetail(withStatus('draft'))
+    const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+    const link = within(breadcrumb).getByRole('link', { name: 'Builder' })
+    expect(link.getAttribute('href')).toBe('/builder')
+    fireEvent.click(link)
+    expect(state.emit).toHaveBeenCalledWith('go_to_page', { page: 'builder' })
+    expect(within(breadcrumb).getByText('Repartidores', { selector: '[aria-current="page"]' })).toBeTruthy()
   })
 
   it('fills platforms the customer has not edited with the app values', () => {
@@ -103,11 +128,41 @@ describe('BuilderProduct detail', () => {
     expect(screen.queryByRole('columnheader', { name: 'Last build' })).toBeNull()
   })
 
+  // redesign B2: P/Skeleton in a busy region
+  it('shows a skeleton while it loads', () => {
+    const { container } = renderDetail({ loading: true, product: null, errorKind: null })
+    const busy = container.querySelector('[aria-busy="true"]')
+    expect(busy).toBeTruthy()
+    expect(busy.querySelectorAll('.odc-skeleton').length).toBeGreaterThan(0)
+    expect(within(screen.getByRole('navigation', { name: 'Breadcrumb' })).getByText('App', { selector: '[aria-current="page"]' })).toBeTruthy()
+  })
+
   it('shows a not found state with a way back', () => {
     renderDetail({ loading: false, product: null, errorKind: 'not_found' })
-    expect(screen.getByText('This app doesn’t exist')).toBeTruthy()
+    // redesign B2: P/EmptyState with the title as a heading, as BuilderMessage drew it
+    expect(screen.getByRole('heading', { name: 'This app doesn’t exist' })).toBeTruthy()
+    expect(screen.getByText('It may have been deleted, or it belongs to another project.')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'Back to Builder' }))
     expect(state.emit).toHaveBeenCalledWith('go_to_page', { page: 'builder' })
+  })
+
+  it.each([
+    ['disabled', 'Builder isn’t available here', 'Builder is turned off for this installation.'],
+    ['no_access', 'You don’t have access to Builder', 'Only admins with edit permissions can create and manage apps. Ask a project owner for access.']
+  ])('says when Builder is %s, with nothing to do', (errorKind, title, text) => {
+    renderDetail({ loading: false, product: null, errorKind })
+    expect(screen.getByRole('heading', { name: title })).toBeTruthy()
+    expect(screen.getByText(text)).toBeTruthy()
+    expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('announces a failed load and tries again', () => {
+    renderDetail({ loading: false, product: null, errorKind: 'error' })
+    const alert = screen.getByRole('alert')
+    expect(within(alert).getByText('We couldn’t load this app')).toBeTruthy()
+    expect(within(alert).getByText('Check your connection and try again.')).toBeTruthy()
+    fireEvent.click(within(alert).getByRole('button', { name: 'Try again' }))
+    expect(state.props.reloadProduct).toHaveBeenCalled()
   })
 
   it.each([
@@ -132,15 +187,27 @@ describe('BuilderProduct detail', () => {
   it('asks before archiving', async () => {
     const changeStatus = vi.fn(async () => ({ product: { ...product, product_status: 'archived' }, errorKind: null }))
     renderDetail(withStatus('active'), { changeStatus })
-    fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
-    fireEvent.click(await screen.findByRole('button', { name: 'Archive' }))
-    const dialog = screen.getByRole('dialog', { name: 'Archive Repartidores?' })
+    const menu = await openMore()
+    // redesign B2: Archive is a menuitem of P/Menu and the confirmation a P/ConfirmDialog (alertdialog)
+    fireEvent.click(within(menu).getByRole('menuitem', { name: 'Archive' }))
+    const dialog = await screen.findByRole('alertdialog', { name: 'Archive Repartidores?' })
     expect(within(dialog).getByText(/Archived apps can’t build from here. Installed apps keep working/)).toBeTruthy()
     expect(changeStatus).not.toHaveBeenCalled()
     await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Archive' })) })
     expect(changeStatus).toHaveBeenCalledWith('archived')
     expect(state.showToast).toHaveBeenCalledWith('SUCCESS', 'Repartidores was archived')
-    expect(screen.queryByRole('dialog')).toBeNull()
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+  })
+
+  it('keeps the app when the archive is cancelled', async () => {
+    const changeStatus = vi.fn()
+    renderDetail(withStatus('draft'), { changeStatus })
+    const menu = await openMore()
+    fireEvent.click(within(menu).getByRole('menuitem', { name: 'Archive' }))
+    const dialog = await screen.findByRole('alertdialog', { name: 'Archive Repartidores?' })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(changeStatus).not.toHaveBeenCalled()
   })
 
   it('says when the change failed', async () => {
@@ -156,6 +223,27 @@ describe('BuilderProduct detail', () => {
     expect(screen.getByRole('button', { name: 'More actions' }).disabled).toBe(true)
   })
 
+  it('lists what an app misses when activating is refused, with the way to fix it', async () => {
+    const checks = [{
+      app_id: 310,
+      platforms: { ios: { problems: [{ code: 'missing_file', level: 'warning', subject: { name: 'Icon iOS', group: 'resources_icons' } }] } }
+    }]
+    const changeStatus = vi.fn(async () => ({ product: null, errorKind: 'incomplete', checks }))
+    renderDetail(withStatus('draft'), { changeStatus })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Activate' })) })
+    // redesign B2: a P/Dialog that keeps the alertdialog role
+    const dialog = await screen.findByRole('alertdialog', { name: 'Repartidores can’t be activated yet' })
+    expect(dialog.classList.contains('odc-dialog')).toBe(true)
+    expect(within(dialog).getByText('Complete these and try again. Issues marked Ordering don’t stop it.')).toBeTruthy()
+    expect(within(dialog).getByText('Repartidores · iOS')).toBeTruthy()
+    expect(within(dialog).getByText('Upload Icon iOS')).toBeTruthy()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Fix' }))
+    expect(screen.getByText('files tab resources_icons')).toBeTruthy()
+    expect(window.location.search).toBe('?tab=files')
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    window.history.replaceState(null, '', '/')
+  })
+
   it('switches tabs, keeps the tab in the URL and opens the one a check points to', () => {
     window.history.replaceState(null, '', '/builder/41')
     renderDetail(withStatus('draft'), {
@@ -166,9 +254,14 @@ describe('BuilderProduct detail', () => {
         checks: { platforms: { ios: { problems: [{ code: 'missing_file', level: 'warning', subject: { name: 'Icon iOS', group: 'resources_icons' } }] } } }
       }
     })
+    // redesign B2: P/Tabs, named, with its hint as a P/InlineNotice
+    expect(screen.getByRole('tablist', { name: 'App sections' })).toBeTruthy()
     expect(screen.getByRole('tab', { name: 'General' }).getAttribute('aria-selected')).toBe('true')
+    expect(screen.getByText('Changes to the app apply on the next build. The name in Ordering changes right away.').closest('.odc-notice')).toBeTruthy()
     fireEvent.click(screen.getByRole('tab', { name: 'Constants' }))
     expect(screen.getByText('constants tab')).toBeTruthy()
+    expect(screen.getByText('Constants apply on the next build.')).toBeTruthy()
+    expect(screen.getByRole('tab', { name: 'Constants' }).getAttribute('aria-selected')).toBe('true')
     expect(window.location.search).toBe('?tab=constants')
     fireEvent.click(screen.getByRole('button', { name: 'Fix' }))
     expect(screen.getByText('files tab resources_icons')).toBeTruthy()
@@ -176,14 +269,62 @@ describe('BuilderProduct detail', () => {
     expect(window.location.search).toBe('')
   })
 
+  it('opens the tab of the URL', () => {
+    window.history.replaceState(null, '', '/builder/41?tab=credentials')
+    renderDetail(withStatus('draft'))
+    expect(screen.getByRole('tab', { name: 'Credentials' }).getAttribute('aria-selected')).toBe('true')
+    expect(screen.getByRole('tabpanel').textContent).toContain('credentials tab')
+    window.history.replaceState(null, '', '/')
+  })
+
+  it('says when a product has no app', () => {
+    renderDetail({ loading: false, product: { ...product, apps: [] }, errorKind: null })
+    expect(screen.getByRole('heading', { name: 'This product has no app' })).toBeTruthy()
+    expect(screen.queryByRole('tablist')).toBeNull()
+  })
+
   it('renames the product in place', async () => {
     const renameProduct = vi.fn(async () => ({ ok: true, errorCodes: [] }))
     renderDetail(withStatus('draft'), { renameProduct })
     fireEvent.click(screen.getByRole('button', { name: 'Rename' }))
-    fireEvent.change(screen.getByLabelText('Name in Ordering'), { target: { value: ' Drivers ' } })
+    const input = screen.getByLabelText('Name in Ordering')
+    // redesign B2: a P/TextField
+    expect(input.classList.contains('odc-field-input')).toBe(true)
+    expect(input.value).toBe('Repartidores')
+    expect(document.activeElement).toBe(input)
+    fireEvent.change(input, { target: { value: ' Drivers ' } })
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save' })) })
     expect(renameProduct).toHaveBeenCalledWith('Drivers')
     expect(state.showToast).toHaveBeenCalledWith('SUCCESS', 'Renamed to Drivers')
+    expect(screen.queryByLabelText('Name in Ordering')).toBeNull()
+  })
+
+  it('leaves the rename with Escape or Cancel, saving nothing', () => {
+    const renameProduct = vi.fn()
+    renderDetail(withStatus('draft'), { renameProduct })
+    fireEvent.click(screen.getByRole('button', { name: 'Rename' }))
+    fireEvent.keyDown(screen.getByLabelText('Name in Ordering'), { key: 'Escape' })
+    expect(screen.queryByLabelText('Name in Ordering')).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Rename' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(screen.queryByLabelText('Name in Ordering')).toBeNull()
+    expect(renameProduct).not.toHaveBeenCalled()
+  })
+
+  it('asks for a name and says why the API refused one', async () => {
+    const renameProduct = vi.fn(async () => ({ ok: false, errorCodes: ['name.max'] }))
+    renderDetail(withStatus('draft'), { renameProduct })
+    fireEvent.click(screen.getByRole('button', { name: 'Rename' }))
+    const input = screen.getByLabelText('Name in Ordering')
+    fireEvent.change(input, { target: { value: '   ' } })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save' })) })
+    expect(renameProduct).not.toHaveBeenCalled()
+    expect(input.getAttribute('aria-invalid')).toBe('true')
+    expect(screen.getByRole('alert').textContent).not.toBe('')
+    fireEvent.change(input, { target: { value: 'Drivers' } })
+    expect(screen.queryByRole('alert')).toBeNull()
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save' })) })
+    expect(screen.getByRole('alert').textContent).toBe('Use 30 characters or fewer.')
   })
 
   it('keeps an app name to 30 characters', async () => {
@@ -201,6 +342,65 @@ describe('BuilderProduct detail', () => {
   it('hides the checks of an archived app', () => {
     renderDetail(withStatus('archived'), { checksEnabled: false, checksState: { loading: false, checks: null, error: false } })
     expect(screen.queryByText('Before the next build')).toBeNull()
+  })
+
+  describe('an app with themes (has_themes)', () => {
+    const marketplaceApp = { ...product, kind: 'app', product_type: 'marketplace_app', has_themes: true }
+    const appTabs = () => within(screen.getByRole('tablist', { name: 'App sections' })).getAllByRole('tab').map(tab => tab.textContent)
+
+    it('has the Theme tab after General, with the same themes list and editor as a website', async () => {
+      window.history.replaceState(null, '', '/builder/41')
+      renderDetail({ loading: false, product: marketplaceApp, errorKind: null })
+      expect(appTabs()).toEqual(['General', 'Theme', 'Images and files', 'Constants', 'Credentials', 'Push notifications', 'Builds'])
+      await act(async () => { fireEvent.click(screen.getByRole('tab', { name: 'Theme' })) })
+      expect(window.location.search).toBe('?tab=theme')
+      expect(screen.getByText(/the next time they open the app/)).toBeTruthy()
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'themes list' })) })
+      expect(window.location.search).toBe('?tab=theme&theme=10')
+      expect(screen.getByText('Theme', { selector: '[aria-current="page"]' })).toBeTruthy()
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'editor of 10' })) })
+      expect(screen.getByRole('button', { name: 'themes list' })).toBeTruthy()
+    })
+
+    it('has no Appearance tab: the theme sets its colors, and a link to it opens General', () => {
+      window.history.replaceState(null, '', '/builder/41?tab=appearance')
+      renderDetail({ loading: false, product: marketplaceApp, errorKind: null })
+      expect(screen.queryByRole('tab', { name: 'Appearance' })).toBeNull()
+      expect(screen.queryByText('colors tab')).toBeNull()
+      expect(screen.getByRole('tab', { name: 'General' }).getAttribute('aria-selected')).toBe('true')
+    })
+
+    it('keeps the Appearance tab in an app without themes', () => {
+      window.history.replaceState(null, '', '/builder/41?tab=appearance')
+      renderDetail({ loading: false, product: { ...product, kind: 'app', has_themes: false }, errorKind: null })
+      expect(screen.getByRole('tab', { name: 'Appearance' }).getAttribute('aria-selected')).toBe('true')
+      expect(screen.getByText('colors tab')).toBeTruthy()
+    })
+
+    it('opens a theme’s editor from its link', () => {
+      window.history.replaceState(null, '', '/builder/41?tab=theme&theme=10')
+      renderDetail({ loading: false, product: marketplaceApp, errorKind: null })
+      expect(screen.getByRole('button', { name: 'editor of 10' })).toBeTruthy()
+    })
+
+    it('has no Theme tab without themes, nor its editor from a link', () => {
+      window.history.replaceState(null, '', '/builder/41?tab=theme&theme=10')
+      renderDetail({ loading: false, product: { ...product, kind: 'app', has_themes: false }, errorKind: null })
+      expect(screen.queryByRole('tab', { name: 'Theme' })).toBeNull()
+      expect(screen.queryByRole('button', { name: 'editor of 10' })).toBeNull()
+      expect(screen.getByRole('tab', { name: 'General' }).getAttribute('aria-selected')).toBe('true')
+    })
+
+    it('reads `has_themes` for a website too, and the kind only when the API doesn’t send it', () => {
+      window.history.replaceState(null, '', '/builder/43')
+      const web = { ...product, id: 43, kind: 'web', product_type: 'marketplace_website', apps: [] }
+      const webTabs = () => within(screen.getByRole('tablist', { name: 'Website sections' })).getAllByRole('tab').map(tab => tab.textContent)
+      const { unmount } = renderDetail({ loading: false, product: { ...web, has_themes: false }, errorKind: null })
+      expect(webTabs()).toEqual(['General', 'Website settings'])
+      unmount()
+      renderDetail({ loading: false, product: web, errorKind: null })
+      expect(webTabs()).toEqual(['General', 'Website settings', 'Theme'])
+    })
   })
 
   describe('a website', () => {
@@ -221,26 +421,43 @@ describe('BuilderProduct detail', () => {
       renderDetail({ loading: false, product: web, errorKind: null })
       expect(screen.getByText('Marketplace website · Code fleet-mountain-7zoeit · Created date:2026-10-08 17:40:00')).toBeTruthy()
       expect(screen.getByRole('heading', { name: 'Your website is online' })).toBeTruthy()
-      expect(screen.getByRole('link', { name: /Open website/ }).getAttribute('href')).toBe('https://fleet-mountain-7zoeit-stores.my-sites.app')
+      const open = screen.getByRole('link', { name: /Open website/ })
+      expect(open.getAttribute('href')).toBe('https://fleet-mountain-7zoeit-stores.my-sites.app')
+      // redesign B2: a link drawn as a Product button, still in a new tab
+      expect(open.getAttribute('target')).toBe('_blank')
+      expect(open.getAttribute('rel')).toBe('noopener noreferrer')
+      expect(open.classList.contains('odc-btn')).toBe(true)
+      expect(open.textContent).toContain('(opens in a new tab)')
       expect(screen.getByText('Domains')).toBeTruthy()
-      expect(within(screen.getByRole('tablist')).getAllByRole('tab').map(tab => tab.textContent)).toEqual(['General', 'Website settings', 'Theme'])
+      expect(within(screen.getByRole('tablist', { name: 'Website sections' })).getAllByRole('tab').map(tab => tab.textContent)).toEqual(['General', 'Website settings', 'Theme'])
       expect(screen.queryByText('This product has no app')).toBeNull()
       expect(screen.queryByRole('heading', { name: 'Builds' })).toBeNull()
+    })
+
+    it('lists its general data', () => {
+      renderDetail({ loading: false, product: web, errorKind: null })
+      const general = screen.getByRole('region', { name: 'General' })
+      expect(Array.from(general.querySelectorAll('dt')).map(node => node.textContent)).toEqual(['Name in Ordering', 'Type', 'Status'])
+      expect(Array.from(general.querySelectorAll('dd')).map(node => node.textContent)).toEqual(['Prueba web', 'Marketplace website', 'Draft'])
     })
 
     it('goes back to the website from the theme’s breadcrumb, asking first with changes not saved', async () => {
       renderDetail({ loading: false, product: web, errorKind: null })
       await act(async () => { fireEvent.click(screen.getByRole('tab', { name: 'Theme' })) })
+      expect(screen.getByText('How your website looks. Your customers see the active theme; changes reach them after you publish.')).toBeTruthy()
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'themes list' })) })
       const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
       expect(within(breadcrumb).getByRole('link', { name: 'Prueba web' }).getAttribute('href')).toBe('/builder/43')
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'change the theme' })) })
       await act(async () => { fireEvent.click(within(breadcrumb).getByRole('link', { name: 'Prueba web' })) })
-      const dialog = screen.getByRole('dialog', { name: 'Leave without saving?' })
-      await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' })) })
+      // redesign B2: P/ConfirmDialog (alertdialog); its cancel is «Stay», as main's Confirm said
+      const dialog = await screen.findByRole('alertdialog', { name: 'Leave without saving?' })
+      expect(within(dialog).getByText('You have changes you haven’t saved. They’ll be lost.')).toBeTruthy()
+      await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Stay' })) })
       expect(screen.getByRole('button', { name: 'editor of 10' })).toBeTruthy()
+      await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
       await act(async () => { fireEvent.click(within(breadcrumb).getByRole('link', { name: 'Prueba web' })) })
-      await act(async () => { fireEvent.click(within(screen.getByRole('dialog', { name: 'Leave without saving?' })).getByRole('button', { name: 'Leave' })) })
+      await act(async () => { fireEvent.click(within(await screen.findByRole('alertdialog', { name: 'Leave without saving?' })).getByRole('button', { name: 'Leave' })) })
       expect(screen.getByRole('heading', { name: 'Your website is online' })).toBeTruthy()
       expect(window.location.search).not.toContain('theme=')
     })
@@ -294,17 +511,33 @@ describe('BuilderProduct detail', () => {
       const renameProduct = vi.fn(async () => ({ ok: true, errorCodes: [] }))
       renderDetail({ loading: false, product: { ...web, name: '' }, errorKind: null }, { changeStatus, renameProduct })
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Activate' })) })
-      const dialog = screen.getByRole('alertdialog', { name: 'Add a name to activate this website' })
+      const dialog = await screen.findByRole('alertdialog', { name: 'Add a name to activate this website' })
+      // redesign B2: a P/Dialog, described by its text
+      expect(dialog.classList.contains('odc-dialog')).toBe(true)
+      expect(dialog).toHaveAccessibleDescription(/A website needs a name before it goes active/)
+      expect(within(dialog).getByText('After you save it, activate the website again.')).toBeTruthy()
       expect(screen.queryByText(/can’t be activated yet/)).toBeNull()
-      fireEvent.click(within(dialog).getByRole('button', { name: 'Add a name' }))
+      await act(async () => { fireEvent.click(within(dialog).getByRole('button', { name: 'Add a name' })) })
 
-      expect(screen.queryByRole('alertdialog')).toBeNull()
+      await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
       const input = screen.getByLabelText('Name in Ordering')
-      expect(document.activeElement).toBe(input)
+      await waitFor(() => expect(document.activeElement).toBe(input))
       expect(screen.getByText('Then activate the website again.')).toBeTruthy()
+      expect(input).toHaveAccessibleDescription('Then activate the website again.')
       fireEvent.change(input, { target: { value: 'Burger Town' } })
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save' })) })
       expect(renameProduct).toHaveBeenCalledWith('Burger Town')
+    })
+
+    it('closes the name dialog without renaming', async () => {
+      const changeStatus = vi.fn(async () => ({ product: null, errorKind: 'incomplete', checks: [], missing: ['name'] }))
+      renderDetail({ loading: false, product: { ...web, name: '' }, errorKind: null }, { changeStatus })
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Activate' })) })
+      const dialog = await screen.findByRole('alertdialog', { name: 'Add a name to activate this website' })
+      const closes = within(dialog).getAllByRole('button', { name: 'Close' })
+      fireEvent.click(closes[closes.length - 1])
+      await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+      expect(screen.queryByLabelText('Name in Ordering')).toBeNull()
     })
 
     it('falls back to a message for anything else a website misses', async () => {
@@ -325,17 +558,21 @@ describe('BuilderProduct detail', () => {
         const hint = document.getElementById(draft.getAttribute('aria-describedby'))
         expect(hint.textContent).toContain(lock)
         expect(within(hint).getByRole('button', { name: 'Go to Domains' })).toBeTruthy()
+        // redesign B2: the hint is a P/InlineNotice
+        expect(hint.classList.contains('odc-notice')).toBe(true)
       })
 
       it('keeps it from being archived, and activating stays open', async () => {
         renderDetail({ loading: false, product: { ...web, domain: 'shop.burgertown.com' }, errorKind: null })
         expect(screen.getByRole('button', { name: 'Activate' }).disabled).toBe(false)
-        fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
-        const archive = await screen.findByRole('button', { name: 'Archive' })
-        expect(archive.disabled).toBe(true)
+        const menu = await openMore()
+        // redesign B2: a disabled menuitem whose reason is its accessible description
+        const archive = within(menu).getByRole('menuitem', { name: 'Archive' })
+        expect(archive.getAttribute('aria-disabled')).toBe('true')
         expect(document.getElementById(archive.getAttribute('aria-describedby')).textContent).toContain(lock)
+        expect(archive).toHaveAccessibleDescription(lock)
         fireEvent.click(archive)
-        expect(screen.queryByRole('dialog')).toBeNull()
+        expect(screen.queryByRole('alertdialog')).toBeNull()
       })
 
       it('takes the user to the Domains card of the General tab', async () => {
@@ -352,8 +589,8 @@ describe('BuilderProduct detail', () => {
         expect(screen.getByRole('button', { name: 'Move to draft' }).disabled).toBe(false)
         expect(screen.getByRole('button', { name: 'Move to draft' }).getAttribute('aria-describedby')).toBeNull()
         expect(screen.queryByText(lock)).toBeNull()
-        fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
-        expect((await screen.findByRole('button', { name: 'Archive' })).disabled).toBe(false)
+        const menu = await openMore()
+        expect(within(menu).getByRole('menuitem', { name: 'Archive' }).getAttribute('aria-disabled')).not.toBe('true')
       })
 
       it('explains a refusal of the API with the same message', async () => {
@@ -367,9 +604,9 @@ describe('BuilderProduct detail', () => {
 
     it('says an archived website stays online', async () => {
       renderDetail({ loading: false, product: { ...web, product_status: 'active' }, errorKind: null })
-      fireEvent.click(screen.getByRole('button', { name: 'More actions' }))
-      fireEvent.click(await screen.findByRole('button', { name: 'Archive' }))
-      const dialog = screen.getByRole('dialog', { name: 'Archive Prueba web?' })
+      const menu = await openMore()
+      fireEvent.click(within(menu).getByRole('menuitem', { name: 'Archive' }))
+      const dialog = await screen.findByRole('alertdialog', { name: 'Archive Prueba web?' })
       expect(within(dialog).getByText('For now this only labels the website as archived. It stays online at fleet-mountain-7zoeit-stores.my-sites.app; you can bring it back at any time.')).toBeTruthy()
     })
   })

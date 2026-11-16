@@ -1,0 +1,129 @@
+/*
+ * The campaigns list and the dialog of opens (redesign CA-B4): the cells of the table and the cards of a phone. Product's
+ * DataTable, RecordCard, Pagination and Dialog own the structure; this adds what a campaign cell is made of. Tokens only
+ * (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ */
+
+/* ── The cells ── */
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-campaign-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name wraps (a long one breaks anywhere) and stops at two lines */
+td .odc-campaign-name,
+th .odc-campaign-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* «N/A»: not a figure, a word that says the channel keeps no such count */
+.odc-campaign-na { color: var(--od-x-text-subtle); }
+
+/* The status and, for a scheduled campaign, its date and time after it */
+.odc-campaign-status {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-campaign-when { color: var(--od-text-muted); }
+
+/* The switch of a row: the click is its own, and the row keeps its padding around it */
+.odc-campaign-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+/* The opens count that opens the list: a link-button that reads as the figure it holds */
+.odc-campaign-opens-link {
+  padding-inline: 0;
+  min-inline-size: 0;
+}
+
+/* ── The foot: the pages ── */
+.odc-campaign-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-campaign-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── Phone: the cards ── */
+.odc-campaign-cards .odc-campaign-foot { padding-inline: 0; }
+
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-campaign-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-campaign-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+/* redesign : the name and the status share the first row and both may shrink; the name is one line, so a long one took
+   the room and squeezed the status under its own word («Ended» ran past a 390 screen). The status keeps at least its longest word
+   (it may still wrap between words) and the name gives way, with its ellipsis. */
+.odc-campaign-cards .odc-order-card-status {
+  min-inline-size: min-content;
+}
+
+.odc-campaign-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-campaign-card-kind {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-campaign-card-figures { color: var(--od-text-muted); }
+
+/* ── The opens dialog ── */
+.odc-campaign-opens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-campaign-opens-email { unicode-bidi: isolate; }
+
+.odc-campaign-opens-foot { min-inline-size: 0; }
+
+.odc-campaign-opens-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The status cell of the table (redesign CA-R2 P4) ──
+   Beside the open panel the Status column was cut mid-word («Schedulec»). The column now names a floor (`--od-x-col-floor-campaign-status`);
+   the label itself (the text of a Status or of a switch, not the date after it) never breaks inside a word. */
+.odc-campaign-status-label {
+  overflow-wrap: normal;
+  word-break: keep-all;
+}

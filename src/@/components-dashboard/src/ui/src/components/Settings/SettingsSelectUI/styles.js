@@ -8,7 +8,7 @@ export const SelectHeader = styled.div`
   margin-bottom: 5px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};
     margin: 0;
@@ -16,7 +16,7 @@ export const SelectHeader = styled.div`
   p {
     margin-top: 10px;
     margin-bottom: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
   }
 `
 
@@ -36,7 +36,7 @@ export const SelectContent = styled.div`
       padding: 8px 15px;
       border-radius: 7.6px;
       border: 1px solid ${props => props.theme.colors.borderColor};
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
     }
 
     .list {
@@ -50,13 +50,13 @@ export const Option = styled.div`
   display: flex;
   align-items: center;
   column-gap: 10px;
-  font-size: 13px;
+  font-size: var(--od-type-control-value-size);
   line-height: 2;
   font-weight: 500;
 `
 
 export const OptionsError = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: #d83520;
 `
 export const InputWrapper = styled.div`

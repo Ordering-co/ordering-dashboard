@@ -1,0 +1,88 @@
+/* Scoped AutoScroll surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-auto-scroll) {
+  --od-auto-scroll-edge-inset: calc(var(--od-entity-selector-focus-width) + var(--od-entity-selector-focus-offset) + 1px);
+  display: inherit;
+  box-sizing: border-box;
+  width: initial;
+  min-height: calc(var(--od-entity-selector-touch-target) + var(--od-auto-scroll-edge-inset) + var(--od-auto-scroll-edge-inset));
+  padding-block: var(--od-auto-scroll-edge-inset);
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-auto-scroll)[data-modal] {
+  display: flex;
+  width: 300vw;
+}
+
+.od-ui.od-icon-button.od-auto-scroll-arrow {
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--od-x-layer-raised) + 9);
+  align-self: center;
+  flex: 0 0 var(--od-entity-selector-touch-target);
+  width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  color: var(--od-entity-selector-text);
+  background: var(--od-entity-selector-subtle);
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: 999px;
+  opacity: 0.9;
+}
+
+.od-ui[data-modal] > .od-auto-scroll-arrow {
+  top: 35%;
+}
+
+.od-ui.od-icon-button.od-auto-scroll-arrow[data-scroll-action='left'] {
+  left: var(--od-auto-scroll-edge-inset);
+  margin-right: calc(-1 * var(--od-entity-selector-touch-target));
+  order: -1;
+}
+
+.od-ui.od-icon-button.od-auto-scroll-arrow[data-scroll-action='right'] {
+  right: var(--od-auto-scroll-edge-inset);
+  margin-left: calc(-1 * var(--od-entity-selector-touch-target));
+  order: 1;
+}
+
+.od-ui[dir='rtl'] > .od-auto-scroll-arrow[data-scroll-action='left'] {
+  order: 1;
+}
+
+.od-ui[dir='rtl'] > .od-auto-scroll-arrow[data-scroll-action='right'] {
+  order: -1;
+}
+
+.od-ui.od-icon-button.od-auto-scroll-arrow > svg {
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+.od-ui.od-icon-button.od-auto-scroll-arrow[data-hidden] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .od-ui:where(.od-auto-scroll)[data-modal] {
+    display: inherit;
+    width: 100%;
+  }
+
+  .od-ui:where(.od-auto-scroll)[data-modal] > .od-auto-scroll-arrow {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui.od-icon-button.od-auto-scroll-arrow {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

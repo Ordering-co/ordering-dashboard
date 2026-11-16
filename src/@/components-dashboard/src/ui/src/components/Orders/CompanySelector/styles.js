@@ -4,16 +4,16 @@ import styled, { css } from 'styled-components'
 export const Option = styled.div`
   display: flex;
   align-items: center;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   padding: ${({ padding }) => padding || '5px 10px'};
   white-space: nowrap;
   ${({ isPhoneView }) => isPhoneView && css`
     width: 100%;
   `}
   ${({ isRemove }) => isRemove && css`
-    color: ${props => props.theme.colors.danger};
+    color: ${props => props.theme?.ordering?.semantic?.state?.danger?.functional ?? props.theme.colors.danger};
     padding: 3px 10px;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   `}
 
   img {
@@ -33,19 +33,13 @@ export const Option = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 350px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 
   @media (max-width: 576px) {
     padding: ${({ padding }) => padding || '5px 0px'};
     ${({ isFilterView }) => isFilterView && css`
-      ${props => props.theme?.rtl
-? css`
-        margin-right: 10px;
-      `
-: css`
-        margin-left: 10px;
-      `}
+      margin-inline-start: 10px;
     `}
     span {
       max-width: 280px;
@@ -62,14 +56,14 @@ export const OptionContent = styled.div`
 
 export const CompanyNameContainer = styled.div`
   line-height: 1.3;
-  color: #263238;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#263238'};
 `
 
 export const CompanyName = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   font-weight: 600;
   line-height: 1.3;
-  color: ${props => props.theme.colors.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor};
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -85,8 +79,8 @@ export const CompanyName = styled.p`
   }
 `
 export const CompanyText = styled.span`
-  font-size: 12px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-secondary-size);
+  color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
   ${({ small }) => small && css`
     display: none;
   `}
@@ -95,7 +89,7 @@ export const CompanyText = styled.span`
 export const WrapperCompanyImage = styled.div`
   width: 45px;
   height: 45px;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
   border-radius: 8px;
   display: flex;
 
@@ -116,13 +110,7 @@ export const WrapperCompanyImage = styled.div`
     }
   `}
 
-  ${props => props.theme?.rtl
-? css`
-    margin-left: 8px;
-  `
-: css`
-    margin-right: 8px;
-  `}
+  margin-inline-end: 8px;
 `
 const CompanyImageStyled = styled.div`
   display: flex;
@@ -152,6 +140,6 @@ export const PlaceholderTitle = styled(Option)`
 
   ${({ isSingle }) => isSingle && css`
     padding: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   `}
 `

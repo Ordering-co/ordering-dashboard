@@ -1,0 +1,103 @@
+/*
+ *  · «What's new» on the Home: one card (icon, «New», title, a line, its button and ✕) and, with more than one, the
+ * position, the dots and ‹ ›. The block is an `odc-home-block` like the others. Values: --od-* and --od-x-* only, logical
+ * properties only. Prefix: odc-news-*.
+ */
+
+.odc-news {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.odc-news-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-news-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  border-radius: var(--od-radius-component);
+  background: var(--od-x-selected);
+  color: var(--od-action);
+}
+
+.odc-news-text {
+  display: grid;
+  flex: 1 1 calc(var(--od-x-measure) / 2);
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-news-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-news-tag {
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-round);
+  background: var(--od-x-selected);
+  color: var(--od-action);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-news-description {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+}
+
+.odc-news-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-news-position {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-news-dots {
+  display: flex;
+  gap: var(--od-space-2);
+}
+
+.odc-news-dot {
+  inline-size: var(--od-space-2);
+  block-size: var(--od-space-2);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--od-border);
+  cursor: pointer;
+}
+
+.odc-news-dot[aria-current='true'] {
+  background: var(--od-action);
+}
+
+.odc-news-dot:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-news-arrows {
+  display: flex;
+  gap: var(--od-space-1);
+}

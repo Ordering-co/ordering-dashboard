@@ -1,17 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import BiCurrentLocation from '@meronex/icons/bi/BiCurrentLocation'
-import HiOutlineLocationMarker from '@meronex/icons/hi/HiOutlineLocationMarker'
-import CgSearchLoading from '@meronex/icons/cg/CgSearchLoading'
-
-import {
-  HouseDoor,
-  Building,
-  SuitHeart,
-  PlusLg,
-  XLg
-} from 'react-bootstrap-icons'
+import React, { useState, useEffect, useId, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -24,24 +11,12 @@ import {
   useConfig
 } from '../../../../../index'
 
-import { Alert } from '../../Shared'
 import { GoogleGpsButton } from '../GoogleGpsButton'
-import { Button, IconButton, Input, TextArea } from '../../../styles'
-
-import {
-  FormControl,
-  FormActions,
-  AddressWrap,
-  WrapAddressInput,
-  AddressTagSection,
-  WrapperMap,
-  WrapperSkeleton,
-  Title,
-  CloseButtonWrapper,
-  InputText,
-  WrapInput,
-  TagButton
-} from './styles'
+import { Button as ProductButton, EmptyState, InlineNotice, SegmentedControl, Skeleton as ProductSkeleton } from '../../Shared/Product'
+import { LoaderCircle, MapPin as MapPinIcon, Navigation } from '../../Shared/Icon'
+import { StepBoundary } from '../../Shared/Product/Wizard/StepBoundary'
+import { useGoogleMapsFailure } from '../../Shared/Product/Wizard/useGoogleMapsFailure'
+import '../../Orders/CreateCustomOrder/steps.css'
 
 const inputNames = [
   { name: 'address', code: 'Address' },
@@ -49,6 +24,42 @@ const inputNames = [
   { name: 'zipcode', code: 'Zipcode' },
   { name: 'address_notes', code: 'Address notes' }
 ]
+
+// redesign fix-qa: E3. Embedded mode: the GPS button is drawn by GoogleGpsButton without a name; the icon carries one.
+const GpsIcon = () => {
+  const [, t] = useLanguage()
+  return (
+    <>
+      <Navigation className='odc-icon' aria-hidden='true' />
+      <span className='odc-sr-only'>{t('USE_MY_LOCATION', 'Use my location')}</span>
+    </>
+  )
+}
+const GpsLoadingIcon = () => {
+  const [, t] = useLanguage()
+  return (
+    <>
+      <LoaderCircle className='odc-icon odc-spin' aria-hidden='true' />
+      <span className='odc-sr-only'>{t('USE_MY_LOCATION', 'Use my location')}</span>
+    </>
+  )
+}
+
+// redesign fix-qa: E3. What the map area says when Google is missing, in the form too.
+// focusable (tabIndex -1) so the boundary can put the focus here when the map fails, instead of <body>
+const MapUnavailable = ({ focusTarget = false }) => {
+  const [, t] = useLanguage()
+  return (
+    <EmptyState
+      role='status'
+      tabIndex={focusTarget ? -1 : undefined}
+      data-map-notice={focusTarget ? '' : undefined}
+      icon={MapPinIcon}
+      title={t('MAP_UNAVAILABLE', 'Map unavailable')}
+      description={t('MAP_UNAVAILABLE_TEXT', 'The map could not load. The address and the business are still set.')}
+    />
+  )
+}
 
 const AddressFormUI = (props) => {
   const {
@@ -63,8 +74,7 @@ const AddressFormUI = (props) => {
     handleChangeInput,
     saveAddress,
     setIsEdit,
-    userCustomerSetup,
-    isSeletectedUserAddresses
+    userCustomerSetup
   } = props
 
   const [configState] = useConfig()
@@ -73,6 +83,11 @@ const AddressFormUI = (props) => {
   const formMethods = useForm()
   const [{ auth }] = useSession()
   const googleInputRef = useRef(null)
+  const titleRef = useRef(null)
+  const formBodyRef = useRef(null) //
+  const mapsFailed = useGoogleMapsFailure()
+  const fieldPrefix = useId().replace(/:/g, '')
+  const fieldId = name => `${fieldPrefix}-${name}`
 
   const [state, setState] = useState({ selectedFromAutocomplete: true })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
@@ -93,9 +108,11 @@ const AddressFormUI = (props) => {
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
                               configState.configs?.google_autocomplete_selection_required?.value === 'true'
 
+  // redesign UF-B5 (M-UF20): the sentence of ERROR_MAX_LIMIT_LOCATION has its own English default, without the number and the
+  // unit, which `setMapErrors` adds after it (a translation of the key has no number either).
   const mapErrors = {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
-    ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
+    ERROR_MAX_LIMIT_LOCATION: 'Sorry, You can only set the position to'
   }
 
   const closeAlert = () => {
@@ -202,7 +219,18 @@ const AddressFormUI = (props) => {
         })
         return
       }
-      getAddressFormatted(formState?.changes?.address)
+      // redesign UF-B5 (M-UF23): without Google there is no geocoder, and the call no longer throws.
+      if (window.google?.maps?.Geocoder) {
+        getAddressFormatted(formState?.changes?.address)
+        return
+      }
+      // redesign UF-R1 (F2, M-UF23): with Google, an address the geocoder cannot find is refused; without it the typed address
+      // would reach the API with no coordinates, which the delivery zones need. It is not saved: same inline error path,
+      // the form stays open with what was typed.
+      setAlertState({
+        open: true,
+        content: [t('USER_FORM_ADDRESS_MAPS_UNAVAILABLE', 'We can\'t check this address because the map didn\'t load. Try again in a moment.')]
+      })
       return
     }
 
@@ -251,9 +279,10 @@ const AddressFormUI = (props) => {
   const setMapErrors = (errKey) => {
     setAlertState({
       open: true,
+      // redesign UF-B5 (M-UF20): always a list, as the alert and the inline notices read it
       content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
         ? [t(errKey, mapErrors[errKey])]
-        : `${[t(errKey, mapErrors[errKey])]} ${maxLimitLocation} ${[t('METTERS', 'meters')]}`
+        : [`${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t('METTERS', 'meters')}`]
     })
   }
 
@@ -300,7 +329,8 @@ const AddressFormUI = (props) => {
 
     if (isEditing) {
       if (formState?.changes?.location) {
-        const prevLocation = { lat: Math.trunc(locationChange.lat), lng: Math.trunc(locationChange.lng) }
+        // redesign UF-B5 (M-UF19): an address saved without a location has no previous one to compare with
+        const prevLocation = { lat: Math.trunc(locationChange?.lat), lng: Math.trunc(locationChange?.lng) }
         const newLocation = { lat: Math.trunc(formState?.changes?.location?.lat), lng: Math.trunc(formState?.changes?.location?.lng) }
         if (prevLocation.lat !== newLocation.lat && prevLocation.lng !== newLocation.lng) {
           setLocationChange(formState?.changes?.location)
@@ -328,6 +358,11 @@ const AddressFormUI = (props) => {
     }
   }, [])
 
+  // The title takes the focus when the form opens.
+  useEffect(() => {
+    titleRef.current?.focus()
+  }, [])
+
   /** Form events control */
 
   useEffect(() => {
@@ -343,72 +378,80 @@ const AddressFormUI = (props) => {
     inputNames.forEach(field => {
       formMethods.register(field.name, {
         required: isRequiredField(field.name)
-          ? t(`VALIDATION_ERROR_${field.name}_REQUIRED`, `The field ${field.code} is required`)
+          // redesign UF-B5 (M-UF20): the key is upper case, like every VALIDATION_ERROR_<FIELD>_REQUIRED of the catalog
+          ? t(`VALIDATION_ERROR_${field.name.toUpperCase()}_REQUIRED`, `The field ${field.code} is required`)
           : null
       })
     })
   }, [formMethods])
 
+  const loading = configState.loading || addressState.loading
+  const isNew = Object.keys(props?.address ?? {}).length === 0
+  const fieldClass = (name) => name === 'address_notes' ? 'odc-steps-input odc-addr-notes' : 'odc-steps-input'
+  const alertMessages = [].concat(alertState.content).filter(Boolean)
+  const tagOptions = [
+    // redesign W0-4c (T0-15, decisión 19): address type uses HOME_ADDRESS; HOME is the menu.
+    { value: 'home', label: t('HOME_ADDRESS', 'Home') },
+    { value: 'office', label: t('OFFICE', 'Office') },
+    { value: 'favorite', label: t('ADDRESS_TAG_FAVORITE', 'Favorite') },
+    { value: 'other', label: t('MORE', 'More') }
+  ]
+
   return (
-    <div className='address-form'>
-      {(configState.loading || addressState.loading) && (
-        <WrapperSkeleton>
-          <Skeleton height={50} count={5} style={{ marginBottom: '10px' }} />
-        </WrapperSkeleton>
+    <div className='odc-addr-form'>
+      <h4 ref={titleRef} tabIndex={-1} className='odc-steps-heading' data-address-form-title=''>
+        {isNew ? t('ADD_ADDRESS', 'Add address') : t('EDIT_ADDRESS', 'Edit address')}
+      </h4>
+
+      {loading && (
+        <div className='odc-steps-list' aria-busy='true'>
+          {[0, 1, 2].map(index => <div key={index} className='odc-steps-skeleton-row'><ProductSkeleton size='60%' /></div>)}
+        </div>
       )}
 
-      {isSeletectedUserAddresses && (
-        <>
-          <Title>
-            {Object.keys(props?.address).length === 0
-              ? (
-                  t('ADD_ADDRESS', 'Add address')
-                )
-              : (
-                  t('EDIT_ADDRESS', 'Edit address')
-                )}
-          </Title>
-          <CloseButtonWrapper>
-            <IconButton
-              color='black'
-              onClick={() => onCancel()}
-            >
-              <XLg />
-            </IconButton>
-          </CloseButtonWrapper>
-        </>
-      )}
-
-      {!configState.loading && !addressState.loading && (
-        <FormControl
+      {!loading && (
+        <form
+          ref={formBodyRef}
+          className='odc-addr-form-body'
           onSubmit={formMethods.handleSubmit(onSubmit)}
           onKeyDown={(e) => checkKeyDown(e)}
           autoComplete='off'
         >
           {locationChange && (
-            <WrapperMap>
-              <GoogleMapsMap
-                apiKey={googleMapsApiKey}
-                location={locationChange}
-                fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
-                mapControls={googleMapsControls}
-                handleChangeAddressMap={handleChangeAddress}
-                setErrors={setMapErrors}
-                maxLimitLocation={maxLimitLocation}
-              />
-            </WrapperMap>
+            mapsFailed
+              ? <MapUnavailable />
+              : (
+                <StepBoundary
+                  fallback={<MapUnavailable focusTarget />}
+                  focusOnError={() => formBodyRef.current?.querySelector('[data-map-notice]')}
+                >
+                  <div className='odc-addr-map' role='region' aria-label={t('ADDRESS', 'Address')}>
+                    <GoogleMapsMap
+                      apiKey={googleMapsApiKey}
+                      fillContainer
+                      location={locationChange}
+                      fixedLocation={!isEditing ? firstLocationNoEdit.value : null}
+                      mapControls={googleMapsControls}
+                      handleChangeAddressMap={handleChangeAddress}
+                      setErrors={setMapErrors}
+                      maxLimitLocation={maxLimitLocation}
+                    />
+                  </div>
+                </StepBoundary>
+                )
           )}
 
           {inputNames.map(field => showField && showField(field.name) && (
             field.name === 'address'
               ? (
-              <React.Fragment key={field.name}>
-                <InputText>{t('ADDRESS', 'Addresss')}</InputText>
-                <AddressWrap className='google-control'>
-                  <WrapAddressInput>
-                    <HiOutlineLocationMarker />
+                <div key={field.name} className='odc-addr-field'>
+                  <label className='odc-addr-label' htmlFor={fieldId('address')}>{t('ADDRESS', 'Address')}</label>
+                  <div className='odc-addr-autocomplete'>
                     <GoogleAutocompleteInput
-                      className='input-autocomplete'
+                      className={fieldClass(field.name)}
+                      id={fieldId('address')}
+                      aria-invalid={Boolean(formMethods.errors.address)}
+                      aria-describedby={formMethods.errors.address ? fieldId('address-error') : undefined}
                       apiKey={googleMapsApiKey}
                       placeholder={t('ADDRESS', 'Address')}
                       onChangeAddress={(e) => {
@@ -430,131 +473,115 @@ const AddressFormUI = (props) => {
                       autoComplete='new-password'
                       countryCode={configState?.configs?.country_autocomplete?.value || '*'}
                     />
-                  </WrapAddressInput>
-                  <GoogleGpsButton
-                    className='gps-button'
-                    apiKey={googleMapsApiKey}
-                    onAddress={(e) => {
-                      formMethods.setValue('address', e.address)
-                      handleChangeAddress(e)
-                    }}
-                    onError={setMapErrors}
-                    IconButton={BiCurrentLocation}
-                    IconLoadingButton={CgSearchLoading}
-                  />
-                </AddressWrap>
-              </React.Fragment>
+                    <GoogleGpsButton
+                      className='gps-button'
+                      apiKey={googleMapsApiKey}
+                      onAddress={(e) => {
+                        formMethods.setValue('address', e.address)
+                        handleChangeAddress(e)
+                      }}
+                      onError={setMapErrors}
+                      IconButton={GpsIcon}
+                      IconLoadingButton={GpsLoadingIcon}
+                    />
+                  </div>
+                  {formMethods.errors.address && (
+                    <p id={fieldId('address-error')} className='odc-addr-error' role='alert'>{formMethods.errors.address.message}</p>
+                  )}
+                </div>
                 )
               : (
-              <React.Fragment key={field.name}>
-                {field.name !== 'address_notes'
-                  ? (
-                  <WrapInput
-                    className={field.name}
-                  >
-                    <InputText>{t(field.name.toUpperCase(), field.code)}</InputText>
-                    <Input
-                      placeholder={t(field.name.toUpperCase(), field.code)}
-                      value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
-                      onChange={(e) => {
-                        formMethods.setValue(field.name, e.target.value)
-                        handleChangeInput({ target: { name: field.name, value: e.target.value } })
-                      }}
-                      autoComplete='new-field'
-                      maxLength={30}
-                    />
-                  </WrapInput>
-                    )
-                  : (
-                  <WrapInput className='address_notes'>
-                    <InputText>{t('ADDRESS_NOTES', 'Address Notes')}</InputText>
-                    <TextArea
-                      rows={4}
-                      placeholder={t('ADDRESS_NOTES', 'Address Notes')}
-                      value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
-                      onChange={(e) => {
-                        formMethods.setValue('address_notes', e.target.value)
-                        handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
-                      }}
-                      autoComplete='new-field'
-                      maxLength={250}
-                    />
-                  </WrapInput>
-                    )}
-              </React.Fragment>
+                <div key={field.name} className='odc-addr-field'>
+                  <label className='odc-addr-label' htmlFor={fieldId(field.name)}>
+                    {field.name === 'address_notes' ? t('ADDRESS_NOTES', 'Address Notes') : t(field.name.toUpperCase(), field.code)}
+                  </label>
+                  {field.name !== 'address_notes'
+                    ? (
+                      <input
+                        id={fieldId(field.name)}
+                        name={field.name}
+                        className={fieldClass(field.name)}
+                        aria-invalid={Boolean(formMethods.errors[field.name])}
+                        aria-describedby={formMethods.errors[field.name] ? fieldId(`${field.name}-error`) : undefined}
+                        placeholder={t(field.name.toUpperCase(), field.code)}
+                        value={formState.changes?.[field.name] ?? addressState.address?.[field.name] ?? ''}
+                        onChange={(e) => {
+                          formMethods.setValue(field.name, e.target.value)
+                          handleChangeInput({ target: { name: field.name, value: e.target.value } })
+                        }}
+                        autoComplete='new-field'
+                        maxLength={30}
+                      />
+                      )
+                    : (
+                      <textarea
+                        id={fieldId('address_notes')}
+                        name='address_notes'
+                        className={fieldClass(field.name)}
+                        aria-invalid={Boolean(formMethods.errors.address_notes)}
+                        aria-describedby={formMethods.errors.address_notes ? fieldId('address_notes-error') : undefined}
+                        rows={4}
+                        placeholder={t('ADDRESS_NOTES', 'Address Notes')}
+                        value={formState.changes?.address_notes ?? addressState.address.address_notes ?? ''}
+                        onChange={(e) => {
+                          formMethods.setValue('address_notes', e.target.value)
+                          handleChangeInput({ target: { name: 'address_notes', value: e.target.value } })
+                        }}
+                        autoComplete='new-field'
+                        maxLength={250}
+                      />
+                      )}
+                  {formMethods.errors[field.name] && (
+                    <p id={fieldId(`${field.name}-error`)} className='odc-addr-error' role='alert'>{formMethods.errors[field.name].message}</p>
+                  )}
+                </div>
                 )
           ))}
 
-          {!formState.loading && formState.error && <p style={{ color: '#c10000' }}>{formState.error}</p>}
+          <div className='odc-addr-field'>
+            <span className='odc-addr-label'>{t('ADDRESS_TYPE', 'Address type')}</span>
+            <SegmentedControl
+              label={t('ADDRESS_TYPE', 'Address type')}
+              value={addressTag ?? ''}
+              onValueChange={handleAddressTag}
+              options={tagOptions}
+            />
+          </div>
 
-          <AddressTagSection>
-            <TagButton
-              type='button'
-              active={addressTag === 'home' ? 'active' : ''}
-              onClick={() => handleAddressTag('home')}
+          {!formState.loading && formState.error && <InlineNotice tone='danger' role='alert'>{formState.error}</InlineNotice>}
+          {alertState.open && alertMessages.length > 0 && alertMessages.map((message, index) => (
+            <InlineNotice
+              key={`${index}-${message}`}
+              tone='danger'
+              role='alert'
+              action={index === alertMessages.length - 1
+                ? <ProductButton variant='link' size='sm' onClick={closeAlert}>{t('ACCEPT', 'Accept')}</ProductButton>
+                : undefined}
             >
-              <HouseDoor />
-              {t('HOME', 'Home')}
-            </TagButton>
-            <TagButton
-              type='button'
-              active={addressTag === 'office' ? 'active' : ''}
-              onClick={() => handleAddressTag('office')}
-            >
-              <Building />
-              {t('OFFICE', 'Office')}
-            </TagButton>
-            <TagButton
-              type='button'
-              active={addressTag === 'favorite' ? 'active' : ''}
-              onClick={() => handleAddressTag('favorite')}
-            >
-              <SuitHeart />
-              {t('ADDRESS_TAG_FAVORITE', 'Favorite')}
-            </TagButton>
-            <TagButton
-              type='button'
-              active={addressTag === 'other' ? 'active' : ''}
-              onClick={() => handleAddressTag('other')}
-            >
-              <PlusLg />
-              {t('MORE', 'More')}
-            </TagButton>
-          </AddressTagSection>
-          <FormActions>
-            <Button
-              id='submit-btn'
+              {message}
+            </InlineNotice>
+          ))}
+
+          <div className='odc-addr-actions'>
+            <ProductButton onClick={() => onCancel && onCancel()}>{t('CANCEL', 'Cancel')}</ProductButton>
+            <ProductButton
               type='submit'
-              borderRadius='5px'
+              variant='primary'
+              busy={Boolean(formState.loading)}
               disabled={formState.loading || Object.keys(formState?.changes).length === 0}
-              color='primary'
             >
-              {!formState.loading
-                ? (
-                    isEditing || (!auth && orderState.options?.address?.address)
-                      ? t('SAVE', 'SAVE')
-                      : t('ADD', 'Add')
-                  )
-                : (
-                    t('LOADING', 'Loading')
-                  )}
-            </Button>
-          </FormActions>
-        </FormControl>
+              {isEditing || (!auth && orderState.options?.address?.address)
+                ? t('SAVE', 'Save')
+                : t('ADD', 'Add')}
+            </ProductButton>
+          </div>
+        </form>
       )}
-
-      <Alert
-        title={t('ADDRESS', 'Address')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
-        onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
-      />
     </div>
   )
 }
+
+export { AddressFormUI }
 
 export const AddressForm = (props) => {
   const googleMapsControls = {

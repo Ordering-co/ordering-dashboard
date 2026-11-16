@@ -18,9 +18,9 @@ export const UsersDeleteButton = (props) => {
   const handleModalOpen = () => {
     setConfirmAdmin({
       open: true,
-      handleOnConfirm: (code) => {
+      handleOnConfirm: (token) => {
         setConfirmAdmin({ ...confirmAdmin, open: false })
-        handleDeleteSeveralUsers(code)
+        handleDeleteSeveralUsers(token)
       }
     })
   }
@@ -46,6 +46,7 @@ export const UsersDeleteButton = (props) => {
       </Button>
       <ConfirmAdmin
         open={confirmAdmin.open}
+        action='users_delete'
         onClose={() => setConfirmAdmin({ ...confirmAdmin, open: false })}
         onConfirm={confirmAdmin.handleOnConfirm}
       />

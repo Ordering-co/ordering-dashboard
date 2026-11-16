@@ -9,7 +9,8 @@ const api = vi.hoisted(() => ({
   requestBuilderBuild: vi.fn(),
   cancelBuilderBuild: vi.fn(),
   updateBuilderProductStatus: vi.fn(),
-  listBuilderBuilds: vi.fn()
+  listBuilderBuilds: vi.fn(),
+  createBuilderInstallLink: vi.fn()
 }))
 
 const sockets = vi.hoisted(() => {
@@ -67,6 +68,7 @@ describe('BuilderProductDetail builds', () => {
     api.getBuilderProduct.mockResolvedValue(ok(product))
     api.getBuilderAppChecks.mockResolvedValue(ok({ platforms: {} }))
     api.getBuilderLatestBuilds.mockResolvedValue(ok(latest))
+    api.listBuilderBuilds.mockResolvedValue(ok([], { pagination: { total_pages: 0 } }))
     sockets.socket.join.mockClear()
   })
 
@@ -77,7 +79,16 @@ describe('BuilderProductDetail builds', () => {
     expect(api.getBuilderLatestBuilds).toHaveBeenCalledWith(expect.anything(), 'tok', '41', 310)
     expect(ui.current.latestBuildsState.platforms.ios.latest.status).toBe('building')
     expect(sockets.socket.join).toHaveBeenCalledWith({ project: 'development', room: 'builder_app_builds', user_id: 7, role: 'manager' })
-    expect(ui.current.adHocInstallUrl).toBe('http://api/v400/en/development/builder/apps/310/downloads/ios/ad-hoc/ipa')
+  })
+
+  it('asks for the install link of an attempt', async () => {
+    const link = { url: 'https://files.test/install', expires_at: '2026-10-09T10:50:00Z', platform: 'android', mode: 'release', file: 'apk' }
+    api.createBuilderInstallLink.mockResolvedValueOnce(ok(link))
+    const ui = await renderDetail()
+    let answer
+    await act(async () => { answer = await ui.current.createInstallLink(9) })
+    expect(api.createBuilderInstallLink).toHaveBeenCalledWith(expect.anything(), 'tok', '41', 310, 9)
+    expect(answer).toEqual({ ok: true, result: link, errorCodes: [], checks: null })
   })
 
   it('shows a requested build as the latest and reloads the history', async () => {
@@ -160,6 +171,47 @@ describe('BuilderProductDetail builds', () => {
     expect(ui.current.latestBuildsState.platforms.ios.latest.status).toBe('cancelled')
     await act(async () => { vi.advanceTimersByTime(1000) })
     expect(api.getBuilderLatestBuilds).toHaveBeenCalledTimes(2)
+  })
+
+  // the Builds card's tabs: the latest attempt of each file type comes from the history
+  it('reads the history, 50 at a time, until every file type has its attempt', async () => {
+    const page = (from, count, fields) => Array.from({ length: count }, (_, index) => attempt({ id: from - index, ...fields(index) }))
+    api.listBuilderBuilds
+      .mockResolvedValueOnce(ok(page(200, 50, () => ({ platform: 'android', mode: 'release', type: 'bundle' })), { pagination: { total_pages: 9 } }))
+      .mockResolvedValueOnce(ok(page(150, 50, (index) => index === 0
+        ? { platform: 'android', mode: 'release', type: 'assemble', status: 'successful' }
+        : { mode: index % 2 ? 'ad-hoc' : 'app-store' }), { pagination: { total_pages: 9 } }))
+      .mockResolvedValueOnce(ok(page(100, 50, (index) => index === 0 ? { platform: 'android', mode: 'debug', type: 'assemble' } : {}), { pagination: { total_pages: 9 } }))
+    const ui = await renderDetail()
+    await waitFor(() => expect(ui.current.buildAttemptsState.loading).toBe(false))
+    expect(api.listBuilderBuilds).toHaveBeenCalledTimes(3)
+    expect(api.listBuilderBuilds).toHaveBeenNthCalledWith(1, expect.anything(), 'tok', '41', 310, { page: 1, pageSize: 50 })
+    expect(api.listBuilderBuilds).toHaveBeenNthCalledWith(3, expect.anything(), 'tok', '41', 310, { page: 3, pageSize: 50 })
+    expect(ui.current.buildAttemptsState.attempts).toHaveLength(150)
+    expect(ui.current.buildAttemptsState.error).toBe(false)
+  })
+
+  it('stops reading the history at its last page, and at four pages', async () => {
+    api.listBuilderBuilds.mockResolvedValueOnce(ok([attempt({ id: 2 })], { pagination: { total_pages: 1 } }))
+    let ui = await renderDetail()
+    await waitFor(() => expect(ui.current.buildAttemptsState.attempts).toHaveLength(1))
+    expect(api.listBuilderBuilds).toHaveBeenCalledTimes(1)
+
+    api.listBuilderBuilds.mockReset().mockImplementation(async (_o, _t, _p, _a, { page }) =>
+      ok(Array.from({ length: 50 }, (_, index) => attempt({ id: 1000 - page * 50 - index })), { pagination: { total_pages: 20 } }))
+    ui = await renderDetail()
+    await waitFor(() => expect(ui.current.buildAttemptsState.attempts).toHaveLength(200))
+    expect(api.listBuilderBuilds).toHaveBeenCalledTimes(4)
+  })
+
+  it('says the attempts could not load, and reads them again with the latest state', async () => {
+    api.listBuilderBuilds.mockResolvedValueOnce(fail(500, []))
+    const ui = await renderDetail()
+    await waitFor(() => expect(ui.current.buildAttemptsState.error).toBe(true))
+    await act(async () => { ui.current.reloadLatestBuilds() })
+    await waitFor(() => expect(ui.current.buildAttemptsState.error).toBe(false))
+    expect(api.getBuilderLatestBuilds).toHaveBeenCalledTimes(2)
+    expect(api.listBuilderBuilds).toHaveBeenCalledTimes(2)
   })
 
   it('checks again for pending changes after a save, only when a build could be behind', async () => {

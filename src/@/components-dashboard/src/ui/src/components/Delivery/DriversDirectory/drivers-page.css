@@ -1,0 +1,52 @@
+/*
+ * redesign DL-B5 (decision 1 | M-DL13) · Drivers page: the frame of the list beside the driver panel (split view) and its foot.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The header and the filter row, the table and the panel have their own files (drivers-filters.css, drivers-table.css, driver-panel.css).
+ */
+
+/* The page height, shared by the list and the panel (as /orders and /users/customers). */
+.odc-split.odc-dlp-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header and filters, selection bar, table and foot, one under the other. */
+.odc-dlp-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-dlp-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-dlp-frame {
+    display: none;
+  }
+}
+
+/* ── Foot: the pagination (the old «Add new driver» of the foot is the header's «Add driver» and the empty state's) ── */
+.odc-dlp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dlp-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}

@@ -1,81 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { useWindowSize } from '../../../hooks/useWindowSize'
-// import { useLanguage } from '../../../../../index'
-import {
-  Container,
-  Header,
-  LeftHeader
-  // Tabs,
-  // Tab
-} from './styles'
-import { IconButton } from '../../../styles'
-import { XLg } from 'react-bootstrap-icons'
+import React from 'react'
 import { FacebookProfile } from './FacebookProfile'
-import { FacebookPost } from './FacebookPost'
 
-export const BusinessSalesFacebook = (props) => {
-  const { onClose, socialItem, storeUrl } = props
-
-  const { width } = useWindowSize()
-  // const [, t] = useLanguage()
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [selectedTab] = useState('profile')
-
-  // const tabList = [
-  //   { key: 'profile', title: t('PROFILE', 'Profile') },
-  //   { key: 'post', title: t('POST', 'Post') }
-  // ]
-
-  const actionSidebar = (value) => {
-    if (!value) {
-      onClose && onClose()
-    }
-    setIsMenuOpen(value)
-    document.getElementById('businessSocial').style.width = value
-      ? width > 1000 ? '500px' : '100%'
-      : '0'
-  }
-
-  useEffect(() => {
-    if (isMenuOpen) {
-      if (width < 1000) {
-        document.getElementById('businessSocial').style.width = '100%'
-      } else {
-        document.getElementById('businessSocial').style.width = '500px'
-      }
-    }
-  }, [width])
-
-  useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open])
-
-  return (
-    <Container id='businessSocial'>
-      <Header>
-        <LeftHeader>
-          <img src={socialItem.icon} alt='' />
-          <h2>{socialItem.name}</h2>
-        </LeftHeader>
-        <IconButton onClick={onClose} color='black'>
-          <XLg />
-        </IconButton>
-      </Header>
-      {/* <Tabs>
-        {tabList.map(item => (
-          <Tab
-            key={item.key}
-            onClick={() => setSelectedTab(item.key)}
-            active={selectedTab === item.key}
-          >
-            {item.title}
-          </Tab>
-        ))}
-      </Tabs> */}
-      {selectedTab === 'profile' && <FacebookProfile storeUrl={storeUrl} />}
-      {selectedTab === 'post' && <FacebookPost />}
-    </Container>
-  )
-}
+// redesign stores 5.15b (; G5-04, G5-10, G5-11, G5-13): the Facebook guide, drawn inside BusinessSalesChannel's
+// P/SectionSplit (which owns its title, X and «‹ Back»). Only the page button guide: the «Post» tab was already commented out in
+// main and stays out (decision 8: FacebookPost.js and the styles.js only it read were deleted as dead code, ).
+export const BusinessSalesFacebook = ({ link }) => (
+  <div className='odc-sales-guide'>
+    <FacebookProfile link={link} />
+  </div>
+)

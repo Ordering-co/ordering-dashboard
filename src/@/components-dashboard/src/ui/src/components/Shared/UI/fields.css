@@ -1,0 +1,104 @@
+.od-ui:where(.od-field) {
+  @apply od-box-border;
+  background: var(--od-field-surface);
+  color: var(--od-field-text);
+  border: 1px solid var(--od-field-border);
+  border-radius: var(--od-field-radius);
+  font-family: var(--od-field-font);
+  font-size: var(--od-field-font-size);
+  outline: none;
+  transition:
+    background-color var(--od-field-duration) var(--od-field-easing),
+    border-color var(--od-field-duration) var(--od-field-easing),
+    color var(--od-field-duration) var(--od-field-easing);
+}
+
+.od-ui:where(.od-field):hover:not(:disabled):not(:read-only) {
+  border-color: var(--od-field-border-strong);
+}
+
+.od-ui:where(.od-field):focus {
+  border-color: var(--od-field-focus);
+}
+
+.od-ui:where(.od-field):focus-visible {
+  outline: var(--od-field-focus-width) solid var(--od-field-focus);
+  outline-offset: var(--od-field-focus-offset);
+}
+
+.od-ui:where(.od-field)::placeholder,
+.od-ui:where(.od-field)::-webkit-input-placeholder {
+  color: var(--od-field-text-subtle);
+  opacity: 1;
+}
+
+.od-ui:where(.od-field):-ms-input-placeholder {
+  color: var(--od-field-text-subtle);
+}
+
+.od-ui:where(.od-field):read-only,
+.od-ui:where(.od-field):disabled {
+  background-color: var(--od-field-surface-subtle);
+  color: var(--od-field-text-muted);
+  cursor: not-allowed;
+  border-color: var(--od-field-border);
+}
+
+.od-ui:where(.od-field):disabled {
+  opacity: 0.6;
+}
+
+.od-ui:where(.od-field)[aria-invalid='true'] {
+  border-color: var(--od-field-danger);
+}
+
+.od-ui:where(.od-field-primary) {
+  background: var(--od-field-surface);
+  color: var(--od-field-action-content);
+  border-color: var(--od-field-action);
+}
+
+.od-ui:where(.od-field-primary):focus {
+  border-color: var(--od-field-focus);
+}
+
+.od-ui:where(.od-field-secondary) {
+  background: var(--od-field-surface);
+  color: var(--od-field-secondary-content);
+  border-color: var(--od-field-secondary-border);
+}
+
+.od-ui:where(.od-field-secondary):focus {
+  border-color: var(--od-field-focus);
+}
+
+.od-ui:where(.od-field-input) {
+  min-height: var(--od-field-compact-height);
+  line-height: calc(var(--od-field-compact-height) - 2px);
+  padding: 0 10px;
+}
+
+.od-ui:where(.od-field-textarea) {
+  @apply od-resize-none;
+  min-height: var(--od-field-compact-height);
+  line-height: 1.4;
+  padding: 6px 10px;
+}
+
+.od-ui:where(.od-input-group) {
+  @apply od-flex;
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-field-input),
+  .od-ui:where(.od-field-textarea) {
+    min-height: var(--od-field-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-field) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

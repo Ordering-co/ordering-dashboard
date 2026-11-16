@@ -1,0 +1,130 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-d2-taxes-fees-markups-misc-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "d2-servicedetail-container-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d2-servicedetail-uploadimageicon-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d2-servicedetail-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d2-servicedetail-option-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "Option",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "d2-servicedetail-selectwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d2-servicedetail-selectwrapper-div-----div-first-child-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "SelectWrapper",
+   "property": "font-size",
+   "context": "> div > > div:first-child",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "d2-servicedetail-timeblock-select-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "TimeBlock",
+   "property": "font-size",
+   "context": "> select",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "d2-servicedetail-propertyoption-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ServiceDetail/styles.js",
+   "component": "PropertyOption",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "d2-brandwhitelabel-headercontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BrandWhiteLabel/styles.js",
+   "component": "HeaderContainer",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "d2-brandwhitelabel-headercontainer-p-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BrandWhiteLabel/styles.js",
+   "component": "HeaderContainer",
+   "property": "font-size",
+   "context": "p",
+   "match": "13px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "d2-brandwhitelabel-sectiontitle-root-15px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BrandWhiteLabel/styles.js",
+   "component": "SectionTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "15px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "d2-brandwhitelabel-emptywrapper-root-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BrandWhiteLabel/styles.js",
+   "component": "EmptyWrapper",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "13px",
+   "replace": "var(--od-type-secondary-size)"
+  }
+ ],
+ "preservations": []
+}

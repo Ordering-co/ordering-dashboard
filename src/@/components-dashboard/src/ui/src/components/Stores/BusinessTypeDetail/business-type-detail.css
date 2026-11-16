@@ -1,0 +1,29 @@
+/*
+ * redesign stores 5.2 · The detail of a business type inside the P/SectionSplit of Categories: image, name and the save
+ * bar at the foot. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ *
+ * The form is a flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as SEO, 5.1b).
+ */
+
+.odc-bt-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-bt-form:focus { outline: none; }
+
+/* The image keeps a card's width; it does not stretch across a wide panel. */
+.odc-bt-form > .odc-image-field {
+  max-inline-size: calc(var(--od-x-control-height) * 12);
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as SEO). */
+.odc-bt-form :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

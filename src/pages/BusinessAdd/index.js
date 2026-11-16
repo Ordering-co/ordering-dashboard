@@ -8,7 +8,7 @@ export const BusinessAdd = (props) => {
 
   const businessAddProps = {
     placeId,
-    googleBusiness: state?.googleBusiness,
+    continueTutorial: state?.continueTutorial,
     ...props
   }
 

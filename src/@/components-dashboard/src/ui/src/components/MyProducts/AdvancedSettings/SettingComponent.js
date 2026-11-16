@@ -4,6 +4,7 @@ import { Select } from '../../../styles/Select/FirstSelect'
 import { ColorPicker } from '../../Shared'
 import { Input } from '../../../styles'
 import { HideCheckBox } from './HideCheckBox'
+import { DEFAULT_SETTING_COLOR } from './themeDefaults'
 import { ImageBox } from './ImageBox'
 import {
   FormControl,
@@ -76,7 +77,7 @@ export const SettingComponent = (props) => {
             <FormControl>
               <label>{setting.name}</label>
               <ColorPicker
-                defaultColor={deepFind(advancedValues, setting?.path) || '#2C7BE5'}
+                defaultColor={deepFind(advancedValues, setting?.path) || DEFAULT_SETTING_COLOR}
                 onChangeColor={(color) => handleUpdateThemeValue(color, setting?.path)}
               />
             </FormControl>

@@ -1,0 +1,98 @@
+/*
+ * redesign stores 5.12 (, E2) · The add / edit form of a tax or a product fee. Values: --od-* and --od-x-* only
+ * (guard: productLiteralGuard.test.js). Logical properties only. Two layouts share it: `modal` (a footer with Accept / Close, inside
+ * the legacy Modal of S/ProductDetailsAdvanced) and `panel` (a P/SaveBar at the foot, inside the P/SectionSplit of
+ * S/BusinessTaxAndFees).
+ *
+ * The form is a flex column on purpose: the P/SaveBar of the panel is `position: sticky`, and a grid item could not stick.
+ */
+
+.odc-etm-form {
+  display: flex;
+  flex-direction: column;
+  /* >= 12px between stacked fields keeps their 44px touch areas from crossing (field.css) */
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-etm-form:focus { outline: none; }
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as the other panels). */
+.odc-etm-form :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* In the modal the fields keep a readable width instead of stretching across 80% of the screen. */
+.odc-etm-form[data-layout='modal'] > .odc-field,
+.odc-etm-form[data-layout='modal'] > .odc-radiogroup,
+.odc-etm-form[data-layout='modal'] > .odc-etm-rates {
+  max-inline-size: calc(var(--od-space-10) * 6);
+}
+
+/* ── Rates by order type: a disclosure and its group ── */
+.odc-etm-rates {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-etm-rates-toggle {
+  align-self: flex-start;
+}
+
+.odc-etm-rates-toggle .odc-icon {
+  transition: rotate var(--od-duration-fast) ease;
+}
+
+.odc-etm-rates-toggle[aria-expanded='true'] .odc-icon {
+  rotate: 180deg;
+}
+
+.odc-etm-rates-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-etm-rate-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-etm-rate-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Footer of the modal layout ── */
+.odc-etm-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-4);
+}
+
+.odc-etm-notice {
+  flex-basis: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-etm-rates-toggle .odc-icon { transition: none; }
+}

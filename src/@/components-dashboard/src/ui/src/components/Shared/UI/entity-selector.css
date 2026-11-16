@@ -1,0 +1,6 @@
+/* Match the governed boot skeleton roles without replacing the specialized widget. */
+.od-ui[data-slot='entity-selector'] .react-loading-skeleton,
+.od-ui.od-city-selector-loading .react-loading-skeleton {
+  --base-color: var(--od-entity-selector-border);
+  --highlight-color: var(--od-entity-selector-surface);
+}

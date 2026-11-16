@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-delivery-1-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "group-setting-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverGroupSetting/styles.js",
+      "component": "DriverGroupItem",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "advanced-log-heading",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "thead > tr > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "advanced-log-content",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "> tbody > td,\n    th[scope='row']",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "advanced-log-user",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "UserInfoContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "advanced-log-time",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "DateTimeWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "advanced-log-empty",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "NoData",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "advanced-log-event",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversAdvancedLogs/styles.js",
+      "component": "EventTypeContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "group-checkbox-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverGroupSetting/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This exact font-size controls the group checkbox glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    }
+  ]
+}

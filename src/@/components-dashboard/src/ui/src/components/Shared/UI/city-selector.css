@@ -1,0 +1,64 @@
+/* Scoped CitySelector surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-city-selector-option) {
+  box-sizing: border-box;
+  max-width: 300px;
+  overflow: hidden;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-city-selector-placeholder) {
+  max-width: 200px;
+}
+
+.od-ui:where(.od-city-selector-loading) {
+  @apply od-h-full od-w-full;
+  min-height: var(--od-entity-selector-touch-target);
+  color: var(--od-entity-selector-muted);
+}
+
+.od-ui:where(.od-city-selector-loading) > span,
+.od-ui:where(.od-city-selector-loading) .react-loading-skeleton {
+  display: block;
+  height: 100%;
+}
+
+@media (max-width: 480px), (pointer: coarse) {
+  .od-ui.od-multi-select-root.od-city-multi-select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .od-ui.od-multi-select-root.od-city-multi-select > .od-multi-select-options {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+
+  .od-ui.od-multi-select-root.od-city-multi-select .od-multi-select-options-inner,
+  .od-ui.od-multi-select-root.od-city-multi-select .od-multi-select-option {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .od-ui.od-multi-select-root.od-city-multi-select .od-multi-select-option {
+    overflow: hidden;
+  }
+
+  .od-ui.od-multi-select-root.od-city-multi-select .od-city-selector-option {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+}

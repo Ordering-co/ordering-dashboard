@@ -1,0 +1,130 @@
+/*
+ * redesign SC-B3 · /schools, Students: the panel of a student (class, diet, guardians) and the cells of the list.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js, and students.css.test.js for this file). Logical properties only.
+ * Class prefix odc-school-student-.
+ */
+
+/* ── The list: names wrap instead of cutting, a card's lines are quiet ── */
+.odc-school-student-name {
+  overflow-wrap: anywhere;
+}
+
+.odc-school-student-card-line {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* ── The panel: sections with a hairline on top and one rhythm; the first has none ── */
+.odc-school-student-body {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-school-student-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-school-student-section:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.odc-school-student-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* a term over its value: label muted, value in body text */
+.odc-school-student-facts {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.odc-school-student-fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-school-student-fact dt {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-school-student-fact dd {
+  margin: 0;
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+/* ── Guardians: one row each, the name (and email) at the start and Remove at the end; it wraps in a narrow panel ── */
+.odc-school-student-guardians {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-inline-size: 0;
+}
+
+.odc-school-student-guardian {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-school-student-guardian-name {
+  flex: 1 1 var(--od-x-menu-min);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-school-student-muted {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Assign parent: the picker takes the room, the button sits at its end and lines up with the control ── */
+.odc-school-student-assign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-school-student-assign > .odc-field {
+  flex: 1 1 var(--od-x-menu-min);
+  min-inline-size: 0;
+}
+
+/* ── Loading: the shape of the body ── */
+.odc-school-student-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}

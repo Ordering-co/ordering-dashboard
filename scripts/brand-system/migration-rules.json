@@ -1,0 +1,1301 @@
+{
+  "schemaVersion": 1,
+  "id": "l1-app-boot-loader",
+  "rules": [
+    {
+      "id": "boot-shell-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#F8F9FA'",
+      "replace": "props => props.theme.ordering?.semantic.background ?? (props.theme.colors.backgroundPage || '#F8F9FA')"
+    },
+    {
+      "id": "boot-shell-text",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "color",
+      "match": "props => props.theme.colors.headingColor",
+      "replace": "props => props.theme.ordering?.semantic.text.default ?? props.theme.colors.headingColor"
+    },
+    {
+      "id": "boot-sidebar-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-sidebar-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#FFF'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')"
+    },
+    {
+      "id": "boot-sidebar-rtl-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "border-left",
+      "match": "props.theme.colors.borderColor",
+      "replace": "props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-sidebar-footer-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooter",
+      "property": "border-top",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-welcome-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-welcome-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#FFF'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')"
+    },
+    {
+      "id": "boot-metric-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-metric-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#FFF'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')"
+    },
+    {
+      "id": "boot-chart-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-chart-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#FFF'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')"
+    },
+    {
+      "id": "boot-service-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    },
+    {
+      "id": "boot-service-background",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage || '#FFF'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.backgroundPage || '#FFF')"
+    },
+    {
+      "id": "boot-bone-base",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "background",
+      "match": "props => props.theme.colors.gray || '#DEE2E6'",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? (props.theme.colors.gray || '#DEE2E6')"
+    },
+    {
+      "id": "boot-bone-highlight",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "background",
+      "match": "props => props.theme.colors.secundary || '#F8F9FA'",
+      "replace": "props => props.theme.ordering?.semantic.surface.default ?? (props.theme.colors.secundary || '#F8F9FA')"
+    },
+    {
+      "id": "boot-canonical-shell-font-family",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "font-family",
+      "match": "props => props.theme.ordering?.font.family.sans ?? 'inherit'",
+      "replace": "props => props.theme.ordering?.font.family.sans ?? 'inherit'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-shell-font-size",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "font-size",
+      "match": "props => props.theme.ordering?.font.size.productUi ?? 'inherit'",
+      "replace": "props => props.theme.ordering?.font.size.productUi ?? 'inherit'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-shell-font-weight",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "font-weight",
+      "match": "props => props.theme.ordering?.font.weight.regular ?? 'inherit'",
+      "replace": "props => props.theme.ordering?.font.weight.regular ?? 'inherit'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-shell-line-height",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "line-height",
+      "match": "props => props.theme.ordering?.font.lineHeight.body ?? 'inherit'",
+      "replace": "props => props.theme.ordering?.font.lineHeight.body ?? 'inherit'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-welcomeblock-border-radius",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "border-radius",
+      "match": "props => props.theme.ordering?.radius.panel ?? '8px'",
+      "replace": "props => props.theme.ordering?.radius.panel ?? '8px'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-welcomeblock-box-shadow",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "box-shadow",
+      "match": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "replace": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-metriccard-border-radius",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "border-radius",
+      "match": "props => props.theme.ordering?.radius.panel ?? '7.6px'",
+      "replace": "props => props.theme.ordering?.radius.panel ?? '7.6px'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-metriccard-box-shadow",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "box-shadow",
+      "match": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "replace": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-chartpanel-border-radius",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "border-radius",
+      "match": "props => props.theme.ordering?.radius.panel ?? '7.6px'",
+      "replace": "props => props.theme.ordering?.radius.panel ?? '7.6px'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-chartpanel-box-shadow",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "box-shadow",
+      "match": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "replace": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-servicecard-border-radius",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "border-radius",
+      "match": "props => props.theme.ordering?.radius.panel ?? '8px'",
+      "replace": "props => props.theme.ordering?.radius.panel ?? '8px'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-servicecard-box-shadow",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "box-shadow",
+      "match": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "replace": "props => props.theme.ordering?.shadow[1] ?? `0 1px 4px ${props.theme.colors.borderColor}`",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-canonical-bone-border-radius",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "border-radius",
+      "match": "props => props.$radius || props.theme.ordering?.radius.component || '6px'",
+      "replace": "props => props.$radius || props.theme.ordering?.radius.component || '6px'",
+      "reason": "Reviewed scoped canonical role; legacy branch preserves the existing computed presentation."
+    },
+    {
+      "id": "boot-whatsapp-route-row-border",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteRow",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "replace": "props => props.theme.ordering?.semantic.border.default ?? props.theme.colors.borderColor"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "boot-layout-18e064f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "width",
+      "match": "100%",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-a7addeec",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "min-height",
+      "match": "100vh",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-ef3b6370",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Shell",
+      "property": "min-height",
+      "match": "100dvh",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-b2dbf0f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SrOnly",
+      "property": "width",
+      "match": "1px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-7704ec97",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SrOnly",
+      "property": "height",
+      "match": "1px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-56c22027",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SrOnly",
+      "property": "padding",
+      "match": "0",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-66db34bd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SrOnly",
+      "property": "margin",
+      "match": "-1px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-afce4cf5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "width",
+      "match": "248px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-00c1d10d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "padding",
+      "match": "20px 16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-807212e9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "gap",
+      "match": "22px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-b277b1c9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "min-height",
+      "match": "100vh",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-3985a6fc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "min-height",
+      "match": "100dvh",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-1b3fe525",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarLogo",
+      "property": "width",
+      "match": "112px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-fa7147f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarLogo",
+      "property": "height",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-2a23dcad",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarNav",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-bb69f33e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarNavRow",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-6afbdacb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarNavRow",
+      "property": "min-height",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-a8061497",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooter",
+      "property": "gap",
+      "match": "8px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-161e45d6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooter",
+      "property": "margin-top",
+      "match": "auto",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-122396e2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooter",
+      "property": "padding-top",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-3bcdd9d0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooterRow",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-8f43af0d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SidebarFooterRow",
+      "property": "min-height",
+      "match": "32px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-6d6d0463",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Main",
+      "property": "min-width",
+      "match": "0",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-ea60b137",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Main",
+      "property": "padding",
+      "match": "20px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-2f1e4683",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Main",
+      "property": "padding",
+      "match": "20px 25px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-99fa09ee",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Main",
+      "property": "padding-right",
+      "match": "80px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-c4c376ef",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "BreadcrumbRow",
+      "property": "width",
+      "match": "88px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-90ba9591",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "BreadcrumbRow",
+      "property": "height",
+      "match": "22px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-57fc206c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "BreadcrumbRow",
+      "property": "margin",
+      "match": "10px 0 36px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-88d5c895",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "gap",
+      "match": "24px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-057381af",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "min-height",
+      "match": "180px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-cf2ca830",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "margin-bottom",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-f91ce50e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "padding",
+      "match": "20px 24px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-2c7e38e4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "padding",
+      "match": "20px 30px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-491258c8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeBlock",
+      "property": "min-height",
+      "match": "200px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-e74a4a1d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeCopy",
+      "property": "gap",
+      "match": "12px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-0a79920d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeCopy",
+      "property": "min-width",
+      "match": "0",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-0922d449",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeTitle",
+      "property": "width",
+      "match": "min(360px, 80%)",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-530f017b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeTitle",
+      "property": "height",
+      "match": "36px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-297e07c1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeLine",
+      "property": "width",
+      "match": "min(420px, 90%)",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-e94331eb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeLine",
+      "property": "height",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-3dccfc27",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeActions",
+      "property": "gap",
+      "match": "12px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-a430ae35",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeActions",
+      "property": "margin-top",
+      "match": "6px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-67a61315",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeIllustration",
+      "property": "width",
+      "match": "min(280px, 36%)",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-efe79afb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WelcomeIllustration",
+      "property": "height",
+      "match": "148px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-3db5bc86",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricsRow",
+      "property": "gap",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-510e34b6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "min-height",
+      "match": "108px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-b97e4f16",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCard",
+      "property": "padding",
+      "match": "20px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-0ff1baf1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricCopy",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-0a106657",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricLabel",
+      "property": "width",
+      "match": "110px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-381eb6fb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricLabel",
+      "property": "height",
+      "match": "14px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-84f8dc83",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricValue",
+      "property": "width",
+      "match": "88px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-6f31ac69",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricValue",
+      "property": "height",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-d141b6d5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricIcon",
+      "property": "width",
+      "match": "63px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-77d70125",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricIcon",
+      "property": "height",
+      "match": "63px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-b196a421",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ReportsRow",
+      "property": "gap",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-8d2af143",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ReportsRow",
+      "property": "margin-top",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-fa854104",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "min-height",
+      "match": "360px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-3b8fca96",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "padding",
+      "match": "20px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-2c3da16a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartPanel",
+      "property": "width",
+      "match": "49%",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-c24d0ad1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartHeader",
+      "property": "width",
+      "match": "160px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-2debb519",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartHeader",
+      "property": "height",
+      "match": "14px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-28ce8d70",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartHeader",
+      "property": "margin-bottom",
+      "match": "12px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-6cfb2226",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartBody",
+      "property": "width",
+      "match": "100%",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-41ee897b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartBody",
+      "property": "min-height",
+      "match": "300px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-f73698d7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartBody",
+      "property": "height",
+      "match": "300px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-8880d4a3",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "TilesColumn",
+      "property": "gap",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-1f4c50ad",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "TilesColumn",
+      "property": "width",
+      "match": "46%",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-36eda701",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "LowerRow",
+      "property": "gap",
+      "match": "20px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-fe8e1183",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "LowerRow",
+      "property": "margin-top",
+      "match": "28px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-93f85a31",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "min-height",
+      "match": "150px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-f63f07ce",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCard",
+      "property": "padding",
+      "match": "20px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-070c75dc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCardBody",
+      "property": "gap",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-f36eb00f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceIcon",
+      "property": "width",
+      "match": "72px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-e5be2ff6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceIcon",
+      "property": "height",
+      "match": "72px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-5a5b90f5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCopy",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-b0a3e289",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCopy",
+      "property": "min-width",
+      "match": "0",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-62bba67a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceCardFooter",
+      "property": "margin-top",
+      "match": "16px",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-aee17b2c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "animation",
+      "match": "1.4s ease-out infinite",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-layout-d0d3f43e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "animation",
+      "match": "none",
+      "reason": "Preserve the current scoped layout geometry.",
+      "evidence": "AppBootLoader L1 fixture and focused tests."
+    },
+    {
+      "id": "boot-sr-only-border-reset",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "SrOnly",
+      "property": "border",
+      "match": "0",
+      "reason": "The visually-hidden accessibility pattern requires a zero border.",
+      "evidence": "SrOnly uses the established clipped-content accessibility recipe."
+    },
+    {
+      "id": "boot-sidebar-rtl-branch",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": null,
+      "structure": "arrow:LogicalExpression:&&:OptionalMemberExpression:tagged:css",
+      "reason": "The conditional RTL branch controls layout direction and must remain structurally intact.",
+      "evidence": "The nested border color expression has its own semantic migration rule."
+    },
+    {
+      "id": "boot-sidebar-rtl-border-reset",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Sidebar",
+      "property": "border-right",
+      "match": "0",
+      "reason": "RTL removes the physical right border before applying the mirrored border.",
+      "evidence": "Changing the reset would alter the existing RTL layout contract."
+    },
+    {
+      "id": "boot-metric-icon-radius",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "MetricIcon",
+      "property": "border-radius",
+      "match": "7.6px",
+      "reason": "Geometry remains exact in the contextual color pass.",
+      "evidence": "The placeholder retains its metric-card silhouette."
+    },
+    {
+      "id": "boot-chart-body-radius",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ChartBody",
+      "property": "border-radius",
+      "match": "6px",
+      "reason": "The chart placeholder geometry remains exact.",
+      "evidence": "The 6px component radius already equals the canonical component radius."
+    },
+    {
+      "id": "boot-service-icon-radius",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "ServiceIcon",
+      "property": "border-radius",
+      "match": "10px",
+      "reason": "The service placeholder geometry remains exact.",
+      "evidence": "The 10px panel radius already equals the canonical panel maximum."
+    },
+    {
+      "id": "boot-shimmer-keyframes",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "animation",
+      "match": "shimmer",
+      "reason": "The animation reference controls behavior and is not a visual token value.",
+      "evidence": "Reduced motion disables the same keyframes in the component stylesheet."
+    },
+    {
+      "id": "boot-reduced-motion-background-reset",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "background",
+      "match": "none",
+      "reason": "Reduced motion removes the animated highlight background.",
+      "evidence": "The declaration is scoped to prefers-reduced-motion and preserves the no-motion fallback."
+    },
+    {
+      "id": "boot-width-dynamic",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "width",
+      "match": "props => props.$width || '100%'",
+      "reason": "Dynamic skeleton geometry preserves the current layout contract.",
+      "evidence": "AppBootLoader callers use content-specific widths."
+    },
+    {
+      "id": "boot-height-dynamic",
+      "kind": "styled-expression",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "Bone",
+      "property": "height",
+      "match": "props => props.$height || '100%'",
+      "reason": "Dynamic skeleton geometry preserves the current layout contract.",
+      "evidence": "AppBootLoader callers use content-specific heights."
+    },
+    {
+      "id": "boot-layout-whatsapp-skeleton-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteSkeleton",
+      "property": "gap",
+      "match": "24px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-header-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteHeader",
+      "property": "gap",
+      "match": "16px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-heading-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteHeading",
+      "property": "gap",
+      "match": "10px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-heading-width",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteHeading",
+      "property": "width",
+      "match": "min(360px, 70%)",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-actions-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteActions",
+      "property": "gap",
+      "match": "8px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-table-min-width",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteTable",
+      "property": "min-width",
+      "match": "0",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-row-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteRow",
+      "property": "gap",
+      "match": "24px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-row-min-height",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteRow",
+      "property": "min-height",
+      "match": "68px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-identity-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteIdentity",
+      "property": "gap",
+      "match": "12px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-copy-gap",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteCopy",
+      "property": "gap",
+      "match": "7px",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    },
+    {
+      "id": "boot-layout-whatsapp-copy-min-width",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/AppBootLoader/styles.js",
+      "component": "WhatsAppRouteCopy",
+      "property": "min-width",
+      "match": "0",
+      "reason": "Preserve the WhatsApp bots route skeleton layout.",
+      "evidence": "AppBootLoader WhatsApp bots route fallback."
+    }
+  ]
+}

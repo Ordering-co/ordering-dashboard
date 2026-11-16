@@ -1,0 +1,71 @@
+/* redesign 2.E: TimeField — two native selects in a group; units or a separator between them. Tokens only. */
+
+.odc-time-field {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start; /* inside Field's grid frame, the group is as wide as its content */
+  max-inline-size: 100%;
+  gap: var(--od-space-2); /* two 32px selects are always >= 12px apart (a unit or the separator sits between) */
+}
+
+/* ── Unit and separator: quiet text between the selects ── */
+.odc-time-field-unit,
+.odc-time-field-separator {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── Select: 32px, the field border (>= 3:1), the house ring (the look of the schedule editor's) ── */
+.odc-time-field-part {
+  display: inline-block;
+  min-inline-size: 0;
+}
+
+.odc-time-field-select {
+  display: block;
+  block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  cursor: pointer;
+}
+
+/* Invalid: as the field family, a thicker border drawn inside on top of the colour, so it is not colour alone. */
+.odc-time-field-select[aria-invalid='true'] {
+  border-color: var(--od-danger-functional);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-time-field-select:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-time-field-select:disabled {
+  cursor: not-allowed;
+  color: var(--od-x-text-subtle);
+}
+
+/* ── Phone and coarse pointer: 32px visible, 44px area, 16px text ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-time-field-select { font-size: var(--od-x-type-lead-size); }
+  .odc-time-field-unit,
+  .odc-time-field-separator { font-size: var(--od-x-type-lead-size); }
+  .odc-time-field-part {
+    position: relative;
+    isolation: isolate;
+  }
+  .odc-time-field-part::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset); /* a 32px frame -> 44px area, never smaller than the frame */
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+}

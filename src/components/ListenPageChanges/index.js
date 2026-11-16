@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useEvent, useLanguage } from '~components'
-import { useTheme } from '~ui'
+import { useTheme } from '~ui/src/contexts/ThemeContext'
 
 export const ListenPageChanges = ({ children }) => {
   const history = useHistory()
@@ -44,6 +44,7 @@ export const ListenPageChanges = ({ children }) => {
     logs: '/settings/logs',
     enterprise_settings: '/settings/enterprise',
     free_products: '/free-downloads',
+    open_source_code: '/open-source-code',
     business_analytics: '/intelligence/business',
     drivers_analytics: '/intelligence/drivers',
     invoice: '/intelligence/invoice',
@@ -93,7 +94,8 @@ export const ListenPageChanges = ({ children }) => {
     importers: '/connect/importers',
     pos_menu: '/connect/pos-menu',
     sales_channels: '/connect/sales-channels',
-    whatsapp_bots: '/connect/whatsapp-bots'
+    whatsapp_bots: '/connect/whatsapp-bots',
+    order_with_google: '/connect/order-with-google'
   }
 
   const handleGoToPage = ({ page, params = {}, search, replace = false, state = false }) => {
@@ -158,6 +160,16 @@ export const ListenPageChanges = ({ children }) => {
       })
     }
   }, [languageState?.language?.rtl])
+
+  // redesign F6g-2: the document carries the language, so [dir='rtl'] selectors (odc-icon-flip, sheet slide) match
+  // everywhere, portals included. Until the language is known the document keeps the direction it had.
+  useEffect(() => {
+    const language = languageState?.language
+    if (!language) return
+    const root = document.documentElement
+    root.setAttribute('dir', language.rtl ? 'rtl' : 'ltr')
+    if (language.code) root.setAttribute('lang', language.code)
+  }, [languageState?.language?.rtl, languageState?.language?.code])
 
   return (
     <>

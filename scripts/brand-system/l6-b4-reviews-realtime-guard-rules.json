@@ -1,0 +1,1839 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b4-reviews-realtime-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l6-b4-reviews-realtime-businessreviewdetails-index-js-fba0f7",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "businessReviewDetailsProps /* binding-sha256:951746a9da442eee2c8595e82e70550d5d264e190b7edbb80a282830371b29e0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-businessreviewdetails-styles-js-c90602",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Comment",
+            "property": "font",
+            "match": "({ isEmpty }) => isEmpty && css`\n    color: ${props => props.theme.colors.lightGray};\n    font-style: italic;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 9px;\n  `\n: css`\n    margin-left: 9px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "UserInfoContainer",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    padding-left: 10px;\n  `\n: css`\n    padding-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    display: flex;\n    align-items: center;\n  `\n: css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSmall }) => isSmall\n? css`\n    max-width: 40px;\n    max-height: 40px;\n    height: 40px;\n    width: 40px;\n  `\n: css`\n    max-width: 120px;\n    max-height: 120px;\n    height: 120px;\n    width: 120px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Comment",
+            "property": "color-block",
+            "match": "({ isEmpty }) => isEmpty && css`\n    color: ${props => props.theme.colors.lightGray};\n    font-style: italic;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Comment",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-right: 9px;\n  `\n: css`\n    margin-left: 9px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBarStyled",
+            "property": "background",
+            "match": "props => `linear-gradient(to right, ${props.theme.colors.headingColor} ${props.percentage}%, ${props.theme.colors.borderColor} ${props.percentage}%)`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewQualityTextContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "UserInfoContainer",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    padding-left: 10px;\n  `\n: css`\n    padding-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    display: flex;\n    align-items: center;\n  `\n: css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSmall }) => isSmall\n? css`\n    max-width: 40px;\n    max-height: 40px;\n    height: 40px;\n    width: 40px;\n  `\n: css`\n    max-width: 120px;\n    max-height: 120px;\n    height: 120px;\n    width: 120px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-businessreviewlist-index-js-742902",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "reviewsProps /* binding-sha256:1b2ac137837c792dbc36951212b3769ef26d876ca117bf3eadae1f8e69d87ebf */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-businessreviewlist-styles-js-d60f24",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    width: 45px;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    width: 45px;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-productreviewdetails-index-js-30e20a",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "productReviewProps /* binding-sha256:3ade1ad8ca6216308e8eb6fa4cfe297c6341fce21f367ebc1f78172853ef360b */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-productreviewdetails-styles-js-85be55",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "font-size",
+            "match": "22px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "LikeSignWrapper svg: los glifos de pulgar arriba y abajo de la resena de producto."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "font",
+            "match": "({ isLike }) => isLike\n? css`\n    > svg:first-child {\n      color: ${props => props.theme.colors.primary};\n    }\n  `\n: css`\n    > svg:last-child {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    display: flex;\n    align-items: center;\n  `\n: css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSmall }) => isSmall\n? css`\n    max-width: 40px;\n    max-height: 40px;\n    height: 40px;\n    width: 40px;\n  `\n: css`\n    max-width: 120px;\n    max-height: 120px;\n    height: 120px;\n    width: 120px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "color-block",
+            "match": "({ isLike }) => isLike\n? css`\n    > svg:first-child {\n      color: ${props => props.theme.colors.primary};\n    }\n  `\n: css`\n    > svg:last-child {\n      color: ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n        margin-left: 10px;\n      `\n: css`\n        margin-right: 10px;\n      `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "LikeSignWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => isSkeleton\n? css`\n    display: flex;\n    align-items: center;\n  `\n: css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSmall }) => isSmall\n? css`\n    max-width: 40px;\n    max-height: 40px;\n    height: 40px;\n    width: 40px;\n  `\n: css`\n    max-width: 120px;\n    max-height: 120px;\n    height: 120px;\n    width: 120px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-reports-index-js-48a7f0",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/Reports/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-reviewproductslisting-index-js-e9cd64",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "businessProductslistingProps /* binding-sha256:714db2e3118a2a5e042fe4af4f35ddc915c4a9830fb812caa317eaa59e0129f1 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-reviewproductslisting-styles-js-6682ac",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    width: 45px;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    width: 45px;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-reviewslisting-index-js-3d751b",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "listProps /* binding-sha256:a82ec952d0173b98c6c310828f36ba9a604928c14c39e651c0bc8168b41af148 */",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-reviewslisting-styles-js-953e69",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "FilterButton",
+            "property": "font-size",
+            "match": "12px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "FilterButton svg: el caret dentro del boton de filtro."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 3px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TitleWrapper",
+            "property": "font-size",
+            "match": "16px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "TitleWrapper svg: el caret que despliega el selector de negocio."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "CalendarWrapper",
+            "property": "border",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "CalendarWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ClearFilter",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ErrorText",
+            "property": "color",
+            "match": "props => props.theme.colors.danger || '#D81212'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FilterButton",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FilterButton",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FilterButton",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "FormField",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 8px;\n      margin-right: -8px;\n    `\n: css`\n      margin-right: 8px;\n      margin-left: -8px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderLeft",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "HeaderRight",
+            "property": "background-color",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 3px solid;\n    font-weight: 500;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 30px;\n  `\n: css`\n    margin-right: 30px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tab",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "Tabs",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-userreviewdetails-index-js-453867",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "userReivewDetailsProps /* binding-sha256:9f0e2c8b05083c9a37eb682080e8515bc23ac0397c3e68deff0de56f41d9caa5 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-userreviewdetails-styles-js-0a2286",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Header",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 15px;\n    `\n: css`\n      margin-right: 15px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewBarStyled",
+            "property": "background",
+            "match": "props => `linear-gradient(to right, ${props.theme.colors.headingColor} ${props.percentage}%, ${props.theme.colors.borderColor} ${props.percentage}%)`",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMeta",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewQualityTextContainer",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-usersreviewlist-index-js-56a126",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "driversReviewListProps /* binding-sha256:c988ab553bdc6a473c9fa81528277236c7b18c2e4b127e8fa13ca2e261b96e6c */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch. Tanda U: same spread of driversReviewListProps, re-pinned because the object gained searchSeed (, search seed for the controller); no colour was added or changed."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l6-b4-reviews-realtime-usersreviewlist-styles-js-7283e9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+            "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "font",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "font",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of b4-reviews-realtime: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-left",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "border-right",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "({ isHeader }) => !isHeader && css`\n    height: 40px;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    ${props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n      border-right: 1px solid ${props => props.theme.colors.borderColor};\n    `\n: css`\n      border-left: 1px solid ${props => props.theme.colors.borderColor};\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color-block",
+            "match": "props => props.theme.colors.rtl\n? css`\n    padding-right: 15px;\n  `\n: css`\n    padding-left: 15px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewMarkerWrapper",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewObject",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n      margin-left: 10px;\n    `\n: css`\n      margin-right: 10px;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewsTable",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.disabled",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "background-color",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "border-top",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "ReviewTbody",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    background-color: ${props => props.theme.colors.lightPrimary} !important;\n    td {\n      border-top: 1px solid ${props => props.theme.colors.primary};\n      border-bottom: 1px solid ${props => props.theme.colors.primary};\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "border",
+            "match": "1px solid #E3E3E3",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "box-shadow",
+            "match": "0px 1px 4px rgba(0, 0, 0, 0.1)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "({ isSkeleton }) => !isSkeleton && css`\n    border: 1px solid #E3E3E3;\n    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          },
+          {
+            "component": "WrapperImage",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl\n? css`\n    margin-left: 10px;\n  `\n: css`\n    margin-right: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The b4-reviews-realtime semantic inventory pins the full expression. L6 changes no existing colour in this batch."
+          }
+        ]
+      }
+    }
+  ]
+}

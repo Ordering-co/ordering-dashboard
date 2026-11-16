@@ -1,0 +1,64 @@
+/* Scoped SearchBar surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-search-bar) {
+  @apply od-relative od-flex od-items-center;
+}
+
+.od-ui:where(.od-search-bar) > svg,
+.od-ui:where(.od-search-bar) > button.close {
+  position: absolute;
+  color: var(--od-search-text-subtle);
+}
+
+.od-ui:where(.od-search-bar) > svg {
+  width: var(--od-search-icon-size);
+  height: var(--od-search-icon-size);
+  pointer-events: none;
+}
+
+.od-ui:where(.od-search-bar) > button.close {
+  @apply od-inline-flex od-items-center od-justify-center;
+  width: var(--od-search-compact-height);
+  height: var(--od-search-compact-height);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--od-search-radius);
+  cursor: pointer;
+  color: var(--od-search-text-subtle);
+  opacity: 1;
+  text-shadow: none;
+}
+
+.od-ui:where(.od-search-bar) > button.close:hover,
+.od-ui:where(.od-search-bar) > button.close:focus {
+  color: var(--od-search-text-subtle);
+  opacity: 1;
+}
+
+.od-ui:where(.od-search-bar) > button.close:focus-visible {
+  outline: var(--od-search-focus-width) solid var(--od-search-focus);
+  outline-offset: var(--od-search-focus-offset);
+}
+
+.od-ui:where(.od-search-bar) > button.close svg {
+  position: static;
+  width: var(--od-search-icon-size);
+  height: var(--od-search-icon-size);
+}
+
+@media (max-width: 1200px) {
+  .od-ui:where(.od-search-bar) {
+    flex: 1;
+  }
+
+  .od-ui:where(.od-search-bar) input {
+    @apply od-box-border od-w-full;
+  }
+}
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-search-bar) > button.close {
+    width: var(--od-search-touch-target);
+    height: var(--od-search-touch-target);
+  }
+}

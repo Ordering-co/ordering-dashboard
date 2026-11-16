@@ -68,11 +68,14 @@ describe('WebsiteMigration', () => {
     renderMigration({ onMigrated, onChange })
 
     fireEvent.click(await screen.findByRole('button', { name: 'Migrate website' }))
-    // Nothing is sent before the confirmation, which says it goes live at once
+    // Nothing is sent before the confirmation, which says it's irreversible,
+    // goes live at once and is the project's responsibility
     expect(global.fetch).toHaveBeenCalledTimes(1)
+    expect(screen.getByText(/The migration is irreversible/)).toBeInTheDocument()
+    expect(screen.getByText(/under your own responsibility/)).toBeInTheDocument()
     expect(screen.getByText(/goes live right away/)).toBeInTheDocument()
     expect(screen.getByText(/review your website after the migration/)).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Migrate now' }))
+    fireEvent.click(screen.getByRole('button', { name: 'I understand, migrate' }))
 
     expect(await screen.findByRole('heading', { name: 'This website was migrated to the new editor' })).toBeInTheDocument()
     expect(global.fetch.mock.calls[1][1].method).toBe('POST')
@@ -117,7 +120,7 @@ describe('WebsiteMigration', () => {
     })
     renderMigration()
     fireEvent.click(await screen.findByRole('button', { name: 'Migrate website' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Migrate now' }))
+    fireEvent.click(screen.getByRole('button', { name: 'I understand, migrate' }))
     expect(await screen.findByRole('heading', { name: 'This website was migrated to the new editor' })).toBeInTheDocument()
     expect(global.fetch).toHaveBeenCalledTimes(3)
   })
@@ -126,7 +129,7 @@ describe('WebsiteMigration', () => {
     mockApi({ get: () => [200, { error: false, result: result() }], post: () => [503, { error: true, error_codes: ['site_migration.unavailable'] }] })
     renderMigration()
     fireEvent.click(await screen.findByRole('button', { name: 'Migrate website' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Migrate now' }))
+    fireEvent.click(screen.getByRole('button', { name: 'I understand, migrate' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('Migration isn’t available right now. Try again later.')
     expect(screen.getByRole('button', { name: 'Migrate website' })).not.toBeDisabled()
   })
@@ -171,5 +174,40 @@ describe('WebsiteMigration', () => {
     expect(screen.getByRole('heading', { name: 'Websites are now made in Builder' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Go to Builder' }))
     expect(history.push).toHaveBeenCalledWith('/builder')
+  })
+
+  // redesign C: the cards are Product pieces (P/Button, P/ConfirmDialog, P/Skeleton, P/CopyButton)
+  it('is drawn with the Product pieces', async () => {
+    mockApi({ get: () => [200, { error: false, result: result() }], post: () => [200, { error: false, result: result() }] })
+    const { container } = renderMigration()
+    const busy = container.querySelector('[aria-busy="true"]')
+    expect(busy).toHaveClass('odc-root')
+    expect(busy.querySelectorAll('.odc-skeleton').length).toBeGreaterThan(0)
+    expect(container.querySelector('.react-loading-skeleton')).toBeNull()
+
+    const migrate = await screen.findByRole('button', { name: 'Migrate website' })
+    expect(migrate).toHaveClass('odc-btn')
+    expect(migrate).toHaveAttribute('data-variant', 'primary')
+    fireEvent.click(migrate)
+    const dialog = await screen.findByRole('alertdialog', { name: 'Migrate your website to the new editor?' })
+    expect(dialog).toHaveClass('odc-dialog')
+    expect(within(dialog).getByRole('button', { name: 'I understand, migrate' })).toHaveAttribute('data-variant', 'primary')
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull())
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('copies the DNS record with the Product copy button', async () => {
+    mockApi({ get: () => [200, { error: false, result: result({ status: 'dns_required', domain: 'example.com' }) }] })
+    renderMigration()
+    expect(await screen.findByText('For a root domain, your provider must allow a CNAME, ALIAS or ANAME record at @')).toBeInTheDocument()
+    const copy = screen.getByRole('button', { name: 'Copy cname.my-sites.app' })
+    expect(copy).toHaveClass('odc-btn')
+    expect(copy.closest('.odc-copy')).not.toBeNull()
+  })
+
+  it('draws the Builder notice with the Product button', () => {
+    renderWithProviders(<WebsiteInBuilder />)
+    expect(screen.getByRole('button', { name: 'Go to Builder' })).toHaveClass('odc-btn')
   })
 })

@@ -79,7 +79,8 @@ export const Markups = (props) => {
         return { ...prev, markups: without }
       }
       const safePageSize = Number(paginationProps.pageSize) >= 1 ? Number(paginationProps.pageSize) : 10
-      const next = [...without, markup].slice(-safePageSize)
+      // redesign bugs F row 28: the list is newest first (orderBy=-created_at): the new markup goes first and the oldest row drops off
+      const next = [markup, ...without].slice(0, safePageSize)
       return { ...prev, markups: next }
     })
     setPaginationProps((prev) => {
@@ -411,11 +412,15 @@ export const Markups = (props) => {
     }
   }
 
-  const createMarkup = async (changes) => {
+  // redesign stores 5.13: `options.inlineError` skips the "Loading" and error toasts and leaves `actionState.error`
+  // empty (the UI shows the error inline). The success toast and the return shape do not change. Without options nothing changes
+  // (the /stores/markups route does not pass any).
+  const createMarkup = async (changes, options = {}) => {
     if (!token) return
     if (session?.user?.level !== 0) return
+    const inline = options?.inlineError === true
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
       const requestOptions = {
         method: 'POST',
@@ -428,8 +433,8 @@ export const Markups = (props) => {
       const response = await fetch(`${ordering.root}/markups`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: content?.result })
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : content?.result })
         return { error: true, result: content?.result }
       }
       setActionState({ loading: false, error: null })
@@ -437,17 +442,18 @@ export const Markups = (props) => {
       showToast?.(ToastType.Success, t('MARKUP_CREATED', 'Markup created'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
-      setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      setActionState({ loading: false, error: inline ? null : [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
   }
 
-  const updateMarkup = async (id, changes) => {
+  const updateMarkup = async (id, changes, options = {}) => {
     if (!token) return
     if (session?.user?.level !== 0) return
+    const inline = options?.inlineError === true
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
       const requestOptions = {
         method: 'PUT',
@@ -460,8 +466,8 @@ export const Markups = (props) => {
       const response = await fetch(`${ordering.root}/markups/${id}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: content?.result })
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : content?.result })
         return { error: true, result: content?.result }
       }
       setActionState({ loading: false, error: null })
@@ -469,19 +475,26 @@ export const Markups = (props) => {
       showToast?.(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
-      setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      setActionState({ loading: false, error: inline ? null : [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
   }
 
-  const deleteMarkups = async (ids) => {
+  // redesign stores 5.13 (G5-41): every id whose DELETE worked leaves the list (and the pagination totals) even when
+  // others fail; the result says which ones did: `{ error, result, deletedIds, failedIds }` (`result` is `true` on full success,
+  // the per-id messages otherwise). A request that throws counts as a failure of that id. `options.inlineError` as in `createMarkup`.
+  const deleteMarkups = async (ids, options = {}) => {
     if (!token) return
     if (session?.user?.level !== 0) return
     const list = Array.isArray(ids) ? ids : []
     if (list.length === 0) return
+    const inline = options?.inlineError === true
+    const deletedIds = []
+    const failedIds = []
+    const errors = []
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
       const requestOptions = {
         method: 'DELETE',
@@ -491,31 +504,39 @@ export const Markups = (props) => {
         }
       }
 
-      const errors = []
       for (const id of list) {
-        const response = await fetch(`${ordering.root}/markups/${id}`, requestOptions)
-        const content = await response.json()
-        if (content?.error) {
-          const msg = Array.isArray(content?.result) ? content.result.join(', ') : String(content?.result || 'Error')
-          errors.push(`#${id}: ${msg}`)
+        try {
+          const response = await fetch(`${ordering.root}/markups/${id}`, requestOptions)
+          const content = await response.json()
+          if (content?.error) {
+            const msg = Array.isArray(content?.result) ? content.result.join(', ') : String(content?.result || 'Error')
+            errors.push(`#${id}: ${msg}`)
+            failedIds.push(id)
+          } else {
+            deletedIds.push(id)
+          }
+        } catch (err) {
+          errors.push(`#${id}: ${err?.message || 'Unknown error'}`)
+          failedIds.push(id)
         }
       }
 
+      removeMarkupsFromList(deletedIds)
+
       if (errors.length) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: errors })
-        return { error: true, result: errors }
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : errors })
+        return { error: true, result: errors, deletedIds, failedIds }
       }
 
       setActionState({ loading: false, error: null })
-      removeMarkupsFromList(list)
       showToast?.(ToastType.Success, t('MARKUPS_DELETED', 'Markups deleted'))
-      return { error: false, result: true }
+      return { error: false, result: true, deletedIds, failedIds: [] }
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
       const msg = [err?.message || 'Unknown error']
-      setActionState({ loading: false, error: msg })
-      return { error: true, result: msg }
+      setActionState({ loading: false, error: inline ? null : msg })
+      return { error: true, result: msg, deletedIds, failedIds: list.filter((id) => !deletedIds.includes(id)) }
     }
   }
 

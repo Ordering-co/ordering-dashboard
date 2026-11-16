@@ -1,0 +1,452 @@
+/* Scoped FirstSelect compatibility surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-first-select-root) {
+  @apply od-inline-block od-relative;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: var(--od-first-select-compact-height);
+  color: var(--od-first-select-text);
+  background: var(--od-first-select-surface);
+  border: 1px solid var(--od-first-select-border);
+  border-radius: var(--od-first-select-radius);
+  font-family: var(--od-first-select-font);
+  font-size: var(--od-first-select-font-size);
+  line-height: calc(var(--od-first-select-compact-height) - 2px);
+}
+
+.od-ui:where(.od-first-select-root)[data-type='primary'] {
+  color: var(--od-first-select-action-content);
+  background: var(--od-first-select-action-soft);
+  border-color: var(--od-first-select-action-soft);
+}
+
+.od-ui:where(.od-first-select-root)[data-disabled] {
+  cursor: not-allowed;
+  color: var(--od-first-select-muted);
+  background: var(--od-first-select-subtle) !important;
+  border-color: var(--od-first-select-border);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-trigger {
+  @apply od-flex od-items-center od-justify-between;
+  box-sizing: border-box;
+  position: relative;
+  z-index: calc(var(--od-x-layer-raised) + 10);
+  min-width: 0;
+  max-width: 100%;
+  min-height: calc(var(--od-first-select-compact-height) - 2px);
+  padding-inline: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-trigger p { margin: 0; }
+
+.od-ui:where(.od-first-select-root) > .od-first-select-trigger:focus-visible,
+.od-ui:where(.od-first-select-root) .od-first-select-option:focus-visible,
+.od-ui:where(.od-first-select-root) .od-first-select-delete:focus-visible {
+  outline: var(--od-first-select-focus-width) solid var(--od-first-select-focus);
+  outline-offset: var(--od-first-select-focus-offset);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-trigger[data-disabled] {
+  pointer-events: none;
+  color: var(--od-first-select-muted);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-header {
+  @apply od-flex od-items-center;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1;
+  overflow: auto;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-chevron {
+  @apply od-flex od-items-center;
+  color: var(--od-first-select-muted);
+  margin-inline-start: 5px;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-chevron svg {
+  width: var(--od-first-select-icon-size);
+  height: var(--od-first-select-icon-size);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: calc(var(--od-x-layer-notice) - 10);
+  min-width: 100%;
+  margin-top: 7px;
+  color: var(--od-first-select-text);
+  background: var(--od-first-select-surface);
+  border: 1px solid var(--od-first-select-border);
+  border-radius: var(--od-first-select-radius-component);
+  box-shadow: var(--od-first-select-shadow);
+  overflow: hidden;
+  font: inherit;
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-position='right'] {
+  inset-inline-end: 0;
+  margin-inline-end: -1px;
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-position='left'] {
+  inset-inline-start: 0;
+  margin-inline-start: -1px;
+}
+
+/* Opt-in (placement='auto' | 'top'): the list opens upward, anchored to the top of the trigger. */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-placement='top'] {
+  inset-block-end: 100%;
+  margin-block-start: 0;
+  margin-block-end: var(--od-space-2);
+}
+
+/* Opt-in (fitTrigger, selectPlacement.js): the list starts where the trigger starts and is as wide as it;
+   its rows are brand rows (32px, 44px with a coarse pointer). */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] {
+  --odc-fit-row: var(--od-x-control-height);
+  --odc-fit-max: min(60dvh, calc(var(--odc-fit-row) * 8));
+  display: flex;
+  flex-direction: column;
+  /* The sheet makes the root a flex box, whose static position for the list is its top: anchor it under the trigger. */
+  inset-block-start: 100%;
+  inset-inline: calc(var(--od-x-hairline) * -1) auto;
+  inline-size: max-content;
+  min-inline-size: calc(100% + var(--od-x-hairline) * 2);
+  /* Up to the popover width (a consumer with long labels may ask for more: --odc-fit-max-inline), never past the window. */
+  max-inline-size: min(
+    max(calc(100% + var(--od-x-hairline) * 2), var(--odc-fit-max-inline, var(--od-x-popover))),
+    calc(100vw - var(--od-x-viewport-gap) * 2)
+  );
+  margin-inline: 0;
+  margin-block-start: var(--od-space-2);
+  background: var(--od-bg);
+  border-color: var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'][data-align='end'] {
+  inset-inline: auto calc(var(--od-x-hairline) * -1);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'][data-placement='top'] {
+  inset-block-start: auto;
+  margin-block-start: 0;
+}
+
+/* redesign F6d-2 (Q3-11): `portal`. The list is drawn in the shared layer host inside a wrapper that has the field's
+   class (so every rule above and its tokens reach it) but no box of its own; the list is a fixed overlay placed from
+   the field by FirstSelect (left / top / bottom and the field's width as its minimum, written on the node). */
+.od-ui:where(.od-first-select-root)[data-portal] {
+  display: contents;
+}
+
+.od-ui:where(.od-first-select-root)[data-portal] > .od-first-select-list[data-fit='trigger'] {
+  position: fixed;
+  inset-inline: auto;
+  min-inline-size: 0;
+  max-inline-size: min(var(--odc-fit-max-inline, var(--od-x-popover)), calc(100vw - var(--od-x-viewport-gap) * 2));
+  margin: 0;
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-options-inner {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-block-size: 0;
+  max-block-size: var(--odc-fit-max);
+  overflow-y: auto;
+  padding: var(--od-space-1);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option {
+  gap: var(--od-space-2);
+  min-width: 0;
+  min-height: var(--odc-fit-row);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border-radius: var(--od-radius-control);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The check slot comes first in the row (redesign F6c, Q2-18), so the label block is the one after it. */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option > .od-first-select-check + * {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option:hover:not([aria-disabled='true']),
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option:focus-visible:not([aria-disabled='true']) {
+  background: var(--od-x-hover);
+}
+
+/* Selected = check mark + medium weight, never only a fill. The mark is at the START of the row in every C18
+   dropdown, as in the Product Menu radio items and the multi-select checkbox (redesign F6c, Q2-18). */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option[data-selected] {
+  background: transparent;
+  color: var(--od-text);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option[data-selected]:hover,
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option[data-selected]:focus-visible {
+  background: var(--od-x-hover);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option:focus-visible {
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+  color: var(--od-text);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-check svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* Group heading: caption in the subtle text colour, no rule, not a row. */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-group {
+  padding-block: var(--od-space-2) var(--od-space-1);
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-group > span {
+  display: block;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+/* Dangerous action: first, apart behind a divider, in the danger colour (redesign F6c, P3-02). */
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-separator {
+  block-size: var(--od-x-hairline);
+  margin-block: var(--od-space-1);
+  margin-inline: calc(var(--od-space-1) * -1);
+  background: var(--od-border);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option[data-danger] {
+  color: var(--od-danger-functional);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-search {
+  flex: none;
+  padding: var(--od-space-2) var(--od-space-2) var(--od-space-1);
+}
+
+.od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-search > * {
+  flex: 1 1 auto;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* The closed field of a C18 list is a brand field: 32px (44px on a phone), field border, chevron.
+   The primary variant (the selection bar) keeps its own look. */
+.od-ui:where(.od-first-select-root)[data-fit='trigger']:not([data-type='primary']) {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  border-color: var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] > .od-first-select-trigger {
+  flex: 1 1 auto;
+  min-block-size: calc(var(--od-x-control-height) - var(--od-x-hairline) * 2);
+  padding-inline: var(--od-x-space-2-5);
+  line-height: var(--od-x-leading-ui);
+}
+
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] > .od-first-select-trigger[data-empty],
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] .od-first-select-header[data-placeholder] {
+  color: var(--od-x-text-subtle);
+}
+
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] .od-first-select-header {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] .od-first-select-header > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* The ring goes around the whole field, as the inputs do, not around the inner trigger. */
+.od-ui:where(.od-first-select-root)[data-fit='trigger']:has(> .od-first-select-trigger:focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.od-ui:where(.od-first-select-root)[data-fit='trigger'] > .od-first-select-trigger:focus-visible {
+  outline: 0;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-options-inner {
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option {
+  @apply od-flex od-items-center od-justify-between;
+  box-sizing: border-box;
+  min-width: 100px;
+  min-height: var(--od-first-select-compact-height);
+  padding: 5px 10px;
+  color: var(--od-first-select-text);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--od-first-select-duration) var(--od-first-select-easing),
+    border-color var(--od-first-select-duration) var(--od-first-select-easing),
+    color var(--od-first-select-duration) var(--od-first-select-easing);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option:hover:not([aria-disabled='true']),
+.od-ui:where(.od-first-select-root) .od-first-select-option:focus-visible:not([aria-disabled='true']) {
+  background: var(--od-first-select-subtle);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option[data-selected] {
+  color: var(--od-first-select-action-content);
+  background: var(--od-first-select-action-soft);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option[data-selected]:hover,
+.od-ui:where(.od-first-select-root) .od-first-select-option[data-selected]:focus-visible {
+  background: var(--od-first-select-action-soft);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option[data-disabled] {
+  cursor: no-drop;
+  opacity: 0.6;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-option.od-option-hidden { display: none; }
+.od-ui:where(.od-first-select-root) .od-first-select-option.od-option-border { border-bottom: 1px solid var(--od-first-select-border); }
+.od-ui:where(.od-first-select-root) .od-first-select-option.od-option-primary { color: var(--od-first-select-text-subtle); }
+.od-ui:where(.od-first-select-root) .od-first-select-option svg { vertical-align: text-top; }
+
+.od-ui:where(.od-first-select-root) .od-first-select-functionality {
+  @apply od-flex od-items-center;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-functionality[data-selected-option] > svg {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-delete {
+  @apply od-inline-flex od-items-center od-justify-center;
+  width: var(--od-first-select-compact-height);
+  height: var(--od-first-select-compact-height);
+  padding: 0;
+  margin-inline-start: 20px;
+  color: var(--od-first-select-action-content);
+  background: transparent;
+  border: 0;
+  border-radius: var(--od-first-select-radius);
+  cursor: pointer;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-delete svg {
+  width: var(--od-first-select-icon-size);
+  height: var(--od-first-select-icon-size);
+  margin: 0;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-search {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px 10px;
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-search > div input {
+  height: var(--od-first-select-compact-height);
+}
+
+.od-ui:where(.od-first-select-root) .od-first-select-pagination {
+  max-height: 55px;
+  padding: 8px 12px;
+}
+
+@media (max-width: 380px) {
+  .od-ui:where(.od-first-select-root) > .od-first-select-trigger {
+    padding-inline: 9px;
+    font-size: var(--od-first-select-font-ui);
+  }
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .od-ui:where(.od-first-select-root) > .od-first-select-trigger,
+  .od-ui:where(.od-first-select-root) .od-first-select-option,
+  .od-ui:where(.od-first-select-root) .od-first-select-delete {
+    min-height: var(--od-first-select-touch-target);
+  }
+
+  .od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] {
+    --odc-fit-row: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-first-select-root) > .od-first-select-list[data-fit='trigger'] .od-first-select-option {
+    min-height: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-first-select-root)[data-fit='trigger']:not([data-type='primary']) {
+    min-block-size: var(--od-x-target-coarse);
+  }
+
+  .od-ui:where(.od-first-select-root)[data-fit='trigger'] > .od-first-select-trigger {
+    min-block-size: calc(var(--od-x-target-coarse) - var(--od-x-hairline) * 2);
+  }
+
+  .od-ui:where(.od-first-select-root) .od-first-select-delete {
+    width: var(--od-first-select-touch-target);
+    height: var(--od-first-select-touch-target);
+  }
+
+  .od-ui:where(.od-first-select-root) .od-first-select-search > div input {
+    height: var(--od-first-select-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-first-select-root) .od-first-select-option {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}

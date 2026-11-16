@@ -4,7 +4,7 @@ export const DeliveryzonesContainer = styled.div`
   padding: 10px;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 20px;
@@ -20,12 +20,12 @@ export const DeliveryzonesTable = styled.table`
     padding: 12px 0;
   }
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
   }
 
   td {
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
   }
   thead {
     border-bottom: 1px solid ${props => props.theme.colors.disabled};
@@ -33,7 +33,7 @@ export const DeliveryzonesTable = styled.table`
       th {
         position: sticky;
         top: 0px;
-        z-index: 100;
+        z-index: var(--od-x-layer-sticky);
         background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
       }
     }

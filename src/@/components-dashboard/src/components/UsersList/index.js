@@ -9,6 +9,13 @@ import { useLanguage } from '../../contexts/LanguageContext'
 import { useEvent } from '../../contexts/EventContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
 import { USERS_FILTER_INITIAL_VALUES } from '../UsersFilter'
+import { confirmationPayload } from '../../utils/confirmationPayload'
+
+// redesign UC-B1 (M-10): the error of an outcome is the API result when it is an array of strings, else null; never an object
+const outcomeError = (result) => Array.isArray(result) && result.every(item => typeof item === 'string') ? result : null
+
+// redesign DL-B1 (decision 7, M-DL6): the only attributes the live driver events may change on a loaded row
+const LIVE_DRIVER_ATTRIBUTES = ['enabled', 'available', 'busy']
 
 export const UsersList = (props) => {
   props = { ...defaultProps, ...props }
@@ -21,14 +28,20 @@ export const UsersList = (props) => {
     isSearchByUserEmail,
     isSearchByUserPhone,
     isSearchByUserName,
+    isSearchByFullName,
     isBusinessOwners,
     defaultUserTypesSelected,
     disabledActiveStateCondition,
     isDriver,
     isProfessional,
     searchSeed,
-    filterSeed
+    filterSeed,
+    statusFilter,
+    liveDriversRoom,
+    clearSelectionOnQueryChange
   } = props
+  // redesign DL-B1 (decision 3): only a value other than undefined / 'all' changes the request
+  const activeStatusFilter = statusFilter && statusFilter !== 'all' ? statusFilter : null
 
   const [ordering] = useApi()
   const [configFile] = useContext(ConfigFileContext) || []
@@ -64,6 +77,9 @@ export const UsersList = (props) => {
   const [actionDisabled, setActionDisabled] = useState(true)
   const [driversGroupsState, setDriversGroupsState] = useState({ groups: [], loading: false, error: null })
 
+  // redesign (n.º 14, D-55): opt-in; functional update so an already empty selection does not re-render
+  const clearSelection = () => setSelectedUsers(current => current.length ? [] : current)
+
   /**
    * Save filter type values
    * @param {object} types
@@ -95,13 +111,18 @@ export const UsersList = (props) => {
    * @param {boolean} newFetch Make a new request or next page
    */
   const getUsers = async (page, pageSize) => {
+    // redesign (n.º 14, D-55): a bulk delete only reaches what is on screen, so a different page or page size empties the selection
+    if (clearSelectionOnQueryChange && ((page != null && page !== paginationProps.currentPage) || (pageSize != null && pageSize !== paginationProps.pageSize))) {
+      clearSelection()
+    }
     const source = {}
     if (requestsState.current.users?.cancel) {
       requestsState.current.users.cancel()
     }
     requestsState.current.users = source
     try {
-      setUsersList({ ...usersList, loading: true })
+      // a new load leaves the last error behind (the tables paint the error over the rows while it is set)
+      setUsersList({ ...usersList, loading: true, error: null })
       let parameters = {}
 
       const paginationParams = {
@@ -154,6 +175,15 @@ export const UsersList = (props) => {
 
       if (selectedOccupation) {
         conditions.push({ attribute: 'occupation_id', value: selectedOccupation })
+      }
+
+      // redesign DL-B1 (decision 3): each status asks for exactly its state, ANDed with the conditions above
+      if (activeStatusFilter === 'available') {
+        conditions.push({ attribute: 'enabled', value: true }, { attribute: 'available', value: true }, { attribute: 'busy', value: false })
+      } else if (activeStatusFilter === 'busy') {
+        conditions.push({ attribute: 'enabled', value: true }, { attribute: 'available', value: true }, { attribute: 'busy', value: true })
+      } else if (activeStatusFilter === 'offline') {
+        conditions.push({ attribute: 'enabled', value: true }, { attribute: 'available', value: false })
       }
 
       if (searchValue) {
@@ -212,6 +242,31 @@ export const UsersList = (props) => {
               }
             }
           )
+        }
+
+        // redesign UC-B1 (decision 2A, auditor #8): «Olivia Bennett» matches name «Olivia» AND lastname «Bennett»
+        const trimmedSearch = String(searchValue).trim()
+        const firstSpace = trimmedSearch.search(/\s/)
+        if (isSearchByFullName && firstSpace > 0) {
+          searchConditions.push({
+            conector: 'AND',
+            conditions: [
+              {
+                attribute: 'name',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${trimmedSearch.slice(0, firstSpace)}%`)
+                }
+              },
+              {
+                attribute: 'lastname',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${trimmedSearch.slice(firstSpace).trim()}%`)
+                }
+              }
+            ]
+          })
         }
 
         conditions.push({
@@ -506,7 +561,8 @@ export const UsersList = (props) => {
       } else {
         let finalUsers = result
 
-        if (isDriver && session?.user?.level === 5 && session?.user?.id) {
+        // redesign DL-B1 (decision 3, M-DL5): a filtered answer is not merged with the level 5 cache (it would bring back rows that do not match)
+        if (isDriver && session?.user?.level === 5 && session?.user?.id && !activeStatusFilter) {
           try {
             const storageKey = getDashboardStorageKey(configFile, `drivers_cache_${session.user.id}`)
             let cachedDrivers = []
@@ -558,14 +614,16 @@ export const UsersList = (props) => {
           }
         }
 
-        usersList.users = finalUsers
+        // redesign (row 92, M-C18): the new list goes into the new state object; the previous one is not assigned to
         setUsersList({
           ...usersList,
-          loading: false
+          users: finalUsers,
+          loading: false,
+          error: null // a good answer clears the error of the load before it (Retry, a tab, a search)
         })
         let nextPageItems = 0
         if (pagination.current_page !== pagination.total_pages) {
-          const remainingItems = pagination.total - usersList.users.length
+          const remainingItems = pagination.total - finalUsers.length
           nextPageItems = remainingItems < pagination.page_size ? remainingItems : pagination.page_size
         }
         setPaginationProps({
@@ -693,7 +751,13 @@ export const UsersList = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ enabled: user.enabled })
+      // an admin-level toggle goes through ConfirmAdmin first, which hands over the one-time
+      // confirmation_token the API now requires to flip `enabled` on a level 0 user; a toggle that never
+      // asked (any other level) carries none.
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({
+        enabled: user.enabled,
+        ...confirmationPayload(user.confirmationToken)
+      })
       setActionStatus({
         ...actionStatus,
         loading: false,
@@ -702,27 +766,30 @@ export const UsersList = (props) => {
       if (!error) {
         if (isDriver) {
           handleSuccessUpdate(result)
-        } else if (!disabledActiveStateCondition) {
-          let users = [...usersList?.users]
-          if ((!user.enabled && selectedUserActiveState) || (user?.enabled && !selectedUserActiveState)) {
-            users = usersList.users.filter(_user => {
-              let valid = true
-              if (_user.id === user.id) {
-                if (user.enabled === !selectedUserActiveState) {
-                  valid = false
-                }
-              }
-              return valid
-            })
+        } else {
+          // the row follows what the API returned (result.enabled), not what was asked; without a state condition it
+          // changes in place (only `enabled`: the list's other fields stay as it fetched them), with one it leaves the list when it
+          // is no longer the list's state, and a user that was not in it enters as the returned record
+          const saved = result && typeof result === 'object' ? result : {}
+          const enabled = typeof saved.enabled === 'boolean' ? saved.enabled : !!user.enabled
+          const inList = usersList.users.some(_user => _user.id === user.id)
+          let users
+          if (!disabledActiveStateCondition && enabled !== !!selectedUserActiveState) {
+            users = usersList.users.filter(_user => _user.id !== user.id)
+          } else if (inList) {
+            users = usersList.users.map(_user => (_user.id === user.id ? { ..._user, enabled } : _user))
           } else {
-            users.push(user)
+            users = disabledActiveStateCondition ? usersList.users : [...usersList.users, { ...user, ...saved, enabled }]
           }
           setUsersList({ ...usersList, users })
         }
         showToast(ToastType.Success, t('UPDATED', 'Updated'))
       }
+      // redesign UC-B1 (M-10): the caller learns the outcome; on success it also gets the record the API returned
+      return error ? { ok: false, error: outcomeError(result) } : { ok: true, error: null, user: result }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
@@ -745,18 +812,23 @@ export const UsersList = (props) => {
         error: error ? result : null
       })
       if (!error) {
+        // the row follows what the API returned (result.busy), not what was asked
+        const busy = typeof result?.busy === 'boolean' ? result.busy : user.busy
         let users = []
         users = usersList.users.filter(_user => {
           if (_user.id === user.id) {
-            _user.busy = user.busy
+            _user.busy = busy
           }
           return true
         })
         setUsersList({ ...usersList, users })
         showToast(ToastType.Success, t('UPDATED', 'Updated'))
       }
+      // redesign DL-B1 (M-DL3): the caller learns the outcome, like handleChangeActiveUser; with the record the API returned
+      return error ? { ok: false, error: outcomeError(result) } : { ok: true, error: null, user: result }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
@@ -778,18 +850,23 @@ export const UsersList = (props) => {
         error: error ? result : null
       })
       if (!error) {
+        // the row follows what the API returned (result.available), not what was asked
+        const available = typeof result?.available === 'boolean' ? result.available : user.available
         let users = []
         users = usersList.users.filter(_user => {
           if (_user.id === user.id) {
-            _user.available = user.available
+            _user.available = available
           }
           return true
         })
         setUsersList({ ...usersList, users })
         showToast(ToastType.Success, t('UPDATED', 'Updated'))
       }
+      // redesign DL-B1 (M-DL3): the caller learns the outcome, like handleChangeActiveUser; with the record the API returned
+      return error ? { ok: false, error: outcomeError(result) } : { ok: true, error: null, user: result }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
@@ -832,8 +909,9 @@ export const UsersList = (props) => {
 
   /**
    * Method to delete several users from API
+   * `token` is the ConfirmAdmin confirmation_token (action `users_delete`).
    */
-  const handleDeleteSeveralUsers = async (code) => {
+  const handleDeleteSeveralUsers = async (token) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setDeleteUsersActionState({
@@ -841,10 +919,8 @@ export const UsersList = (props) => {
         loading: true
       })
       const payload = {
-        users_id: selectedUsers
-      }
-      if (code) {
-        payload.deleted_action_code = code
+        users_id: selectedUsers,
+        ...confirmationPayload(token)
       }
       const requestOptions = {
         method: 'DELETE',
@@ -1015,6 +1091,8 @@ export const UsersList = (props) => {
   }, [session])
 
   useEffect(() => {
+    // redesign (n.º 14, D-55): a new filter or search empties the selection, even when the page stays the first one
+    if (clearSelectionOnQueryChange) clearSelection()
     getUsers(firstRender.current ? paginationProps.currentPage : 1, null)
   }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified, selectedOccupation, multiFilterValues, orderFilterValue])
 
@@ -1027,7 +1105,10 @@ export const UsersList = (props) => {
   }, [])
 
   useEffect(() => {
-    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null)
+    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) {
+      if (clearSelectionOnQueryChange) clearSelection()
+      getUsers(1, null)
+    }
   }, [filterValues])
 
   useEffect(() => {
@@ -1048,23 +1129,33 @@ export const UsersList = (props) => {
     }
   }, [events])
 
+  // redesign DL-B1 (decision 3): a change of the status filter asks again for page 1 once; the first render already asked
+  const lastStatusFilter = useRef(activeStatusFilter)
+  useEffect(() => {
+    if (lastStatusFilter.current === activeStatusFilter) return
+    lastStatusFilter.current = activeStatusFilter
+    getUsers(1, paginationProps.pageSize)
+  }, [activeStatusFilter])
+
+  // redesign DL-B1 (decision 7, M-DL6): updates a row when enabled, available OR busy differ, copying only the attributes the event
+  // carries, and with the functional form so it never reads the rows of an old render.
   useEffect(() => {
     const handleUpdateDriver = (driver) => {
-      const selectedUser = usersList?.users?.find(item => item?.id === driver?.id)
-      if (selectedUser && ((driver?.enabled !== selectedUser?.enabled) || (driver?.available !== selectedUser?.available))) {
-        const updatedUserList = usersList?.users.map(item => {
-          if (item.id === driver?.id) {
-            return {
-              ...item,
-              enabled: driver?.enabled,
-              available: driver?.available,
-              busy: driver?.busy
-            }
+      setUsersList((prevState) => {
+        const selectedUser = prevState?.users?.find(item => item?.id === driver?.id)
+        if (!selectedUser) return prevState
+        const patch = {}
+        for (const attribute of LIVE_DRIVER_ATTRIBUTES) {
+          if (driver?.[attribute] !== undefined && driver[attribute] !== selectedUser[attribute]) {
+            patch[attribute] = driver[attribute]
           }
-          return item
-        })
-        setUsersList({ ...usersList, users: updatedUserList })
-      }
+        }
+        if (Object.keys(patch).length === 0) return prevState
+        return {
+          ...prevState,
+          users: prevState.users.map(item => item.id === driver.id ? { ...item, ...patch } : item)
+        }
+      })
     }
 
     socket.on('drivers_update', handleUpdateDriver)
@@ -1072,10 +1163,62 @@ export const UsersList = (props) => {
     return () => {
       socket.off('drivers_update', handleUpdateDriver)
     }
-  }, [socket, usersList?.users])
+  }, [socket])
 
+  // redesign DL-B1 (decision 7, M-DL6): opt-in, like K/DriversList: join the drivers room as manager now if connected and on every
+  // (re)connect; leaving it only drops this page's use of the room (the socket counts the uses)
   useEffect(() => {
-    if (isDriver && session?.user?.level === 5 && session?.user?.id && usersList?.users?.length > 0 && !usersList.loading) {
+    if (!liveDriversRoom || !session?.auth || session?.loading || !socket?.socket) return
+    const io = socket.socket
+    const room = { room: 'drivers', user_id: session?.user?.id, role: 'manager' }
+    const handleJoin = () => socket.join(room)
+    if (io.connected) handleJoin()
+    io.on('connect', handleJoin)
+
+    return () => {
+      socket.leave(room)
+      io.off('connect', handleJoin)
+    }
+  }, [liveDriversRoom, socket, socket?.socket, session?.auth, session?.loading, session?.user?.id])
+
+  // redesign DL-B1 (decision 7, M-DL6): live status of the rows already loaded: only available, busy and enabled, only the ones that arrive;
+  // never adds, removes or reorders rows
+  useEffect(() => {
+    if (!liveDriversRoom) return
+    const handleBatchDriverChanges = (batch) => {
+      if (!Array.isArray(batch)) return
+      const patches = new Map()
+      for (const entry of batch) {
+        if (!Array.isArray(entry?.changes)) continue
+        for (const change of entry.changes) {
+          if (!LIVE_DRIVER_ATTRIBUTES.includes(change?.attribute)) continue
+          patches.set(entry.driver_id, { ...patches.get(entry.driver_id), [change.attribute]: change.new })
+        }
+      }
+      if (patches.size === 0) return
+      setUsersList((prevState) => {
+        let changed = false
+        const users = prevState.users.map(item => {
+          const patch = patches.get(item?.id)
+          if (!patch || Object.keys(patch).every(attribute => item[attribute] === patch[attribute])) return item
+          changed = true
+          return { ...item, ...patch }
+        })
+        return changed ? { ...prevState, users } : prevState
+      })
+    }
+
+    socket.on('batch_driver_changes', handleBatchDriverChanges)
+
+    return () => {
+      socket.off('batch_driver_changes', handleBatchDriverChanges)
+    }
+  }, [liveDriversRoom, socket])
+
+  // redesign DL-B1 (decision 3, M-DL5): rows of a filtered answer are not written into the level 5 cache. `activeStatusFilter` is
+  // deliberately not a dependency: when it goes back to «all» the rows still on screen are the filtered ones until the reload lands
+  useEffect(() => {
+    if (isDriver && session?.user?.level === 5 && session?.user?.id && !activeStatusFilter && usersList?.users?.length > 0 && !usersList.loading) {
       try {
         const storageKey = getDashboardStorageKey(configFile, `drivers_cache_${session.user.id}`)
         if (Array.isArray(usersList.users)) {
@@ -1162,6 +1305,23 @@ UsersList.propTypes = {
    */
   isSearchByUserPhone: PropTypes.bool,
   /**
+   * Opt-in (UC-B1): a search with a space also matches «first word» as name AND «the rest» as lastname
+   */
+  isSearchByFullName: PropTypes.bool,
+  /**
+   * Opt-in (DL-B1): driver status asked from the API. `undefined` / 'all' is today's request;
+   * 'available' = enabled, available, not busy; 'busy' = enabled, available, busy; 'offline' = enabled, not available
+   */
+  statusFilter: PropTypes.oneOf(['all', 'available', 'busy', 'offline']),
+  /**
+   * Opt-in (DL-B1): join the `drivers` socket room as manager and apply `batch_driver_changes` (available, busy, enabled) to the loaded rows
+   */
+  liveDriversRoom: PropTypes.bool,
+  /**
+   * Opt-in (n.º 14, D-55): the selection empties when the page, the page size, a filter or the search changes, so a bulk delete only reaches visible rows
+   */
+  clearSelectionOnQueryChange: PropTypes.bool,
+  /**
    * Array of user props to fetch
    */
   propsToFetch: PropTypes.arrayOf(string)
@@ -1176,5 +1336,7 @@ const defaultProps = {
   ],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
   defaultUserTypesSelected: [0, 1, 2, 3],
-  defaultUserActiveState: true
+  defaultUserActiveState: true,
+  isSearchByFullName: false, // redesign UC-B1 (decision 2A): opt-in
+  liveDriversRoom: false // redesign DL-B1 (decision 7, M-DL6): opt-in
 }

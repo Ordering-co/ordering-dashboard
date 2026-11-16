@@ -1,9 +1,68 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { normalizeTimezone } from '../../utils'
+import { sumRows } from '../../utils/homeMetrics'
+import { periodOf, zonedNow } from '../../utils/businessReports'
+import { pairsByAt, periodOfChartReport, rowsOfChartReport, secondsOf, seriesOfChartReport, spendSeries as spendSeriesOf, topDriverItems } from '../../utils/driverReports'
 
+// redesign drivers FB (D2, D5, D9, DR-01, DR-12, DR-13, DR-19): the controller of /intelligence/drivers, with the pattern of BusinessAnalytics.
+// It asks the reports and computes the figures; the UI only paints them. There is no comparison with the previous period (D2).
+
+/** Milliseconds a debounced filter change waits for the next one before asking the reports (D6: store and brand checkboxes). */
+const FILTER_DEBOUNCE = 600
+
+/** The fourteen reports of the page, in the order `main` asks them: block key, API report, and the prop the UI receives. */
+const BLOCKS = [
+  { key: 'orders', type: 'driver_orders_v2', prop: 'ordersList' },
+  { key: 'sales', type: 'driver_sales_v2', prop: 'salesList' },
+  { key: 'orderStatus', type: 'drivers_orders_status', prop: 'orderStatusList' },
+  { key: 'topDrivers', type: 'drivers_top_orders', prop: 'topDriversList' },
+  { key: 'spendTimes', type: 'drivers_spend_times', prop: 'spendTimesList' },
+  { key: 'availableTimes', type: 'drivers_available_times', prop: 'availableTimesList' },
+  { key: 'busyTimes', type: 'drivers_busy_times', prop: 'busyTimesList' },
+  { key: 'customerSatisfaction', type: 'customer_satisfaction', prop: 'customerSatisfactionList' },
+  { key: 'acceptSpend', type: 'drivers_accept_spend', prop: 'acceptSpendList' },
+  { key: 'completeSpend', type: 'drivers_complete_spend', prop: 'completeSpendList' },
+  { key: 'arrivedPickUpSpend', type: 'drivers_arrived_pickup_spend', prop: 'arrivedPickUpSpendList' },
+  { key: 'pickUpSpend', type: 'drivers_pickup_spend', prop: 'pickUpSpendList' },
+  { key: 'orderLocation', type: 'drivers_order_location', prop: 'orderLocationList' },
+  { key: 'deliverySpend', type: 'drivers_delivery_spend', prop: 'deliverySpendList' }
+]
+
+/** The keys `reloadBlock` accepts. */
+export const DRIVER_ANALYTICS_BLOCK_KEYS = BLOCKS.map(block => block.key)
+
+// A block is found by its key and also by the name of its API report
+const BLOCK_LOOKUP = {}
+BLOCKS.forEach((block) => {
+  BLOCK_LOOKUP[block.key] = block
+  BLOCK_LOOKUP[block.type] = block
+})
+
+const LOCATIONS_TYPE = 'drivers_order_location'
+const V2_TYPES = ['driver_orders_v2', 'driver_sales_v2']
+
+// redesign drivers FB (DR-01: every block is born loading, so the UI reserves the final box from the first paint)
+const emptyBlock = (block, patch) => ({
+  loading: true,
+  data: [],
+  ...(block.type === LOCATIONS_TYPE ? { locations: [] } : {}),
+  error: null,
+  ...patch
+})
+
+const initialBlocks = () => Object.fromEntries(BLOCKS.map(block => [block.key, emptyBlock(block)]))
+
+const isReady = (block) => !block.loading && block.error == null
+
+/** A non-empty list of ids, or null: an empty array is never sent (DR-13). */
+const idsOf = (ids) => (Array.isArray(ids) && ids.length > 0 ? ids : null)
+
+/**
+ * Component to manage the Driver Intelligence page behavior without UI component
+ */
 export const DriverAnalytics = (props) => {
   const {
     UIComponent
@@ -12,623 +71,168 @@ export const DriverAnalytics = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
+  // The latest session and api, read by the loaders so they never depend on their identity
+  const context = useRef({})
+  context.current = { root: ordering?.root, token, sessionLoading: loading }
+
+  const mounted = useRef(true)
+  // One counter per block: a response only writes if no newer request of its own was made (DR-12)
+  const requests = useRef({})
+  const timer = useRef(null)
+
+  // redesign drivers FB (D5): the drivers live in `drivers_ids`, the key of the kit pills, and are sent as `drivers=`
   const [filterList, setFilterList] = useState({
     lapse: 'today',
-    userIds: null,
+    drivers_ids: null,
     businessIds: null,
     app_id: 'all',
     driver_groups_ids: null,
     franchises_id: null,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   })
-  const [ordersList, setOrdersList] = useState({ loading: false, data: [], error: null })
-  const [salesList, setSalesList] = useState({ loading: false, data: [], error: null })
-  const [orderStatusList, setOrderStatusList] = useState({ loading: false, data: [], error: null })
-  const [topOrdersList, setTopOrdersList] = useState({ loading: false, data: [], error: null })
-  const [spendTimesList, setSpendTimesList] = useState({ loading: false, data: [], error: null })
-  const [availableTimesList, setAvailableTimesList] = useState({ loading: false, data: [], error: null })
-  const [busyTimesList, setBusyTimesList] = useState({ loading: false, data: {}, error: null })
-  const [customerSatisfactionList, setCustomerSatisfactionList] = useState({ loading: false, data: [], error: null })
-  const [ordersAcceptSpendList, setOrdersAcceptSpendList] = useState({ loading: false, data: [], error: null })
-  const [arrivedPickUpSpendList, setArrivedPickUpSpendList] = useState({ loading: false, data: [], error: null })
-  const [orderLocationList, setOrderLocationList] = useState({ loading: false, data: [], error: null })
-  const [completeSpendList, setCompleteSpendList] = useState({ loading: false, data: [], error: null })
-  const [pickUpSpendList, setPickUpSpendList] = useState({ loading: false, data: [], error: null })
-  const [deliverySpendList, setDeliverySpendList] = useState({ loading: false, data: [], error: null })
+  // The filters the reports are asked with; the pills (`filterList`) change at once, this one after the debounce
+  const [applied, setApplied] = useState(filterList)
+  const latestFilters = useRef(filterList)
+  const appliedRef = useRef(applied)
+  appliedRef.current = applied
+
+  const [blocks, setBlocks] = useState(initialBlocks)
   const [countryCode, setCountryCode] = useState('')
+
+  useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+      clearTimeout(timer.current)
+    }
+  }, [])
 
   const handleChangeCode = (code) => {
     if (code === countryCode) setCountryCode('')
     else setCountryCode(code)
   }
 
-  const paramsForAPI = (type) => {
-    const rootUrl = `${ordering.root}/reports/${type}`
-    let params = `lapse=${filterList?.lapse}&timezone=${normalizeTimezone(filterList?.timeZone)}`
-    if (filterList?.userIds) params = `${params}&drivers=${filterList?.userIds?.toString()}`
-    if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses=${filterList?.businessIds?.toString()}`
-    if (filterList?.app_id && filterList.app_id !== 'all') params = `${params}&app_id=${filterList?.app_id}`
-    if (filterList?.driver_groups_ids) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
-    if (filterList?.franchises_id) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
+  const paramsForAPI = (type, filters) => {
+    const rootUrl = `${context.current.root}/reports/${type}`
+    let params = `lapse=${filters?.lapse}&timezone=${normalizeTimezone(filters?.timeZone)}`
+    // redesign drivers FB (DR-13): a list with no ids is not sent
+    const drivers = idsOf(filters?.drivers_ids)
+    if (drivers) params = `${params}&drivers=${drivers.toString()}`
+    const businesses = idsOf(filters?.businessIds)
+    if (businesses) params = `${params}&businesses=${businesses.toString()}`
+    if (filters?.app_id && filters.app_id !== 'all') params = `${params}&app_id=${filters?.app_id}`
+    const groups = idsOf(filters?.driver_groups_ids)
+    if (groups) params = `${params}&driver_groups_ids=${JSON.stringify(groups)}`
+    const franchises = idsOf(filters?.franchises_id)
+    if (franchises) params = `${params}&franchises_id=${JSON.stringify(franchises)}`
+    // the v2 reports ignore `drivers=` / `businesses=`; they read these JSON lists instead
+    if (V2_TYPES.includes(type)) {
+      if (drivers) params = `${params}&drivers_ids=${JSON.stringify(drivers)}`
+      if (businesses) params = `${params}&businesses_ids=${JSON.stringify(businesses)}`
+    }
+
     return `${rootUrl}?${params}`
   }
 
-  /**
-   * Method to get orders list
-   */
-  const getOrders = async () => {
-    if (loading) return
-    try {
-      setOrdersList({ ...ordersList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
+  /** GET one report; resolves with the API envelope `{ error, result }` of the body, as `main` reads it. */
+  const getReport = async (type, filters) => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${context.current.token}`
       }
-      const functionFetch = paramsForAPI('driver_orders_v2')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setOrdersList({
-          ...ordersList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setOrdersList({
-          ...ordersList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setOrdersList({
-        ...ordersList,
-        loading: false,
-        error: err
-      })
     }
+    const response = await fetch(paramsForAPI(type, filters), requestOptions)
+    return response.json()
   }
 
   /**
-   * Method to get sales list
+   * Method to get one block (orders, sales, top drivers...). Nothing is asked while the session loads.
+   * A success clears the error; a failure leaves empty data, loading off and the error (DR-01).
    */
-  const getSales = async () => {
-    if (loading) return
-    try {
-      setSalesList({ ...salesList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('driver_sales_v2')
+  const loadBlock = useCallback(async (key, filters = appliedRef.current) => {
+    const block = BLOCK_LOOKUP[key]
+    if (!block || context.current.sessionLoading) return
+    const id = (requests.current[block.key] || 0) + 1
+    requests.current[block.key] = id
+    const isCurrent = () => mounted.current && requests.current[block.key] === id
+    const write = (patch) => setBlocks(previous => ({ ...previous, [block.key]: patch(previous[block.key]) }))
 
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
+    write(previous => ({ ...previous, loading: true }))
+    try {
+      const { error, result } = await getReport(block.type, filters)
+      if (!isCurrent()) return
       if (!error) {
-        setSalesList({
-          ...salesList,
+        write(() => emptyBlock(block, {
           loading: false,
-          data: result
-        })
+          data: result,
+          ...(block.type === LOCATIONS_TYPE ? { locations: result } : {})
+        }))
       } else {
-        setSalesList({
-          ...salesList,
-          loading: true,
-          error: result
-        })
+        write(() => emptyBlock(block, { loading: false, error: result }))
       }
     } catch (err) {
-      setSalesList({
-        ...salesList,
-        loading: false,
-        error: err
-      })
+      if (!isCurrent()) return
+      write(() => emptyBlock(block, { loading: false, error: err }))
     }
-  }
+  }, [])
 
-  /**
-   * Method to get order status List
-   */
-  const getOrderStatus = async () => {
-    if (loading) return
-    try {
-      setOrderStatusList({ ...orderStatusList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_orders_status')
+  const reloadBlock = useCallback((key) => loadBlock(key, appliedRef.current), [loadBlock])
 
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setOrderStatusList({
-          ...orderStatusList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setOrderStatusList({
-          ...orderStatusList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setOrderStatusList({
-        ...orderStatusList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get top orders list
-   */
-  const getTopOrders = async () => {
-    if (loading) return
-    try {
-      setTopOrdersList({ ...topOrdersList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_top_orders')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setTopOrdersList({
-          ...topOrdersList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setTopOrdersList({
-          ...topOrdersList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setTopOrdersList({
-        ...topOrdersList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get complete spend List
-   */
-  const getCustomerSatisfaction = async () => {
-    if (loading) return
-    try {
-      setCustomerSatisfactionList({ ...customerSatisfactionList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('customer_satisfaction')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setCustomerSatisfactionList({
-          ...customerSatisfactionList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setCustomerSatisfactionList({
-          ...customerSatisfactionList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setCustomerSatisfactionList({
-        ...customerSatisfactionList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get complete spend List
-   */
-  const getCompleteSpend = async () => {
-    if (loading) return
-    try {
-      setCompleteSpendList({ ...completeSpendList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_complete_spend')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setCompleteSpendList({
-          ...completeSpendList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setCompleteSpendList({
-          ...completeSpendList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setCompleteSpendList({
-        ...completeSpendList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get spend times list
-   */
-  const getSpendTimes = async () => {
-    if (loading) return
-    try {
-      setSpendTimesList({ ...spendTimesList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_spend_times')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setSpendTimesList({
-          ...spendTimesList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setSpendTimesList({
-          ...spendTimesList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setSpendTimesList({
-        ...spendTimesList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get available times list
-   */
-  const getAvailableTimes = async () => {
-    if (loading) return
-    try {
-      setAvailableTimesList({ ...availableTimesList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_available_times')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setAvailableTimesList({
-          ...availableTimesList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setAvailableTimesList({
-          ...availableTimesList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setAvailableTimesList({
-        ...availableTimesList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to busy times list
-   */
-  const getBusyTimes = async () => {
-    if (loading) return
-    try {
-      setBusyTimesList({ ...busyTimesList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_busy_times')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setBusyTimesList({
-          ...busyTimesList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setBusyTimesList({
-          ...busyTimesList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setBusyTimesList({
-        ...busyTimesList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get orders accept spend list
-   */
-  const getOrdersAcceptSpend = async () => {
-    if (loading) return
-    try {
-      setOrdersAcceptSpendList({ ...ordersAcceptSpendList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_accept_spend')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setOrdersAcceptSpendList({
-          ...ordersAcceptSpendList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setOrdersAcceptSpendList({
-          ...ordersAcceptSpendList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setOrdersAcceptSpendList({
-        ...ordersAcceptSpendList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get drivers arrived pickup spend list
-   */
-  const getArrivedPickeUpSpend = async () => {
-    if (loading) return
-    try {
-      setArrivedPickUpSpendList({ ...arrivedPickUpSpendList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_arrived_pickup_spend')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setArrivedPickUpSpendList({
-          ...arrivedPickUpSpendList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setArrivedPickUpSpendList({
-          ...arrivedPickUpSpendList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setArrivedPickUpSpendList({
-        ...arrivedPickUpSpendList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get location List
-   */
-  const getLocations = async () => {
-    if (loading) return
-    try {
-      setOrderLocationList({ ...orderLocationList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_order_location')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setOrderLocationList({
-          ...orderLocationList,
-          loading: false,
-          locations: result
-        })
-      } else {
-        setOrderLocationList({
-          ...orderLocationList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setOrderLocationList({
-        ...orderLocationList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get arrived pickup spend list
-   */
-  const getPickUpSpend = async () => {
-    if (loading) return
-    try {
-      setPickUpSpendList({ ...pickUpSpendList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_pickup_spend')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setPickUpSpendList({
-          ...pickUpSpendList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setPickUpSpendList({
-          ...pickUpSpendList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setPickUpSpendList({
-        ...pickUpSpendList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get arrived pickup spend list
-   */
-  const getDeliverySpend = async () => {
-    if (loading) return
-    try {
-      setDeliverySpendList({ ...deliverySpendList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_delivery_spend')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setDeliverySpendList({
-          ...deliverySpendList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setDeliverySpendList({
-          ...deliverySpendList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setDeliverySpendList({
-        ...deliverySpendList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
+  // One load per change of the applied filters, and one when the session finishes loading
   useEffect(() => {
-    getOrders()
-    getSales()
-    getOrderStatus()
-    getTopOrders()
-    getSpendTimes()
-    getAvailableTimes()
-    getBusyTimes()
-    getCustomerSatisfaction()
-    getOrdersAcceptSpend()
-    getCompleteSpend()
-    getArrivedPickeUpSpend()
-    getPickUpSpend()
-    getLocations()
-    getDeliverySpend()
-  }, [filterList])
+    if (loading) return
+    BLOCKS.forEach(block => loadBlock(block.key, applied))
+  }, [applied, loading])
+
+  /**
+   * Changes the filters. The pills see it at once; the reports are asked at once too, unless `debounce` is set
+   * (D6: the checkboxes of stores and brands), which waits 600 ms after the last change.
+   */
+  const handleChangeFilterList = useCallback((next, options) => {
+    const value = typeof next === 'function' ? next(latestFilters.current) : next
+    latestFilters.current = value
+    setFilterList(value)
+    clearTimeout(timer.current)
+    if (options?.debounce) {
+      timer.current = setTimeout(() => {
+        if (mounted.current) setApplied(latestFilters.current)
+      }, FILTER_DEBOUNCE)
+    } else {
+      setApplied(value)
+    }
+  }, [])
+
+  // redesign drivers FB (D6, DR-19): the rows and series the cards draw, computed once from the blocks that are ready
+  // redesign drivers FB (phase-1 audit): `*Rows` are the first series (totals and CSV, as main); `*Series` are all of them (main draws every series)
+  const ordersRows = useMemo(() => (isReady(blocks.orders) ? rowsOfChartReport(blocks.orders.data, 'orders') : []), [blocks.orders])
+  const salesRows = useMemo(() => (isReady(blocks.sales) ? rowsOfChartReport(blocks.sales.data, 'sales') : []), [blocks.sales])
+  const ordersSeries = useMemo(() => (isReady(blocks.orders) ? seriesOfChartReport(blocks.orders.data, 'orders') : []), [blocks.orders])
+  const salesSeries = useMemo(() => (isReady(blocks.sales) ? seriesOfChartReport(blocks.sales.data, 'sales') : []), [blocks.sales])
+  // redesign drivers FB (phase-1 audit): the axis of each chart follows the range its own response carries, not the zone
+  const ordersPeriod = useMemo(() => (isReady(blocks.orders) ? periodOfChartReport(blocks.orders.data) : null), [blocks.orders])
+  const salesPeriod = useMemo(() => (isReady(blocks.sales) ? periodOfChartReport(blocks.sales.data) : null), [blocks.sales])
+  const spendSeries = useMemo(() => (isReady(blocks.spendTimes) ? spendSeriesOf(blocks.spendTimes.data) : []), [blocks.spendTimes])
+  const availablePairs = useMemo(() => (isReady(blocks.availableTimes) ? pairsByAt(blocks.availableTimes.data, 'available', 'not_available') : []), [blocks.availableTimes])
+  const busyPairs = useMemo(() => (isReady(blocks.busyTimes) ? pairsByAt(blocks.busyTimes.data, 'busy', 'not_busy') : []), [blocks.busyTimes])
+  const topDrivers = useMemo(() => (isReady(blocks.topDrivers) ? topDriverItems(blocks.topDrivers.data) : []), [blocks.topDrivers])
+
+  const totals = useMemo(() => {
+    const seconds = (block) => (isReady(block) ? secondsOf(block.data) : null)
+    return {
+      orders: isReady(blocks.orders) ? sumRows(ordersRows, 'orders') : null,
+      sales: isReady(blocks.sales) ? sumRows(salesRows, 'sales') : null,
+      acceptSeconds: seconds(blocks.acceptSpend),
+      arrivedSeconds: seconds(blocks.arrivedPickUpSpend),
+      pickupSeconds: seconds(blocks.pickUpSpend),
+      deliverySeconds: seconds(blocks.deliverySpend),
+      completeSeconds: seconds(blocks.completeSpend)
+    }
+  }, [blocks, ordersRows, salesRows])
+
+  // The period is read in the zone of the pills, which change at once; and again on every load (`applied` is a new object then)
+  const period = useMemo(() => periodOf(filterList.lapse, zonedNow(filterList.timeZone)), [filterList.lapse, filterList.timeZone, applied])
 
   return (
     <>
@@ -636,21 +240,21 @@ export const DriverAnalytics = (props) => {
         <UIComponent
           {...props}
           filterList={filterList}
-          ordersList={ordersList}
-          salesList={salesList}
-          orderStatusList={orderStatusList}
-          topOrdersList={topOrdersList}
-          customerSatisfactionList={customerSatisfactionList}
-          ordersAcceptSpendList={ordersAcceptSpendList}
-          arrivedPickUpSpendList={arrivedPickUpSpendList}
-          orderLocationList={orderLocationList}
-          spendTimesList={spendTimesList}
-          availableTimesList={availableTimesList}
-          busyTimesList={busyTimesList}
-          completeSpendList={completeSpendList}
-          pickUpSpendList={pickUpSpendList}
-          deliverySpendList={deliverySpendList}
-          handleChangeFilterList={setFilterList}
+          {...Object.fromEntries(BLOCKS.map(block => [block.prop, blocks[block.key]]))}
+          reloadBlock={reloadBlock}
+          totals={totals}
+          ordersRows={ordersRows}
+          salesRows={salesRows}
+          ordersSeries={ordersSeries}
+          salesSeries={salesSeries}
+          ordersPeriod={ordersPeriod}
+          salesPeriod={salesPeriod}
+          spendSeries={spendSeries}
+          availablePairs={availablePairs}
+          busyPairs={busyPairs}
+          topDrivers={topDrivers}
+          period={period}
+          handleChangeFilterList={handleChangeFilterList}
           countryCode={countryCode}
           handleChangeCode={handleChangeCode}
         />

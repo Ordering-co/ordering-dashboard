@@ -1,5 +1,5 @@
 import { getMenuImportUseFixture, MENU_IMPORT_ALLOWED_ORDERING_HOSTS } from './menuImportConfig'
-import { ORDERING_BRAND } from '../../../styles/OrderingBrand/tokens.generated'
+import { ORDERING_BRAND } from '../../../styles/OrderingBrand'
 
 const DOORDASH_URL_PATTERN = /doordash\.com/i
 const UBER_EATS_URL_PATTERN = /ubereats\.com/i
@@ -26,6 +26,7 @@ const validateDoorDashForm = (form) => validateDoorDashUrl(form.url)
 const validateUberEatsForm = (form) => validateUberEatsUrl(form.url)
 
 const LITERAL_IP = /^(?:\d{1,3}\.){3}\d{1,3}$/
+const ORDERING_BUSINESS_SEGMENT = /^[0-9A-Za-z_-]+$/
 
 const hostnameOf = (rawUrl) => {
   try {
@@ -70,6 +71,9 @@ const validateOrderingBusinessUrl = (rawUrl, projectApiRoot) => {
     if (!segment) {
       return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_INVALID_URL' }
     }
+    if (!ORDERING_BUSINESS_SEGMENT.test(segment)) {
+      return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_SEGMENT_INVALID' }
+    }
     if (!orderingHostAllowed(trimmed, projectApiRoot)) {
       return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_HOST_NOT_ALLOWED' }
     }
@@ -85,7 +89,12 @@ const validateOrderingForm = (form, context = {}) => {
   const segment = (form.orderingBusinessSegment || '').trim()
 
   if (url) return validateOrderingBusinessUrl(url, context.projectApiRoot)
-  if (projectId && segment) return { valid: true }
+  if (projectId && segment) {
+    if (!ORDERING_BUSINESS_SEGMENT.test(segment)) {
+      return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_SEGMENT_INVALID' }
+    }
+    return { valid: true }
+  }
   if (projectId || segment) {
     return { valid: false, error: 'IMPORTER_VALIDATION_ORDERING_INCOMPLETE_STRUCTURED' }
   }

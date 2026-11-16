@@ -76,7 +76,8 @@ export const CustomerFees = (props) => {
         return { ...prev, fees: without }
       }
       const safePageSize = Number(paginationProps.pageSize) >= 1 ? Number(paginationProps.pageSize) : 10
-      const next = [...without, fee].slice(-safePageSize)
+      // redesign bugs F row 28: the list is newest first (orderBy=-id): the new fee goes first and the oldest row drops off
+      const next = [fee, ...without].slice(0, safePageSize)
       return { ...prev, fees: next }
     })
     setPaginationProps((prev) => {
@@ -283,8 +284,11 @@ export const CustomerFees = (props) => {
     }
   }
 
-  const createFee = async (changes) => {
+  // redesign stores 5.12: `options.inlineError` skips the "Loading" and error toasts and leaves `actionState.error`
+  // empty (the UI shows the error inline). The success toast and the return shape do not change.
+  const createFee = async (changes, options = {}) => {
     if (!token || !businessId) return
+    const inline = options?.inlineError === true
 
     const fixed = Number(changes?.fixed) || 0
     const percentage = Number(changes?.percentage) || 0
@@ -294,7 +298,7 @@ export const CustomerFees = (props) => {
     }
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const payload = {
@@ -315,8 +319,8 @@ export const CustomerFees = (props) => {
       const response = await fetch(`${ordering.root}/fees`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: content?.result })
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : content?.result })
         return { error: true, result: content?.result }
       }
       setActionState({ loading: false, error: null })
@@ -324,14 +328,15 @@ export const CustomerFees = (props) => {
       showToast?.(ToastType.Success, t('FEE_CREATED', 'Fee created'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
-      setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      setActionState({ loading: false, error: inline ? null : [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
   }
 
-  const updateFee = async (id, changes) => {
+  const updateFee = async (id, changes, options = {}) => {
     if (!token) return
+    const inline = options?.inlineError === true
 
     const hasAmountChanges = 'fixed' in changes || 'percentage' in changes
     if (hasAmountChanges) {
@@ -345,7 +350,7 @@ export const CustomerFees = (props) => {
     }
 
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
 
       const payload = {
@@ -365,8 +370,8 @@ export const CustomerFees = (props) => {
       const response = await fetch(`${ordering.root}/fees/${id}`, requestOptions)
       const content = await response.json()
       if (content?.error) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: content?.result })
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : content?.result })
         return { error: true, result: content?.result }
       }
       setActionState({ loading: false, error: null })
@@ -374,18 +379,25 @@ export const CustomerFees = (props) => {
       showToast?.(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       return content
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
-      setActionState({ loading: false, error: [err?.message || 'Unknown error'] })
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      setActionState({ loading: false, error: inline ? null : [err?.message || 'Unknown error'] })
       return { error: true, result: [err?.message || 'Unknown error'] }
     }
   }
 
-  const deleteFees = async (ids) => {
+  // redesign stores 5.12 (G4-33): every id whose DELETE worked leaves the list (and the pagination totals) even when
+  // others fail; the result says which ones did: `{ error, result, deletedIds, failedIds }` (`result` is `true` on full success,
+  // the per-id messages otherwise). `options.inlineError` as in `createFee`.
+  const deleteFees = async (ids, options = {}) => {
     if (!token) return
     const list = Array.isArray(ids) ? ids : []
     if (list.length === 0) return
+    const inline = options?.inlineError === true
+    const deletedIds = []
+    const failedIds = []
+    const errors = []
     try {
-      showToast?.(ToastType.Info, t('LOADING', 'Loading'))
+      if (!inline) showToast?.(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
       const requestOptions = {
         method: 'DELETE',
@@ -395,31 +407,39 @@ export const CustomerFees = (props) => {
         }
       }
 
-      const errors = []
       for (const id of list) {
-        const response = await fetch(`${ordering.root}/fees/${id}`, requestOptions)
-        const content = await response.json()
-        if (content?.error) {
-          const msg = Array.isArray(content?.result) ? content.result.join(', ') : String(content?.result || 'Error')
-          errors.push(`#${id}: ${msg}`)
+        try {
+          const response = await fetch(`${ordering.root}/fees/${id}`, requestOptions)
+          const content = await response.json()
+          if (content?.error) {
+            const msg = Array.isArray(content?.result) ? content.result.join(', ') : String(content?.result || 'Error')
+            errors.push(`#${id}: ${msg}`)
+            failedIds.push(id)
+          } else {
+            deletedIds.push(id)
+          }
+        } catch (err) {
+          errors.push(`#${id}: ${err?.message || 'Unknown error'}`)
+          failedIds.push(id)
         }
       }
 
+      removeFeesFromList(deletedIds)
+
       if (errors.length) {
-        showToast?.(ToastType.Error, t('ERROR', 'Error'))
-        setActionState({ loading: false, error: errors })
-        return { error: true, result: errors }
+        if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
+        setActionState({ loading: false, error: inline ? null : errors })
+        return { error: true, result: errors, deletedIds, failedIds }
       }
 
       setActionState({ loading: false, error: null })
-      removeFeesFromList(list)
       showToast?.(ToastType.Success, t('FEES_DELETED', 'Fees deleted'))
-      return { error: false, result: true }
+      return { error: false, result: true, deletedIds, failedIds: [] }
     } catch (err) {
-      showToast?.(ToastType.Error, t('ERROR', 'Error'))
+      if (!inline) showToast?.(ToastType.Error, t('ERROR', 'Error'))
       const msg = [err?.message || 'Unknown error']
-      setActionState({ loading: false, error: msg })
-      return { error: true, result: msg }
+      setActionState({ loading: false, error: inline ? null : msg })
+      return { error: true, result: msg, deletedIds, failedIds: list.filter((id) => !deletedIds.includes(id)) }
     }
   }
 

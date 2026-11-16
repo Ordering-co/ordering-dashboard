@@ -55,6 +55,21 @@ describe('format', () => {
     expect(formatFieldValue('name', 'Pizza', helpers)).toBe('Pizza')
   })
 
+  // redesign AS-A (M-AS9): the minutes unit has its own key, the generic MIN key is untouched
+  it('takes the minutes unit of the preparation time from its own key', () => {
+    const keyed = (key, fallback) => ({ ASSISTANT_UNIT_MIN: 'mín', MIN: 'minuto' })[key] ?? fallback
+    expect(formatFieldValue('prepared_in', 20, { ...helpers, t: keyed })).toBe('20 mín')
+  })
+
+  // redesign AS-A (M-AS12): a confirm in flight is not expired by the clock
+  it('keeps a proposal with a confirm in flight as proposed after its clock ran out', () => {
+    const now = Date.UTC(2026, 8, 30, 12, 0, 0)
+    const expiresAt = new Date(now + 1000).toISOString()
+    const action = { status: 'proposed', expires_at: expiresAt }
+    expect(getActionDisplayStatus({ ...action, busy: true }, now + 5000)).toBe('proposed')
+    expect(getActionDisplayStatus({ ...action, busy: false }, now + 5000)).toBe('expired')
+  })
+
   it('summarizes a weekly schedule, Sunday first', () => {
     const open = { enabled: true, lapses: [{ open: { hour: 9, minute: 0 }, close: { hour: 22, minute: 30 } }] }
     const closed = { enabled: false, lapses: [] }
@@ -76,21 +91,31 @@ describe('format', () => {
 })
 
 describe('formatRetryAt', () => {
-  // Local times, whatever the time zone of the test run
+  // redesign AS-B (M-AS14, decision 13): parseDate (the project format) paints the time and the date
   const now = new Date(2026, 9, 1, 15, 0).getTime()
   const at = (day, hour, minute = 0) => new Date(2026, 9, day, hour, minute).toISOString()
+  const calls = []
+  const parseDate = (value, options) => {
+    calls.push([value, options])
+    return options.timeOnly ? `T(${value})` : `D(${value})`
+  }
 
-  it('says today, tomorrow or the date, with the time', () => {
-    expect(formatRetryAt(at(1, 19), t, 'en', now)).toBe('You can use it again today at 7:00 PM.')
-    expect(formatRetryAt(at(2, 9, 30), t, 'en', now)).toBe('You can use it again tomorrow at 9:30 AM.')
-    expect(formatRetryAt(at(3, 19), t, 'en', now)).toBe('You can use it again on Oct 3 at 7:00 PM.')
+  it('says today, tomorrow or the date, with the project format for both', () => {
+    const today = at(1, 19)
+    const utc = today.slice(0, 19).replace('T', ' ')
+    expect(formatRetryAt(today, t, parseDate, now)).toBe(`You can use it again today at T(${utc}).`)
+    expect(calls.at(-1)).toEqual([utc, { timeOnly: true }])
+    expect(formatRetryAt(at(2, 9, 30), t, parseDate, now)).toMatch(/^You can use it again tomorrow at T\(/)
+    const later = at(3, 19)
+    const laterUtc = later.slice(0, 19).replace('T', ' ')
+    expect(formatRetryAt(later, t, parseDate, now)).toBe(`You can use it again on D(${laterUtc}) at T(${laterUtc}).`)
+    expect(calls.at(-1)).toEqual([laterUtc, { dateOnly: true, omitYear: true }])
   })
 
-  it('uses the Dashboard language and falls back to later', () => {
-    expect(formatRetryAt(at(1, 19), t, 'es', now)).toBe('You can use it again today at 19:00.')
-    expect(formatRetryAt(at(1, 19), t, 'not a locale', now)).toMatch(/^You can use it again today at /)
-    expect(formatRetryAt(null, t, 'en', now)).toBe('You can use it again later.')
-    expect(formatRetryAt('soon', t, 'en', now)).toBe('You can use it again later.')
+  it('falls back to later without a date or a formatter', () => {
+    expect(formatRetryAt(null, t, parseDate, now)).toBe('You can use it again later.')
+    expect(formatRetryAt('soon', t, parseDate, now)).toBe('You can use it again later.')
+    expect(formatRetryAt(at(1, 19), t, undefined, now)).toBe('You can use it again later.')
   })
 })
 

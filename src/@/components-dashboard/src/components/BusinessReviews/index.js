@@ -81,10 +81,11 @@ export const BusinessReviews = (props) => {
           loading: false,
           error: null
         })
+        // redesign reviews FB (D5, RV-08): the load error reaches the UI (it was null, so a failure looked like «no reviews»)
         setBusinessReviewsList({
           reviews: [],
           loading: false,
-          error: null
+          error: result ?? error
         })
         return
       }
@@ -111,7 +112,7 @@ export const BusinessReviews = (props) => {
         setBusinessReviewsList({
           reviews: [],
           loading: false,
-          error: null
+          error: [err.message]
         })
       }
     }
@@ -119,12 +120,16 @@ export const BusinessReviews = (props) => {
 
   /**
    * Method to change the enabled of the review
+   * redesign reviews FB (D5, RV-04): it answers `{ ok: true }` or `{ ok: false, error }` so the switch of the UI says
+   * «saving» and «could not save» itself (no «Loading» toast, no toast on failure). The review of the list is replaced by
+   * a copy, never mutated.
+   * @param {number} reviewId
    * @param {boolean} enabled
    */
   const handleChangeReviewEnabled = async (reviewId, enabled) => {
+    // redesign reviews FB (D5, RV-04)
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
+      setActionState({ loading: true, error: null })
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -135,22 +140,28 @@ export const BusinessReviews = (props) => {
       }
       const response = await fetch(`${ordering.root}/business/${businessId}/reviews/${reviewId}`, requestOptions)
       const content = await response.json()
-      if (!content.error) {
-        const reviews = businessReviewsList.reviews.filter(review => {
-          if (review.id === reviewId) {
-            Object.assign(review, content.result)
-          }
-          return true
-        })
-        setBusinessReviewsList({ ...businessReviewsList, reviews })
-        showToast(ToastType.Success, t('REVIEW_UPDATED', 'Review updated'))
+      if (content.error) {
+        setActionState({ loading: false, error: content.result })
+        return { ok: false, error: content.result }
       }
+      setBusinessReviewsList(prev => ({
+        ...prev,
+        reviews: prev.reviews.map(review => review.id === reviewId ? { ...review, ...content.result } : review)
+      }))
+      setActionState({ loading: false, error: null })
+      showToast(ToastType.Success, t('REVIEW_UPDATED', 'Review updated'))
+      return { ok: true }
     } catch (err) {
+      // redesign reviews R1 (Q1-7): `actionState.error` keeps the message of the exception, but the answer carries no text, so the
+      // switch says its own «The review wasn't updated.» instead of «Failed to fetch» (AsyncSwitch only uses `failureText` when the
+      // error has none)
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
-  useEffect(() => {
+  // redesign reviews FB (D5, RV-08): the load of the effect, also exposed as `reloadReviews` (the «Try again» of the UI)
+  const loadReviews = () => {
     syncBusinessFromProps()
 
     if (fetchReviewsFromApi) {
@@ -169,6 +180,10 @@ export const BusinessReviews = (props) => {
     } else {
       getBusiness()
     }
+  }
+
+  useEffect(() => {
+    loadReviews()
 
     return () => {
       if (requestsState.current.reviews) {
@@ -186,6 +201,7 @@ export const BusinessReviews = (props) => {
           reviewsList={businessReviewsList}
           actionState={actionState}
           handleChangeReviewEnabled={handleChangeReviewEnabled}
+          reloadReviews={loadReviews}
         />
       )}
     </>

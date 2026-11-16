@@ -122,16 +122,14 @@ export const logMenuImportSync = ({ token, source, params }) => {
   const orderingToken = String(token || '').trim()
   const project = String(params?.project || '').trim()
   const orderingApiBaseUrl = String(params?.orderingApiBaseUrl || '').trim()
-  const businessIds = Array.isArray(params?.businessIds) ? params.businessIds : []
-  const businessId = businessIds[0]
+  // one record per store of the import
+  const businessIds = (Array.isArray(params?.businessIds) ? params.businessIds : []).filter((id) => id != null)
 
-  if (!url || !anon || !orderingToken || !project || !orderingApiBaseUrl || businessId == null) {
+  if (!url || !anon || !orderingToken || !project || !orderingApiBaseUrl || !businessIds.length) {
     return
   }
 
   const payload = {
-    action: 'upsert',
-    business_id: Number(businessId),
     project,
     source,
     ordering_api_base_url: orderingApiBaseUrl
@@ -149,14 +147,16 @@ export const logMenuImportSync = ({ token, source, params }) => {
     payload.source_url = sourceUrl
   }
 
-  try {
-    void fetch(url, {
-      method: 'POST',
-      headers: buildCommonHeaders(anon, orderingToken),
-      body: JSON.stringify(payload),
-      keepalive: true
-    }).catch(() => {})
-  } catch {
-    // ignore
-  }
+  businessIds.forEach((businessId) => {
+    try {
+      void fetch(url, {
+        method: 'POST',
+        headers: buildCommonHeaders(anon, orderingToken),
+        body: JSON.stringify({ action: 'upsert', business_id: Number(businessId), ...payload }),
+        keepalive: true
+      }).catch(() => {})
+    } catch {
+      // ignore
+    }
+  })
 }

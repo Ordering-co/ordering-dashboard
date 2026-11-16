@@ -1,0 +1,87 @@
+/*
+ * redesign SC-B5 (decision 1A) · /schools: the shell. The page, its header with the menu button, the picker row under it and the states
+ * that take the place of the tabs.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js, and SchoolsManagement/__tests__/schools-page.css.test.js for this
+ * file). Logical properties. Class prefix odc-school-.
+ */
+
+/* ── The page: what SchoolsContainer was (it fills the width, scrolls inside itself, keeps the page gutter) ── */
+.odc-school-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  padding: var(--od-x-page-gutter);
+  overflow: auto;
+}
+
+@media (max-width: 767px) {
+  .odc-school-page {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── The picker: its own row under the header (auditor 9: inside the page header its list would sit under that stacking context and,
+   at 390, would not drop to its own line). A comfortable width on a laptop, the full width on a phone ── */
+.odc-school-picker {
+  min-inline-size: 0;
+}
+
+.odc-school-picker > .odc-field {
+  inline-size: var(--od-x-search);
+  max-inline-size: 100%;
+}
+
+@media (max-width: 767px) {
+  .odc-school-picker > .odc-field {
+    inline-size: 100%;
+  }
+}
+
+/* A school's name in the list and in the trigger: one line, an ellipsis when it is longer */
+.odc-school-picker-name {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* «No results» in the list */
+.odc-school-picker-note {
+  color: var(--od-text-muted);
+}
+
+/* ── The tabs and what is under them ── */
+.odc-school-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* While the chosen school comes back (?school= or the remembered one): lines in the shape of the tab, no «Select a school…» in between */
+.odc-school-restoring {
+  display: grid;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── The module is off: the panel (a Product EmptyState); the line for non-administrators goes under the description ── */
+.odc-school-disabled-line {
+  display: block;
+}
+
+.odc-school-disabled-line + .odc-school-disabled-line {
+  margin-block-start: var(--od-space-2);
+}
+
+/* redesign SC-B5 (live check): the tab's content starts one step under the tabs, not touching their hairline */
+.odc-school-tabpanel {
+  padding-block-start: var(--od-space-4);
+  min-inline-size: 0;
+}

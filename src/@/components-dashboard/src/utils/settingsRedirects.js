@@ -31,6 +31,18 @@ export const SETTINGS_LEGACY_REDIRECTS = {
   '/reservations': { group: 'orders', category: 'store_reservation' }
 }
 
+/**
+ * Old category keys whose home moved. `basic_maps` was a folder of the old
+ * Basic page: the API sends it empty and Maps lives in its child `google_maps`
+ * (Locations & markets). The hub drops empty folders, so the key is renamed
+ * before looking for the section.
+ */
+export const SETTINGS_CATEGORY_ALIASES = {
+  basic_maps: 'google_maps'
+}
+
+export const resolveSettingsCategoryAlias = (category) => SETTINGS_CATEGORY_ALIASES[category] || null
+
 export const buildSettingsPath = ({ group, category, q, id, focus, view } = {}) => {
   const params = new URLSearchParams()
   if (group) params.set('group', group)
@@ -47,7 +59,11 @@ export const isSettingsHubPath = (pathname = '') => pathname === SETTINGS_HUB_PA
 
 /**
  * Builds the hub URL for a legacy path. Incoming `?category=` (special screen
- * key or numeric id) wins over the default target category.
+ * key or numeric id) wins over the default target category. The default group
+ * is only a guess for the old page, so it is not kept next to a category the
+ * old URL named: the hub fills in the group that category really belongs to
+ * (`/settings/enterprise?category=enterprise_orders_slas` is
+ * Orders, not Drivers).
  */
 export const getSettingsRedirectPath = (pathname, search = '') => {
   const target = SETTINGS_LEGACY_REDIRECTS[pathname]
@@ -55,9 +71,12 @@ export const getSettingsRedirectPath = (pathname, search = '') => {
   const incoming = new URLSearchParams(String(search || '').replace(/^\?/, ''))
   const incomingCategory = incoming.get('category')
   const incomingGroup = incoming.get('group')
+  const category = incomingCategory
+    ? resolveSettingsCategoryAlias(incomingCategory) || incomingCategory
+    : target.category
   return buildSettingsPath({
-    group: incomingGroup || target.group,
-    category: incomingCategory || target.category,
+    group: incomingGroup || (incomingCategory ? null : target.group),
+    category,
     q: incoming.get('q') || null
   })
 }

@@ -6,8 +6,9 @@ import { useWebsocket } from '../../contexts/WebsocketContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useUtils } from '../../contexts/UtilsContext'
-import { capitalize } from '~ui'
+import { capitalize } from '~ui/src/utils'
 import { getHistoryComment as buildHistoryComment } from './historyComment'
+import { joinDraft } from './joinDraft' // redesign tramo A r4 (W0-QA2-05)
 
 export const Messages = (props) => {
   const {
@@ -24,7 +25,7 @@ export const Messages = (props) => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [configState] = useConfig()
-  const [{ getOrderState, parsePrice }] = useUtils()
+  const [{ getOrderState, parsePrice, parseDate }] = useUtils()
   const [{ user, token }] = useSession()
   const accessToken = props.accessToken || token
 
@@ -43,6 +44,7 @@ export const Messages = (props) => {
     t,
     getOrderState,
     parsePrice,
+    parseDate, // redesign W1-6 (T1-6-4a, W1-D-18): the dates of the history events are painted by parseDate, not pasted raw
     googleMapsApiKey,
     capitalize
   })
@@ -54,8 +56,22 @@ export const Messages = (props) => {
     if (customHandleSend) {
       return customHandleSend(message)
     }
+    // redesign W0-2 r3 (W0-P2-02): as in main, the draft (text and attachment) empties when the send STARTS, so what
+    // the user types while the request is on the way is new text. If the send then fails, the draft that was sent
+    // comes back. redesign tramo A r3 (W0-QA1-03): if the user typed meanwhile, nothing is lost: the box keeps the sent
+    // draft, a separator and what was typed after (nothing was sent, so nothing is repeated); an attachment chosen
+    // meanwhile stays, the new one wins. The separator is a space, not a line break: both consumers (ChatTab and
+    // /messages) write in a single-line <input>, whose value sanitization removes line breaks and would glue the two texts.
+    const sentMessage = message
+    const sentImage = image
+    const restoreDraft = () => {
+      setMessage(current => joinDraft(sentMessage, current)) // redesign tramo A r4 (W0-QA2-05)
+      setImage(current => current === null ? sentImage : current)
+    }
     try {
       setSendMessages({ loading: true, error: null })
+      setMessage('')
+      setImage(null)
       const _canRead = []
       if (canRead.customer) {
         _canRead.push(3)
@@ -99,8 +115,11 @@ export const Messages = (props) => {
           })
         }
       }
-      setSendMessages({ loading: false, error: error ? result : null })
+      // redesign W0-2 r2 (W0-Q1-07): a refusal with no text still counts as an error (it used to read as a success)
+      if (error) restoreDraft() // redesign W0-2 r3 (W0-P2-02): the refused draft comes back, so the same Send retries
+      setSendMessages({ loading: false, error: error ? (result || [t('ERROR', 'Error')]) : null })
     } catch (error) {
+      restoreDraft() // redesign W0-2 r3 (W0-P2-02): a request that did not arrive keeps the draft too
       setSendMessages({ loading: false, error: [error.Messages] })
     }
   }
@@ -151,15 +170,13 @@ export const Messages = (props) => {
           loading: false,
           error: null
         })
-        if (messages.messages.length > 0) {
-          const _messages = messages.messages.filter(message => {
-            if (message.id === messageId) {
-              message.read = true
-            }
-            return true
-          })
-          setMessages({ ...messages, messages: _messages })
-        }
+        // redesign W1-6 (T1-6-4a, W1-D-14): from the state at the moment the answer arrives, not from the one the request left with: a
+        // message that came in meanwhile (socket) or a change of conversation stayed in the list before, overwritten by the old one.
+        setMessages(prevState => (
+          prevState.messages.some(item => item.id === messageId)
+            ? { ...prevState, messages: prevState.messages.map(item => item.id === messageId ? { ...item, read: true } : item) }
+            : prevState
+        ))
         handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(null)
         handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(orderId)
       } else {

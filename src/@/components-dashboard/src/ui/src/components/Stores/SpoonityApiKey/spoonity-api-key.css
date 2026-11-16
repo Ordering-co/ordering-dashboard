@@ -1,0 +1,47 @@
+/*
+ * redesign stores 5.16 · Store details › Spoonity key on Product: the title, a P/SecretField for the key and the
+ * P/SaveBar (or a P/EmptyState when the store has no Spoonity config). Values: --od-* and --od-x-* only, logical properties only.
+ * Prefix: odc-spoonity-*.
+ */
+
+.odc-spoonity {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-spoonity:focus { outline: none; }
+
+@media (min-width: 576px) {
+  .odc-spoonity {
+    padding: var(--od-space-5);
+  }
+}
+
+.odc-spoonity-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* The form holds the field and the bar; the field keeps a readable width and the bar sticks to the end of the section. */
+.odc-spoonity-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-spoonity-form:focus { outline: none; }
+
+.odc-spoonity-field {
+  inline-size: 100%;
+  max-inline-size: var(--od-x-measure);
+  min-inline-size: 0;
+}

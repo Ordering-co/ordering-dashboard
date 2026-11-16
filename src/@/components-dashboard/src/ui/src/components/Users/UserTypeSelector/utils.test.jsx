@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { userTypesValues } from './utils'
+import { userTypeLabel, userTypesValues } from './utils'
 
 const t = (_key, fallback) => fallback
 
@@ -28,5 +28,25 @@ describe('userTypesValues', () => {
   test('limits options to the page levels when a preset list is given', () => {
     const options = userTypesValues({ t, isPrimary: true, defaultUserTypesSelected: [4] })
     expect(levelsOf(options)).toEqual([4])
+  })
+})
+
+// redesign D-11: the level as plain text, with the same keys the selector rows use
+describe('userTypeLabel', () => {
+  test('names every level of the selector as the selector does', () => {
+    const labels = userTypesValues({ t, isPrimary: true }).map(option => userTypeLabel(t, option.value))
+    expect(labels).toEqual(['Administrator', 'Business owner', 'User', 'Driver', 'Driver manager', 'Call center agent', 'Professional'])
+  })
+
+  test('asks the translator with the keys of the rows', () => {
+    const keys = []
+    userTypeLabel((key, fallback) => { keys.push(key); return fallback }, 5)
+    expect(keys).toEqual(['DRIVER_MANAGER'])
+  })
+
+  test('takes the level as a number or as text, and says nothing for an unknown one', () => {
+    expect(userTypeLabel(t, '4')).toBe('Driver')
+    expect(userTypeLabel(t, 1)).toBe('')
+    expect(userTypeLabel(t, undefined)).toBe('')
   })
 })

@@ -12,7 +12,7 @@ export const Container = styled.div`
 : css`
       margin-right: 10px;
     `}
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     white-space: nowrap;
   }
 

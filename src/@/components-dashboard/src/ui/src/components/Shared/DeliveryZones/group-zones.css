@@ -1,0 +1,140 @@
+/*
+ * The delivery zones section of the group panel (redesign DG-B2c, decision 3): the lines above the map, the cells of the list and the
+ * cards of a phone. Product's MapFrame, DataTable, RecordCard, SaveBar and EmptyState own their structure; this adds what a zone cell
+ * is made of. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ */
+
+.gz {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* The root is a focus fallback (the zone that was open is gone, there is no Add button): programmatic only, never a tab stop */
+.gz:focus { outline: none; }
+
+/* «Whole city covers everywhere.»: one line per zone, above the map */
+.gz-notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  list-style: none;
+}
+
+.gz-notes li { overflow-wrap: anywhere; }
+
+/* The list (table or cards) adds no box of its own */
+.gz-list { min-inline-size: 0; }
+
+/* ── The Active column: the header box says «Select all», the word says what the column is ── */
+.gz-active-head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* ── The Zone cell: a button with the name, then what the columns that stepped aside left ── */
+.gz-who {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  line-height: var(--od-x-leading-ui);
+}
+
+.gz-open {
+  position: relative;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-block-size: var(--od-x-target-fine);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--od-text);
+  font: inherit;
+  font-weight: var(--od-font-weight-medium);
+  text-align: start;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+  cursor: pointer;
+}
+
+.gz-open:hover { text-decoration: underline; text-underline-offset: var(--od-x-space-half); }
+
+.gz-open:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.gz-open:disabled {
+  color: var(--od-text-muted);
+  cursor: default;
+  text-decoration: none;
+}
+
+/* A coarse pointer reaches the touch minimum on each axis without growing the box (as the Product buttons do) */
+@media (pointer: coarse), (max-width: 767px) {
+  .gz-open::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+.gz-sub {
+  display: block;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  overflow-wrap: anywhere;
+}
+
+.gz-type { white-space: nowrap; }
+
+/* ── Add delivery zone: below the list, at the start ── */
+.gz-add {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* The wrapper of the save bar draws no box: the bar keeps its own place (sticky) in the section */
+.gz-bar { display: contents; }
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.gz-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.gz-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.gz-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gz-card-meta {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.gz-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-block-start: var(--od-space-1);
+}

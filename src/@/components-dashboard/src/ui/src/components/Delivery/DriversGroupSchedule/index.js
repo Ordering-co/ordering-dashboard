@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Alert } from '../../Shared'
+import { AlertDialog, Button } from '../../Shared/Product'
 import { ScheduleForm } from '../DriversGroupAddForm/ScheduleForm'
 
 import { Container } from './styles'
@@ -36,25 +35,30 @@ export const DriversGroupSchedule = (props) => {
       <Container
         onSubmit={onSubmit}
         disabled={actionDisabled}
+        inert={actionDisabled ? '' : undefined}
+        aria-disabled={actionDisabled ? 'true' : undefined}
       >
         <ScheduleForm {...props} hideTitle />
-        <Button
-          borderRadius='8px'
-          color='primary'
-          type='submit'
-          disabled={Object.keys(changesState).length === 0 || actionState?.loading}
-        >
-          {t('SAVE', 'Save')}
-        </Button>
+        {/* redesign (AD-1): a Product primary Save, aligned to the inline start; in a wrapper so the legacy `> button` rule of the form leaves it alone */}
+        <div style={{ marginBlockStart: 'var(--od-space-4)' }}>
+          <Button
+            variant='primary'
+            type='submit'
+            disabled={Object.keys(changesState).length === 0 || actionState?.loading}
+            busy={Boolean(actionState?.loading)}
+          >
+            {t('SAVE', 'Save')}
+          </Button>
+        </div>
       </Container>
-      <Alert
+      {/* redesign (AD-7): the legacy Alert is a Product alert dialog; same message */}
+      <AlertDialog
+        open={alertState.open}
         title={t('WEB_APPNAME', 'Ordering')}
         content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
+        closeLabel={t('CLOSE', 'Close')}
+        confirmLabel={t('OK', 'OK')}
         onClose={() => setAlertState({ open: false, content: [] })}
-        onAccept={() => setAlertState({ open: false, content: [] })}
-        closeOnBackdrop={false}
       />
     </>
   )

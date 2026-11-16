@@ -24,12 +24,10 @@ vi.mock('../../../styles/Select', () => ({
   )
 }))
 
-vi.mock('../../../../../index.js', () => ({
+vi.mock('../../../../../index.js', async () => ({
   useLanguage: () => [null, (_key, fallback) => fallback],
   useSession: () => [{ auth: true, user: { level: 0 } }],
-  Popup: ({ UIComponent, open, ...props }) => (
-    open ? <UIComponent {...props} open={open} /> : null
-  )
+  Popup: (await import('../../../../../components/Popup')).Popup
 }))
 
 vi.mock('../../PageNotFound', () => ({
@@ -90,7 +88,7 @@ describe('Shared presentation components', () => {
     expect(screen.getByText('Edit order')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-    fireEvent.keyDown(document, { code: 'Escape' })
+    fireEvent.keyDown(document, { key: 'Escape', code: 'Escape', keyCode: 27 })
 
     expect(onAccept).toHaveBeenCalledOnce()
     expect(onCancel).toHaveBeenCalledOnce()

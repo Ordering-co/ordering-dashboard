@@ -1,0 +1,97 @@
+/*
+ * ListPopover: a pill whose popover is a single-choice list (search, «All», one option per row).
+ * redesign stores 2.D. It reuses the popup, the search and the status text of filter-popover.css
+ * (odc-orders-picker*); this file only draws the option rows and their check mark.
+ * Values are --od-* / --od-x-* tokens only (src/__tests__/tools/productLiteralGuard.test.js).
+ * Logical properties only (C17).
+ */
+
+/* The list scrolls inside the popup, never the page. Its height is the picker's (filter-popover.css: eight rows at a time,
+   never more than 60dvh), like the Driver checklist; this rule sets no height of its own, or it would win over that cap. */
+.odc-list-popover-list {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* Every option is a native button, the whole row is the target (32px with a mouse, 44px under the media query below). */
+.odc-list-popover-option {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-x-space-1-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-list-popover-option:hover { background: var(--od-x-hover); }
+
+.odc-list-popover-option:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* A name wraps between words instead of the picker's ellipsis, so a type is never cut (decision 1); a word is broken only
+   when it alone is wider than the row. A name in another script keeps its own direction inside the row (bidi isolate). */
+.odc-list-popover-option .odc-orders-picker-name {
+  flex: 1 1 auto;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: break-word;
+  unicode-bidi: isolate;
+}
+
+/* C18: the chosen row shows a check mark and a medium weight, never a background alone. The mark sits at the start of
+   the row, in a slot every row keeps so the names line up (as the single-choice menu, menu.css). */
+.odc-list-popover-check {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-list-popover-check .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-list-popover-option[aria-selected='true'] .odc-orders-picker-name { font-weight: var(--od-font-weight-medium); }
+
+/* The status region is always in the page (a live region is announced when its content changes); empty, it takes no room. */
+.odc-list-popover-status:empty {
+  margin: 0;
+  margin-block-start: calc(var(--od-space-1) * -1); /* takes back the gap the column leaves above it */
+  padding: 0;
+}
+
+/* review R-6: «Loading...» and «No results found» start where the names start: the row's inline padding, the check slot
+   and the gap after it. */
+.odc-list-popover-status .odc-orders-picker-empty {
+  padding-inline: calc(var(--od-x-space-1-5) + var(--od-x-icon-sm) + var(--od-space-2)) var(--od-x-space-1-5);
+}
+
+/* review R-4: the notice of the bar keeps the page gutter and a bottom margin; inside the popover it lines up with the rows. */
+.odc-list-popover-status .odc-notice {
+  margin: 0;
+}
+
+/* Below 768px a mouse is a phone layout too, so the media query is not only the coarse pointer (as filter-popover.css). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-list-popover-option {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

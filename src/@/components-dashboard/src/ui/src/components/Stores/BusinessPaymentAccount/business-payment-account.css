@@ -1,0 +1,129 @@
+/*
+ * redesign stores 5.11 · Business payment account: the store's payout account in one view. Without an account the create
+ * form (or, for an admin with existing accounts, the choice between creating and associating); with one, a read view and an in-place
+ * edit with the save bar. Looks like the Payments section (payment-methods.css: .odc-pm-title is the section title).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * Prefix: odc-bpa-*.
+ */
+
+.odc-bpa {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+@media (min-width: 576px) {
+  .odc-bpa {
+    padding: var(--od-space-5);
+  }
+}
+
+/* The title and, in edit, Cancel at the end */
+.odc-bpa-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The same style as .odc-pm-title */
+.odc-bpa-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* ── Loading ── */
+.odc-bpa-loading {
+  display: grid;
+  gap: var(--od-space-4);
+  max-inline-size: var(--od-x-measure);
+}
+
+.odc-bpa-skeleton-row {
+  display: grid;
+  gap: var(--od-space-2);
+}
+
+/* ── No account ── */
+.odc-bpa-lead {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+/* Create / Associate and the description of the active one */
+.odc-bpa-choice {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bpa-choice-desc {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-bpa-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-measure);
+}
+
+.odc-bpa-form:focus {
+  outline: none;
+}
+
+.odc-bpa-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-bpa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+/* ── The account ── */
+.odc-bpa-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  max-inline-size: var(--od-x-measure);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bpa-row {
+  display: grid;
+  gap: var(--od-space-1);
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  min-inline-size: 0;
+}
+
+.odc-bpa-term {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bpa-value {
+  margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  color: var(--od-text);
+}

@@ -1,86 +1,63 @@
 import React from 'react'
+import { ThumbsDown, ThumbsUp } from '../../Shared/Icon'
 import { useLanguage, useUtils, ProductReviews as ProductReviewController } from '../../../../../index'
-import { ImageFill, HandThumbsUp, HandThumbsDown } from 'react-bootstrap-icons'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import { ReviewItem } from '../ReviewsDirectory/ReviewItem'
+import { ReviewPanel } from '../ReviewsDirectory/ReviewPanel'
+import { isLiked } from '../ReviewsDirectory/reviewsData'
 
-import {
-  ReviewDetailsContainer,
-  Header,
-  ProductImageContainer,
-  WrapperImage,
-  Image,
-  ReviewContentWrapper,
-  ReviewHeader,
-  LikeSignWrapper,
-  ReviewComment,
-  NotReviewed
-} from './styles'
+// redesign reviews FC (D5, RV-13): a product review is liked or not, never a note. The thumb is decoration; the words say it.
+const Verdict = ({ liked, t }) => {
+  const Thumb = liked ? ThumbsUp : ThumbsDown
+  return (
+    <span className='odc-rv-verdict' data-liked={liked ? 'true' : 'false'}>
+      <Thumb className='odc-icon' aria-hidden='true' focusable='false' />
+      <span>{liked ? t('REVIEWS_LIKED', 'Liked') : t('REVIEWS_NOT_LIKED', 'Not liked')}</span>
+    </span>
+  )
+}
 
-const ProductReviewDetailsUI = (props) => {
+/**
+ * The panel of the reviews of one product (redesign reviews FC, D5, D9; RV-08, RV-09, RV-13). The page mounts it inside the SplitView
+ * and gives it `businessId`, `product` (the row of the list), `productId`, `categoryId` and `onClose`; the controller (`ProductReviews`)
+ * brings `productState`, `productReviewList` (its `error` is `true` when the API answers an error) and `reloadReviews`.
+ * It has no «Open as page», as main.
+ */
+export const ProductReviewDetailsUI = (props) => {
   const {
+    product,
     productState,
-    productReviewList
+    productReviewList,
+    reloadReviews,
+    onClose
   } = props
 
   const [, t] = useLanguage()
   const [{ optimizeImage }] = useUtils()
 
-  return (
-    <>
-      <ReviewDetailsContainer>
-        <Header>
-          <h1>{productState.product?.name}</h1>
-        </Header>
-        <ProductImageContainer>
-          <WrapperImage>
-            {productState.product?.images
-              ? (
-              <Image bgimage={optimizeImage(productState.product?.images, 'h_120,c_limit')} />
-                )
-              : (
-              <ImageFill />
-                )}
-          </WrapperImage>
-        </ProductImageContainer>
-        {productReviewList?.loading
-          ? (
-              [...Array(10).keys()].map(i => (
-            <ReviewContentWrapper key={i}>
-              <ReviewHeader>
-                <LikeSignWrapper>
-                  <Skeleton width={70} />
-                </LikeSignWrapper>
-              </ReviewHeader>
-              <ReviewComment>
-                <Skeleton />
-              </ReviewComment>
-            </ReviewContentWrapper>
-              ))
-            )
-          : (
-              productReviewList.reviews.map(review => (
-            <ReviewContentWrapper key={review.id}>
-              <ReviewHeader>
-                <LikeSignWrapper isLike={review?.qualification === 5}>
-                  <HandThumbsUp />
-                  <HandThumbsDown />
-                </LikeSignWrapper>
-              </ReviewHeader>
-              <ReviewComment>
-                {review?.comment}
-              </ReviewComment>
-            </ReviewContentWrapper>
-              ))
-            )}
+  const displayedProduct = productState?.product ?? product ?? null
+  const isHeaderLoading = !displayedProduct?.name && productState?.loading
+  const reviews = Array.isArray(productReviewList?.reviews) ? productReviewList.reviews : []
 
-        {!productReviewList.loading && productReviewList.reviews.length === 0 && (
-          <NotReviewed>
-            {t('ERROR_REVIEW_FIND', 'The review does not exist.')}
-          </NotReviewed>
-        )}
-      </ReviewDetailsContainer>
-    </>
+  return (
+    <ReviewPanel
+      title={displayedProduct?.name || t('PRODUCT', 'Product')}
+      titleLoading={Boolean(isHeaderLoading)}
+      avatar={{
+        kind: 'business',
+        name: displayedProduct?.name,
+        src: displayedProduct?.images ? optimizeImage(displayedProduct.images, 'h_120,c_limit') : undefined
+      }}
+      count={reviews.length}
+      onClose={onClose}
+      loading={Boolean(productReviewList?.loading)}
+      error={Boolean(productReviewList?.error)}
+      empty={reviews.length === 0}
+      onRetry={reloadReviews}
+    >
+      {reviews.map(review => (
+        <ReviewItem key={review?.id} review={review} verdict={<Verdict liked={isLiked(review)} t={t} />} />
+      ))}
+    </ReviewPanel>
   )
 }
 

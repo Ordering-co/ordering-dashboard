@@ -130,7 +130,7 @@ export const AdvancedSettings = (props) => {
       <Container>
         {isApp && (
           <BoxLayout>
-            <h1>{isKiosk ? t('KIOSK_APP_ADVANCED_SETTINGS', 'Kiosk App  Advanced Settings') : t('CUSTOMER_APP_ADVANCED_SETTINGS', 'Customer App  Advanced Settings')}</h1>
+            <h1>{isKiosk ? t('KIOSK_APP_ADVANCED_SETTINGS', 'Kiosk App Advanced Settings') : t('CUSTOMER_APP_ADVANCED_SETTINGS', 'Customer App Advanced Settings')}</h1>
             {showAppDesign && (
               <>
                 <h2>{t('APP_DESIGN', 'App design')}</h2>
@@ -160,7 +160,7 @@ export const AdvancedSettings = (props) => {
             {!forcedSiteId && (
               <BoxLayout>
                 {!isApp && (
-                  <h1>{t('WEBSITE_ADVANCED_SETTINGS', 'Website  Advanced Settings')}</h1>
+                  <h1>{t('WEBSITE_ADVANCED_SETTINGS', 'Website Advanced Settings')}</h1>
                 )}
                 <h2>{t('BUTTONS', 'Buttons')}</h2>
                 <SettingComponent
@@ -182,7 +182,7 @@ export const AdvancedSettings = (props) => {
               </BoxLayout>
             )}
             <BoxLayout>
-              <h2>{t('TIPOGRAPHY', 'Tipography')}</h2>
+              <h2>{t('TIPOGRAPHY', 'Typography')}</h2>
               <HeadingWrapper>
                 <FontStyleGroup
                   fonts={advancedValues?.general?.components?.fonts?.primary}
@@ -548,7 +548,7 @@ export const AdvancedSettings = (props) => {
         </Modal>
       )}
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

@@ -3,6 +3,7 @@ import { useLanguage, DragAndDrop, ExamineClick } from '../../../../../index'
 import { Circle as UnCheckIcon, ThreeDots, RecordCircleFill as CheckIcon } from 'react-bootstrap-icons'
 import BiImage from '@meronex/icons/bi/BiImage'
 import { Alert, Confirm, ImageCrop, Modal } from '../../Shared'
+import { Dialog } from '../../Shared/Product'
 import { Input, Switch } from '../../../styles'
 import { bytesConverter } from '../../../utils'
 import { DropdownButton, Dropdown } from 'react-bootstrap'
@@ -434,12 +435,13 @@ export const ProductExtraSuboption = (props) => {
           />
         </Modal>
       )}
-      <Modal
-        width='85%'
-        maxWidth='1000px'
+      {/* redesign bugs F row 25 (S-4): the Product Dialog with a title, like the store's Snooze (it was an untitled legacy Modal) */}
+      <Dialog
         open={isProductExtraSuboptionSnooze}
-        onClose={() => setProductExtraSuboptionSnooze(false)}
-        closeOnBackdrop={false}
+        onOpenChange={setProductExtraSuboptionSnooze}
+        size='lg'
+        title={t('SNOOZE', 'Snooze')}
+        closeLabel={t('CLOSE', 'Close')}
       >
         <SnoozeComponent
           hideButtons
@@ -448,7 +450,7 @@ export const ProductExtraSuboption = (props) => {
           formState={formState}
           onClose={() => setProductExtraSuboptionSnooze(false)}
         />
-      </Modal>
+      </Dialog>
     </SubOptionContainer>
   )
 }

@@ -1,0 +1,160 @@
+/*
+ * redesign UF-B5 (decision 5 A, M-UF7, M-UF8) · Custom fields of a user: one readable row per field, and an add form with
+ * labels. Only var(--od-*) / var(--od-x-*); the breakpoints are the playbook's, literal inside @media.
+ */
+
+/* redesign UF-B5 (decision 6 A): the box of the saved places in the user panels (Users/UserDetails). It
+   replaces the legacy `SavedPlaces` wrapper, which forced a flex row on the first child and would have laid the embedded list
+   out as columns. The host imports UserMetaFields, which loads this file. */
+.odc-uf-saved-places {
+  margin-block-start: var(--od-space-6);
+  min-inline-size: 0;
+}
+
+.odc-uf-meta {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── List ── */
+.odc-uf-meta-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-uf-meta-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 3fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-uf-meta-type {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The key is an identifier, not a figure: mono, and it never breaks the row. */
+.odc-uf-meta-key {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-uf-meta-value {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.odc-uf-meta-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+}
+
+.odc-uf-meta-skeleton-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 3fr);
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  align-items: center;
+}
+
+/* ── Add form ── */
+.odc-uf-meta-form {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-uf-meta-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-uf-meta-inputs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 3fr);
+  align-items: start;
+  gap: var(--od-space-3);
+}
+
+.odc-uf-meta-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* The JSON editor keeps the one that was there (jsoneditor-react), framed like a field. */
+.odc-uf-meta-json {
+  inline-size: 100%;
+  block-size: calc(var(--od-x-control-height) * 10);
+}
+
+.odc-uf-meta-json > div {
+  block-size: 100%;
+}
+
+.odc-uf-meta-json .jsoneditor {
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-uf-meta-json .jsoneditor > div.jsoneditor-menu {
+  background-color: var(--od-action);
+  border-block-end: var(--od-x-hairline) solid var(--od-action);
+}
+
+.odc-uf-meta-json .jsoneditor-search {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .odc-uf-meta-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .odc-uf-meta-type {
+    grid-column: 1 / -1;
+  }
+
+  /* type on its line, then the key with its delete button, then the value across */
+  .odc-uf-meta-key {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .odc-uf-meta-delete {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .odc-uf-meta-value {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .odc-uf-meta-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .odc-uf-meta-actions .odc-btn {
+    inline-size: 100%;
+  }
+}

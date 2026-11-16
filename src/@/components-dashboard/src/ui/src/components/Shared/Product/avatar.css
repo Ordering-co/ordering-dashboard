@@ -1,0 +1,41 @@
+/* C12 · Avatars and third-party logos. */
+
+.odc-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--od-x-avatar);
+  block-size: var(--od-x-avatar);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-line-tight);
+}
+
+.odc-avatar[data-size='lg'] {
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+}
+
+.odc-avatar[data-kind='business'] {
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+  color: var(--od-text);
+}
+
+.odc-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.odc-avatar[data-kind='business'] img { object-fit: contain; }
+
+.odc-avatar .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}

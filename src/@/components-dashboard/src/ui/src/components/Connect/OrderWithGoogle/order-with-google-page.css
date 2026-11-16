@@ -1,0 +1,141 @@
+/*
+ *  · Connect › Order with Google: the page frame (as /builder), the counters by state (each one a toggle that filters
+ * the list) and the cells of the table. Values: --od-* and --od-x-* only, logical properties only. Prefix: odc-gap-*.
+ */
+
+.odc-root.odc-gap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media (max-width: 767px) {
+  .odc-root.odc-gap {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+/* ── Counters ── */
+.odc-gap-counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 1024px) {
+  .odc-gap-counts {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.odc-gap-count {
+  display: grid;
+  gap: var(--od-space-1);
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--od-space-3) var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-gap-count:hover {
+  border-color: var(--od-border-strong);
+}
+
+.odc-gap-count:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-gap-count[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+}
+
+.odc-gap-count-label {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-gap-count-value {
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* ── Tabs and search (as /connect/pos-menu) ── */
+.odc-gap-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-gap-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* ── Cells: the store as /connect/pos-menu draws it (logo, name, city) ── */
+.odc-gap-store {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-gap-store-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-gap-name,
+.odc-gap-sub {
+  display: -webkit-box;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.odc-gap-name {
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-gap-sub {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-gap-muted {
+  color: var(--od-text-muted);
+}
+
+.odc-gap-link {
+  overflow-wrap: anywhere;
+}

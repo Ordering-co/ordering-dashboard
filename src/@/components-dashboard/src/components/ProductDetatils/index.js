@@ -28,6 +28,7 @@ export const ProductDetatils = (props) => {
 
   const [productState, setProductState] = useState({ loading: false, product: null, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [duplicateState, setDuplicateState] = useState({ loading: false, error: null })
   const [productCart, setProductCart] = useState({ ingredients: {}, options: {} })
 
   // The assistant changed this product: show the values it read back
@@ -83,6 +84,10 @@ export const ProductDetatils = (props) => {
 
   /**
    * Method to update the product details from API
+   * redesign SP-F2 (D2): it answers how the save went, `{ ok: true }` or `{ ok: false, error }`; the other callers ignore it.
+   * `options.keepPendingChanges` (the Enabled switch) leaves the unsaved edits of other fields alone: only the keys sent leave `changes`.
+   * redesign stores 2.F: the Snooze dialog uses it with `{ snooze_until }` and shows the error inline, so in this mode
+   * `formState.result` is not touched unless the caller asks with `options.reportResult` (the Enabled switch does, as before).
    */
   const handleUpdateClick = async (params, options = { refreshProducts: false }) => {
     try {
@@ -94,15 +99,33 @@ export const ProductDetatils = (props) => {
         accessToken: session.token,
         noStringify: ['allergens', 'dietary_tags']
       })
-      setFormState({
-        ...formState,
-        changes: error ? formState.changes : {},
-        result: {
-          error,
-          result
-        },
-        loading: false
-      })
+      if (options.keepPendingChanges) {
+        setFormState(prev => {
+          const sentKeys = Object.keys(changes)
+          let pending = prev.changes || {}
+          // the same object when none of them was pending: `changes` is compared by reference
+          if (!error && sentKeys.some(key => key in pending)) {
+            pending = { ...pending }
+            sentKeys.forEach(key => { delete pending[key] })
+          }
+          return {
+            ...prev,
+            changes: error ? prev.changes : pending,
+            ...(options.reportResult ? { result: { error, result } } : {}),
+            loading: false
+          }
+        })
+      } else {
+        setFormState({
+          ...formState,
+          changes: error ? formState.changes : {},
+          result: {
+            error,
+            result
+          },
+          loading: false
+        })
+      }
 
       if (!error) {
         if (options.refreshProducts) {
@@ -115,7 +138,7 @@ export const ProductDetatils = (props) => {
             }
           })
           showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
-          return
+          return { ok: true }
         }
         if ((typeof originalChanges?.ribbon?.enabled) !== 'undefined' && !originalChanges?.ribbon?.enabled && result?.ribbon?.enabled) {
           const updatedChanges = { ribbon: { enabled: false } }
@@ -124,19 +147,31 @@ export const ProductDetatils = (props) => {
           })
           handleSuccessUpdate(content?.result)
         } else {
-          handleSuccessUpdate(result)
+          // What was asked fills in what the answer leaves out, so the row and the card of the list say the same.
+          handleSuccessUpdate(options.keepPendingChanges ? { ...changes, ...result } : result)
         }
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
+        return { ok: true }
       }
+      return { ok: false, error: result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
+      if (options.keepPendingChanges) {
+        setFormState(prev => ({
+          ...prev,
+          ...(options.reportResult ? { result: { error: true, result: err.message } } : {}),
+          loading: false
+        }))
+      } else {
+        setFormState({
+          ...formState,
+          result: {
+            error: true,
+            result: err.message
+          },
+          loading: false
+        })
+      }
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -207,10 +242,12 @@ export const ProductDetatils = (props) => {
 
   /**
    * Method to change the product enabled state
+   * redesign SP-F2 (D2): returns `{ ok }` / `{ ok: false, error }`; a good save leaves the other pending edits in place and
+   * updates `categoryState` (inside `handleSuccessUpdate`), so the switch of the header and the row of the list agree.
    */
   const handleChangeProductActiveState = () => {
     const params = { enabled: !productState?.product?.enabled }
-    handleUpdateClick(params)
+    return handleUpdateClick(params, { keepPendingChanges: true, reportResult: true })
   }
 
   /**
@@ -413,10 +450,13 @@ export const ProductDetatils = (props) => {
 
   /**
    * Method to duplicate product from API
+   * redesign SP-F2 (D2): returns `{ ok }` / `{ ok: false, error }` and leaves the failure in `duplicateState.error`
+   * (it used to vanish when the API answered with an error), so the header can say it. The toasts are the ones it already had.
    */
   const handleDuplicateProduct = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setDuplicateState({ loading: true, error: null })
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -430,12 +470,18 @@ export const ProductDetatils = (props) => {
 
       if (!content.error) {
         if (handleUpdateCategoryState) {
-          handleUpdateCategoryState({ ...categoryState, products: [...categoryState?.products, content.result] })
+          handleUpdateCategoryState({ ...categoryState, products: [...(categoryState?.products || []), content.result] })
         }
+        setDuplicateState({ loading: false, error: null })
         showToast(ToastType.Success, t('PRODUCT_DUPLICATED', 'Product duplicated'))
+        return { ok: true }
       }
+      setDuplicateState({ loading: false, error: content.result })
+      return { ok: false, error: content.result }
     } catch (err) {
+      setDuplicateState({ loading: false, error: [err.message] })
       showToast(ToastType.Error, err.message)
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -469,6 +515,7 @@ export const ProductDetatils = (props) => {
           handleChangeFormState={handleChangeFormState}
           handleSuccessUpdate={handleSuccessUpdate}
           handleDuplicateProduct={handleDuplicateProduct}
+          duplicateState={duplicateState}
           getProduct={getProduct}
         />
       )}

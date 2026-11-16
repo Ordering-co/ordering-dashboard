@@ -1,0 +1,146 @@
+/*
+ * redesign stores 3.D · the Sync content: tabs (Deliverect, ItsaCheckmate, synced stores), the two provider pages and the
+ * Sheet that holds them. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only.
+ * One file for BusinessSync, BusinessSyncBasic and BusinessSyncItsaCheckmate.
+ */
+
+/* ── Content. In the legacy side bar it brings its own padding and title; in the Sheet (data-in-sheet) the Sheet brings both ── */
+.stores-sync {
+  inline-size: 100%;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.stores-sync:not([data-in-sheet]) {
+  /* 20px */
+  padding: calc(var(--od-space-4) + var(--od-space-1));
+}
+
+.stores-sync-title {
+  margin: 0 0 var(--od-space-5);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+.stores-sync-tabs .odc-tab-panel {
+  margin-block-start: var(--od-space-5);
+}
+
+/* ── Provider pages ── */
+.stores-sync-provider {
+  min-inline-size: 0;
+}
+
+.stores-sync-logo {
+  display: flex;
+  align-items: center;
+  inline-size: calc(var(--od-x-sheet) / 2);
+  max-inline-size: 100%;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-shadow-1);
+}
+
+.stores-sync-logo > img {
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+
+.stores-sync-about {
+  margin-block: var(--od-space-5) var(--od-space-6);
+}
+
+.stores-sync-about p {
+  margin: 0;
+}
+
+.stores-sync-about p + p {
+  margin-block-start: var(--od-space-2);
+}
+
+.stores-sync-about span,
+.stores-sync-lead strong {
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.stores-sync-lead {
+  margin-block-end: var(--od-x-space-2-5);
+}
+
+.stores-sync-points {
+  display: grid;
+  gap: var(--od-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stores-sync-points li {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.stores-sync-start h2 {
+  margin: 0 0 var(--od-space-2);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-title);
+}
+
+.stores-sync-start p {
+  margin: 0 0 var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.stores-sync-video {
+  position: relative;
+  margin-block: var(--od-space-6) var(--od-space-5);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  box-shadow: var(--od-shadow-1);
+}
+
+.stores-sync-video > iframe {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+}
+
+/* The facade (SyncVideo.jsx): one native button fills the frame, so the whole 16:9 area is the touch target (never under 44px).
+   The frame clips, so the focus ring is drawn inside the button (negative offset = its own width). */
+.stores-sync-video > .stores-sync-video-play {
+  flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--od-space-3);
+  border-radius: inherit;
+  white-space: normal;
+  text-align: center;
+}
+
+.stores-sync-video > .stores-sync-video-play:focus-visible {
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+/* ── Sheet: the panel doubles while a synced store's detail is open beside the list (set by BusinessSyncSheet from onDetailChange).
+   The synced stores decide the side-by-side layout from the usable width (useWindowSize, docked assistant included) and only then
+   say so: no media query here, so the two never disagree (review r1 #2). ── */
+.odc-sheet.stores-sync-sheet[data-detail='true'] {
+  inline-size: calc(var(--od-x-sheet) * 2);
+}

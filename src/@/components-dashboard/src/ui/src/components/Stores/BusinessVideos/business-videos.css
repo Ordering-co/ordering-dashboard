@@ -1,0 +1,78 @@
+/*
+ * redesign stores 5.3 · Store details › Videos on Product: the list of links, each with its delete, and the add form
+ * (a labelled URL field and «Add»). Values: --od-* and --od-x-* only. Logical properties.
+ */
+
+.odc-videos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.odc-videos-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-videos-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-control-height);
+  padding: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-videos-row + .odc-videos-row {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* A long link breaks inside the row instead of widening the panel. */
+.odc-videos-link {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  color: var(--od-text);
+  overflow-wrap: anywhere;
+}
+
+.odc-videos-add {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-videos-field {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* «Add» lines up with the input, below the field's label. */
+.odc-videos-submit {
+  flex: none;
+  margin-block-start: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui) + var(--od-x-space-1-5));
+}
+
+.odc-videos-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}
+
+.odc-videos-confirm p { margin: 0; }
+
+.odc-videos-confirm-url {
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}

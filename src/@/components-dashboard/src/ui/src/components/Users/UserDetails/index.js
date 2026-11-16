@@ -22,7 +22,6 @@ import {
   DetailsHeader,
   VerifiedItem,
   UserName,
-  SavedPlaces,
   PersonalizationWrapper,
   OrdersWrapper,
   ActionSelectorWrapper,
@@ -174,16 +173,18 @@ export const UserDetailsUI = (props) => {
           )}
           {currentMenuSelected === 'saved_places' && (
             <>
-              <SavedPlaces>
+              <div className='odc-uf-saved-places'>
+                {/* redesign UF-B5 (decision 6 A): the embedded list owns its form inside this bar; passing `setExtraOpen`
+                    would widen the bar to a second, empty column */}
                 <AddressList
+                  isEmbedded
                   isSeletectedUserAddresses
                   userId={userState.user?.id}
                   addresses={userState.user?.addresses}
-                  setExtraOpen={setExtraOpen}
                   userState={userState}
                   handleSuccessUpdate={handleSuccessUserUpdate}
                 />
-              </SavedPlaces>
+              </div>
             </>
           )}
           {currentMenuSelected === 'businesses' && (

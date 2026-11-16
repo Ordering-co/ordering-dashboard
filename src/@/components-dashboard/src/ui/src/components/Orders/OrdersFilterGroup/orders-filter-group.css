@@ -1,0 +1,130 @@
+/*
+ * Filters sheet (5.2-F): one label spacing and one control height for every field.
+ * The base look of the sheet lives in ../OrdersFilterBar/orders-filter-bar.css; this file is
+ * loaded after it and every selector carries `.odc-ofs-body`, so it outranks the older
+ * heights (control-lg) without `!important`. Tokens only.
+ *
+ * --odc-ofs-control is the one height: the compact control, and the touch target with a
+ * coarse pointer. Text fields fix it; pickers take it as a floor, because a multi-select
+ * with several chips grows past a single line.
+ */
+
+.odc-ofs-body {
+  --odc-ofs-control: var(--od-x-control-height);
+}
+
+/* A coarse pointer, or a viewport under 768px used with a mouse (E10). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-ofs-body {
+    --odc-ofs-control: var(--od-x-target-coarse);
+  }
+}
+
+/* Two columns; one when the body is too narrow for two readable fields. */
+.odc-ofs-body .odc-ofs-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+@container (max-width: 359px) {
+  .odc-ofs-body .odc-ofs-row { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Label and control: the same gap in every field. Bootstrap's `label { margin-bottom }`
+   used to add a second gap above the text fields only. */
+.odc-ofs-body .odc-ofs-field {
+  gap: var(--od-x-space-1-5);
+}
+
+.odc-ofs-body .odc-ofs-label {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* When a label wraps in a neighbour, the controls of the row still share one baseline. */
+.odc-ofs-body .odc-ofs-label + * {
+  margin-block-start: auto;
+}
+
+.odc-ofs-body .odc-ofs-input {
+  box-sizing: border-box;
+  block-size: var(--odc-ofs-control);
+  min-block-size: var(--odc-ofs-control);
+  margin: 0;
+}
+
+.odc-ofs-body .odc-ofs-field :is(.od-first-select-root, .od-multi-select-root) {
+  box-sizing: border-box;
+  block-size: auto;
+  min-block-size: var(--odc-ofs-control);
+  margin: 0;
+}
+
+/* city-selector.css turns the City picker's root into a block at 480px and below (or a coarse pointer), and its
+   trigger then stops stretching: it collapsed to its text (19px). It stays a flex field like its neighbours. */
+.odc-ofs-body .odc-ofs-field .od-multi-select-root.od-city-multi-select {
+  display: flex;
+}
+
+/* Single-line pickers (audit 1): the status pickers never wrap, so they keep the one control
+   height (32px, 44px with a coarse pointer). A long value truncates and carries its full text as
+   `title`; the logistic status dot keeps its size. */
+.odc-ofs-body .odc-ofs-text {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-ofs-body .odc-ofs-placeholder {
+  color: var(--od-x-text-subtle);
+}
+
+/* «Select …» placeholders (audit 4) read in the subtle text colour, like «Any»: the pickers draw an
+   empty state as the trigger's own child (no header yet), each with the colour of its legacy style.
+   The header only exists once a value is chosen, so a chosen value keeps the value colour. */
+.odc-ofs-body .od-first-select-trigger > :not(.od-first-select-header, .od-first-select-chevron),
+.odc-ofs-body .od-multi-select-trigger > :not(.od-multi-select-header, .od-multi-select-chevron),
+.odc-ofs-body .od-multi-select-trigger[data-trigger-text-style] .od-multi-select-header {
+  color: var(--od-x-text-subtle);
+}
+
+/* : the legacy pickers (Delivery type, Country, City, Currency, Driver group, Payment method) draw that empty
+   text inside an Option / PlaceholderTitle box with 10px of padding: 39 and 35px controls beside the 32px ones, the text
+   10px further in, and City's in the value colour. In the sheet the box takes the trigger's line, indent and colour. */
+.odc-ofs-body .od-multi-select-trigger > :not(.od-multi-select-header, .od-multi-select-chevron) > * {
+  padding: 0;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* redesign F6c-2 (Q2-28): a picker that draws its empty text as a bare string (the Business picker of the orders
+   surfaces) has no element for the rule above to reach: with no header there is no value, so the trigger itself
+   takes the placeholder colour (the chevron has its own). */
+.odc-ofs-body .od-multi-select-trigger:not(:has(.od-multi-select-header)) {
+  color: var(--od-x-text-subtle);
+}
+
+.odc-ofs-body .odc-ofs-select-single .od-first-select-header {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.odc-ofs-body .odc-ofs-select-single .od-first-select-header > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-ofs-body .odc-ofs-dot {
+  flex: none;
+}
+
+/* ── Phones (5.6-B): the sheet rises from the bottom (Sheet side="bottom", chosen in index.js) ──
+ * Capped at 90dvh (Sheet's own cap is 85dvh); the filters are long, so it is that tall. The footer is
+ * the Sheet's fixed row: under 768px dialog.css makes Clear and Apply split the width, and product.css
+ * gives every button 44px with a coarse pointer, so this sheet adds nothing there. */
+.odc-ofs-sheet[data-side='bottom'] {
+  max-block-size: 90dvh;
+}

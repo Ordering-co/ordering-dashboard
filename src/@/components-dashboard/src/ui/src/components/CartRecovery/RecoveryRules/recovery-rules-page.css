@@ -1,0 +1,37 @@
+/*
+ * redesign RA-B5 (decision 1) · The cart recovery rules page shell: the list's frame beside the rule panel (split view), as /marketing/campaign
+ * (.odc-campaign-*), /users/customers and /orders. The header and the table are RA-B2's (recovery-rules-list.css), the panel RA-B3's.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties. Class prefix odc-ra-.
+ */
+
+/* The page height, shared by the list and the panel (as /orders: .odc-orders-split). */
+.odc-split.odc-ra-split {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: calc(var(--vh, 1vh) * 100);
+}
+
+/* The list's frame: header, search and table, one under the other. */
+.odc-ra-frame {
+  display: grid;
+  /* one track that may shrink below its content (an auto track grows with the table) */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--od-space-3);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the frame takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-ra-frame {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+@media print {
+  .odc-ra-frame {
+    display: none;
+  }
+}

@@ -1,0 +1,221 @@
+/*
+ * redesign all-in-one B2 (decisions 1 and 6; AIO-01, AIO-02, AIO-03, AIO-08) · The board of /all-in-one, the same model as the boards of
+ * /deliveries (delivery-board.css) and /drivers-dashboard (drivers-board.css): the page is a column (head, notice, board) and the board takes
+ * what is left, so the page does not scroll and there is no second scroll. From 1024px two columns: the orders on the left (tabs and tools on
+ * top, the list scrolling inside) and, on the right, the map over the drivers (360 / 400 / 440px at 1024 / 1280 / 1440, the orders the rest).
+ * Below 1024px one column with a List | Map switch. The grey 5px separators and the cap on #orderTable of the old page are gone.
+ * Pieces: the board (.aio-board), the orders (.aio-orders), the side column (.aio-side) with the map (.aio-map) and the drivers.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so it mirrors in RTL.
+ */
+
+/* ── The board ── */
+.aio-board {
+  /* 360px from 1024 to 1279: the narrow dialog (400px) less 3rem (48px) plus 0.5rem (8px) */
+  --aio-side-size: calc(var(--od-x-dialog-sm) - var(--od-space-7) + var(--od-space-2));
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* 400px from 1280 to 1439, 440px from 1440. */
+@media (min-width: 1280px) {
+  .aio-board { --aio-side-size: var(--od-x-dialog-sm); }
+}
+
+@media (min-width: 1440px) {
+  .aio-board { --aio-side-size: var(--od-x-panel-narrow); }
+}
+
+.aio-board [hidden] {
+  display: none;
+}
+
+/* Below 1024px: the orders first and the drivers under them; the map is behind the switch and gets most of the window in «Map». */
+.aio-view {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* redesign all-in-one F2 (live, 390): the list here is long (orders, then drivers), so the switch stays at the top of the page while it
+   scrolls: «Map» is one touch from anywhere, and «List» brings back the place the person left.
+   redesign AH: the page scrolls inside OrdersListContainer, which has 20px of padding; a sticky box stops at that
+   padding, so the switch stuck 20px below the top and the cards showed above it. It gives the padding back (its own padding-block
+   keeps the air). */
+@media (max-width: 1023px) {
+  .aio-view {
+    position: sticky;
+    inset-block-start: calc(var(--aio-scroll-pad-start, 0) * -1);
+    z-index: var(--od-x-layer-sticky);
+    padding-block: var(--od-space-2);
+    background: var(--od-canvas);
+  }
+}
+
+.aio-board[data-view='map'] {
+  min-block-size: 70vh;
+}
+
+.aio-board[data-view='map'] > .aio-side {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* From 1024px: two columns that share the height the page leaves; the orders scroll inside, never the page. */
+@media (min-width: 1024px) {
+  .aio-board {
+    flex-direction: row;
+    flex: 1 1 0;
+    min-block-size: 0;
+  }
+
+  .aio-orders {
+    flex: 1 1 0;
+  }
+
+  .aio-orders-body {
+    flex: 1 1 0;
+    min-block-size: 0;
+    overflow-y: auto;
+  }
+
+  .aio-side {
+    flex: 0 0 var(--aio-side-size);
+    inline-size: var(--aio-side-size);
+  }
+
+  /* redesign all-in-one F2 (live, 1440 and 1024): the drivers get 60% of the column (their filter and pager take ≈200px; at 50% only
+     2–3 rows were left); the map keeps the rest, never under its compact floor. They scroll inside. */
+  .aio-side .aio-side-drivers {
+    flex: 0 1 60%;
+    max-block-size: 60%;
+    min-block-size: 0;
+  }
+
+  /* redesign all-in-one F2 (live, 1024): in a column of ≈340px «Create custom order» ran over the Status pill. The row wraps and the pill
+     keeps its own width, as the phone rule of styles.js does (W0-QA1-02); the pinned interpolations there are untouched. */
+  .aio-orders-head .aio-subfilter {
+    flex-wrap: wrap;
+    row-gap: var(--od-space-2);
+  }
+
+  .aio-orders-head .aio-subfilter-status {
+    flex: 1 0 auto;
+    min-inline-size: fit-content;
+  }
+
+  /* redesign all-in-one R1-03: with orders selected the row turns into a column and the controls (status picker, delete, Export…) keep
+     one line wider than the panel (the frame clipped «Export» and «Change status»). They stay inside the head and wrap. */
+  .aio-orders-head .aio-subfilter > div:last-child {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .aio-orders-head .aio-subfilter > div:last-child > div {
+    flex-wrap: wrap;
+    row-gap: var(--od-space-2);
+  }
+}
+
+/* redesign all-in-one R1-02: from 1024 to 1279 the column is 360px and its pager takes two lines, so at 60% one driver row was left in
+   view (main showed ≈3.5 cards there, with the map off screen). Here the map stays at its compact floor and the drivers take the rest. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .aio-side > .aio-map {
+    flex: 0 0 var(--od-x-map-height-compact);
+  }
+
+  .aio-side .aio-side-drivers {
+    flex: 1 1 0;
+    max-block-size: none;
+  }
+}
+
+@media print {
+  .aio-board {
+    display: none;
+  }
+}
+
+/* ── The orders: the panel frame of the family (as .odd-list), tabs and tools on top ── */
+.aio-orders {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* the frame (1px) is inside the column */
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.aio-orders-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.aio-orders-body {
+  min-inline-size: 0;
+}
+
+/* redesign all-in-one F2 (live, 390): below 1024px the list draws cards, which ran to the frame of the panel */
+@media (max-width: 1023px) {
+  .aio-orders-body {
+    padding-inline: var(--od-space-3);
+  }
+}
+
+/* redesign page-bugs Y (W1 review F3): after a bulk change the focus goes to the list of orders (a labelled region, tabindex -1), so it
+   needs a ring that shows inside the panel, which clips what is drawn outside it */
+.aio-orders-body:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(-1 * var(--od-focus-ring-width));
+}
+
+/* redesign page-bugs Y (W1 review F2): below 1024px the page scrolls and, with orders selected, the SelectionBar of /orders (count, Change
+   status, Delete, Clear) is the last child of the panel and sticks at the foot of the window (selection-bar.css: sticky, inset-block-end)
+   while the orders are on screen. `overflow: hidden` made the panel the scroller that sticky looks up to, so the bar never stuck; `clip`
+   keeps the rounded frame and does not scroll. From 1024px the panel is not the page scroller (the body is) and there is no bar. */
+@media (max-width: 1023px) {
+  .aio-orders {
+    overflow: clip;
+  }
+
+  .aio-orders > .aio-selbar {
+    margin-block-end: var(--od-space-3);
+  }
+}
+
+/* ── The side column: the map takes what the drivers leave ── */
+.aio-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+.aio-map {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-block-size: var(--od-x-map-height-compact);
+  overflow: hidden;
+  border-radius: var(--od-radius-panel);
+}
+
+.aio-map > .drivers-location {
+  flex: 1 1 0;
+  min-block-size: 0;
+}
+
+/* The slot only carries `hidden` (in «Map» below 1024px the drivers stay mounted); the drivers are the flex child of the column. */
+.aio-drivers-slot {
+  display: contents;
+}

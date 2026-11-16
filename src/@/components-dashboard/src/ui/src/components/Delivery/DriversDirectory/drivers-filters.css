@@ -1,0 +1,77 @@
+/*
+ * redesign DL-B4 (decision 3 | M-DL10): the header and the filter row of the drivers list (/delivery/drivers-list).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+
+/* The header block: the page header, the filter row and the notice, one under the other */
+.odc-dl-header {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── Head: `.odc-dl-head` is the page header's own class (: the opener is PageHeader's `leading`) ── */
+
+/* The header stays on ONE line when the list is narrow (beside the ficha, on a phone), as the customers list: under 768px of the
+   header's own width (the page header is its container) Learn and Export CSV keep only their icon, and «Add driver» does under
+   600px by the page header's own rule (its label is marked `data-collapse-label`). The words are clipped, not removed: the accessible
+   name stays and each button has its `title`. */
+@container (max-width: 767px) {
+  .odc-dl-head .od-learn-label {
+    position: absolute;
+    inline-size: var(--od-x-hairline);
+    block-size: var(--od-x-hairline);
+    margin: calc(var(--od-x-hairline) * -1);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odc-dl-head .od-ui.od-learn-menu .learn-drop-down {
+    margin-inline: 0;
+  }
+
+  /* Export CSV: a text node in the button, which only the font can take away; the icon (16px by its own attribute) stays centred */
+  .odc-dl-export > .odc-btn {
+    gap: 0;
+    inline-size: var(--od-x-control-height);
+    padding-inline: 0;
+    font-size: 0;
+  }
+}
+
+/* The holder of the export takes no box of its own: the button is a child of the group of actions */
+.odc-dl-export {
+  display: contents;
+}
+
+/* ── The filter row: the search, then the status control. When the control does not fit beside the search it takes its own line. ── */
+.odc-dl-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-dl-search {
+  flex: 1 1 var(--od-x-search-min);
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-search);
+}
+
+.odc-dl-search .odc-search {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+/* A definite width for the segmented control (it measures its room); when the four options do not fit it is its native select,
+   capped so it is not a full-width bar */
+.odc-dl-status {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+.odc-dl-status .odc-seg-select {
+  max-inline-size: var(--od-x-search);
+}

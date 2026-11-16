@@ -9,10 +9,10 @@
 
 const CREATE_ACTIONS = [
   { key: 'custom_order', url: '/orders', query: { add: 'custom_order' }, labelKey: 'CREATE_CUSTOM_ORDER', label: 'Create custom order', aliases: ['crear orden', 'nueva orden', 'orden manual', 'pedido manual', 'new order'], when: ({ level, isReadOnly }) => level === 0 && !isReadOnly },
-  { key: 'customer', url: '/users/customers', query: { add: '1' }, labelKey: 'ADD_USER', label: 'Add user', parentKey: 'CUSTOMERS', parent: 'Customers', aliases: ['crear cliente', 'nuevo cliente', 'agregar cliente', 'new customer'] },
-  { key: 'business_owner', url: '/users/business-owners', query: { add: '1' }, labelKey: 'ADD_USER', label: 'Add user', parentKey: 'BUSINESS_OWNERS', parent: 'Business Owners', aliases: ['crear dueno', 'nuevo propietario', 'new owner'] },
-  { key: 'callcenter_agent', url: '/users/callcenter-agents', query: { add: '1' }, labelKey: 'ADD_USER', label: 'Add user', parentKey: 'CALL_CENTER_AGENTS', parent: 'Call Center Agents', aliases: ['crear agente', 'nuevo agente'] },
-  { key: 'admin', url: '/users/admins', query: { add: '1' }, labelKey: 'ADD_USER', label: 'Add user', parentKey: 'ADMINS', parent: 'Admins', aliases: ['crear administrador', 'nuevo admin', 'invitar admin'] },
+  { key: 'customer', url: '/users/customers', query: { add: '1' }, labelKey: 'CUSTOMERS_ADD', label: 'Add customer', parentKey: 'CUSTOMERS', parent: 'Customers', aliases: ['crear cliente', 'nuevo cliente', 'agregar cliente', 'new customer', 'add user'] }, // redesign UC-B7: the page's button says «Add customer»
+  { key: 'business_owner', url: '/users/business-owners', query: { add: '1' }, labelKey: 'BUSINESS_OWNERS_ADD', label: 'Add business owner', parentKey: 'BUSINESS_OWNERS', parent: 'Business Owners', aliases: ['crear dueno', 'nuevo propietario', 'new owner', 'add user'] }, // redesign BO-B6: the page's button says «Add business owner»
+  { key: 'callcenter_agent', url: '/users/callcenter-agents', query: { add: '1' }, labelKey: 'CALL_CENTER_AGENTS_ADD', label: 'Add call center agent', parentKey: 'CALL_CENTER_AGENTS', parent: 'Call Center Agents', aliases: ['crear agente', 'nuevo agente', 'add user'] }, // redesign CA-B1: the page's button says «Add call center agent»
+  { key: 'admin', url: '/users/admins', query: { add: '1' }, labelKey: 'ADMINS_ADD', label: 'Add admin', parentKey: 'ADMINS', parent: 'Admins', aliases: ['crear administrador', 'nuevo admin', 'invitar admin', 'add user'] }, // redesign AD-B1: the page's button says «Add admin»
   { key: 'professional', url: '/users/professionals', query: { add: '1' }, labelKey: 'ADD_PROFESSIONAL', label: 'Add professional', aliases: ['crear profesional', 'nuevo profesional'] },
   { key: 'driver', url: '/delivery/drivers-list', query: { add: '1' }, labelKey: 'ADD_DRIVER', label: 'Add driver', aliases: ['crear repartidor', 'nuevo repartidor', 'nuevo conductor', 'new driver'] },
   { key: 'driver_manager', url: '/delivery/drivers-managers', query: { add: '1' }, labelKey: 'ADD_DRIVER_MANAGER', label: 'Add driver manager', aliases: ['crear gerente de repartidores'] },
@@ -23,7 +23,7 @@ const CREATE_ACTIONS = [
   { key: 'promotion', url: '/marketing/promotions-enterprise', query: { view: 'advanced_offers', add: '1' }, labelKey: 'COMMAND_PALETTE_ADD_PROMOTION', label: 'Add promotion', aliases: ['crear promocion', 'nuevo cupon', 'crear descuento', 'new coupon'] },
   { key: 'builder_app', url: '/builder', query: { add: '1' }, labelKey: 'BUILDER_CREATE_APP', label: 'Create app', parentKey: 'BUILDER', parent: 'Builder', aliases: ['crear app', 'nueva app', 'nueva aplicacion', 'crear aplicacion', 'new app'] },
   { key: 'markup', url: '/stores/markups', query: { add: '1' }, labelKey: 'ADD_MARKUP', label: 'Add markup', aliases: ['crear recargo', 'nuevo margen'] },
-  { key: 'gift_cards_setup', url: '/gift-cards', query: { setup: '1' }, labelKey: 'SETUP_GIFT_CARDS', label: 'Setup Gift Cards', aliases: ['configurar tarjetas de regalo', 'crear tarjeta de regalo', 'gift card'] },
+  { key: 'gift_cards_setup', url: '/gift-cards', query: { setup: '1' }, labelKey: 'SETUP_GIFT_CARDS', label: 'Set up gift cards', aliases: ['configurar tarjetas de regalo', 'crear tarjeta de regalo', 'gift card'] },
   { key: 'whatsapp_bot', url: '/connect/whatsapp-bots', query: { add: '1' }, labelKey: 'ADD_WHATSAPP_BOT', label: 'Add WhatsApp bot', aliases: ['crear bot de whatsapp', 'nuevo bot de whatsapp', 'agregar bot'], when: ({ level }) => level === 0 }
 ]
 

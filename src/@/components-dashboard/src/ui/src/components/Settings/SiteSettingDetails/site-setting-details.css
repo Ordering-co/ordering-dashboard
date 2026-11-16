@@ -1,0 +1,57 @@
+/*
+ *  · The configs of one site (Settings › Sales channels, and the legacy side panel): a section heading, the configs
+ * (or one block per category) as hub rows (settings-hub-form.css). Values: --od-* and --od-x-* only (guard:
+ * productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+.ssd {
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+.ssd-title {
+  margin-block: 0 var(--od-space-2);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.ssd-category + .ssd-category {
+  margin-block-start: var(--od-space-6);
+}
+
+.ssd-category-head {
+  display: grid;
+  gap: var(--od-x-space-half);
+  padding-block-end: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.ssd-category-name {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/*  (row 2): the description reads from the start edge, never justified */
+.ssd-category-description {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+}
+
+/* the Custom free text under its select */
+.ssd-custom {
+  margin-block-start: var(--od-space-2);
+}
+
+.ssd-loading-row {
+  display: grid;
+  gap: var(--od-space-2);
+  padding-block: var(--od-space-3);
+}

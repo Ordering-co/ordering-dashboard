@@ -11,7 +11,7 @@ export const ReviewsTable = styled.table`
   }
 
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
   }
 
@@ -84,7 +84,7 @@ export const Image = (props) => {
 }
 
 export const ReviewObject = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   display: flex;
   align-items: center;
 
@@ -101,12 +101,12 @@ export const ReviewObject = styled.div`
 
 export const InfoBlock = styled.div`
   p {
-    font-size: 11px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     color: ${props => props.theme.colors.lightGray};
 
     &.bold {
-      font-size: 12px;
+      font-size: var(--od-type-content-size);
       font-weight: 500;
       color: ${props => props.theme.colors.headingColor};
     }
@@ -114,7 +114,7 @@ export const InfoBlock = styled.div`
 `
 
 export const ReviewMarkerWrapper = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
 
   ${props => props.theme.colors.rtl
 ? css`

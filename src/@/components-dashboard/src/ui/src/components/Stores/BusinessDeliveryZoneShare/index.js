@@ -1,45 +1,15 @@
 import React from 'react'
 import { BusinessDeliveryZoneShare as BusinessDeliveryZoneShareController } from '../../../../../index'
-import { SelectBusinesses } from '../../Shared'
+import { StoreSharePickerUI } from '../StoreSharePicker'
 
-export const BusinessDeliveryZoneShareUI = (props) => {
-  const {
-    actionState,
-    selectedBusinessIds,
-    businessesState,
-    handleSelectBusiness,
-    handleSelectAllBusiness,
-    handleShareBusinesses,
-    searchBusinesses,
-    handleChangeBusinessPage,
-    handleChangeBusinessPageSize,
-    businessesPaginationProps
-  } = props
-
-  return (
-    <>
-      <SelectBusinesses
-        isSkeleton={businessesState.loading}
-        allBusinesses={businessesState.businesses}
-        selectedBusinessIds={selectedBusinessIds}
-        handleSelectBusiness={handleSelectBusiness}
-        handleSelectAllBusinesses={() => handleSelectAllBusiness(true)}
-        handleSelectNoneBusinesses={() => handleSelectAllBusiness(false)}
-        isDisabled={actionState.loading || businessesState.loading}
-        handleUpdateClick={handleShareBusinesses}
-        searchBusinesses={searchBusinesses}
-        handleChangeBusinessPage={handleChangeBusinessPage}
-        handleChangeBusinessPageSize={handleChangeBusinessPageSize}
-        businessesPaginationProps={businessesPaginationProps}
-      />
-    </>
-  )
-}
+// redesign stores 2.H: the zone's «Share with» is the common StoreSharePicker. `BusinessDeliveryZoneShareUI`
+// stays as an alias of its UI for whoever imported it.
+export const BusinessDeliveryZoneShareUI = StoreSharePickerUI
 
 export const BusinessDeliveryZoneShare = (props) => {
   const BusinessDeliveryZoneShareProps = {
     ...props,
-    UIComponent: BusinessDeliveryZoneShareUI
+    UIComponent: StoreSharePickerUI
   }
   return (
     <BusinessDeliveryZoneShareController {...BusinessDeliveryZoneShareProps} />

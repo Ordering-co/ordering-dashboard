@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { brandFocusOutline } from '../../../styles/touchTarget'
 
 export const BlocksStack = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ export const BlockHeader = styled.div``
 
 export const BlockTitle = styled.h3`
   margin: 0;
-  font-size: 15px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   line-height: 20px;
   color: ${props => props.theme.colors.headingColor};
@@ -25,7 +26,7 @@ export const BlockTitle = styled.h3`
 
 export const BlockHelp = styled.p`
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 18px;
   color: ${props => props.theme.colors.secundaryContrast};
 `
@@ -43,36 +44,38 @@ export const Field = styled.div`
 
 export const FieldLabel = styled.label`
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.headingColor};
 `
 
 export const FieldHelp = styled.p`
   margin: 0;
-  font-size: 13px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   color: ${props => props.theme.colors.secundaryContrast};
 `
 
 export const FieldControl = styled.input`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   height: 44px;
   border: 1px solid ${({ $invalid, theme }) => $invalid ? '#E63757' : '#DEE2E6'};
   box-sizing: border-box;
   border-radius: 7.6px;
   padding: 0 12px;
   width: 100%;
+
+  ${brandFocusOutline}
 `
 
 export const FieldError = styled.p`
   margin: 0;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 16px;
   color: #E63757;
 `
 
 export const FieldSelect = styled.select`
-  font-size: 14px;
+  font-size: var(--od-type-control-value-size);
   height: 44px;
   border: 1px solid #DEE2E6;
   box-sizing: border-box;
@@ -81,6 +84,8 @@ export const FieldSelect = styled.select`
   width: 100%;
   background: ${props => props.theme.colors.backgroundPage};
   color: ${props => props.theme.colors.headingColor};
+
+  ${brandFocusOutline}
 `
 
 export const PreviewList = styled.ul`
@@ -96,7 +101,7 @@ export const PreviewItem = styled.li`
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
   line-height: 20px;
   color: ${props => props.theme.colors.headingColor};
 
@@ -113,7 +118,7 @@ export const ToggleRow = styled.label`
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.headingColor};
 
   input {
@@ -131,7 +136,7 @@ export const CompactTable = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: var(--od-type-content-size);
 
   th, td {
     padding: 10px 12px;
@@ -141,7 +146,7 @@ export const Table = styled.table`
   }
 
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 600;
     color: ${props => props.theme.colors.lightGray};
     background: ${props => props.theme.colors.secundary};
@@ -161,7 +166,9 @@ export const Table = styled.table`
     border: 1px solid #DEE2E6;
     border-radius: 6px;
     padding: 0 8px;
-    font-size: 13px;
+    font-size: var(--od-type-control-value-size);
+
+    ${brandFocusOutline}
   }
 `
 

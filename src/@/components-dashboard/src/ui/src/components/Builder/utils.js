@@ -90,6 +90,19 @@ export const getProductKind = (product) => {
 }
 
 /**
+ * Whether the product has themes to edit in Builder: the API's `has_themes`
+ * (a website, or an app that reads its theme at runtime, like the
+ * Marketplace App). An API that doesn't send it yet: only a website.
+ */
+export const getProductHasThemes = (product) => {
+  if (typeof product?.has_themes === 'boolean') return product.has_themes
+  return !!product && getProductKind(product) === 'web'
+}
+
+/** A text said of the product: `app`'s for an app, else `web`'s (a website). */
+export const byKind = (kind, web, app) => kind === 'app' ? app : web
+
+/**
  * The own domain a website has configured, active or still being set up:
  * its name, or null. The product gives it as a string; a domain answer's
  * `own` (`{ name, status }`) is read too.
@@ -230,11 +243,13 @@ export const BUILD_MODE_OPTIONS = {
 export const getBuildOptionValue = (build) => build?.platform === 'android' ? build?.type : build?.mode
 
 /**
- * The option the Build dialog starts on: the latest attempt's, else the
- * store one for an active app and the one to try for a draft.
+ * The option the Build dialog starts on: the one asked for (`initial`: the
+ * file type of the tab the Build button was pressed on) when the dialog
+ * offers it, else the latest attempt's, else the store one for an active app
+ * and the one to try for a draft.
  */
-export const getDefaultBuildOption = (platform, latest, productStatus) => {
-  const options = BUILD_MODE_OPTIONS[platform] || []
+export const getDefaultBuildOption = (platform, latest, productStatus, { options = BUILD_MODE_OPTIONS[platform] || [], initial = null } = {}) => {
+  if (initial && options.some(option => option.value === initial)) return initial
   const previous = options.find(option => option.value === getBuildOptionValue(latest))
   if (previous) return previous.value
   if (!options.length) return null
@@ -254,6 +269,16 @@ export const getBuildModeLabel = (build, t = defaultT) => {
 export const getBuildFileLabel = (build) => {
   if (build?.platform === 'ios') return 'IPA'
   return build?.type === 'bundle' ? 'AAB' : 'APK'
+}
+
+/**
+ * Whether a phone installs the attempt's file: an iOS ad hoc IPA or an
+ * Android APK. An AAB goes to Play Console and an App Store IPA to App Store
+ * Connect.
+ */
+export const isBuildInstallable = (build) => {
+  if (build?.platform === 'ios') return build.mode === 'ad-hoc'
+  return build?.platform === 'android' && getBuildFileLabel(build) === 'APK'
 }
 
 /** Who asked for the attempt. */
@@ -277,6 +302,84 @@ export const getReplacedBuildIds = (builds = []) => {
     else seen.add(key)
   })
   return replaced
+}
+
+/**
+ * The file type of an attempt, the tab it falls in on the Builds card: iOS by
+ * its mode (`ad-hoc`, `app-store`); Android `assemble` (APK), `bundle` (AAB)
+ * or, for a debug build of My Products, `debug`. api-core keeps one file per
+ * platform, mode and type, so each type has its own latest attempt.
+ */
+export const getBuildTypeValue = (build) => {
+  if (!build) return null
+  if (build.platform !== 'android') return build.mode || null
+  if (build.mode === 'debug') return 'debug'
+  return build.type === 'bundle' ? 'bundle' : 'assemble'
+}
+
+/** The tabs each platform always has, in order; a debug APK adds its tab only when there is one. */
+export const BUILD_TYPE_TABS = {
+  ios: [
+    { value: 'ad-hoc', label: (t) => t('BUILDER_BUILD_MODE_AD_HOC', 'Ad hoc') },
+    { value: 'app-store', label: (t) => t('BUILDER_BUILD_MODE_APP_STORE', 'App Store') }
+  ],
+  android: [
+    { value: 'assemble', label: () => 'APK' },
+    { value: 'bundle', label: () => 'AAB' }
+  ]
+}
+
+/**
+ * Whether the app changed since a successful attempt was built. `/latest`
+ * says it for the latest successful attempt of each file type
+ * (`successful_by_type`): a build of one type leaves the others as they
+ * were. An API from before that list says it for the platform's latest
+ * successful attempt only.
+ */
+export const hasPendingChanges = (item, attempt) => {
+  if (!item || !attempt) return false
+  if (Array.isArray(item.successful_by_type)) {
+    return item.successful_by_type.some(entry => entry.id === attempt.id && entry.pending_changes === true)
+  }
+  return attempt.id === item.successful?.id && item.pending_changes === true
+}
+
+/**
+ * The tabs of a platform on the Builds card: for each file type, its latest
+ * attempt and its latest successful one (the file the storage still keeps:
+ * only a newer successful attempt of the same type replaces it). From the
+ * attempts of the history (newest first) plus `/latest`'s `latest` and
+ * `successful`, whose copies win, because the socket keeps `latest` up to date.
+ * `current` is the tab of the platform's latest attempt. My Products has
+ * its own `types` and `typeValueOf` (it builds debug files too).
+ */
+export const getBuildTypeTabs = (platform, item, attempts = [], t = defaultT, { types = BUILD_TYPE_TABS[platform] || [], typeValueOf = getBuildTypeValue } = {}) => {
+  const byId = new Map()
+  const add = (attempt) => {
+    if (!attempt || attempt.platform !== platform) return
+    byId.set(attempt.id, { ...byId.get(attempt.id), ...attempt })
+  }
+  attempts.forEach(add)
+  add(item?.successful)
+  add(item?.latest)
+  const sorted = [...byId.values()].sort((a, b) => Number(b.id) - Number(a.id))
+
+  const tabs = types.map(tab => ({ value: tab.value, label: tab.label(t), latest: null, successful: null }))
+  sorted.forEach(attempt => {
+    const value = typeValueOf(attempt)
+    if (!value) return
+    let tab = tabs.find(item => item.value === value)
+    if (!tab) {
+      const label = value === 'debug' ? t('BUILDER_BUILD_APK_DEBUG', 'APK debug') : getBuildModeLabel(attempt, t)
+      tab = { value, label, latest: null, successful: null }
+      tabs.push(tab)
+    }
+    if (!tab.latest) tab.latest = attempt
+    if (!tab.successful && attempt.status === 'successful') tab.successful = attempt
+  })
+  const latestValue = typeValueOf(item?.latest)
+  const current = tabs.some(tab => tab.value === latestValue) ? latestValue : (tabs[0]?.value ?? null)
+  return { tabs, current }
 }
 
 export const getBuildStatusLabel = (status, t = defaultT) => {
@@ -394,18 +497,34 @@ export const BUILDER_DETAIL_TABS = [
   { value: 'builds', label: (t) => t('BUILDER_TAB_BUILDS', 'Builds') }
 ]
 
-export const getDetailTab = (value) =>
-  BUILDER_DETAIL_TABS.some(tab => tab.value === value) ? value : 'general'
+/** The Theme tab, of a product with themes (`getProductHasThemes`). */
+export const BUILDER_THEME_TAB = { value: 'theme', label: (t) => t('BUILDER_TAB_THEME', 'Theme') }
+
+/**
+ * Tabs of an app's detail. With themes, Theme after General and no
+ * Appearance: the theme sets its colors, not the build's.
+ */
+export const getAppDetailTabs = (hasThemes) => hasThemes
+  ? [BUILDER_DETAIL_TABS[0], BUILDER_THEME_TAB, ...BUILDER_DETAIL_TABS.slice(1).filter(tab => tab.value !== 'appearance')]
+  : BUILDER_DETAIL_TABS
+
+export const getDetailTab = (value, tabs = BUILDER_DETAIL_TABS) =>
+  tabs.some(tab => tab.value === value) ? value : 'general'
 
 /** Tabs of a website's detail. */
 export const BUILDER_WEB_TABS = [
   { value: 'general', label: (t) => t('BUILDER_TAB_GENERAL', 'General') },
   { value: 'site', label: (t) => t('BUILDER_TAB_SITE', 'Website settings') },
-  { value: 'theme', label: (t) => t('BUILDER_TAB_THEME', 'Theme') }
+  BUILDER_THEME_TAB
 ]
 
-export const getWebDetailTab = (value) =>
-  BUILDER_WEB_TABS.some(tab => tab.value === value) ? value : 'general'
+/** Tabs of a website's detail: Theme only with themes. */
+export const getWebDetailTabs = (hasThemes) => hasThemes
+  ? BUILDER_WEB_TABS
+  : BUILDER_WEB_TABS.filter(tab => tab.value !== BUILDER_THEME_TAB.value)
+
+export const getWebDetailTab = (value, tabs = BUILDER_WEB_TABS) =>
+  tabs.some(tab => tab.value === value) ? value : 'general'
 
 /** Setting groups in the order the Images and files tab shows them. */
 export const BUILDER_SETTING_GROUPS = [
@@ -563,6 +682,9 @@ export const getCredentialsErrorMessage = (platform, codes = [], t = defaultT) =
     if (rule === 'max') return t('BUILDER_CREDENTIAL_ERROR_SIZE', '_field_ is too big.').replace('_field_', label)
     return t('BUILDER_CREDENTIAL_ERROR_FIELD', 'Check _field_.').replace('_field_', label)
   }
+  if (codes.includes('credentials.default_keystore_unavailable')) {
+    return t('BUILDER_DEFAULT_KEYSTORE_UNAVAILABLE', 'The default keystore isn’t available right now. Upload your own or try again later.')
+  }
   return t('BUILDER_SAVE_ERROR', 'We couldn’t save it. Try again.')
 }
 
@@ -677,20 +799,50 @@ const ACTION_ERRORS = {
   retry: (t) => t('BUILDER_RETRY_ERROR', 'We couldn’t retry the build. Try again.'),
   cancel: (t) => t('BUILDER_CANCEL_ERROR', 'We couldn’t cancel the build. Try again.'),
   log: (t) => t('BUILDER_LOG_ERROR', 'We couldn’t load the log. Try again.'),
-  download: (t) => t('BUILDER_DOWNLOAD_ERROR', 'We couldn’t download the file. Try again.')
+  download: (t) => t('BUILDER_DOWNLOAD_ERROR', 'We couldn’t download the file. Try again.'),
+  install: (t) => t('BUILDER_INSTALL_LINK_ERROR', 'We couldn’t create the install link. Try again.')
+}
+
+/** The install link reads some refusals in its own words. */
+const INSTALL_REJECTIONS = {
+  'build.not_successful': (t) => t('BUILDER_INSTALL_NOT_SUCCESSFUL', 'Only successful builds can be installed.'),
+  'build.artifact_replaced': (t) => t('BUILDER_INSTALL_REPLACED', 'A newer build replaced this file. Install that one instead.'),
+  'build.not_installable': (t) => t('BUILDER_INSTALL_NOT_INSTALLABLE', 'This file can’t be installed on a phone.')
 }
 
 /**
  * Message for a refused build action (`build`, `retry`, `cancel`, `log`,
- * `download`), from its error codes, with the platform and the mode filled in.
+ * `download`, `install`), from its error codes, with the platform and the mode filled in.
  */
 export const getBuildActionError = (action, codes = [], { platform, mode } = {}, t = defaultT) => {
   let text = null
   if (codes.includes('build.not_latest') && NOT_LATEST[action]) text = NOT_LATEST[action](t)
+  const installKnown = action === 'install' && codes.find(code => INSTALL_REJECTIONS[code])
+  if (!text && installKnown) text = INSTALL_REJECTIONS[installKnown](t)
   const known = codes.find(code => BUILD_REJECTIONS[code])
   if (!text && known) text = BUILD_REJECTIONS[known](t)
   if (!text) text = (ACTION_ERRORS[action] || ACTION_ERRORS.build)(t)
   return text.replace('_platform_', getPlatformLabel(platform)).replace('_mode_', mode || '')
+}
+
+/** How long until a moment, in minutes rounded up: "23 h 59 min", "5 min", "less than a minute". */
+export const getTimeLeftLabel = (milliseconds, t = defaultT) => {
+  const minutes = Math.ceil(Math.max(0, milliseconds) / 60000)
+  if (minutes < 1) return t('BUILDER_TIME_LESS_THAN_MINUTE', 'less than a minute')
+  if (minutes < 60) return t('BUILDER_TIME_MINUTES', '_minutes_ min').replace('_minutes_', String(minutes))
+  return t('BUILDER_TIME_HOURS_MINUTES', '_hours_ h _minutes_ min')
+    .replace('_hours_', String(Math.floor(minutes / 60)))
+    .replace('_minutes_', String(minutes % 60))
+}
+
+/** An ISO 8601 moment as the API's UTC date time (`YYYY-MM-DD HH:mm:ss`), which parseDate reads. */
+export const toApiUtcDateTime = (iso) => {
+  const time = Date.parse(iso)
+  if (Number.isNaN(time)) return null
+  const date = new Date(time)
+  const pad = (value) => String(value).padStart(2, '0')
+  const day = [date.getUTCFullYear(), pad(date.getUTCMonth() + 1), pad(date.getUTCDate())].join('-')
+  return `${day} ${[date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()].map(pad).join(':')}`
 }
 
 /** The API takes a service account of up to 20 000 characters. */

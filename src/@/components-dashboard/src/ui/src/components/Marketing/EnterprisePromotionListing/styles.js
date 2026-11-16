@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-export const PromotionWorkspace = styled.main`
+export const PromotionWorkspace = styled.div`
   flex: 1 1 auto;
   width: 100%;
   min-width: 0;
@@ -20,7 +20,7 @@ export const WorkspaceHeader = styled.header`
   h1 {
     margin: 0;
     color: ${props => props.theme.colors?.headingColor || '#0B0C0D'};
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 600;
     line-height: 1.3;
   }
@@ -44,7 +44,7 @@ export const WorkspaceTab = styled.button`
   color: ${props => props.$active ? (props.theme.colors?.primary || '#266DF0') : (props.theme.colors?.headingColor || '#3F4145')};
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   font-weight: ${props => props.$active ? 600 : 500};
   white-space: nowrap;
   transition: color 180ms ease;
@@ -99,7 +99,7 @@ export const HeaderTitleContainer = styled.div`
   align-items: center;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0px;
     font-weight: 600;
     color: ${props => props.theme.colors.headingColor};

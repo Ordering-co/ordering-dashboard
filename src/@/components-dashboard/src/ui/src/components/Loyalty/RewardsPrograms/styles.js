@@ -16,7 +16,7 @@ export const HeaderTitleContainer = styled.div`
 
   > h1 {
     font-weight: 700;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     color: ${props => props.theme.colors.headingColor};
     margin: 0px;
     line-height: 32px;
@@ -91,13 +91,13 @@ export const LoyaltyItemContent = styled.div`
     margin-left: 13px;
   `}
   h5 {
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     font-weight: 500;
     margin-bottom: 6px;
   }
   p {
     color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -130,14 +130,14 @@ export const InfoWrapper = styled.div`
 export const InfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;

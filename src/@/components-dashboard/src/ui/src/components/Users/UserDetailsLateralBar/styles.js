@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 export const LateralBarContainer = styled.div`
   width: 0;
   position: fixed;
-  z-index: 1005;
+  z-index: calc(var(--od-x-layer-chrome) + 5);
   top: 0;
   background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
   overflow-x: hidden;

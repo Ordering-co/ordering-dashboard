@@ -1,0 +1,78 @@
+/* redesign AS-C (D4, M-AS6): the guided-navigation destinations of the assistant. Only var(--od-*) / var(--od-x-*), logical
+   properties, prefix odc-as-. redesign J5 row 51 (assistant P-3, ): the buttons are P/Button, which brings the colors, the
+   focus ring, the disabled look and the 44px touch area (decision 12); this file only lays them out. */
+.odc-as-destinations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+}
+
+.odc-as-destination-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+/* A destination: the whole width, 32px visible and taller when the text wraps (whole words), text at the inline start. */
+.odc-as-destinations .odc-as-dest-btn {
+  inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-1-5);
+  justify-content: flex-start;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* One destination: a discreet main action (action border and text; the text token is the content one, which keeps its contrast in dark). */
+.odc-as-destinations .odc-as-dest-single:not(:disabled) {
+  border-color: var(--od-action);
+  color: var(--od-action-content);
+}
+
+/* «Search the Dashboard»: the link variant, at the start and wrapping like the destinations. Its height is the link variant's own
+   (32px visible on a phone; review J5 #3: a min-block-size here beat that rule and left it at 24). */
+.odc-as-destinations .odc-as-dest-search {
+  align-self: flex-start;
+  block-size: auto;
+  text-align: start;
+  white-space: normal;
+}
+
+.odc-as-subtitle {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-as-note {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-as-note-error { color: var(--od-danger-functional); }
+
+/* The loading line: the Product loader icon, spun with Product's own keyframes (product.css). */
+.odc-as-destinations .odc-as-spin { flex: none; animation: odc-spin var(--od-duration-slow) linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-as-destinations .odc-as-spin { animation: none; }
+}

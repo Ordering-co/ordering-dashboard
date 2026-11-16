@@ -1,0 +1,43 @@
+/* redesign W0-7 (T0-25) · C19 · Embedded maps. The frame owns the slot: width of the container and never more, height from a token,
+   brand radius and border, overflow hidden. «Map unavailable» is drawn in this same slot. Actions never go in it. */
+
+.odc-map-frame {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: var(--od-x-map-height);
+  min-inline-size: 0;
+  overflow: hidden;
+  background: var(--od-surface-subtle);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-map-frame[data-size='compact'] { block-size: var(--od-x-map-height-compact); }
+
+/* The frame takes the height its container gives it (a page region), with a floor so the map is never a sliver. */
+.odc-map-frame[data-size='fill'] {
+  block-size: 100%;
+  min-block-size: var(--od-x-map-height-compact);
+}
+
+/* A failed map hands the focus here (StepBoundary focusOnError): programmatic only, never a tab stop. */
+.odc-map-frame:focus { outline: none; }
+.odc-map-frame:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.odc-map-frame-map {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* The empty state fills the slot instead of padding it, so the frame does not change size when the provider is missing. */
+.odc-map-frame .odc-state {
+  box-sizing: border-box;
+  block-size: 100%;
+  padding-block: var(--od-space-3);
+}

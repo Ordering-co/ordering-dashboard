@@ -33,12 +33,18 @@ export const UserActiveStateFilter = (props) => {
       <UserActiveStateFilterContainer>
         <DragScroll>
           <Tab
+            as='button'
+            type='button'
+            aria-pressed={!!selectedUserActiveState}
             active={selectedUserActiveState}
             onClick={() => onChangeUserActiveState('active')}
           >
             {t('ACTIVE', 'Active')}
           </Tab>
           <Tab
+            as='button'
+            type='button'
+            aria-pressed={!selectedUserActiveState}
             active={!selectedUserActiveState}
             onClick={() => onChangeUserActiveState('inactive')}
           >

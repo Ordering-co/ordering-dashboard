@@ -1,0 +1,120 @@
+/*
+ * redesign deliveries F2-B2 (decisions 1 and 3; DV-01, DV-06, DV-13) · the drivers strip at the foot of the map column.
+ * It is a flex child of the column (WrapperMap), never absolute: it takes its own height up to a share of the column and
+ * scrolls inside itself, so the map keeps the rest. Tokens only; logical properties only.
+ */
+
+.odc-dock {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-block-size: 0;
+  max-block-size: 40%;
+  overflow-y: auto;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odc-dock-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  margin: 0;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  color: var(--od-text);
+}
+
+/* Programmatic focus lands here when there is nobody to assign (focusCandidatesToken). */
+.odc-dock-title:focus { outline: none; }
+.odc-dock-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-dock-summary {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-dock .odc-notice { margin: 0; }
+
+.odc-dock-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-dock-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-1);
+}
+
+.odc-dock-row + .odc-dock-row { border-block-start: var(--od-x-hairline) solid var(--od-border); }
+
+.odc-dock-row .odc-btn { flex: none; }
+
+.odc-dock-who {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-dock-name {
+  overflow: hidden;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-dock-meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-dock-state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+}
+
+.odc-dock-dot {
+  flex: none;
+  inline-size: var(--od-x-dot);
+  block-size: var(--od-x-dot);
+  border-radius: var(--od-radius-round);
+  background: var(--od-x-text-subtle);
+}
+
+.odc-dock-row[data-state='available'] .odc-dock-dot { background: var(--od-success-signal); }
+.odc-dock-row[data-state='busy'] .odc-dock-dot { background: var(--od-warning-signal); }
+
+.odc-dock-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-dock-skeleton { display: flex; flex-direction: column; }
+
+.odc-dock-skeleton .odc-dock-who { gap: var(--od-space-1); }

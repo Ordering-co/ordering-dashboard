@@ -185,6 +185,29 @@ describe('hide rules', () => {
     expect(isDeliveryCompanyPluginCategory({ key: 'custom_order' })).toBe(false)
   })
 
+  it('flags the plugin_ forms the API sends for Uber Direct and Shipday', () => {
+    expect(isDeliveryCompanyPluginCategory({ key: 'plugin_uber_direct_integration' })).toBe(true)
+    expect(isDeliveryCompanyPluginCategory({ key: 'plugin_shipday_delivery_integration' })).toBe(true)
+    expect(isDeliveryCompanyPluginCategory({ key: 'shipday_delivery_integration' })).toBe(true)
+    expect(isDeliveryCompanyPluginCategory({ key: 'plugin_computop' })).toBe(false)
+  })
+
+  it.each([
+    'yango_delivery_integration',
+    'llamafood_delivery_integration',
+    'pedidosya_integration',
+    'pickerexpress_integration',
+    'rappi_cargo_integration'
+  ])('flags %s, a delivery company offered in Connect, in both forms', (key) => {
+    expect(isDeliveryCompanyPluginCategory({ key })).toBe(true)
+    expect(isDeliveryCompanyPluginCategory({ key: `plugin_${key}` })).toBe(true)
+  })
+
+  it('does not flag the Rappi and PedidosYa keys that are not delivery companies', () => {
+    expect(isDeliveryCompanyPluginCategory({ key: 'plugin_rappi_integration' })).toBe(false)
+    expect(isDeliveryCompanyPluginCategory({ key: 'plugin_pedidosya' })).toBe(false)
+  })
+
   it('rehomes notification_toast and preorder_maximum_days into their task sections', () => {
     expect(SETTINGS_REHOMED_CONFIGS.notification_toast).toBe('notification')
     expect(SETTINGS_REHOMED_CONFIGS.preorder_maximum_days).toBe('pro_preorder')
@@ -307,7 +330,12 @@ describe('buildSettingsHub', () => {
       category('dashboard_theme', { rank: 5 })
     ],
     key_pro: [category('notification', { rank: 4 }), category('pro_preorder', { rank: 1 })],
-    key_plugin: [category('doordash_drive_integration'), category('zapier', { name: 'Zapier' })],
+    key_plugin: [
+      category('doordash_drive_integration'),
+      category('plugin_uber_direct_integration'),
+      category('plugin_shipday_delivery_integration'),
+      category('zapier', { name: 'Zapier' })
+    ],
     key_addon: [category('addon_catering'), category('addon_gift_cards')],
     store_reservation: [category('store_reservation')]
   }
@@ -340,6 +368,8 @@ describe('buildSettingsHub', () => {
     const allKeys = hub.flatMap(group => group.sections.map(section => section.key))
     expect(allKeys).not.toContain('dashboard_theme')
     expect(allKeys).not.toContain('doordash_drive_integration')
+    expect(allKeys).not.toContain('plugin_uber_direct_integration')
+    expect(allKeys).not.toContain('plugin_shipday_delivery_integration')
     expect(allKeys).toContain('addon_catering')
     expect(allKeys).toContain('addon_gift_cards')
     expect(allKeys).toContain('store_reservation')
@@ -590,5 +620,41 @@ describe('searchSettingsHub', () => {
   it('returns nothing for an empty or unmatched query', () => {
     expect(searchSettingsHub(hub, '')).toEqual([])
     expect(searchSettingsHub(hub, 'zzz-not-there')).toEqual([])
+  })
+
+  describe('what the screen shows', () => {
+    const dateHub = buildSettingsHub({
+      categoryLists: {
+        key_basic: [
+          category('platform_date_time_formats', {
+            rank: 1,
+            configs: [{ key: 'dates_general_format', name: 'Dates general format', rank: 1 }]
+          }),
+          category('stripe', {
+            name: 'Card Payments',
+            configs: [{ key: 'stripe_publishable', name: 'Publishable key', rank: 1 }]
+          })
+        ]
+      }
+    })
+    const es = { SETTINGS_DATE_TIME_FORMAT: 'Formato de fecha y hora', SETTINGS_DATE_TIME_CUSTOM: 'Formato personalizado', SETTINGS_SECTION_DATE_TIME: 'Formato de fecha y hora' }
+    const tEs = (key, fallback) => es[key] || fallback
+
+    it('finds the «Custom format» label the Date and time block draws', () => {
+      const hits = searchSettingsHub(dateHub, 'Custom format')
+      expect(hits.some(hit => hit.config?.key === 'dates_general_format')).toBe(true)
+    })
+
+    it('finds the translated label of a block field and the translated section title', () => {
+      const fieldHits = searchSettingsHub(dateHub, 'personalizado', { t: tEs })
+      expect(fieldHits.some(hit => hit.config?.key === 'dates_general_format')).toBe(true)
+      const sectionHits = searchSettingsHub(dateHub, 'formato fecha', { t: tEs })
+      expect(sectionHits.some(hit => hit.type === 'section' && hit.section.key === 'platform_date_time_formats')).toBe(true)
+    })
+
+    it('does not match a field whose visible labels lack the term', () => {
+      expect(searchSettingsHub(dateHub, 'personalizado', { t: tEs }).some(hit => hit.config?.key === 'stripe_publishable')).toBe(false)
+      expect(searchSettingsHub(dateHub, 'personalizado')).toEqual([])
+    })
   })
 })

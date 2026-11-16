@@ -1,20 +1,17 @@
 import React, { useState, useRef } from 'react'
 import { useLanguage, DragAndDrop, ExamineClick, useToast, ToastType } from '../../../../../index'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { Alert, ImageCrop, Modal } from '../../Shared'
-import BsCardImage from '@meronex/icons/bs/BsCardImage'
+import { Button, Skeleton } from '../../Shared/Product'
 import { bytesConverter } from '../../../utils'
+import './site-theme.css'
 
-import {
-  UploadImageIconContainer,
-  UploadImageIcon,
-  ComponentImage
-} from './styles'
+// redesign (lot D, decision 7): the same logic as in `main` (JPG/WEBP, 2 MB, crop, upload to the gallery, the Alert of the
+// upload errors); only the zone changes: a real button named «Choose image» and the tile and the hint drawn with tokens
+// (site-theme.css). Dropping a file on the zone still works. `label` (optional) names the group the zone belongs to.
 
 export const ThemeImage = (props) => {
   const {
-    isMarginTop,
+    label,
     valueObject,
     handleAddThemeGallery,
     handleChangeValue
@@ -29,7 +26,7 @@ export const ThemeImage = (props) => {
   const [imageUploadState, setImageUploadState] = useState({ loading: false, image: null })
 
   const handleClickImage = () => {
-    imageRef.current.click()
+    imageRef.current?.click()
   }
 
   const handleFiles = (files) => {
@@ -92,12 +89,11 @@ export const ThemeImage = (props) => {
     }
   }
 
+  const preview = imageUploadState.image || valueObject
+
   return (
     <>
-      <ComponentImage
-        isMarginTop={isMarginTop}
-        onClick={() => handleClickImage()}
-      >
+      <div className='odc-op-theme-image' role={label ? 'group' : undefined} aria-label={label || undefined}>
         <ExamineClick
           onFiles={files => handleFiles(files)}
           childRef={(e) => { imageRef.current = e }}
@@ -108,22 +104,23 @@ export const ThemeImage = (props) => {
             onDrop={dataTransfer => handleFiles(dataTransfer.files)}
             accept='image/jpeg, image/jpg, image/webp'
             disabled={imageUploadState.loading}
+            className='odc-op-theme-image-zone'
           >
-            {imageUploadState.loading && (
-              <Skeleton width={160} height={160} />
-            )}
-            {!imageUploadState.loading && (imageUploadState.image || valueObject) && (
-              <img src={imageUploadState.image || valueObject} alt='image' loading='lazy' />
-            )}
-            <UploadImageIconContainer>
-              <UploadImageIcon>
-                <BsCardImage />
-                <span>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
-              </UploadImageIcon>
-            </UploadImageIconContainer>
+            <div className='odc-op-theme-image-tile' data-empty={!imageUploadState.loading && !preview ? '' : undefined}>
+              {imageUploadState.loading && <Skeleton block='100%' />}
+              {!imageUploadState.loading && preview && (
+                <img src={preview} alt='image' loading='lazy' />
+              )}
+            </div>
+            <div className='odc-op-theme-image-actions'>
+              <Button size='sm' busy={imageUploadState.loading} disabled={imageUploadState.loading} onClick={handleClickImage}>
+                {t('CHOOSE_IMAGE', 'Choose image')}
+              </Button>
+              <span className='odc-op-theme-image-hint'>{t('DRAG_AND_DROP', 'Drag and drop')}</span>
+            </div>
           </DragAndDrop>
         </ExamineClick>
-      </ComponentImage>
+      </div>
       <Alert
         title={t('ORDERING_PRODUCTS', 'Ordering products')}
         content={alertState.content}
@@ -135,9 +132,9 @@ export const ThemeImage = (props) => {
       />
       {cropState?.open && (
         <Modal
-          width='700px'
+          width='var(--od-x-dialog-lg)' /* was 700px: the literal guard wants tokens (720px) */
           height='80vh'
-          padding='30px'
+          padding='var(--od-space-5)' /* was 30px (24px) */
           title={t('IMAGE_CROP', 'Image crop')}
           open={cropState?.open}
           onRemove={() => setCropState({ ...cropState, open: false })}

@@ -1,26 +1,39 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   useLanguage,
   useConfig,
   useEvent,
   OrderNotification as OrderNotificationController
 } from '../../../../../index'
-import { Alert, Modal } from '../../Shared'
+import { Button, Dialog, InlineNotice } from '../../Shared/Product'
+import { Info } from '../../Shared/Icon'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
 import { useTheme } from 'styled-components'
-import { CheckSquareFill, Square } from 'react-bootstrap-icons'
+import { captureException } from '@sentry/react'
 import { getDashboardNotificationIconUrl } from '../../../utils'
 
-import {
-  ModalContainer,
-  ToastWrapper,
-  AlarmContent,
-  CheckBoxWrapper
-} from './styles'
-import { Button } from '../../../styles'
+import { ToastWrapper } from './styles'
+import './order-notification.css'
 
 toast.configure()
+
+// NotAllowedError: the browser blocked autoplay. AbortError: play() was interrupted
+// (dialog closed, a new load, or unmount). Both are expected and stay out of Sentry.
+const blockedPlaybackErrors = new Set(['NotAllowedError', 'AbortError'])
+
+const playNotificationSound = async (sound, reportedErrors) => {
+  if (!sound) return
+  try {
+    sound.muted = false
+    await sound.play()
+  } catch (error) {
+    const name = error?.name || 'unknown'
+    if (blockedPlaybackErrors.has(name) || reportedErrors?.has(name)) return
+    reportedErrors?.add(name)
+    captureException(error)
+  }
+}
 
 const OrderNotificationUI = (props) => {
   const {
@@ -32,12 +45,15 @@ const OrderNotificationUI = (props) => {
   const [, t] = useLanguage()
   const [events] = useEvent()
   const theme = useTheme()
-  const [showModal, setShowModal] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
+  // redesign F6b (D-16): decided in the first render, not in an effect after the first paint: a notice that
+  // pops in a frame later pushes the list down by its own height.
+  const [showModal, setShowModal] = useState(() => !localStorage.getItem('new_order_notification'))
 
   const [notificationModalOpen, setNotificationModalOpen] = useState(false)
   const [registerOrderIds, setRegisterOrderIds] = useState([])
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const gotItRef = useRef(null)
+  const soundRef = useRef(null)
+  const reportedPlaybackErrorsRef = useRef(new Set())
   const [userInteracted, setUserInteracted] = useState(false)
 
   const handleNotification = (order) => {
@@ -87,9 +103,7 @@ const OrderNotificationUI = (props) => {
     }
     toast(content, toastConfigure)
     if (!configState?.configs?.disable_sound_notification && userInteracted) {
-      const sound = document.getElementById('notification-sound')
-      sound.muted = false
-      sound.play()
+      playNotificationSound(soundRef.current, reportedPlaybackErrorsRef.current)
     }
     setRegisterOrderIds([])
   }
@@ -100,20 +114,12 @@ const OrderNotificationUI = (props) => {
   }, [registerOrderIds])
 
   useEffect(() => {
-    if (!notificationModalOpen || configState?.configs?.disable_sound_notification) return
-    const sound = document.getElementById('notification-sound')
+    if (!notificationModalOpen || !userInteracted || configState?.configs?.disable_sound_notification) return
     const interval = setInterval(() => {
-      if (notificationModalOpen && userInteracted) {
-        sound.muted = false
-        sound.play()
-      }
+      playNotificationSound(soundRef.current, reportedPlaybackErrorsRef.current)
     }, 3000)
-    if (!notificationModalOpen) {
-      clearInterval(interval)
-      return
-    }
     return () => clearInterval(interval)
-  }, [notificationModalOpen, configState?.configs?.disable_sound_notification])
+  }, [notificationModalOpen, userInteracted, configState?.configs?.disable_sound_notification])
 
   useEffect(() => {
     if (configState.loading) return
@@ -122,11 +128,6 @@ const OrderNotificationUI = (props) => {
       events.off('order_added', handleNotification)
     }
   }, [configState, registerOrderIds, customerId, userInteracted])
-
-  useEffect(() => {
-    const isSaved = localStorage.getItem('new_order_notification')
-    if (!isSaved) setShowModal(true)
-  }, [])
 
   useEffect(() => {
     if (userInteracted) return
@@ -140,63 +141,63 @@ const OrderNotificationUI = (props) => {
     }
   }, [userInteracted])
 
-  const handleClose = () => {
+  // redesign 5.2-A: the sound notice is inline, not a modal. Both actions close it
+  // and record a gesture so a later attempt can run. Only "Don't show again" is remembered.
+  // A gesture does not guarantee playback; the browser can still block it.
+  const handleCloseSoundNotice = () => {
     setShowModal(false)
     setUserInteracted(true)
-    if (isChecked) {
-      localStorage.setItem('new_order_notification', '1')
-    }
   }
+
+  const handleDontShowAgain = () => {
+    localStorage.setItem('new_order_notification', '1')
+    handleCloseSoundNotice()
+  }
+
+  // redesign F6d (Q3-03): the text clips with an ellipsis from 768px; it says itself in a title
+  const soundNoticeText = t('SOUND_WILL_BE_PLAYED', 'The sound will be played on this page whenever a new order is received.')
 
   return (
     <>
-      {notificationModalOpen && (
-        <Modal
-          width='750px'
-          open={notificationModalOpen}
-          onClose={handleCloseNotificationModal}
-        >
-          <ModalContainer>
-            <h1>{t('NEW_ORDRES_RECEIVED', 'New orders have been received!')}</h1>
-            <img src={theme.images.general.registerOrder} alt='' />
-            {registerOrderIds.map((orderId) =>
-              <p key={orderId}>
-                {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', `${orderId}`)}
-              </p>
-            )}
-          </ModalContainer>
-        </Modal>
-      )}
-      <audio id='notification-sound' muted>
+      <Dialog
+        open={notificationModalOpen}
+        onOpenChange={(next) => { if (!next) handleCloseNotificationModal() }}
+        size='md'
+        title={t('NEW_ORDERS_RECEIVED', 'New orders received')}
+        closeLabel={t('CLOSE', 'Close')}
+        initialFocus={gotItRef}
+        footer={(
+          <Button ref={gotItRef} variant='primary' onClick={handleCloseNotificationModal}>
+            {t('GOT_IT', 'Got it')}
+          </Button>
+        )}
+      >
+        <ul className='odc-new-orders'>
+          {registerOrderIds.map((orderId) => (
+            <li key={orderId}>
+              {t('ORDER', 'Order')} <span className='odc-mono'>#{orderId}</span>
+            </li>
+          ))}
+        </ul>
+      </Dialog>
+      <audio ref={soundRef} id='notification-sound' muted>
         <source src={theme.sounds.notificationOgg} type='audio/ogg' />
         <source src={theme.sounds.notificationMp3} type='audio/mpeg' />
       </audio>
-      <Alert
-        width='700px'
-        title={t('WEB_APPNAME', 'Ordering')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => setAlertState({ open: false, content: [] })}
-        onAccept={() => setAlertState({ open: false, content: [] })}
-        closeOnBackdrop={false}
-      />
       {showModal && (
-        <Modal
-          open={showModal}
-          width='700px'
-          onClose={handleClose}
-          title={t('ORDERING', 'Ordering')}
+        <InlineNotice
+          tone='info'
+          icon={Info}
+          className='odc-sound-notice'
+          action={(
+            <span className='odc-sound-actions'>
+              <Button size='sm' onClick={handleCloseSoundNotice}>{t('ACCEPT', 'Accept')}</Button>
+              <Button variant='link' onClick={handleDontShowAgain}>{t('DONT_SHOW_AGAIN', 'Don\'t show again')}</Button>
+            </span>
+          )}
         >
-          <AlarmContent>
-            <span>{t('SOUND_WILL_BE_PLAYED', 'The sound will be played on this page whenever a new order is received.')}</span>
-            <CheckBoxWrapper onClick={() => setIsChecked(prev => !prev)} isChecked={isChecked}>
-              {isChecked ? <CheckSquareFill /> : <Square />}
-              <span>{t('DONT_SHOW_AGAIN', 'Don\'t show again')}</span>
-            </CheckBoxWrapper>
-            <Button color='primary' onClick={handleClose}>{t('ACCEPT', 'Accept')}</Button>
-          </AlarmContent>
-        </Modal>
+          <span title={soundNoticeText}>{soundNoticeText}</span>
+        </InlineNotice>
       )}
     </>
   )
@@ -211,3 +212,16 @@ export const OrderNotification = (props) => {
     <OrderNotificationController {...orderNotificationProps} />
   )
 }
+
+// redesign W0-12 (W0-A0-01): the notice used to be mounted as a bare sibling of the page, which made it a flex column of the
+// shell next to the page (685px wide at 1440, 350px at 390, the list left at 40px). A page mounts the notice through this slot: a
+// one-line cell INSIDE its own container, under its head, which takes no height while the notice is not shown (the
+// «Empty, loading and error states» rule: notices hold one fixed one-line slot; a hidden notice reserves no height).
+// /orders keeps its own slot in OrdersContentHeader (`.odc-orders-notices`, which also hosts the connection notice).
+// redesign cierre W0 (W0-QA4-04): `spaced` for a page whose head ends in a field with no padding of its own (DriversManager's search):
+// on a phone the notice would touch it.
+export const OrderNotificationSlot = ({ isOnlyDelivery, customerId, spaced }) => (
+  <div className='odc-notice-slot' data-slot='order-notice-slot' data-spaced={spaced ? '' : undefined}>
+    <OrderNotification isOnlyDelivery={isOnlyDelivery} customerId={customerId} />
+  </div>
+)

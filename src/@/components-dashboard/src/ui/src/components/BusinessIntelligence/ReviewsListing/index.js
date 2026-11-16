@@ -1,469 +1,340 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react'
-import { List as MenuIcon, CaretDownFill, Download as DownloadIcon } from 'react-bootstrap-icons'
-import { useLocation } from 'react-router-dom'
-import { useLanguage, useSession, useApi } from '../../../../../index'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { useApi, useLanguage } from '../../../../../index'
 import { useInfoShare } from '../../../contexts/InfoShareContext'
-import { SearchBar, LearnDropDown, Modal } from '../../Shared'
+import { learnOptionsValues } from '../../../utils'
+import { settleFocusOn } from '../../../utils/listFocus'
+import { Download, Menu as MenuIcon, Store } from '../../Shared/Icon'
+import { LearnDropDown } from '../../Shared/LearnDropDown'
+import { Button, EmptyState, FilterBar, IconButton, PageHeader, SearchField, SplitView, Tabs } from '../../Shared/Product'
+import { StorePicker } from '../AnalyticsKit/StorePicker'
+import { BusinessReviewDetails } from '../BusinessReviewDetails'
 import { BusinessReviewList } from '../BusinessReviewList'
-import { UsersReviewList } from '../UsersReviewList'
-import { BusinessSelectHeader } from '../../Stores/BusinessSelectHeader'
+import { ProductReviewDetails } from '../ProductReviewDetails'
 import { ReviewProductsListing } from '../ReviewProductsListing'
-import { AnalyticsCalendar } from '../AnalyticsCalendar'
-import { Select } from '../../../styles/Select/FirstSelect'
-import { addQueryToUrl, removeQueryToUrl, learnOptionsValues } from '../../../utils'
-
-import { IconButton, Button } from '../../../styles'
-
+import { UserReviewDetails } from '../UserReviewDetails'
+import { UsersReviewList } from '../UsersReviewList'
+import { ReviewsExport } from '../ReviewsDirectory/ReviewsExport'
 import {
-  ReviewsListingContainer,
-  Header,
-  HeaderLeft,
-  HeaderRight,
-  Tabs,
-  Tab,
-  SelectWrapper,
-  TitleWrapper,
-  DownloadBar,
-  DownloadForm,
-  FormField,
-  DownloadActions,
-  FilterButton,
-  DriverSelectWrapper,
-  ModalBusinessSelect,
-  CalendarWrapper,
-  ClearFilter,
-  ErrorText
-} from './styles'
+  useReviewsQuery,
+  writeFirstTab,
+  writeProduct,
+  writeProducts,
+  writeRecord,
+  writeStore,
+  writeTab
+} from '../ReviewsDirectory/useReviewsQuery'
+import '../ReviewsDirectory/reviews-page.css'
 
-const formatYMD = (date) => {
-  const pad = (n) => `${n}`.padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
-}
+// redesign reviews FD2 (D1, D2, D6, D7, D9; RV-01, RV-07, RV-10, RV-11, RV-15): /intelligence/reviews is a header (title, Learn, Export
+// CSV), the five tabs, the search, and the list of the tab beside the panel of the record that is open, in a split view (as
+// /users/customers and /orders). The controllers of `main` own the data (the lists D1 and the panels C); this owns what the person sees of
+// it: the tab, the address (?tab, ?id, ?business, ?category, ?product), the record that is open, the search and the focus.
 
-const getDefaultFilters = () => {
-  const to = new Date()
-  const from = new Date()
-  from.setDate(from.getDate() - 30)
-  return { from: formatYMD(from), to: formatYMD(to), driver_id: 'all' }
+const SEARCH_WAIT_MS = 750 // the wait of main's lazy search box between typing and asking
+
+const USER_TABS = { drivers: [4], customers: [3], professionals: [8] }
+
+// The name the panel is called by, from the row of the list when there is one
+const nameOfRow = (tab, row, t) => {
+  if (tab === 'business' || tab === 'products') return row?.name || (tab === 'business' ? t('BUSINESS', 'Business') : t('PRODUCT', 'Product'))
+  const person = [row?.name, row?.lastname].filter(Boolean).join(' ')
+  return person || t('USER', 'User')
 }
 
 export const ReviewsListing = (props) => {
-  const {
-    isUseQuery
-  } = props
+  const { isUseQuery } = props
 
-  const query = new URLSearchParams(useLocation().search)
-  const defaultTab = query.get('tab')
-  const defaultPage = query.get('page') || 1
-  const defaultPageSize = query.get('pageSize') || 10
-
+  const initial = useReviewsQuery()
   const [, t] = useLanguage()
   const [{ isCollapse }, { handleMenuCollapse }] = useInfoShare()
-  const [{ token }] = useSession()
   const [ordering] = useApi()
 
+  const [tab, setTab] = useState(initial.tab ?? 'business')
+  // The lists take the page and the size of the URL only on the first load; the first change the person makes ends that (as main)
   const firstRender = useRef(true)
-  const [showOption, setShowOption] = useState(defaultTab || 'business')
+  const frameRef = useRef(null)
+
+  // ---- the record that is open: a row, or just an id (the panel loads it); a product has its category too ----
+  const [open, setOpen] = useState(() => {
+    if ((initial.tab ?? 'business') === 'products') {
+      return initial.business != null && initial.category != null && initial.product != null
+        ? { id: initial.product, categoryId: initial.category, row: null }
+        : null
+    }
+    return initial.id != null ? { id: initial.id, row: null } : null
+  })
+  const [expanded, setExpanded] = useState(false)
+  const openId = useRef(open?.id ?? null)
+  openId.current = open?.id ?? null
+
+  // ---- the business of Products: `storeId` drives the list; `store` ({ id, name }) is what the pill says ----
+  const [storeId, setStoreId] = useState(() => ((initial.tab ?? 'business') === 'products' ? initial.business : null))
+  const [store, setStore] = useState(null)
+  const [restoring, setRestoring] = useState(storeId != null)
+  const lookup = useRef(0) // a business chosen meanwhile wins over the answer about the one in the URL
+
+  // ---- the search: one box for every tab, asked 750 ms after the last key ----
+  const [searchText, setSearchText] = useState('')
   const [searchValue, setSearchValue] = useState(null)
-  const [showSelect, setShowSelect] = useState(false)
-  const [business, setBusiness] = useState('')
-  const [businessId, setBusinessId] = useState(null)
 
-  const [filterList, setFilterList] = useState(getDefaultFilters)
-  const [reportBusiness, setReportBusiness] = useState(null)
-  const [showBusinessFilter, setShowBusinessFilter] = useState(false)
-  const [driverList, setDriverList] = useState({ loading: false, drivers: [] })
-  const [driverSearchValue, setDriverSearchValue] = useState(null)
-  const [downloadState, setDownloadState] = useState({ loading: false, error: null })
-  const [showDownloadModal, setShowDownloadModal] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
 
-  const learnOptions = learnOptionsValues(
-    [
-      'reviews_manager',
-      'reviews_details'
-    ],
-    t
+  // The first load adds `tab` and nothing else (RV-15)
+  useEffect(() => {
+    if (initial.tab == null) writeFirstTab(tab)
+  }, [])
+
+  // RV-11: the business of the URL has no name yet; it is asked once (a GET), and the pill says «Loading» meanwhile
+  useEffect(() => {
+    if (storeId == null) return undefined
+    const token = ++lookup.current
+    let current = true
+    const settle = (name) => {
+      if (!current || lookup.current !== token) return
+      setStore({ id: storeId, name: name || `#${storeId}` })
+      setRestoring(false)
+    }
+    ;(async () => {
+      try {
+        const { content } = await ordering.businesses(storeId).select(['name']).get()
+        settle(content?.error ? null : content?.result?.name)
+      } catch (error) {
+        settle(null)
+      }
+    })()
+    return () => { current = false }
+  }, [])
+
+  useEffect(() => {
+    if (searchText === (searchValue ?? '')) return undefined
+    const timer = setTimeout(() => setSearchValue(searchText), SEARCH_WAIT_MS)
+    return () => clearTimeout(timer)
+  }, [searchText])
+
+  // ---- the record ----
+  const closePanel = (options) => {
+    const focus = options?.focus !== false
+    if (openId.current == null) return
+    const closedId = openId.current
+    openId.current = null
+    setOpen(null)
+    setExpanded(false)
+    if (tab === 'products') writeProduct(null)
+    else writeRecord(null)
+    if (focus) settleFocusOn(() => frameRef.current, closedId)
+  }
+
+  const openRow = (row) => {
+    if (tab === 'products') {
+      const categoryId = row.category?.id ?? null
+      setOpen({ id: row.id, categoryId, row })
+      writeProduct(row.id, categoryId)
+      return
+    }
+    setOpen({ id: row.id, row })
+    writeRecord(row.id)
+  }
+
+  const changeTab = (next) => {
+    if (next === tab) return
+    firstRender.current = false
+    openId.current = null
+    setOpen(null)
+    setExpanded(false)
+    setExportOpen(false)
+    writeTab(next, storeId)
+    setTab(next)
+  }
+
+  // RV-01: «Product reviews» of a business: Products, with that business and its products
+  const openProducts = (business) => {
+    if (!business?.id) return
+    firstRender.current = false
+    lookup.current++
+    openId.current = null
+    setOpen(null)
+    setExpanded(false)
+    setStoreId(business.id)
+    setStore({ id: business.id, name: business.name || `#${business.id}` })
+    setRestoring(false)
+    setTab('products')
+    writeProducts(business.id)
+  }
+
+  const chooseStore = (choice) => {
+    if (choice?.id == null) return
+    firstRender.current = false
+    lookup.current++
+    openId.current = null
+    setOpen(null)
+    setExpanded(false)
+    setStoreId(choice.id)
+    setStore({ id: choice.id, name: choice.name || `#${choice.id}` })
+    setRestoring(false)
+    writeStore(choice.id)
+  }
+
+  // ---- what the lists receive ----
+  const page = isUseQuery && firstRender.current
+  const paginationSettings = {
+    initialPage: page ? initial.page : 1,
+    pageSize: page ? initial.pageSize : 10,
+    controlType: 'pages'
+  }
+  const listProps = {
+    parentSearchValue: searchValue,
+    isUseQuery,
+    paginationSettings,
+    activeId: open?.id,
+    onOpenRow: openRow
+  }
+  const canExport = tab === 'business' || tab === 'drivers'
+
+  let list
+  if (tab === 'business') {
+    list = <BusinessReviewList {...listProps} />
+  } else if (USER_TABS[tab]) {
+    list = <UsersReviewList key={tab} {...listProps} defaultUserTypesSelected={USER_TABS[tab]} />
+  } else if (storeId != null) {
+    list = (
+      <ReviewProductsListing
+        key={storeId}
+        parentSearchValue={searchValue}
+        businessId={storeId}
+        isUseQuery={isUseQuery}
+        defaultPage={paginationSettings.initialPage}
+        defaultPageSize={paginationSettings.pageSize}
+        firstRender={firstRender.current}
+        activeId={open?.id}
+        onOpenRow={openRow}
+      />
+    )
+  } else {
+    list = (
+      <EmptyState
+        className='odc-rv-empty'
+        icon={Store}
+        title={t('REVIEWS_CHOOSE_BUSINESS', 'Choose a business to see its product reviews')}
+      />
+    )
+  }
+
+  const learn = <LearnDropDown learnOptions={learnOptionsValues(['reviews_manager', 'reviews_details'], t)} />
+
+  const listView = (
+    <div ref={frameRef} className='odc-root odc-rv-frame'>
+      <PageHeader
+        className='odc-rv-pagehead'
+        leading={isCollapse && <IconButton icon={MenuIcon} label={t('OPEN_MENU', 'Open menu')} onClick={() => handleMenuCollapse(false)} />}
+        title={t('REVIEWS_MANAGER', 'Reviews manager')}
+        learn={learn}
+        actions={canExport
+          ? (
+            <Button
+              className='odc-rv-export-button'
+              icon={Download}
+              title={t('REVIEWS_EXPORT_CSV', 'Export CSV')}
+              onClick={() => setExportOpen(true)}
+            >
+              <span data-collapse-label=''>{t('REVIEWS_EXPORT_CSV', 'Export CSV')}</span>
+            </Button>
+            )
+          : undefined}
+      />
+      <Tabs
+        wrap
+        label={t('REVIEWS_TABS', 'Reviews of')}
+        value={tab}
+        onValueChange={changeTab}
+        items={[
+          { value: 'business', label: t('BUSINESS', 'Business') },
+          { value: 'drivers', label: t('DRIVERS', 'Drivers') },
+          { value: 'customers', label: t('CUSTOMERS', 'Customers') },
+          { value: 'professionals', label: t('PROFESSIONALS', 'Professionals') },
+          { value: 'products', label: t('PRODUCTS', 'Products') }
+        ]}
+      />
+      <FilterBar
+        flush
+        className='odc-rv-bar'
+        label={t('FILTERS', 'Filters')}
+        search={(
+          <SearchField
+            value={searchText}
+            onChange={setSearchText}
+            label={t('SEARCH', 'Search')}
+            placeholder={t('SEARCH', 'Search')}
+            clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+          />
+        )}
+        filters={tab === 'products'
+          ? (
+            <StorePicker
+              business={{ selected: store, select: chooseStore, restoring }}
+              includeInactive
+              defaultOpen={storeId == null}
+            />
+            )
+          : undefined}
+      />
+      {list}
+    </div>
   )
 
-  const changeBusinessState = (business) => {
-    setShowSelect(false)
-    setBusiness(business)
-    setBusinessId(business.id)
-    addQueryToUrl({ business: business.id })
-  }
-
-  const changeReportBusiness = (business) => {
-    setReportBusiness(business)
-    setShowBusinessFilter(false)
-  }
-
-  const handleChangeDate = (from, to) => {
-    setFilterList(prev => ({ ...prev, from, to }))
-  }
-
-  const loadDrivers = async (search = null) => {
-    setDriverList(prev => ({ ...prev, loading: true }))
-    const conditions = [{ attribute: 'level', value: 4 }]
-    if (search) conditions.push({ attribute: 'name', value: { condition: 'ilike', value: `%${search}%` } })
-    try {
-      const { content } = await ordering.users().asDashboard()
-        .select(['id', 'name', 'lastname'])
-        .where({ conditions, conector: 'AND' })
-        .get({ query: { page: 1, page_size: 50 } })
-      setDriverList({ loading: false, drivers: content?.result || [] })
-    } catch (err) {
-      setDriverList({ loading: false, drivers: [] })
-    }
-  }
-
-  const handleChangeDriverSearch = (value) => {
-    setDriverSearchValue(value)
-    loadDrivers(value)
-  }
-
-  const driverOptions = useMemo(() => {
-    const options = [{ value: 'all', content: t('ALL', 'All') }]
-    ;(driverList.drivers || []).forEach(driver => {
-      options.push({ value: driver.id, content: `${driver.name || ''} ${driver.lastname || ''}`.trim() || `#${driver.id}` })
-    })
-    return options
-  }, [driverList.drivers])
-
-  const buildWhere = (extraConditions = []) => {
-    const conditions = [...extraConditions]
-    if (filterList.from) {
-      conditions.push({ attribute: 'created_at', value: { condition: '>=', value: `${filterList.from} 00:00:00` } })
-    }
-    if (filterList.to) {
-      conditions.push({ attribute: 'created_at', value: { condition: '<=', value: `${filterList.to} 23:59:59` } })
-    }
-    return conditions
-  }
-
-  const handleDownload = async () => {
-    setDownloadState({ loading: true, error: null })
-    try {
-      const params = new URLSearchParams()
-      let endpoint
-      let filename
-      if (showOption === 'business') {
-        endpoint = `${ordering.root}/business/business_reviews_delivery.csv`
-        if (reportBusiness?.id) params.append('business_id', reportBusiness.id)
-        params.append('where', JSON.stringify(buildWhere()))
-        filename = `business_reviews_delivery_${filterList.from}_${filterList.to}.csv`
-      } else {
-        endpoint = `${ordering.root}/users/user_reviews.csv`
-        if (filterList.driver_id && filterList.driver_id !== 'all') params.append('user_id', filterList.driver_id)
-        params.append('where', JSON.stringify(buildWhere([{ attribute: 'type', value: 1 }])))
-        filename = `driver_reviews_${filterList.from}_${filterList.to}.csv`
-      }
-      const response = await fetch(`${endpoint}?${params.toString()}`, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      if (!response.ok) {
-        const errData = await response.json().catch(() => null)
-        throw new Error(errData?.result?.[0] || t('DOWNLOAD_FAILED', 'Download failed'))
-      }
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-      setDownloadState({ loading: false, error: null })
-      setShowDownloadModal(false)
-    } catch (err) {
-      setDownloadState({ loading: false, error: err.message })
-    }
-  }
-
-  const handleChangeOption = (option, isInitialRender) => {
-    if (!isInitialRender) {
-      firstRender.current = false
-      removeQueryToUrl(['page', 'pageSize', 'business', 'category', 'product', 'id'])
-      addQueryToUrl({ tab: option })
-    }
-    setShowOption(option)
-    if (option === 'products' && !businessId) {
-      setShowSelect(true)
-    }
-  }
-
-  const handleOpenProducts = (business) => {
-    setBusiness(business)
-    setShowOption('products')
-    setShowSelect(false)
-  }
-
-  useEffect(() => {
-    if (showOption === 'drivers' && driverList.drivers.length === 0 && !driverList.loading) {
-      loadDrivers()
-    }
-  }, [showOption])
-
-  useEffect(() => {
-    const tab = query.get('tab')
-    if (tab) {
-      const businessId = query.get('business')
-      if (tab === 'products' && businessId) {
-        setShowOption('products')
-        setShowSelect(false)
-        setBusinessId(Number(businessId))
-      } else {
-        handleChangeOption(tab, true)
-      }
+  let panel = null
+  if (open) {
+    if (tab === 'business') {
+      panel = (
+        <BusinessReviewDetails
+          key={open.id}
+          business={open.row}
+          businessId={open.id}
+          onClose={closePanel}
+          expanded={expanded}
+          onExpandedChange={setExpanded}
+          onOpenProducts={openProducts}
+        />
+      )
+    } else if (tab === 'products') {
+      panel = (
+        <ProductReviewDetails
+          key={open.id}
+          businessId={storeId}
+          product={open.row}
+          productId={open.id}
+          categoryId={open.categoryId}
+          onClose={closePanel}
+        />
+      )
     } else {
-      handleChangeOption(showOption)
+      panel = (
+        <UserReviewDetails
+          key={`${tab}-${open.id}`}
+          userId={open.id}
+          user={open.row}
+          onClose={closePanel}
+          expanded={expanded}
+          onExpandedChange={setExpanded}
+        />
+      )
     }
-  }, [])
+  }
 
   return (
     <>
-      <ReviewsListingContainer>
-        <Header>
-          <HeaderLeft>
-            {isCollapse && (
-              <IconButton
-                color='black'
-                onClick={() => handleMenuCollapse(false)}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            {showOption === 'products'
-              ? (
-                  <SelectWrapper>
-                    <TitleWrapper onClick={() => setShowSelect(prev => !prev)}>
-                      <h1>{business?.name || t('REVIEWS_MANAGER', 'Reviews manager')}</h1>
-                      <CaretDownFill className={`${showSelect && 'rotate'}`} />
-                    </TitleWrapper>
-                    {showSelect && (
-                      <BusinessSelectHeader
-                        close={() => setShowSelect(false)}
-                        isOpen={showSelect}
-                        noActiveStatusCondition
-                        changeBusinessState={changeBusinessState}
-                      />
-                    )}
-                  </SelectWrapper>
-                )
-              : (<h1>{t('REVIEWS_MANAGER', 'Reviews manager')}</h1>)
-            }
-            <LearnDropDown
-              learnOptions={learnOptions}
-            />
-          </HeaderLeft>
-          <HeaderRight>
-            <SearchBar
-              lazyLoad
-              placeholder={t('SEARCH', 'Search')}
-              searchValue={searchValue}
-              onSearch={val => setSearchValue(val)}
-            />
-          </HeaderRight>
-        </Header>
-        <Tabs>
-          <Tab
-            active={showOption === 'business'}
-            onClick={() => handleChangeOption('business')}
-          >
-            {t('BUSINESS', 'Business')}
-          </Tab>
-          <Tab
-            active={showOption === 'drivers'}
-            onClick={() => handleChangeOption('drivers')}
-          >
-            {t('DRIVERS', 'Drivers')}
-          </Tab>
-          <Tab
-            active={showOption === 'customers'}
-            onClick={() => handleChangeOption('customers')}
-          >
-            {t('CUSTOMERS', 'Customers')}
-          </Tab>
-          <Tab
-            active={showOption === 'professionals'}
-            onClick={() => handleChangeOption('professionals')}
-          >
-            {t('PROFESSIONALS', 'Professionals')}
-          </Tab>
-          <Tab
-            active={showOption === 'products'}
-            onClick={() => handleChangeOption('products')}
-          >
-            {t('PRODUCTS', 'Products')}
-          </Tab>
-        </Tabs>
-        {(showOption === 'business' || showOption === 'drivers') && (
-          <DownloadBar>
-            <Button
-              color='primary'
-              borderRadius='8px'
-              onClick={() => { setDownloadState({ loading: false, error: null }); setShowDownloadModal(true) }}
-            >
-              {t('CSV', 'CSV')}
-              <DownloadIcon />
-            </Button>
-          </DownloadBar>
-        )}
-        {showOption === 'business' && (
-          <BusinessReviewList
-            parentSearchValue={searchValue}
-            handleOpenProducts={handleOpenProducts}
-            isUseQuery={isUseQuery}
-            paginationSettings={{
-              initialPage: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPage) : 1,
-              pageSize: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPageSize) : 10,
-              controlType: 'pages'
-            }}
-          />
-        )}
-        {showOption === 'drivers' && (
-          <UsersReviewList
-            defaultUserTypesSelected={[4]}
-            parentSearchValue={searchValue}
-            isUseQuery={isUseQuery}
-            paginationSettings={{
-              initialPage: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPage) : 1,
-              pageSize: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPageSize) : 10,
-              controlType: 'pages'
-            }}
-          />
-        )}
-        {showOption === 'customers' && (
-          <UsersReviewList
-            defaultUserTypesSelected={[3]}
-            parentSearchValue={searchValue}
-            isUseQuery={isUseQuery}
-            paginationSettings={{
-              initialPage: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPage) : 1,
-              pageSize: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPageSize) : 10,
-              controlType: 'pages'
-            }}
-          />
-        )}
-        {showOption === 'professionals' && (
-          <UsersReviewList
-            defaultUserTypesSelected={[8]}
-            parentSearchValue={searchValue}
-            isUseQuery={isUseQuery}
-            paginationSettings={{
-              initialPage: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPage) : 1,
-              pageSize: isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPageSize) : 10,
-              controlType: 'pages'
-            }}
-          />
-        )}
-        {showOption === 'products' && businessId && (
-          <ReviewProductsListing
-            parentSearchValue={searchValue}
-            businessId={businessId}
-            isUseQuery={isUseQuery}
-            defaultPage={isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPage) : 1}
-            defaultPageSize={isUseQuery && firstRender.current && !isNaN(defaultPage) ? Number(defaultPageSize) : 10}
-            firstRender={firstRender.current}
-          />
-        )}
-      </ReviewsListingContainer>
-      {showDownloadModal && (
-        <Modal
-          open={showDownloadModal}
-          onClose={() => setShowDownloadModal(false)}
-          title={t('DOWNLOAD_REVIEWS_CSV', 'Download reviews CSV')}
-          width='500px'
-          maxWidth='500px'
-          padding='30px'
-          overflow='visible'
-        >
-          <DownloadForm>
-            {showOption === 'business'
-              ? (
-                <>
-                  <FormField>
-                    <label>{t('BUSINESS', 'Business')}</label>
-                    <ModalBusinessSelect>
-                      <FilterButton onClick={() => setShowBusinessFilter(prev => !prev)}>
-                        <b>{reportBusiness?.name || t('ALL', 'All')}</b>
-                        <CaretDownFill className={`${showBusinessFilter && 'rotate'}`} />
-                      </FilterButton>
-                      {reportBusiness && (
-                        <ClearFilter onClick={() => setReportBusiness(null)}>
-                          {t('ALL', 'All')}
-                        </ClearFilter>
-                      )}
-                      {showBusinessFilter && (
-                        <BusinessSelectHeader
-                          close={() => setShowBusinessFilter(false)}
-                          isOpen={showBusinessFilter}
-                          noActiveStatusCondition
-                          changeBusinessState={changeReportBusiness}
-                        />
-                      )}
-                    </ModalBusinessSelect>
-                  </FormField>
-                  <FormField>
-                    <label>{t('DATE_RANGE', 'Date range')}</label>
-                    <CalendarWrapper>
-                      <AnalyticsCalendar
-                        handleChangeDate={handleChangeDate}
-                        defaultValue={filterList}
-                        leftAlign
-                        collapseSingleDate
-                      />
-                    </CalendarWrapper>
-                  </FormField>
-                </>
-                )
-              : (
-                <>
-                  <FormField>
-                    <label>{t('DRIVER', 'Driver')}</label>
-                    <DriverSelectWrapper>
-                      <Select
-                        className='select'
-                        options={driverOptions}
-                        defaultValue={filterList.driver_id}
-                        placeholder={t('DRIVER', 'Driver')}
-                        onChange={(value) => setFilterList(prev => ({ ...prev, driver_id: value }))}
-                        isShowSearchBar
-                        searchBarIsCustomLayout
-                        searchValue={driverSearchValue}
-                        handleChangeSearch={handleChangeDriverSearch}
-                      />
-                    </DriverSelectWrapper>
-                  </FormField>
-                  <FormField>
-                    <label>{t('DATE_RANGE', 'Date range')}</label>
-                    <CalendarWrapper>
-                      <AnalyticsCalendar
-                        handleChangeDate={handleChangeDate}
-                        defaultValue={filterList}
-                        leftAlign
-                        collapseSingleDate
-                      />
-                    </CalendarWrapper>
-                  </FormField>
-                </>
-                )}
-            {downloadState.error && <ErrorText>{downloadState.error}</ErrorText>}
-            <DownloadActions>
-              <Button
-                color='primary'
-                borderRadius='8px'
-                disabled={downloadState.loading}
-                onClick={handleDownload}
-              >
-                <DownloadIcon />
-                {downloadState.loading ? t('DOWNLOADING', 'Downloading...') : t('DOWNLOAD', 'Download')}
-              </Button>
-            </DownloadActions>
-          </DownloadForm>
-        </Modal>
-      )}
+      <SplitView
+        className='odc-rv-split'
+        list={listView}
+        panel={panel}
+        open={Boolean(open)}
+        expanded={expanded && tab !== 'products'}
+        panelLabel={nameOfRow(tab, open?.row, t)}
+        resizeLabel={t('REVIEWS_RESIZE_PANEL', 'Resize the reviews panel')}
+        storageKey='od.reviews.panel'
+        onClose={closePanel}
+      />
+      <ReviewsExport open={exportOpen && canExport} onOpenChange={setExportOpen} tab={tab} />
     </>
   )
 }

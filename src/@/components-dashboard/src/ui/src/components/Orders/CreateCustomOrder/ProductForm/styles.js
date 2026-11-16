@@ -27,7 +27,17 @@ export const TitleWrapper = styled.div`
   gap: 15px;
   margin-top: 20px;
  .favorite {
-  cursor: pointer;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+
     svg {
       color: ${props => props.theme.colors.danger};
       display: flex;
@@ -172,7 +182,7 @@ export const ProductEdition = styled.div`
 export const SectionTitle = styled.h3`
   text-transform: capitalize;
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   line-height: 24px;
   padding: 7px 0px;
   margin-bottom: 0px;
@@ -210,13 +220,13 @@ export const ProductActions = styled.div`
   align-items: center;
   padding: 10px 0px;
   width: 100%;
-  z-index: 9999997;
+  z-index: calc(var(--od-x-layer-notice) - 2);
 
   position: fixed;
   bottom: 0;
   right: 0;
   width: 100%;
-  background-color: #FFF;
+  background-color: ${({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? '#FFF'};
 
   div.price {
     padding-top: 10px;
@@ -224,22 +234,41 @@ export const ProductActions = styled.div`
     h4 {
       margin: 0;
       font-weight: 600;
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
       line-height: 20px;
     }
     span {
-      font-size: 13px;
+      font-size: var(--od-type-control-size);
       color: #D83520;
       line-height: 15px;
     }
   }
 
   div.incdec-control {
-    width: 195px;
+    width: auto;
+    max-width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     position: relative;
+
+    button.qty-step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button.qty-step:disabled {
+      cursor: not-allowed;
+    }
 
     svg {
       width: 25px;
@@ -250,8 +279,13 @@ export const ProductActions = styled.div`
 
   div.price-amount-block {
     display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     justify-content: space-between;
-    width: 80%
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   svg {
@@ -275,6 +309,7 @@ export const ProductActions = styled.div`
     padding: 5px 10px;
     margin-top: 10px;
     position: relative;
+    min-height: 44px;
 
     &.soldout {
       width: 100%;
@@ -377,8 +412,8 @@ export const ProductTabContainer = styled.div`
   border-bottom: 1px solid #E9ECEF;
   position: sticky;
   top: 0px;
-  background: white;
-  z-index: 9999996;
+  background: ${({ theme }) => theme?.ordering?.semantic?.surface?.default ?? theme?.colors?.backgroundPage ?? 'white'};
+  z-index: calc(var(--od-x-layer-notice) - 3);
   overflow: scroll hidden;
   width: 100%;
   ::-webkit-scrollbar {
@@ -409,14 +444,14 @@ export const Divider = styled.div`
 `
 
 export const ProductName = styled.h1`
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   line-height: 30px;
   color: #344050;
   display: flex;
   justify-content: space-between;
   margin: 0;
   .calories {
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     font-weight: 100;
     color: #909BA9;
     white-space: nowrap;
@@ -424,7 +459,6 @@ export const ProductName = styled.h1`
     align-items: flex-end;
   }
   @media (min-width: 768px) {
-    font-size: 22px;
     line-height: 34px;
   }
 `
@@ -445,14 +479,14 @@ export const PriceContent = styled.div`
   align-items: center;
   gap: 10px;
   > p {
-    font-size: 18px;
+    font-size: var(--od-type-section-title-size);
     line-height: 27px;
     color: #344050;
     margin: 0;
   }
   .offer-price {
     text-decoration: line-through;
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     color: #909BA9;
   }
 `
@@ -460,7 +494,7 @@ export const ProductMeta = styled.div`
   display: flex;
   align-items: center;
   span {
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     color: #909BA9;
   }
@@ -486,7 +520,7 @@ export const ProductTagWrapper = styled.div`
   }
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     ${props => props.theme?.rtl
 ? css`
       margin: 0 10px 0 20px;
@@ -509,11 +543,17 @@ export const WeightUnitSwitch = styled.div`
 `
 export const WeightUnitItem = styled.span`
   display: inline-flex;
+  align-items: center;
   width: fit-content;
   min-width: unset !important;
-  font-size: 12px;
+  min-height: 44px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   padding: 2px 6px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  color: inherit;
   cursor: pointer;
 
   ${({ active }) => active && css`

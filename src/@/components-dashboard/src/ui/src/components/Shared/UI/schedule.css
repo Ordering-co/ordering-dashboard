@@ -1,0 +1,228 @@
+/* Scoped schedule surface. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-schedule) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-schedule-day) {
+  @apply od-flex od-flex-col od-items-start od-justify-between;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--od-entity-selector-border);
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-day-title {
+  @apply od-flex od-items-center;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 10px 0 5px;
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-day-title > .od-checkbox {
+  flex: 0 0 auto;
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-day-title h4 {
+  margin: 0;
+  padding-inline: 10px;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-day-selector {
+  @apply od-flex od-items-start od-justify-between;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 5px 0 10px;
+  gap: 8px;
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-lapses {
+  @apply od-flex od-flex-col;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.od-ui:where(.od-schedule-day) .od-schedule-lapses > p {
+  margin: 6px 0;
+  color: var(--od-entity-selector-muted);
+  font-size: 13px;
+}
+
+.od-ui:where(.od-schedule-lapse) {
+  @apply od-grid od-items-center;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 8px minmax(0, 1fr) minmax(0, 1fr) 44px;
+  width: 100%;
+  min-width: 0;
+  gap: 4px;
+}
+
+.od-ui:where(.od-schedule-lapse):not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.od-ui:where(.od-schedule-time-field) {
+  @apply od-flex od-justify-center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: var(--od-entity-selector-radius);
+}
+
+.od-ui:where(.od-schedule-time-field) .od-schedule-time-select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+}
+
+.od-ui:where(.od-schedule-time-field) .od-legacy-select-trigger {
+  min-height: 42px;
+  border: 0;
+}
+
+.od-ui:where(.od-schedule-time-field) .od-legacy-select-selected {
+  padding-inline: 6px;
+  font-size: var(--od-entity-selector-font-ui);
+}
+
+.od-ui:where(.od-schedule-time-field) .od-legacy-select-chevron {
+  display: none;
+}
+
+.od-ui:where(.od-schedule-time-field) .od-legacy-select-option {
+  min-width: 0;
+}
+
+.od-ui:where(.od-schedule-time-option) {
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.od-ui:where(.od-schedule-split) {
+  width: 8px;
+  height: 1px;
+  background: var(--od-entity-selector-border-strong);
+}
+
+.od-ui:where(.od-schedule-trash-wrapper) {
+  @apply od-flex od-items-center od-justify-center;
+  width: 44px;
+  min-width: 44px;
+}
+
+.od-ui:where(.od-schedule-icon-wrapper)[data-hidden],
+.od-ui:where(.od-schedule-trash-wrapper)[data-hidden] {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.od-ui:where(.od-schedule-add-actions) {
+  @apply od-flex od-items-center od-justify-end;
+  min-width: 88px;
+}
+
+.od-ui:where(.od-schedule-add-actions) > .od-icon-button,
+.od-ui:where(.od-schedule-trash-wrapper) > .od-icon-button,
+.od-ui:where(.od-schedule-day) .od-schedule-actions .od-icon-button {
+  width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui:where(.od-schedule-add-actions) > .od-icon-button:first-child svg,
+.od-ui:where(.od-schedule-day) .od-schedule-actions .od-icon-button svg {
+  color: var(--od-entity-selector-action-content);
+}
+
+.od-ui:where(.od-schedule-add-actions) > .od-icon-button:last-child svg,
+.od-ui:where(.od-schedule-trash-wrapper) > .od-icon-button svg {
+  color: var(--od-entity-selector-muted);
+}
+
+/* The container (Schedule.jsx) is not an `od-ui` element itself, so it is scoped through its day, which is. */
+.od-ui:where(.od-schedule-day) .od-schedule-actions {
+  @apply od-flex od-items-center;
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
+.od-ui:where(.od-schedule-date) {
+  @apply od-flex od-flex-col;
+  min-width: 0;
+}
+
+.od-ui:where(.od-schedule-date) h4.date {
+  color: var(--od-entity-selector-muted);
+  font-weight: 400;
+}
+
+@media (max-width: 449px) {
+  .od-ui:where(.od-schedule-day) .od-schedule-day-selector {
+    flex-wrap: wrap;
+  }
+
+  .od-ui:where(.od-schedule-day) .od-schedule-lapses {
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  .od-ui:where(.od-schedule-lapse)[data-manual] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 8px minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .od-ui:where(.od-schedule-lapse)[data-manual] > .od-schedule-add-actions {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+}
+
+@media (min-width: 450px) {
+  .od-ui:where(.od-schedule-day) .od-schedule-day-title h4,
+  .od-ui:where(.od-schedule-day) .od-schedule-lapses > p {
+    padding-inline: 12px;
+    font-size: 14px;
+  }
+
+  .od-ui:where(.od-schedule-lapse) {
+    display: flex;
+    width: auto;
+    justify-content: center;
+  }
+
+  .od-ui:where(.od-schedule-time-field) {
+    width: 65px;
+    margin: 5px;
+  }
+
+  .od-ui:where(.od-schedule-time-field) .od-legacy-select-selected {
+    padding-inline: 13px;
+    font-size: 16px;
+  }
+
+  .od-ui:where(.od-schedule-split) {
+    margin-inline: 8px;
+  }
+
+  .od-ui:where(.od-schedule-trash-wrapper) {
+    width: 56px;
+  }
+
+  .od-ui:where(.od-schedule-add-actions) {
+    width: auto;
+    min-width: 88px;
+    justify-content: flex-start;
+  }
+}

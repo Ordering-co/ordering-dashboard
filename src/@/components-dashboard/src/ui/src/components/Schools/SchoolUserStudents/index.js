@@ -181,6 +181,7 @@ export const SchoolUserStudents = (props) => {
                     <td>{student.grade?.name || '-'}</td>
                     <td>
                       <RowActions>
+                        <Button color='primary' onClick={(e) => { e.stopPropagation(); openEdit(student) }}>{t('EDIT', 'Edit')}</Button>
                         <Button color='secundary' onClick={(e) => { e.stopPropagation(); setConfirm({ open: true, student }) }}>{t('DELETE', 'Delete')}</Button>
                       </RowActions>
                     </td>
@@ -216,7 +217,7 @@ export const SchoolUserStudents = (props) => {
             <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
           </div>
           <div>
-            <label>{t('LASTNAME', 'Lastname')}</label>
+            <label>{t('LAST_NAME', 'Last name')}</label>
             <Input value={form.lastname} onChange={(e) => setForm((f) => ({ ...f, lastname: e.target.value }))} />
           </div>
           <div>

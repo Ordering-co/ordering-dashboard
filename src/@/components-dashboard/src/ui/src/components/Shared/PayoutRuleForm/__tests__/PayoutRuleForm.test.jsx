@@ -1,7 +1,9 @@
 import React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
+import { LeaveGuardContext, useLeaveGuardHost } from '../../Product/LeaveGuard'
+import { SettingsHubFormContext } from '../../../Settings/SettingsHubForm/SettingsHubFormContext'
 
 const showToast = vi.fn()
 const handleSaveRule = vi.fn()
@@ -38,16 +40,50 @@ vi.mock('../../../../styles', () => ({
 
 vi.mock('../../../../styles/Select', () => ({
   Select: ({ defaultValue, options, onChange }) => (
-    <select aria-label='unit' value={defaultValue} onChange={e => onChange(e.target.value)}>
+    <select aria-label='unit' defaultValue={defaultValue} onChange={e => onChange(e.target.value)}>
       {options.map(option => <option key={option.value} value={option.value}>{option.value}</option>)}
     </select>
   )
 }))
 
 import { PayoutRuleForm } from '../index'
+import { SectionSplit } from '../../Product/SectionSplit'
 
 const platformRule = { fixed: 1, percentage: 10, percentage_base: 'subtotal' }
 const driverTotal = () => screen.getByTestId('payout-rule-driver-example-total')
+
+// The leave-guard host the way a panel shell reads it (Stores/BusinessSchedule test)
+const GuardProbe = ({ hostRef, children }) => {
+  const leave = useLeaveGuardHost()
+  hostRef.current = leave
+  return <LeaveGuardContext.Provider value={leave.context}>{children}</LeaveGuardContext.Provider>
+}
+const renderInHost = (ui) => {
+  const hostRef = { current: null }
+  renderWithProviders(<GuardProbe hostRef={hostRef}>{ui}</GuardProbe>)
+  return hostRef
+}
+
+// J2 L-4 (batch D, via F): in the store panel the commission of Stripe Connect v2 sits in a P/SectionSplit detail. With it unsaved,
+// Escape on the detail goes through the same guard as Close: the host asks, and the detail stays until it is answered.
+const renderInSplit = (onClose) => {
+  const hostRef = { current: null }
+  renderWithProviders(
+    <GuardProbe hostRef={hostRef}>
+      <SectionSplit
+        open
+        detailKey='stripe_connect_v2'
+        onClose={onClose}
+        detailTitle='Stripe Connect v2'
+        closeLabel='Close'
+        backLabel='Payment methods'
+        list={<div />}
+        detail={<PayoutRuleForm scope='platform' ownerId={7} />}
+      />
+    </GuardProbe>
+  )
+  return hostRef
+}
 
 describe('PayoutRuleForm', () => {
   beforeEach(() => {
@@ -72,6 +108,20 @@ describe('PayoutRuleForm', () => {
 
     fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '1.00' } })
     expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+  })
+
+  it('L-4: unsaved, Escape on the detail asks through the host like Close, and does not close', () => {
+    ruleState = { loading: false, error: null, rule: platformRule, override: platformRule }
+    const onClose = vi.fn()
+    const hostRef = renderInSplit(onClose)
+    fireEvent.change(screen.getByLabelText('Percentage'), { target: { value: '12' } })
+    const detail = document.querySelector('.odc-section-split-detail')
+    detail.focus()
+    expect(hostRef.current.dialog.open).toBe(false)
+    act(() => { fireEvent.keyDown(detail, { key: 'Escape', code: 'Escape' }) })
+    expect(onClose).not.toHaveBeenCalled()
+    expect(hostRef.current.dialog.open).toBe(true)
+    expect(hostRef.current.dialog.count).toBe(1)
   })
 
   it('works the platform rule out on the example order as it is typed', () => {
@@ -255,5 +305,151 @@ describe('PayoutRuleForm', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('Not allowed')
     expect(screen.queryByLabelText('Fixed amount')).not.toBeInTheDocument()
+  })
+
+  // leaving with an unsaved payout rule asks first
+  describe('leave guard', () => {
+    it('reports an edited rule to the host, which asks before leaving', () => {
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      expect(host.current.isDirty()).toBe(false)
+
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+      const proceed = vi.fn()
+      let asked
+      act(() => { asked = host.current.requestLeave(proceed) })
+
+      expect(host.current.isDirty()).toBe(true)
+      expect(asked).toBe(true)
+      expect(proceed).not.toHaveBeenCalled()
+      expect(host.current.dialog.open).toBe(true)
+      expect(host.current.dialog.count).toBe(1)
+    })
+
+    it('leaves at once when nothing changed, and when the edit is put back', () => {
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '1' } })
+      const proceed = vi.fn()
+      act(() => { host.current.requestLeave(proceed) })
+
+      expect(proceed).toHaveBeenCalledTimes(1)
+      expect(host.current.dialog.open).toBe(false)
+    })
+
+    it('does not ask for a rule that was never saved and has not been touched', () => {
+      ruleState = { loading: false, error: null, rule: null, override: null }
+      const host = renderInHost(<PayoutRuleForm scope='driver' />)
+      expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
+      expect(host.current.isDirty()).toBe(false)
+
+      fireEvent.change(screen.getByLabelText('Tip'), { target: { value: '50' } })
+      expect(host.current.isDirty()).toBe(true)
+    })
+
+    it('discards back to the saved rule, unit included', () => {
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+      fireEvent.change(screen.getByLabelText('unit'), { target: { value: 'total' } })
+      const proceed = vi.fn()
+      act(() => { host.current.requestLeave(proceed) })
+
+      act(() => { host.current.dialog.onDiscard() })
+
+      expect(proceed).toHaveBeenCalledTimes(1)
+      expect(screen.getByLabelText('Fixed amount')).toHaveValue('1')
+      expect(screen.getByLabelText('unit')).toHaveValue('subtotal')
+      expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+      expect(host.current.isDirty()).toBe(false)
+    })
+
+    it('discards an Override a store had not saved yet', () => {
+      const host = renderInHost(<PayoutRuleForm scope='platform' ownerId={41} />)
+      fireEvent.click(screen.getByRole('radio', { name: 'Override' }))
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '9' } })
+      act(() => { host.current.requestLeave(vi.fn()) })
+
+      act(() => { host.current.dialog.onDiscard() })
+
+      expect(screen.getByRole('radio', { name: 'Inherit global' })).toHaveAttribute('aria-checked', 'true')
+      expect(screen.getByLabelText('Fixed amount')).toHaveValue('1')
+      expect(screen.getByLabelText('Fixed amount')).toBeDisabled()
+    })
+
+    it('saves from the question and lets go once the API accepts it', async () => {
+      handleSaveRule.mockResolvedValue({ error: false, result: {} })
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+      const proceed = vi.fn()
+      const onCancel = vi.fn()
+      act(() => { host.current.requestLeave(proceed, onCancel) })
+
+      await act(async () => { await host.current.dialog.onSave() })
+
+      expect(handleSaveRule).toHaveBeenCalledWith({ fixed: '2.5', percentage: '10', percentage_base: 'subtotal' })
+      expect(proceed).toHaveBeenCalledTimes(1)
+      expect(onCancel).not.toHaveBeenCalled()
+    })
+
+    it('keeps the guard when the API refuses the save', async () => {
+      handleSaveRule.mockResolvedValue({ error: true, result: ['Somebody else saved this rule'] })
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+      const proceed = vi.fn()
+      const onCancel = vi.fn()
+      act(() => { host.current.requestLeave(proceed, onCancel) })
+
+      await act(async () => { await host.current.dialog.onSave() })
+
+      expect(proceed).not.toHaveBeenCalled()
+      expect(onCancel).toHaveBeenCalledTimes(1)
+      expect(host.current.isDirty()).toBe(true)
+      expect(screen.getByLabelText('Fixed amount')).toHaveValue('2.5')
+      expect(screen.getByRole('alertdialog')).toHaveTextContent('Somebody else saved this rule')
+    })
+
+    it('keeps the guard when the value is one the API would refuse', async () => {
+      const host = renderInHost(<PayoutRuleForm scope='platform' />)
+      fireEvent.change(screen.getByLabelText('Percentage'), { target: { value: '150' } })
+      const proceed = vi.fn()
+      const onCancel = vi.fn()
+      act(() => { host.current.requestLeave(proceed, onCancel) })
+
+      await act(async () => { await host.current.dialog.onSave() })
+
+      expect(handleSaveRule).not.toHaveBeenCalled()
+      expect(proceed).not.toHaveBeenCalled()
+      expect(onCancel).toHaveBeenCalledTimes(1)
+      expect(host.current.isDirty()).toBe(true)
+      expect(screen.getByRole('alert')).toHaveTextContent('Enter a percentage from 0 to 100')
+    })
+  })
+
+  describe('Settings hub report', () => {
+    const renderInHub = (ui) => {
+      const report = vi.fn()
+      renderWithProviders(<SettingsHubFormContext.Provider value={{ product: true, report }}>{ui}</SettingsHubFormContext.Provider>)
+      return report
+    }
+
+    it('tells the hub when the rule has unsaved changes, with one key per form', () => {
+      const report = renderInHub(<><PayoutRuleForm scope='platform' /><PayoutRuleForm scope='driver' /></>)
+      expect(report).toHaveBeenCalledWith('payout-rule:platform:global', { dirty: false, saving: false })
+
+      fireEvent.change(screen.getByLabelText('Fixed amount'), { target: { value: '2.5' } })
+
+      expect(report).toHaveBeenLastCalledWith('payout-rule:platform:global', { dirty: true, saving: false })
+      expect(report.mock.calls.some(([key]) => key === 'payout-rule:driver:global')).toBe(true)
+    })
+
+    it('drops its report when the form goes away', () => {
+      const report = vi.fn()
+      const { unmount } = renderWithProviders(
+        <SettingsHubFormContext.Provider value={{ product: true, report }}>
+          <PayoutRuleForm scope='platform' />
+        </SettingsHubFormContext.Provider>
+      )
+      unmount()
+      expect(report).toHaveBeenLastCalledWith('payout-rule:platform:global', null)
+    })
   })
 })

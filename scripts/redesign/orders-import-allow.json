@@ -1,0 +1,77 @@
+{
+  "_doc": "Exceptions for scripts/redesign/orders-import-guard.mjs (W0-8c, T0-32; L2-27). Every import from UI/Orders outside Orders that exists today, with the reason and the wave that removes or promotes it. An entry whose import no longer exists fails the test: remove it. Shared/Product has no list: it can never import from Orders.",
+  "entries": [
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/AddressForm/index.js",
+      "import": "../../Orders/CreateCustomOrder/steps.css",
+      "reason": "Reuses the wizard step styles of CreateCustomOrder (the order wizard embeds this form); W4 decides whether they are promoted to P/ or the form gets its own",
+      "wave": "W4-8"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/AddressList/index.js",
+      "import": "../../Orders/CreateCustomOrder/steps.css",
+      "reason": "Reuses the wizard step styles of CreateCustomOrder (the order wizard embeds this list); W4 decides whether they are promoted to P/ or the list gets its own",
+      "wave": "W4-8"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ChatBusinessesList.jsx",
+      "import": "../../Orders",
+      "reason": "Opens ContactOrdersSheet from the messages business list (barrel import); W1-6 messages",
+      "wave": "W1-6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/ChatContactList.jsx",
+      "import": "../../Orders",
+      "reason": "Opens ContactOrdersSheet from the messages contact list (barrel import); W1-6 messages",
+      "wave": "W1-6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/MessagesListing.jsx",
+      "import": "../../Orders",
+      "reason": "Mounts OrdersContentHeader and OrderDetails in the messages screen (barrel import); W1-6 messages, redesign messages B3b",
+      "wave": "W1-6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/MessagesListing.jsx",
+      "import": "../../Orders/OrderNotification",
+      "reason": "The /messages list mounts the order notification slot like the other three order surfaces (W0-12, T0-46: one slot per surface, not a fixed sheet over the page); promote OrderNotification to P/ when a non-order surface needs it",
+      "wave": "W1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/MessagesListing.jsx",
+      "import": "../../Orders/Messages/Inbox",
+      "reason": "The /messages inbox (redesign messages B3b, owner decision 1A) lives in Orders/Messages, beside the order panel's chat it mounts (decision 4A); imported by file so the screen does not pull it through the Orders barrel",
+      "wave": "W1-6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/UserDetails/index.js",
+      "import": "../../Orders/OrdersManager",
+      "reason": "Embeds OrdersManager in the customer record (Orders tab); W4 decides, unchanged embed per plan W4-1",
+      "wave": "W4-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/UserFilterGroup/index.js",
+      "import": "../../Orders",
+      "reason": "Uses DateTypeSelector from Orders in the users filter (barrel import); W4-1 filters",
+      "wave": "W4-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/CustomersDirectory/CustomerPanel.jsx",
+      "import": "../../Orders/OrdersManager",
+      "reason": "The customer panel embeds the customer's orders (OrdersManager isSelectedOrders, statusGroup 'completed'), as Users/UserDetails does; redesign UC-B4",
+      "wave": "W4-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/StaffDirectory/StaffPanel.jsx",
+      "import": "../../Orders/OrdersManager",
+      "reason": "The staff record panel (business owners) embeds the user's orders in its Orders tab (OrdersManager isSelectedOrders), as Users/UserDetails does; redesign BO-B4",
+      "wave": "W4-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversDirectory/DriverPanel.jsx",
+      "import": "../../Orders/OrdersManager",
+      "reason": "The driver panel keeps main's URL-only ?tab=orders (OrdersManager isSelectedOrders customerId), as Delivery/UserDetails does; redesign DL-B3",
+      "wave": "W4-1"
+    }
+  ]
+}

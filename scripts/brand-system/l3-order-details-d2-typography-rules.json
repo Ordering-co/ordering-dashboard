@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-order-details-d2-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "messages-not-send-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "NotSendMessage",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-header-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "HeaderProfile",
+      "property": "font-size",
+      "context": "div > p",
+      "match": "0.7em",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "messages-header-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "HeaderName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "1.1em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-status",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "Status",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.7em",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "messages-order-number",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "OrderNumber",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-console-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "MessageConsole",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-business-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "MessageBusiness",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-customer-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "MessageCustomer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-preview-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "ImagePreviewWrapper",
+      "property": "font-size",
+      "context": "a",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "messages-partner-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "PartnerName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "1.1em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-my-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "MyName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "1.1em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-time",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "TimeofSent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "messages-tab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "TabItem",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "messages-tab-mobile",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "TabItem",
+      "property": "font-size",
+      "context": "@media (max-width: 576px)",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "messages-search",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "MessagesSearch",
+      "property": "font-size",
+      "context": "input",
+      "match": "15px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "messages-info-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "> p > &:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "messages-info-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "> p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "messages-recipient-help",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "SendToContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "messages-quick-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "QuickMessageWrapper",
+      "property": "font-size",
+      "context": "button",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "contact-info-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": "> p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "contact-name-small",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "InfoContent",
+      "property": "font-size",
+      "context": ".name-small",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "contact-review-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "ReviewWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "contact-company-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "CompanySelectorContainer",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "contact-driver-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "DriverSelectorContainer",
+      "property": "font-size",
+      "context": "> p",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "contact-table-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "CustomerInfoTable",
+      "property": "font-size",
+      "context": "tr > td",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "contact-review-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "ReviewButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "contact-edit-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "component": "CustomerEditWrapper",
+      "property": "font-size",
+      "context": ".input-autocomplete",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "logistic-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderLogisticInformation/styles.js",
+      "component": "WraaperLogs",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "logistic-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderLogisticInformation/styles.js",
+      "component": "WraaperLogs",
+      "property": "font-size",
+      "context": "> button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "logistic-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderLogisticInformation/styles.js",
+      "component": "UppercaseText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "meta-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "MetaTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "20px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "meta-type",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "MetaContainer",
+      "property": "font-size",
+      "context": ".meta_type",
+      "match": "14px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "meta-input",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "MetaAddContainer",
+      "property": "font-size",
+      "context": "input",
+      "match": "16px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "meta-readable-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "RoundBorder",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "meta-empty",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "NoMetaField",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "messages-order-identifier-role",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "OrderNumber",
+      "property": "font-size",
+      "context": ".order-identifier",
+      "match": "var(--od-type-identifier-size)",
+      "reason": "Only the order or external ID consumes the central identifier role.",
+      "evidence": "The translated label remains content-direction text while the nested identifier is isolated in mono and LTR."
+    },
+    {
+      "id": "meta-key-identifier-role",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "IdentifierBorder",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-type-identifier-size)",
+      "reason": "Only the machine-facing meta-field key consumes the central identifier role.",
+      "evidence": "Arbitrary meta-field values remain content typography and inherit the document writing direction."
+    },
+    {
+      "id": "messages-empty-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "NotSendMessage",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This font-size controls the empty-state SVG geometry, not readable text.",
+      "evidence": "NotSendMessage scopes the declaration to svg while its paragraph uses the central content role."
+    },
+    {
+      "id": "messages-send-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "SendImage",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This font-size controls the attachment SVG geometry, not readable text.",
+      "evidence": "SendImage scopes the declaration to svg and exposes the upload action through separate semantics."
+    },
+    {
+      "id": "messages-detail-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "component": "OrderDetailIconButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "30px",
+      "reason": "This font-size controls the order-detail SVG geometry, not readable text.",
+      "evidence": "OrderDetailIconButton contains an icon-only action with a separate accessible name."
+    },
+    {
+      "id": "meta-delete-svg-geometry",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "component": "MetaContainer",
+      "property": "font-size",
+      "context": ".meta_value > svg",
+      "match": "20px",
+      "reason": "This font-size controls the delete SVG geometry, not readable text.",
+      "evidence": "MetaContainer scopes the declaration to the icon while the delete action is named by its button owner."
+    }
+  ]
+}

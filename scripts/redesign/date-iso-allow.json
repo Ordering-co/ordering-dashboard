@@ -1,0 +1,600 @@
+{
+  "_doc": "Exceptions for scripts/redesign/date-iso-guard.mjs (W0-8c, T0-32; decision 13). Every line under UI/ (src/@/components-dashboard/src/ui/src/components) that paints or builds a fixed date format today, matched by the text of the line, never by its number. count (default 1) is how many lines with that text the file has. W0-4a changes the Orders sites and trims this list; each wave removes its own. An entry that no longer matches exactly fails the test: remove it. Out of the list on purpose: C/ outside ui/ (contexts, utils, controllers) and src/pages, which no governed set reaches.",
+  "entries": [
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/index.js",
+      "line-text": "newDate = moment(date).format('MMM DD')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 2
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsAvailableTimes/index.js",
+      "line-text": "newDate = moment(date).format('YYYY-MM')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 2
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/index.js",
+      "line-text": "newDate = moment(date).format('MMM DD')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 2
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsBusyTimes/index.js",
+      "line-text": "newDate = moment(date).format('YYYY-MM')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 2
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "newTimeAxes.push(moment(curDate._d.getTime()).format('YYYY-MM-DD HH:mm:ss'))",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.max = moment().format('YYYY-MM-DD')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.max = moment().subtract(lapse === 'today' ? 0 : 1, 'days').format('YYYY-MM-DD 24:00:00')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.max = to.format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 4
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.min = from.format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1",
+      "count": 4
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.min = moment().subtract(lapse === 'last_7_days' ? 7 : 30, 'days').format('YYYY-MM-DD')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/AnalyticsSpendTimes/index.js",
+      "line-text": "xAxes.time.min = moment().subtract(lapse === 'today' ? 0 : 1, 'days').format('YYYY-MM-DD 00:00:00')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W7-1",
+      "wave": "W7-1"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/Importers/ImporterRunStatus.jsx",
+      "line-text": "const checkedAt = new Date().toISOString()",
+      "reason": "Timestamp of «Check now» written to the stored run (checkedAt, finishedAt: the shape main's useMenuImportRun and ImportersPanel read back); a stored value, never painted: the line prints it through formatTime. ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/Importers/useMenuImport.js",
+      "line-text": "const nowIso = () => new Date().toISOString()",
+      "reason": "Main's useMenuImport (6f58d106, ): startedAt and finishedAt of the stored run (ISO instants, read back by useMenuImportRun); a stored value, never painted: the dialogs show it through parseDate. ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDrivers/index.js",
+      "line-text": "onCheckedChange={next => handleSelectDriverTemporary(driver?.id, next, moment().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss'))}",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W4-5",
+      "wave": "W4-5"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriverTemporalSchedule/index.js",
+      "line-text": "handleSelectDriverTemporary(driverSchedule?.id, true, moment(date).utc().format('YYYY-MM-DD HH:mm:ss'))",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W4-4",
+      "wave": "W4-4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/index.js",
+      "line-text": "time => (timeZone.fallback ? moment(parseDate(time, { outputFormat: 'YYYY-MM-DD HH:mm:ss' })).toDate() : zoneWallDate(time, zone)),",
+      "reason": "parseDate with a fixed outputFormat instead of dates_general_format (decision 13); a parse step of the calendar accessors, not painted;  moved it into a memoized accessor and  into the store-zone wallDate (with no store zone)",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/DetailsTab.jsx",
+      "line-text": "const closedAt = moment(parseDate(closing.createdAt, { outputFormat: 'YYYY-MM-DD HH:mm:ss' }))",
+      "reason": "parseDate with a fixed outputFormat instead of dates_general_format (decision 13); may be a comparison or a parse step, not painted; W0-4a changes the Orders sites to parseDate with dates_general_format",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/DetailsTab.jsx",
+      "line-text": "const placedDay = parseDate(order?.created_at, { outputFormat: 'YYYY-MM-DD' })",
+      "reason": "parseDate with a fixed outputFormat instead of dates_general_format (decision 13); may be a comparison or a parse step, not painted; W0-4a changes the Orders sites to parseDate with dates_general_format",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderDetails/DetailsTab.jsx",
+      "line-text": "if (parseDate(value, { outputFormat: 'YYYY-MM-DD' }) === placedDay) {",
+      "reason": "parseDate with a fixed outputFormat instead of dates_general_format (decision 13); may be a comparison or a parse step, not painted; W0-4a changes the Orders sites to parseDate with dates_general_format",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/orderEta.js",
+      "line-text": ".format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; W0-4a changes the Orders sites to parseDate with dates_general_format",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/orderEta.js",
+      "line-text": "const ETA_PARSE_OPTIONS = { outputFormat: 'YYYY-MM-DD HH:mm:ss' }",
+      "reason": "parseDate with a fixed outputFormat instead of dates_general_format (decision 13); may be a comparison or a parse step, not painted; W0-4a changes the Orders sites to parseDate with dates_general_format",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrdersTable/orderEta.js",
+      "line-text": "export const SLA_PARSE_OPTIONS = { outputFormat: 'YYYY-MM-DD HH:mm' }",
+      "reason": "Machine data, not painted: the SLA timer and the delay read the delivery at the minute, as main did (tramo A r2, W0-PA1-04)",
+      "wave": "W0-4a"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/McpTokenForm.js",
+      "line-text": ".replace('_date_', moment().add(expiresInDays, 'days').format('YYYY-MM-DD'))}",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W5",
+      "wave": "W5"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Settings/McpTokens/utils.js",
+      "line-text": "const API_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W5",
+      "wave": "W5"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/RangeCalendar.jsx",
+      "line-text": "const dateFormat = withTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD'",
+      "reason": "Fixed date format in logic (API value, chart axis, parse or comparison); the review confirms whether it is visible; migrated in W6-2",
+      "wave": "W6-2",
+      "count": 2
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Shared/UI/Schedule.jsx",
+      "line-text": "<h4 className='date'>{parseDate(getNextDate(daysOfWeekIndex), { outputFormat: 'YYYY-MM-DD' })}</h4>",
+      "reason": "parseDate with a fixed outputFormat painted in JSX instead of dates_general_format (decision 13); migrated in W2-0",
+      "wave": "W2-0"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/timeZone.js",
+      "line-text": "const DAY = 'YYYY-MM-DD'",
+      "reason": "Machine day and UTC/zone wall-clock keys of the time zone helpers (API values and comparisons, never painted); the visible text uses the project's dates_general_format. .",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/timeZone.js",
+      "line-text": "const DATETIME = 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "Machine day and UTC/zone wall-clock keys of the time zone helpers (API values and comparisons, never painted); the visible text uses the project's dates_general_format. .",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/dateRange.js",
+      "line-text": "export const DAY = 'YYYY-MM-DD'",
+      "reason": "Machine day key of the date-range helpers (state and comparisons, never painted); the visible text uses the project's dates_general_format. Governed since W0-2 r2 (W0-P1-08).",
+      "wave": "W0-2"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/dateRange.js",
+      "line-text": "export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'",
+      "reason": "Machine day key of the date-range helpers (state and comparisons, never painted); the visible text uses the project's dates_general_format. Governed since W0-2 r2 (W0-P1-08).",
+      "wave": "W0-2"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/AdvancedReports/index.js",
+      "line-text": "const last7day = now.subtract('7', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/DashboardOrdersList/index.js",
+      "line-text": "const today = now.format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MenuControl/index.js",
+      "line-text": "setDateSelected(dayjs(date).format('YYYY-MM-DD HH:mm'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MenuControl/index.js",
+      "line-text": "props.handlerSelectDate(dayjs(date).format('YYYY-MM-DD HH:mm'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MenuControl/index.js",
+      "line-text": "const _start = dayjs().format('YYYY-MM-DD')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MenuControl/index.js",
+      "line-text": "const _end = dayjs().day(30).format('YYYY-MM-DD')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MenuControl/index.js",
+      "line-text": "date: dayjs(_start).add(i, 'd').format('YYYY-MM-DD')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "? dayjs(date).format('YYYY-MM-DD HH:mm')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": ": dayjs().format('YYYY-MM-DD HH:mm')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "const [scheduleSelected, setScheduleSelected] = useState(_currentDate ? dayjs(validDate(_currentDate)).format('YYYY-MM-DD HH:mm') : null)",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "const [dateSelected, setDateSelected] = useState(dayjs(validDate(_currentDate)).format('YYYY-MM-DD'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "setScheduleSelected(_currentDate.format('YYYY-MM-DD HH:mm'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "setDateSelected(_currentDate.format('YYYY-MM-DD'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "dateSelected !== dayjs().format('YYYY-MM-DD') && setDateSelected(dayjs().format('YYYY-MM-DD'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "const isToday = dateSelected === dayjs().format('YYYY-MM-DD')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "const isLastDate = dateSelected === dayjs(maxDate).format('YYYY-MM-DD')",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/MomentOption/index.js",
+      "line-text": "datesList.push(dayjs(validDate(minDate)).add(i, 'd').format('YYYY-MM-DD'))",
+      "reason": "clave de estado y comparación del selector de fecha del pedido en el controlador; el texto visible lo pinta la UI (se migra a parseDate en su ola) [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "todayDatetime = nowInUserTimezone.utc().format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "const today = now.format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "todayDatetime = dayjs(today).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "yesterFrom = yesterdayInUserTimezone.utc().format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "yesterEnd = yesterdayInUserTimezone.endOf('day').utc().format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "yesterFrom = dayjs(yesterday).format('YYYY-MM-DD 00:00:00')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "yesterEnd = dayjs(yesterday).endOf('day').format('YYYY-MM-DD 23:59:59')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "const last7day = now.subtract('7', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "const last7Datetime = dayjs(last7day).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "const last30day = now.subtract('30', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "const last30Datetime = dayjs(last30day).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "fromDatetime = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/OrdersFilter/index.js",
+      "line-text": "endDatetime = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/ProductForm/index.js",
+      "line-text": "end: moment(values?.serviceTime).add(duration, 'minutes').format('YYYY-MM-DD HH:mm:ss'),",
+      "reason": "dato de petición a la API: fin del tramo ocupado del profesional que se envía; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W3"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const today = now.format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const todayDatetime = dayjs(today).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const yesterday = now.subtract('1', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const yesterdayDatetime = dayjs(yesterday).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const last7day = now.subtract('7', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const last7Datetime = dayjs(last7day).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const last30day = now.subtract('30', 'day').format('YYYY-MM-DD')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "const last30Datetime = dayjs(last30day).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "fromDatetime = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/components/UsersFilter/index.js",
+      "line-text": "endDatetime = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')",
+      "reason": "dato de petición a la API: rango de fechas del filtro que el controlador envía en la consulta; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/contexts/AssistantContext/client.js",
+      "line-text": "if (Number.isFinite(at)) return new Date(at).toISOString()",
+      "reason": "valor de máquina ISO 8601: instante de reintento que el controlador devuelve y compara; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/contexts/AssistantContext/client.js",
+      "line-text": "if (Number.isFinite(seconds) && seconds > 0) return new Date(now + seconds * 1000).toISOString()",
+      "reason": "valor de máquina ISO 8601: instante de reintento que el controlador devuelve y compara; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/contexts/OrderContext/index.js",
+      "line-text": "const momentFormatted = momentUnix ? dayjs.unix(momentUnix).utc().format('YYYY-MM-DD HH:mm:ss') : null",
+      "reason": "dato de petición a la API: momento del pedido en formato UTC de la API; no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/contexts/UtilsContext/index.js",
+      "line-text": "export const DEFAULT_VISIBLE_DATE_FORMAT = 'DD MMM YYYY'",
+      "reason": "constante: formato visible por defecto de parseDate (DD MMM YYYY, no ISO) cuando falta dates_general_format [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": "'YYYY-MM-DD HH:mm:ss',",
+      "reason": "opción elegible de dates_general_format en Ajustes (preset); no es una fecha pintada [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": "'MM/DD/YYYY hh:mm A',",
+      "reason": "opción elegible de dates_general_format en Ajustes (preset); no es una fecha pintada [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": "'DD/MM/YYYY HH:mm',",
+      "reason": "opción elegible de dates_general_format en Ajustes (preset); no es una fecha pintada [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": "'DD MMM YYYY HH:mm'",
+      "reason": "opción elegible de dates_general_format en Ajustes (preset); no es una fecha pintada [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": ": 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "valor por defecto cuando falta dates_general_format; se descompone en fecha y hora, no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/settingsCustomSections.js",
+      "line-text": "const dateFormat = safeFormat.replace(/[HhmsaA:.\\s]+$/g, '').trim() || 'YYYY-MM-DD'",
+      "reason": "valor por defecto cuando falta dates_general_format; se descompone en fecha y hora, no se pinta [inventario de W0 (T0-35): razón asignada por script por archivo, revisadas a mano 12 de 74; se comprueba línea a línea en su ola]",
+      "wave": "W6"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/BuilderProductDetail/index.js",
+      "line-text": "const formatDate = (value, format = 'MMM D, YYYY') => value ? parseDate(value, { outputFormat: format }) : ''",
+      "reason": "Fixed date format brought by main with the Builder section (, T0-50 merge); visible build/app dates; migrated with the catalog family in W3",
+      "wave": "W3"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/BuilderProductsList/index.js",
+      "line-text": "const formatDate = (value) => value ? parseDate(value, { outputFormat: 'MMM D, YYYY' }) : ''",
+      "reason": "Fixed date format brought by main with the Builder section (, T0-50 merge); visible build/app dates; migrated with the catalog family in W3",
+      "wave": "W3"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/calendarFormats.js",
+      "line-text": "const rangeToken = isEnglish(languageCode) || !languageCode ? ['MMMM DD', 'DD'] : ['DD MMMM', 'DD']",
+      "reason": "Calendar layout words (month header, weekday header, week range): the structure of react-big-calendar views, written with the Intl names of the user; not the project date format. W1-7 (T1-7-4)",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/calendarFormats.js",
+      "line-text": "monthHeaderFormat: date => write(date, 'MMMM YYYY'),",
+      "reason": "Calendar layout words (month header, weekday header, week range): the structure of react-big-calendar views, written with the Intl names of the user; not the project date format. W1-7 (T1-7-4)",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Appointments/calendarFormats.js",
+      "line-text": "dayHeaderFormat: date => write(date, 'dddd MMM DD'),",
+      "reason": "Calendar layout words (month header, weekday header, week range): the structure of react-big-calendar views, written with the Intl names of the user; not the project date format. W1-7 (T1-7-4)",
+      "wave": "W1-7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/UsersFilterBar/userFilters.js",
+      "line-text": "const DATETIME = 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "API parameter format of the sign-up date filter (created_at), the same values K/UsersFilter builds; never shown. The visible range uses the project format (decision 13). Redesign UC-B3",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Users/UsersFilterBar/userFilters.js",
+      "line-text": "const DAY = 'YYYY-MM-DD'",
+      "reason": "API parameter format of the sign-up date filter (created_at), the same values K/UsersFilter builds; never shown. The visible range uses the project format (decision 13). Redesign UC-B3",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/BuilderAppBuilds/BuildsCard.js",
+      "line-text": "const DATE_TIME = 'MMM D, YYYY h:mm A'",
+      "reason": "Fixed date format brought by main with the Builder section (; merged into the redesign 2026-10-09, after T0-50); visible build/app dates; migrated with the catalog family",
+      "wave": "W3"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Marketing/PromotionsDirectory/promotionData.js",
+      "line-text": "const API_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "Strict parse format of the API's wall-clock offer dates (start/end) to compute the status; never painted: visible dates go through parseDate (decision 13); ",
+      "wave": "W6-2"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/reportPeriods.js",
+      "line-text": "const dayOfMs = (ms) => new Date(ms).toISOString().slice(0, 10)",
+      "reason": "Data day (YYYY-MM-DD) of the report periods, computed in UTC to avoid DST shifts; never painted: the page shows it through parseDate (decision 13). ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/utils/clicksReport.js",
+      "line-text": "const day = (value) => dayjs(value).format('YYYY-MM-DD')",
+      "reason": "Request format of GET /reports/tracking_events (from/to as YYYY-MM-DD HH:mm:ss, as main's RealTime); never painted: the page shows the period through parseDate (decision 13). ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversTimeCalendar/blockData.js",
+      "line-text": "const DAY = 'YYYY-MM-DD'",
+      "reason": "Machine day key of the drivers time calendar (range state, comparisons, the day a block starts); never painted: visible dates go through formatVisibleDay/parseDate (decision 13). ",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversTimeCalendar/blockData.js",
+      "line-text": "const DATETIME = 'YYYY-MM-DD HH:mm:ss'",
+      "reason": "Request and response format of delivery_blocks (start, end, break, until; UTC on the wire, local in state, as main's CalendarDriversList); never painted: visible hours go through formatClock and the project's general_hour_format. ",
+      "wave": "W4"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Connect/WhatsAppBots/WhatsAppBotConnection.js",
+      "line-text": ": date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })",
+      "reason": "WhatsApp bots came from main ( to ) at the launch merge as main ships it, not redesigned: the date of the connected number is the browser's format. Its redesign moves it to the project format. ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/BuilderWebTheme/ThemeEditor.js",
+      "line-text": "const formatDate = (value) => value ? parseDate(value, { outputFormat: 'MMM D, h:mm A' }) : ''",
+      "reason": "Builder themes v2 (main ) came in the launch merge as main ships it: the saved and published times of a theme in a fixed format. Its redesign moves it to the project format. ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/Builder/BuilderWebTheme/index.js",
+      "line-text": "const formatDate = (value) => value ? parseDate(value, { outputFormat: 'MMM D, YYYY' }) : ''",
+      "reason": "Builder themes v2 (main ) came in the launch merge as main ships it: the dates of the themes list in a fixed format. Its redesign moves it to the project format. ",
+      "wave": "W7"
+    },
+    {
+      "file": "src/@/components-dashboard/src/ui/src/components/MyProducts/WebsiteMigration/index.js",
+      "line-text": "return date.toISOString().slice(0, 10)",
+      "reason": "Website migration (main ): the fallback when Intl cannot format the migration day in the locale, as main ships it. ",
+      "wave": "W7"
+    }
+  ]
+}

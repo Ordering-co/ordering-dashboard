@@ -10,7 +10,7 @@ export const HeaderContainer = styled.div`
 
   h1 {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--od-type-section-title-size);
     margin: 0;
   }
 `
@@ -26,10 +26,11 @@ export const ListContent = styled.div`
 
   ${props => props.theme.rtl
 ? css`
-      padding-left: 18px;`
-    : css`
-      padding-right: 18px;`
-  }
+    padding-left: 18px;
+  `
+: css`
+    padding-right: 18px;
+  `}
 
   @media (max-width: 576px) {
     padding: 0px;
@@ -72,9 +73,9 @@ export const CategoryEnableWrapper = styled.div`
   align-items: center;
   width: fit-content;
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     ${props => props.theme?.rtl
 ? css`
@@ -99,7 +100,7 @@ export const SelectedCategoriesWrapper = styled.div`
   margin-bottom: 10px;
   p {
     margin: 0px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
   }
 `
 
@@ -123,7 +124,7 @@ export const SearchWrapper = styled.div`
     background: transparent;
     outline: none;
     width: 100%;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     color: ${props => props.theme.colors.headingColor};
 
     &::placeholder {

@@ -1,18 +1,14 @@
 import React, { useState } from 'react'
-import { CheckCircle, ChevronDown, ChevronUp, ExclamationTriangle } from 'react-bootstrap-icons'
 
 import { useLanguage } from '../../../../../index'
+import { ChevronDown, ChevronUp, CircleCheck, TriangleAlert } from '../../Shared/Icon'
+import { Button, StatusBadge } from '../../Shared/Product'
 import { PlatformIcon } from '../BuilderShared'
 import { getCheckProblems, getPlatformLabel } from '../utils'
-import {
-  ChecksCard,
-  ChecksGrid,
-  ChecksHeader,
-  ChecksPanel,
-  ChecksToggleLabel,
-  LinkButton,
-  OwnerPill
-} from '../styles'
+import '../BuilderAppSettings/builder-app-edit.css'
+
+// redesign B2: on Product pieces (Button link, StatusBadge for the owner) and --od-* tokens. Same states, texts and
+// disclosure as main: the header stays a native button with aria-expanded and aria-controls, as main's.
 
 /**
  * What the next build of the app would get wrong. Always on screen for
@@ -28,26 +24,26 @@ export const BuilderChecksPanel = (props) => {
 
   if (error) {
     return (
-      <ChecksPanel aria-live='polite'>
-        <ChecksHeader as='div'>
-          <ExclamationTriangle aria-hidden='true' color='#7A5000' size={18} />
-          <span>
+      <section className='odc-be-checks' aria-live='polite'>
+        <div className='odc-be-checks-head'>
+          <TriangleAlert className='odc-icon' aria-hidden='true' />
+          <span className='odc-be-checks-text'>
             <strong>{t('BUILDER_CHECKS_ERROR', 'We couldn’t check what the next build needs')}</strong>
           </span>
-          <LinkButton type='button' onClick={reloadChecks}>{t('BUILDER_RETRY', 'Try again')}</LinkButton>
-        </ChecksHeader>
-      </ChecksPanel>
+          <Button variant='link' onClick={reloadChecks}>{t('BUILDER_RETRY', 'Try again')}</Button>
+        </div>
+      </section>
     )
   }
 
   if (!checks) {
     return loading
       ? (
-        <ChecksPanel clean aria-busy='true'>
-          <ChecksHeader as='div'>
-            <span><small>{t('BUILDER_CHECKS_LOADING', 'Checking what the next build needs…')}</small></span>
-          </ChecksHeader>
-        </ChecksPanel>
+        <section className='odc-be-checks' data-tone='clean' aria-busy='true'>
+          <div className='odc-be-checks-head'>
+            <span className='odc-be-checks-text'><small>{t('BUILDER_CHECKS_LOADING', 'Checking what the next build needs…')}</small></span>
+          </div>
+        </section>
         )
       : null
   }
@@ -58,14 +54,14 @@ export const BuilderChecksPanel = (props) => {
 
   if (!problems.length) {
     return (
-      <ChecksPanel clean aria-live='polite'>
-        <ChecksHeader as='div'>
-          <CheckCircle aria-hidden='true' color='#0B6B42' size={18} />
-          <span>
+      <section className='odc-be-checks' data-tone='clean' aria-live='polite'>
+        <div className='odc-be-checks-head'>
+          <CircleCheck className='odc-icon' aria-hidden='true' />
+          <span className='odc-be-checks-text'>
             <strong>{t('BUILDER_CHECKS_CLEAN', 'Nothing is missing for the next build')}</strong>
           </span>
-        </ChecksHeader>
-      </ChecksPanel>
+        </div>
+      </section>
     )
   }
 
@@ -76,27 +72,28 @@ export const BuilderChecksPanel = (props) => {
   ].filter(Boolean).join(' · ')
 
   return (
-    <ChecksPanel aria-labelledby='builder-checks-title' aria-live='polite'>
-      <ChecksHeader
+    <section className='odc-be-checks' aria-labelledby='builder-checks-title' aria-live='polite'>
+      <button
         type='button'
+        className='odc-be-checks-head'
         aria-expanded={open ? 'true' : 'false'}
         aria-controls='builder-checks-body'
         onClick={() => setOpen(!open)}
       >
-        <ExclamationTriangle aria-hidden='true' color='#7A5000' size={18} />
-        <span>
+        <TriangleAlert className='odc-icon' aria-hidden='true' />
+        <span className='odc-be-checks-text'>
           <strong id='builder-checks-title'>{t('BUILDER_CHECKS_TITLE', 'Before the next build')}</strong>
           <small>{summary}</small>
         </span>
-        <ChecksToggleLabel>
+        <span className='odc-be-checks-toggle'>
           {open ? t('BUILDER_HIDE', 'Hide') : t('BUILDER_SHOW', 'Show')}
-          {open ? <ChevronUp aria-hidden='true' /> : <ChevronDown aria-hidden='true' />}
-        </ChecksToggleLabel>
-      </ChecksHeader>
+          {open ? <ChevronUp className='odc-icon' aria-hidden='true' /> : <ChevronDown className='odc-icon' aria-hidden='true' />}
+        </span>
+      </button>
       {open && (
-        <ChecksGrid id='builder-checks-body'>
+        <div id='builder-checks-body' className='odc-be-checks-grid'>
           {platforms.map(platform => (
-            <ChecksCard key={platform}>
+            <div key={platform} className='odc-be-checks-card'>
               <strong>
                 <PlatformIcon platform={platform} />
                 {getPlatformLabel(platform)}
@@ -104,22 +101,23 @@ export const BuilderChecksPanel = (props) => {
               <ul>
                 {problems.filter(problem => problem.platform === platform).map(problem => (
                   <li key={problem.key}>
-                    <OwnerPill owner={problem.owner}>
-                      {problem.owner === 'ordering' ? 'Ordering' : t('BUILDER_TO_DO', 'To do')}
-                    </OwnerPill>
+                    <StatusBadge
+                      family={problem.owner === 'ordering' ? 'review' : 'pending'}
+                      label={problem.owner === 'ordering' ? 'Ordering' : t('BUILDER_TO_DO', 'To do')}
+                    />
                     <span>{problem.text}</span>
                     {problem.tab && (
-                      <LinkButton type='button' onClick={() => onGoToTab(problem.tab, problem.group)}>
+                      <Button variant='link' size='sm' onClick={() => onGoToTab(problem.tab, problem.group)}>
                         {t('BUILDER_FIX', 'Fix')}
-                      </LinkButton>
+                      </Button>
                     )}
                   </li>
                 ))}
               </ul>
-            </ChecksCard>
+            </div>
           ))}
-        </ChecksGrid>
+        </div>
       )}
-    </ChecksPanel>
+    </section>
   )
 }

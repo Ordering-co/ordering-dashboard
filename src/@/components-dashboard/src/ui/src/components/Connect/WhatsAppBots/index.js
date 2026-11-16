@@ -90,7 +90,12 @@ const WhatsAppBotsUI = (props) => {
     verifyRegistration,
     runDoctor,
     disconnect,
-    reloadConnection
+    reloadConnection,
+    translationsState,
+    setTranslationLocale,
+    updateTranslationDraft,
+    saveBotTranslations,
+    reloadBotTranslations
   } = props
   const { loading, error, bots, pagination } = botsState
   const [, t] = useLanguage()
@@ -312,6 +317,13 @@ const WhatsAppBotsUI = (props) => {
         settingsState={settingsState}
         saveBotSettings={saveBotSettings}
         reloadBotSettings={reloadBotSettings}
+        translationsProps={{
+          translationsState,
+          setTranslationLocale,
+          updateTranslationDraft,
+          saveBotTranslations,
+          reloadBotTranslations
+        }}
         connectionProps={connectionState && {
           connectionState,
           connectWithMeta,

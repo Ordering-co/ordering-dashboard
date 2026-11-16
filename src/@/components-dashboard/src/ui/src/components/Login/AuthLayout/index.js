@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components'
 import { useConfig, useLanguage } from '../../../../../index'
 import { OrderingBrandFonts } from '../../../styles/OrderingBrand'
 import { getDashboardLogoUrl } from '../../../utils'
+import { useInsideMainLandmark } from './MainLandmarkContext'
 import {
   LoginContainer,
   LoginHeroContainer,
@@ -24,6 +25,7 @@ export const AuthLayout = ({ isPopup, children }) => {
   const [, t] = useLanguage()
   const [{ configs } = {}] = useConfig()
   const theme = useTheme()
+  const insideMain = useInsideMainLandmark()
   const tenantLogo = configs?.dashboard_logo?.value
   const background = configs?.dashboard_login_background?.value
   const logoAlt = tenantLogo ? t('LOGO', 'Logo') : 'Ordering.co'
@@ -47,7 +49,8 @@ export const AuthLayout = ({ isPopup, children }) => {
         </HeroBody>
       </LoginHeroContainer>
 
-      <FormSide>
+      {/* inside the shell's <main> the form column is a plain box; outside it (docs_connect) it is the page's main */}
+      <FormSide as={insideMain ? 'div' : 'main'}>
         <FormPanel>
           <MobileLogo>
             {tenantLogo

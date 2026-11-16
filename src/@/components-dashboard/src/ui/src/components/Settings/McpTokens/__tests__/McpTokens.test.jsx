@@ -1,6 +1,8 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { renderToString } from 'react-dom/server'
+import { ServerStyleSheet, ThemeProvider } from 'styled-components'
 import { renderWithProviders, defaultTheme } from '~/__tests__/helpers/testUtils'
 import themeJson from '~/theme.json'
 
@@ -27,6 +29,7 @@ vi.mock('../../../../../../index', async () => {
 })
 
 import { McpTokens } from '../index'
+import * as mcpStyles from '../styles'
 
 const STATUS = {
   enabled: true,
@@ -324,8 +327,8 @@ describe('McpTokens', () => {
     fireEvent.click(within(card).getByText('Revoke'))
     expect(calls('DELETE', '/users/7/mcp_tokens/1')).toHaveLength(0)
 
-    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Revoke' })).toHaveLength(2))
-    fireEvent.click(screen.getAllByRole('button', { name: 'Revoke' })[1])
+    // The confirm dialog is modal: the page behind it is inert, so only its own Revoke button is exposed.
+    fireEvent.click(await within(await screen.findByRole('alertdialog')).findByRole('button', { name: 'Revoke' }))
 
     await waitFor(() => expect(within(screen.getByTestId('mcp-token')).getByText('Revoked')).toBeInTheDocument())
     expect(calls('DELETE', '/users/7/mcp_tokens/1')).toHaveLength(1)
@@ -341,8 +344,8 @@ describe('McpTokens', () => {
 
     const [card] = await screen.findAllByTestId('mcp-token')
     fireEvent.click(within(card).getByText('Revoke'))
-    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Revoke' })).toHaveLength(2))
-    fireEvent.click(screen.getAllByRole('button', { name: 'Revoke' })[1])
+    // The confirm dialog is modal: the page behind it is inert, so only its own Revoke button is exposed.
+    fireEvent.click(await within(await screen.findByRole('alertdialog')).findByRole('button', { name: 'Revoke' }))
 
     expect(await screen.findByText('This MCP key does not exist or is already revoked.')).toBeInTheDocument()
   })
@@ -355,5 +358,69 @@ describe('McpTokens', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('We could not load the MCP status of this project. You do not have permission.')
     expect(screen.getByText('Retry')).toBeInTheDocument()
+  })
+
+  // secondary text, the dropdown marker, the revoke hit area and name, and focus after a new key.
+  const cssOf = (Component) => {
+    const sheet = new ServerStyleSheet()
+    try {
+      renderToString(sheet.collectStyles(<ThemeProvider theme={theme}><Component /></ThemeProvider>))
+      return sheet.getStyleTags()
+    } finally {
+      sheet.seal()
+    }
+  }
+
+  it.each(['Header', 'Section', 'TokenFacts', 'FieldHelp'])('%s draws its secondary text with --od-x-text-subtle, not #748194', (name) => {
+    const css = cssOf(mcpStyles[name])
+    expect(css).toContain('color:var(--od-x-text-subtle)')
+    expect(css.toLowerCase()).not.toMatch(/color:#748194/)
+  })
+
+  it('shows a marker on the Manual configuration summary that turns when it opens', () => {
+    const css = cssOf(mcpStyles.Section)
+    expect(css).toMatch(/summary::before/)
+    expect(css).toMatch(/details\[open\] > summary::before/)
+  })
+
+  it('gives the row actions (Revoke, Create a replacement) a 44px target', () => {
+    expect(cssOf(mcpStyles.LinkAction)).toContain('min-height:var(--od-x-target-coarse)')
+  })
+
+  it('names each Revoke action after the key it revokes', async () => {
+    mockApi({
+      'GET /mcp/status': () => ({ error: false, result: STATUS }),
+      'GET /users/7/mcp_tokens': () => ({
+        error: false,
+        result: [key(), key({ id: 2, name: 'Codex – desktop' })],
+        pagination: { current_page: 1, total_pages: 1, total: 2 }
+      })
+    })
+    render()
+
+    expect(await screen.findByRole('button', { name: 'Revoke Claude Code – laptop' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Revoke Codex – desktop' })).toBeInTheDocument()
+  })
+
+  it('moves the focus to the new key when it appears, not to the body', async () => {
+    mockApi({
+      'GET /mcp/status': () => ({ error: false, result: STATUS }),
+      'GET /users/7/mcp_tokens': () => ({ error: false, result: [], pagination: { current_page: 1, total_pages: 1, total: 0 } }),
+      'POST /users/7/mcp_tokens': ({ body }) => ({
+        error: false,
+        result: { ...key({ id: 5, name: body.name, scope: body.scope }), token: 'ord_mcp_ab12SECRETSECRET' }
+      })
+    })
+    render()
+
+    fireEvent.click((await screen.findAllByText('Create key'))[0])
+    const form = await screen.findByTestId('mcp-create-form')
+    fireEvent.change(within(form).getByLabelText('Name'), { target: { value: 'Laptop' } })
+    fireEvent.click(within(form).getByLabelText(/I understand that the data/))
+    fireEvent.click(within(form).getByRole('button', { name: 'Create' }))
+
+    const secret = await screen.findByTestId('mcp-secret')
+    await waitFor(() => expect(secret.contains(document.activeElement)).toBe(true))
+    expect(document.activeElement).toBe(within(secret).getByRole('button', { name: /Copy the key/ }))
   })
 })

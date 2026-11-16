@@ -1,0 +1,30 @@
+/*
+ *  · Settings › Website & channels › Sales channels (Sites): the site picker over the site's settings.
+ * The hub prints the title and spaces the section (no padding here). `odc-root` goes on the Product parts only, not around the
+ * legacy site detail. Values: --od-* and --od-x-* only (guard:
+ * productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ */
+
+.sas {
+  inline-size: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+}
+
+/* only in the legacy side panel: the expand button at the end of the row */
+.sas-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: var(--od-space-3);
+}
+
+.sas-site {
+  margin-block-end: var(--od-space-4);
+}
+
+.sas-loading-row {
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.sas-loading-row:last-child { border-block-end: 0; }

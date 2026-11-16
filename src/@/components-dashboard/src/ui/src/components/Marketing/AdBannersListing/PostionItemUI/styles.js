@@ -6,6 +6,20 @@ export const ItemContainer = styled.div`
   flex-direction: row;
   margin: 15px 0;
   padding: 20px 10px;
+  width: 100%;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  text-align: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
   transition: all 0.3s;
   border-radius: 8px;
   cursor: pointer;
@@ -70,14 +84,14 @@ export const TitleContainer = styled.div`
 
 export const Title = styled.p`
   font-weight: 500;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   color: #344050;
   margin-bottom: 8px;
 `
 
 export const Description = styled.div`
   font-weight: normal;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   color: #909BA9;
 
   @media (min-width: 577px) {

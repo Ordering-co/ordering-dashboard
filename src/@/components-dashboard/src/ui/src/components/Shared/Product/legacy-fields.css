@@ -1,0 +1,366 @@
+/*
+ * redesign W0-7 (T0-28b) · Product frame around legacy pieces: ImageField (ImageCrop), ColorField (ColorPicker),
+ * PhoneField (InputPhoneNumber). Values come from --od-* and --od-x-* only (literal guard).
+ *
+ * The legacy CSS of the three pieces is already scoped to its own classes (`.od-ui:where(.od-...)`, specificity
+ * 0,1,0 or 0,2,0 for the nested rules), so nothing leaks out of it. What is here reaches in: every rule starts at
+ * the wrapper's class (`.odc-color-field`, `.odc-phone-field`, `.odc-image-field`), which puts it above the legacy
+ * rule and keeps it from touching the same piece anywhere else. The legacy `!important` on the picker trigger
+ * background is left alone: the box (border, fill) is drawn by the wrapper around the trigger instead.
+ *
+ * Decision 12 (phone): controls stay 32px visible and take a 44px area. An <input> takes no ::after, so the phone field's
+ * area is a pseudo-element of its box (`.PhoneInput`, redesign tramo B r3, W0-QB2-02); the picker trigger takes its own ::after.
+ */
+
+/* ── Frame (stand-in for Field's label, hint and error) ── */
+.odc-legacy-field {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+/* redesign stores 5.18: as .odc-field-label, the global Bootstrap label margin does not reach it */
+.odc-legacy-field-label {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-legacy-field-required {
+  margin-inline-start: var(--od-x-space-half);
+  color: var(--od-danger-functional);
+}
+
+.odc-legacy-field-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-legacy-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-legacy-field-error-icon.odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}
+
+.odc-legacy-field[data-disabled] .odc-legacy-field-label,
+.odc-legacy-field[data-disabled] .odc-legacy-field-hint { color: var(--od-x-text-subtle); }
+
+/* ── ImageField ── */
+.odc-image-field-body {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+}
+
+.odc-image-field-preview {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: calc(var(--od-x-control-height) * 4);
+  block-size: calc(var(--od-x-control-height) * 3);
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-x-text-subtle);
+}
+
+/*  AB-S01: with `aspectRatio` the box has that proportion (--odc-image-ratio = width / height) instead of the fixed 4:3: as wide as
+   the row, twice the old width or the old height allows, whichever is smaller; the image still fits without cropping. */
+.odc-image-field-preview[data-ratio] {
+  inline-size: min(
+    100%,
+    calc(var(--od-x-control-height) * 8),
+    calc(var(--od-x-control-height) * 4 * var(--odc-image-ratio))
+  );
+  block-size: auto;
+  aspect-ratio: var(--odc-image-ratio);
+}
+
+.odc-image-field-img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.odc-image-field-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-image-field[data-invalid] .odc-image-field-preview {
+  border-color: var(--od-danger-functional);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-image-field[data-disabled] .odc-image-field-preview {
+  border-color: var(--od-border);
+  opacity: 0.55;
+}
+
+/* Buttons keep the Product 32px box; the 44px target on a phone is theirs (product.css). */
+
+/* ── ColorField ── */
+.odc-color-field-control {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: var(--od-x-space-1-5);
+  max-inline-size: 100%;
+  block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-1-5) var(--od-space-3);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+}
+
+.odc-color-field-control:hover { border-color: var(--od-text-muted); }
+
+.odc-color-field-control[data-invalid] {
+  border-color: var(--od-danger-functional);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-color-field[data-disabled] .odc-color-field-control {
+  border-color: var(--od-border);
+  background: var(--od-surface-subtle);
+  cursor: not-allowed;
+}
+
+/* The trigger (swatch + chevron) is the control: 32px high inside the box, transparent as the piece forces. */
+.odc-color-field .od-color-picker-trigger {
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 0;
+  block-size: calc(var(--od-x-control-height) - var(--od-x-hairline) * 2);
+  gap: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-1-5);
+  border-radius: var(--od-radius-control);
+  /* The legacy Button clips its overflow, which would cut the hit area off. */
+  overflow: visible;
+}
+
+.odc-color-field .od-color-picker-trigger:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The swatch the piece draws, at Product size. Its fill (the stored color) is never touched. */
+.odc-color-field .od-color-picker-value {
+  inline-size: var(--od-x-icon-md);
+  min-inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  margin: 0;
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-color-field .od-color-picker-trigger > svg {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+  color: var(--od-text-muted);
+}
+
+/* The panel opens under the control; keep it above the page and inside the writing direction. */
+.odc-color-field .od-color-picker-panel {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+/* Value in mono (decision 11), isolated so a hex never reorders in RTL. */
+.odc-color-field-value {
+  min-inline-size: 0;
+  overflow: hidden;
+  font-family: var(--od-font-mono);
+  font-variant-ligatures: var(--od-font-mono-ligatures);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+
+/* ── PhoneField: country and number as one 32px field (44px on a phone) ── */
+.odc-phone-field .od-phone-input {
+  text-align: start;
+}
+
+.odc-phone-field .od-phone-input .PhoneInput {
+  display: flex;
+  align-items: stretch;
+  block-size: var(--od-x-control-height);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  transition: border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-phone-field .od-phone-input .PhoneInput:hover { border-color: var(--od-text-muted); }
+
+/* One ring for the whole field, wherever the keyboard focus is inside: on the field when the select (an invisible overlay)
+   has it, on the number input itself otherwise (redesign W0-7, T0-29: the input carries its own ring, at the field edge). */
+.odc-phone-field .od-phone-input .PhoneInput:has(.PhoneInputCountrySelect:focus-visible) {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-phone-field .od-phone-input .PhoneInputCountry,
+.odc-phone-field .od-phone-input .PhoneInputCountry:focus-within {
+  margin: 0;
+  padding-inline: var(--od-x-space-2-5) var(--od-x-space-1-5);
+  border-radius: var(--od-radius-control);
+  outline: 0;
+}
+
+/* Which half has the keyboard focus: a fill, since the ring is on the whole field. */
+.odc-phone-field .od-phone-input .PhoneInputCountry:has(.PhoneInputCountrySelect:focus-visible) {
+  background: var(--od-x-hover);
+}
+
+.odc-phone-field .od-phone-input .PhoneInputCountryIcon {
+  inline-size: var(--od-x-icon-lg);
+  block-size: var(--od-x-icon);
+  font-size: inherit;
+}
+
+.odc-phone-field .od-phone-input .PhoneInputCountryIcon.PhoneInputCountryIcon--border img {
+  border-radius: var(--od-radius-control);
+}
+
+.odc-phone-field .od-phone-input .PhoneInputCountrySelectArrow {
+  margin: 0;
+  margin-inline-start: var(--od-x-space-1-5);
+}
+
+.odc-phone-field .od-phone-input input.PhoneInputInput {
+  min-block-size: 0;
+  block-size: 100%;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-1-5) var(--od-x-space-2-5);
+  border: 0;
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  /* The digits keep their order in RTL; an empty field shows its placeholder in the page direction. */
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+  outline: 0;
+}
+
+.odc-phone-field .od-phone-input input.PhoneInputInput:placeholder-shown { direction: inherit; }
+.odc-phone-field .od-phone-input input.PhoneInputInput:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-x-hairline) + var(--od-focus-ring-offset));
+}
+.odc-phone-field .od-phone-input input.PhoneInputInput::placeholder { color: var(--od-x-text-subtle); }
+
+/* The piece's own invalid message, as the field's error line. */
+.odc-phone-field .od-phone-input-error {
+  display: block;
+  margin-block-start: var(--od-x-space-1-5);
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-phone-field[data-invalid] .od-phone-input .PhoneInput,
+.odc-phone-field .od-phone-input .PhoneInput:has(input[aria-invalid='true']) {
+  border-color: var(--od-danger-functional);
+  box-shadow: inset 0 0 0 var(--od-x-hairline) var(--od-danger-functional);
+}
+
+.odc-phone-field[data-disabled] .od-phone-input .PhoneInput {
+  border-color: var(--od-border);
+  background: var(--od-surface-subtle);
+  cursor: not-allowed;
+}
+
+.odc-phone-field .od-phone-input input.PhoneInputInput:disabled {
+  background: transparent;
+  color: var(--od-x-text-subtle);
+  opacity: 1;
+}
+
+/*
+ * Phone and coarse pointer (decision 12): the field stays 32px visible (the box is `.PhoneInput`, 32px at every width); its 44px
+ * area is a pseudo-element of the box (its own stacking context, the area one layer below its content), centred, which the number
+ * and the country select cover except for the 6px above and below. A press that lands on the box itself focuses the number
+ * (PhoneField.jsx). The text grows to the lead size so iOS does not zoom on focus (redesign tramo B r3, W0-QB2-02).
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-phone-field .od-phone-input .PhoneInput {
+    position: relative;
+    isolation: isolate;
+  }
+  .odc-phone-field .od-phone-input .PhoneInput::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+    z-index: calc(var(--od-x-layer-raised) * -1);
+  }
+
+  .odc-phone-field .od-phone-input input.PhoneInputInput {
+    min-block-size: 0;
+    font-size: var(--od-x-type-lead-size);
+  }
+
+  /* The legacy phone rule grows the country to the touch target; the box stays 32px. */
+  .odc-phone-field .od-phone-input .PhoneInputCountry {
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+
+  /* The select is an overlay of its country half: inside the 1px border, so it takes it back. */
+  .odc-phone-field .od-phone-input .PhoneInputCountrySelect {
+    inset-block: calc(var(--od-x-hairline) * -1);
+    inset-inline: calc(var(--od-x-hairline) * -1) 0;
+    inline-size: auto;
+    block-size: auto;
+  }
+
+  /* redesign W0-7 (T0-29, decision 12): Change and Remove sit --od-space-2 (8px) apart, closer than two 44px areas need
+     (12px), so on a phone they stay 44px visible instead of using the area pattern. Listed for the owner. */
+  .odc-image-field-actions .odc-btn { min-block-size: var(--od-touch-target-minimum); }
+
+  .odc-color-field .od-color-picker-trigger::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--od-x-target-inset) - var(--od-x-hairline));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-phone-field .od-phone-input .PhoneInput { transition: none; }
+}
+
+/* redesign stores 5.1a: a file dragged over a droppable ImageField */
+.odc-image-field[data-dragging] .odc-image-field-preview {
+  border-color: var(--od-action);
+  border-style: dashed;
+}

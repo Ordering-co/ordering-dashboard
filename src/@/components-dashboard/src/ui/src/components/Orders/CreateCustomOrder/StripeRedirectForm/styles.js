@@ -60,7 +60,8 @@ export const FormGroup = styled.div`
   select {
     padding: 7px 5px;
     margin-top: 8px;
-    font-size: 16px;
+    min-height: 44px;
+    font-size: var(--od-type-control-size);
     border-radius: 7.6px;
     border: 1px solid #DBDCDB;
   }

@@ -8,6 +8,7 @@ const {
   SCHOOLS_ALLOWED_LEVELS,
   canAccessBuilder,
   canAccessSchoolsPage,
+  canAssignDriverManually,
   getConnectVisualAccess,
   isDashboardFeatureEnabled
 } = dashboardFeatureAccess
@@ -125,5 +126,34 @@ describe('getConnectVisualAccess', () => {
     expect(access.connectPosMenuSync).toBe(true)
     expect(access.connectImporters).toBe(true)
     expect(access.connectSalesChannels).toBe(true)
+  })
+})
+
+describe('canAssignDriverManually', () => {
+  const businessOwnerAssignment = (value) => ({ store_app_manual_driver_assignment_enabled: { value } })
+  const deliveryManagerAssignment = (value) => ({ delivery_manager_manual_driver_assignment_enabled: { value } })
+
+  it('always lets admins assign drivers, even with both configs off', () => {
+    const configs = { ...businessOwnerAssignment('0'), ...deliveryManagerAssignment('0') }
+
+    expect(canAssignDriverManually({ level: 0, configs })).toBe(true)
+  })
+
+  it('blocks business owners only when their assignment config is off', () => {
+    expect(canAssignDriverManually({ level: 2, configs: businessOwnerAssignment('0') })).toBe(false)
+    expect(canAssignDriverManually({ level: 2, configs: businessOwnerAssignment('1') })).toBe(true)
+    expect(canAssignDriverManually({ level: 2, configs: deliveryManagerAssignment('0') })).toBe(true)
+  })
+
+  it('blocks delivery managers only when their assignment config is off', () => {
+    expect(canAssignDriverManually({ level: 5, configs: deliveryManagerAssignment('0') })).toBe(false)
+    expect(canAssignDriverManually({ level: 5, configs: deliveryManagerAssignment('1') })).toBe(true)
+    expect(canAssignDriverManually({ level: 5, configs: businessOwnerAssignment('0') })).toBe(true)
+  })
+
+  it('keeps assignment available when the config is missing', () => {
+    expect(canAssignDriverManually({ level: 2, configs: {} })).toBe(true)
+    expect(canAssignDriverManually({ level: 5 })).toBe(true)
+    expect(canAssignDriverManually()).toBe(true)
   })
 })

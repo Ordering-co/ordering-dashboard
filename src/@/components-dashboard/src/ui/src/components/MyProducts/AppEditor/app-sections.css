@@ -1,0 +1,107 @@
+/*
+ * redesign my-products B3 (; D3, D6) · The inner layout of the «App» sections of the editor (General, Constants, Credentials,
+ * Files): a grid of fields, a two-column row from 768px, the foot with the Save button and its status line, and the gap between the
+ * iOS and Android blocks. The section title is the editor's, not ours. Values: --od-* and --od-x-* only (guard: productLiteralGuard).
+ * Breakpoints as literals only in @media. Logical properties (C17). Nothing outside `.odc-aps`. Prefix: odc-aps-*.
+ */
+
+.odc-aps {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-aps-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* Two fields on a row from 768px (Package and Version); one column below. */
+.odc-aps-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+@media (min-width: 768px) {
+  .odc-aps-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A control that is not a Field (a checkbox row) with its error under it. */
+.odc-aps-check {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* The inline notice sits in the section's own column, not in a page gutter. */
+.odc-aps .odc-notice {
+  margin-inline: 0;
+  margin-block: 0;
+}
+
+/* The foot: the Save button and, beside it, the status line («Saved»). */
+.odc-aps-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-aps-status {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* R1-02: the status line and the error notice take the focus after a save (tabIndex -1) when the control that started it cannot. */
+.odc-aps-status:focus-visible,
+.odc-aps-result:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+/* R1-01: the legacy InputFile (BasicAppSettings/styles.js) draws its drop zone as a `label.drop-container` that holds a 350px input plus
+   padding (~394px), so it never shrank into a 358px field at 390 and the page scrolled sideways. Here it takes the width of its column
+   (class and structure, not the styled-components hash; the legacy file is not touched) and the path of the current file may break. */
+.odc-aps .drop-container {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-aps #current-file {
+  display: block;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Credentials: one block per platform, separated by a rule and the same gap on both sides. */
+.odc-aps-platform {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-aps-platform + .odc-aps-platform {
+  padding-block-start: var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-aps-platform-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}

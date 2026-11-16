@@ -15,22 +15,24 @@ export const BusinessDeviceListing = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  const [deviceListState, setDeviceListState] = useState({ loading: false, devices: [], error: null })
+  // redesign stores-devices (G5-36): the list starts loading, so the page never paints «No devices» before the first answer
+  const [deviceListState, setDeviceListState] = useState({ loading: true, devices: [], error: null })
 
   /**
    * Method to update device list
    */
   const handleUpdateDeviceList = (devices) => {
-    setDeviceListState({ ...deviceListState, devices })
+    setDeviceListState(prev => ({ ...prev, devices }))
   }
 
   /**
    * Method to get device list
+   * redesign stores-devices (G5-36): a new load clears the previous error, so «Retry» can recover a failed list
    */
   const getDevices = async () => {
     if (loading) return
     try {
-      setDeviceListState({ ...deviceListState, loading: true })
+      setDeviceListState(prev => ({ ...prev, loading: true, error: null }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -43,24 +45,25 @@ export const BusinessDeviceListing = (props) => {
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setDeviceListState({
-          ...deviceListState,
+        setDeviceListState(prev => ({
+          ...prev,
           loading: false,
-          devices: result
-        })
+          devices: result || [],
+          error: null
+        }))
       } else {
-        setDeviceListState({
-          ...deviceListState,
+        setDeviceListState(prev => ({
+          ...prev,
           loading: false,
           error: result
-        })
+        }))
       }
     } catch (err) {
-      setDeviceListState({
-        ...deviceListState,
+      setDeviceListState(prev => ({
+        ...prev,
         loading: false,
-        error: err
-      })
+        error: err?.message ?? err
+      }))
     }
   }
 
@@ -77,6 +80,7 @@ export const BusinessDeviceListing = (props) => {
           onSearch={setSearchValue}
           handleUpdateDeviceList={handleUpdateDeviceList}
           deviceListState={deviceListState}
+          reloadDevices={getDevices}
         />
       )}
     </>

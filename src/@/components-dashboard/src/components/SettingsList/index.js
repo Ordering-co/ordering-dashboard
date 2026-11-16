@@ -8,6 +8,9 @@ import { useConfig } from '../../contexts/ConfigContext'
 import { parseJsonArray } from '../../utils'
 import { isSettingsConfigVisible, mergeSettingsChanges } from '../../utils/settingsCustomSections'
 
+/** A type 5 change that holds a picked image (a data URL) and not a stored value, such as the empty one of «Restore default». */
+const isPickedImage = change => change?.type === 5 && typeof change?.value === 'string' && change.value.startsWith('data:')
+
 /**
  * Component to manage Settings List page behavior without UI component
  */
@@ -29,6 +32,11 @@ export const SettingsList = (props) => {
   const [, t] = useLanguage()
   const [{ configs: projectConfigs }, { refreshConfigs }] = useConfig()
   const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
+  // redesign settings B: how many configs of the current save were stored and which one failed (partial
+  // error), and a revision that remounts the controls after a discard. Only read by the Product UI; the save below is unchanged.
+  const [batch, setBatch] = useState({ savedCount: 0, failedKey: null })
+  const [revision, setRevision] = useState(0)
+  const saving = !!(formState?.API || formState?.loading)
 
   /** Method to change checkbox status
    * @param {EventTarget} evt
@@ -70,15 +78,17 @@ export const SettingsList = (props) => {
       default:
         break
     }
-    const savedValue = (formState?.finalResult || []).find(config => config.id === id)?.value
-    const nextChanges = mergeSettingsChanges(formState?.changes, item, changeValue, savedValue)
-
-    const defaultConfigs = (configs || []).map(config => (config.id === id) ? { ...config, value: changeValue } : config)
-    setFormState({
-      ...formState,
-      changes: nextChanges.length > 0 ? nextChanges : null
+    // redesign settings B (ST-15): functional updates, so several calls in one event all count. The date and
+    // time block writes three configs from one change; with the closure's state only the last one survived.
+    setFormState(current => {
+      const savedValue = (current?.finalResult || []).find(config => config.id === id)?.value
+      const nextChanges = mergeSettingsChanges(current?.changes, item, changeValue, savedValue)
+      return {
+        ...current,
+        changes: nextChanges.length > 0 ? nextChanges : null
+      }
     })
-    setConfigs(defaultConfigs)
+    setConfigs(current => (current || []).map(config => (config.id === id) ? { ...config, value: changeValue } : config))
   }
 
   /**
@@ -103,7 +113,21 @@ export const SettingsList = (props) => {
       setFormState({ ...formState, changes: null, API: false })
       return
     }
+    setBatch({ savedCount: 0, failedKey: null }) // redesign settings B
     setFormState({ ...formState, changes: [..._changes], API: true })
+  }
+
+  /**
+   * redesign settings B: drop every pending change. `configs` go back to the last stored values
+   * (`finalResult`), `changes` to null and the result is cleared; `revision` goes up so the uncontrolled controls remount.
+   * Not while the save chain runs.
+   */
+  const handleDiscardChanges = () => {
+    if (saving) return
+    setConfigs([...(formState?.finalResult || [])])
+    setFormState({ ...formState, changes: null, result: { error: null }, API: false })
+    setBatch({ savedCount: 0, failedKey: null })
+    setRevision(current => current + 1)
   }
 
   const transformArray = (values) => {
@@ -115,8 +139,10 @@ export const SettingsList = (props) => {
    * @param {Number} id config id to update a config
    * @param {Object} params key and value to change
    */
-  const saveConfig = async (id, params) => {
+  const saveConfig = async (id, params, changeKey = params?.key) => {
     if (loading) return
+    // redesign settings B: only a PUT of the Save chain counts toward the batch (an image saves on its own).
+    const inChain = !!formState?.API
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
@@ -128,6 +154,7 @@ export const SettingsList = (props) => {
         ? await saveConfigRequest(id, params)
         : (await ordering.setAccessToken(token).configs(id).save(params)).content
       if (!error) {
+        inChain && setBatch(current => ({ ...current, savedCount: current.savedCount + 1 }))
         const changes = formState?.changes ? formState?.changes.filter(item => item.id !== result.id) : []
         const _configs = formState?.finalResult.map(config => {
           if (config.id === result.id) {
@@ -177,6 +204,7 @@ export const SettingsList = (props) => {
           !saveConfigRequest && refreshConfigs && refreshConfigs()
         }
       } else {
+        inChain && setBatch(current => ({ ...current, failedKey: changeKey ?? null }))
         setFormState({
           ...formState,
           loading: false,
@@ -188,6 +216,7 @@ export const SettingsList = (props) => {
         })
       }
     } catch (err) {
+      inChain && setBatch(current => ({ ...current, failedKey: changeKey ?? null }))
       setFormState({
         ...formState,
         loading: false,
@@ -224,8 +253,10 @@ export const SettingsList = (props) => {
 
   useEffect(() => {
     if (formState?.API && formState?.changes?.length > 0) {
-      const params = { key: formState?.changes[0].key, value: formState?.changes[0].value }
-      saveConfig(formState?.changes[0].id, params)
+      const change = formState.changes[0]
+      // n.º 1, D-56 (a): an image picked in the hub is a pending change; it uploads with the request the image always used
+      const params = isPickedImage(change) ? { image: change.value } : { key: change.key, value: change.value }
+      saveConfig(change.id, params, change.key)
     }
   }, [formState?.API])
 
@@ -242,6 +273,11 @@ export const SettingsList = (props) => {
           formState={formState}
           handleChangeFormState={setFormState}
           saveConfig={saveConfig}
+          handleDiscardChanges={handleDiscardChanges}
+          revision={revision}
+          saving={saving}
+          savedCount={batch.savedCount}
+          failedKey={batch.failedKey}
         />
       )}
     </>

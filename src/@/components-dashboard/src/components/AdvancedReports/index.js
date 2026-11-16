@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { normalizeTimezone } from '../../utils'
-
+// Used only as the parity oracle in src/@/components-dashboard/src/components/AdvancedReports/__tests__/useAdvancedReport.test.js; no production consumer.
 /**
  * Component to manage Advance Reports page behavior without UI component
  */

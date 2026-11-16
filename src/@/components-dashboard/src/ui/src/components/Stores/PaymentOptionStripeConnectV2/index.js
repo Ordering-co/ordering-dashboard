@@ -12,6 +12,7 @@ import { TabContent } from './styles'
  * Stripe account it gets paid on; what the platform keeps of its orders can be
  * set for this store alone, by an administrator. Payouts lists what its orders
  * paid out, and which ones are waiting or need a look.
+ * It now rides on the redesign's PaymentOption / ProviderPanel: the tabs are `extraTabs` items `{ id, label, content }`.
  */
 export const PaymentOptionStripeConnectV2 = (props) => {
   const { business } = props
@@ -21,8 +22,8 @@ export const PaymentOptionStripeConnectV2 = (props) => {
 
   const extraTabs = [
     {
-      key: 'stripe_account',
-      title: t('STRIPE_CONNECT_ACCOUNT_TITLE', 'Stripe account'),
+      id: 'stripe_account',
+      label: t('STRIPE_CONNECT_ACCOUNT_TITLE', 'Stripe account'),
       content: (
         <TabContent>
           <StripeConnectAccount ownerType='business' ownerId={business?.id} />
@@ -30,8 +31,8 @@ export const PaymentOptionStripeConnectV2 = (props) => {
       )
     },
     user?.level === 0 && {
-      key: 'platform_fee',
-      title: t('PAYOUT_RULE_PLATFORM_TITLE', 'Platform fee'),
+      id: 'platform_fee',
+      label: t('PAYOUT_RULE_PLATFORM_TITLE', 'Platform fee'),
       content: (
         <TabContent>
           <PayoutRuleForm scope='platform' ownerId={business?.id} />
@@ -39,8 +40,8 @@ export const PaymentOptionStripeConnectV2 = (props) => {
       )
     },
     {
-      key: 'payouts',
-      title: t('PAYOUTS', 'Payouts'),
+      id: 'payouts',
+      label: t('PAYOUTS', 'Payouts'),
       content: (
         <TabContent>
           <Payouts businessId={business?.id} />

@@ -59,4 +59,37 @@ describe('buildOrderPlacedForViaHtml', () => {
       viaLabel: via.fallback
     })).toBe('Order placed for <b>Jan 1</b> via <b>Other</b>.')
   })
+
+  // `app_id` comes from the app that placed the order; without a translation its fallback is the raw value
+  const build = (appId) => {
+    const via = getOrderPlacedViaCopy(appId)
+    return buildOrderPlacedForViaHtml({
+      template: 'Order placed for _for_ via _via_.',
+      deliveryDatetimeUtc: null,
+      parseUtcDate: () => 'should not run',
+      parseLocalDate: () => 'Jan 1, 7:00 AM',
+      viaLabel: via.fallback
+    })
+  }
+
+  it('keeps the visible text of a normal app_id', () => {
+    expect(build('ordering_app')).toBe('Order placed for <b>Jan 1, 7:00 AM</b> via <b>Ordering app</b>.')
+  })
+
+  it('escapes an app_id that carries markup', () => {
+    const html = build('<img src=x onerror=alert(1)>')
+    expect(html).toBe('Order placed for <b>Jan 1, 7:00 AM</b> via <b>&lt;img src=x onerror=alert(1)&gt;</b>.')
+    const node = document.createElement('p')
+    node.innerHTML = html
+    expect(node.querySelector('img')).toBeNull()
+    expect(node.textContent).toBe('Order placed for Jan 1, 7:00 AM via <img src=x onerror=alert(1)>.')
+  })
+
+  it('escapes the date too', () => {
+    expect(getOrderPlacedDatetimeHtml({
+      deliveryDatetimeUtc: null,
+      parseUtcDate: () => '',
+      parseLocalDate: () => '<i>x</i>'
+    })).toBe('<b>&lt;i&gt;x&lt;/i&gt;</b>')
+  })
 })

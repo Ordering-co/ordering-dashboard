@@ -1,0 +1,22 @@
+/*
+ * redesign stores 5.11 · Stripe Connect: the «Connect with Stripe» block at the top of the ProviderPanel's General tab.
+ * Values: --od-* and --od-x-* only. Logical properties only. Prefix: odc-psc-*.
+ */
+
+.odc-psc-connect {
+  display: grid;
+  justify-items: start;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-psc-connect .odc-notice {
+  justify-self: stretch;
+}
+
+.odc-psc-hint {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}

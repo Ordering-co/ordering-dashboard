@@ -1,0 +1,255 @@
+/*
+ * redesign AB-B3 (decision 2; defects M-AB07, M-AB15, M-AB16) · The banner panel: name, image tiles and businesses.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-banners-.
+ */
+
+/* ── The body of the panel: one column, one rhythm ── */
+.odc-banners-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A notice belongs to the panel body, not to a page bar: no page gutter around it */
+.odc-banners-panel-body .odc-notice {
+  margin: 0;
+}
+
+.odc-banners-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* ── The name: the field and the line that says whether it is saved. The line keeps its room, so «Saved» does not push the tabs ── */
+/* redesign AB-R1 (review r1 #4): its own class; `.odc-banners-name` is the clipped name of a list row */
+.odc-banners-name-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-banners-status {
+  margin: 0;
+  min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui));
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-tab-panel {
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-3);
+}
+
+/* ── Image tiles: a native button per image, the thumbnail in the ratio of the position and what it links to ── */
+.odc-banners-images-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* Wide positions (web, 1440 x 300) are two to a row; square ones (app, 300 x 300) three */
+.odc-banners-images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-banners-images[data-shape='square'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.odc-banners-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--od-space-2);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-banners-tile:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-banners-tile:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-banners-thumb {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: var(--odc-banners-ratio);
+  object-fit: cover;
+  border-radius: var(--od-radius-control);
+  background: var(--od-x-skeleton);
+}
+
+/* A thumbnail that does not load, or a link with no image yet: a neutral box in the same ratio */
+span.odc-banners-thumb[data-failed] {
+  border: var(--od-x-hairline) dashed var(--od-border);
+  background: var(--od-bg);
+}
+
+.odc-banners-tile-caption {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-tile-path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-banners-tile-add {
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: var(--odc-banners-ratio);
+  border-style: dashed;
+  background: var(--od-bg);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+}
+
+/* ── Businesses: search, page selection, one checkbox row per business, pages, the count and the save ── */
+.odc-banners-businesses {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-banners-businesses-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-banners-business-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-business-item {
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-business {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-banners-business-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-banners-business-skeleton {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-business-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-1-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-selected {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-selected .odc-figure {
+  color: var(--od-text);
+}
+
+/* redesign  (review F-2): the count and «Clear selection» on one line, wrapping on a phone */
+.odc-banners-selected-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-banners-businesses-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+}
+
+.odc-banners-businesses-foot .odc-notice {
+  flex: 1 1 100%;
+}
+
+/* ── Touch (decision 12): a tile is seen at its size; its 44px reach is a centred pseudo-element, as P/product.css gives a button ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-banners-tile::after {
+    content: '';
+    position: absolute;
+    inset: var(--od-x-target-inset);
+  }
+}
+
+/* In a narrow panel the header's switch drops under the title row, where the way out ends: its own 44px area would reach into it */
+@container odc-record (max-width: 480px) {
+  .odc-banners-panel-status {
+    margin-block-start: var(--od-space-3);
+  }
+
+  .odc-banners-images {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .odc-banners-images[data-shape='square'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

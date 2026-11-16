@@ -9,25 +9,19 @@ export const FormCash = styled.div`
   flex-direction: column;
   align-items: center;
   label {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
     margin-right: 20px;
     ${props => props.theme?.rtl && css`
         margin-left: 20px;
         margin-right: 0;
     `}
   }
-
-  @media (min-width: 381px) {
-    label {
-      font-size: 18px;
-    }
-  }
 `
 
 export const WrapperInput = styled.div`
   width: 100%;
   label {
-    font-size: 16px;
+    font-size: var(--od-type-control-size);
   }
   
   input {
@@ -40,11 +34,7 @@ export const WrapperInput = styled.div`
 
 export const ErrorText = styled.p`
   margin: 10px 0px 0px;
-  color: #D81212;
-  font-size: 14px;
+  color: var(--od-danger-functional);
+  font-size: var(--od-type-content-size);
   font-weight: bold;
-
-  @media (min-width: 381px) {
-    font-size: 20px;
-  }
 `

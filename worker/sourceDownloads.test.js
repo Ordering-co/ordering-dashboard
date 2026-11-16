@@ -369,7 +369,7 @@ describe('source downloads Worker endpoints', () => {
     expect(get).toHaveBeenCalledTimes(1)
   })
 
-  it('uses the selected orderingv1 tenant on the official shared host for catalog and ZIP', async () => {
+  it('uses the selected selected-demo tenant on the official shared host for catalog and ZIP', async () => {
     const { bucket, get, archiveBytes } = makeBucket()
     const assetsFetch = vi.fn(async () => new Response(JSON.stringify({
       project: 'orderingplus',
@@ -377,12 +377,12 @@ describe('source downloads Worker endpoints', () => {
     }), { headers: { 'content-type': 'application/json' } }))
     const env = { ASSETS: { fetch: assetsFetch }, SOURCE_DOWNLOADS: bucket, PROJECT: 'orderingplus', USE_PROJECT_DOMAIN: 'true', DISABLE_CACHE: 'true' }
     const identity = vi.fn(async url => new Response(JSON.stringify(
-      String(url).includes('/orderingv1/')
+      String(url).includes('/selected-demo/')
         ? { error: false, result: { id: 9, level: 0, enabled: true } }
         : { error: true, result: ['unauthorized'] }
-    ), { status: String(url).includes('/orderingv1/') ? 200 : 401 }))
+    ), { status: String(url).includes('/selected-demo/') ? 200 : 401 }))
     vi.stubGlobal('fetch', identity)
-    const headers = { authorization: 'Bearer selected-tenant-session', 'x-ordering-project': 'orderingv1' }
+    const headers = { authorization: 'Bearer selected-tenant-session', 'x-ordering-project': 'selected-demo' }
 
     const catalog = await worker.fetch(new Request('https://dashboard.orderingplus.com/api/source-catalog', { headers }), env, {})
     const download = await worker.fetch(new Request('https://dashboard.orderingplus.com/api/source-downloads/website-marketplace/v2026.10.02.132200', { headers }), env, {})
@@ -392,8 +392,8 @@ describe('source downloads Worker endpoints', () => {
     expect(download.headers.get('content-type')).toBe('application/zip')
     expect(Array.from(new Uint8Array(await download.arrayBuffer()))).toEqual(Array.from(archiveBytes))
     expect(identity.mock.calls.map(([url]) => String(url))).toEqual([
-      'https://api.ordering.test/v400/en/orderingv1/users/me?params=id,level,enabled',
-      'https://api.ordering.test/v400/en/orderingv1/users/me?params=id,level,enabled'
+      'https://api.ordering.test/v400/en/selected-demo/users/me?params=id,level,enabled',
+      'https://api.ordering.test/v400/en/selected-demo/users/me?params=id,level,enabled'
     ])
     expect(get).toHaveBeenCalledTimes(3)
 
@@ -403,6 +403,32 @@ describe('source downloads Worker endpoints', () => {
     expect(wrongSelection.status).toBe(401)
     expect((await wrongSelection.json()).error.code).toBe('invalid_session')
     expect(get).toHaveBeenCalledTimes(3)
+  })
+
+  // the beta Worker serves the shared dashboard-beta.ordering.co host, so it takes the selected tenant too
+  it('uses the selected tenant on the beta shared host', async () => {
+    const { bucket } = makeBucket()
+    const assetsFetch = vi.fn(async () => new Response(JSON.stringify({
+      project: 'orderingplus',
+      api: { url: 'https://api.ordering.test', version: 'v400', language: 'en' }
+    }), { headers: { 'content-type': 'application/json' } }))
+    const env = { ASSETS: { fetch: assetsFetch }, SOURCE_DOWNLOADS: bucket, PROJECT: 'orderingplus', USE_PROJECT_DOMAIN: 'true', DISABLE_CACHE: 'true' }
+    const identity = vi.fn(async () => new Response(JSON.stringify({ error: false, result: { id: 9, level: 0, enabled: true } })))
+    vi.stubGlobal('fetch', identity)
+
+    const catalog = await worker.fetch(new Request('https://dashboard-beta.ordering.co/api/source-catalog', {
+      headers: { authorization: 'Bearer selected-tenant-session', 'x-ordering-project': 'selected-demo' }
+    }), env, {})
+    expect(catalog.status).toBe(200)
+    expect(identity.mock.calls.map(([url]) => String(url))).toEqual([
+      'https://api.ordering.test/v400/en/selected-demo/users/me?params=id,level,enabled'
+    ])
+
+    const anonymous = await worker.fetch(new Request('https://dashboard-beta.ordering.co/api/source-catalog', {
+      headers: { authorization: 'Bearer selected-tenant-session' }
+    }), env, {})
+    expect(anonymous.status).toBe(400)
+    expect((await anonymous.json()).error.code).toBe('invalid_project_selection')
   })
 
   it('rejects anonymous, malformed, and custom-domain project overrides before identity or storage access', async () => {
@@ -415,7 +441,7 @@ describe('source downloads Worker endpoints', () => {
     const anonymous = await worker.fetch(new Request('https://dashboard.orderingplus.com/api/source-catalog'), env, {})
     expect(anonymous.status).toBe(401)
     expect(anonymous.headers.get('content-type')).toContain('application/json')
-    for (const selection of [null, '', '_', '../orderingv1', 'orderingv1/foo', 'orderingv1?token=x', 'orderingv1,orderingplus']) {
+    for (const selection of [null, '', '_', '../selected-demo', 'selected-demo/foo', 'selected-demo?token=x', 'selected-demo,orderingplus']) {
       const headers = { authorization: 'Bearer selected-tenant-session' }
       if (selection !== null) headers['x-ordering-project'] = selection
       const response = await worker.fetch(new Request('https://dashboard.orderingplus.com/api/source-catalog', { headers }), env, {})
@@ -423,7 +449,7 @@ describe('source downloads Worker endpoints', () => {
       expect((await response.json()).error.code).toBe('invalid_project_selection')
     }
     const override = await worker.fetch(new Request('https://tenant.example.test/api/source-catalog', {
-      headers: { authorization: 'Bearer selected-tenant-session', 'x-ordering-project': 'orderingv1' }
+      headers: { authorization: 'Bearer selected-tenant-session', 'x-ordering-project': 'selected-demo' }
     }), env, {})
     expect(override.status).toBe(400)
     expect(identity).not.toHaveBeenCalled()

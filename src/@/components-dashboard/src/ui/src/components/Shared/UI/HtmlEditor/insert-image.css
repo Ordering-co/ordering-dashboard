@@ -1,0 +1,222 @@
+/* Scoped insert-image dialog. Tailwind utilities only; Preflight stays off. */
+.od-ui:where(.od-editor-insert-image) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+  font-size: var(--od-entity-selector-font-size);
+}
+
+.od-ui:where(.od-editor-insert-image) > h1 {
+  margin: 0 0 25px;
+  color: var(--od-entity-selector-text);
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-editor-insert-image) > .od-button {
+  width: 100%;
+  min-height: var(--od-entity-selector-touch-target);
+}
+
+.od-ui:where(.od-editor-insert-image) .od-editor-field {
+  @apply od-flex od-flex-col;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+
+.od-ui:where(.od-editor-insert-image) .od-editor-field > label {
+  margin: 0 0 4px;
+  color: var(--od-entity-selector-text);
+  font-size: 14px;
+}
+
+.od-ui:where(.od-editor-insert-image) .od-editor-field > input {
+  width: 100%;
+  min-width: 0;
+}
+
+.od-ui:where(.od-editor-image-list) {
+  @apply od-flex od-flex-wrap od-justify-center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.od-ui:where(.od-editor-image-item) {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  border: 2px solid transparent;
+  border-radius: var(--od-entity-selector-radius);
+  transition: transform 250ms ease, border-color 250ms ease;
+}
+
+.od-ui:where(.od-editor-image-item)[data-selected] {
+  border-color: var(--od-entity-selector-action);
+}
+
+.od-ui:where(.od-editor-image-item):hover {
+  transform: scale(1.1);
+}
+
+.od-ui.od-button.od-editor-image-choice {
+  display: block;
+  width: auto;
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-radius: var(--od-entity-selector-radius);
+}
+
+.od-ui.od-button.od-editor-image-choice > img {
+  display: block;
+  width: auto;
+  max-width: min(120px, calc(100vw - 48px));
+  height: 120px;
+  object-fit: cover;
+  background: var(--od-entity-selector-border);
+}
+
+.od-ui.od-icon-button.od-editor-image-delete {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  z-index: var(--od-x-layer-raised);
+  width: var(--od-entity-selector-touch-target);
+  height: var(--od-entity-selector-touch-target);
+  min-width: var(--od-entity-selector-touch-target);
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 0;
+  background: transparent;
+}
+
+.od-ui.od-icon-button.od-editor-image-delete::before {
+  position: absolute;
+  inset: 10px;
+  content: '';
+  background: var(--od-editor-danger);
+  border-radius: 999px;
+}
+
+.od-ui.od-icon-button.od-editor-image-delete > svg {
+  position: relative;
+  z-index: var(--od-x-layer-raised);
+  width: 14px;
+  height: 14px;
+  color: #FFF;
+}
+
+.od-ui:where(.od-editor-new-image) {
+  @apply od-flex od-w-full od-flex-col od-items-center od-justify-start;
+  min-width: 0;
+  margin: 20px auto;
+}
+
+.od-ui:where(.od-editor-image-upload) {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 130px;
+  overflow: hidden;
+  background: var(--od-entity-selector-surface);
+  border: 1px solid var(--od-entity-selector-border);
+  border-radius: var(--od-entity-selector-radius);
+  cursor: grab;
+  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.1));
+}
+
+.od-ui:where(.od-editor-image-upload):focus-visible {
+  outline: var(--od-entity-selector-focus-width) solid var(--od-entity-selector-focus);
+  outline-offset: var(--od-entity-selector-focus-offset);
+}
+
+.od-ui:where(.od-editor-image-upload)[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.od-ui:where(.od-editor-image-upload) img,
+.od-ui:where(.od-editor-image-upload) > div,
+.od-ui:where(.od-editor-image-upload) > div > div {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--od-entity-selector-radius);
+}
+
+.od-ui:where(.od-editor-image-upload) img {
+  object-fit: cover;
+}
+
+.od-ui:where(.od-editor-upload-overlay) {
+  position: absolute;
+  inset: 0;
+  padding: 4px;
+  color: #FFF;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.od-ui:where(.od-editor-upload-prompt) {
+  @apply od-flex od-h-full od-w-full od-flex-col od-items-center od-justify-center;
+  color: #FFF;
+  border: 1px dashed #FFF;
+  text-align: center;
+}
+
+.od-ui:where(.od-editor-upload-prompt) > span {
+  margin: 0;
+  padding-inline: 8px;
+  overflow-wrap: anywhere;
+}
+
+.od-ui:where(.od-editor-upload-prompt) > svg {
+  width: 45px;
+  height: 45px;
+}
+
+.od-ui:where(.od-editor-camera) > * {
+  width: 30px;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.od-ui:where(.od-editor-image-skeleton),
+.od-ui:where(.od-editor-image-skeleton) > span,
+.od-ui:where(.od-editor-image-skeleton) .react-loading-skeleton {
+  width: 100%;
+  height: 100%;
+}
+
+.od-ui:where(.od-editor-image-skeleton) .react-loading-skeleton {
+  --base-color: var(--od-entity-selector-border);
+  --highlight-color: var(--od-entity-selector-surface);
+}
+
+@media (min-width: 768px) {
+  .od-ui:where(.od-editor-new-image) {
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-editor-image-item) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+
+  .od-ui:where(.od-editor-image-item):hover {
+    transform: none;
+  }
+}

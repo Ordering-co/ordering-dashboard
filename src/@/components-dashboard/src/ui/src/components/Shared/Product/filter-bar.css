@@ -1,0 +1,492 @@
+/* C7 · Filter bar: search, pills, «more», tools, chips and the inline notice. */
+
+/* The bar is the container: its own width, not the viewport, decides what fits. */
+.odc-filterbar {
+  container-type: inline-size;
+  min-inline-size: 0;
+  /* redesign F6d-1 (Q3-02): the search of THIS bar never gives up more than this (a pill is parked first); the
+     other screens that use --od-x-search-min keep their own floor. FilterBar's measure reads the same name. */
+  --od-x-search-min: var(--od-x-filterbar-search-min);
+}
+
+.odc-filterbar-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-2);
+  padding: var(--od-space-3) var(--od-x-page-gutter);
+}
+
+/* ONE row at every width above the phone (redesign F1b, D-06; C7): search, the pills that fit, «+N»,
+   «more», «clear», then the tools. The search gives up width first (down to --od-x-search-min); a pill
+   that still does not fit leaves the row for the «+N» menu (FilterBar's measure). Nothing wraps, and
+   opening the order panel never changes the height of the bar. `position: relative` is the frame the
+   parked pills are placed in. */
+.odc-filterbar-start {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-filterbar-search,
+.odc-filterbar-more,
+.odc-filterbar-clear {
+  display: contents;
+}
+
+/* Without «+N» (no `overflowLabel`) the pills slot scrolls sideways inside its own row. */
+.odc-filterbar-filters {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* room for the focus ring inside the scroller */
+  padding: var(--od-x-space-1-5);
+  margin: calc(var(--od-x-space-1-5) * -1);
+}
+
+.odc-filterbar-filters::-webkit-scrollbar { display: none; }
+.odc-filterbar .odc-pill { flex: none; }
+
+/* redesign tramo A r3 (W0-QA1-06): the pill whose popover is open keeps the width it had when it opened (FilterBar sets
+   `data-hold` and --odc-pill-hold), so a value does not move the pill, and the popover with it, under the pointer. The value
+   is cut with its ellipsis (.odc-pill-value) while it is held (see below for a pill held without a value). */
+.odc-filterbar .odc-pill[data-hold] { inline-size: var(--odc-pill-hold); }
+
+/* redesign tramo A r4 (W0-QA2-07): the first pill, when its value does not fit the room there is even with «Clear filters» in «+N», is
+   never parked: FilterBar sets `data-cut` and --odc-pill-cut (the room, measured) and the value is cut with its ellipsis. */
+.odc-filterbar .odc-pill[data-cut] { max-inline-size: var(--odc-pill-cut); }
+.odc-filterbar-more > *,
+.odc-filterbar-clear > *,
+.odc-filterbar-overflow > * { flex: none; }
+
+/* With «+N» nothing scrolls: the pills that do not fit are parked. */
+.odc-filterbar[data-overflow-menu] .odc-filterbar-filters {
+  flex: none;
+  overflow: visible;
+  padding: 0;
+  margin: 0;
+}
+
+/* A parked pill stays mounted (its popover and its state live on) but is out of the flow, invisible, out
+   of the tab order and untouchable. FilterBar places it on top of the «+N» button
+   (--odc-overflow-x/-y, from a measure) so a popover anchored to it opens under «+N». While the bar
+   measures, every pill is back in its row. */
+.odc-filterbar-filters > [data-overflowed] {
+  position: absolute;
+  inset-block-start: var(--odc-overflow-y, 0);
+  inset-inline-start: var(--odc-overflow-x, 0);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.odc-filterbar[data-measuring] .odc-filterbar-filters > [data-overflowed] {
+  position: static;
+  visibility: visible;
+}
+
+/* «+N»: a pill-sized button with the pills that did not fit. With none it is parked, still measurable. */
+.odc-filterbar-overflow { display: contents; }
+
+.odc-filterbar-overflow[data-empty] > * {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.odc-filterbar .odc-filterbar-overflow-btn[data-active] {
+  background: var(--od-surface-subtle);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* redesign F6f-1 (Q5-01, Q5-02): the room the row holds for what is not there yet. «Clear filters» not drawn: an empty
+   box of its width (FilterBar's measure sets --odc-clear-reserve), at its place, so the button takes the room it
+   had and nothing moves. «Filters» gains a count: the room it will take is held after it (--odc-more-reserve). */
+.odc-filterbar-clear-reserve {
+  flex: none;
+  inline-size: var(--odc-clear-reserve, 0);
+  block-size: 0;
+  pointer-events: none;
+}
+
+/* redesign tramo A r3 (W0-QA1-08): at level 1 (`data-clear-parked`) «Clear filters» is not in the row, drawn or not: its stand-in
+   box has no width to hold, and an empty flex item still costs a gap. With no filter the row was one gap (8px) longer than
+   with one (the parked button is out of the flow), and the first filter closed gave that gap to the search (211 -> 219). */
+.odc-filterbar[data-clear-parked] .odc-filterbar-clear-reserve { display: none; }
+
+.odc-filterbar-more > * { margin-inline-end: var(--odc-more-reserve, 0); }
+
+/* «+N» gains «· K active» when a parked pill takes a value: the room it will take is held at the end of the row
+   (--odc-plus-reserve, measured; the negative margin cancels the gap before the box), so the search and the pills,
+   where the popover is anchored, do not move when the label grows. */
+.odc-filterbar-plus-reserve {
+  flex: none;
+  inline-size: var(--odc-plus-reserve, 0);
+  block-size: 0;
+  margin-inline-start: calc(var(--od-space-2) * -1);
+  pointer-events: none;
+}
+
+/* While a popover is open the search keeps the width it had (--odc-search-pin, measured), so what is after it does not move. */
+.odc-filterbar-search > [data-pinned] { flex: 0 0 var(--odc-search-pin); }
+
+/* redesign W0-4b (T0-14, decision 18): when not even every pill in «+N» leaves room for the words of «Clear filters»
+   (FilterBar sets `data-clear-parked`) it leaves the row for the «+N» menu, where it is one more entry that presses it.
+   It stays mounted, parked like a pill (invisible, out of the tab order, untouchable); the search never goes below its
+   floor for it. While the bar measures it is back in its row. */
+.odc-filterbar[data-clear-parked] .odc-filterbar-clear > * {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.odc-filterbar[data-measuring] .odc-filterbar-clear > * {
+  position: static;
+  visibility: visible;
+}
+
+.odc-filterbar-tools {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+/* The sort statement of the list gives way before any pill is parked (redesign F6c-2, Q2-06; FilterBar sets
+   `data-tools-collapsed`): a control-sized icon, its words moved out of the box and not removed (a reader still
+   hears them) and the same words as a tooltip (`title`, set by FilterBar). The icon is a mask, so it takes the
+   text colour. */
+.odc-filterbar[data-tools-collapsed] :is([data-filterbar-collapsible], .odc-orders-sort) {
+  position: relative;
+  box-sizing: border-box;
+  flex: none;
+  inline-size: var(--od-x-control-height);
+  block-size: var(--od-x-control-height);
+  padding: 0;
+  overflow: hidden;
+  text-indent: 100vmax;
+  white-space: nowrap;
+}
+
+.odc-filterbar[data-tools-collapsed] :is([data-filterbar-collapsible], .odc-orders-sort)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 8 4-4 4 4'/%3E%3Cpath d='M7 4v16'/%3E%3Cpath d='M11 12h4'/%3E%3Cpath d='M11 16h7'/%3E%3Cpath d='M11 20h10'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.odc-filterbar-chips {
+  padding-block: 0 var(--od-space-2);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* One «Clear filters» at a time (C7): the bar's own button when it has one, so the chips' «clear all»
+   steps aside. On a phone the bar's button leaves and the chips keep theirs (below). */
+.odc-filterbar[data-clear] .odc-chips-clear { display: none; }
+
+/* redesign bugs H (W0-Q2-06): with the bar's «Clear filters» parked in «+N» (`data-clear-parked`) the only one that can be seen without opening
+   the menu is the chips' «clear all», so it comes back. It is another node, in the chips row: the row of the bar is not touched. */
+.odc-filterbar[data-clear][data-clear-parked] .odc-chips-clear { display: inline-flex; }
+
+/* A phone, or a list as narrow as one on a phone's screen: search and «more» on the first row, the pills
+   on their own sideways row (with the edge fade); the chips keep «clear all», so the separate clear button
+   leaves. Only here: a narrow list beside the detail panel on a wider screen is the same one row, with
+   «+N» (redesign F1b), so opening an order never changes the height of the bar. */
+@container (max-width: 599px) {
+  @media (max-width: 767px) {
+    .odc-filterbar-main {
+      padding-inline: var(--od-x-page-gutter-mobile);
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        'search more'
+        'pills pills';
+    }
+    .odc-filterbar-start { display: contents; }
+    .odc-filterbar .odc-filterbar-search > * { grid-area: search; min-inline-size: 0; }
+    .odc-filterbar .odc-search { inline-size: auto; }
+    .odc-filterbar-more > * { grid-area: more; }
+    .odc-filterbar .odc-filterbar-filters,
+    .odc-filterbar[data-overflow-menu] .odc-filterbar-filters {
+      grid-area: pills;
+      max-inline-size: none;
+      display: flex;
+      flex-wrap: nowrap;
+      gap: var(--od-space-2);
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: var(--od-x-space-1-5);
+      margin: calc(var(--od-x-space-1-5) * -1);
+    }
+    .odc-filterbar-filters::-webkit-scrollbar { display: none; }
+    .odc-filterbar .odc-filterbar-overflow { display: none; }
+    .odc-filterbar-clear,
+    .odc-filterbar-clear-reserve,
+    .odc-filterbar-plus-reserve { display: none; }
+    .odc-filterbar[data-clear] .odc-chips-clear { display: inline-flex; }
+    .odc-filterbar-chips { padding-inline: var(--od-x-page-gutter-mobile); }
+    .odc-filterbar .odc-notice { margin-inline: var(--od-x-page-gutter-mobile); }
+  }
+}
+
+/* A phone (the list is cards below 768px, batch 5.6): the table tools have nothing to act on. */
+@media (max-width: 767px) {
+  .odc-filterbar-tools { display: none; }
+}
+
+/* FA-2 · flush: the screen already has its page margin, so the bar adds none. After the
+   phone block and one class more specific, so it wins at every width. */
+.odc-filterbar[data-flush] .odc-filterbar-main,
+.odc-filterbar[data-flush] .odc-filterbar-chips { padding-inline: 0; }
+.odc-filterbar[data-flush] .odc-notice { margin-inline: 0; }
+
+/* ── Search ── */
+.odc-search {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  /* Gives up width first, down to its floor; the pills do not shrink. */
+  flex: 0 1 var(--od-x-search);
+  min-inline-size: var(--od-x-search-min);
+  block-size: var(--od-x-control-height);
+  /*  AB-S03: the basis above is a width for a row. In a column (flex-direction: column) it is the main size, so the field was 280px
+     tall; its own height is its ceiling, which clamps that basis there and changes nothing in a row. The phone's min-block-size (44px) still wins. */
+  max-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-2-5) var(--od-x-space-half);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-x-text-subtle);
+  transition: border-color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-search:focus-within {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-search-input {
+  flex: 1 1 0;
+  align-self: stretch;
+  min-inline-size: 0;
+  padding: 0;
+  /* Over the field's own hairline border, so the whole field is the target. */
+  margin: 0;
+  margin-block: calc(var(--od-x-hairline) * -1);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  appearance: none;
+}
+
+.odc-search-input::placeholder { color: var(--od-x-text-subtle); opacity: 1; }
+.odc-search-input::-webkit-search-cancel-button,
+.odc-search-input::-webkit-search-decoration { appearance: none; }
+
+/* ── Pill ── */
+.odc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  margin: 0;
+  border: var(--od-x-hairline) dashed var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--od-duration-fast) var(--od-ease-standard),
+    border-color var(--od-duration-fast) var(--od-ease-standard),
+    color var(--od-duration-fast) var(--od-ease-standard);
+}
+
+.odc-pill:hover {
+  border-style: solid;
+  color: var(--od-text);
+}
+
+.odc-pill:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-pill[data-active] {
+  border: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+/* A long value (a group, a date range) is cut with an ellipsis; FilterPill carries it whole as a `title` (F6d-1, Q3-02). */
+.odc-pill-value {
+  min-inline-size: 0;
+  max-inline-size: var(--od-x-pill-value-max);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--od-font-weight-semibold);
+}
+
+/* «Label · value» (redesign F6c-2, Q2-15): one separator for every pill, a middle dot, like «SLA · Delayed». */
+.odc-pill-sep { color: var(--od-text-muted); }
+.odc-pill-sep::before { content: '·'; }
+
+/* redesign tramo A r4 (W0-PA2-05, W0-QA2-06): a pill that is held without a value has no room for the one it takes: the value used to be
+   left at 0px and the pill read «Status ·». Holding more width moves the pill (and its popover), so while it is held the separator is not
+   painted and the value is read but not seen (as .odc-sr-only does); both are back, whole, when the popover closes. The value stays in the
+   accessible name. A pill that had a value when it opened keeps painting it (cut with its ellipsis). */
+.odc-filterbar .odc-pill[data-hold][data-hold-bare] .odc-pill-sep { display: none; }
+.odc-filterbar .odc-pill[data-hold][data-hold-bare] .odc-pill-value {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* redesign bugs H (W0-D-12): the last cut of the first pill. When not even its value cut to 5em fits the row (with «Clear filters» in «+N»),
+   FilterBar sets `data-cut-bare` and the pill paints only its label: the separator is not drawn and the value is read but not seen (as in
+   the held pill above). The value stays in the accessible name and is back, whole, as soon as the bar has room. */
+.odc-filterbar .odc-pill[data-cut-bare] { max-inline-size: none; }
+.odc-filterbar .odc-pill[data-cut-bare] .odc-pill-sep { display: none; }
+.odc-filterbar .odc-pill[data-cut-bare] .odc-pill-value {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ── Chips ── */
+.odc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-block-size: var(--od-x-control-height-sm);
+  padding-inline: var(--od-x-space-2-5) var(--od-x-space-half);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-chip-text { min-inline-size: 0; overflow-wrap: anywhere; }
+
+/* The X is a 24px target (WCAG 2.5.8); the coarse rule below lifts it to 44px. */
+.odc-chip .odc-chip-remove.odc-btn[data-icon-only][data-size='sm'] {
+  inline-size: var(--od-x-target-fine);
+  block-size: var(--od-x-target-fine);
+  min-block-size: var(--od-x-target-fine);
+  color: var(--od-text-muted);
+}
+
+.odc-chip .odc-chip-remove .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+}
+
+.odc-chips-clear { display: inline-flex; align-items: center; }
+
+/* ── Inline notice ── */
+.odc-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin-block: 0 var(--od-space-2);
+  margin-inline: var(--od-x-page-gutter);
+  padding: var(--od-x-space-1-5) var(--od-x-space-2-5);
+  border-radius: var(--od-radius-component);
+  background: var(--od-x-info-soft);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-notice[data-tone='warning'] { background: var(--od-warning-soft); }
+.odc-notice[data-tone='info'] { background: var(--od-x-info-soft); }
+.odc-notice[data-tone='danger'] { background: var(--od-danger-soft); }
+
+.odc-notice-dot {
+  inline-size: var(--od-x-dot);
+  block-size: var(--od-x-dot);
+  flex: none;
+  border-radius: var(--od-radius-round);
+  background: var(--od-x-info-signal);
+}
+
+.odc-notice[data-tone='warning'] .odc-notice-dot { background: var(--od-warning-signal); }
+.odc-notice[data-tone='danger'] .odc-notice-dot { background: var(--od-danger-signal); }
+
+.odc-notice-text { min-inline-size: 0; }
+.odc-notice-action { margin-inline-start: auto; flex: none; }
+
+/* Touch (C3): everything pressable reaches 44px. redesign fix-qa E8: also on a phone-width viewport
+   (below 768px) with a fine pointer (a narrow desktop window, device emulation without touch): the
+   44px is a size of the phone layout, not only of the pointer. */
+@media (pointer: coarse), (max-width: 767px) {
+  /* redesign W0-3d (T0-12, decision 12): these keep their 44px box. The search row and the pill row are 8px apart on the phone
+     (grid gap, above), so two 44px areas centered on 32px boxes would cross; the owner decides that reflow. The notice's button
+     is not here any more: it keeps its box and takes the centered area of `.odc-btn` (product.css); the notice's own 6px of
+     padding holds that area. */
+  .odc-search,
+  .odc-pill,
+  .odc-filterbar .odc-btn {
+    min-block-size: var(--od-x-target-coarse);
+  }
+  .odc-filterbar .odc-btn[data-icon-only] {
+    min-inline-size: var(--od-x-target-coarse);
+  }
+  /* A one-word pill («City») is still 44px wide. */
+  .odc-pill {
+    min-inline-size: var(--od-x-target-coarse);
+    justify-content: center;
+  }
+  /* The 44px X sits on the frame's hairline instead of shrinking below the target. */
+  .odc-search-clear { margin-block: calc(var(--od-x-hairline) * -1); }
+  .odc-chip .odc-chip-remove.odc-btn[data-icon-only][data-size='sm'] {
+    min-inline-size: var(--od-x-target-coarse);
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-search,
+  .odc-pill { transition: none; }
+}

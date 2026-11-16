@@ -1,0 +1,110 @@
+/*
+ * redesign stores 5.2 · The people picker of a store's owners or agents: search, a listbox of people, the status line.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so RTL needs nothing more.
+ * Prefix: odc-people-picker-*, odc-people-option-*.
+ */
+
+.odc-people-picker {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-people-picker-list {
+  display: grid;
+  max-block-size: 50dvh;
+  overflow-y: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  min-inline-size: 0;
+}
+
+.odc-people-picker-skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding: var(--od-space-2) var(--od-space-3);
+}
+
+.odc-people-option {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-target-coarse);
+  margin: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-3);
+  border: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  text-align: start;
+  cursor: pointer;
+  min-inline-size: 0;
+}
+
+.odc-people-option:last-child { border-block-end: 0; }
+.odc-people-option:hover { background: var(--od-x-hover); }
+.odc-people-option[aria-selected='true'] { background: var(--od-x-selected); }
+.odc-people-option[aria-selected='true'] .odc-people-option-name { font-weight: var(--od-font-weight-semibold); }
+
+.odc-people-option[aria-disabled='true'] {
+  cursor: default;
+  color: var(--od-x-text-subtle);
+}
+
+.odc-people-option[aria-disabled='true']:hover { background: none; }
+
+/* inside the list the ring is inset so the scroller never clips it */
+.odc-people-option:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-people-option-check {
+  display: inline-flex;
+  flex: none;
+  inline-size: var(--od-space-4);
+  color: var(--od-text);
+}
+
+.odc-people-option-who {
+  display: grid;
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-people-option-name,
+.odc-people-option-meta {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-people-option-name {
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-option-meta {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-option-tag {
+  flex: none;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-people-picker-empty {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}

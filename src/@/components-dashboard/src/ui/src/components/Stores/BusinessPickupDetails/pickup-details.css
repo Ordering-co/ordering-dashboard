@@ -1,0 +1,56 @@
+/*
+ * redesign stores 5.7 · Pickup tab of the store editor: one form (order time, minimum purchase, save bar).
+ * Values: --od-* and --od-x-* only, logical properties only. Same frame as the preorders form (preorder.css).
+ */
+
+.odc-store-pickup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  padding-inline: var(--od-space-5);
+  padding-block-start: var(--od-space-5);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-store-pickup:focus {
+  outline: none;
+}
+
+.odc-store-pickup-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-store-pickup-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-type-section-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+/* A number is short: the field does not stretch across a wide panel */
+.odc-store-pickup-field {
+  min-inline-size: 0;
+  max-inline-size: calc(var(--od-x-search-min) * 2);
+}
+
+@media (max-width: 767px) {
+  .odc-store-pickup {
+    padding-inline: var(--od-space-4);
+  }
+
+  .odc-store-pickup-field {
+    max-inline-size: none;
+  }
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar: every control keeps a margin at its foot that
+   clears the bar and a gap (the same rule as Store details and the Users profile form; review 5.7 #6). */
+.odc-store-pickup :is(input, select, textarea, button, [role='radio']) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}

@@ -22,13 +22,20 @@ const STATUS_PAGES = [
 
 const INVOICE_TABS = [
   { invoice: 'business', tab: 'payment_methods', parentKey: 'COMMAND_PALETTE_INVOICE_BUSINESS', parent: 'Store invoices', labelKey: 'PAYMENT_METHODS', label: 'Payment methods', aliases: ['facturas por metodo de pago'] },
-  { invoice: 'business', tab: 'order_type', parentKey: 'COMMAND_PALETTE_INVOICE_BUSINESS', parent: 'Store invoices', labelKey: 'ORDER_TYPE', label: 'Delivery Type', aliases: ['facturas por tipo de orden'] },
+  { invoice: 'business', tab: 'order_type', parentKey: 'COMMAND_PALETTE_INVOICE_BUSINESS', parent: 'Store invoices', labelKey: 'ORDER_TYPE', label: 'Delivery type', aliases: ['facturas por tipo de orden'] },
   { invoice: 'driver', tab: 'payment_methods', parentKey: 'COMMAND_PALETTE_INVOICE_DRIVER', parent: 'Driver invoices', labelKey: 'PAYMENT_METHODS', label: 'Payment methods', aliases: ['facturas de repartidores por metodo de pago'] }
 ]
 
 const PROMOTION_VIEWS = [
   { view: 'journeys', labelKey: 'QUICK_OFFERS', label: 'Quick offers', aliases: ['ofertas rapidas', 'plantillas de promocion', 'primera compra', 'te extranamos', 'journeys'] },
   { view: 'advanced_offers', labelKey: 'ADVANCED_OFFERS', label: 'Advanced offers', aliases: ['ofertas avanzadas', 'cupones', 'promociones avanzadas'] }
+]
+
+// redesign OC-integration: the views of /cart-recovery/open-carts (Follow up is the page itself)
+const OPEN_CART_VIEWS = [
+  { view: 'paymentFailed', labelKey: 'OPEN_CARTS_PAYMENT_FAILED', label: 'Payment failed', aliases: ['pago fallido', 'carritos con pago fallido', 'failed payment'] },
+  { view: 'live', labelKey: 'OPEN_CARTS_VIEW_LIVE', label: 'Live now', aliases: ['ahora mismo', 'carritos en vivo', 'comprando ahora', 'live carts'] },
+  { view: 'all', labelKey: 'ALL', label: 'All', aliases: ['todos los carritos', 'all carts'] }
 ]
 
 const GIFT_CARD_TABS = [
@@ -42,13 +49,6 @@ const INACTIVE_USER_LISTS = [
   { url: '/users/callcenter-agents', labelKey: 'CALL_CENTER_AGENTS', label: 'Call Center Agents', aliases: ['agentes inactivos'] },
   { url: '/users/admins', labelKey: 'ADMINS', label: 'Admins', aliases: ['administradores inactivos'] },
   { url: '/users/professionals', labelKey: 'PROFESSIONALS', label: 'Professionals', aliases: ['profesionales inactivos'] }
-]
-
-const ECOMMERCE_REPORTS = [
-  { id: 1, labelKey: 'USERS', label: 'Users', aliases: ['reporte de usuarios'] },
-  { id: 2, labelKey: 'DISCOUNT_DASHBOARD', label: 'Discount dashboard', aliases: ['descuentos', 'reporte de descuentos'] },
-  { id: 3, labelKey: 'DASHBOARD_WITH_STORE_MAP', label: 'Dashboard with store map', aliases: ['mapa de tiendas'] },
-  { id: 4, labelKey: 'REAL_TIME', label: 'Real time', aliases: ['tiempo real', 'en vivo'] }
 ]
 
 const LANGUAGE_PRODUCT_TYPES = [
@@ -108,6 +108,17 @@ export const buildPageActionEntries = ({ t = (_key, fallback) => fallback, can =
     })
   }
 
+  if (can('/cart-recovery/open-carts')) {
+    OPEN_CART_VIEWS.forEach(view => add({
+      id: `action:open-carts-${view.view}`,
+      title: `${t('OPEN_CARTS', 'Open carts')} › ${t(view.labelKey, view.label)}`,
+      subtitle: t('OPEN_CARTS', 'Open carts'),
+      path: withQuery('/cart-recovery/open-carts', { view: view.view }),
+      aliases: [...view.aliases, 'carritos abiertos', 'carritos', 'abandoned carts'],
+      icon: 'orders'
+    }))
+  }
+
   if (can('/marketing/promotions-enterprise')) {
     PROMOTION_VIEWS.forEach(view => add({
       id: `action:promotions-${view.view}`,
@@ -139,28 +150,6 @@ export const buildPageActionEntries = ({ t = (_key, fallback) => fallback, can =
     aliases: [...list.aliases, 'inactivos', 'desactivados', 'inactive'],
     icon: 'users'
   }))
-
-  // Ecommerce reports has no sidebar item: same rule as the other admin reports
-  if (can('/intelligence/reports') && canOpenDashboardRoute('/intelligence/ecommerce_reports', level) && !isReadOnly) {
-    const ecommerceLabel = t('COMMAND_PALETTE_ECOMMERCE_REPORTS', 'Ecommerce reports')
-    add({
-      id: 'action:ecommerce-reports',
-      title: ecommerceLabel,
-      subtitle: t('REPORTS', 'Reports'),
-      path: '/intelligence/ecommerce_reports',
-      aliases: ['reportes de ecommerce', 'ecommerce', 'reportes'],
-      icon: 'intelligence'
-    })
-    ECOMMERCE_REPORTS.forEach(report => add({
-      id: `action:ecommerce-report-${report.id}`,
-      title: t(report.labelKey, report.label),
-      subtitle: ecommerceLabel,
-      path: withQuery('/intelligence/ecommerce_reports', { id: report.id }),
-      aliases: [...report.aliases, 'reporte', 'ecommerce'],
-      icon: 'intelligence',
-      boost: -1
-    }))
-  }
 
   if (level === 0 && !isReadOnly && canOpenDashboardRoute(SETTINGS_HUB_PATH, level)) {
     const translationsLabel = `${t('SETTINGS', 'Settings')} › ${t('TRANSLATIONS', 'Translations')}`

@@ -4,7 +4,7 @@ export const LoadingMessage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme.colors.lightGray};
   margin-top: 10px;
 

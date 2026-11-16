@@ -1,0 +1,279 @@
+/*
+ * Ordering.co Brand System — local candidate extension (orders pilot, Part 2).
+ *
+ * These values are CANDIDATES, not a release: docs/redesign/candidates.md
+ * (C1–C17) explains each one. They live here, in one file and under the
+ * --od-x-* prefix, so it stays visible what is a candidate and what comes from
+ * the pinned release (--od-*, src/brand/ordering.tokens.generated.css). When a
+ * candidate is published upstream, its --od-x-* name is replaced by the released
+ * --od-* variable and removed from this file.
+ *
+ * This is the only file of new pilot code allowed to hold literal colors and
+ * sizes; every component reads these variables (guard:
+ * src/__tests__/tools/productLiteralGuard.test.js).
+ *
+ * Light applies on :root (the dashboard's GlobalStyle puts the release there)
+ * and on any [data-ordering-brand] scope. Dark applies inside
+ * [data-ordering-brand][data-od-theme='dark'], the same contract as the release.
+ */
+
+:root,
+[data-ordering-brand] {
+  /* C1 · Product type scale, in rem so it follows the browser font size. */
+  --od-x-type-caption-size: var(--od-font-size-1);      /* 12px — the absolute floor */
+  --od-x-type-ui-size: 0.8125rem;                        /* 13px — controls, tabs, table headers, menu */
+  --od-x-type-body-size: var(--od-font-size-2);          /* 14px — cells, forms, panel text */
+  --od-x-type-lead-size: var(--od-font-size-3);          /* 16px — comfortable fields (mobile), dialog lead */
+  --od-x-type-section-size: var(--od-font-size-4);       /* 18px — panel section, dialog title */
+  --od-x-type-title-size: var(--od-font-size-5);         /* 22px — page and panel title */
+  --od-x-type-display-size: var(--od-font-size-6);       /* 28px — key figure */
+  --od-x-leading-ui: 1.35;
+  --od-x-leading-body: 1.45;
+  --od-x-leading-title: 1.2;
+  --od-x-tracking-title: -0.01em;
+
+  /* C2 · Density. The mode changes row height and vertical padding, never type. */
+  --od-x-row-compact: var(--od-table-row-height);        /* 36px */
+  --od-x-row-comfortable: 44px;
+  --od-x-header-row: 36px;
+  --od-x-control-height: var(--od-control-height);       /* 32px */
+  --od-x-control-height-sm: 28px;
+  --od-x-control-height-lg: 40px;
+  --od-x-tab-height: 40px;
+  --od-x-tab-height-sm: 36px;
+  --od-x-page-gutter: var(--od-space-5);                 /* 24px desktop */
+  --od-x-page-gutter-mobile: var(--od-space-4);          /* 16px mobile */
+
+  /* Half and odd steps of the 4/8 rhythm, for optical alignment only. */
+  --od-x-space-half: 0.125rem;                           /* 2px */
+  --od-x-space-1-5: 0.375rem;                            /* 6px */
+  --od-x-space-2-5: 0.625rem;                            /* 10px */
+  --od-x-space-3-5: 0.875rem;                            /* 14px */
+
+  /* C3 · Targets and focus. */
+  --od-x-target-fine: 24px;                              /* WCAG 2.2 2.5.8 */
+  --od-x-target-coarse: var(--od-touch-target-minimum);  /* 44px */
+  /* W0-3d light (T0-12, decisión 12): the inset of the phone hit area (a ::after or ::before of a control), centred,
+     reaching --od-x-target-coarse on each axis and never shrinking a control that is already larger. Percentages
+     resolve on the control that uses it (block sides against its height, inline sides against its width). */
+  --od-x-target-inset: min(0px, calc((100% - var(--od-x-target-coarse)) / 2));
+  /* W0-7-switch light */
+  --od-x-switch-width: 32px;
+  --od-x-switch-height: 18px;
+  --od-x-switch-thumb: 14px;
+  /* W0-7-map-frame light */
+  --od-x-map-height: 320px;          /* MapFrame default: the map of a form or a detail, tall enough to pan on a laptop */
+  --od-x-map-height-compact: 200px;  /* MapFrame compact, and the floor of `fill`; same as --od-x-map-edit */
+  /* W0-7-record-panel light */
+  --od-x-record-nav: 200px;          /* the section column of RecordPanel in a wide panel */
+  --od-x-focus-inset: calc(var(--od-focus-ring-width) * -1);
+
+  /* Icons (C1 handoff §3): 16 by default, 20 and 24 for larger actions. */
+  --od-x-icon-xs: 12px;
+  --od-x-icon-sm: 14px;
+  --od-x-icon: var(--od-icon-size);                      /* 16px */
+  --od-x-icon-md: 20px;
+  --od-x-icon-lg: 24px;
+
+  /* Component sizes (C5, C6, C9, C11, C12). */
+  --od-x-hairline: var(--od-stroke);                     /* 1px */
+  --od-x-indicator: 2px;                                 /* active nav / tab / row */
+  --od-x-dot: 6px;
+  --od-x-dot-lg: 8px;
+  --od-x-badge-height: 22px;
+  --od-x-count-height: 18px;
+  --od-x-checkbox-box: 16px;
+  --od-x-avatar: 24px;
+  --od-x-avatar-lg: 32px;
+  --od-x-route-node: 12px;
+  --od-x-route-rail: 2px;
+  --od-x-feed-node: 7px;
+  --od-x-skeleton-line: 10px;
+
+  /* Layout (C8, C11). */
+  --od-x-sidebar: 248px;
+  --od-x-rail: 56px;
+  --od-x-drawer: 320px;                                  /* mobile navigation drawer, capped at 88vw */
+  --od-x-logo-height: 22px;                              /* project logo in the sidebar header */
+  --od-x-panel: 520px;
+  --od-x-panel-narrow: 440px;
+  --od-x-sheet: 440px;
+  --od-x-dialog-sm: 400px;
+  --od-x-dialog-md: 560px;
+  --od-x-dialog-lg: 720px;
+  --od-x-menu-min: 210px;
+  --od-x-popover: 260px;
+  --od-x-search: 280px;
+  --od-x-search-min: 180px;
+  --od-x-col-person-share: 16%;                           /* share of the table each people column asks for (business, customer, driver) */
+  --od-x-cell-person: 128px;                             /* avatar + name cell in a table row, ellipsis beyond (C6) */
+  --od-x-measure: 44ch;
+  --od-x-viewport-gap: 16px;
+  --od-x-detail-offset: 345px;                          /* page chrome above the orders tab of a customer / driver detail */
+
+  /* W0-5 light (T0-17, decisión 16; G8): the layer scale. Six roles, ordered, with room between them. A component takes a role
+     (or `calc(var(--od-x-layer-chrome) + n)` for n in 1…99 inside chrome) and never invents a value outside it. The
+     dialogs, sheets and popovers of the overlay host are ordered by its registry (`--od-dialog-layer`), not by these. */
+  --od-x-layer-raised: 1;                                /* above its siblings inside one component; never compared across components */
+  --od-x-layer-sticky: 100;                              /* sticky headers, toolbars and bars of a scrolling region */
+  --od-x-layer-chrome: 1000;                             /* persistent app chrome: sidebar, its menus and tooltips (+1…+99 inside the role) */
+  --od-x-layer-drawer: 1100;                             /* navigation drawer and side panels that cover the chrome on small screens */
+  --od-x-layer-overlay: 3000;                            /* the one overlay host: dialogs, sheets, popovers, menus and select lists */
+  --od-x-layer-notice: 4000;                             /* toasts and live notices that must stay above an open overlay */
+
+  /* C4 · Color in product. */
+  --od-x-text-subtle: #6B6E75;                           /* third text level: 5.11:1 on white */
+  --od-x-field-border: #85888F;                          /* inputs ≥ 3:1 on white (WCAG 1.4.11) */
+  --od-x-control-border: var(--od-text-muted);           /* checkbox/radio border ≥ 3:1 */
+  --od-x-hover: var(--od-surface-subtle);
+  --od-x-selected: var(--od-action-soft);
+  --od-x-info-signal: var(--od-text);                    /* "in progress" dot: graphite, not green or blue */
+  --od-x-info-soft: var(--od-surface-subtle);
+  --od-x-scrim: rgb(11 12 13 / 0.32);
+  --od-x-pop-shadow: var(--od-shadow-2);
+  --od-x-dialog-bg: var(--od-bg);
+  --od-x-danger-strong: var(--od-danger-functional);     /* destructive button fill */
+  --od-x-danger-on-inverse: #FF8A8A;                     /* destructive text on the inverse selection bar */
+  --od-x-inverse-hover: rgb(255 255 255 / 0.12);
+  --od-x-skeleton: var(--od-border);
+
+  /* C15 · Motion. */
+  --od-x-arrive: 2.4s;
+  --od-x-shimmer: 1.4s;
+
+  /* Batch 5.3 · detail panel (one block per work order). */
+  /* 5.3-A light */
+  /* 5.3-B light */
+  /* 5.3-C light */
+  /* 5.2-F light */
+  /* 5.4-A light */
+  /* 5.4-B light */
+  /* FA light */
+  --od-x-fade-size: var(--od-space-5);                  /* edge fade of a sideways scroller (filter pills, tabs): 24px */
+  /* FB light */
+  /* FC light */
+  /* FD light */
+  /* 5.5-A light */
+  --od-x-wizard: 760px;                                 /* create-order wizard sheet (steps + fixed summary), from 1024px */
+  --od-x-wizard-summary: 240px;                         /* fixed summary column of the wizard, from 1024px */
+  --od-x-wizard-map: 160px;                             /* map of the Business step */
+  /* 5.5-B light */
+  /* 5.6-A light */
+  /* 5.6-B light */
+  /* AUDIT4 light */
+  /* E1 light */
+  --od-x-daterange: 320px;                              /* date range popover of the filters: presets, From / To, calendar */
+  /* E3 light */
+  /* E5 light */
+  /* E6 light */
+  --od-x-launcher-clearance: 5rem;                      /* room under the order panel foot for Mia's floating button: 52px + 20px from the edge + 8px of air */
+  /* E7 light */
+  /* E2 light */
+  /* E4 light */
+  /* E8 light */
+  /* E9 light */
+  /* C1 light */
+  /* C2 light */
+  --od-x-timer-ok: color-mix(in srgb, var(--od-success-signal) 50%, var(--od-text)); /* in-time timer text: the success green pulled toward the text colour; 6.3:1 on the light surface, higher on the dark one */
+  /* C3 light */
+  --od-x-sk-order: 130px;                               /* loading ghost of the Order cell: the width of «2026-10-06 01:00 PM» (measured 129-130 on three tabs) */
+  --od-x-sk-status: 136px;                              /* loading ghost of the Status cell: dot + a status name; real names run 68-193, so this is the middle one */
+  --od-x-sk-status-wrap: 84px;                          /* the same cell in the narrow list beside the panel, where the name wraps: its longest word and the dot */
+  --od-x-sk-sla: 60px;                                  /* loading ghost of the SLA cell: the badge «On time» (measured 56-61) */
+  --od-x-sk-total: 68px;                                /* loading ghost of the Total cell: the amount (measured 63-71) */
+  --od-x-sk-tab: 56px;                                  /* a tab label of the order panel while it loads */
+  --od-x-sk-meta: 128px;                                /* an item of the metadata line of the order panel header while it loads */
+  --od-x-sk-foot-count: 140px;                          /* «Showing 1–10 of 745» of the list footer while it loads */
+  --od-x-sk-foot-label: 92px;                           /* «Items per page» of the list footer while it loads */
+  --od-x-sk-foot-menu: 62px;                            /* the page-size menu of the list footer while it loads */
+  --od-x-sk-foot-jump: 80px;                            /* the page field and its «of 75» of the list footer while it loads */
+  --od-x-map-edit: 200px;                               /* map of the Edit customer form in the order panel: contained, the pan area stays usable on a phone */
+  --od-x-selection-col: 52px;                           /* select-all / row checkbox column of the orders table: pinned while it scrolls sideways */
+  /* F6c-5 light */
+  --od-x-col-status-max: 180px;                         /* widest the Status of a row gets in the narrow list beside the order panel; longer names clip with an ellipsis (real names run 68-193) */
+  --od-x-row-compact-orders: 40px;                      /* compact rows of the orders list: two lines (value and caption, about 35px of text) with room above and below; 36px touched the border */
+  --od-x-edge-shadow: color-mix(in srgb, var(--od-text) 18%, transparent); /* the edge of a table that goes on sideways: a mix of the text colour, so it reads on the light and on the dark surface */
+  /* F6d-4b light */
+  /* F6d-1 light */
+  --od-x-filterbar-search-min: 200px;                   /* the search of the orders filter bar keeps at least this much before a pill is parked in «+N» */
+  --od-x-pill-value-max: 160px;                         /* widest the value of a filter pill gets; longer ones end in an ellipsis (the whole value is the pill's title) */
+  /* F6d-3 light */
+  --od-x-page-content: 960px;                           /* widest the Details column of the order panel gets when it opens as a page, so its rows and icons stop spreading across 1144px */
+  /* F6e-3 light */
+  --od-x-col-floor-status: 193px;                       /* least the Status column asks for, loading and loaded: dot, gap and the longest status name measured (real names run 68-193), so the column does not move when the rows arrive */
+  --od-x-col-floor-sla: 61px;                           /* least the SLA column asks for, loading and loaded: the widest badge measured (56-61) */
+  --od-x-col-floor-total: 71px;                         /* least the Total column asks for, loading and loaded: the widest amount measured (63-71) */
+  --od-x-tab-count-reserve: calc(2.4ch + 2 * var(--od-x-space-1-5)); /* room of a tab's count in a list whose counts arrive later: two tabular digits (a digit is about 1.17ch, so 2.4ch with a little to spare) plus the chip's side padding; resolved against the slot's own caption font */
+  /* F6f-1 light */
+  /* messages B3b light */
+  --od-x-inbox-list: 340px;                             /* the conversation list of the /messages inbox, beside the open conversation (768px and up) */
+  --od-x-launcher-inline-clearance: 5.5rem;            /* room at the right of the /messages field row for Mia's floating button: ~90px wide, 20px from the edge, minus the ~37px of page and pane padding already beside the row, plus 8px of air (measured 1024-1440) */
+  /* messages chat-floor light */
+  --od-x-chat-min-block: 320px;                         /* least height the message thread of a conversation keeps (, C23): a short window scrolls the container above it instead of squeezing the thread to ~170px; same as the map floor (--od-x-map-height) */
+  /* home A light — chart palette (decision 36), validated with the dataviz skill: redesign/pages/home/evidence/chart-palette-validation.md */
+  --od-x-chart-1: #266DF0;                              /* blue, the brand blue (--od-blue-600); slot order is fixed: never cycled or ranked */
+  --od-x-chart-2: #FF9418;                              /* orange (--od-logo-orange); 2.21:1 on white, so charts always carry a legend or labels and the data table */
+  --od-x-chart-3: #087A4B;                              /* green (--od-green-700) */
+  --od-x-chart-4: #5B4FD1;                              /* violet */
+  --od-x-chart-5: #E91D63;                              /* pink (--od-logo-pink) */
+  --od-x-chart-6: #986400;                              /* ochre (--od-orange-700) */
+  --od-x-chart-comparison: var(--od-ink-400);           /* a previous period or a baseline: neutral, dashed, never a series hue */
+  --od-x-chart-grid: var(--od-border);                  /* recessive grid */
+  --od-x-chart-axis: var(--od-text-muted);              /* tick labels */
+  --od-x-chart-line-width: 2px;                         /* series lines (dataviz marks spec) */
+  --od-x-chart-height: 14rem;                           /* plot height of a dashboard trend (224px at 16px) */
+  --od-x-chart-height-compact: 10rem;                   /* phone and narrow cards */
+  /* stores-list B2 light */
+  --od-x-store-panel: 500px;                            /* the store editor of /stores/list with its Overview: the width of the summary panel in main */
+  --od-x-store-panel-wide: 1000px;                      /* the store editor with a section open on a window of 1000px or more: the two panels of main side by side */
+  --od-x-col-floor-store: 200px;                       /* least the Store column of /stores/list asks for beside the docked editor: the logo and two lines of a name, never «F / a. / D / e..» (review at 1440 with the Overview open) */
+  /* campaign CA-R1 light */
+  --od-x-col-floor-campaign-status: 128px;              /* least the Status column of /marketing/campaign asks for beside the panel: the switch and «Paused», or the dot and «Scheduled», never cut mid-word (review r1, P4: «Schedulec» at 1280) */
+  --od-x-col-floor-campaign: 200px;                    /* least the Campaign column of /marketing/campaign asks for beside the panel: two lines of a name, never a word cut to «QA-REDESI…» (measured at 1280 with the panel open) */
+  /* promotions PE-B1 light */
+  --od-x-col-floor-promotion: 200px;                   /* least the Promotion column of /marketing/promotions-enterprise asks for beside the panel: the 24px image and two lines of a name (live check: «B u.» at 1440 with the panel open) */
+  --od-x-col-floor-promotion-benefit: 180px;           /* least the Benefit column asks for beside the panel: «Free delivery · min $ 30.00» in two lines, not five (live check at 1440 with the panel open) */
+  --od-x-col-max-promotion: 320px;                     /* most the Promotion column of Quick offers takes: the name and one line of its description, so status, benefit and the switch stay on screen at 1280-1440 (live check) */
+  /*  profile light */
+  --od-x-profile-avatar: 64px;                         /* the account photo on /profile: replaces the 216px box of main (decisions.md D1), still a face you recognise next to the name */
+  --od-x-profile-column: 760px;                        /* widest the /profile column gets: an account page you read, not a form stretched across 1440 (decisions.md D1) */
+  /* deliveries-followups P4 light */
+  --od-x-board-list-sm: 400px;                         /* the order list of the /deliveries board beside the map, 1024-1279px: three lines of a card, the map keeps the rest (DV-04) */
+  --od-x-board-list-md: 440px;                         /* the same list from 1280px */
+  --od-x-board-list-lg: 480px;                         /* the same list from 1440px */
+  /* purchase-addons PA-B2 light */
+  --od-x-addon-card-min: 280px;                         /* narrowest column of the add-on catalog grid (/purchase/addons): three cards across at 1440 with the sidebar, one at 390 */
+  /* C22 light */
+  --od-x-marker-available: #168A45;                     /* border and pointer of an «available» driver marker: 4.42:1 on white, 3.45:1 on map land #E5E3DF (; --od-success-signal gave 2.02:1 and 1.57:1) */
+}
+
+[data-ordering-brand][data-od-theme='dark'] {
+  --od-x-text-subtle: #989AA0;
+  --od-x-field-border: #75787F;                          /* 4.02:1 on the dark surface */
+  --od-x-control-border: var(--od-text-subtle);
+  --od-x-hover: #1D1E21;
+  --od-x-scrim: rgb(0 0 0 / 0.56);
+  --od-x-pop-shadow: 0 12px 32px -16px rgb(0 0 0 / 0.7);
+  --od-x-dialog-bg: var(--od-surface);
+  --od-x-danger-strong: #C92929;                         /* white text keeps 5.6:1 */
+  --od-x-danger-on-inverse: var(--od-danger-functional);
+  --od-x-inverse-hover: var(--od-x-hover);
+  /* 5.3-A dark */
+  /* 5.3-B dark */
+  /* 5.3-C dark */
+  /* 5.4-A dark */
+  /* 5.4-B dark */
+  /* FA dark */
+  /* FD dark */
+  /* messages chat-floor dark */
+  /* home A dark — the same six hues stepped for the dark surface (#17181A), validated with the dataviz skill */
+  --od-x-chart-1: #4E8CFC;
+  --od-x-chart-2: #D9701A;
+  --od-x-chart-3: #16A06A;
+  --od-x-chart-4: #8F7FEA;
+  --od-x-chart-5: #E2336F;
+  --od-x-chart-6: #BD8A00;
+  --od-x-chart-comparison: var(--od-ink-500);
+  /* C22 dark */
+  --od-x-marker-available: #168A45;                      /* same value as light: the map tiles stay light in the dark theme, so the marker is read against #E5E3DF, not the dark surface */
+}

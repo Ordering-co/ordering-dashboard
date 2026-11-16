@@ -152,7 +152,7 @@ export const BusinessPreview = (props) => {
                 <Contentheader>
                   {!isWhiteLabel && (
                     <HeaderLogo>
-                      <img alt='Logotype' width='100px' height='30px' src={theme?.images?.logos?.logotype} loading='lazy' />
+                      <img alt='Logotype' width='120px' height='30px' src={theme?.images?.logos?.logotype} loading='lazy' />
                     </HeaderLogo>
                   )}
                   <HeaderInfo>

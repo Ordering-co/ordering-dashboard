@@ -133,6 +133,13 @@ export const ImageBox = (props) => {
     })
   }
 
+  // Same action for mouse and keyboard: open the file input, then notify the caller.
+  const isActionable = Boolean(editable || handleClick)
+  const activate = () => {
+    editable && imageRef.current.click()
+    handleClick && handleClick()
+  }
+
   useEffect(() => {
     if (!photo) return
     setPicture(photo)
@@ -142,9 +149,13 @@ export const ImageBox = (props) => {
     <div>
       <ImageBoxContainer
         isBig={isBig}
-        onClick={() => {
-          editable && imageRef.current.click()
-          handleClick && handleClick()
+        {...(isActionable && { role: 'button', tabIndex: 0, 'aria-label': title })}
+        onClick={activate}
+        onKeyDown={(e) => {
+          if (!isActionable || e.target !== e.currentTarget) return
+          if (e.key !== 'Enter' && e.key !== ' ') return
+          e.preventDefault()
+          activate()
         }}
       >
         {editable
@@ -198,7 +209,7 @@ export const ImageBox = (props) => {
         </Modal>
       )}
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}
@@ -210,10 +221,12 @@ export const ImageBox = (props) => {
   )
 }
 
+/** The format ImageBox takes when its context gives none (what the legacy Advanced page of an app used). */
+export const IMAGE_BOX_FORMAT = { extensionFile: 'png', mimeTypeAccept: 'image/png, image/jpeg, image/jpg' }
+
 const defaultProps = {
   editable: true,
   requireDimentions: null,
   fileSize: 3072,
-  extensionFile: 'png',
-  mimeTypeAccept: 'image/png, image/jpeg, image/jpg'
+  ...IMAGE_BOX_FORMAT
 }

@@ -1,0 +1,19 @@
+/* redesign : the picture of the «no stores» dialog (P/Dialog), as main's modal drew it. Values: --od-* only. */
+.odc-stores-empty-picture {
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  block-size: auto;
+  margin-inline: auto;
+}
+
+/*  (T10, decision X-1): with the Overview panel docked, the list ends where the panel starts, so the table narrows instead
+   of running under it (the panel is fixed at the inline end, --od-x-store-panel wide). */
+/* redesign tanda AB (, ): the page header keeps the whole width, so docking never moves it (the panel starts under
+   it, see store-editor.css). The room for the panel is taken from what is under the PageHeader: the status tabs and view switch (the
+   view row, inside the head) and the filters, the selection bar and the table. The page gutter stays in the page's own padding, so the
+   end edge is where the padding alone put it (panel + gutter). */
+.odc-stores-listing[data-editor-docked] > :not(.odc-sl-head),
+.odc-stores-listing[data-editor-docked] .odc-sl-viewrow {
+  margin-inline-end: var(--od-x-store-panel);
+}

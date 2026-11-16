@@ -1,0 +1,48 @@
+/* C18 · Content of a dropdown row: media, label, muted secondary column. Tokens only.
+   The row (height, hover, check mark) is drawn by first-select.css / multi-select.css. */
+
+.odc-so {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  flex: 1 1 auto;
+}
+
+/* Media of 20px, 24px on a phone (the row is 44px there). */
+.odc-so .odc-avatar {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+.odc-so .odc-avatar .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+}
+
+.odc-so-label {
+  min-inline-size: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-so-meta {
+  flex: none;
+  max-inline-size: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  unicode-bidi: isolate;
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-so .odc-avatar {
+    inline-size: var(--od-x-avatar);
+    block-size: var(--od-x-avatar);
+  }
+}

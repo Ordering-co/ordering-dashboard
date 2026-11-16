@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-shell-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "shell-commandpalette-content-cmdk-group-heading-11px-195160",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "Content",
+      "property": "font-size",
+      "context": "[cmdk-group-heading]",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-contextchip-root-13px-7e9ba6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "ContextChip",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "shell-commandpalette-kbd-root-11px-75db61",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "Kbd",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-itemtitle-root-14px-8f9cc5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "ItemTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "shell-commandpalette-itemsubtitle-root-12px-eef4c9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "ItemSubtitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-badge-root-11px-351af8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "Badge",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-statusrow-root-13px-6467c8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "StatusRow",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-emptystate-p-14px-bf4464",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "p",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "shell-commandpalette-emptystate-p-p-13px-32cff7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "EmptyState",
+      "property": "font-size",
+      "context": "p + p",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-footer-root-12px-a608b7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "Footer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-commandpalette-triggerbutton-root-13px-887fbc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "TriggerButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "shell-authlayout-route-li-13px-7f199c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "Route",
+      "property": "font-size",
+      "context": "li",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "shell-authlayout-divider-root-var-od-font-size-1-81d7cc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "Divider",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-1)",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "shell-authlayout-authnotice-root-var-od-font-size-1-12c29c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "AuthNotice",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-1)",
+      "replace": "var(--od-type-secondary-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "shell-pres-commandpalette-inputrow-cmdk-input-16px-0aaab9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "InputRow",
+      "property": "font-size",
+      "context": "[cmdk-input]",
+      "match": "16px",
+      "reason": "This font-size keeps a text input at 16px, the size below which iOS Safari zooms the page on focus. No role is 16px (control-value resolves to 14px), so migrating it would reintroduce the focus-zoom on touch screens.",
+      "evidence": "InputRow [cmdk-input]: campo de busqueda de la paleta a 16px incondicional, en un dialogo con layout movil (max-width: 575px). Intencion inferida; gana el valor de main."
+    },
+    {
+      "id": "shell-pres-commandpalette-triggerbutton-svg-16px-87934c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "component": "TriggerButton",
+      "property": "font-size",
+      "context": "&& svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+      "evidence": "TriggerButton && svg: dimensiona el glifo Search (1em) del disparador de la barra lateral; su unico hijo svg."
+    },
+    {
+      "id": "shell-pres-authlayout-logincontainer-root-var-od-font-size-2-44cf8e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "LoginContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "LoginContainer (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-herocaption-root-clamp-2rem-3-2vw-2-75rem-8b86b9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "HeroCaption",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "clamp(2rem, 3.2vw, 2.75rem)",
+      "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+      "evidence": "HeroCaption: titular fluido clamp(2rem, 3.2vw, 2.75rem)."
+    },
+    {
+      "id": "shell-pres-authlayout-titleformside-h1-var-od-font-size-6-88a737",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "TitleFormSide",
+      "property": "font-size",
+      "context": "h1",
+      "match": "var(--od-font-size-6)",
+      "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+      "evidence": "TitleFormSide h1: titulo del login a --od-font-size-6 (1.75rem)."
+    },
+    {
+      "id": "shell-pres-authlayout-titleformside-p-var-od-font-size-2-d244e2",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "TitleFormSide",
+      "property": "font-size",
+      "context": "p",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "TitleFormSide p: font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-tab-root-inherit-47104c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "Tab",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+      "evidence": "Tab (la linea siguiente toma content): font: inherit de un reset de control nativo."
+    },
+    {
+      "id": "shell-pres-authlayout-tab-root-var-od-font-size-2-92bc96",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "Tab (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-field-label-var-od-font-size-2-87008f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "Field",
+      "property": "font-size",
+      "context": "label",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "Field label: font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-controlstyles-root-inherit-98283d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "controlStyles",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+      "evidence": "controlStyles (TextInput y .PhoneInputInput; la linea siguiente fija el tamano): font: inherit de un reset de control nativo."
+    },
+    {
+      "id": "shell-pres-authlayout-controlstyles-root-var-od-font-size-3-174ce0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "controlStyles",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-3)",
+      "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+      "evidence": "controlStyles: texto de campo a --od-font-size-3 (16px) por debajo de 768px; a 768px y mas vuelve a content."
+    },
+    {
+      "id": "shell-pres-authlayout-controlstyles-media-min-width-768px-var-od-font-size-2-463ef0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "controlStyles",
+      "property": "font-size",
+      "context": "@media (min-width: 768px)",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "controlStyles @media (min-width: 768px): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-buttonbase-root-inherit-1a7052",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "buttonBase",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+      "evidence": "buttonBase (la linea siguiente toma content): font: inherit de un reset de control nativo."
+    },
+    {
+      "id": "shell-pres-authlayout-buttonbase-root-var-od-font-size-2-c18dea",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "buttonBase",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "buttonBase (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-redirectlink-root-var-od-font-size-2-afb5c9",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "RedirectLink",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-2)",
+      "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+      "evidence": "RedirectLink (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+    },
+    {
+      "id": "shell-pres-authlayout-countdowntimer-root-var-od-font-size-6-30d592",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "CountdownTimer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-font-size-6)",
+      "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+      "evidence": "CountdownTimer: cuenta atras del OTP a --od-font-size-6 (1.75rem)."
+    },
+    {
+      "id": "shell-pres-authlayout-otpwrapper-otp-input-inherit-08ef9d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "OtpWrapper",
+      "property": "font",
+      "context": ".otp-input",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+      "evidence": "OtpWrapper .otp-input (la linea siguiente fija el tamano): font: inherit de un reset de control nativo."
+    },
+    {
+      "id": "shell-pres-authlayout-otpwrapper-otp-input-20px-45fce4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "OtpWrapper",
+      "property": "font-size",
+      "context": ".otp-input",
+      "match": "20px",
+      "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+      "evidence": "OtpWrapper .otp-input: los digitos OTP de 20px."
+    },
+    {
+      "id": "shell-pres-authlayout-resendcode-root-inherit-526d41",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "component": "ResendCode",
+      "property": "font",
+      "context": "<root>",
+      "match": "inherit",
+      "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+      "evidence": "ResendCode es un boton sin tamano propio; font: inherit es lo que lo mantiene en los 14px del login."
+    }
+  ]
+}

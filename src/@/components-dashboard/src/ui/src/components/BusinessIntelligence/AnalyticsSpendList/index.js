@@ -59,7 +59,7 @@ export const AnalyticsSpendList = (props) => {
             </AnalyticsSpendListContent>
                   )
                 : (
-            <EmptyContent>{t('NO_DATA', 'No Data')}</EmptyContent>
+            <EmptyContent>{t('NO_DATA', 'No data')}</EmptyContent>
                   )
             )
       }

@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { Button } from '~ui'
+import { Button } from '~ui/src/styles/Buttons'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useApi, useSession } from '~components'
 import { useStoreOnboardingLanguage } from '../../@/components-dashboard/src/utils/useStoreOnboardingLanguage'
-import { StoreOnboarding } from '../../pages/StoreOnboarding'
+import { ChunkErrorBoundary } from '~ui/src/components/Shared/ChunkErrorBoundary'
+import { lazyWithReload } from '../../utils/chunkReload'
 import { deleteDraftMedia } from '../../@/components-dashboard/src/utils/storeOnboardingDraftMedia'
 import { draftKey, readDraft, isOnboardingEligible } from '../../@/components-dashboard/src/utils/storeOnboarding'
 import { createOnboardingApi } from '../../@/components-dashboard/src/utils/storeOnboardingApi'
+
+// the walkthrough is a chunk, like the pages. The gate wraps every route, so a static import put the walkthrough's
+// selects, schedule and phone input (and their CSS) in the entry stylesheet of every project.
+const StoreOnboarding = lazy(() => lazyWithReload(() => import('../../pages/StoreOnboarding')).then(m => ({ default: m.StoreOnboarding })))
 
 const GateStatus = styled.main`padding:64px 24px;max-width:600px;margin:auto;button{margin-right:8px;}`
 
@@ -87,12 +92,12 @@ export const StoreOnboardingGate = ({ children }) => {
     history.replace(destination === 'orders' ? '/orders' : '/home')
   }
   if (!eligible || status === 'ready' || ((status === 'checking' || status === 'error') && !((state.identity === identity && state.blocking) || hasDraft()))) return <>{children}</>
-  if (status === 'required') return <StoreOnboarding key={identity} storageKey={key} onComplete={complete} />
+  const checking = <GateStatus><p role='status'>{t('STORE_ONBOARDING_CHECKING', 'Preparing your restaurant setup…')}</p></GateStatus>
+  if (status === 'required') return <ChunkErrorBoundary><Suspense fallback={checking}><StoreOnboarding key={identity} storageKey={key} onComplete={complete} /></Suspense></ChunkErrorBoundary>
+  if (status !== 'error') return checking
   return (
     <GateStatus>
-      {status === 'error'
-        ? <><p role='alert'>{t('STORE_ONBOARDING_DISCOVERY_ERROR', 'We could not check your store setup. Your progress has been preserved. Try again to continue.')}</p><Button onClick={() => setRetry(n => n + 1)}>{t('STORE_ONBOARDING_RETRY', 'Try again')}</Button><Button onClick={logout}>{t('STORE_ONBOARDING_LOGOUT', 'Log out')}</Button></>
-        : <p role='status'>{t('STORE_ONBOARDING_CHECKING', 'Preparing your restaurant setup…')}</p>}
+      <p role='alert'>{t('STORE_ONBOARDING_DISCOVERY_ERROR', 'We could not check your store setup. Your progress has been preserved. Try again to continue.')}</p><Button onClick={() => setRetry(n => n + 1)}>{t('STORE_ONBOARDING_RETRY', 'Try again')}</Button><Button onClick={logout}>{t('STORE_ONBOARDING_LOGOUT', 'Log out')}</Button>
     </GateStatus>
   )
 }

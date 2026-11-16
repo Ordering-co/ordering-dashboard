@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 export const FormContainer = styled.form`
   display: flex;
@@ -10,75 +10,56 @@ export const FormContainer = styled.form`
     position: sticky;
     top: 100%;
     margin-top: 30px;
-    height: 42px;
+    min-height: 44px;
   }
 `
-export const TypeSelectWrapper = styled.div`
-  .select {
-    background: ${props => props.theme.colors.secundary};
-    width: 100%;
-    border: none;
-    font-size: 14px;
-    color: ${props => props.theme.colors.headingColor};
-    > div:first-child {
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
-  }
-`
+/* redesign DG-B2b (M-DG27 | decisión 6): the slot of P/MapFrame. The frame (size='fill') takes the height of this container,
+   which is the height token of an embedded map; the frame owns the radius, the border and the notice. */
 export const WrapperMap = styled.div`
   width: 100%;
-  height: 300px;
-  display: flex;
-  justify-content: center;
+  height: var(--od-x-map-height);
   box-sizing: border-box;
-  margin: 29px 0 20px 0;
+  margin: var(--od-space-5) 0 var(--od-space-4);
   position: relative;
+`
+
+/* The ready map and its Clear button, inside the frame. BusinessZoneGoogleMaps paints one absolutely positioned div; it fills the stage. */
+export const MapStage = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+
   > div {
-    position: relative !important; 
+    position: relative !important;
     width: 100% !important;
     height: 100% !important;
-    border-radius: 8px;
   }
 
   > button {
     position: absolute;
-    font-size: 14px;
-    padding: 0 5px;
-    background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-    top: 10px;
-    z-index: 10;
-    border: none;
-    box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px;
-    color: ${props => props.theme.colors.headingColor};
-    ${props => props.theme?.rtl
-? css`
-      right: 10px;
-    `
-: css`
-      left: 10px;
-    `}
-    &:hover {
-      background: #eee;
-    }
+    inset-block-start: var(--od-space-2);
+    inset-inline-start: var(--od-space-2);
+    z-index: var(--od-x-layer-raised);
   }
 `
 
 export const ErrorText = styled.div`
-  font-size: 14px;
-  color: ${props => props.theme.colors.lightGray};
+  font-size: var(--od-type-content-size);
+  color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
   text-align: center;
   margin: 20px 0;
 `
 export const FormControl = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 0;
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 9px;
   }
   input {
     width: 100%;
+    min-width: 0;
   }
 `
 export const Row = styled.div`
@@ -89,7 +70,21 @@ export const Row = styled.div`
   > div {
     width: 45%;
   }
+
+  @media (max-width: 620px) {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    > div {
+      width: 100%;
+    }
+  }
 `
 export const KmlButtonWrapper = styled.div`
   margin-bottom: 20px;
+
+  > button {
+    min-height: 44px;
+  }
 `

@@ -5,6 +5,9 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
+// redesign CA-B1 (decision 2): attributes of the filter pills; unknown keys in filterValues.changes are ignored
+const FILTER_ATTRIBUTES = ['contact_type', 'audience_type', 'status']
+
 /**
  * Component to manage campaign form behavior without UI component
  */
@@ -23,6 +26,9 @@ export const CampaignListing = (props) => {
   const [, t] = useLanguage()
 
   const firstRender = useRef(true)
+  const requestCounter = useRef(0)
+  const searchValueRef = useRef(null)
+  const filterValuesRef = useRef({ clear: false, changes: {} })
   const [searchValue, setSearchValue] = useState(null)
   const [campaignList, setCampaignList] = useState({ campaigns: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
@@ -41,15 +47,25 @@ export const CampaignListing = (props) => {
     setSearchValue(search)
   }
 
+  // redesign CA-B1 (decision 2, M-CA8): always the latest values for the request that is about to start
+  searchValueRef.current = searchValue
+  filterValuesRef.current = filterValues
+
   /**
    * Method to get the sites from API
    */
   const getCampaignList = async (page, pageSize) => {
+    // redesign CA-B1 (M-CA8): only the latest request may paint; older responses are dropped
+    const requestId = ++requestCounter.current
+    const isLatest = () => requestId === requestCounter.current
     try {
-      setCampaignList({ ...campaignList, loading: true })
+      setCampaignList(prev => ({ ...prev, loading: true }))
+      // redesign CA-B1 (decision 2): read the latest search and filters, not the closure of the render that started the call
+      const currentSearch = searchValueRef.current
+      const currentFilters = filterValuesRef.current
       let where = null
       const conditions = []
-      if (searchValue) {
+      if (currentSearch) {
         const searchConditions = []
         if (isSearchByName) {
           searchConditions.push(
@@ -57,7 +73,7 @@ export const CampaignListing = (props) => {
               attribute: 'name',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${searchValue}%`)
+                value: encodeURI(`%${currentSearch}%`)
               }
             }
           )
@@ -68,7 +84,7 @@ export const CampaignListing = (props) => {
               attribute: 'contact_type',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${searchValue}%`)
+                value: encodeURI(`%${currentSearch}%`)
               }
             }
           )
@@ -76,6 +92,19 @@ export const CampaignListing = (props) => {
         conditions.push({
           conector: 'OR',
           conditions: searchConditions
+        })
+      }
+
+      // redesign CA-B1 (decision 2): one OR group of equalities per non-empty filter attribute (the API rejects `in`)
+      if (!currentFilters?.clear) {
+        FILTER_ATTRIBUTES.forEach(attribute => {
+          const values = currentFilters?.changes?.[attribute]
+          if (Array.isArray(values) && values.length > 0) {
+            conditions.push({
+              conector: 'OR',
+              conditions: values.map(value => ({ attribute, value }))
+            })
+          }
         })
       }
 
@@ -99,35 +128,37 @@ export const CampaignListing = (props) => {
 
       const response = await fetch(fetchEndpoint, requestOptions)
       const content = await response.json()
+      if (!isLatest()) return
       if (!content.error) {
         setCampaignList({
           loading: false,
           campaigns: content.result,
           error: null
         })
-        setPaginationProps({
-          ...paginationProps,
+        setPaginationProps(prev => ({
+          ...prev,
           currentPage: content.pagination.current_page,
           totalPages: content.pagination.total_pages,
           totalItems: content.pagination.total,
           from: content.pagination.from,
           to: content.pagination.to,
           pageSize: content.pagination.page_size
-        })
+        }))
       } else {
-        setCampaignList({
-          ...campaignList,
+        setCampaignList(prev => ({
+          ...prev,
           loading: false,
           error: content.result
-        })
+        }))
       }
       firstRender.current = false
     } catch (err) {
-      setCampaignList({
-        ...campaignList,
+      if (!isLatest()) return
+      setCampaignList(prev => ({
+        ...prev,
         loading: false,
         error: [err.message]
-      })
+      }))
     }
   }
 
@@ -150,18 +181,19 @@ export const CampaignListing = (props) => {
       const content = await response.json()
 
       if (!content.error) {
-        if (handleSuccessUpdateCampaign) {
-          const updatedCampaigns = campaignList?.campaigns.filter(_action => {
-            if (_action.id === id) {
-              Object.assign(_action, content.result)
-            }
-            return true
-          })
-          handleSuccessUpdateCampaign(updatedCampaigns)
-        }
+        // redesign CA-B1 (inventory 8.18): new objects, the previous state is never mutated
+        setCampaignList(prev => ({
+          ...prev,
+          campaigns: prev.campaigns.map(_campaign => _campaign.id === id ? { ..._campaign, ...content.result } : _campaign)
+        }))
         showToast(ToastType.Success, t('CAMPAIGN_SAVED', 'Campaign saved'))
+        return { ok: true, error: null }
       }
-    } catch {}
+      // redesign CA-B1 (M-CA5): the caller decides how to paint the failure
+      return { ok: false, error: content.result }
+    } catch (err) {
+      return { ok: false, error: [err.message] }
+    }
   }
   /**
    * Method to add the campaign in the campaign list
@@ -172,7 +204,8 @@ export const CampaignListing = (props) => {
     setPaginationProps({
       ...paginationProps,
       to: paginationProps?.to + 1,
-      total: paginationProps?.total + 1
+      // redesign CA-B1 (inventory 8.18): the field is totalItems, `total` is never read
+      totalItems: paginationProps?.totalItems + 1
     })
     setCampaignList({ ...campaignList, campaigns })
   }
@@ -195,18 +228,19 @@ export const CampaignListing = (props) => {
     const filteredCampaigns = campaignList.campaigns.filter(campaign => campaign.id !== campaignId)
     setPaginationProps({
       ...paginationProps,
-      total: paginationProps?.total - 1
+      // redesign CA-B1 (inventory 8.18): the field is totalItems, `total` is never read
+      totalItems: paginationProps?.totalItems - 1
     })
     setCampaignList({ ...campaignList, campaigns: filteredCampaigns })
   }
 
+  // redesign CA-B1 (M-CA8): no early return while loading, a change made during a load is not lost
   useEffect(() => {
-    if (campaignList.loading) return
-    getCampaignList(firstRender.current ? paginationProps.currentPage : 1, paginationProps.pageSize)
+    getCampaignList(firstRender.current && requestCounter.current === 0 ? paginationProps.currentPage : 1, paginationProps.pageSize)
   }, [searchValue])
 
   useEffect(() => {
-    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !campaignList.loading) getCampaignList(1, paginationProps.pageSize)
+    if (Object.keys(filterValues?.changes).length > 0 || filterValues.clear) getCampaignList(1, paginationProps.pageSize)
   }, [filterValues])
 
   return (
@@ -215,6 +249,7 @@ export const CampaignListing = (props) => {
         <UIComponent
           {...props}
           searchValue={searchValue}
+          filterValues={filterValues}
           paginationProps={paginationProps}
           campaignList={campaignList}
           getCampaignList={getCampaignList}

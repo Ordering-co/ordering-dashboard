@@ -163,6 +163,7 @@ const CampaignDetailUI = (props) => {
               <Tab
                 key={option.key}
                 active={selectedOption === option.key}
+                aria-pressed={selectedOption === option.key}
                 onClick={() => handleTabClick(option.key)}
               >
                 {option.name}

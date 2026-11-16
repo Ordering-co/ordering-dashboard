@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components'
+import { brandFocusOutline } from '../../../styles/touchTarget'
 
 export const ImageContainer = styled.div`
   margin-bottom: 20px;
   p {
     font-weight: 600;
     margin: 0 0 10px 0;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 
@@ -34,6 +35,8 @@ export const ConfigImage = styled.div`
   img{
     object-fit: contain;
   }
+
+  ${brandFocusOutline}
 `
 export const UploadImageIconContainer = styled.div`
   position: absolute;
@@ -52,12 +55,14 @@ export const UploadImageIcon = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color: #FFF;
-  border: 1px dashed #fff;
+  /* : white on the grey scrim was under AA; the label sits on the surface in the text color (both color modes) */
+  color: var(--od-text);
+  background: var(--od-surface);
+  border: 1px dashed var(--od-border-strong);
   span {
     margin: 0;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 
   svg {   
@@ -78,6 +83,6 @@ export const ImageActions = styled.div`
 
   button {
     height: 36px;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
   }
 `

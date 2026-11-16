@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLanguage, BusinessSpreadSheet as BusinessSpreadSheetController } from '../../../../../index'
 import { Alert, SpreadSheetEditor } from '../../Shared'
+import { ConfirmDialog } from '../../Shared/Product'
 import {
   BusinessSpreadSheetContainer
 } from './styles'
@@ -12,7 +13,10 @@ const BusinessSpreadSheetUI = (props) => {
     handleRowRemove,
     handleAfterSectionEnd,
     handleoutsideClickDeselects,
-    allowSpreadColumns
+    allowSpreadColumns,
+    pendingRemoval,
+    confirmRemoval,
+    cancelRemoval
   } = props
 
   const [, t] = useLanguage()
@@ -35,6 +39,11 @@ const BusinessSpreadSheetUI = (props) => {
       content: []
     })
   }
+
+  // redesign D-9 (owner, 2026-10-19): deleting saved rows asks first. One product is named, several are counted.
+  const removalCount = pendingRemoval?.count || 0
+  const removalOne = removalCount === 1
+  const removalName = pendingRemoval?.names?.[0] || t('SPREADSHEET_DELETE_THIS_PRODUCT', 'this product')
 
   useEffect(() => {
     if (spreadSheetState?.result?.error) {
@@ -84,6 +93,25 @@ const BusinessSpreadSheetUI = (props) => {
         onAccept={() => closeAlert()}
         closeOnBackdrop={false}
       />
+      <ConfirmDialog
+        open={pendingRemoval != null}
+        tone='danger'
+        title={removalOne
+          ? t('SPREADSHEET_DELETE_PRODUCT_TITLE_ONE', 'Delete _name_?').replace('_name_', () => removalName)
+          : t('SPREADSHEET_DELETE_PRODUCT_TITLE_OTHER', 'Delete _count_ products?').replace('_count_', () => String(removalCount))}
+        confirmLabel={removalOne
+          ? t('SPREADSHEET_DELETE_PRODUCT_ONE', 'Delete product')
+          : t('SPREADSHEET_DELETE_PRODUCT_OTHER', 'Delete _count_ products').replace('_count_', () => String(removalCount))}
+        cancelLabel={t('CANCEL', 'Cancel')}
+        closeLabel={t('CLOSE', 'Close')}
+        busy={Boolean(spreadSheetState?.loading)}
+        onConfirm={() => confirmRemoval && confirmRemoval()}
+        onCancel={() => cancelRemoval && cancelRemoval()}
+      >
+        {removalOne
+          ? t('SPREADSHEET_DELETE_PRODUCT_BODY_ONE', "It is removed from this store's menu. This can't be undone.")
+          : t('SPREADSHEET_DELETE_PRODUCT_BODY', "They are removed from this store's menu. This can't be undone.")}
+      </ConfirmDialog>
     </>
   )
 }

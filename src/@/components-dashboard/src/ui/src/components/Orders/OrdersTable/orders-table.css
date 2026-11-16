@@ -1,0 +1,456 @@
+/*
+ * Orders list (redesign 5.2-C): cells, footer, tools and selection bar around the Product
+ * DataTable. Values come from --od-* and --od-x-* only (literal guard:
+ * src/__tests__/tools/productLiteralGuard.test.js). Logical properties only.
+ */
+
+/* ── Table region. `#orderTable` stays the scroll hook other screens already style. ── */
+.odc-orders-table {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-orders-table > .odc-table-scroll {
+  container-type: inline-size;
+  container-name: orders-table;
+  flex: 1 1 auto;
+  block-size: auto;
+}
+
+/* The order tabs of a customer or a driver (isSelectedOrders) sit inside a detail panel: the
+   table keeps its own scroll under a ceiling, as the old `calc(100vh - 345px)` did.
+   --od-x-detail-offset is the room the panel needs above the table (value: coordinator). */
+.odc-orders-table[data-bounded] > .odc-table-scroll {
+  max-block-size: calc(100dvh - var(--od-x-detail-offset));
+}
+
+/* Tour step 0 pins the list in place. */
+.odc-orders-table[data-no-scroll] > .odc-table-scroll { overflow: hidden; }
+
+/* `row_in_color_enabled`: the SLA tint sits at the lowest specificity so hover, selected and the
+   open row (data-table.css) always win over it. The words in the SLA column carry the meaning. */
+.odc-table tbody tr:where([data-status='at_risk']) td { background: var(--od-warning-soft); }
+.odc-table tbody tr:where([data-status='delayed']) td { background: var(--od-danger-soft); }
+
+/* ── Cells ── */
+.odc-orders-cell {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-orders-cell-id { font-weight: var(--od-font-weight-semibold); }
+
+.odc-orders-sub {
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  color: var(--od-text-muted);
+}
+
+.odc-orders-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* People columns share what the fixed columns leave (C6): never under
+   --od-x-cell-person, wider when the table has room, ellipsis beyond. max-inline-size: 0
+   keeps a long name from widening its column past its share. */
+.odc-orders-col-person {
+  inline-size: var(--od-x-col-person-share);
+  min-inline-size: var(--od-x-cell-person);
+  max-inline-size: 0;
+}
+
+.odc-orders-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* redesign F6h-3 (A2-04): the element that clips carries dir="auto" in the markup: it is its own bidi run, so the
+   ellipsis falls at the end of the name's own direction («Customer De…», not «…stomer Demo») in RTL. */
+.odc-orders-who-name {
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-orders-who-text .odc-orders-sub {
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+}
+
+/* Customer order count, kept from the old avatar badge. */
+.odc-orders-count { margin-inline-start: var(--od-x-space-1-5); }
+
+.odc-orders-cell .odc-num,
+.odc-orders-cell .odc-figure, /* redesign W0-3a (T0-9): the figures keep the weight the numbers had */
+.odc-orders-total { font-weight: var(--od-font-weight-medium); }
+
+.odc-orders-empty { color: var(--od-x-text-subtle); }
+
+.odc-orders-adv .odc-orders-sub { white-space: nowrap; }
+
+/* ── Footer: «Showing 1–10 of 123», rows per page, previous and next. ── */
+
+/* F4 (C20): while the first page loads the footer keeps its place: the same row, as tall as the real pager (a control), with
+   the boxes of its menus and buttons. With cards (a phone) the buttons are 44px, as the real ones. */
+.odc-orders-foot[data-skeleton] .odc-orders-pager { min-block-size: var(--od-x-control-height); }
+.odc-orders-foot[data-skeleton] .odc-skeleton[data-shape='box'] { block-size: var(--od-x-control-height-sm); }
+/* the count holds the line of the text it stands for */
+.odc-orders-foot-count {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+}
+/* the spaces the real pager has around its label and its page field, so the row wraps where the real one does */
+.odc-orders-foot[data-skeleton] .odc-orders-pager > .odc-skeleton:first-child { margin-inline-end: var(--od-space-1); }
+.odc-orders-foot[data-skeleton] .odc-orders-foot-jump { margin-inline: var(--od-space-1); }
+.odc-orders-foot[data-skeleton][data-cards] .odc-orders-pager { min-block-size: var(--od-x-target-coarse); }
+.odc-orders-foot[data-skeleton][data-cards] .odc-skeleton[data-shape='box'] {
+  min-inline-size: var(--od-x-target-coarse);
+  block-size: var(--od-x-target-coarse);
+}
+.odc-orders-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-x-page-gutter);
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-orders-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+}
+
+.odc-orders-pager-label { margin-inline-end: var(--od-space-1); }
+
+/* redesign cierre W0 (W0-QA4-01): «Previous page» and «Next page» are one item of the pager: they wrap together, never one at the end
+   of a line and the other alone on the next (as .odc-pagination-steps in Pagination). */
+.odc-orders-pager-steps {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  flex: none;
+}
+
+/* Jump to a page (E7): a numeric field you can type in, 28px here and 44px with a coarse pointer, same
+   border as the sheet fields. Its width comes from its `size` (the digits of the last page). */
+.odc-orders-pager-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin-inline: var(--od-space-1);
+  white-space: nowrap;
+}
+
+.odc-orders-page-input {
+  box-sizing: border-box;
+  block-size: var(--od-x-control-height-sm);
+  min-inline-size: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-x-field-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.odc-orders-page-input:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+@media (pointer: coarse) {
+  .odc-orders-page-input { block-size: var(--od-x-target-coarse); }
+  /* redesign cierre W0 (W0-QA4-03, decision 12): the 28px buttons carry a 44px area (8px outside each side), so their neighbours need
+     16px between boxes for the areas not to cross. Under 768px the buttons are 44px visible (order-card.css). */
+  .odc-orders-pager-steps { gap: var(--od-space-4); }
+}
+
+/* A selection bar floats over the foot of the list: the foot keeps clear of it, so «Showing…» and the
+   pager stay readable and clickable while orders are selected. */
+.odc-orders-foot[data-selecting] {
+  padding-block-end: calc(var(--od-x-target-coarse) + var(--od-space-4) * 2);
+}
+
+/* The empty list with filters: «Clear filters» and «Filters» side by side. */
+.odc-orders-empty-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+/* ── Tools: sort text, density and columns. In the filter bar slot or in a row of their own. ── */
+.odc-orders-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin-inline-start: auto;
+  font-family: var(--od-font-sans);
+}
+
+.odc-orders-tools-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/*  (W1-D-7, decision 12): in a row of their own (the driver panel) «Compact rows» and «Manage columns» are 32 visible with a
+   44×44 area each (product.css), outside the filter bar that makes them 44. 32 + 12 = 44: the areas touch, they do not cross. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-orders-tools-row .odc-orders-tools { gap: var(--od-space-3); }
+}
+
+/*  (owner decision 2): the order of in progress is a ghost menu trigger next to the density and column buttons;
+   it keeps the caption size and the muted text of the statement it replaces (E7), and does not wrap. */
+.odc-orders-sort {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  white-space: nowrap;
+}
+
+/* ── Selection bar: the legacy status selector and delete button live inside the inverse bar. ── */
+.odc-orders-selbar.odc-selbar { overflow: visible; }
+
+/*  (W1, owner decision 1 A): the bar also shows on the phone. With overflow visible (for the status menu) its
+   count, Change status, Delete and clear do not fit in 390px and ran off the screen, so there it wraps inside the page
+   gutters instead; the separator, which only divides the count from the actions on one line, goes. */
+@media (max-width: 767px) {
+  .odc-orders-selbar.odc-selbar {
+    flex-wrap: wrap;
+    row-gap: var(--od-space-1);
+  }
+
+  .odc-orders-selbar .odc-selbar-actions {
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    min-inline-size: 0;
+    row-gap: var(--od-space-1);
+  }
+
+  .odc-orders-selbar .odc-selbar-separator { display: none; }
+}
+
+.odc-orders-bulk {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.odc-orders-selbar .odc-orders-bulk button {
+  background: transparent;
+  border-color: transparent;
+  color: inherit;
+  box-shadow: none;
+}
+
+.odc-orders-selbar .odc-orders-bulk button:hover { background: var(--od-x-inverse-hover); }
+
+.odc-orders-selbar .odc-orders-bulk[data-tone='danger'] button { color: var(--od-x-danger-on-inverse); }
+
+/* The bulk status selector is still the legacy FirstSelect. Inside the bar it is dressed for the
+   inverse surface: no fill, a hairline border, the bar's own text colour (inverse in light; the
+   bar uses the page text on --od-surface in dark, so it inherits instead of naming a token),
+   chevron included, at the height of the Delete button next to it. The colour on `p` is
+   !important in the legacy wrapper, so it is answered in kind, only for the trigger. */
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root {
+  display: flex;
+  block-size: var(--od-x-control-height-sm);
+  min-block-size: 0;
+  border: var(--od-x-hairline) solid var(--od-x-inverse-hover);
+  border-radius: var(--od-radius-component);
+  background: transparent;
+  color: inherit;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root:hover { background: var(--od-x-inverse-hover); }
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root > .od-first-select-trigger {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  color: inherit;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root .od-first-select-trigger :is(.od-first-select-header, p) {
+  color: inherit !important;
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root .od-first-select-trigger .od-first-select-header > * {
+  padding-block: 0;
+  min-block-size: 0;
+}
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-chevron { color: inherit; }
+
+.odc-orders-selbar .odc-orders-bulk .od-first-select-root > .od-first-select-trigger:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* On the dark theme the bar is --od-surface: its edge is the page border. */
+[data-ordering-brand][data-od-theme='dark'] .odc-orders-selbar .odc-orders-bulk .od-first-select-root {
+  border-color: var(--od-border);
+}
+
+@media (pointer: coarse) {
+  .odc-orders-selbar .odc-orders-bulk .od-first-select-root { block-size: var(--od-x-target-coarse); }
+}
+
+/* The legacy list opens upward: the bar sits at the foot of the list. */
+.odc-orders-selbar .od-ui .od-first-select-list {
+  inset-block-end: 100%;
+  margin-block: 0 var(--od-space-2);
+}
+
+/* The status keeps one line (C6). Full width, it is never truncated: columns step aside instead. In the narrow list
+   (beside the order panel) it still keeps one line, so every row is the same height: the name clips with an ellipsis
+   at a maximum width and carries the whole name as its title (F6c-5, Q2-05; before, it wrapped to three lines
+   and rows were 44 or 56px). */
+.odc-orders-col-status { white-space: nowrap; }
+@container orders-table (max-width: 860px) {
+  .odc-orders-col-status .odc-status { max-inline-size: var(--od-x-col-status-max); }
+  .odc-orders-col-status .odc-status > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ── E7 · Columns the user chose scroll sideways; the select-all and the order column stay in place. ──
+   The pinned cells need an opaque fill (what scrolls under them must not show through), so each row
+   state sets --odc-tint and the cell paints that tint over the page background. */
+.odc-orders-table .odc-table tbody tr { --odc-tint: transparent; }
+.odc-orders-table .odc-table tbody tr:where([data-status='at_risk']) { --odc-tint: var(--od-warning-soft); }
+.odc-orders-table .odc-table tbody tr:where([data-status='delayed']) { --odc-tint: var(--od-danger-soft); }
+.odc-orders-table .odc-table tbody tr[data-checked],
+.odc-orders-table .odc-table tbody tr[data-active] { --odc-tint: var(--od-x-selected); }
+.odc-orders-table .odc-table tbody tr[data-row-id]:hover { --odc-tint: var(--od-x-hover); }
+
+.odc-orders-table .odc-table [data-selection] {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: var(--od-x-layer-raised);
+  inline-size: var(--od-x-selection-col);
+  min-inline-size: var(--od-x-selection-col);
+  max-inline-size: var(--od-x-selection-col);
+  background-color: var(--od-bg);
+}
+
+.odc-orders-table .odc-table .odc-orders-col-sticky {
+  position: sticky;
+  inset-inline-start: var(--od-x-selection-col);
+  z-index: var(--od-x-layer-raised);
+  background-color: var(--od-bg);
+  /* the edge shows only while the table has been scrolled under the pinned column */
+  border-inline-end: var(--od-x-hairline) solid transparent;
+}
+
+.odc-orders-table[data-bounded] .odc-table .odc-orders-col-sticky { inset-inline-start: 0; }
+
+/* Header cells are already pinned to the top (data-table.css); in the corner they stay over both axes. */
+.odc-orders-table .odc-table thead th[data-selection],
+.odc-orders-table .odc-table thead th.odc-orders-col-sticky { z-index: calc(var(--od-x-layer-raised) + 1); }
+
+.odc-orders-table .odc-table tbody tr[data-row-id] td[data-selection],
+.odc-orders-table .odc-table tbody tr[data-row-id] td.odc-orders-col-sticky {
+  background-image: linear-gradient(var(--odc-tint), var(--odc-tint));
+}
+
+.odc-orders-table > .odc-table-scroll[data-overflow-start] .odc-orders-col-sticky {
+  border-inline-end-color: var(--od-border);
+}
+
+.odc-orders-table .odc-table tbody tr[data-new] td[data-selection],
+.odc-orders-table .odc-table tbody tr[data-new] td.odc-orders-col-sticky {
+  animation-name: odc-arrive-pinned;
+}
+
+@keyframes odc-arrive-pinned {
+  from { background-color: var(--od-warning-soft); }
+  to { background-color: var(--od-bg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-orders-table .odc-table tbody tr[data-new] td[data-selection],
+  .odc-orders-table .odc-table tbody tr[data-new] td.odc-orders-col-sticky { animation: none; }
+}
+
+/* F6c-5 (Q2-05): a cue that the table goes on sideways. While the scroller has more to show past its end
+   (useOverflowEdges sets data-overflow-end) the wrapper paints a soft edge over the end of it; it goes when the scroller
+   reaches the end. It sits on the wrapper, not on the scrolled content, and never takes a click. The start edge already
+   has the pinned column's border. */
+.odc-orders-table { position: relative; }
+
+/* F6i-1 (A3-01): containing blocks for the hidden text (.odc-sr-only is position: absolute). The live region is a sibling of the
+   table, outside every scroller of it, and the loading label of the cards sits in a list that is not positioned: without a
+   host each one was placed against a far ancestor and made the page on a phone ~750px (390) to ~1050px (320) taller than the
+   list. The host holds only the 1px hidden box and takes no room. */
+.odc-orders-live,
+.odc-order-cards { position: relative; }
+
+.odc-orders-table:has(> .odc-table-scroll[data-overflow-end])::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: calc(var(--od-x-layer-raised) + 2);
+  inline-size: var(--od-x-fade-size);
+  background: linear-gradient(var(--odc-edge-to, to left), var(--od-x-edge-shadow), transparent);
+  pointer-events: none;
+}
+
+.odc-orders-table:dir(rtl) { --odc-edge-to: to right; }
+
+/* F6c-5 (Q2-22): two lines (the value and its caption) do not fit a 36px row without touching its borders; the
+   orders rows of the compact density are the height those two lines need. The coarse pointer keeps its 44px target. */
+.odc-orders-table .odc-table[data-density='compact'] tbody td { block-size: var(--od-x-row-compact-orders); }
+
+@media (pointer: coarse) {
+  /* redesign cierre W0 (W0-QA4-03): the header row is as tall as a row, so the area of «Select all» and the one of the first row's
+     checkbox (both 44px) touch without crossing. */
+  .odc-orders-table .odc-table thead th { block-size: var(--od-x-target-coarse); }
+  .odc-orders-table .odc-table[data-density='compact'] tbody td { block-size: var(--od-x-target-coarse); }
+  .odc-orders-table .odc-table[data-density='compact'] tbody td.odc-table-empty { block-size: auto; }
+}
+
+/* The timer is coloured like the SLA of the same order (main: Order.js:302). In time is green again
+   (main: OrdersTable/styles.js:416-418), from --od-x-timer-ok (candidates.css) so it reads on both surfaces. */
+.odc-orders-timer[data-status='in_time'] { color: var(--od-x-timer-ok); }
+.odc-orders-timer[data-status='at_risk'] { color: var(--od-warning-functional); }
+.odc-orders-timer[data-status='delayed'] { color: var(--od-danger-functional); }
+
+/* The total with «2 hours ago» under it, both at the end of the column. */
+.odc-orders-total-cell { align-items: flex-end; }

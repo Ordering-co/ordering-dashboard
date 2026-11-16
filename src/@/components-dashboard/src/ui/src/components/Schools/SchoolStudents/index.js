@@ -1,268 +1,232 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useApi, useSession, useLanguage, useToast, ToastType } from '../../../../../index'
-import { Button } from '../../../styles'
-import { Select as FirstSelect } from '../../../styles/Select/FirstSelect'
-import { SideBar, SpinnerLoader, Pagination } from '../../Shared'
-import {
-  listStudents, getStudent, attachParent, detachParent
-} from '../../../../../components/Schools/schoolApi'
+
+import { useApi, useLanguage, useSession } from '../../../../../index'
+import { listStudents } from '../../../../../components/Schools/schoolApi'
+import { GraduationCap } from '../../Shared/Icon'
+import { DataTable, EmptyState, Pagination, RecordCardList, SplitView } from '../../Shared/Product'
+import { useIsPhone } from '../../Shared/Product/useIsPhone'
+import { SchoolDayBar } from '../SchoolDayBar'
+import { SchoolListError } from '../SchoolListError'
+import { personName } from '../schoolDisplay'
 import { useSchoolFilters } from '../useSchoolFilters'
-import {
-  Toolbar, Table, RowActions, FormGrid, FormActions, EmptyState, Chips, Chip
-} from '../styles'
+import { useSchoolList } from '../useSchoolList'
+import { StudentPanel } from './StudentPanel'
+import '../schools.css'
+import './students.css'
+
+// redesign SC-B3 (decisions 1A and 12; M-SC03, M-SC15): the Students tab. The day bar (grade and classroom, no date) over the list, beside ONE
+// panel (the student) in a split view; a phone gets cards. The filters are not in the URL (as main) and the tab is mounted with `key` = the
+// school (B5), so its state starts clean in every school (M-SC13).
 
 const PAGE_SIZE = 10
+const PAGE_SIZES = [10, 25, 50] // as the other redesigned lists
+const DASH = '—'
+
+const nextFrame = (callback) => (typeof window !== 'undefined' && window.requestAnimationFrame ? window.requestAnimationFrame(callback) : setTimeout(callback, 16))
+
+// «_total_» of a template becomes a node (an .odc-figure number), the rest stays text (as Marketing/CampaignDirectory/CampaignsTable)
+const fillTemplate = (template, values, figure) => template.split(/(_[a-z]+_)/).map((part, index) => {
+  const name = part.match(/^_([a-z]+)_$/)?.[1]
+  return name && values[name] !== undefined ? <React.Fragment key={index}>{figure(values[name])}</React.Fragment> : part
+})
+
+const figureOf = (value) => <bdi dir='ltr' className='odc-figure'>{value}</bdi>
+
+// A student's code is a figure (decision 11)
+const codeNode = (student) => (student.code ? figureOf(student.code) : DASH)
+
+// The card is a link to the list itself (a plain click opens the student, never the address): a link without an `href` takes no focus
+const hrefHere = () => (typeof window === 'undefined' ? '' : `${window.location.pathname}${window.location.search}`)
 
 export const SchoolStudents = (props) => {
   const { school, initialPage, onPageChange } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [, t] = useLanguage()
-  const [, { showToast }] = useToast()
-
-  const [state, setState] = useState({ loading: false, items: [], error: null })
-  const [pagination, setPagination] = useState({ currentPage: initialPage || 1, totalPages: 1, pageSize: PAGE_SIZE })
-  const [filters, setFilters] = useState({ classroomId: null, gradeId: null })
-  const firstLoad = useRef(true)
-  const [detail, setDetail] = useState(null)
-  const [detailLoading, setDetailLoading] = useState(false)
-
-  const [customers, setCustomers] = useState([])
-  const [customerSearch, setCustomerSearch] = useState('')
-  const [loadingCustomers, setLoadingCustomers] = useState(false)
-  const [customerPagination, setCustomerPagination] = useState({ currentPage: 1, totalPages: 1, pageSize: 10 })
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null)
-  const [savingParent, setSavingParent] = useState(false)
-
+  const isPhone = useIsPhone()
   const schoolId = school?.id
   const { grades, classrooms } = useSchoolFilters(schoolId)
 
-  const load = async (page = 1, pageSize = pagination.pageSize) => {
-    if (!schoolId) return
-    setState((s) => ({ ...s, loading: true }))
-    const { error, result, pagination: meta } = await listStudents(ordering, token, {
-      schoolId, classroomId: filters.classroomId, gradeId: filters.gradeId, page, pageSize
-    })
-    if (error) {
-      setState({ loading: false, items: [], error: result })
-    } else {
-      setState({ loading: false, items: result || [], error: null })
-      setPagination({ currentPage: meta?.current_page || page, totalPages: meta?.total_pages || 1, pageSize })
+  const [filters, setFilters] = useState({ gradeId: null, classroomId: null })
+  const [open, setOpen] = useState(null) // the row of the open student
+  const [expanded, setExpanded] = useState(false)
+  const frameRef = useRef(null)
+
+  const list = useSchoolList({
+    // the same call and parameters as main; with no school there is nothing to ask
+    fetchPage: ({ page, pageSize }) => (schoolId
+      ? listStudents(ordering, token, { schoolId, classroomId: filters.classroomId, gradeId: filters.gradeId, page, pageSize })
+      : Promise.resolve({ error: false, result: [] })),
+    deps: [schoolId, filters.classroomId, filters.gradeId],
+    initialPage,
+    pageSize: PAGE_SIZE,
+    onPageChange
+  })
+
+  const gradeNameById = Object.fromEntries(grades.map((grade) => [grade.id, grade.name]))
+  const classroomNameById = Object.fromEntries(classrooms.map((classroom) => [classroom.id, classroom.name]))
+  const classroomOf = (student) => student.classroom?.name || classroomNameById[student.classroom_id] || null
+  const gradeOf = (student) => student.grade?.name || gradeNameById[student.grade_id] || null
+
+  // ---- the open student and the focus ----
+  // redesign SC-B3: closing the panel gives the focus back to the row (the cards of a phone carry `data-row-id` too). It is tried on the next
+  // frame, after the panel left the page, and leaves alone a focus the person already put somewhere in the list.
+  const focusRow = (id) => nextFrame(() => {
+    const frame = frameRef.current
+    if (!frame) return
+    const active = document.activeElement
+    if (active && active !== document.body && active.isConnected && frame.contains(active)) return
+    const row = Array.from(frame.querySelectorAll('[data-row-id]')).find((element) => element.getAttribute('data-row-id') === String(id))
+    if (!row) return
+    const target = row.hasAttribute('tabindex') ? row : (row.querySelector('a[href], button, [tabindex]') ?? row)
+    target.focus({ preventScroll: true })
+  })
+
+  const closePanel = () => {
+    if (!open) return
+    const { id } = open
+    setOpen(null)
+    setExpanded(false)
+    focusRow(id)
+  }
+
+  // The list's own version of the open student when it has one (the panel shows the row until the student loads)
+  const openRow = open ? (list.items.find((student) => student.id === open.id) ?? open) : null
+
+  // ---- the list: a table, or cards on a phone ----
+  const loadingLabel = t('LOADING', 'Loading')
+  const listLabel = t('SCHOOL_STUDENTS', 'School students')
+  const empty = <EmptyState icon={GraduationCap} title={t('SCHOOL_NO_STUDENTS', 'No students yet')} />
+  // redesign SC-B3 (M-SC03): a failed load is its own state, never «No students yet»
+  const failed = !list.loading && Boolean(list.error)
+
+  const total = list.total
+  const showFoot = !failed && (total != null ? total > 0 : list.items.length > 0)
+  const foot = showFoot && (
+    <Pagination
+      page={list.page}
+      pageSize={list.pageSize}
+      total={total ?? undefined}
+      hasMore={total == null && list.page < list.totalPages}
+      itemCount={list.items.length}
+      pageSizeOptions={PAGE_SIZES}
+      onPageChange={list.goToPage}
+      onPageSizeChange={(size) => list.changePageSize(size)}
+      busy={list.loading}
+      showPageInput
+      label={t('PAGINATION', 'Pagination')}
+      previousLabel={t('PREVIOUS_PAGE', 'Previous page')}
+      nextLabel={t('NEXT_PAGE', 'Next page')}
+      pageSizeLabel={t('ITEMS_PER_PAGE', 'Items per page')}
+      pageLabel={t('PAGE', 'Page')}
+      pageOfLabel={(totalPages, figure) => fillTemplate(t('PAGE_OF_TOTAL', 'of _total_'), { total: totalPages }, figure)}
+      rangeLabel={(from, to, count, figure) => fillTemplate(t('SHOWING_RANGE', 'Showing _from_–_to_ of _total_'), { from, to, total: count }, figure)}
+      pageStatusLabel={(current, totalPages) => t('PAGE_STATUS', 'Page _page_ of _total_').replace('_page_', String(current)).replace('_total_', String(totalPages))}
+    />
+  )
+
+  const columns = [
+    {
+      id: 'name',
+      header: t('NAME', 'Name'),
+      rowHeader: true,
+      wrap: true,
+      skeleton: { lines: 1 },
+      cell: (student) => <span className='odc-school-student-name' dir='auto'>{personName(student) || DASH}</span>
+    },
+    { id: 'code', header: t('SCHOOL_STUDENT_CODE', 'Code'), skeleton: { lines: 1 }, cell: codeNode },
+    { id: 'classroom', header: t('SCHOOL_CLASSROOM', 'Classroom'), skeleton: { lines: 1 }, cell: (student) => classroomOf(student) ?? DASH },
+    { id: 'grade', header: t('SCHOOL_GRADE', 'Grade'), skeleton: { lines: 1 }, cell: (student) => gradeOf(student) ?? DASH }
+  ]
+
+  const toCard = (student) => {
+    const name = personName(student)
+    return {
+      id: student.id,
+      href: hrefHere(),
+      label: t('SCHOOL_OPEN_STUDENT', 'Open _name_').replace('_name_', () => name),
+      title: <span className='odc-school-student-name' dir='auto'>{name || DASH}</span>,
+      from: codeNode(student),
+      indicator: <span className='odc-school-student-card-line'>{[classroomOf(student), gradeOf(student)].filter(Boolean).join(' · ') || DASH}</span>,
+      active: open?.id === student.id,
+      onOpen: () => setOpen(student)
     }
   }
 
-  const goToPage = (page) => { onPageChange && onPageChange(page); load(page) }
-  const handleChangePageSize = (size) => { onPageChange && onPageChange(1); load(1, size) }
-
-  useEffect(() => {
-    if (firstLoad.current) { firstLoad.current = false; load(initialPage || 1) } else { onPageChange && onPageChange(1); load(1) }
-  }, [schoolId, filters.classroomId, filters.gradeId])
-
-  const refreshDetail = async (studentId) => {
-    const { error, result } = await getStudent(ordering, token, studentId)
-    if (!error) setDetail(result)
+  let content
+  if (failed) {
+    content = <SchoolListError message={list.error} onRetry={list.reload} />
+  } else if (isPhone) {
+    content = (
+      <RecordCardList
+        label={listLabel}
+        items={list.loading ? [] : list.items.map(toCard)}
+        loading={list.loading}
+        loadingLabel={loadingLabel}
+        skeletonCount={PAGE_SIZE}
+        empty={empty}
+      />
+    )
+  } else {
+    content = (
+      <DataTable
+        label={listLabel}
+        columns={columns}
+        rows={list.items}
+        getRowId={(student) => student.id}
+        activeRowId={open?.id}
+        onOpenRow={(student) => setOpen(student)}
+        loading={list.loading}
+        loadingLabel={loadingLabel}
+        skeletonRows={PAGE_SIZE}
+        empty={empty}
+      />
+    )
   }
 
-  const openDetail = async (student) => {
-    setDetail({ id: student.id })
-    setSelectedCustomerId(null)
-    setDetailLoading(true)
-    const { error, result } = await getStudent(ordering, token, student.id)
-    setDetailLoading(false)
-    if (!error) setDetail(result)
-    loadCustomers(1, '')
-  }
+  const listView = (
+    <div ref={frameRef} className='odc-root odc-school-tab'>
+      <SchoolDayBar
+        showDate={false}
+        grades={grades}
+        classrooms={classrooms}
+        gradeId={filters.gradeId}
+        setGradeId={(gradeId) => setFilters((current) => ({ ...current, gradeId }))}
+        classroomId={filters.classroomId}
+        setClassroomId={(classroomId) => setFilters((current) => ({ ...current, classroomId }))}
+      />
+      {content}
+      {foot}
+    </div>
+  )
 
-  const loadCustomers = async (page = 1, search = customerSearch) => {
-    setLoadingCustomers(true)
-    const conditions = [{ attribute: 'level', value: 3 }]
-    if (search) conditions.push({ attribute: 'name', value: { condition: 'ilike', value: `%${search}%` } })
-    try {
-      const { content } = await ordering.users().asDashboard()
-        .select(['id', 'name', 'lastname', 'email'])
-        .where({ conditions, conector: 'AND' })
-        .get({ query: { page, page_size: 10 } })
-      setCustomers(content?.result || [])
-      setCustomerPagination({ currentPage: content?.pagination?.current_page || page, totalPages: content?.pagination?.total_pages || 1, pageSize: 10 })
-    } catch (err) {
-      setCustomers([])
-    } finally {
-      setLoadingCustomers(false)
-    }
-  }
-
-  const handleCustomerSearch = (value) => {
-    setCustomerSearch(value || '')
-    loadCustomers(1, value || '')
-  }
-
-  const handleAttachParent = async () => {
-    if (!selectedCustomerId) { showToast(ToastType.Error, t('SCHOOL_SELECT_CUSTOMER', 'Select a customer')); return }
-    setSavingParent(true)
-    const { error, result } = await attachParent(ordering, token, detail.id, { user_id: selectedCustomerId })
-    setSavingParent(false)
-    if (error) { showToast(ToastType.Error, Array.isArray(result) ? result[0] : result); return }
-    showToast(ToastType.Success, t('SCHOOL_PARENT_ASSIGNED', 'Parent assigned'))
-    setSelectedCustomerId(null)
-    handleCustomerSearch('')
-    refreshDetail(detail.id)
-  }
-
-  const handleDetachParent = async (userId) => {
-    const { error, result } = await detachParent(ordering, token, detail.id, userId)
-    if (error) { showToast(ToastType.Error, Array.isArray(result) ? result[0] : result); return }
-    showToast(ToastType.Success, t('SCHOOL_PARENT_REMOVED', 'Parent removed'))
-    refreshDetail(detail.id)
-  }
-
-  const gradeOptions = [{ value: null, content: t('SCHOOL_ALL_GRADES', 'All grades') }]
-    .concat(grades.map((g) => ({ value: g.id, content: g.name })))
-  const classroomOptions = [{ value: null, content: t('SCHOOL_ALL_CLASSROOMS', 'All classrooms') }]
-    .concat(classrooms.map((c) => ({ value: c.id, content: c.name })))
-
-  const gradeNameById = Object.fromEntries(grades.map((g) => [g.id, g.name]))
-  const classroomNameById = Object.fromEntries(classrooms.map((c) => [c.id, c.name]))
-
-  const customerOptions = customers.map((u) => ({
-    value: u.id,
-    content: `${u.name || ''} ${u.lastname || ''}${u.email ? ` · ${u.email}` : ''}`.trim()
-  }))
+  const panel = openRow && (
+    <StudentPanel
+      key={openRow.id}
+      student={openRow}
+      onClose={closePanel}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+    />
+  )
 
   return (
-    <div>
-      <Toolbar>
-        <div>
-          <FirstSelect
-            defaultValue={filters.gradeId}
-            options={gradeOptions}
-            placeholder={t('SCHOOL_ALL_GRADES', 'All grades')}
-            onChange={(value) => setFilters((f) => ({ ...f, gradeId: value }))}
-          />
-        </div>
-        <div>
-          <FirstSelect
-            defaultValue={filters.classroomId}
-            options={classroomOptions}
-            placeholder={t('SCHOOL_ALL_CLASSROOMS', 'All classrooms')}
-            onChange={(value) => setFilters((f) => ({ ...f, classroomId: value }))}
-          />
-        </div>
-      </Toolbar>
-
-      {state.loading
-        ? <SpinnerLoader />
-        : state.items.length === 0
-          ? <EmptyState>{t('SCHOOL_NO_STUDENTS', 'No students yet')}</EmptyState>
-          : (
-            <Table>
-              <thead>
-                <tr>
-                  <th>{t('SCHOOL_STUDENT_CODE', 'Code')}</th>
-                  <th>{t('NAME', 'Name')}</th>
-                  <th>{t('SCHOOL_CLASSROOM', 'Classroom')}</th>
-                  <th>{t('SCHOOL_GRADE', 'Grade')}</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {state.items.map((student) => (
-                  <tr key={student.id} onClick={() => openDetail(student)} style={{ cursor: 'pointer' }}>
-                    <td>{student.code}</td>
-                    <td>{student.name} {student.lastname}</td>
-                    <td>{student.classroom?.name || classroomNameById[student.classroom_id] || '-'}</td>
-                    <td>{student.grade?.name || gradeNameById[student.grade_id] || '-'}</td>
-                    <td>
-                      <RowActions>
-                        <Button color='primary' onClick={(e) => { e.stopPropagation(); openDetail(student) }}>{t('VIEW', 'View')}</Button>
-                      </RowActions>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-            )}
-
-      {state.items.length > 0 && (
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
-          defaultPageSize={pagination.pageSize}
-          handleChangePage={goToPage}
-          handleChangePageSize={handleChangePageSize}
-        />
-      )}
-
-      {detail && (
-        <SideBar open={!!detail} onClose={() => setDetail(null)} showExpandIcon>
-          <div style={{ flex: 1, width: '100%', minWidth: 0, boxSizing: 'border-box', padding: '24px 20px' }}>
-            <h2 style={{ marginTop: 0 }}>{t('SCHOOL_STUDENT', 'Student')}</h2>
-            {detailLoading
-              ? <SpinnerLoader />
-              : (
-                <FormGrid>
-                  <div><strong>{t('NAME', 'Name')}:</strong> {detail.name} {detail.lastname}</div>
-                  <div><strong>{t('SCHOOL_STUDENT_CODE', 'Code')}:</strong> {detail.code}</div>
-                  <div><strong>{t('SCHOOL_CLASSROOM', 'Classroom')}:</strong> {detail.classroom?.name || '-'}</div>
-                  <div><strong>{t('SCHOOL_GRADE', 'Grade')}:</strong> {detail.grade?.name || '-'}</div>
-                  <div>
-                    <strong>{t('SCHOOL_ALLERGIES', 'Allergies')}:</strong>
-                    <Chips>
-                      {(detail.allergies || []).length
-                        ? detail.allergies.map((a) => <Chip key={a}>{a}</Chip>)
-                        : <span> -</span>}
-                    </Chips>
-                  </div>
-                  <div>
-                    <strong>{t('SCHOOL_DIETARY_TAGS', 'Dietary tags')}:</strong>
-                    <Chips>
-                      {(detail.dietary_tags || []).length
-                        ? detail.dietary_tags.map((d) => <Chip key={d}>{d}</Chip>)
-                        : <span> -</span>}
-                    </Chips>
-                  </div>
-
-                  <div>
-                    <strong>{t('SCHOOL_GUARDIANS', 'Guardians')}:</strong>
-                    {(detail.parents || []).length === 0 && <span> -</span>}
-                    {(detail.parents || []).map((p) => (
-                      <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 8 }}>
-                        <span>{p.name} {p.lastname}{p.email ? ` · ${p.email}` : ''}</span>
-                        <Button color='secundary' onClick={() => handleDetachParent(p.id)}>{t('REMOVE', 'Remove')}</Button>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div>
-                    <label>{t('SCHOOL_ASSIGN_PARENT', 'Assign parent')}</label>
-                    <FirstSelect
-                      defaultValue={selectedCustomerId}
-                      options={customerOptions}
-                      placeholder={t('SCHOOL_SELECT_CUSTOMER', 'Select a customer')}
-                      isShowSearchBar
-                      searchValue={customerSearch}
-                      handleChangeSearch={handleCustomerSearch}
-                      isLoading={loadingCustomers}
-                      pagination={customerPagination}
-                      handleChangePage={(page) => loadCustomers(page, customerSearch)}
-                      optionInnerMaxHeight='220px'
-                      onChange={(value) => setSelectedCustomerId(value)}
-                    />
-                    <FormActions style={{ justifyContent: 'flex-start' }}>
-                      <Button color='primary' onClick={handleAttachParent} disabled={savingParent}>
-                        {savingParent ? t('LOADING', 'Loading') : t('SCHOOL_ASSIGN_PARENT', 'Assign parent')}
-                      </Button>
-                    </FormActions>
-                  </div>
-                </FormGrid>
-                )}
-          </div>
-        </SideBar>
-      )}
-    </div>
+    <SplitView
+      list={listView}
+      panel={panel}
+      open={Boolean(open)}
+      expanded={expanded}
+      panelLabel={t('SCHOOL_STUDENT', 'Student')}
+      resizeLabel={t('SCHOOL_STUDENT_RESIZE_PANEL', 'Resize the student panel')}
+      storageKey='odc-schools-student-panel'
+      onClose={closePanel}
+    />
   )
 }
 
 SchoolStudents.propTypes = {
-  school: PropTypes.object
+  school: PropTypes.object,
+  initialPage: PropTypes.number,
+  onPageChange: PropTypes.func
 }

@@ -89,9 +89,9 @@ export const CategoryEnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     margin: 0px;
     ${props => props.theme?.rtl
 ? css`
@@ -144,7 +144,7 @@ export const ActionSelectorWrapper = styled.div`
   }
 
   .dropdown-item {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `
 

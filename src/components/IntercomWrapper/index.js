@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useApi, useConfig, useSession } from '~components'
-import { useProjectState } from '~ui'
+import { useProjectState } from '~ui/src/contexts/ProjectContext'
 import settings from '../../config'
 import { getIntercomHash, setIntercomSettings } from '../Utils'
 import { clearIntercomSession, isIntercomAllowed, isProjectIntercomAllowed, setIntercomAccess } from '../../@/components-dashboard/src/ui/src/utils/assistantIntercom'

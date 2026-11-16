@@ -30,8 +30,7 @@ export const GoogleBusinessSearch = (props) => {
   const {
     UIComponent,
     initialBusiness,
-    initialPlaceId,
-    onConfirm
+    initialPlaceId
   } = props
 
   const [{ configs }] = useConfig()
@@ -111,10 +110,6 @@ export const GoogleBusinessSearch = (props) => {
   const handleConfirm = () => {
     const business = searchState.business
     if (!business) return
-    if (onConfirm) {
-      onConfirm(business)
-      return
-    }
     run(() => applyBusiness(business))
   }
 
@@ -231,7 +226,6 @@ GoogleBusinessSearch.propTypes = {
   onAppliedChange: PropTypes.func,
   photoRoles: PropTypes.arrayOf(PropTypes.oneOf(['gallery', 'header', 'logo'])),
   onPhotos: PropTypes.func,
-  onConfirm: PropTypes.func,
   initialBusiness: PropTypes.object,
   initialPlaceId: PropTypes.string
 }

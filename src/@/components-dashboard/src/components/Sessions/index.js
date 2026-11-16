@@ -9,7 +9,7 @@ export const Sessions = (props) => {
   } = props
 
   const [ordering] = useApi()
-  const [{ user, token }, { login, logout }] = useSession()
+  const [{ user, token, project }, { login, logout }] = useSession()
 
   const [sessionsList, setSessionsList] = useState({ sessions: [], loading: true, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
@@ -21,7 +21,8 @@ export const Sessions = (props) => {
     try {
       setSessionsList({
         ...sessionsList,
-        loading: true
+        loading: true,
+        error: null // redesign (PF-02): a reload starts without the previous error
       })
       const response = await fetch(`${ordering.root}/users/${user.id}/sessions`, {
         method: 'GET',
@@ -127,8 +128,10 @@ export const Sessions = (props) => {
             sessions: sessionsList.sessions.filter(session => session.current)
           })
           if (user?.session_strategy === 'jwt') {
+            // SessionContext stores `values.project`; without it localStorage.project becomes "undefined"
             login({
               token,
+              project,
               user: { ...user, session_strategy: 'jwt_session' }
             })
           }
@@ -168,6 +171,7 @@ export const Sessions = (props) => {
           actionState={actionState}
           handleDeleteSession={handleDeleteSession}
           handleDeleteAllSessions={handleDeleteAllSessions}
+          handleReloadSessions={handleGetSessions} // redesign (PF-02)
         />
       )}
     </>

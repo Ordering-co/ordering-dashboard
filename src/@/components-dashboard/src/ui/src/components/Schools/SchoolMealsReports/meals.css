@@ -1,0 +1,92 @@
+/*
+ * redesign SC-B4 · /schools «Meals & reports»: the two report cards and the text of the meals of a phone (static P/RecordCards,  X-SC4).
+ * Values: --od-* and --od-x-* only (guard: labels.css.test.js, the literal guard of the Product files). Logical properties.
+ * Class prefix odc-school-. The chips and the filter bar are the ones of schools.css (B1).
+ */
+
+/* ── The two report cards (Kitchen, Products ordered): two columns from 768, one on a phone ── */
+.odc-school-reports {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.odc-school-report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface);
+  color: var(--od-text);
+}
+
+.odc-school-report-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-school-report-desc {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* what the download includes: date, grade and classroom (M-SC08) */
+.odc-school-report-scope {
+  margin: 0;
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-school-report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  margin-block-start: auto;
+  padding-block-start: var(--od-space-1);
+}
+
+@media (max-width: 767px) {
+  .odc-school-reports {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* «Pasta bake × 2».  X-SC4: it is the title of a static RecordCard, whose title is mono (an identifier); a meal's name is a word */
+.odc-school-meal-title {
+  margin: 0;
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* «Ana Diaz · Room 3 · Grade 3» and the order */
+.odc-school-meal-where,
+.odc-school-meal-order {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* the allergens and the dietary tags, under the figures */
+.odc-school-meal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1) var(--od-space-3);
+  min-inline-size: 0;
+}

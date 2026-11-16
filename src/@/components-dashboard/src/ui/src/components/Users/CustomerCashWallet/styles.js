@@ -6,7 +6,7 @@ export const Container = styled.div`
   overflow-x: hidden;
 
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 7px;
@@ -28,9 +28,14 @@ export const Tabs = styled.div`
   }
 `
 export const Tab = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   cursor: pointer;
   color: ${props => props.theme.colors.lightGray};
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   padding: 13px 0;
   position: relative;
 
@@ -53,4 +58,16 @@ export const Tab = styled.div`
       `}
     }
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
+
 `

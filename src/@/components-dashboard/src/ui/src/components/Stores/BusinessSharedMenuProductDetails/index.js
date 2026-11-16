@@ -1,177 +1,222 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   useLanguage,
   BusinessSharedMenuProductDetails as BusinessSharedMenuProductDetailsController
 } from '../../../../../index'
-import { Checkbox, Input, Switch } from '../../../styles'
-import { SearchBar } from '../../Shared'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
+import { AsyncSwitch, NumberField, SaveBar, SearchField, useLeaveGuard, useSectionSplit } from '../../Shared/Product'
+import './shared-menu-product-details.css'
 
-import {
-  DetailsContainer,
-  InputWrapper,
-  SwitchWrapper,
-  QuantityWrapper,
-  SearchbarWrapper,
-  ProductExtraWrapper,
-  ProductOptionWrapper,
-  ProductSuboptionWrapper
-} from './styles'
+// redesign stores 5.6 (G3-04, decisions 4 and 5): the product of a shared menu is the detail of a P/SectionSplit (the piece
+// titles it with the name). Price and quantity are P/NumberField (the quantity has a label now) saved with the P/SaveBar and guarded
+// when the user leaves; the three properties and every extra, option and suboption are P/AsyncSwitch (they save at once, go back and
+// say why when it fails). The controller answers `{ ok, error }` to all of them. The visibility rules of the tree and the search
+// (case-insensitive on both sides) are the ones of main.
+
+const SAVED_MS = 2500
+const FAILURE_FALLBACK = "We couldn't save the change."
+
+// the first text of what the controller answers: a string, `{ message }` or a list of them
+const firstMessage = (error) => (Array.isArray(error) ? error : [error])
+  .map(item => (typeof item === 'string' ? item : item?.message))
+  .find(message => typeof message === 'string' && message.trim()) ?? null
+
+const hasError = error => (Array.isArray(error) ? error.length > 0 : Boolean(error))
+
+// a number or null: NumberField takes nothing else
+const toNumber = (value) => {
+  if (value == null || value === '') return null
+  const number = Number(value)
+  return Number.isFinite(number) ? number : null
+}
+
+const matches = (item, needle) => (item?.name || '').toLowerCase().includes(needle)
+
+const showSuboption = (suboption, needle) => matches(suboption, needle)
+
+const showOption = (option, needle) => (
+  matches(option, needle) || (option.suboptions || []).some(suboption => showSuboption(suboption, needle))
+)
+
+const showExtra = (extra, needle) => (
+  matches(extra, needle) || (extra.options || []).some(option => showOption(option, needle))
+)
 
 const BusinessSharedMenuProductDetailsUI = (props) => {
   const {
     productState,
     formState,
-    handleChangeInput,
-    handleChangeItem,
+    handleChangeField,
+    pendingChangeKeys,
+    isDirty,
+    saveChanges,
+    discardChanges,
+    handleToggleProperty,
     handleUpdateExtra,
     handleUpdateOption,
     handleUpdateSuboption
   } = props
 
   const [, t] = useLanguage()
+  const { registerCloseGuard } = useSectionSplit()
   const [searchValue, setSearchValue] = useState('')
+  const [saved, setSaved] = useState(false)
+  const mounted = useRef(true)
+  const savedTimer = useRef(null)
 
-  const showExtra = (extra) => {
-    let valid = false
-    if (extra.name?.toLowerCase().includes(searchValue)) valid = true
-    else {
-      extra.options.forEach(option => {
-        if (option.name?.toLowerCase().includes(searchValue)) {
-          valid = true
-        }
-        option.suboptions.forEach(suboption => {
-          if (suboption.name?.toLowerCase().includes(searchValue)) {
-            valid = true
-          }
-        })
-      })
+  useEffect(() => {
+    mounted.current = true
+    return () => {
+      mounted.current = false
+      clearTimeout(savedTimer.current)
     }
-    return valid
+  }, [])
+
+  const product = productState?.product || {}
+  const changes = formState?.changes || {}
+  const keys = Array.isArray(pendingChangeKeys) ? pendingChangeKeys : []
+  const count = isDirty ? (keys.length || 1) : 0
+  const failureText = t('STORES_CHANGE_FAILED', FAILURE_FALLBACK)
+
+  // Closing the product by any way (X, «‹ Products», Esc, another product, the menu) asks first when price or quantity are typed and not saved.
+  useLeaveGuard({
+    dirty: Boolean(isDirty),
+    count: keys.length || 1,
+    save: saveChanges,
+    discard: discardChanges,
+    registerCloseGuard
+  })
+
+  const changeField = (name, value) => {
+    setSaved(false)
+    handleChangeField(name, value)
   }
 
-  const showOption = (option) => {
-    let valid = false
-    if (option.name?.toLowerCase().includes(searchValue)) valid = true
-    else {
-      option.suboptions.forEach(suboption => {
-        if (suboption.name?.toLowerCase().includes(searchValue)) {
-          valid = true
-        }
-      })
+  const save = async () => {
+    setSaved(false)
+    let result
+    try {
+      result = await saveChanges()
+    } catch (error) {
+      result = { ok: false, error: error?.message }
     }
-    return valid
+    if (mounted.current && result?.ok !== false) {
+      setSaved(true)
+      clearTimeout(savedTimer.current)
+      savedTimer.current = setTimeout(() => { if (mounted.current) setSaved(false) }, SAVED_MS)
+    }
+    return result
   }
 
-  const showSuboption = (suboption) => {
-    let valid = false
-    if (suboption.name?.toLowerCase().includes(searchValue)) valid = true
-    return valid
+  const discard = () => {
+    setSaved(false)
+    discardChanges?.()
   }
+
+  const fieldLabels = {
+    price: t('PRICE', 'Price'),
+    quantity: t('STORES_SHARED_PRODUCT_QUANTITY', 'Quantity')
+  }
+  const names = keys.map(key => fieldLabels[key] ?? key)
+  const countText = (count === 1
+    ? t('SETTINGS_UNSAVED_CHANGES_ONE', '_count_ unsaved change')
+    : t('SETTINGS_UNSAVED_CHANGES_OTHER', '_count_ unsaved changes')).replace('_count_', count)
+  const errorText = hasError(formState?.error)
+    ? translateApiMessage(t, firstMessage(formState.error), failureText)
+    : null
+
+  const needle = searchValue.toLowerCase()
+  const extras = product.extras || []
+
+  const toggle = (checked, onToggle, label) => (
+    <AsyncSwitch checked={!!checked} onToggle={onToggle} failureText={failureText}>
+      <span className='odc-smpd-name' dir='auto'>{label}</span>
+    </AsyncSwitch>
+  )
 
   return (
-    <DetailsContainer>
-      <h1>{productState.product.name}</h1>
-      <InputWrapper>
-        <label>{t('PRICE', 'Price')}</label>
-        <Input
-          placeholder='$0.00'
-          name='price'
-          value={formState?.changes?.price ?? productState.product?.price ?? ''}
-          onChange={e => handleChangeInput(e)}
-          onKeyPress={(e) => {
-            if (!/^[0-9.]$/.test(e.key)) {
-              e.preventDefault()
-            }
-          }}
+    <div className='odc-smpd' tabIndex={-1}>
+      <div className='odc-smpd-fields'>
+        <NumberField
+          label={t('PRICE', 'Price')}
+          min={0}
+          value={toNumber('price' in changes ? changes.price : product.price)}
+          onChange={value => changeField('price', value)}
         />
-      </InputWrapper>
-      <SwitchWrapper>
-        <label>{t('INVENTORIED', 'Limit product quantity')}</label>
-        <Switch
-          defaultChecked={productState.product.inventoried}
-          onChange={enabled => handleChangeItem({ inventoried: enabled })}
+        <NumberField
+          label={t('STORES_SHARED_PRODUCT_QUANTITY', 'Quantity')}
+          min={0}
+          step={1}
+          format={{ maximumFractionDigits: 0 }}
+          value={toNumber('quantity' in changes ? changes.quantity : product.quantity)}
+          onChange={value => changeField('quantity', value)}
         />
-      </SwitchWrapper>
-      <QuantityWrapper>
-        <Input
-          placeholder='0'
-          name='quantity'
-          value={formState?.changes?.quantity ?? productState.product?.quantity ?? ''}
-          onChange={e => handleChangeInput(e)}
-          onKeyPress={(e) => {
-            if (!/^[0-9]$/.test(e.key)) {
-              e.preventDefault()
-            }
-          }}
-        />
-      </QuantityWrapper>
-      <SwitchWrapper>
-        <label>{t('FEATURED', 'Featured')}</label>
-        <Switch
-          defaultChecked={productState.product.featured}
-          onChange={enabled => handleChangeItem({ featured: enabled })}
-        />
-      </SwitchWrapper>
-      <SwitchWrapper>
-        <label>{t('UPSELLING', 'Upselling')}</label>
-        <Switch
-          defaultChecked={productState.product.upselling}
-          onChange={enabled => handleChangeItem({ upselling: enabled })}
-        />
-      </SwitchWrapper>
-      {productState.product?.extras?.length > 0 && (
-        <>
-          <SearchbarWrapper>
-            <label>{t('PRODUCT_OPTIONS', 'Product options')}</label>
-            <SearchBar
-              placeholder={t('SEARCH', 'Search')}
-              isCustomLayout
-              search={searchValue}
-              onSearch={val => setSearchValue(val?.toLowerCase())}
-            />
-          </SearchbarWrapper>
-          {productState.product.extras.map(extra => (
-            showExtra(extra) && (
-              <div key={extra.id}>
-                <ProductExtraWrapper>
-                  <Checkbox
-                    defaultChecked={extra.enabled}
-                    onChange={e => handleUpdateExtra(extra.id, e.target.checked)}
-                  />
-                  <span>{extra.name}</span>
-                </ProductExtraWrapper>
-                {extra?.enabled && extra.options.map(option => (
-                  showOption(option) && (
-                    <div key={option.id}>
-                      <ProductOptionWrapper>
-                        <Checkbox
-                          defaultChecked={option.enabled}
-                          onChange={e => handleUpdateOption(option.id, e.target.checked)}
-                        />
-                        <span>{option.name}</span>
-                      </ProductOptionWrapper>
-                      {option?.enabled && option?.suboptions.map(suboption => (
-                        showSuboption(suboption) && (
-                          <div key={suboption.id}>
-                            <ProductSuboptionWrapper>
-                              <Checkbox
-                                defaultChecked={suboption.enabled}
-                                onChange={e => handleUpdateSuboption(suboption.id, e.target.checked)}
-                              />
-                              <span>{suboption.name}</span>
-                            </ProductSuboptionWrapper>
-                          </div>
-                        )
-                      ))}
-                    </div>
-                  )
-                ))}
-              </div>
-            )
-          ))}
-        </>
+      </div>
+
+      <div className='odc-smpd-switches'>
+        {toggle(product.inventoried, next => handleToggleProperty('inventoried', next), t('INVENTORIED', 'Limit product quantity'))}
+        {toggle(product.featured, next => handleToggleProperty('featured', next), t('FEATURED', 'Featured'))}
+        {toggle(product.upselling, next => handleToggleProperty('upselling', next), t('UPSELLING', 'Upselling'))}
+      </div>
+
+      {extras.length > 0 && (
+        <section className='odc-smpd-options'>
+          <h4 className='odc-smpd-subtitle'>{t('PRODUCT_OPTIONS', 'Product options')}</h4>
+          <SearchField
+            className='odc-smpd-search'
+            value={searchValue}
+            onChange={setSearchValue}
+            label={t('SEARCH', 'Search')}
+            placeholder={t('SEARCH', 'Search')}
+            clearLabel={t('CLEAR_SEARCH', 'Clear search')}
+          />
+          <ul className='odc-smpd-tree'>
+            {extras.filter(extra => showExtra(extra, needle)).map(extra => (
+              <li key={extra.id} className='odc-smpd-node'>
+                {toggle(extra.enabled, next => handleUpdateExtra(extra.id, next), extra.name ?? '')}
+                {extra.enabled && (
+                  <ul className='odc-smpd-tree'>
+                    {(extra.options || []).filter(option => showOption(option, needle)).map(option => (
+                      <li key={option.id} className='odc-smpd-node'>
+                        {toggle(option.enabled, next => handleUpdateOption(option.id, next), option.name ?? '')}
+                        {option.enabled && (
+                          <ul className='odc-smpd-tree'>
+                            {(option.suboptions || []).filter(suboption => showSuboption(suboption, needle)).map(suboption => (
+                              <li key={suboption.id} className='odc-smpd-node'>
+                                {toggle(suboption.enabled, next => handleUpdateSuboption(suboption.id, next), suboption.name ?? '')}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
-    </DetailsContainer>
+
+      <SaveBar
+        label={t('SAVE_CHANGES', 'Save changes')}
+        formSelector='.odc-smpd'
+        count={count}
+        countText={countText}
+        names={names}
+        moreText={n => t('SETTINGS_UNSAVED_MORE', '+_count_').replace('_count_', n)}
+        saving={!!formState?.saving}
+        errorText={errorText}
+        onRetry={save}
+        retryLabel={t('RETRY', 'Retry')}
+        saved={saved}
+        savedText={t('SAVED', 'Saved')}
+        discardLabel={t('DISCARD', 'Discard')}
+        saveLabel={t('SAVE', 'Save')}
+        onDiscard={discard}
+        onSave={save}
+      />
+    </div>
   )
 }
 

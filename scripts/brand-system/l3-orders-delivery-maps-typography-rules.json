@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-orders-delivery-maps-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "driver-marker-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverMapMarkerAndInfo/styles.js",
+      "component": "Text",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "order-marker-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/InterActOrderMarker/styles.js",
+      "component": "Text",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "online-drivers-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesLocation/styles.js",
+      "component": "WrapperOnlineDrivers",
+      "property": "font-size",
+      "context": "& > p",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "online-driver-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesLocation/styles.js",
+      "component": "DriverInfo",
+      "property": "font-size",
+      "context": "p > &:first-child",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "online-driver-secondary",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DeliveriesLocation/styles.js",
+      "component": "DriverInfo",
+      "property": "font-size",
+      "context": "p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "driver-selector-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverSelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "driver-selector-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverSelector/styles.js",
+      "component": "DriverName",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "driver-group-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriversGroupTypeSelector/styles.js",
+      "component": "PlaceholderTitle",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "logistics-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Logistics/styles.js",
+      "component": "WraaperLogs",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "logistics-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Logistics/styles.js",
+      "component": "WraaperLogs",
+      "property": "font-size",
+      "context": "> button",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "logistics-time",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Logistics/styles.js",
+      "component": "TimeofSent",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "0.8em",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "maps-key-warning-banner",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/GoogleMapsApiKeySettingButton/style.js",
+      "component": "WarningBanner",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-content-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "driver-selector-remove-role",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/DriverSelector/styles.js",
+      "component": "Option",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "var(--od-type-control-size)",
+      "reason": "The conditional remove option already consumes the central control role.",
+      "evidence": "The full interpolation pins its danger fallback, padding and typography together."
+    }
+  ]
+}

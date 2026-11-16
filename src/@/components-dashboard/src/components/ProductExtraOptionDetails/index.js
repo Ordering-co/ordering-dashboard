@@ -390,11 +390,17 @@ export const ProductExtraOptionDetails = (props) => {
   /**
    * Method to save the option from API
    * @param {Object} change
+   * redesign stores 2.F: it answers `{ ok: true }` / `{ ok: false, error }` (nothing before; the callers ignore it).
+   * `saveOptions.keepPendingChanges` (the Snooze dialog) sends only `change`, keeps the other pending settings (only the sent keys
+   * leave `settingChangeState.changes`; a failure leaves it untouched), does not set `settingChangeState.error` (the dialog
+   * shows the error inline) and always clears `loading`.
    */
-  const handleUpdateOption = async (change) => {
+  const handleUpdateOption = async (change, saveOptions) => {
+    const keepPending = saveOptions?.keepPendingChanges === true && !!change && Object.keys(change).length > 0
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setSettingChangeState({ ...settingChangeState, loading: true })
+      if (keepPending) setSettingChangeState(prev => ({ ...prev, loading: true }))
+      else setSettingChangeState({ ...settingChangeState, loading: true })
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -406,10 +412,23 @@ export const ProductExtraOptionDetails = (props) => {
       const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setSettingChangeState({
-          changes: content.error ? settingChangeState.changes : {},
-          loading: false
-        })
+        if (keepPending) {
+          setSettingChangeState(prev => {
+            const sentKeys = Object.keys(change)
+            let pending = prev.changes || {}
+            // the same object when none of them was pending
+            if (sentKeys.some(key => key in pending)) {
+              pending = { ...pending }
+              sentKeys.forEach(key => { delete pending[key] })
+            }
+            return { ...prev, changes: pending, loading: false }
+          })
+        } else {
+          setSettingChangeState({
+            changes: content.error ? settingChangeState.changes : {},
+            loading: false
+          })
+        }
         setOptionState({ ...optionState, option: { ...optionState.option, ...content.result } })
         const options = extra.options.filter(option => {
           if (option.id === content.result.id) {
@@ -421,9 +440,14 @@ export const ProductExtraOptionDetails = (props) => {
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
         showToast(ToastType.Success, t('OPTION_SAVED', 'Option saved'))
+        return { ok: true }
       }
+      if (keepPending) setSettingChangeState(prev => ({ ...prev, loading: false }))
+      return { ok: false, error: content.result }
     } catch (err) {
-      setSettingChangeState({ ...settingChangeState, loading: false, error: err.message })
+      if (keepPending) setSettingChangeState(prev => ({ ...prev, loading: false }))
+      else setSettingChangeState({ ...settingChangeState, loading: false, error: err.message })
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -538,14 +562,15 @@ export const ProductExtraOptionDetails = (props) => {
     handleUpdateOption({ respect_to: subOptionId })
   }
 
+  // redesign bugs F row 25: merge into the previous pending changes (it spread the setter's `.changes`, so each change replaced the last)
   const handleChangeSettingsChangeState = (updatedChange) => {
-    setSettingChangeState({
-      ...settingChangeState,
+    setSettingChangeState(prev => ({
+      ...prev,
       changes: {
-        ...setChangesState.changes,
+        ...prev.changes,
         ...updatedChange
       }
-    })
+    }))
   }
 
   /**
@@ -555,7 +580,7 @@ export const ProductExtraOptionDetails = (props) => {
     event.dataTransfer.setData('transferSubOptionId', subOption.id)
     const ghostElement = document.createElement('div')
     ghostElement.classList.add('ghostDragging')
-    ghostElement.innerHTML = subOption.name
+    ghostElement.textContent = subOption.name
     document.body.appendChild(ghostElement)
     event.dataTransfer.setDragImage(ghostElement, 0, 0)
     setIsSubOptionsBottom(false)

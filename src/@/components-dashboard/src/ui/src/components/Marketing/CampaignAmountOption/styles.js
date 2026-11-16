@@ -14,7 +14,7 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   font-weight: 700;
-  font-size: 20px;
+  font-size: var(--od-type-title-size);
   line-height: 30px;
   margin-top: 0px;
   margin-bottom: 30px;
@@ -23,15 +23,31 @@ export const Title = styled.h1`
 export const RadioCheckWrapper = styled.div`
   margin-top: 24px;
 
-  > div {
+  > button {
     display: flex;
     align-items: center;
     cursor: pointer;
     width: fit-content;
+    background: none;
+    border: none;
+    padding: 0px;
+    color: inherit;
+    font-family: inherit;
+    text-align: inherit;
+
+    &:focus-visible {
+      outline: 2px solid var(--od-action);
+      outline-offset: 2px;
+    }
+
+    @media (pointer: coarse) {
+      min-height: 44px;
+    }
+
 
     span {
       font-weight: 400;
-      font-size: 14px;
+      font-size: var(--od-type-control-size);
       line-height: 24px;
     }
 
@@ -136,7 +152,7 @@ export const DaysContent = styled.div`
 
 export const SubTitle = styled.h2`
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   line-height: 24px;
   margin: 0px;
 `

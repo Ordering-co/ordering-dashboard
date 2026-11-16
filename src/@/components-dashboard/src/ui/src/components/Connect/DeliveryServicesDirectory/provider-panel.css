@@ -1,0 +1,147 @@
+/*
+ * redesign DS-B3 (decisions 1, 2 | M-DS6, M-DS12, M-DS22): the panel of a delivery provider (RecordPanel with sections) and its
+ * Credentials section. Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on
+ * anything else. Logical properties only (C17). The panel's classes use the `dsp-` prefix, the Credentials section's `cs-`; the
+ * wrappers keep `odc-`.
+ */
+
+/* ── The panel ── */
+.dsp-body {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A section that was visited is kept mounted for its draft and hidden, not removed */
+.dsp-section { min-inline-size: 0; }
+.dsp-section[hidden] { display: none; }
+
+/* ── Status next to the title: the state of the provider and the switch ──
+   One line, never the badge over the switch. The RecordPanel drops the status to its own line at 480px of panel; the title of this
+   panel shares its row with «Open as page» and Close and a provider name can be long, so here it drops earlier (the same rules as the
+   panel's own, at a wider limit, as the drivers group panel does). */
+.dsp-status {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  white-space: nowrap;
+}
+
+/* redesign DS-R1-04,  R1: the notice of a switch that failed hangs out of the flow (P/AsyncSwitch, inside .odc-record-head),
+   so it neither pushes the state dot nor widens the header: the state and the switch stay on one row. P hangs it toward the start of
+   the switch because the switch ends its rows; here the switch follows the state at the start of the line, so the notice hangs from the
+   whole line instead, from its start (toward the start of the switch it left the viewport at 390: -47px). A `display: contents`
+   wrapper used to be here: it loses the `position: relative` the notice hangs from and the notice anchored to the whole split
+   (measured live: 20 x 271px at the foot of the page). */
+.dsp-status { position: relative; }
+
+.dsp-status > .odc-async-switch { position: static; }
+
+.dsp-status .odc-async-switch-notice {
+  inset-inline: 0 auto;
+  margin-inline: 0;
+}
+
+@container odc-record (max-width: 600px) {
+  .odc-record-head-row:has(.dsp-status) { flex-wrap: wrap; }
+  .odc-record-head-row > .odc-record-status:has(.dsp-status) {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* The line under the subtitle when the group is paused in Delivery groups (the switch above is the company's, not the group's) */
+.dsp-group-paused {
+  display: block;
+  margin-block-start: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+}
+
+/* ── Schedule: the Update button under the editor ── */
+.dsp-schedule-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-block-start: var(--od-space-4);
+}
+
+/* ── Loading ── */
+.dsp-skeleton,
+.cs-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── Credentials ── */
+.cs-root {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* redesign DS-R1-07: the «Fill in every field…» notice is a block of the section, aligned with the fields and the intro. The notice carries
+   the page gutter as its own margin (it was made for a bar), which indented it and left it narrower than the rest; the grid's gap is its
+   only spacing here. */
+.cs-root > .odc-notice { margin: 0; }
+
+.cs-intro {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.cs-message {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.cs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+/* The form is wrapped on its own so the pinned save bar stays inside it: the automatic assignment block comes after the wrapper and
+   never sits under the bar (the bar is `position: sticky` and cannot leave its parent). */
+.cs-form {
+  min-inline-size: 0;
+}
+
+/* : SettingsList's FormContainer (a styled-component of the legacy list) carries `margin-top: 20px`, which on top of the grid's
+   gap and the first row's own padding left 52px between «Setup guide» and the first field. The panel's gap is the rhythm here; the
+   margin is taken off only inside this section (SettingsList itself is not touched). */
+.cs-form .odc-hub-form > :first-child { margin-block-start: 0; }
+
+/* ── Automatic assignment: a block of its own that saves on change ── */
+.cs-block {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.cs-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+.cs-block-title {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-body);
+}
+
+.cs-block-note {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}

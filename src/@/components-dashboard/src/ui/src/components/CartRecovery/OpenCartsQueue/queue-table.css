@@ -1,0 +1,166 @@
+/*
+ * The open carts list (redesign OC-C): the cells of the queue table and the cards of a phone. Product's DataTable and
+ * RecordCard own the structure; this adds what a cart cell is made of. Tokens only (--od-*, --od-x-*); logical
+ * properties only, so right-to-left needs no second set of rules.
+ */
+
+/* The frame of the list (redesign OC-F1): it only holds the ref that finds the focus again after Retry; it takes no box. */
+.odc-oq-frame { display: contents; }
+
+/* ── Above the list: «With contact only» and the column manager ── */
+.odc-oq-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-4);
+  min-inline-size: 0;
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-x-page-gutter);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-oq-tools[data-cards] { padding-inline: 0; }
+
+.odc-oq-tools-start {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-oq-tools-end { margin-inline-start: auto; }
+
+.odc-oq-note { color: var(--od-text-muted); }
+
+.odc-oq-notice { padding-inline: var(--od-x-page-gutter); padding-block-end: var(--od-space-2); }
+.odc-oq-notice[data-cards] { padding-inline: 0; }
+
+/* ── The cells ── */
+.odc-oq-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-oq-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-oq-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-oq-name[data-quiet] {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-oq-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-oq-cell {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-oq-items {
+  /* redesign OC-integration: the cart summary wraps to two lines at most, so Status and Contact stay in view at 1440 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.odc-oq-dash { color: var(--od-x-text-subtle); }
+
+/* ── Bands of the follow up view (Last 24 hours, 2–7 days) ──
+   DataTable has no separator row and keeps one tab stop per table, so the band is written in the first row of each band,
+   above the customer, and every row of the band repeats it for a screen reader. */
+.odc-oq-customer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-oq-group {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-table tbody tr[data-group-start] > :where(td, th) {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  padding-block-start: var(--od-space-2);
+}
+
+/* ── The contact menu ── */
+.odc-oq-contact { display: inline-flex; }
+
+/* ── Phone: the cards ── */
+.odc-oq-card-group {
+  margin: 0;
+  padding-block: var(--od-space-3) var(--od-space-1);
+  padding-inline: var(--od-x-page-gutter-mobile);
+  color: var(--od-text-muted);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-order-card-people > .odc-oq-who {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-order-card-driver .odc-oq-items { min-inline-size: 0; }
+
+.odc-oq-card-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-block-start: var(--od-space-1);
+}
+
+/* redesign OC-integration (OC-Q1-02/03, live 1280 with the panel): in an auto table a nowrap line sets the column's
+   minimum (the «#id · business · time» line held Cart at 274px). Inside table cells the name and the second lines wrap,
+   breaking long emails anywhere, and stop at two lines; cards keep their own rules. */
+td .odc-oq-name,
+th .odc-oq-name,
+td .odc-oq-sub,
+th .odc-oq-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

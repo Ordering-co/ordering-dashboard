@@ -37,8 +37,8 @@ export const RewardsPrograms = (props) => {
 
   const walletList = [
     { enabled: isPointsWallets, key: 'credit_point', name: t('POINTS_WALLET', 'Points wallet'), description: t('POINTS_WALLET_DESCRIPTION', 'Points wallet general and per business setup.'), icon: <Cash /> },
-    { enabled: isPointsWallets, key: 'levels', name: t('LEVELS', 'Levels'), description: t('LEVELS_DESCRIPTION', 'Setup different loyalty levels for your users.'), icon: <BarChartSteps /> },
-    { enabled: isWalletRefunds, key: 'cashback', name: t('CASH_WALLET', 'Cash wallet'), description: t('CASH_WALLET_DESCRIPTION', 'Cash wallet general and per business setup.'), icon: <Cash /> }
+    { enabled: isPointsWallets, key: 'levels', name: t('LEVELS', 'Levels'), description: t('LOYALTY_LEVELS_DESCRIPTION', 'Set up different loyalty levels for your users.'), icon: <BarChartSteps /> },
+    { enabled: isWalletRefunds, key: 'cashback', name: t('CASH_WALLET_NAME', 'Cash wallet'), description: t('CASH_WALLET_DESCRIPTION', 'Cash wallet general and per business setup.'), icon: <Cash /> }
   ]
 
   const learnOptions = learnOptionsValues(
@@ -82,6 +82,7 @@ export const RewardsPrograms = (props) => {
           {isCollapse && (
             <IconButton
               color='black'
+              aria-label={t('MENU', 'Menu')}
               onClick={() => handleMenuCollapse(false)}
             >
               <MenuIcon />

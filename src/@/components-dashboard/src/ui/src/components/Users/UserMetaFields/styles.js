@@ -22,7 +22,7 @@ export const MetaContainer = styled.div`
 
   .meta_type {
     width: 25%;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     margin-top: 10px;
   }
   .meta_key {
@@ -54,7 +54,7 @@ export const MetaAddContainer = styled(MetaContainer)`
     border-radius: 8px;
     padding: 10px 15px;
     outline: none;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     box-sizing: border-box;
     width: 100%;
   }
@@ -95,12 +95,12 @@ export const RoundBorder = styled.div`
   border: 1px solid #DEE2E6;
   border-radius: 8px;
   padding: 10px 15px;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   color: ${props => props.theme.colors?.headingColor};
   overflow: hidden;
 `
 export const NoMetaField = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
 `
 export const MetaAddForm = styled.form`
   button[type='submit'] {

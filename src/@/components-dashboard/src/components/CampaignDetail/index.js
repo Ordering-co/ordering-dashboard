@@ -192,12 +192,14 @@ export const CampaignDetail = (props) => {
   /**
    * Method to add new campaign from API
    */
-  const handleAddCampaign = async () => {
+  const handleAddCampaign = async (overrides) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, error: null })
 
-      const changes = { ...formState?.changes }
+      // redesign CA-B1 (M-CA12, M-CA13): overrides win over the form for this request only; an `undefined` value
+      // stays undefined through the loop below and JSON.stringify drops the key from the body
+      const changes = { ...formState?.changes, ...(overrides || {}) }
 
       for (const key in changes) {
         // if (key === 'conditions' && changes[key].length > 0) {
@@ -229,12 +231,14 @@ export const CampaignDetail = (props) => {
         handleSuccessAddCampaign && handleSuccessAddCampaign(content.result)
         showToast(ToastType.Success, t('CAMPAIGN_ADDED', 'Campaign added'))
         props.onClose && props.onClose()
+        return { ok: true, error: null, result: content.result }
       } else {
         setFormState({
           ...formState,
           loading: false,
           error: content.result
         })
+        return { ok: false, error: content.result }
       }
     } catch (err) {
       setFormState({
@@ -242,6 +246,7 @@ export const CampaignDetail = (props) => {
         loading: false,
         error: err.message
       })
+      return { ok: false, error: err.message }
     }
   }
 
@@ -266,12 +271,14 @@ export const CampaignDetail = (props) => {
         showToast(ToastType.Success, t('CAMPAIGN_DELETED', 'Campaign deleted'))
         setFormState({ ...formState, loading: false, error: null })
         props.onClose && props.onClose()
+        return { ok: true, error: null }
       } else {
         setFormState({
           ...formState,
           loading: false,
           error: content.result
         })
+        return { ok: false, error: content.result }
       }
     } catch (err) {
       setFormState({
@@ -279,6 +286,7 @@ export const CampaignDetail = (props) => {
         loading: false,
         error: err.message
       })
+      return { ok: false, error: err.message }
     }
   }
 
@@ -652,7 +660,8 @@ export const CampaignDetail = (props) => {
     if (!isAddMode || !formState?.changes?.conditions) return
     const contactType = formState?.changes?.contact_type || campaignState?.campaign?.contact_type
     if (formState?.changes?.conditions?.length > 0 && contactType) getAudience(formState?.changes?.conditions, contactType)
-  }, [JSON.stringify(formState?.changes?.conditions)])
+    // redesign (row 56 Q-P3): the channel is a dependency too, so changing it with rules set recounts the audience
+  }, [JSON.stringify(formState?.changes?.conditions), formState?.changes?.contact_type])
 
   useEffect(() => {
     getParentCategory()

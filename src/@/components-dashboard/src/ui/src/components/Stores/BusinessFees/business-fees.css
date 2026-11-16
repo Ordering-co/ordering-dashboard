@@ -1,0 +1,338 @@
+/*
+ * redesign stores 5.13 · Business fees of a store on Product: the Fees and Fee events tabs, the two tables (cards
+ * under 768px), the fee's detail form inside a P/SectionSplit and the manual charge or credit dialog.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller. Prefix: odc-bf-*.
+ */
+
+.odc-bf {
+  display: grid;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-5); /* the section gutter, as Tax & fees (odc-tf) */
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-bf-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* ── The tabs and «Refresh», on one line ── */
+.odc-bf-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bf-nav > .odc-bf-tabs {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-bf-refresh { flex: none; }
+
+.odc-bf-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── Tools: the search and the add button ── */
+.odc-bf-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bf-search {
+  flex: 1 1 var(--od-x-search);
+  min-inline-size: 0;
+}
+
+/* «Add fee» and «Add charge or credit» break at their spaces instead of leaving a narrow panel */
+.odc-bf-tools > .odc-btn,
+.odc-bf-empty > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+}
+
+.odc-bf-notice { min-inline-size: 0; }
+
+.odc-bf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bf-empty-text {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-bf-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-bf-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── The cells (the tables and the cards draw the same ones) ── */
+.odc-bf-namecell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The name of a fee: a native button, so Enter and Space open the fee. A click on the row opens it too (the table owns that). */
+.odc-bf-name {
+  display: block;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: inherit;
+  font-weight: var(--od-font-weight-medium);
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bf-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-bf-name-text {
+  display: block;
+  /* the card's title link carries odc-mono (a figure); the name is text */
+  font-family: var(--od-font-sans);
+  overflow: hidden;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td .odc-bf-name-text,
+th .odc-bf-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* the name of a fee event is plain text (its row opens nothing) */
+.odc-bf-plain { font-weight: var(--od-font-weight-medium); }
+
+.odc-bf-sub {
+  display: block;
+  max-inline-size: 100%;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-bf-amount {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+/* The type of an event, as a label: the words say it, the tint only helps */
+.odc-bf-type {
+  display: inline-flex;
+  align-items: center;
+  max-inline-size: 100%;
+  block-size: var(--od-x-badge-height);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  unicode-bidi: isolate;
+  white-space: nowrap;
+}
+
+.odc-bf-type[data-type='manual_charge'] { background: var(--od-warning-soft); }
+.odc-bf-type[data-type='manual_credit'] { background: var(--od-success-soft); }
+
+/* The switch of a row: a click on it is its own, and the row keeps its padding around it */
+.odc-bf-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-bf-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── The cards of the fee events (a phone): the rows open nothing, so they are not links ── */
+.odc-bf-ev {
+  display: grid;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-bf-ev-select {
+  display: flex;
+  align-items: center;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bf-ev-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-bf-ev-card {
+  display: grid;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bf-ev-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bf-ev-row > :first-child { min-inline-size: 0; }
+
+.odc-bf-ev-date {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+/* ── The detail form ──
+   A flex column on purpose: the save bar is `position: sticky` and a grid item could not stick (as SEO, 5.1b). */
+.odc-bf-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* The form is a programmatic focus target after Discard (the buttons that had the focus are gone). */
+.odc-bf-form:focus { outline: none; }
+
+/* Two fields side by side while there is room for both, one under the other when there is not */
+.odc-bf-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--od-x-search-min), 1fr));
+  align-items: start;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* A switch with a line of help under it */
+.odc-bf-switch {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-bf-hint {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* A control that is not a field of the Product family (the period) under a visible label */
+.odc-bf-period {
+  display: grid;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-bf-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The browser scrolls a focused field into view without counting the sticky bar (the same rule as SEO). */
+.odc-bf-form :is(input, button) {
+  scroll-margin-block-end: calc(var(--od-space-8) * 2 + var(--od-space-4));
+}
+
+/* ── The manual charge or credit dialog (it lives in a portal: nothing here depends on the section's root) ── */
+.odc-bf-dialog-form {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-bf-recap {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-body);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-bf-dialog-notice { min-inline-size: 0; }
+
+/* review 5.13 (, F3 locales): as in business-markups.css, a long fee name wraps to two lines inside the card. */
+.odc-bf .odc-order-card-link .odc-bf-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

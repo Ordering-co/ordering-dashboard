@@ -1,0 +1,28 @@
+/*
+ * redesign stores 5.15a · CopyButton: the P/Button that copies, the word that turns into «Copied», and the failure
+ * said beside it. Tokens only; the button's size, focus ring and 44px phone area are product.css's.
+ */
+
+.odc-copy {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* «Copy» and «Copied» share one grid cell: the button is as wide as the longer word and a copy moves nothing. */
+.odc-copy-words { display: inline-grid; }
+.odc-copy-word {
+  grid-row: 1;
+  grid-column: 1;
+  text-align: center;
+}
+.odc-copy-word[aria-hidden='true'] { visibility: hidden; }
+
+/* A failed copy is said in words, in the functional danger colour (never colour alone: the words carry it). */
+.odc-copy-failed {
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}

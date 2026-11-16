@@ -1,0 +1,148 @@
+/*
+ * redesign stores add (, 2.3-B) · The delivery zone of the new-store form. Values: --od-* and --od-x-* only, logical
+ * properties only. Controls, focus ring and the 44px touch area are the ones of P/ (Button, Field, SegmentedControl, MapFrame).
+ */
+
+.odc-sadd-zone {
+  container-type: inline-size;
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-sadd-zone-notice {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-sadd-zone-title {
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sadd-zone-muted {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* No zone yet: the words on one side, the button on the other; the button wraps under the words when the container is narrow. */
+.odc-sadd-zone-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-sadd-zone-empty-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  flex: 1 1 14rem;
+}
+
+.odc-sadd-zone-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+.odc-sadd-zone-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+}
+
+/* The type is a segmented control in a fieldset (the fieldset is what disables it): no border, no padding, and it may shrink. */
+.odc-sadd-zone-type {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Minimum purchase | Delivery fee: two columns, one under 480px of container (and of window, where a container query is not honoured). */
+.odc-sadd-zone-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+  align-items: start;
+}
+
+.odc-sadd-zone-row > * {
+  min-inline-size: 0;
+}
+
+@container (max-width: 479px) {
+  .odc-sadd-zone-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  .odc-sadd-zone-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.odc-sadd-zone-map-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* The slot of P/MapFrame (size='fill'): the frame takes the height of this container, the height of an embedded map. */
+.odc-sadd-zone-map {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: var(--od-x-map-height);
+}
+
+/* The ready map and its Clear shape button, inside the frame. BusinessZoneGoogleMaps paints one absolutely positioned div; it fills the stage. */
+.odc-sadd-zone-stage {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-sadd-zone-stage > div {
+  position: relative !important;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}
+
+.odc-sadd-zone-stage > button {
+  position: absolute;
+  inset-block-start: var(--od-space-2);
+  inset-inline-start: var(--od-space-2);
+  z-index: var(--od-x-layer-raised);
+}
+
+/* The missing shape: same look as the error of a Field, under the map. */
+.odc-sadd-zone-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-sadd-zone-error-icon.odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}

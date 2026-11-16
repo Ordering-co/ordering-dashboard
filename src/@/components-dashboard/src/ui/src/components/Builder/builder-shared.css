@@ -1,0 +1,17 @@
+/*
+ * redesign  B3b · Builder's shared pieces (BuilderShared.js): the link to a tutorial outside the dashboard (GuideLink).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+.odc-builder-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  color: var(--od-action-content);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-builder-guide .odc-icon {
+  inline-size: var(--od-x-icon-xs);
+  block-size: var(--od-x-icon-xs);
+}

@@ -21,7 +21,8 @@ const CustomDomainUI = (props) => {
     formState,
     onClose,
     handleChangeCustomDomain,
-    disableDescriptionInfo
+    disableDescriptionInfo,
+    hideTitle // redesign ordering-website B4 (D7, OW-08): opt-in; a dialog around the form gives the title
   } = props
 
   const [, t] = useLanguage()
@@ -76,7 +77,7 @@ const CustomDomainUI = (props) => {
   return (
     <>
       <Container>
-        <h1>{t('CUSTOM_DOMAIN', 'Custom domain')}</h1>
+        {!hideTitle && <h1>{t('CUSTOM_DOMAIN', 'Custom domain')}</h1>}
         <FormControl>
           <TitleWrapper>
             <label>{t('DOMAIN', 'Domain')}</label>
@@ -84,6 +85,7 @@ const CustomDomainUI = (props) => {
               <CustomDomainInfo>
                 <IconButton
                   color='primary'
+                  aria-label={t('INFORMATION', 'Information')}
                 >
                   <InfoCircle />
                 </IconButton>
@@ -98,6 +100,8 @@ const CustomDomainUI = (props) => {
             <IconButton
               className={cnameCopied ? 'copied' : undefined}
               color='primary'
+              // redesign ordering-website review R1-04: the copy button had no name
+              aria-label={t('COPY_BUTTON', 'Copy')}
               onClick={handleCopyCname}
             >
               {cnameCopied ? <CheckCircleFill /> : <Files />}
@@ -132,7 +136,7 @@ const CustomDomainUI = (props) => {
             outline
             onClick={onClose}
           >
-            {t('Cancel', 'Cancel')}
+            {t('CANCEL', 'Cancel')}
           </Button>
           <Button
             color='primary'
@@ -144,7 +148,7 @@ const CustomDomainUI = (props) => {
         </ButtonGroup>
       </Container>
       <Alert
-        title={t('ORDERING', 'Ordering')}
+        title={t('ORDERING', 'Ordering.co')}
         content={alertState.content}
         acceptText={t('ACCEPT', 'Accept')}
         open={alertState.open}

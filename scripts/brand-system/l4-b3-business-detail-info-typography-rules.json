@@ -1,0 +1,177 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b3-business-detail-info-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "b3-businessdetail-infoconatiner-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessDetail/styles.js",
+   "component": "InfoConatiner",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b3-businessplace-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlace/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b3-businessplace-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlace/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b3-businessplace-content-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlace/styles.js",
+   "component": "Content",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b3-businessplacegroup-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b3-businessplacegroup-actionselectorwrapper-div-div-dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b3-businessplacegroup-content-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "Content",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b3-businessplacegroup-checkwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "b3-businessplacegrouplist-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroupList/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "b3-businessplacegrouplist-checkwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroupList/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "> label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "b3-pres-businessplace-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlace/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  },
+  {
+   "id": "b3-pres-businessplacegroup-actionselectorwrapper-button-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  },
+  {
+   "id": "b3-pres-businessplacegroup-checkwrapper-span-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "span > svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  },
+  {
+   "id": "b3-pres-businessplacegroup-placeitemcontainer-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroup/styles.js",
+   "component": "PlaceItemContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  },
+  {
+   "id": "b3-pres-businessplacegrouplist-checkwrapper-span-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroupList/styles.js",
+   "component": "CheckWrapper",
+   "property": "font-size",
+   "context": "span > svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  },
+  {
+   "id": "b3-pres-businessplacegrouplist-placeitemcontainer-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPlaceGroupList/styles.js",
+   "component": "PlaceItemContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "16px",
+   "reason": "This font-size controls the inherited icon SVG geometry, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The b3-business-detail-info typography inventory pins this declaration to an icon-only selector."
+  }
+ ]
+}

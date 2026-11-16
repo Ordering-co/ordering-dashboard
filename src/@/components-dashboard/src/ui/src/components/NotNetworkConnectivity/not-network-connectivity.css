@@ -1,0 +1,20 @@
+/*
+ * redesign  (D6): the offline page. One empty state centred in the free space, at least the viewport height.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ */
+.odc-offline {
+  flex: 1;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  min-block-size: calc(var(--vh, 1vh) * 100);
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the page takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-offline {
+    padding: var(--od-x-page-gutter-mobile);
+  }
+}

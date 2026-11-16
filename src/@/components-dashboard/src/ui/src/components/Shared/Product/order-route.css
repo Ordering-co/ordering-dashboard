@@ -1,0 +1,137 @@
+/* C5 · The route of an order: real milestones, real times. Detail view only. */
+
+.odc-route {
+  --odc-route-center: calc(var(--od-x-route-node) / 2);
+  --odc-route-gap: var(--od-space-3);
+  --odc-route-line: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+  container-type: inline-size;
+}
+
+.odc-route ol {
+  display: grid;
+  grid-template-columns: repeat(var(--steps), minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-route li {
+  position: relative;
+  min-inline-size: 0;
+  padding-block-start: calc(var(--od-x-route-node) + var(--od-space-2));
+}
+
+/* The rail of a step runs from its node to the next one; the first starts and the last ends at a node centre. */
+.odc-route li::before {
+  content: '';
+  position: absolute;
+  inset-block-start: calc(var(--odc-route-center) - var(--od-x-route-rail) / 2);
+  inset-inline: 0;
+  block-size: var(--od-x-route-rail);
+  background: var(--od-border);
+}
+.odc-route li:first-child::before { inset-inline-start: var(--odc-route-center); }
+.odc-route li:last-child::before { inset-inline-end: auto; inline-size: var(--odc-route-center); }
+.odc-route li:only-child::before { display: none; }
+.odc-route li[data-state='done']::before { background: var(--od-text); }
+
+.odc-route-node {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  box-sizing: border-box;
+  inline-size: var(--od-x-route-node);
+  block-size: var(--od-x-route-node);
+  border: var(--od-x-indicator) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-round);
+  background: var(--od-bg);
+}
+.odc-route li[data-state='done'] .odc-route-node {
+  border-color: var(--od-text);
+  background: var(--od-text);
+}
+.odc-route li[data-state='next'] .odc-route-node {
+  border-color: var(--od-action);
+  box-shadow: 0 0 0 var(--od-space-1) var(--od-action-soft);
+}
+.odc-route li[data-state='stop'] .odc-route-node {
+  border-color: var(--od-danger-signal);
+  background: var(--od-danger-signal);
+}
+
+.odc-route-label {
+  display: block;
+  padding-inline-end: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+  /* A long label breaks inside its column; it is never cut or pushed past the content edge. : it breaks
+     between words, and a word wider than its column with the language's hyphenation («Angenom-men», lang from
+     <html>); `anywhere` cut «Angenommen» at any letter. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.odc-route li[data-state='next'] .odc-route-label { color: var(--od-action-content); }
+.odc-route li[data-state='stop'] .odc-route-label { color: var(--od-danger-functional); }
+.odc-route li[data-state='todo'] .odc-route-label {
+  color: var(--od-x-text-subtle);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-route-time {
+  display: block;
+  padding-inline-end: var(--od-space-2);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  /* A dated time («Oct 1, 12:53 PM») breaks at its spaces inside the column, never past the content edge. */
+  overflow-wrap: anywhere;
+}
+
+.odc-route-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  margin-block-start: var(--od-space-3);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+.odc-route-note .odc-icon { margin-block-start: var(--od-x-space-half); }
+.odc-route-note b { color: var(--od-text); font-weight: var(--od-font-weight-semibold); }
+.odc-route-note[data-tone='late'] b,
+.odc-route-note[data-tone='stop'] b { color: var(--od-danger-functional); }
+
+/* Narrow container: the list turns vertical and the rail runs down the start side. */
+@container (width < 400px) {
+  .odc-route ol {
+    grid-template-columns: 1fr;
+    gap: var(--odc-route-gap);
+  }
+
+  .odc-route li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--od-space-2);
+    padding-block-start: 0;
+    padding-inline-start: calc(var(--od-x-route-node) + var(--od-space-2));
+  }
+
+  .odc-route-node {
+    inset-block-start: calc((var(--odc-route-line) - var(--od-x-route-node)) / 2);
+  }
+
+  .odc-route li::before {
+    inset-block-start: calc(var(--odc-route-line) / 2);
+    inset-block-end: calc((var(--odc-route-gap) + var(--odc-route-line) / 2) * -1);
+    inset-inline: calc(var(--odc-route-center) - var(--od-x-route-rail) / 2) auto;
+    inline-size: var(--od-x-route-rail);
+    block-size: auto;
+  }
+  .odc-route li:first-child::before { inset-inline-start: calc(var(--odc-route-center) - var(--od-x-route-rail) / 2); }
+  .odc-route li:last-child::before { display: none; }
+
+  .odc-route-label { flex: 0 1 auto; padding-inline-end: 0; }
+  .odc-route-time { flex: none; padding-inline-end: 0; white-space: nowrap; }
+}

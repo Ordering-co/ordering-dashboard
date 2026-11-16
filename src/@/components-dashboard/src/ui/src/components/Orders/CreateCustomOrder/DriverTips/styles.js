@@ -4,31 +4,41 @@ export const DriverTipContainer = styled.div`
   margin-top: 50px;
 
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin-top: 0;
     margin-bottom: 24px;
   }
 `
 
-export const TipCard = styled.div`
+export const TipCard = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   border: 1px solid ${props => props.theme.colors.borderColor};
+  background: transparent;
   width: 62px;
   height: 62px;
   min-width: 62px;
+  min-height: var(--od-touch-target-minimum);
   cursor: pointer;
   text-transform: capitalize;
-  font-size: 14px;
-  color: #B1BCCC;
+  font-family: inherit;
+  font-size: var(--od-type-control-size);
+  color: var(--od-text-subtle);
   transition: all 0.3s;
   text-align: center;
   &.active {
     background-color: ${props => props.theme.colors.primary};
     color: ${props => props.theme.colors.primaryContrast};
+  }
+  &:focus-visible {
+    outline: 2px solid var(--od-focus-ring-color);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 `
 
@@ -41,7 +51,7 @@ export const FormDriverTip = styled.div`
 `
 
 export const DriverTipLabel = styled.label`
-  font-size: 16px;
+  font-size: var(--od-type-control-size);
   align-self: flex-start;
 
   ${props => props.theme?.rtl && css`
@@ -62,7 +72,7 @@ export const WrapperInput = styled.div`
     padding: 4px 15px;
     box-sizing: border-box;
     flex: 1;
-    margin-right: 10px;
+    margin-inline-end: 10px;
   }
 
   @media (min-width: 768px) {
@@ -84,7 +94,8 @@ export const WrapperTips = styled.div`
   align-items: center;
   flex-wrap: wrap;
 
-  > div {
+  > div,
+  > button {
     margin: 5px;
     text-align: center;
   }

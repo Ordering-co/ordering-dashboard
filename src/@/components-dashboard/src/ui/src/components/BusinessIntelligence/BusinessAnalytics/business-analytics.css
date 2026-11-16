@@ -1,0 +1,188 @@
+/*
+ * /intelligence/business (redesign bi FD): the page, its sections and the map block.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-bi-*. Breakpoints are the numbers of C/utils/breakpoints.js as literals in @media: phone < 768, two columns from 1024.
+ * The cards are the kit's (AnalyticsKit/analytics-kit.css) and the figures are P/Metric (Shared/Product/metric.css).
+ */
+
+/* redesign bi FD (D1): the page takes the width of the shell, with the padding and the rhythm of Home (.odc-home) */
+.odc-bi-page {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-5);
+  min-inline-size: 0;
+  max-block-size: 100vh;
+  padding: var(--od-space-6);
+  overflow: auto;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+@media print {
+  .odc-bi-page {
+    display: none;
+  }
+}
+
+/* : the opener is PageHeader's `leading`; the page keeps no wrapper rules for the header */
+
+/* period, filters and channels: one block, each on its own line */
+.odc-bi-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* ── The six figures ── */
+.odc-bi-summary {
+  position: relative; /* containing block of the visually hidden title (.odc-sr-only) */
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* redesign bi R1 (F3): the references of the six figures reserve the height they will have, so the page does not move when the answer
+   comes (measured at 1440: the strip grew 131 -> 173 px and everything below it went down 43 px). The main reference (data-lead:
+   «−42.4% over the last 7 full days vs the 7 before (33)») is 3 caption lines in a column of one sixth (from 1280) and 2 in three
+   columns, in two and on a phone. The line of help (data-secondary: «Average in this period») is always 1 line; the skeleton of a
+   figure that has only that line is also data-lead by default (P/Metric), hence the :not(). Only inside this page: Home reserves its
+   own (metric.css). The lines are the <p class="odc-metric-ref"> of P/Metric, reached by their data attributes (this sheet names no
+   class that is not odc-bi-*); `p[...]` keeps these rules above metric.css's own phone rule, whatever the order of the sheets. */
+.odc-bi-summary p[data-lead]:not([data-secondary]) {
+  min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui) * 2);
+}
+
+.odc-bi-summary p[data-secondary] {
+  min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui) * 1);
+}
+
+@media (min-width: 1280px) {
+  .odc-bi-summary p[data-lead]:not([data-secondary]) {
+    min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui) * 3);
+  }
+
+  /* redesign bi R1 (F3, live check r1check: 163 -> 173 px left): in a sixth of the row the help line («Includes cancelled
+     orders») wraps to two lines once loaded, so it reserves two */
+  .odc-bi-summary p[data-secondary] {
+    min-block-size: calc(var(--od-x-type-caption-size) * var(--od-x-leading-ui) * 2);
+  }
+}
+
+/* redesign bi R1 (F3): while a new period or filter loads, the last figures stay in place, dimmed, instead of skeletons */
+.odc-bi-summary [data-stale] {
+  opacity: 0.6;
+}
+
+/* ── Sections (D1): a title and one or two cards ── */
+.odc-bi-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bi-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+/* one column on a phone, two from 1024; a card that is alone takes the row */
+.odc-bi-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--od-space-6);
+  min-inline-size: 0;
+}
+
+/* the total above the ranking of the orders by status */
+.odc-bi-total {
+  margin-block: 0 var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Where orders come from (D9): the switch above the map frame ── */
+.odc-bi-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* the fieldset only carries `disabled` to the buttons of the switch: no border, no padding, no minimum width */
+.odc-bi-map-toggle {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+/* while the locations load, the skeleton has the box of the frame (--od-x-map-height) and its radius */
+.odc-bi-map-skeleton {
+  inline-size: 100%;
+  border-radius: var(--od-radius-component);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .odc-bi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .odc-bi-grid > :only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Phone (< 768): the padding and the rhythm of Home on a phone */
+@media (max-width: 767px) {
+  .odc-bi-page {
+    padding: var(--od-space-4);
+    gap: var(--od-space-4);
+  }
+
+  .odc-bi-grid {
+    gap: var(--od-space-4);
+  }
+
+  /* redesign bi AC (B1): the blocks of the controls are 8 px apart (not 12). The chips are 32 seen with a 44 px area (6 px beyond their
+     box) and the pills are real boxes of 44, so 6 is what their areas need; 12 is only for two rows of chips (the presets, which
+     report-filters.css keeps at 12). Period 76 + filters 96 + channels 32 + two gaps of 8 = 220 px at 390 (it was 330). */
+  .odc-bi-controls {
+    gap: var(--od-space-2);
+  }
+}
+
+/* redesign bi FD (D9, live check a2): GoogleMapsMap draws its own box at 70% × 50%; main stretched it to its wrapper
+   (BI/AnalyticsMap/styles.js WrapperMap). Here it fills the frame the same way */
+.odc-bi-map-canvas {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.odc-bi-map-canvas > div {
+  position: relative !important;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}
+
+/*  (review AK-R2): under the Orders chart, what its series counts (cancelled orders too), in the caption of the help lines */
+.odc-bi-chart-note {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}

@@ -20,7 +20,13 @@ const LanguageSettingUI = (props) => {
     handleChangeFieldSetting
   } = props
 
-  const [languageState, t, { setLanguage }] = useLanguage()
+  const [languageState, t] = useLanguage()
+
+  // redesign (D4, M-02): the project default is saved with the Settings controller; the account selector no longer owns it.
+  const handleSelectDefault = (field) => {
+    if (field.default || !field.enabled) return
+    handleChangeFieldSetting(field.id, { default: true })
+  }
 
   return (
     <>
@@ -52,18 +58,27 @@ const LanguageSettingUI = (props) => {
                 <FieldContainer key={field.id}>
                   <div className='name'>{field.name}</div>
                   <RadioWrapper
+                    role='radio'
+                    aria-checked={!!field.default}
+                    aria-label={`${t('DEFAULT', 'Default')}: ${field.name}`}
                     className={field.default ? 'checked default' : 'default'}
-                    onClick={() => setLanguage(field)}
-                    isDisabled={!field.enabled}
+                    onClick={() => handleSelectDefault(field)}
+                    disabled={!field.enabled}
                   >
                     {(field.default) ? <RecordCircle /> : <Circle />}
                   </RadioWrapper>
                   <div className='status'>
-                    <Switch
-                      defaultChecked={field.enabled}
-                      disabled={languageState?.language?.id === field.id}
-                      onChange={(val) => handleChangeFieldSetting(field.id, { enabled: val })}
-                    />
+                    {/* the shared Switch takes no name, so the group carries "Status: <language>".
+                        the key changes after a failed save, which remounts the switch in its saved state. */}
+                    <div role='group' aria-label={`${t('STATE', 'Status')}: ${field.name}`}>
+                      <Switch
+                        key={`${field.id}-${languageFiledsState.revisions?.[field.id] || 0}`}
+                        defaultChecked={field.enabled}
+                        // review r1 #1: the default no longer follows your own language, so it locks by itself.
+                        disabled={field.default || languageState?.language?.id === field.id}
+                        onChange={(val) => handleChangeFieldSetting(field.id, { enabled: val })}
+                      />
+                    </div>
                   </div>
                 </FieldContainer>
               ))}

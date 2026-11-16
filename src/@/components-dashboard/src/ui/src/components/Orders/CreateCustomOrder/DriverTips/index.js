@@ -54,6 +54,8 @@ const DriverTipsUI = (props) => {
         {driverTipsOptions.map((option, i) => (
           <TipCard
             key={i}
+            type='button'
+            aria-pressed={option === driverTip && !customTip}
             className={`${(option === driverTip && !customTip) ? 'active' : ''}`}
             onClick={() => {
               handlerChangeOption(option)
@@ -65,6 +67,8 @@ const DriverTipsUI = (props) => {
         ))}
         {isDriverTipUseCustom && (
           <TipCard
+            type='button'
+            aria-pressed={customTip}
             className={`${customTip ? 'active' : ''}`}
             onClick={() => setCustomTip(true)}
           >
@@ -77,6 +81,7 @@ const DriverTipsUI = (props) => {
               <Input
                 name='drivertip'
                 type='text'
+                aria-label={t('CUSTOM_TIP', 'Custom')}
                 value={value}
                 placeholder={placeholderCurrency}
                 onChange={handleChangeDriverTip}

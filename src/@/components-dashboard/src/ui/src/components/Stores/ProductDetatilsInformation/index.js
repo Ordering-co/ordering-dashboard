@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useId, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLanguage, DragAndDrop, ExamineClick, useUtils } from '../../../../../index'
 import { Alert, Modal, ImageCrop, ColorPicker } from '../../Shared'
@@ -30,6 +30,18 @@ import {
   ShapeContentWrapper,
   ShapeBoxWrapper
 } from './styles'
+import { ProductFormValidationContext } from '../ProductDetails/productFormValidation'
+
+// bugs E X-3: the shared Switch drops aria props, so its checkbox has no name. Each row names it from the visible text
+// beside it (aria-labelledby on the native input), without changing the markup or the look of the row.
+const useSwitchLabel = () => {
+  const labelId = useId()
+  const rowRef = useRef(null)
+  useEffect(() => {
+    rowRef.current?.querySelector('input[type="checkbox"]')?.setAttribute('aria-labelledby', labelId)
+  })
+  return { labelId, rowRef }
+}
 
 export const ProductDetatilsInformation = (props) => {
   const {
@@ -46,6 +58,26 @@ export const ProductDetatilsInformation = (props) => {
 
   const [{ parsePrice, optimizeImage }] = useUtils()
   const formMethods = useForm()
+  // J2 review H1: while mounted, this form's rules (required name, regular price over the price) are what the editor's leave
+  // question checks before «Save and continue» (Stores/ProductDetails/productFormValidation.js)
+  const formValidation = useContext(ProductFormValidationContext)
+  const latestErrors = useRef(formMethods.errors)
+  latestErrors.current = formMethods.errors
+  useEffect(() => {
+    if (!formValidation) return undefined
+    // the same alert the form's Save shows (the effect on `formMethods.errors` below does not always see `trigger`'s errors)
+    const validate = async () => {
+      const valid = await formMethods.trigger()
+      if (!valid) {
+        // the errors reach `formMethods.errors` on the next render; read them there
+        await new Promise(resolve => setTimeout(resolve, 0))
+        showErrors(latestErrors.current)
+      }
+      return valid
+    }
+    formValidation.current = validate
+    return () => { if (formValidation.current === validate) formValidation.current = null }
+  }, [formValidation, formMethods.trigger])
 
   const isSchool = business?.vertical === SCHOOL_VERTICAL
   const toArray = (value) => {
@@ -63,6 +95,9 @@ export const ProductDetatilsInformation = (props) => {
   const currentAllergens = toArray(formState?.changes?.allergens ?? product?.allergens)
   const currentDietaryTags = toArray(formState?.changes?.dietary_tags ?? product?.dietary_tags)
   const [, t] = useLanguage()
+  const regularPriceSwitch = useSwitchLabel()
+  const inventorySwitch = useSwitchLabel()
+  const ribbonSwitch = useSwitchLabel()
   const allergenOptions = SCHOOL_ALLERGENS.map((a) => ({ value: a.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_ALLERGEN_${a.value.toUpperCase()}`, a.name)}</span> }))
   const dietaryOptions = SCHOOL_DIETARY_TAGS.map((d) => ({ value: d.value, content: <span style={{ marginLeft: '8px' }}>{t(`SCHOOL_DIETARY_${d.value.toUpperCase()}`, d.name)}</span> }))
   const productImageInputRef = useRef(null)
@@ -164,17 +199,20 @@ export const ProductDetatilsInformation = (props) => {
     handleChangeRibbon({ enabled: value })
   }
 
+  const showErrors = (errors) => {
+    if (Object.keys(errors || {}).length === 0) return
+    const content = Object.values(errors).map(error => {
+      if (error.type === 'min') return t('REGULAR_PRICE_MUST_BIGGER_PRICE', 'This regular price must be bigger than price')
+      else return error.message
+    })
+    setAlertState({
+      open: true,
+      content
+    })
+  }
+
   useEffect(() => {
-    if (Object.keys(formMethods.errors).length > 0) {
-      const content = Object.values(formMethods.errors).map(error => {
-        if (error.type === 'min') return t('REGULAR_PRICE_MUST_BIGGER_PRICE', 'This regular price must be bigger than price')
-        else return error.message
-      })
-      setAlertState({
-        open: true,
-        content
-      })
-    }
+    showErrors(formMethods.errors)
   }, [formMethods.errors])
 
   useEffect(() => {
@@ -216,7 +254,11 @@ export const ProductDetatilsInformation = (props) => {
     }
   }, [product?.price, formState?.changes?.price])
 
+  // bugs E renaming a saved product used to rewrite its slug, which breaks public / SEO links. Only a
+  // product with neither id nor slug (not saved yet) follows its name; a saved one keeps the slug it has (SEO options edits it).
+  const isSavedProduct = Boolean(product?.id || product?.slug)
   useEffect(() => {
+    if (isSavedProduct) return
     if (typeof formState?.changes?.name === 'undefined') return
     const generateCode = {
       target: {
@@ -294,8 +336,8 @@ export const ProductDetatilsInformation = (props) => {
             />
           </InputWrapper>
           <InputWrapper>
-            <RegularWrapper>
-              <span>{t('REGULAR_PRICE', 'Regular Price')}</span>
+            <RegularWrapper ref={regularPriceSwitch.rowRef}>
+              <span id={regularPriceSwitch.labelId}>{t('REGULAR_PRICE', 'Regular Price')}</span>
               <Switch
                 defaultChecked={(product?.in_offer && product?.offer_price) || false}
                 onChange={val => handleChangeFormState({ in_offer: val })}
@@ -378,8 +420,8 @@ export const ProductDetatilsInformation = (props) => {
           </StandardField>
         )}
 
-        <InventoryWrapper>
-          <span>{t('INVENTORY', 'Inventory')}</span>
+        <InventoryWrapper ref={inventorySwitch.rowRef}>
+          <span id={inventorySwitch.labelId}>{t('INVENTORY', 'Inventory')}</span>
           <Switch
             defaultChecked={product?.inventoried || false}
             onChange={val => handleChangeFormState({ inventoried: val })}
@@ -393,7 +435,12 @@ export const ProductDetatilsInformation = (props) => {
                 name='quantity'
                 placeholder={t('QUANTITY', 'Quantity')}
                 defaultValue={product?.quantity}
-                onChange={e => handleChangeFormState({ quantity: parseInt(e.target.value) })}
+                // bugs E: an emptied field used to put NaN in the changes. It sends null, as the shared menu editor does
+                // for "no quantity" (on the wire NaN was already serialised as null, so the request does not change).
+                onChange={e => {
+                  const quantity = parseInt(e.target.value)
+                  handleChangeFormState({ quantity: Number.isNaN(quantity) ? null : quantity })
+                }}
                 disabled={formState.loading}
                 autoComplete='off'
                 onKeyPress={(e) => {
@@ -406,8 +453,8 @@ export const ProductDetatilsInformation = (props) => {
           )
         }
 
-        <InventoryWrapper>
-          <span>{t('RIBBON', 'Ribbon')}</span>
+        <InventoryWrapper ref={ribbonSwitch.rowRef}>
+          <span id={ribbonSwitch.labelId}>{t('RIBBON', 'Ribbon')}</span>
           <Switch
             defaultChecked={product?.ribbon?.enabled || false}
             onChange={val => handleChangeEnable(val)}

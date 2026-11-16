@@ -4,15 +4,13 @@ import { useLanguage } from '../../../../../index'
 import { BusinessDeliveryDetails } from '../BusinessDeliveryDetails'
 import { BusinessPickupDetails } from '../BusinessPickupDetails'
 import { BusinessEta } from '../BusinessEta'
-import { DragScroll } from '../../Shared'
-import { addQueryToUrl } from '../../../utils'
-
-import {
-  Container,
-  TabsContainer,
-  Tab
-} from './styles'
 import { DriversGroupsListingDetails } from '../BusinessDeliveryGroupsDetails'
+import { TabPanel, Tabs } from '../../Shared/Product'
+import { useRequestLeave } from '../../Shared/Product/LeaveGuard'
+import { addQueryToUrl } from '../../../utils'
+import './business-delivery-pickup-more.css'
+
+const DEFAULT_TAB = 'delivery'
 
 export const BusinessDeliveryPickupMore = (props) => {
   const {
@@ -22,60 +20,70 @@ export const BusinessDeliveryPickupMore = (props) => {
   const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
 
-  const [selectedTab, setSelectedTab] = useState('delivery')
-
   const tabs = [
     { key: 'delivery', content: t('DELIVERY', 'Delivery') },
     { key: 'pickup', content: t('PICKUP', 'Pickup') },
     { key: 'driver_delivery_group', content: t('DRIVER_DELIVERY_GROUP', 'Driver Delivery Group') },
     { key: 'advanced_eta', content: t('ADVANCED_ETA', 'Advanced ETA') }
   ]
+  // main: every tab is offered; the EatStreet owner no longer loses Driver Delivery Group
+  const enabledTabs = tabs
+
+  // redesign stores 5.7 (G3-26): the `?tab=` is read against the tabs this person is offered. An unknown one opens Delivery,
+  // as it always did.
+  const requestedTab = query.get('tab')
+  const [selectedTab, setSelectedTab] = useState(() => (
+    enabledTabs.some(tab => tab.key === requestedTab) ? requestedTab : DEFAULT_TAB
+  ))
+  // A tab that is not offered is never the one shown.
+  const activeTab = enabledTabs.some(tab => tab.key === selectedTab) ? selectedTab : DEFAULT_TAB
 
   useEffect(() => {
     setIsExtendExtraOpen(false)
-  }, [selectedTab])
+  }, [activeTab])
 
-  const handleTabClick = (tab, isInitialRender) => {
+  // The address says where the person is: a missing or unknown `?tab=` is written back as Delivery (review 5.7 #7).
+  useEffect(() => {
+    if (requestedTab !== activeTab) addQueryToUrl({ tab: activeTab })
+  }, [activeTab])
+
+  const selectTab = (tab) => {
     setSelectedTab(tab)
-    if (!isInitialRender) {
-      addQueryToUrl({ tab })
-    }
+    addQueryToUrl({ tab })
   }
 
-  useEffect(() => {
-    const tab = query.get('tab')
-    const includeTab = tabs.some(_tab => _tab?.key === tab)
-    handleTabClick(tab && includeTab ? tab : 'delivery', !!(tab && includeTab))
-  }, [])
+  // redesign stores 5.7 (G3-23): a tab with unsaved work in the open one asks first (the editor's leave guard: «Keep editing ·
+  // Save · Discard»); without a host or with nothing dirty the tab changes at once.
+  const requestLeave = useRequestLeave()
+  const handleTabChange = (tab) => {
+    if (tab === activeTab) return
+    requestLeave(() => selectTab(tab))
+  }
 
   return (
-    <Container>
-      <h1>{t('DELIVERY_PICKUP_MORE', 'Delivery, pickup & more')}</h1>
-      <TabsContainer>
-        <DragScroll>
-          {tabs.map(tab => (
-            <Tab
-              key={tab.key}
-              active={tab.key === selectedTab}
-              onClick={() => handleTabClick(tab.key)}
-            >
-              {tab.content}
-            </Tab>
-          ))}
-        </DragScroll>
-      </TabsContainer>
-      {selectedTab === 'delivery' && (
-        <BusinessDeliveryDetails {...props} />
-      )}
-      {selectedTab === 'pickup' && (
-        <BusinessPickupDetails {...props} />
-      )}
-      {selectedTab === 'driver_delivery_group' && (
-        <DriversGroupsListingDetails {...props} />
-      )}
-      {selectedTab === 'advanced_eta' && (
-        <BusinessEta {...props} />
-      )}
-    </Container>
+    <div className='odc-dpm'>
+      <h1 className='odc-dpm-title'>{t('DELIVERY_PICKUP_MORE', 'Delivery, pickup & more')}</h1>
+      <Tabs
+        label={t('DELIVERY_PICKUP_MORE', 'Delivery, pickup & more')}
+        items={enabledTabs.map(tab => ({ value: tab.key, label: tab.content }))}
+        value={activeTab}
+        onValueChange={handleTabChange}
+      >
+        <TabPanel value={activeTab}>
+          {activeTab === 'delivery' && (
+            <BusinessDeliveryDetails {...props} />
+          )}
+          {activeTab === 'pickup' && (
+            <BusinessPickupDetails {...props} />
+          )}
+          {activeTab === 'driver_delivery_group' && (
+            <DriversGroupsListingDetails {...props} />
+          )}
+          {activeTab === 'advanced_eta' && (
+            <BusinessEta {...props} />
+          )}
+        </TabPanel>
+      </Tabs>
+    </div>
   )
 }

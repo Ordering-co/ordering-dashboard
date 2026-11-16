@@ -1,0 +1,98 @@
+/*
+ * The delivery services list (redesign DS-B2, decision 6): the cells of the table and the cards of a phone. Product's DataTable
+ * and RecordCard own the structure; this adds what a Provider cell is made of (the avatar, the name and «#id · group #n») and the
+ * card's rows. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no second set of rules.
+ */
+
+/* The anchor of the tour (tour_delivery_completed) wraps the list: it adds no box of its own */
+.odc-ds-list { min-inline-size: 0; }
+
+/* ── The Provider cell ── */
+.odc-ds-provider {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-ds-who {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-ds-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-ds-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name and the second line wrap and stop at two lines */
+td .odc-ds-name,
+th .odc-ds-name,
+td .odc-ds-sub,
+th .odc-ds-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The status while the configs load: a line in the place of the word, the width of a short status (a share of its cell or line) */
+.odc-ds-status-wait {
+  display: inline-block;
+  inline-size: 60%;
+  vertical-align: middle;
+}
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-ds-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-ds-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-ds-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-ds-card-meta {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.odc-ds-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--od-space-2) var(--od-space-4);
+  padding-block-start: var(--od-space-1);
+}

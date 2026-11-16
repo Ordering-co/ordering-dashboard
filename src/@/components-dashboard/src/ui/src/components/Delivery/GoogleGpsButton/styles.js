@@ -6,24 +6,29 @@ export const GpsButtonStyle = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
+  background: ${props => props.theme?.ordering?.semantic?.background ?? props.theme.colors?.backgroundPage ?? '#FFF'};
   padding: 0;
-  width: 43px;
-  height: 43px;
+  width: 44px;
+  height: 44px;
   line-height: 34px;
   text-align: center;
   border-radius: 50%;
   border-style: solid;
   border-width: 1px;
-  border-color: ${props => props.theme.colors.primary};
-  outline: none;
+  border-color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
+    outline-offset: 2px;
+  }
+
   ${props => props.theme?.rtl && css`
     left: 0;
     right: initial;
   `}
   svg {
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.primary};
     font-size: 25px;
   }
 `

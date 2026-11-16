@@ -18,7 +18,7 @@ const LOAD_TIMEOUT_MS = 12000
 /**
  * Renders the Calendly event type directly as an <iframe> (no widget.js). Listens for
  * Calendly's own postMessage events to auto-size the container and detect a completed booking.
- * Falls back to a prominent "open in a new tab" link if nothing loads within 12s.
+ * Falls back to a prominent "open in a new tab" notice (and collapses the blank iframe) if nothing loads within 12s.
  *
  * A booking made in a new tab can't be observed (no postMessage reaches this page), so once
  * the visitor opens the calendar in a new tab we offer an "I've booked my call" action that
@@ -92,16 +92,20 @@ export const CalendlyInlineEmbed = (props) => {
     onScheduled && onScheduled()
   }
 
+  // everything the visitor can act on sits above the iframe. The iframe is 700px tall before Calendly reports a height, and with
+  // an ad blocker it never does: the status, the notice and the new-tab link used to sit under that blank block, below the window.
   return (
     <Wrapper>
-      <IframeContainer $height={height}>
-        <StyledIframe
-          ref={iframeRef}
-          $sized={sized}
-          title={t('TRIAL_EXTENSION_CALENDAR_IFRAME_TITLE', 'Book a call with our team')}
-          src={embedUrl}
-        />
-      </IframeContainer>
+      <SecondaryLink href={fallbackUrl} target='_blank' rel='noopener noreferrer' {...newTabLinkHandlers}>
+        {t('TRIAL_EXTENSION_OPEN_NEW_TAB', 'Open in a new tab')}
+      </SecondaryLink>
+      {openedInNewTab && (
+        <BookedElsewhere>
+          <BookedElsewhereButton type='button' onClick={handleBookedElsewhere}>
+            {t('TRIAL_EXTENSION_ALREADY_BOOKED', "I've booked my call")}
+          </BookedElsewhereButton>
+        </BookedElsewhere>
+      )}
       {!loaded && !failed && (
         <StatusText role='status'>
           {t('TRIAL_EXTENSION_CALENDAR_LOADING', 'Loading the calendar…')}
@@ -115,16 +119,16 @@ export const CalendlyInlineEmbed = (props) => {
           </ProminentLink>
         </FailedNotice>
       )}
-      {openedInNewTab && (
-        <BookedElsewhere>
-          <BookedElsewhereButton type='button' onClick={handleBookedElsewhere}>
-            {t('TRIAL_EXTENSION_ALREADY_BOOKED', "I've booked my call")}
-          </BookedElsewhereButton>
-        </BookedElsewhere>
-      )}
-      <SecondaryLink href={fallbackUrl} target='_blank' rel='noopener noreferrer' {...newTabLinkHandlers}>
-        {t('TRIAL_EXTENSION_OPEN_NEW_TAB', 'Open in a new tab')}
-      </SecondaryLink>
+      {/* After the timeout the blank block is collapsed, not removed: if Calendly answers late it grows back (see handleMessage). */}
+      <IframeContainer $height={height} $collapsed={failed}>
+        <StyledIframe
+          ref={iframeRef}
+          $sized={sized}
+          $collapsed={failed}
+          title={t('TRIAL_EXTENSION_CALENDAR_IFRAME_TITLE', 'Book a call with our team')}
+          src={embedUrl}
+        />
+      </IframeContainer>
     </Wrapper>
   )
 }

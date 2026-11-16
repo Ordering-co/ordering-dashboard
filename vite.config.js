@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -9,8 +9,23 @@ import tailwindcss from '@tailwindcss/vite'
 import { loadEnv, searchForWorkspaceRoot } from 'vite'
 import { defineConfig } from 'vitest/config'
 import { sourceDownloadsLocalPlugin } from './scripts/source-downloads-fixture-adapter.js'
+import { buildVersionPayload } from './worker/version.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
+
+// Two Tailwind builds coexist (docs/BRAND.md › Boundary). Tailwind 4 (`@tailwindcss/vite`, from main) compiles only the
+// Mia buttons' sheet; the T1 pilot (`src/brand/pilot.css`, prefix `od-`) is Tailwind 3 through PostCSS (postcss.config.cjs),
+// and Tailwind 4 would reject its `od-` utilities. Every other stylesheet goes past this plugin untouched.
+const TAILWIND_V4_SHEET = /[\\/]styles[\\/]OrderingUi[\\/]tailwind\.css(?:\?.*)?$/
+const tailwindForMiaOnly = () => tailwindcss().map(plugin => {
+  const { transform } = plugin
+  if (!transform) return plugin
+  const handler = typeof transform === 'function' ? transform : transform.handler
+  const scoped = function (code, id, ...rest) {
+    return TAILWIND_V4_SHEET.test(id) ? handler.call(this, code, id, ...rest) : undefined
+  }
+  return { ...plugin, transform: typeof transform === 'function' ? scoped : { ...transform, handler: scoped } }
+})
 
 const createConfig = base => ({
   base,
@@ -19,7 +34,7 @@ const createConfig = base => ({
   },
   plugins: [
     sourceDownloadsLocalPlugin({ searchWorkspaceRoot: searchForWorkspaceRoot }),
-    tailwindcss(),
+    ...tailwindForMiaOnly(),
     storefrontPreviewPlugin(),
     storeOnboardingTranslationsPlugin(),
     {
@@ -60,6 +75,15 @@ const createConfig = base => ({
           resolve(__dirname, 'dist/config.json')
         )
       }
+    },
+    {
+      // WORKERS_CI_COMMIT_SHA exists only while Workers Builds runs this build, so it is
+      // written next to the assets; worker/index.js serves it at GET /version
+      // (docs/CLOUDFLARE.md › Verifying a deploy).
+      name: 'write-version-json',
+      writeBundle () {
+        writeFileSync(resolve(__dirname, 'dist/version.json'), JSON.stringify(buildVersionPayload()))
+      }
     }
   ],
   resolve: {
@@ -89,6 +113,10 @@ const createConfig = base => ({
   test: {
     globals: true,
     environment: 'jsdom',
+    // Same zone as CI (GitHub-hosted, Mac containers and Namespace all run in UTC): tests that read the machine's zone as
+    // «the browser zone» and use a fixed zone as «another one» broke on a machine set to that zone (America/Bogota).
+    // Tests that need a given zone still set process.env.TZ themselves.
+    env: { TZ: 'UTC' },
     setupFiles: './src/setupTests.js',
     // Git-hosted package path breaks vite-node (encoded "/" in pnpm store path).
     // Must stay test-only: in resolve.alias the no-op stub ships to dev/build and
@@ -105,13 +133,27 @@ const createConfig = base => ({
       // PR CI only needs json (70% gate) and text (job logs). Skip html/lcov.
       reporter: ['text', 'json'],
       reportsDirectory: './coverage',
-      // Scoped coverage gate; the full component library has ~237k statements.
-      // pages + utils + shell UI + tested Shared primitives.
-      // Expand coverage when additional components have tests.
+      // Include tested UI owners, foundations and compatible components.
+      // Generated tokens and the Worker have separate checks.
       include: [
         'src/pages/**/*.{js,jsx}',
         'src/utils/**/*.{js,jsx}',
         'src/config.js',
+        'src/App.js',
+        'src/index.js',
+        'src/brand/**/*.{js,jsx}',
+        'src/components/**/*.{js,jsx}',
+        'src/analytics/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/components/Popup/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/contexts/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/hooks/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/components/Shared/UI/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/components/Shared/Icon/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/styles/Select/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/styles/MultiSelect/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/styles/Toast/**/*.{js,jsx}',
+        'src/@/components-dashboard/src/ui/src/styles/fieldsTheme.js',
+        'src/@/components-dashboard/src/ui/src/styles/selectTheme.js',
         'src/@/components-dashboard/src/utils/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/utils/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/styles/Buttons/**/*.{js,jsx}',
@@ -133,7 +175,6 @@ const createConfig = base => ({
         'src/@/components-dashboard/src/ui/src/components/Shared/Image/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/components/Shared/LinkableText/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/components/Shared/Tabs/**/*.{js,jsx}',
-        'src/@/components-dashboard/src/ui/src/components/Shared/MoreSidebarLayout/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/components/Shared/SimpleSpinner/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/components/PageNotFound/**/*.{js,jsx}',
         'src/@/components-dashboard/src/ui/src/components/Banners/**/*.{js,jsx}',
@@ -156,8 +197,8 @@ const createConfig = base => ({
         '**/__tests__/**',
         '**/__mocks__/**',
         '**/coverage/**',
+        'src/brand/**/*.generated.js',
         '**/styles.js',
-        'src/@/components-dashboard/src/ui/src/themes/**',
         'src/@/components-dashboard/src/sdk/**',
         'src/@/components-dashboard/src/ui/src/config/constants.js',
         'src/@/components-dashboard/src/ui/src/config/currency.js'

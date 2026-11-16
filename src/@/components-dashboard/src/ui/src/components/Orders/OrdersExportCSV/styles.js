@@ -1,44 +1,22 @@
 import styled, { css } from 'styled-components'
 
+// redesign 5.2 audit-3: the trigger is the Product Menu, dressed by content-header.css. The old
+// `> button { height: 42px; margin-inline-end: 14px }` won over it whenever Base UI's focus guards
+// became the first child, and the trigger grew 10px when the menu opened.
 export const ExportContainer = styled.div`
   position: relative;
-  > button {
-    height: 42px;
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 14px;
-    `
-: css`
-      margin-right: 14px;
-    `}
-
-    svg {
-      ${props => props.theme?.rtl
-? css`
-        margin-right: 5px;
-      `
-: css`
-        margin-left: 5px;
-      `}
-    }
-  }
 `
 
 export const PopoverContainer = styled.div`
   position: absolute;
   margin-top: 5px;
   padding: 5px 0;
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-  box-shadow: 0 6px 12px rgba(0,0,0,.175);
-  z-index: 10000;
+  background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'};
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[2] ?? '0 6px 12px rgba(0,0,0,.175)'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '0px'};
+  z-index: calc(var(--od-x-layer-notice) - 10);
 
-  ${props => props.theme?.rtl
-? css`
-    left: 14px;
-  `
-: css`
-    right: 14px;
-  `}
+  inset-inline-end: 14px;
 
   ${({ disabled }) => disabled && css`
     pointer-events: none;
@@ -50,7 +28,7 @@ export const Item = styled.div`
   white-space: nowrap;
   cursor: pointer;
   &:hover {
-    background-color: #F2F2F2;
+    background-color: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#F2F2F2'};
   }
 `
 
@@ -60,8 +38,8 @@ export const ExportCSVResult = styled.div`
   align-items: center;
 
   h1 {
-    font-size: 24px;
-    color: ${props => props.theme.colors?.headingColor};
+    font-size: var(--od-type-title-size);
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
 
   button {
@@ -75,7 +53,7 @@ export const ExportCSVResult = styled.div`
 export const ErrorMessage = styled.p`
   text-align: center;
   margin: 5px 0;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 `
 
 export const TabsSelectContainer = styled.div`
@@ -84,9 +62,9 @@ export const TabsSelectContainer = styled.div`
   width: 100%;
 
   h1 {
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     text-align: center;
-    color: ${props => props.theme.colors?.headingColor};
+    color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
   }
 
   button {
@@ -108,15 +86,9 @@ export const TabItem = styled.label`
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: ${props => props.theme.colors?.headingColor};
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
 
   input {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 10px;
-    `
-: css`
-      margin-right: 10px;
-    `}
+    margin-inline-end: 10px;
   }
 `

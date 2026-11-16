@@ -4,6 +4,8 @@
  * it can carry probed URLs and raw Python payloads.
  */
 
+import { isNetworkFailure } from '../../../../../utils/networkFailure'
+
 const ORDERING_REJECTION_MARK = "{'error': True"
 
 const UNREACHABLE_DETAIL = /max retries exceeded|connection refused|name or service not known|client error|server error/i
@@ -74,6 +76,15 @@ const mapGloriaFoodError = (detail, status, t) => {
   return t('IMPORTER_ERROR_GLORIAFOOD_GENERIC', 'We could not import this GloriaFood menu. Try again or contact support.')
 }
 
+/**
+ * why Ordering did not take the menu for one store of a multi-store import (`partialFailures[].error`). The text is
+ * Ordering's or the HTTP status: never shown as is.
+ */
+export const classifyStoreFailure = (detail, t) => orderingRejectionMessage(detail, t) || t(
+  'IMPORTER_ERROR_STORE_FAILED',
+  'Ordering did not accept the menu for this store. Try again or contact support.'
+)
+
 const isRetryableStatus = (status) => status === 503 || status === 504
 
 /**
@@ -84,6 +95,18 @@ export const classifyMenuImportError = (source, detail, status, t) => {
   if (text.includes('MENU_IMPORT_RATE_LIMITED')) {
     const applied = Number((text.match(/applied=(\d+)/) || [])[1] || 0)
     const retryAfter = (text.match(/retry_after=(\d+)/) || [])[1]
+    if (applied === 1 && retryAfter) {
+      return {
+        message: fill(
+          t(
+            'IMPORTER_ERROR_RATE_LIMITED_APPLIED_ONE',
+            'Ordering updated 1 store, then reached its API limit. Try again in {{retry_after}} seconds.'
+          ),
+          { retry_after: retryAfter }
+        ),
+        retryable: true
+      }
+    }
     if (applied > 0 && retryAfter) {
       return {
         message: fill(
@@ -208,3 +231,15 @@ export const classifyMenuImportError = (source, detail, status, t) => {
 
 export const mapMenuImportError = (source, detail, status, t) =>
   classifyMenuImportError(source, detail, status, t).message
+
+// redesign IM-C2 (IM-03, IM-04): when the menu importer cannot be reached, fetch rejects with a TypeError whose text
+// depends on the browser («Failed to fetch», «NetworkError when attempting to fetch resource.», «Load failed»). Main showed that text
+// as is; this says it in words. Any other failure keeps its own message (the API's detail, or the caller's fallback).
+export const MENU_IMPORT_NETWORK_ERROR = "Couldn't reach the menu importer. Check your connection and try again."
+
+export const readableImportError = (error, t, fallback) => {
+  if (error instanceof TypeError && isNetworkFailure(error.message)) {
+    return t('IMPORTERS_NETWORK_ERROR', "Couldn't reach the menu importer. Check your connection and try again.")
+  }
+  return error?.message || fallback
+}

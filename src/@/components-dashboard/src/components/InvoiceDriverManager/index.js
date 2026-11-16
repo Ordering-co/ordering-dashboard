@@ -3,7 +3,7 @@ import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
-
+// Used only as the parity oracle in src/@/components-dashboard/src/utils/__tests__/invoiceMath.test.js; no production consumer.
 /**
  * Component to manage InvoiceDriverManager behavior without UI component
  */

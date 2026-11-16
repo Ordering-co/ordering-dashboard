@@ -1,0 +1,218 @@
+/*
+ * Analytics kit, blocks (redesign bi FC): the card of a report block, the ranking list and the satisfaction scores.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * Classes are odc-bi-*. Surface, border and radius are those of the Home cards (Home/HomePage/blocks.css).
+ */
+
+/* redesign bi FC (D8, D10): the card every report block sits in */
+.odc-bi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+}
+
+.odc-bi-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+/* redesign bi FC (auditor 11): sentence case, not capitals; section text size */
+.odc-bi-card-title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+/* redesign bi FC (BI-07): after «Try again» the focus lands here by script, and it shows */
+.odc-bi-card-title:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-bi-card-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-bi-card-body {
+  min-inline-size: 0;
+}
+
+/* redesign bi FC (D10): the empty text keeps the height of the chart, so the card does not jump when data arrives */
+.odc-bi-card-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--od-x-chart-height);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  text-align: center;
+}
+
+/* ── BarList (BI-13, BI-14): a table, one neutral bar per row ── */
+.odc-bi-barlist {
+  position: relative; /* containing block of the hidden caption and headers */
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0 var(--od-space-1);
+}
+
+/* the headers are hidden text (out of flow): the cell takes no height */
+.odc-bi-barlist thead th {
+  padding: 0;
+  border: 0;
+}
+
+.odc-bi-bar-name {
+  inline-size: 100%;
+  padding: 0;
+  font-weight: var(--od-font-weight-regular);
+  text-align: start;
+}
+
+.odc-bi-bar-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-block-size: var(--od-x-row-compact);
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  overflow: hidden;
+}
+
+/* The bar sits behind the name. Its length is the only inline style: a percentage of the largest value. One color, whatever the value */
+.odc-bi-bar-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  background: var(--od-action-soft);
+  border-radius: inherit;
+}
+
+.odc-bi-bar-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-bi-bar-label {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bi-bar-hint {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+/* The figure column shrinks to its content and ends the row */
+.odc-bi-bar-value {
+  inline-size: 1%;
+  padding-block: 0;
+  padding-inline: var(--od-space-3) var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: end;
+  white-space: nowrap;
+}
+
+/* ── SatisfactionScores (BI-02) ── */
+.odc-bi-scores {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-bi-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-block-size: var(--od-x-row-comfortable);
+  padding-block: var(--od-space-2);
+}
+
+.odc-bi-score + .odc-bi-score {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bi-score-name {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-bi-score-value {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-bi-score-note {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-bi-score-stars {
+  display: inline-flex;
+  gap: var(--od-x-space-half);
+}
+
+.odc-bi-star {
+  inline-size: var(--od-x-icon);
+  block-size: var(--od-x-icon);
+}
+
+/* Filled and empty are told apart by tone and by the note beside them; neither is red or green (BI-13) */
+.odc-bi-star[data-filled='true'] {
+  fill: var(--od-warning-functional);
+  stroke: var(--od-warning-functional);
+}
+
+.odc-bi-star[data-filled='false'] {
+  fill: var(--od-border-strong);
+  stroke: var(--od-border-strong);
+}
+
+/* Phone (< 768) */
+@media (max-width: 767px) {
+  /* redesign bi FC (BI-15, decision 12): neighbours at 12px or more, so the 44px areas of two actions do not overlap */
+  .odc-bi-card-actions {
+    gap: var(--od-space-3);
+  }
+}

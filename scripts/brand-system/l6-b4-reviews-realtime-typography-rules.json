@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "l6-b4-reviews-realtime-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-header-h1-20px-b0c100",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-reviewqualitytextcontainer-p-1-5dbfa4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "ReviewQualityTextContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-infoblock-p-12px-f6ca01",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-infoblock-p-bold-14px-ec1cac",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p > &.bold",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-comment-root-12px-e9670e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "Comment",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewdetails-notreviewed-root-14px-8eea2e",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewDetails/styles.js",
+      "component": "NotReviewed",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewlist-reviewstable-th-12px-6646b5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "ReviewsTable",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewlist-reviewobject-root-12px-781138",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "ReviewObject",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewlist-infoblock-p-11px-2b65a8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewlist-infoblock-p-bold-12px-a14b9f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p > &.bold",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-businessreviewlist-reviewmarkerwrapper-root-12px-f363fb",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-productreviewdetails-header-h1-20px-c0a9cf",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-productreviewdetails-reviewcomment-root-14px-d5d9ca",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/styles.js",
+      "component": "ReviewComment",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-productreviewdetails-notreviewed-root-14px-69953d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/styles.js",
+      "component": "NotReviewed",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewproductslisting-reviewstable-th-12px-aa0353",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/styles.js",
+      "component": "ReviewsTable",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewproductslisting-reviewobject-root-12px-aed15c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/styles.js",
+      "component": "ReviewObject",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewproductslisting-reviewmarkerwrapper-root-12px-1e6c3a",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-headerleft-h1-20px-b212f1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "HeaderLeft",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-tab-root-14px-de2343",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-formfield-label-13px-f7eafd",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "FormField",
+      "property": "font-size",
+      "context": "> label",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-filterbutton-root-14px-3c2b50",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "FilterButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-clearfilter-root-13px-71e75b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "ClearFilter",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-reviewslisting-errortext-root-13px-220214",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-userreviewdetails-header-h1-20px-d94702",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-userreviewdetails-reviewmeta-p-12px-93d64f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "component": "ReviewMeta",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-userreviewdetails-reviewqualitytextcontainer-p-12px-fc5df5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "component": "ReviewQualityTextContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-userreviewdetails-comment-root-12px-a7a0a7",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "component": "Comment",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-userreviewdetails-notreviewed-root-14px-3260c6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UserReviewDetails/styles.js",
+      "component": "NotReviewed",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-usersreviewlist-reviewstable-th-12px-1e4238",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "ReviewsTable",
+      "property": "font-size",
+      "context": "th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-usersreviewlist-reviewobject-root-12px-a8abf4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "ReviewObject",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-usersreviewlist-infoblock-p-11px-d6e24f",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p",
+      "match": "11px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-usersreviewlist-infoblock-p-bold-12px-e1446c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "InfoBlock",
+      "property": "font-size",
+      "context": "p > &.bold",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b4-reviews-realtime-usersreviewlist-reviewmarkerwrapper-root-12px-9c0ea5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b4-reviews-realtime-pres-businessreviewlist-reviewmarkerwrapper-svg-20px-235c3b",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/BusinessReviewList/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+    },
+    {
+      "id": "b4-reviews-realtime-pres-productreviewdetails-likesignwrapper-svg-22px-31fa3d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ProductReviewDetails/styles.js",
+      "component": "LikeSignWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "22px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "LikeSignWrapper svg: los glifos de pulgar arriba y abajo de la resena de producto."
+    },
+    {
+      "id": "b4-reviews-realtime-pres-reviewproductslisting-reviewmarkerwrapper-svg-20px-17da36",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewProductsListing/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+    },
+    {
+      "id": "b4-reviews-realtime-pres-reviewslisting-titlewrapper-svg-16px-e22393",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "TitleWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "TitleWrapper svg: el caret que despliega el selector de negocio."
+    },
+    {
+      "id": "b4-reviews-realtime-pres-reviewslisting-filterbutton-svg-12px-7b42ce",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/ReviewsListing/styles.js",
+      "component": "FilterButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "12px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "FilterButton svg: el caret dentro del boton de filtro."
+    },
+    {
+      "id": "b4-reviews-realtime-pres-usersreviewlist-reviewmarkerwrapper-svg-20px-9b9b51",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/BusinessIntelligence/UsersReviewList/styles.js",
+      "component": "ReviewMarkerWrapper",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO.",
+      "evidence": "ReviewMarkerWrapper svg: el glifo de estrella junto al numero de resenas."
+    }
+  ]
+}

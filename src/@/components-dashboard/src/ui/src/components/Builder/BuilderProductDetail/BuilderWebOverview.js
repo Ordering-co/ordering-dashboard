@@ -1,18 +1,21 @@
 import React from 'react'
-import { BoxArrowUpRight, Globe } from 'react-bootstrap-icons'
 
 import { BuilderProductDomain as BuilderProductDomainController, useLanguage } from '../../../../../index'
+import { ExternalLink, Globe } from '../../Shared/Icon'
 import { getDomainUrl, getStatusLabel, getTypeLabel, getUntitledName } from '../utils'
-import { Card, DetailsList, DomainLink, MutedText, WebOnlineCard } from '../styles'
 import { BuilderWebDomains } from './BuilderWebDomains'
+import './builder-detail.css'
+
+// redesign B2: the website's General tab with --od-* tokens and Shared/Icon glyphs; «Open website» is a link drawn as a
+// Product button (P/Button has no href: product.css styles `.odc-btn` on an anchor too). Same texts, links and new tabs as main.
 
 /** A domain as a link that opens the website in a new tab. */
 const DomainAnchor = ({ domain, t }) => (
-  <DomainLink href={getDomainUrl(domain)} target='_blank' rel='noopener noreferrer'>
+  <a className='odc-bd-link' href={getDomainUrl(domain)} target='_blank' rel='noopener noreferrer'>
     {domain}
-    <BoxArrowUpRight aria-hidden='true' />
-    <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
-  </DomainLink>
+    <ExternalLink className='odc-icon' aria-hidden='true' />
+    <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+  </a>
 )
 
 /** Puts `_name_` links into a translated text. */
@@ -40,9 +43,9 @@ const BuilderWebOverviewUI = (props) => {
   return (
     <>
       {main && (
-        <WebOnlineCard aria-labelledby='builder-web-online'>
-          <span aria-hidden='true'><Globe /></span>
-          <div>
+        <section className='odc-bd-online' aria-labelledby='builder-web-online'>
+          <span className='odc-bd-online-icon' aria-hidden='true'><Globe className='odc-icon' /></span>
+          <div className='odc-bd-online-text'>
             <h2 id='builder-web-online'>{t('BUILDER_WEB_ONLINE', 'Your website is online')}</h2>
             <p>
               {ownActive && temporary
@@ -51,26 +54,27 @@ const BuilderWebOverviewUI = (props) => {
             </p>
           </div>
           <a
-            className='btn btn-outline-primary'
-            style={{ borderRadius: 8 }}
+            className='odc-btn'
+            data-variant='secondary'
+            data-size='md'
             href={getDomainUrl(main)}
             target='_blank'
             rel='noopener noreferrer'
           >
             {t('BUILDER_OPEN_WEBSITE', 'Open website')}
-            <span className='sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
+            <span className='odc-sr-only'>{t('BUILDER_OPENS_NEW_TAB', '(opens in a new tab)')}</span>
           </a>
-        </WebOnlineCard>
+        </section>
       )}
 
-      <Card aria-labelledby='builder-web-general'>
-        <header>
+      <section className='odc-bd-card' aria-labelledby='builder-web-general'>
+        <header className='odc-bd-card-head'>
           <h2 id='builder-web-general'>{t('BUILDER_TAB_GENERAL', 'General')}</h2>
         </header>
-        <DetailsList>
+        <dl className='odc-bd-details'>
           <div>
             <dt>{t('BUILDER_NAME_IN_ORDERING', 'Name in Ordering')}</dt>
-            <dd>{product.name?.trim() ? product.name : <MutedText>{getUntitledName('web', t)}</MutedText>}</dd>
+            <dd>{product.name?.trim() ? product.name : <span className='odc-bd-muted'>{getUntitledName('web', t)}</span>}</dd>
           </div>
           <div>
             <dt>{t('BUILDER_TYPE', 'Type')}</dt>
@@ -80,8 +84,8 @@ const BuilderWebOverviewUI = (props) => {
             <dt>{t('BUILDER_STATUS', 'Status')}</dt>
             <dd>{getStatusLabel(product.product_status, t)}</dd>
           </div>
-        </DetailsList>
-      </Card>
+        </dl>
+      </section>
 
       <BuilderWebDomains {...props} temporary={temporary} />
     </>

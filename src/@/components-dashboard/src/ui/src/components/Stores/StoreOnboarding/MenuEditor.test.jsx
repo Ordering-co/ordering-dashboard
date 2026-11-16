@@ -9,13 +9,13 @@ import { BusinessProductAddFormUI } from '../BusinessProductAddForm'
 import { BusinessProductsCategoyInfo } from '../BusinessProductsCategoyInfo'
 vi.mock('../../../../../contexts/LanguageContext', () => ({ useLanguage: () => [{}, (_, fallback) => fallback] }))
 vi.mock('../../../../../contexts/ConfigContext', () => ({ useConfig: () => [{ configs: { appointments: { value: true }, use_parent_category: { value: '1' } } }] }))
-vi.mock('../../Shared', () => ({
+vi.mock('../../Shared/Confirm', () => ({
   Alert: ({ open, content }) => open ? <div role='alert'>{content}</div> : null,
-  Confirm: () => null,
-  Modal: ({ open, children }) => open ? <div role='dialog'>{children}</div> : null,
-  ImageCrop: ({ handleChangePhoto }) => <button onClick={() => handleChangePhoto('data:image/png;base64,Y3JvcHBlZA==')}>Crop</button>,
-  ColorPicker: () => null
+  Confirm: () => null
 }))
+vi.mock('../../Shared/Modal', () => ({ Modal: ({ open, children }) => open ? <div role='dialog'>{children}</div> : null }))
+vi.mock('../../Shared/ImageCrop', () => ({ ImageCrop: ({ handleChangePhoto }) => <button onClick={() => handleChangePhoto('data:image/png;base64,Y3JvcHBlZA==')}>Crop</button> }))
+vi.mock('../../Shared/ColorPicker', () => ({ ColorPicker: () => null }))
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 const categories = [{ key: 'c', name: 'Food', products: [{ key: 'p', name: 'Pizza', price: 0 }] }]
 const mount = (onChange = vi.fn().mockResolvedValue(true)) => render(<ThemeProvider theme={theme}><MenuEditor categories={categories} mode='manual' onChange={onChange} onEditingChange={vi.fn()} /></ThemeProvider>)

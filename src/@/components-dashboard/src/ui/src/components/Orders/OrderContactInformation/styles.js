@@ -1,17 +1,17 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { darken } from 'polished'
 
 export const BusinessInfo = styled.div`
   display: flex;
   align-items: center;
   padding: 15px 0;
   position: relative;
+  min-width: 0;
 
   > svg {
     position: absolute;
     top: 32px;
-    right: 10px;
+    inset-inline-end: 10px;
     transition: all 0.3s;
   }
 `
@@ -24,8 +24,8 @@ export const PhotoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 7.6px;
+  box-shadow: ${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'};
+  border-radius: ${props => props.theme?.ordering?.radius?.component ?? '7.6px'};
 
   svg {
     width: 40px;
@@ -60,45 +60,33 @@ export const Photo = (props) => {
 
 export const InfoContent = styled.div`
   flex: 1;
+  min-width: 0;
   > div {
     display: flex;
     align-items: center;
+    min-width: 0;
 
     > p {
       display: flex;
       margin: 0px;
       font-weight: 400;
-      color: ${props => props.theme.colors?.headingColor};
-    }
-
-    > button {
-      ${props => props.theme?.rtl
-? css`
-        margin-right: 8px;
-      `
-: css`
-        margin-left: 8px;
-      `}
+      min-width: 0;
+      overflow-wrap: anywhere;
+      color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
     }
   }
 
   > p {
-    color: ${props => props.theme.colors?.lightGray};
-    font-size: 12px;
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
   }
 
   .name-small {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
-  ${props => props.theme?.rtl
-? css`
-    margin-right: 15px;
-  `
-: css`
-    margin-left: 15px;
-  `}
+  margin-inline-start: 15px;
 `
 
 export const CustomerInfo = styled(BusinessInfo)``
@@ -107,22 +95,35 @@ export const ActionIconWrapper = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
-  right: 0;
-  top: 0;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+
+  > button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
   > .down-arrow {
     transition: all 0.3s;
     margin: 0 10px;
   }
   .edit-icon {
-    color: ${props => props.theme.colors.secundaryLight};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight};
     cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .down-arrow {
+      transition: none;
+    }
   }
 `
 
 export const ReviewWrapper = styled.div`
   margin-top: 23px;
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     font-weight: 500;
     margin-bottom: 12px;
   }
@@ -144,14 +145,14 @@ export const CompanySelectorContainer = styled.div`
   margin-top: 23px;
   margin-bottom: 13px;
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-top: 0;
     margin-bottom: 15px;
   }
   > div {
     width: 100%;
     border-radius: 8px;
-    background-color: ${props => props.theme.colors?.secundary};
+    background-color: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary};
 
     > div {
       &:first-child {
@@ -159,7 +160,7 @@ export const CompanySelectorContainer = styled.div`
         height: 50px;
       }
       > div:first-child {
-        color: ${props => props.theme.colors?.headingColor};
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
       }
     }
   }
@@ -170,14 +171,14 @@ export const DriverSelectorContainer = styled.div`
   margin-top: 23px;
   margin-bottom: 13px;
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-top: 0;
     margin-bottom: 15px;
   }
   > div {
     width: 100%;
     border-radius: 8px;
-    background-color: ${props => props.theme.colors?.secundary};
+    background-color: ${props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary};
 
     > div {
       > div {
@@ -186,14 +187,14 @@ export const DriverSelectorContainer = styled.div`
           height: 50px;
         }
         > div:first-child {
-          color: ${props => props.theme.colors?.headingColor};
+          color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
         }
       }
     }
   }
 `
 export const CutsomerDetail = styled.div`
-  border-bottom: 1px solid ${props => props.theme.colors?.secundary};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary};
   padding-bottom: 15px;
   margin-bottom: 15px;
   width: 100%;
@@ -201,30 +202,81 @@ export const CutsomerDetail = styled.div`
 
 export const CustomerInfoTable = styled.table`
   width: 100%;
+  table-layout: fixed;
 
   tr {
     td {
-      color: ${props => props.theme.colors?.lightGray};
-      font-size: 12px;
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray};
+      font-size: var(--od-type-secondary-size);
       margin: 0px;
+      padding-block: 4px;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: break-word;
 
       &:first-child {
-        color: ${props => props.theme.colors?.headingColor};
+        width: 34%;
+        padding-inline-end: 12px;
+        color: ${props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor};
       }
 
       > a {
-        color: ${props => props.theme.colors?.primary};
+        color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors?.primary};
         transition: all 0.3s linear;
         &:hover {
-          color: ${props => props.theme.colors?.headingColor};
+          color: ${props => props.theme?.ordering?.semantic?.action?.hover ?? props.theme.colors?.headingColor};
+        }
+        &:focus-visible {
+          outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+          outline-offset: 2px;
         }
       }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
     }
   }
 `
 
 export const ToggleItemWrapper = styled.div`
-  border-bottom: 1px solid ${props => props.theme.colors?.secundary};
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary};
+
+  > .disclosure-button {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: ${props => props.theme?.ordering?.radius?.component ?? '6px'};
+    background: transparent;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    .down-arrow {
+      margin: 0 10px;
+      transition: transform 0.3s;
+    }
+
+    &:hover {
+      background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+      outline-offset: -2px;
+    }
+  }
 
   ${({ active }) => active && css`
     border-bottom: none;
@@ -232,12 +284,32 @@ export const ToggleItemWrapper = styled.div`
       transform: rotateZ(180deg);
     }
   `}
+
+  @media (prefers-reduced-motion: reduce) {
+    > .disclosure-button .down-arrow {
+      transition: none;
+    }
+  }
 `
-export const ReviewButton = styled.span`
+export const ReviewButton = styled.button.attrs({ type: 'button' })`
   cursor: pointer;
-  color: ${props => props.theme.colors.primary};
-  font-size: 14px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  background: transparent;
+  color: ${props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
+  font-size: var(--od-type-control-size);
   text-decoration: underline;
+
+  &:hover {
+    background: ${props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+  }
 `
 
 export const CustomerEditWrapper = styled.div`
@@ -247,25 +319,27 @@ export const CustomerEditWrapper = styled.div`
   }
   .input-autocomplete {
     width: 100%;
-    background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
-    border: 1px solid ${props => props.theme.colors.borderColor};
+    background: ${props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'};
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
     border-radius: 8px;
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     padding: 10px 15px;
     outline: none;
     ::placeholder {
-      color: ${props => props.theme.colors.secundaryLight};
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight};
     }
 
     &:-ms-input-placeholder {
-      color: ${props => props.theme.colors.secundaryLight};
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight};
     }
 
     &::-ms-input-placeholder { /* Microsoft Edge */
-      color: ${props => props.theme.colors.secundaryLight};
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight};
     }
     &:focus {
-      border-color: ${() => darken(0.07, '#CCC')};
+      border-color: ${props => props.theme?.ordering?.semantic?.action?.focus ?? '#CCC'};
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+      outline-offset: 2px;
     }
   }
   button {
@@ -273,7 +347,7 @@ export const CustomerEditWrapper = styled.div`
     display: block;
     height: 44px;
     border-radius: 8px;
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 `
 export const WrapperMap = styled.div`

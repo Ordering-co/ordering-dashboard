@@ -35,8 +35,13 @@ export const UserMetaFields = (props) => {
         }
       }
       const response = await fetch(`${ordering.root}/users/${userId}/metafields`, requestOptions)
-      const { result } = await response.json()
-      setMetaFieldsList({ ...metaFieldsList, loading: false, metaFields: result })
+      const { error, result } = await response.json()
+      // redesign UF-B5 (M-UF11): an error answer leaves `metaFields` an array (the UI maps it) and records the error
+      if (!response.ok || error) {
+        setMetaFieldsList({ ...metaFieldsList, loading: false, metaFields: [], error: result ?? true })
+        return
+      }
+      setMetaFieldsList({ ...metaFieldsList, loading: false, metaFields: Array.isArray(result) ? result : [] })
     } catch (err) {
       setMetaFieldsList({ ...metaFieldsList, loading: false, error: err.message })
     }
@@ -65,6 +70,16 @@ export const UserMetaFields = (props) => {
           loading: false,
           result: {
             error: false
+          }
+        })
+      } else {
+        // redesign UF-B5 (M-UF11): a refused delete ends the loading and records why, instead of spinning forever
+        const body = await response.json().catch(() => null)
+        setActionState({
+          loading: false,
+          result: {
+            error: true,
+            result: body?.result ?? body?.message ?? response.statusText
           }
         })
       }

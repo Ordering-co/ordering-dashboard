@@ -114,3 +114,51 @@ export const rankCommandEntries = (entries = [], query = '', { limit } = {}) => 
   })
   return limit ? ranked.slice(0, limit) : ranked
 }
+
+/**
+ * Whether `query` is the entry's whole title or one of its whole aliases (case and accents aside).
+ */
+export const isExactCommandMatch = (entry, query = '') => {
+  const phrase = tokenizeCommandQuery(query).join(' ')
+  if (!entry || !phrase) return false
+  const { title, aliases } = prepareEntry(entry)
+  return title === phrase || aliases.includes(phrase)
+}
+
+/**
+ * Order of the local sections (`navigation`, `settings`, `actions`) for a query. when the best action is named
+ * exactly as the query and no page or setting is, the actions go first: «add business owner» opens the add form, ahead of the
+ * «Allow Business Owner to Register…» setting that only contains the words. Otherwise the order stays as given.
+ */
+export const orderLocalCommandSections = (sections = [], query = '') => {
+  const actions = sections.find(section => section.key === 'actions')
+  if (!actions?.items?.length || !isExactCommandMatch(actions.items[0], query)) return sections
+  const others = sections.filter(section => section !== actions)
+  if (others.some(section => section.items?.length && isExactCommandMatch(section.items[0], query))) return sections
+  return [actions, ...others]
+}
+
+const startsAWord = (text, terms) => {
+  const words = toWords(text || '')
+  return terms.every(term => words.some(word => word.startsWith(term)))
+}
+
+// Records are found by the API on their name, e-mail or phone: their subtitle (customer, e-mail, phone) carries the match for orders and users
+const SUBTITLE_MATCH_SECTIONS = ['orders', 'users']
+// "Search in" hand-offs repeat the query in their title for every query: they say nothing about how well a page or a record matches
+const NEVER_PROMOTED_SECTIONS = ['records']
+
+/**
+ * the order of the sections is decided by their best match. A section whose title says the query (every term is a whole word or the
+ * start of one) goes ahead of a section that only matches by a typo (one edit, «carlos» for the alias «cargos»), by an alias, by a hidden key or by its
+ * subtitle. Nothing is removed and the order is kept among sections of the same kind.
+ */
+export const orderSectionsByTitleMatch = (sections = [], query = '') => {
+  const terms = tokenizeCommandQuery(query)
+  if (!terms.length) return sections
+  const isStrong = (section) => !!section && !NEVER_PROMOTED_SECTIONS.includes(section.key) && (section.items || []).some(item =>
+    startsAWord(item.title, terms) || (SUBTITLE_MATCH_SECTIONS.includes(section.key) && startsAWord(item.subtitle, terms)))
+  const strong = sections.filter(isStrong)
+  if (!strong.length || strong.length === sections.length) return sections
+  return [...strong, ...sections.filter(section => !strong.includes(section))]
+}

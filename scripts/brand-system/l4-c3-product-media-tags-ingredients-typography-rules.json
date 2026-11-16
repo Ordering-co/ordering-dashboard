@@ -1,0 +1,318 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-c3-product-media-tags-ingredients-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "c3-productgallery-prodcutgallerycontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "ProdcutGalleryContainer",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-productgallery-galleryitembottom-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "GalleryItemBottom",
+   "property": "font-size",
+   "context": "> input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c3-productgallery-uploadimageiconcontainer-p-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "UploadImageIconContainer",
+   "property": "font-size",
+   "context": "p",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "c3-productgallery-dropdownwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "DropDownWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-productvideos-prodcutvideoscontainer-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductVideos/styles.js",
+   "component": "ProdcutVideosContainer",
+   "property": "font-size",
+   "context": "> h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-productvideos-addnewvideo-input-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductVideos/styles.js",
+   "component": "AddNewVideo",
+   "property": "font-size",
+   "context": "input",
+   "match": "13px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c3-productvideos-addnewvideo-button-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductVideos/styles.js",
+   "component": "AddNewVideo",
+   "property": "font-size",
+   "context": "button",
+   "match": "13px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-productvideos-galleryitem-button-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductVideos/styles.js",
+   "component": "GalleryItem",
+   "property": "font-size",
+   "context": "button",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-productvideos-galleryurl-root-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductVideos/styles.js",
+   "component": "GalleryURL",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "13px",
+   "replace": "var(--od-type-identifier-size)"
+  },
+  {
+   "id": "c3-productstartguide-container-h2-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductStartGuide/styles.js",
+   "component": "Container",
+   "property": "font-size",
+   "context": "h2",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-productstartguide-infowrapper-h3-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductStartGuide/styles.js",
+   "component": "InfoWrapper",
+   "property": "font-size",
+   "context": "h3",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c3-productstartguide-infowrapper-p-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductStartGuide/styles.js",
+   "component": "InfoWrapper",
+   "property": "font-size",
+   "context": "p",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "c3-productingredient-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredient/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-productingredient-ingredientoption-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredient/styles.js",
+   "component": "IngredientOption",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c3-productingredientdetails-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredientDetails/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-productingredientdetails-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredientDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-productingredientdetails-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredientDetails/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-producttagdetails-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagDetails/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c3-producttagdetails-uploadimageicon-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagDetails/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-producttagdetails-formcontroller-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagDetails/styles.js",
+   "component": "FormController",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-producttagdetails-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-producttagslist-selectbuttongroup-button-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagsList/styles.js",
+   "component": "SelectButtonGroup",
+   "property": "font-size",
+   "context": "button",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c3-producttagslist-producttagwrapper-span-tag-name-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagsList/styles.js",
+   "component": "ProductTagWrapper",
+   "property": "font-size",
+   "context": "span.tag-name",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "c3-pres-productgallery-uploadimageiconcontainer-svg-50px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "UploadImageIconContainer",
+   "property": "font-size",
+   "context": "svg",
+   "match": "50px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ImageIcon/PlusCircle inside the drag-and-drop area, no text in the node."
+  },
+  {
+   "id": "c3-pres-productgallery-dropdownwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductGallery/styles.js",
+   "component": "DropDownWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ThreeDotsVertical dropdown trigger icon."
+  },
+  {
+   "id": "c3-pres-productstartguide-iconwrapper-svg-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductStartGuide/styles.js",
+   "component": "IconWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "24px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. Guide option icon; the rtl conditional touches margin, not font-size."
+  },
+  {
+   "id": "c3-pres-productingredient-ingredientoption-svg-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredient/styles.js",
+   "component": "IngredientOption",
+   "property": "font-size",
+   "context": "svg",
+   "match": "13px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ChevronRight, the single svg child of the list row."
+  },
+  {
+   "id": "c3-pres-productingredientdetails-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductIngredientDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ThreeDots trigger icon."
+  },
+  {
+   "id": "c3-pres-producttagdetails-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ThreeDots trigger icon."
+  },
+  {
+   "id": "c3-pres-producttagslist-tagimagewrapper-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductTagsList/styles.js",
+   "component": "TagImageWrapper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c3 typography inventory pins this declaration to an icon-only node. ImageIcon fallback when the tag has no image."
+  }
+ ]
+}

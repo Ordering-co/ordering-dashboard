@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const InsertLinkContainer = styled.div`
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-bottom: 25px;
   }
@@ -18,6 +18,6 @@ export const WrapperInput = styled.div`
   margin-bottom: 25px;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
   }
 `

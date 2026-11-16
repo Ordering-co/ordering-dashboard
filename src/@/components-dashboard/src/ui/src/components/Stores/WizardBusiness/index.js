@@ -2,77 +2,33 @@ import React from 'react'
 import { useLanguage } from '../../../../../index'
 import { useTheme } from 'styled-components'
 import { SideBar } from '../../Shared'
-import { BusinessSchedule } from '../BusinessSchedule'
-import { BusinessPaymentMethods } from '../BusinessPaymentMethods'
 import { BusinessProductsCategoyDetails } from '../BusinessProductsCategoyDetails'
 import { BusinessProductAddForm } from '../BusinessProductAddForm'
 import { Button } from '../../../styles'
 
 import {
-  BusinessScheduleContainer,
-  BusinessPaymentMethodsContainer,
   TurtorialEndContainier,
   FirstStoreContainer
 } from './styles'
 
+// the steps after /stores/add, the only add. It already asks for the opening hours and the payment methods, so the
+// tutorial is the first category, the first product and the end.
 export const WizardBusiness = (props) => {
   const {
     isTutorialMode,
     business,
     openTutorialSidebarState,
     setOpenTutorialSidebarState,
-    handleSucessUpdateBusiness,
-    setIsTutorialMode
+    handleSucessUpdateBusiness
   } = props
 
   const [, t] = useLanguage()
   const theme = useTheme()
 
-  const handleCloseTutorialSidebar = () => {
-    setIsTutorialMode(false)
-    setOpenTutorialSidebarState(null)
-  }
-
   return (
     <>
       {isTutorialMode && (
         <>
-          {openTutorialSidebarState === 'schedule' && (
-            <SideBar
-              id='business_schedule_detail'
-              open={openTutorialSidebarState === 'schedule'}
-              onClose={() => handleCloseTutorialSidebar()}
-            >
-              <BusinessScheduleContainer>
-                <BusinessSchedule
-                  isTutorialMode
-                  business={business}
-                  handleSuccessUpdate={result => {
-                    handleSucessUpdateBusiness(result)
-                    setOpenTutorialSidebarState('payments')
-                  }}
-                  handleTutorialSkip={() => setOpenTutorialSidebarState('payments')}
-                />
-              </BusinessScheduleContainer>
-            </SideBar>
-          )}
-          {openTutorialSidebarState === 'payments' && (
-            <SideBar
-              id='business_payments_detail'
-              open={openTutorialSidebarState === 'payments'}
-              onClose={() => setOpenTutorialSidebarState(null)}
-            >
-              <BusinessPaymentMethodsContainer>
-                <BusinessPaymentMethods
-                  isTutorialMode
-                  business={business}
-                  handleSuccessUpdate={handleSucessUpdateBusiness}
-                  handleTutorialContinue={() => setOpenTutorialSidebarState('new_category')}
-                />
-              </BusinessPaymentMethodsContainer>
-            </SideBar>
-          )}
-
           {openTutorialSidebarState === 'new_category' && (
             <SideBar
               id='business_new_category_form'
@@ -105,7 +61,7 @@ export const WizardBusiness = (props) => {
                 isTutorialMode
                 business={business}
                 setIsAddProduct={() => setOpenTutorialSidebarState('tutorial_end')}
-                categorySelected={business?.categories[0]}
+                categorySelected={business?.categories?.[0]}
                 handleTutorialSkip={() => setOpenTutorialSidebarState('tutorial_end')}
               />
             </SideBar>

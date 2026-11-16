@@ -1,0 +1,1605 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-b2-business-add-wizard-guards",
+ "categories": [
+  "pilot-guards"
+ ],
+ "rules": [
+  {
+   "id": "l4-b2-stores-businessadd-businessdetails-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "addressOnly ? { value: formState?.changes?.address ?? '' } : { defaultValue: formState?.changes?.address ?? '' }",
+      "context": "JSXSpreadAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression. Brought by main (merged into the redesign 2026-10-09): the addressOnly onboarding mode spreads either a controlled value or a defaultValue onto GoogleAutocompleteInput; both branches hold only the address string, no colour, font or size key."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b2-stores-businessadd-businessdetails-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/BusinessDetails/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "FormControl",
+      "property": "font",
+      "match": "({ noBottom }) => noBottom && css`\n    margin-bottom: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "FormControl",
+      "property": "font",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "FormControl",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "border",
+      "match": "1px solid #DEE2E6",
+      "context": ".select",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "border-color",
+      "match": "() => darken(0.07, '#CCC')",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "color",
+      "match": "props => props.theme.colors.danger",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "color",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "color-block",
+      "match": "({ noBottom }) => noBottom && css`\n    margin-bottom: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "FormControl",
+      "property": "color-block",
+      "match": "props => props.theme.colors.secundaryLight",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "GoogleMapContainer",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b2-stores-businessadd-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessAdd/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": []
+   }
+  },
+  {
+   "id": "l4-b2-stores-businesspreview-index-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/index.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": []
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "jsx-prop",
+      "property": "color",
+      "match": "'primary'",
+      "context": "JSXAttribute",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     }
+    ]
+   }
+  },
+  {
+   "id": "l4-b2-stores-businesspreview-styles-js",
+   "kind": "pilot-guard",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/BusinessPreview/styles.js",
+   "allowedBaseUiSources": [],
+   "typographyPolicy": {
+    "roles": [
+     "control",
+     "controlValue",
+     "content",
+     "secondary",
+     "sectionTitle",
+     "title",
+     "identifier"
+    ],
+    "exceptions": [
+     {
+      "component": "AddressWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "AddressWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessCartContent",
+      "property": "font",
+      "match": "({ isModal }) => !isModal && css`\n    border: 1px solid #E9ECEF;\n    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);\n    border-radius: 7.6px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessCartWrapper",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n      width: 100%;\n      padding: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessCartWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      padding-left: 0px;\n      padding-right: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    margin-left: -20px;\n    width: calc(100% + 40px);\n    height: 150px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "font",
+      "match": "props => props.bgimage && !props.isClosed && css`\n    background-image: url(${props.bgimage});\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "font",
+      "match": "props => props.bgimage && props.isClosed && css`\n    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${props.bgimage});\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "font",
+      "match": "props => props.isSkeleton && css`\n    background-color: #cccccc;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font",
+      "match": "({ isSkeleton }) => isSkeleton && css`\n    > span {\n      display: flex;\n      margin-right: 5px;\n      ${props => props.theme?.rtl && css`\n        margin-left: 5px;\n        margin-right: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 5px;\n        margin-right: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 3,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".dot",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".review > p",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font-size",
+      "match": "15px",
+      "context": ".review > svg",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "font-size",
+      "match": "12px",
+      "context": "h5",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessInfoContainer",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n      flex-direction: row;\n      align-items: flex-end;\n      justify-content: space-between;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n          margin-left: 5px;\n          margin-right: 0;\n        `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    padding-left: 5px;\n    padding-right: 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".preorder-Reviews > span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".preorder-Reviews > span > &.dot",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".type",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "font-size",
+      "match": "20px",
+      "context": "h2",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessMoreDetail",
+      "property": "font-size",
+      "match": "20px",
+      "context": "svg",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "BusinessProductListWrapper",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n      width: 100%;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardContainer",
+      "property": "font",
+      "match": "({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(50% - 20px);\n    }\n\n    @media (min-width: 993px) {\n      width: calc(33.3% - 15px);\n      margin: 10px 15px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 15px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardContainer",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 100% !important;\n    margin: 10px 0px !important;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardContainer",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "10px",
+      "context": "@media (min-width: 1024px) > p",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "12px",
+      "context": "@media (min-width: 1024px) > span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "12px",
+      "context": "h1",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "8px",
+      "context": "p",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "CardInfo",
+      "property": "font-size",
+      "match": "10px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "CartWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "CartWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "Container",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 8px;\n    border: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "DesktopBackground",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 0 0 8px 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "context": "button",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "EmptyCart",
+      "property": "font-size",
+      "match": "12px",
+      "context": ".empty-content > p",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "EmptyCart",
+      "property": "font-size",
+      "match": "35px",
+      "context": ".empty-content > svg",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "MobileCartViewWrapper",
+      "property": "font-size",
+      "match": "14px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    -webkit-mask-image: url(${({ src }) => src});\n    mask-image: url(${({ src }) => src});\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-position: center;\n    mask-position: center;\n    height: 495px;\n    overflow: auto;\n    ::-webkit-scrollbar {\n      width: 0px;\n    }\n    background: ${props => props.theme.colors.backgroundPage};\n    @media (min-width: 576px) {\n      height: 630px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "MomentWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "OrderTypeWrapper",
+      "property": "font-size",
+      "match": "12px",
+      "context": "span",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "PriceWrapper",
+      "property": "font",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "PriceWrapper",
+      "property": "font-size",
+      "match": "10px",
+      "context": ".off-price",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "PriceWrapper",
+      "property": "font-size",
+      "match": "13px",
+      "context": ".off-price > @media (min-width: 1024px)",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "font",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 270px;\n    height: 540px;\n    background-image: url(${({ src }) => src});\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position: center;\n    padding: 29px;\n    @media (min-width: 576px) {\n      width: 325px;\n      height: 650px;\n      padding: 12px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SoldOut",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "SoldOut",
+      "property": "font-size",
+      "match": "10px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "Tab",
+      "property": "font-size",
+      "match": "12px",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "UserWrapper",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 8px;\n        margin-right: 0;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: 10px;\n      margin-left: 0;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n      margin: 0px 10px 0px 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "font-size",
+      "match": "18px",
+      "context": "h3",
+      "count": 1,
+      "reason": "This declaration belongs to BusinessPreview, which renders a MINIATURE SIMULATION of the customer-facing marketplace storefront inside a 270x540 phone mockup frame, not a dashboard surface. Preserved as a simulation contract; any change reopens classification.",
+      "evidence": "Evidence: Container sets width 270px height 540px with a phone mockup background under isMobileView; BusinessSummary opens it inside a preview Modal. Same class of decision as L3 preserving Arial in OrderToPrintTicket as a physical contract."
+     },
+     {
+      "component": "WrapLogo",
+      "property": "font",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     },
+     {
+      "component": "WrapperBusinessLogo",
+      "property": "font",
+      "match": "({ isMobileView }) => isMobileView && css`\n    height: 50px;\n    width: 50px;\n    margin-top: -25px;\n    margin-bottom: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+      "evidence": "Verified mechanically over every font interpolation of the batch: none contains a literal font-size declaration."
+     }
+    ]
+   },
+   "semanticColorPolicy": {
+    "exceptions": [
+     {
+      "component": "AddressWrapper",
+      "property": "color",
+      "match": "rgb(177, 188, 204)",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "AddressWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartContent",
+      "property": "background",
+      "match": "props => props.theme.colors?.backgroundPage || '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartContent",
+      "property": "border",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartContent",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgba(0, 0, 0, 0.12)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartContent",
+      "property": "color-block",
+      "match": "({ isModal }) => !isModal && css`\n    border: 1px solid #E9ECEF;\n    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);\n    border-radius: 7.6px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartWrapper",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n      width: 100%;\n      padding: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessCartWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      padding-left: 0px;\n      padding-right: 15px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "background-color",
+      "match": "#cccccc",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "color",
+      "match": "#FFF",
+      "context": "h1",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    margin-left: -20px;\n    width: calc(100% + 40px);\n    height: 150px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "color-block",
+      "match": "props => props.bgimage && !props.isClosed && css`\n    background-image: url(${props.bgimage});\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "color-block",
+      "match": "props => props.bgimage && props.isClosed && css`\n    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${props.bgimage});\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessContainer",
+      "property": "color-block",
+      "match": "props => props.isSkeleton && css`\n    background-color: #cccccc;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color",
+      "match": "#909BA9",
+      "context": ".dot",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color",
+      "match": "#909BA9",
+      "context": ".review",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color",
+      "match": "#909BA9",
+      "context": "h5",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color-block",
+      "match": "({ isSkeleton }) => isSkeleton && css`\n    > span {\n      display: flex;\n      margin-right: 5px;\n      ${props => props.theme?.rtl && css`\n        margin-left: 5px;\n        margin-right: 0px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 5px;\n        margin-right: 0px;\n      `",
+      "context": "<dynamic>",
+      "count": 3,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessDetail",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoContainer",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n      flex-direction: row;\n      align-items: flex-end;\n      justify-content: space-between;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "color",
+      "match": "#909BA9",
+      "context": ".preorder-Reviews > span > &.dot",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "color",
+      "match": "props => props.theme.colors.darkTextColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "color",
+      "match": "props => props.theme?.colors.primary",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n          margin-left: 5px;\n          margin-right: 0;\n        `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessInfoItem",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    padding-left: 5px;\n    padding-right: 0;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessMoreDetail",
+      "property": "color",
+      "match": "white",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "BusinessProductListWrapper",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n      width: 100%;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "background",
+      "match": "({ soldOut }) => soldOut ? '#6c757d33' : '#FFF'",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "border",
+      "match": "1px solid #E9ECEF",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "color-block",
+      "match": "({ isCartOnProductsList }) => isCartOnProductsList\n? css`\n    @media (min-width: 993px) {\n      width: calc(50% - 20px);\n      margin: 10px 20px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `}\n    }\n  `\n: css`\n    @media (min-width: 681px) {\n      width: calc(50% - 20px);\n    }\n\n    @media (min-width: 993px) {\n      width: calc(33.3% - 15px);\n      margin: 10px 15px 10px 0px;\n      ${props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 15px;\n      `}\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 100% !important;\n    margin: 10px 0px !important;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 15px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardContainer",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin: 10px 0px 10px 20px;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardInfo",
+      "property": "color",
+      "match": "props => props.theme.colors.darkTextColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardInfo",
+      "property": "color",
+      "match": "#263238",
+      "context": "h1",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardInfo",
+      "property": "color",
+      "match": "#909BA9",
+      "context": "p",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CardInfo",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      text-align: right;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CartWrapper",
+      "property": "background",
+      "match": "#2C7BE5",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CartWrapper",
+      "property": "color",
+      "match": "white",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CartWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 5px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "CategoryWrapper",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Container",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Container",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 8px;\n    border: 1px solid ${props => props.theme.colors.borderColor};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Contentheader",
+      "property": "border-bottom",
+      "match": "1px solid #e9ecef",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "DesktopBackground",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    border-radius: 0 0 8px 8px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "DesktopHeader",
+      "property": "background",
+      "match": "props => props.theme.colors.gray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "DesktopHeader",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "background",
+      "match": "#F8F9FA",
+      "context": "button",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "border",
+      "match": "1px solid #F8F9FA",
+      "context": "button",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "color",
+      "match": "props => props.theme.colors.darkTextColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyBtnWrapper",
+      "property": "color",
+      "match": "#748194",
+      "context": "button",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyCart",
+      "property": "color",
+      "match": "#B1BCCC",
+      "context": ".empty-content > p",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "EmptyCart",
+      "property": "color",
+      "match": "#B1BCCC",
+      "context": ".empty-content > svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "HeaderInfo",
+      "property": "background",
+      "match": "#f8f9fa",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "HeaderInfo",
+      "property": "border",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MobileCartViewWrapper",
+      "property": "background-color",
+      "match": "white",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MobileCartViewWrapper",
+      "property": "box-shadow",
+      "match": "0px 4px 10px rgb(0 0 0 / 12%)",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MobileContentMask",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    -webkit-mask-image: url(${({ src }) => src});\n    mask-image: url(${({ src }) => src});\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-position: center;\n    mask-position: center;\n    height: 495px;\n    overflow: auto;\n    ::-webkit-scrollbar {\n      width: 0px;\n    }\n    background: ${props => props.theme.colors.backgroundPage};\n    @media (min-width: 576px) {\n      height: 630px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MobileHeaderWrapper",
+      "property": "color",
+      "match": "#909BA9",
+      "context": "svg",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MomentWrapper",
+      "property": "border-left",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MomentWrapper",
+      "property": "border-right",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "MomentWrapper",
+      "property": "color",
+      "match": "#909ba9",
+      "context": "span",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "OrderTypeWrapper",
+      "property": "color",
+      "match": "#909ba9",
+      "context": "span",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "PriceWrapper",
+      "property": "color",
+      "match": "#909BA9",
+      "context": ".off-price",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "PriceWrapper",
+      "property": "color-block",
+      "match": "props => props.theme.rtl && css`\n      margin-right: 5px;\n      margin-left: 0;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "background",
+      "match": "props => props.theme.colors.backgroundPage",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "color-block",
+      "match": "({ isMobileView }) => !isMobileView && css`\n    background: ${props => props.theme.colors.backgroundPage};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "ProductInfoModalPreview",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    width: 270px;\n    height: 540px;\n    background-image: url(${({ src }) => src});\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-position: center;\n    padding: 29px;\n    @media (min-width: 576px) {\n      width: 325px;\n      height: 650px;\n      padding: 12px;\n    }\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "SoldOut",
+      "property": "background",
+      "match": "#495057 0% 0% no-repeat padding-box",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "SoldOut",
+      "property": "color",
+      "match": "white",
+      "context": "<root>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "SoldOut",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    left: 0px;\n    right: initial;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors.lightGray",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Tab",
+      "property": "color",
+      "match": "props => props.theme.colors?.headingColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => !active && css`\n    color: ${props => props.theme.colors.lightGray};\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "({ active }) => active && css`\n    border-bottom: 1px solid;\n    font-weight: 500;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "Tab",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl\n? css`\n    margin-left: 20px;\n  `\n: css`\n    margin-right: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "UserWrapper",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-left: 10px;\n      margin-right: 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "color",
+      "match": "props => props.theme?.colors.darkTextColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n        margin-left: 8px;\n        margin-right: 0;\n      `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin-right: 10px;\n      margin-left: 0;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapAllCategories",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n      margin: 0px 10px 0px 0px;\n    `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapLogo",
+      "property": "color-block",
+      "match": "props => props.theme?.rtl && css`\n    margin-right: 5px;\n    margin-left: 0px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapperBusinessLogo",
+      "property": "color-block",
+      "match": "({ isMobileView }) => isMobileView && css`\n    height: 50px;\n    width: 50px;\n    margin-top: -25px;\n    margin-bottom: 20px;\n  `",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "WrapperSearch",
+      "property": "border-bottom",
+      "match": "props => props.theme.colors.borderColor",
+      "context": "<dynamic>",
+      "count": 1,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     },
+     {
+      "component": "jsx-prop",
+      "property": "color-block",
+      "match": "props",
+      "context": "JSXSpreadAttribute",
+      "count": 2,
+      "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+      "evidence": "The b2-business-add-wizard semantic inventory pins the full expression."
+     }
+    ]
+   }
+  }
+ ]
+}

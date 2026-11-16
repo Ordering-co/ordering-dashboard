@@ -1,81 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { useWindowSize } from '../../../hooks/useWindowSize'
+import React, { useState } from 'react'
 import { useLanguage } from '../../../../../index'
-import { IconButton } from '../../../styles'
-import { XLg } from 'react-bootstrap-icons'
+import { TabPanel, Tabs } from '../../Shared/Product'
 import { GeneralInstagram } from './GeneralInstagram'
 import { AdvancedInstagram } from './AdvancedInstagram'
-import {
-  Container,
-  Header,
-  LeftHeader,
-  Tabs,
-  Tab
-} from './styles'
 
-export const BusinessSalesInstagram = (props) => {
-  const { onClose, socialItem, storeUrl } = props
-
-  const { width } = useWindowSize()
+// redesign stores 5.15b (; G5-04, G5-12, G5-13, G5-14): the Instagram guide, drawn inside BusinessSalesChannel's
+// P/SectionSplit. General | Advanced are P/Tabs (decision 35: four tabs or fewer); both tabs get the store's link (main never
+// handed it to Advanced, which always showed the placeholder address).
+export const BusinessSalesInstagram = ({ link }) => {
   const [, t] = useLanguage()
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState('general')
 
-  const tabList = [
-    { key: 'general', title: t('GENERAL', 'General') },
-    { key: 'advanced', title: t('ADVANCED', 'Advanced') }
-  ]
-
-  const actionSidebar = (value) => {
-    if (!value) {
-      onClose && onClose()
-    }
-    setIsMenuOpen(value)
-    document.getElementById('businessSocial').style.width = value
-      ? width > 1000 ? '500px' : '100%'
-      : '0'
-  }
-
-  useEffect(() => {
-    if (isMenuOpen) {
-      if (width < 1000) {
-        document.getElementById('businessSocial').style.width = '100%'
-      } else {
-        document.getElementById('businessSocial').style.width = '500px'
-      }
-    }
-  }, [width])
-
-  useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open])
-
   return (
-    <Container id='businessSocial'>
-      <Header>
-        <LeftHeader>
-          <img src={socialItem.icon} alt='' />
-          <h2>{socialItem.name}</h2>
-        </LeftHeader>
-        <IconButton onClick={onClose} color='black'>
-          <XLg />
-        </IconButton>
-      </Header>
-      <Tabs>
-        {tabList.map(item => (
-          <Tab
-            key={item.key}
-            onClick={() => setSelectedTab(item.key)}
-            active={selectedTab === item.key}
-          >
-            {item.title}
-          </Tab>
-        ))}
+    <div className='odc-sales-guide'>
+      <Tabs
+        label={t('SALES_INSTAGRAM_TABS', 'Instagram guide')}
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        activateOnFocus
+        className='odc-sales-tabs'
+        items={[
+          { value: 'general', label: t('GENERAL', 'General') },
+          { value: 'advanced', label: t('ADVANCED', 'Advanced') }
+        ]}
+      >
+        <TabPanel value={selectedTab} className='odc-sales-tab-panel'>
+          {selectedTab === 'general' ? <GeneralInstagram link={link} /> : <AdvancedInstagram link={link} />}
+        </TabPanel>
       </Tabs>
-      {selectedTab === 'general' && <GeneralInstagram storeUrl={storeUrl} />}
-      {selectedTab === 'advanced' && <AdvancedInstagram />}
-    </Container>
+    </div>
   )
 }

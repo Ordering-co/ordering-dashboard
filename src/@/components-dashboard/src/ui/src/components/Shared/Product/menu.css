@@ -1,0 +1,136 @@
+/* C10 · Action menu: hairline popup, 32px rows (44px with a coarse pointer), danger by tone, disabled with its reason. */
+
+.odc-menu-positioner {
+  z-index: calc(var(--od-x-layer-overlay) + 9); /* : mounts in body, so it takes the overlay role (above sticky headers and the dialog host) */
+}
+
+.odc-menu {
+  min-inline-size: var(--od-x-menu-min);
+  padding: var(--od-space-1);
+  background: var(--od-bg);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  box-shadow: var(--od-x-pop-shadow);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  outline: 0;
+}
+
+.odc-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--od-x-space-2-5);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  padding-block: 0;
+  padding-inline: var(--od-x-space-2-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  /* an item with `href` is an <a>: it looks like the others */
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.odc-menu-item[data-highlighted] {
+  background: var(--od-x-hover);
+}
+
+/* Inside the menu the ring is inset so the popup never clips it. */
+.odc-menu-item:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-menu-item[data-tone='danger'] {
+  color: var(--od-danger-functional);
+}
+
+.odc-menu-item[data-disabled],
+.odc-menu-item[aria-disabled='true'] {
+  color: var(--od-x-text-subtle);
+  cursor: not-allowed;
+}
+.odc-menu-item[data-disabled][data-highlighted] {
+  background: transparent;
+}
+
+/* redesign fix-qa E8 · a menu that is a field's list (the account's language): as wide as its trigger and never taller
+   than the room the positioner measured, scrolling inside it, so the last option is always reachable. */
+.odc-menu[data-field-menu] {
+  min-inline-size: var(--anchor-width);
+  max-block-size: var(--available-height);
+  overflow-y: auto;
+}
+
+/* Beside its popover (the account menu's language): the trigger sits inside the popover's padding, so the list needs
+   a little more than the menu offset to clear the popover's own edge. `start` is the side facing the popover in both
+   directions (the list is at the popover's inline end). */
+.odc-menu[data-field-menu][data-side='inline-end'] {
+  margin-inline-start: var(--od-space-2);
+}
+
+/* redesign fix-qa E8 · a menu that names itself (`data-title`): the rail's section popover. The title is a label, not
+   an item: no focus, no role (the trigger already names the menu); it takes the item's inline padding. */
+.odc-menu[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  padding-block: var(--od-space-1) var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-2-5);
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* FA-4 · Single choice: the group is transparent to the layout; the mark slot is always
+   there so checked and unchecked labels start at the same place. The mark is at the START of the row,
+   the side every C18 dropdown uses (FirstSelect and the multi-select checkbox too, redesign F6c, Q2-18). */
+.odc-menu-group { display: contents; }
+
+.odc-menu-mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-inline-start: calc(var(--od-x-space-half) * -1);
+}
+
+.odc-menu-mark .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-menu-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-menu-description {
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-menu-separator {
+  block-size: 0;
+  margin-block: var(--od-space-1);
+  border: 0;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* Touch (C3): every item reaches 44px with a coarse pointer, and on a phone-width viewport (redesign fix-qa E8). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-menu-item {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

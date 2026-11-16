@@ -1,0 +1,7 @@
+# Default routes for the local synthetic dashboard. Custom suites may pass --routes.
+/login
+/orders
+/stores/list
+/marketing/promotions-enterprise
+/settings/basic
+/profile

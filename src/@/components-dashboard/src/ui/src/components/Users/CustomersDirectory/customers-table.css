@@ -1,0 +1,125 @@
+/*
+ * The customers list (redesign UC-B2): the cells of the table and the cards of a phone. Product's DataTable and RecordCard own
+ * the structure; this adds what a customer cell is made of. Tokens only (--od-*, --od-x-*); logical properties only, so
+ * right-to-left needs no second set of rules.
+ */
+
+/* ── The Customer cell ── */
+.odc-cu-who {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.odc-cu-who-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-cu-name {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-cu-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A datum and its verified mark stay on one line */
+.odc-cu-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-cu-email { unicode-bidi: isolate; }
+
+.odc-cu-verified {
+  display: inline-flex;
+  flex: none;
+  color: var(--od-success-signal);
+}
+
+.odc-cu-verified .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+.odc-cu-dash { color: var(--od-x-text-subtle); }
+
+/* «New»: no orders yet. A word, not a figure. */
+.odc-cu-new { color: var(--od-text-muted); }
+
+/* Inside table cells the name and the second line wrap (long emails break anywhere) and stop at two lines */
+td .odc-cu-name,
+th .odc-cu-name,
+td .odc-cu-sub,
+th .odc-cu-sub {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* ── Phone: the cards ── */
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-cu-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-cu-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+.odc-cu-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-cu-contact {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-cu-card-id { color: var(--od-text-muted); }
+
+.odc-cu-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--od-space-1);
+}
+
+.odc-cu-metric-label { color: var(--od-text-muted); }
+
+.odc-cu-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-1);
+}

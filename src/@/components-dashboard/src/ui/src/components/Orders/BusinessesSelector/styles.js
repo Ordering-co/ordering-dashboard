@@ -22,21 +22,21 @@ export const OptionContent = styled.div`
 `
 
 export const OptionName = styled.div`
-  color: #263238;
-  font-size: 16px;
+  color: ${props => props.theme?.ordering?.semantic?.text?.default ?? '#263238'};
+  font-size: var(--od-type-control-value-size);
   line-height: 1.3;
 `
 export const OptionCategory = styled.div`
-  color: #263238;
-  font-size: 12px;
+  color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? '#263238'};
+  font-size: var(--od-type-secondary-size);
   line-height: 1.3;
 `
 
 export const WrapperBusinessImage = styled.div`
   width: 45px;
   height: 45px;
-  border: 1px solid #E3E3E3;
-  border-radius: 10px;
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};
+  border-radius: ${props => props.theme?.ordering?.radius?.panel ?? '10px'};
 
   svg {
     width: 100%;

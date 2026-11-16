@@ -1,11 +1,9 @@
 import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { DragScroll } from '../../Shared'
-import {
-  SettingListConatiner,
-  Tab
-} from './styles'
+import { Tabs } from '../../Shared/Product'
+import './category-info-tabs.css'
 
+// redesign stores 5.2 (decision D8): the two tabs of a product category on P/Tabs (4 or fewer tabs → P/Tabs)
 export const BusinessCategoryInfoSettingList = (props) => {
   const {
     selectedInfoItem,
@@ -13,25 +11,18 @@ export const BusinessCategoryInfoSettingList = (props) => {
   } = props
   const [, t] = useLanguage()
 
-  const listOptions = [
-    { key: 'information', content: t('INFORMATION', 'Information') },
-    { key: 'seo_options', content: t('SEO_OPTIONS', 'SEO Options') }
+  const items = [
+    { value: 'information', label: t('INFORMATION', 'Information') },
+    { value: 'seo_options', label: t('SEO_OPTIONS', 'SEO Options') }
   ]
+
   return (
-    <>
-      <SettingListConatiner>
-        <DragScroll>
-          {listOptions.map(option => (
-            <Tab
-              key={option.key}
-              active={selectedInfoItem === option.key}
-              onClick={() => handleSelectInfoItem(option.key)}
-            >
-              {option.content}
-            </Tab>
-          ))}
-        </DragScroll>
-      </SettingListConatiner>
-    </>
+    <Tabs
+      className='odc-category-tabs'
+      value={selectedInfoItem}
+      onValueChange={handleSelectInfoItem}
+      label={t('CATEGORY_SECTIONS', 'Category sections')}
+      items={items}
+    />
   )
 }

@@ -43,6 +43,6 @@ describe('GiftCardsList search', () => {
     const search = where.conditions.find(condition => condition.conector === 'OR')
     const attributes = search.conditions.map(condition => condition.conditions[0].attribute)
     expect(attributes).toEqual(['name', 'lastname'])
-    expect(search.conditions[1].conditions[0].value).toEqual({ condition: 'ilike', value: encodeURI('%Seis%') })
+    expect(search.conditions[1].conditions[0].value).toEqual({ condition: 'ilike', value: encodeURIComponent('%Seis%') })
   })
 })

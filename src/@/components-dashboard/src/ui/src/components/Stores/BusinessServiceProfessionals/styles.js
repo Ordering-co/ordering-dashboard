@@ -35,7 +35,7 @@ export const Header = styled.div`
   flex-wrap: wrap;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin-top: 0px;
     margin-bottom: 18px;
@@ -164,22 +164,27 @@ export const UserInfo = styled.div`
 
   h3 {
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
     margin-top: 0px;
     margin-bottom: 1px;
   }
   p {
     font-weight: 400;
-    font-size: 10px;
+    font-size: var(--od-type-secondary-size);
     line-height: 15px;
     margin: 0px;
   }
 `
 
 export const AddBtn = styled.span`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   display: block;
   margin-top: 15px;
   cursor: pointer;
@@ -189,6 +194,17 @@ export const AddBtn = styled.span`
 
   &:hover {
     color: ${props => props.theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
   }
 `
 

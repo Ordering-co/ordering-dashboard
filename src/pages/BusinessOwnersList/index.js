@@ -1,42 +1,19 @@
 import React from 'react'
 import { HelmetTags } from '../../components/HelmetTags'
-import { useLanguage } from '~components'
-import { UsersListing, addQueryToUrl, removeQueryToUrl, learnOptionsValues } from '~ui'
+import { StaffListing } from '~ui'
 
 export const BusinessOwnersList = (props) => {
-  const [, t] = useLanguage()
-  const learnOptions = learnOptionsValues(
-    [
-      'business_owners_general_view',
-      'business_owner_details'
-    ],
-    t
-  )
-
+  // redesign BO-B6 (decision 1): the staff directory driven by the business owner kind. The level, the words, Learn, the
+  // fields to fetch (main's list plus the stores) and the ?id= / ?tab= of the record live in the kind and the directory.
   const usersProps = {
     ...props,
-    learnOptions,
-    isUseQuery: true,
-    headerTitle: t('BUSINESS_OWNERS', 'Business owners'),
-    defaultUserTypesSelected: [2],
-    propsToFetch: [
-      'name', 'lastname', 'email', 'phone', 'photo', 'cellphone',
-      'country_phone_code', 'city_id', 'city', 'address', 'addresses',
-      'address_notes', 'dropdown_option_id', 'dropdown_option', 'location',
-      'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups',
-      'phone_verified', 'email_verified', 'wallets', 'orders_count', 'push_tokens'
-    ],
-    onUserRedirect: (userId) => {
-      if (!userId) {
-        return removeQueryToUrl(['id', 'section', 'tab'])
-      }
-      return addQueryToUrl({ id: userId })
-    }
+    kind: 'business_owner',
+    isUseQuery: true
   }
   return (
     <>
       <HelmetTags page='business_owners' />
-      <UsersListing {...usersProps} />
+      <StaffListing {...usersProps} />
     </>
   )
 }

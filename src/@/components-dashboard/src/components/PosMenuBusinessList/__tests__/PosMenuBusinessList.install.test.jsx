@@ -93,6 +93,22 @@ describe('PosMenuBusinessList one-click POS install', () => {
     expect(controller.integrationsList.thirdPartyIntegrations[0].key).toBe('rappi_integration')
   })
 
+  // redesign bugs-d row 57 (IM-09): the importers page reads no integration, so it asks the controller not to load them
+  it('loads the third party integrations on mount by default', async () => {
+    renderController()
+
+    await waitFor(() => expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/third_party_integrations'))).toBe(true))
+  })
+
+  it('skipIntegrations does not request the third party integrations', async () => {
+    renderController({ skipIntegrations: true })
+
+    await waitFor(() => expect(controller).not.toBeNull())
+    await act(async () => {})
+    expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/third_party_integrations'))).toBe(false)
+    expect(controller.integrationsList).toMatchObject({ loading: false, thirdPartyIntegrations: [] })
+  })
+
   it('returns the refreshed list so the caller can find the installed integration', async () => {
     renderController({ integrationType: 'pos' })
     await waitFor(() => expect(controller.integrationsList.thirdPartyIntegrations.length).toBeGreaterThan(0))
@@ -191,5 +207,48 @@ describe('PosMenuBusinessList one-click POS install', () => {
     expect(result).toBe(false)
     expect(callback).not.toHaveBeenCalled()
     expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'Plugin url is invalid')
+  })
+
+  // redesign bugs-d row 80: a request that never reached the API does not toast the browser's «Failed to fetch»
+  it('a network failure in a bulk change toasts readable words', async () => {
+    fetchMock.mockImplementation((url, options = {}) => {
+      if (options.method === 'PUT') return Promise.reject(new TypeError('Failed to fetch'))
+      return json({ error: false, result: [] })
+    })
+    renderController()
+
+    await act(async () => {
+      await controller.handleEnableAllBusiness(true)
+    })
+
+    expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'The integration did not respond. Please try again.')
+  })
+
+  it('a network failure in a bulk delete toasts readable words', async () => {
+    fetchMock.mockImplementation((url, options = {}) => {
+      if (options.method === 'DELETE') return Promise.reject(new TypeError('Load failed'))
+      return json({ error: false, result: [] })
+    })
+    renderController()
+
+    await act(async () => {
+      await controller.handleDeleteMultiBusinesses()
+    })
+
+    expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'The integration did not respond. Please try again.')
+  })
+
+  it('keeps any other error message of a bulk change as it is', async () => {
+    fetchMock.mockImplementation((url, options = {}) => {
+      if (options.method === 'PUT') return Promise.reject(new Error('Business is locked'))
+      return json({ error: false, result: [] })
+    })
+    renderController()
+
+    await act(async () => {
+      await controller.handleEnableAllBusiness(true)
+    })
+
+    expect(mocks.showToast).toHaveBeenLastCalledWith('error', 'Business is locked')
   })
 })

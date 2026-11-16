@@ -1,0 +1,348 @@
+/*
+ * The promotions list (redesign PE-B1): the cells of the table and the cards of a phone, the same in Quick offers and Advanced offers.
+ * Product's DataTable, RecordCard, Pagination, Status, Menu and AsyncSwitch own the structure and the density (no override of the 44px
+ * row); this adds what a promotion cell is made of. Tokens only (--od-*, --od-x-*); logical properties only, so right-to-left needs no
+ * second set of rules.
+ */
+
+/* ── Above the table: the column manager (Advanced) ── */
+.odc-promo-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* redesign PE-B2 (live check): the search at the start, the column manager at the end */
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-x-page-gutter);
+}
+
+/* ── The Promotion cell: image (Advanced), name, and in Quick the description under it ── */
+.odc-promo-name {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-promo-name-text {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-promo-name-main {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inside table cells the name wraps (a long one breaks anywhere) and stops at two lines */
+td .odc-promo-name-main,
+th .odc-promo-name-main {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* redesign PE-B4 (live check): in a table cell the description never widens the column; without a cap a long one pushed status,
+   benefit and the switch out of the screen at 1440 */
+td .odc-promo-name-text,
+th .odc-promo-name-text {
+  max-inline-size: var(--od-x-col-max-promotion);
+}
+
+/* redesign AC-D2 (, G6, review): in Quick the description is one line that cannot break, so it held the Promotion column at
+   its whole cap (356px with its padding) and, beside the pinned Enable and Actions, the table asked for more than 1144px at 1440 and
+   the end of the dates went under Enable. 3/4 of the cap keeps the name on two lines and the description ending in its ellipsis
+   (the whole text is in its title). */
+.odc-promo-table[data-variant='quick'] td .odc-promo-name-text,
+.odc-promo-table[data-variant='quick'] th .odc-promo-name-text {
+  max-inline-size: calc(var(--od-x-col-max-promotion) * 0.75);
+}
+
+/* The second line of the Quick name: muted caption, one line with an ellipsis (the full text is in its title) */
+.odc-promo-name-sub {
+  display: block;
+  overflow: hidden;
+  unicode-bidi: isolate;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The image of the promotion (or a neutral box): 24px, a control radius and a hairline border */
+.odc-promo-image {
+  inline-size: var(--od-x-avatar);
+  block-size: var(--od-x-avatar);
+  flex: none;
+  object-fit: cover;
+  background: var(--od-surface-subtle);
+  border: var(--od-stroke) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-promo-image-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--od-x-text-subtle);
+}
+
+/* ── The priority handle (Advanced): the only part of a row that starts a drag ── */
+.odc-promo-col-grip { inline-size: 1%; }
+
+.odc-promo-grip {
+  display: inline-flex;
+  align-items: center;
+  color: var(--od-x-text-subtle);
+  cursor: grab;
+}
+
+.odc-promo-grip:active { cursor: grabbing; }
+
+/* The drop indicator: a 2px line in the action color on the top (or, for the last row, the bottom) edge of the row it lands on */
+.odc-promo-table tr.odc-promo-drop-target > td,
+.odc-promo-table tr.odc-promo-drop-target > th {
+  box-shadow: inset 0 var(--od-x-indicator) 0 var(--od-action);
+}
+
+.odc-promo-table tr.odc-promo-drop-bottom > td,
+.odc-promo-table tr.odc-promo-drop-bottom > th {
+  box-shadow: inset 0 calc(var(--od-x-indicator) * -1) 0 var(--od-action);
+}
+
+/* ── The other cells ── */
+/* The label of a status never breaks inside a word */
+.odc-promo-status-label {
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.odc-promo-benefit { min-inline-size: 0; }
+
+.odc-promo-muted { color: var(--od-x-text-subtle); }
+
+/* «Coupon» and, after it, the code in a mono chip */
+.odc-promo-applies {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-promo-code {
+  /*  (live check): a long code («dessertsforeveryone») breaks inside its chip instead of widening Applies
+     past what fits at 1440 */
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  padding-block: 0;
+  padding-inline: var(--od-space-2);
+  font-size: var(--od-x-type-caption-size);
+  background: var(--od-surface-subtle);
+  border: var(--od-stroke) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+}
+
+.odc-promo-dates {
+  display: inline-flex;
+  flex-wrap: nowrap; /* redesign PE-B1 (live check): «01-05-2025 – 01-05-2031» on one line, never three */
+  white-space: nowrap;
+  align-items: baseline;
+  gap: 0 var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* The controls of a row: the click is their own, and the row keeps its padding around them */
+.odc-promo-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-promo-col-menu { inline-size: 1%; }
+
+/* redesign , 612: the last column (Quick: Edit and Delete; Advanced: the ⋯ that deletes) is pinned to the end of the
+   scroller, so a row's actions are on screen however long the other columns are (1024, German at 1440). While the table goes on
+   under it (data-overflow-end, from DataTable's useOverflowEdges) the pinned column draws its inner edge, as the catalog's products
+   table: the cue is also the hint that the region scrolls. The cell takes the row's colour, so hover and the open row
+   read the same across it. Logical sides only: in right-to-left the column pins on the left and the edge faces right. */
+.odc-promo-table {
+  --odc-promo-edge: to left;
+  /* redesign AC-D (, G6): the width of the pinned last column, fixed below, so the Enable column can be pinned right
+     before it. Quick: padding, two icon buttons and the gap between them, and the page gutter; Advanced: the same with the one ⋯. */
+  --odc-promo-actions-width: calc(var(--od-space-3) + 2 * var(--od-x-control-height) + var(--od-space-1) + var(--od-x-page-gutter));
+  --odc-promo-menu-width: calc(var(--od-space-3) + var(--od-x-control-height) + var(--od-x-page-gutter));
+  --odc-promo-pin-end: var(--odc-promo-menu-width);
+}
+
+.odc-promo-table[data-variant='quick'] {
+  --odc-promo-pin-end: var(--odc-promo-actions-width);
+}
+
+.odc-promo-table:dir(rtl) {
+  --odc-promo-edge: to right;
+}
+
+.odc-promo-table .odc-table :where(th, td).odc-promo-col-actions,
+.odc-promo-table .odc-table :where(th, td).odc-promo-col-menu {
+  position: sticky;
+  inset-inline-end: 0;
+  z-index: var(--od-x-layer-raised);
+}
+
+/* redesign AC-D (G6): the last column has the width the pin of Enable counts on (it cannot be narrower than its content) */
+.odc-promo-table .odc-table th.odc-promo-col-actions,
+.odc-promo-table .odc-table td.odc-promo-col-actions {
+  inline-size: var(--odc-promo-actions-width);
+  min-inline-size: var(--odc-promo-actions-width);
+}
+
+.odc-promo-table .odc-table th.odc-promo-col-menu,
+.odc-promo-table .odc-table td.odc-promo-col-menu {
+  inline-size: var(--odc-promo-menu-width);
+  min-inline-size: var(--odc-promo-menu-width);
+}
+
+/* redesign AC-D (, G6): at 1440 the table goes on sideways and the pinned last column slid over the end of the Enable
+   column («Enab»). Widening Enable cannot help (the overflow grows by what it gains), so Enable is pinned too, right before the last
+   column: its header and switch are always whole, and what scrolls goes under both. Logical sides, as the last column. */
+.odc-promo-table .odc-table th.odc-promo-col-enabled,
+.odc-promo-table .odc-table td.odc-promo-col-enabled {
+  position: sticky;
+  inset-inline-end: var(--odc-promo-pin-end);
+  z-index: var(--od-x-layer-raised);
+}
+
+.odc-promo-table .odc-table tbody td.odc-promo-col-enabled,
+.odc-promo-table .odc-table tbody td.odc-promo-col-actions,
+.odc-promo-table .odc-table tbody td.odc-promo-col-menu {
+  background: var(--od-bg);
+}
+
+.odc-promo-table .odc-table thead th.odc-promo-col-enabled,
+.odc-promo-table .odc-table thead th.odc-promo-col-actions,
+.odc-promo-table .odc-table thead th.odc-promo-col-menu {
+  z-index: calc(var(--od-x-layer-raised) + 1);
+}
+
+.odc-promo-table .odc-table tbody tr[data-interactive]:hover td:where(.odc-promo-col-enabled, .odc-promo-col-actions, .odc-promo-col-menu) {
+  background: var(--od-x-hover);
+}
+
+.odc-promo-table .odc-table tbody tr[data-active] td:where(.odc-promo-col-enabled, .odc-promo-col-actions, .odc-promo-col-menu) {
+  background: var(--od-x-selected);
+}
+
+/* The edge is drawn once, at the inner side of what is pinned: of Enable when the table has it, else of the last column. */
+.odc-promo-table .odc-table-scroll[data-overflow-end] :where(th, td).odc-promo-col-enabled::after,
+.odc-promo-table .odc-table-scroll[data-overflow-end]:not(:has(.odc-promo-col-enabled)) :where(th, td):where(.odc-promo-col-actions, .odc-promo-col-menu)::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 100%;
+  inline-size: var(--od-x-fade-size);
+  background: linear-gradient(var(--odc-promo-edge), var(--od-x-edge-shadow), transparent);
+  pointer-events: none;
+}
+
+.odc-promo-actions {
+  display: inline-flex;
+  flex-wrap: nowrap; /* redesign PE-B4 (live check): Edit and Delete side by side, never stacked */
+  align-items: center;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* ── The foot: the pages ── */
+.odc-promo-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  min-inline-size: 0;
+  padding-inline: var(--od-x-page-gutter);
+}
+
+.odc-promo-foot > .odc-pagination {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* ── Phone: the cards ── */
+.odc-promo-cards .odc-promo-foot { padding-inline: 0; }
+
+/* The card has no «from → to»: the arrow of the shared card has nothing to point at here. */
+.odc-promo-cards .odc-order-card-arrow { display: none; }
+
+/* The link of the shared card is mono and does not shrink: here it holds a name, which does both */
+.odc-promo-cards .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+}
+
+/* redesign : as in the campaign cards, the status keeps at least its longest word beside a long name, which gives way */
+.odc-promo-cards .odc-order-card-status {
+  min-inline-size: min-content;
+}
+
+.odc-promo-card-name {
+  display: block;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-promo-card-text {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+/* redesign AC-D (, G7): the switch of a card, its visible «Enable» beside it and, under it, the line of an Ended promotion */
+.odc-promo-card-switch {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+}
+
+.odc-promo-card-note {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-promo-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* redesign PE-B1 (live check): an amount never breaks between its symbol and its number («$» / «20.00») */
+.odc-promo-benefit .odc-figure {
+  white-space: nowrap;
+}
+
+/* The tools row starts with the host's search, as wide as the filter bar's search */
+.odc-promo-tools > .odc-promo-search {
+  flex: 0 1 var(--od-x-search);
+}
+
+@media (max-width: 767px) {
+  .odc-promo-tools > .odc-promo-search {
+    flex: 1 1 auto;
+  }
+}

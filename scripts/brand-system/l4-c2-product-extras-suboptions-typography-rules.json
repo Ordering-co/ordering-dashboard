@@ -1,0 +1,565 @@
+{
+ "schemaVersion": 1,
+ "id": "l4-c2-product-extras-suboptions-typography",
+ "categories": [
+  "typography"
+ ],
+ "rules": [
+  {
+   "id": "c2-productextrametafields-metatitle-root-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraMetaFields/styles.js",
+   "component": "MetaTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "18px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextrametafields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextrametafields-metaaddcontainer-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c2-productextrametafields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraMetaFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptionmetafields-metatitle-root-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionMetaFields/styles.js",
+   "component": "MetaTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextraoptionmetafields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptionmetafields-metaaddcontainer-input-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "16px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c2-productextraoptionmetafields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionMetaFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextrasuboptionmetafields-metatitle-root-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSubOptionMetaFields/styles.js",
+   "component": "MetaTitle",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextrasuboptionmetafields-metacontainer-meta-type-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSubOptionMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_type",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextrasuboptionmetafields-metaaddcontainer-input-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSubOptionMetaFields/styles.js",
+   "component": "MetaAddContainer",
+   "property": "font-size",
+   "context": "input",
+   "match": "16px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c2-productextrasuboptionmetafields-roundborder-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSubOptionMetaFields/styles.js",
+   "component": "RoundBorder",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextras-header-h1-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextras-optionnamewrapper-span-name-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "OptionNameWrapper",
+   "property": "font-size",
+   "context": "> span.name",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextras-extraoptioneditcontainer-h2-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "ExtraOptionEditContainer",
+   "property": "font-size",
+   "context": "> h2",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextras-formcontrol-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "FormControl",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextras-details-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "Details",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptiondetails-header-h1-24px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "h1",
+   "match": "24px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextraoptiondetails-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptiondetails-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptiondetails-modifieroptionscontainer-h2-18px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "ModifierOptionsContainer",
+   "property": "font-size",
+   "context": "h2",
+   "match": "18px",
+   "replace": "var(--od-type-section-title-size)"
+  },
+  {
+   "id": "c2-productextraoptionform-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptionform-enablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "EnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptionform-checkboxwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "CheckboxWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptionform-selectboxgroup-p-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "SelectboxGroup",
+   "property": "font-size",
+   "context": "> p",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptions-header-input-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "Header",
+   "property": "font-size",
+   "context": "> input",
+   "match": "20px",
+   "replace": "var(--od-type-title-size)"
+  },
+  {
+   "id": "c2-productextraoptions-optionnamecontainer-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "OptionNameContainer",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptions-optionnamecontainer-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "OptionNameContainer",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "c2-productextraoptions-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptions-addoptionform-input-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "AddOptionForm",
+   "property": "font-size",
+   "context": "> input",
+   "match": "14px",
+   "replace": "var(--od-type-control-value-size)"
+  },
+  {
+   "id": "c2-productextrasuboption-inputwrapper-label-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "InputWrapper",
+   "property": "font-size",
+   "context": "label",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextrasuboption-enablewrapper-span-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "EnableWrapper",
+   "property": "font-size",
+   "context": "span",
+   "match": "14px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextrasuboption-actionselectorwrapper-div-----div----dropdown-item-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "> div > > div > .dropdown-item",
+   "match": "12px",
+   "replace": "var(--od-type-control-size)"
+  },
+  {
+   "id": "c2-productextraoptions-minimumpurchase-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "MinimumPurchase",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptions-minimumpurchase-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "MinimumPurchase",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  },
+  {
+   "id": "c2-productextraoptions-maxpurchase-root-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "MaxPurchase",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "14px",
+   "replace": "var(--od-type-content-size)"
+  },
+  {
+   "id": "c2-productextraoptions-maxpurchase-root-12px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "MaxPurchase",
+   "property": "font-size",
+   "context": "<root>",
+   "match": "12px",
+   "replace": "var(--od-type-secondary-size)"
+  }
+ ],
+ "preservations": [
+  {
+   "id": "c2-pres-productextrametafields-metacontainer-meta-value---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. BsTrash delete icon, no text node."
+  },
+  {
+   "id": "c2-pres-productextraoptionmetafields-metacontainer-meta-value---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. BsTrash delete icon, no text node."
+  },
+  {
+   "id": "c2-pres-productextrasuboptionmetafields-metacontainer-meta-value---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSubOptionMetaFields/styles.js",
+   "component": "MetaContainer",
+   "property": "font-size",
+   "context": ".meta_value > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. BsTrash delete icon, no text node."
+  },
+  {
+   "id": "c2-pres-productextras-morecontainer-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "MoreContainer",
+   "property": "font-size",
+   "context": "svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. Icon-only selector. It is additionally shadowed by the more specific OptionNameWrapper and Details svg rules, so it paints no glyph today."
+  },
+  {
+   "id": "c2-pres-productextras-optionnamewrapper-button---svg-14px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "OptionNameWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "14px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. Pencil edit icon inside a 24x24 button, no text."
+  },
+  {
+   "id": "c2-pres-productextras-details-svg-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtras/styles.js",
+   "component": "Details",
+   "property": "font-size",
+   "context": "svg",
+   "match": "13px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ChevronRight open-detail icon, no text."
+  },
+  {
+   "id": "c2-pres-productextraoptiondetails-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ThreeDots trigger icon."
+  },
+  {
+   "id": "c2-pres-productextraoptiondetails-actionscontainer-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "ActionsContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. Icon-only selector; the PlusCircle hangs from the inner button, so it does not paint today."
+  },
+  {
+   "id": "c2-pres-productextraoptionform-actionscontainer-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "ActionsContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. Icon-only selector; its only call site contains no svg at all."
+  },
+  {
+   "id": "c2-pres-productextraoptions-optionimage-svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "OptionImage",
+   "property": "font-size",
+   "context": "svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ImageIcon replacement icon."
+  },
+  {
+   "id": "c2-pres-productextraoptions-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ThreeDots trigger icon."
+  },
+  {
+   "id": "c2-pres-productextraoptions-arrowwrpper-svg-13px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptions/styles.js",
+   "component": "ArrowWrpper",
+   "property": "font-size",
+   "context": "svg",
+   "match": "13px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ChevronRight icon."
+  },
+  {
+   "id": "c2-pres-productextrasuboption-actionscontainer-svg-16px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "ActionsContainer",
+   "property": "font-size",
+   "context": "> svg",
+   "match": "16px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. Icon-only selector; the svg hangs from the inner button."
+  },
+  {
+   "id": "c2-pres-productextrasuboption-actionselectorwrapper-button---svg-20px",
+   "kind": "static-declaration",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "ActionSelectorWrapper",
+   "property": "font-size",
+   "context": "button > svg",
+   "match": "20px",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "The c2 typography inventory pins this declaration to an icon-only node. ThreeDots trigger icon."
+  },
+  {
+   "id": "c2-pres-productextraoptiondetails-uploadimageicon-svg-ternary",
+   "kind": "styled-expression",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionDetails/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "match": "({ small }) => small ? '16px' : '32px'",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "Icon-only svg node whose size lives inside a conditional interpolation the engine cannot classify. small branch LIVE at index.js:322"
+  },
+  {
+   "id": "c2-pres-productextraoptionform-uploadimageicon-svg-ternary",
+   "kind": "styled-expression",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraOptionForm/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "match": "({ small }) => small ? '16px' : '32px'",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "Icon-only svg node whose size lives inside a conditional interpolation the engine cannot classify. small branch DEAD: its only call site passes no small prop"
+  },
+  {
+   "id": "c2-pres-productextrasuboption-uploadimageicon-svg-ternary",
+   "kind": "styled-expression",
+   "file": "src/@/components-dashboard/src/ui/src/components/Stores/ProductExtraSuboption/styles.js",
+   "component": "UploadImageIcon",
+   "property": "font-size",
+   "match": "({ small }) => small ? '16px' : '32px'",
+   "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+   "evidence": "Icon-only svg node whose size lives inside a conditional interpolation the engine cannot classify. small branch LIVE at index.js:210"
+  }
+ ]
+}

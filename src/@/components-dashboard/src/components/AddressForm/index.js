@@ -84,10 +84,11 @@ export const AddressForm = (props) => {
    * @param {string} fieldName Field name
    */
   const showField = (fieldName) => {
+    // redesign UF-B1a (M-UF10): a failed validation-fields request leaves `fields` as `{}`; the field then counts as not configured
+    const field = validationFields.fields?.address?.[fieldName]
     return !useValidationFileds ||
-      (!validationFields.loading && !validationFields.fields?.address[fieldName]) ||
-      (!validationFields.loading && validationFields.fields?.address[fieldName] &&
-        validationFields.fields?.address[fieldName].enabled)
+      (!validationFields.loading && !field) ||
+      (!validationFields.loading && field && field.enabled)
   }
 
   /**
@@ -95,11 +96,13 @@ export const AddressForm = (props) => {
    * @param {string} fieldName Field name
    */
   const isRequiredField = (fieldName) => {
+    // redesign UF-B1a (M-UF10): not configured (or no address map at all) is not required
+    const field = validationFields.fields?.address?.[fieldName]
     return useValidationFileds &&
       !validationFields.loading &&
-      validationFields.fields?.address[fieldName] &&
-      validationFields.fields?.address[fieldName].enabled &&
-      validationFields.fields?.address[fieldName].required
+      !!field &&
+      field.enabled &&
+      field.required
   }
 
   /**

@@ -1,0 +1,1268 @@
+{
+  "schemaVersion": 1,
+  "id": "l8-shell-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l8-shell-assistant-assistantactioncard-js-c339ef",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantActionCard.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantchat-js-637adf",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantChat.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantcomposer-js-f0b294",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantComposer.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantmarkdown-js-fb08aa",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantMarkdown.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantmessages-js-f27c92",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantMessages.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantnotice-js-5101fc",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantNotice.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-assistantpanel-js-9eaf37",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/AssistantPanel.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-format-js-4f7de9",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/format.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-index-js-1e3919",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-assistant-pagecontext-js-3b2182",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Assistant/pageContext.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-commandpalette-index-js-3cb707",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-shell-commandpalette-styles-js-831906",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/CommandPalette/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "InputRow",
+            "property": "font-size",
+            "match": "16px",
+            "context": "[cmdk-input]",
+            "count": 1,
+            "reason": "This font-size keeps a text input at 16px, the size below which iOS Safari zooms the page on focus. No role is 16px (control-value resolves to 14px), so migrating it would reintroduce the focus-zoom on touch screens.",
+            "evidence": "InputRow [cmdk-input]: campo de busqueda de la paleta a 16px incondicional, en un dialogo con layout movil (max-width: 575px). Intencion inferida; gana el valor de main."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "font-size",
+            "match": "16px",
+            "context": "&& svg",
+            "count": 1,
+            "reason": "Este font-size dimensiona un glifo de icono, no texto legible. Los siete roles son roles de TEXTO y ninguno significa 'tamano de icono'; migrarlo ataria el tamano del glifo a una escala tipografica que no le aplica. Cualquier cambio de componente, propiedad, contexto, valor o cardinalidad reabre la clasificacion.",
+            "evidence": "TriggerButton && svg: dimensiona el glifo Search (1em) del disparador de la barra lateral; su unico hijo svg."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "font",
+            "match": "props => props.$compact && css`\n    width: auto;\n    margin: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TriggerKeys",
+            "property": "font",
+            "match": "Kbd",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "Badge",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Badge",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "background",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "box-shadow",
+            "match": "0 16px 48px rgba(21, 24, 36, 0.18), 0 2px 6px rgba(21, 24, 36, 0.08)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Content",
+            "property": "color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ContextChip",
+            "property": "background",
+            "match": "props => props.theme.colors.lightPrimary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ContextChip",
+            "property": "outline",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "EmptyState",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Footer",
+            "property": "border-top",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InputRow",
+            "property": "border-bottom",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InputRow",
+            "property": "color",
+            "match": "props => props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ItemIcon",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Kbd",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Kbd",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Overlay",
+            "property": "background",
+            "match": "rgba(21, 24, 36, 0.32)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Spinner",
+            "property": "border-top-color",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Spinner",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "background",
+            "match": "props => props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "border-color",
+            "match": "props => props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "border",
+            "match": "props => props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "color-block",
+            "match": "props => props.$compact && css`\n    width: auto;\n    margin: 0;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerButton",
+            "property": "outline",
+            "match": "props => props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerKeys",
+            "property": "background",
+            "match": "props => props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TriggerKeys",
+            "property": "color-block",
+            "match": "Kbd",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l8-shell-projectstatusbadge-index-js-5345b3",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Home/ProjectStatusBadge/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-authlayout-icons-js-39a3f6",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/icons.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-authlayout-index-js-e959eb",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l8-shell-authlayout-styles-js-c58044",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Login/AuthLayout/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "buttonBase",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "buttonBase",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+            "evidence": "buttonBase (la linea siguiente toma content): font: inherit de un reset de control nativo."
+          },
+          {
+            "component": "buttonBase",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "buttonBase (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "controlStyles",
+            "property": "font-size",
+            "match": "var(--od-font-size-3)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+            "evidence": "controlStyles: texto de campo a --od-font-size-3 (16px) por debajo de 768px; a 768px y mas vuelve a content."
+          },
+          {
+            "component": "controlStyles",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "controlStyles",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+            "evidence": "controlStyles (TextInput y .PhoneInputInput; la linea siguiente fija el tamano): font: inherit de un reset de control nativo."
+          },
+          {
+            "component": "controlStyles",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "@media (min-width: 768px)",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "controlStyles @media (min-width: 768px): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "CountdownTimer",
+            "property": "font-size",
+            "match": "var(--od-font-size-6)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+            "evidence": "CountdownTimer: cuenta atras del OTP a --od-font-size-6 (1.75rem)."
+          },
+          {
+            "component": "Field",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "label",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "Field label: font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "HeroCaption",
+            "property": "font-size",
+            "match": "clamp(2rem, 3.2vw, 2.75rem)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+            "evidence": "HeroCaption: titular fluido clamp(2rem, 3.2vw, 2.75rem)."
+          },
+          {
+            "component": "HeroLogo",
+            "property": "font",
+            "match": "({ theme }) => theme?.rtl && css`\n    object-position: right center;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "HeroSide",
+            "property": "font",
+            "match": "({ $grid }) => $grid && css`\n    &::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background-image:\n        linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),\n        linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);\n      background-size: 56px 56px;\n      background-position: -1px -1px;\n      mask-image: radial-gradient(120% 80% at 30% 45%, #000 0%, transparent 75%);\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "inline-style",
+            "property": "font",
+            "match": "style /* binding-sha256:5a1d327c5479d4108914c5543f64bff4d0453fd8fb04730175b42a3a2d8d76e5 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This inline-style reference is pinned whole: the engine cannot resolve the binding statically, and the binding was read and declares no typographic size; any change to it reopens classification.",
+            "evidence": "Checked mechanically over every unresolved inline-style reference of shell: this one declares no literal font-size."
+          },
+          {
+            "component": "InputWithIcon",
+            "property": "font",
+            "match": "TextInput",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LoginContainer",
+            "property": "font",
+            "match": "orderingBrandScope",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "LoginContainer",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "LoginContainer (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "OtpWrapper",
+            "property": "font-size",
+            "match": "20px",
+            "context": ".otp-input",
+            "count": 1,
+            "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+            "evidence": "OtpWrapper .otp-input: los digitos OTP de 20px."
+          },
+          {
+            "component": "OtpWrapper",
+            "property": "font",
+            "match": "inherit",
+            "context": ".otp-input",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+            "evidence": "OtpWrapper .otp-input (la linea siguiente fija el tamano): font: inherit de un reset de control nativo."
+          },
+          {
+            "component": "OtpWrapper",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PhoneNumberWrapper",
+            "property": "font",
+            "match": "controlStyles",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "PrimaryButton",
+            "property": "font",
+            "match": "buttonBase",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RedirectLink",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "RedirectLink",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "RedirectLink (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "ResendCode",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "ResendCode",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+            "evidence": "ResendCode es un boton sin tamano propio; font: inherit es lo que lo mantiene en los 14px del login."
+          },
+          {
+            "component": "Route",
+            "property": "font",
+            "match": "({ theme }) => theme?.rtl && css`\n    li:not(:last-child)::after {\n      left: 0;\n      right: 11px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "SecondaryButton",
+            "property": "font",
+            "match": "buttonBase",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "({ $active }) => $active && css`\n    background: var(--od-surface);\n    color: var(--od-text);\n    box-shadow: var(--od-shadow-1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "Tab",
+            "property": "font",
+            "match": "inherit",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This is a `font` shorthand set to inherit as part of a native control reset: it declares no size of its own and exists so the control keeps the surrounding typography instead of the user agent's. Where the next declaration sets a size, that one takes the role; where none does, `inherit` is what does the work and a role would pin it to an absolute.",
+            "evidence": "Tab (la linea siguiente toma content): font: inherit de un reset de control nativo."
+          },
+          {
+            "component": "Tab",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "Tab (raíz): font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "TextInput",
+            "property": "font",
+            "match": "controlStyles",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "TitleFormSide",
+            "property": "font-size",
+            "match": "var(--od-font-size-6)",
+            "context": "h1",
+            "count": 1,
+            "reason": "This font-size is a size of the login on `main` (Login/AuthLayout) that no governed role equals: 16px field text, the 1.75rem title and OTP countdown, the 20px OTP digits and the fluid hero caption clamp(2rem, 3.2vw, 2.75rem). `main` ships this login and `main` wins: moving it to the nearest role would change a surface `main` already shipped. Both brand adapters read the same token file (sha256 4a31e2f0...16ec), so the value is already brand-governed; what is missing is a role of the same value.",
+            "evidence": "TitleFormSide h1: titulo del login a --od-font-size-6 (1.75rem)."
+          },
+          {
+            "component": "TitleFormSide",
+            "property": "font-size",
+            "match": "var(--od-font-size-2)",
+            "context": "p",
+            "count": 1,
+            "reason": "escala rem del adaptador de main (`--od-font-size-2`, 0.875rem); decisión del usuario 2026-10-04 para que el login escale con la fuente del navegador; mismo valor computado que el rol content (14px) con raíz de 16px",
+            "evidence": "TitleFormSide p: font-size a --od-font-size-2 (0.875rem), igual que en main; el rol content (14px fijos) lo hacía dejar de escalar con la fuente del navegador."
+          },
+          {
+            "component": "TogglePassword",
+            "property": "font",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          },
+          {
+            "component": "WrapperPassword",
+            "property": "font",
+            "match": "TextInput",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "Checked mechanically over every font interpolation of shell: this one declares no literal font-size. The interpolations carry RTL direction, state composition and layout only."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "buttonBase",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "controlStyles",
+            "property": "border",
+            "match": "var(--od-stroke) solid var(--od-border-strong)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "controlStyles",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroCaption",
+            "property": "color",
+            "match": "#FFFFFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroLogo",
+            "property": "color-block",
+            "match": "({ theme }) => theme?.rtl && css`\n    object-position: right center;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroSide",
+            "property": "background-color",
+            "match": "#0B0C0D",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroSide",
+            "property": "border-inline-end",
+            "match": "var(--od-stroke) solid var(--od-border)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroSide",
+            "property": "color-block",
+            "match": "({ $grid }) => $grid && css`\n    &::before {\n      content: '';\n      position: absolute;\n      inset: 0;\n      background-image:\n        linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),\n        linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);\n      background-size: 56px 56px;\n      background-position: -1px -1px;\n      mask-image: radial-gradient(120% 80% at 30% 45%, #000 0%, transparent 75%);\n      pointer-events: none;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "HeroSide",
+            "property": "color",
+            "match": "#FFFFFF",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "inline-style",
+            "property": "color-block",
+            "match": "style /* binding-sha256:5a1d327c5479d4108914c5543f64bff4d0453fd8fb04730175b42a3a2d8d76e5 */",
+            "context": "JSXAttribute:reference",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "InputWithIcon",
+            "property": "color-block",
+            "match": "TextInput",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "LoginContainer",
+            "property": "color-block",
+            "match": "orderingBrandScope",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "OtpWrapper",
+            "property": "border",
+            "match": "var(--od-stroke) solid var(--od-border-strong)",
+            "context": ".otp-input",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "OtpWrapper",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PhoneNumberWrapper",
+            "property": "border",
+            "match": "var(--od-stroke) solid var(--od-border-strong)",
+            "context": ".PhoneInputCountry",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PhoneNumberWrapper",
+            "property": "color-block",
+            "match": "controlStyles",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "PrimaryButton",
+            "property": "color-block",
+            "match": "buttonBase",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "RedirectLink",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "ResendCode",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "background",
+            "match": "#0B0C0D",
+            "context": "li::before",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "background",
+            "match": "rgb(255 255 255 / 0.28)",
+            "context": "li:not(:last-child)::after",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "border",
+            "match": "1.5px solid rgb(255 255 255 / 0.56)",
+            "context": "li::before",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "box-shadow",
+            "match": "0 0 0 4px rgb(38 109 240 / 0.24)",
+            "context": "li:first-child::before",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "color-block",
+            "match": "({ theme }) => theme?.rtl && css`\n    li:not(:last-child)::after {\n      left: 0;\n      right: 11px;\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "color",
+            "match": "#FFFFFF",
+            "context": "li:first-child",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Route",
+            "property": "color",
+            "match": "rgb(255 255 255 / 0.72)",
+            "context": "li",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "SecondaryButton",
+            "property": "border",
+            "match": "var(--od-stroke) solid var(--od-border-strong)",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "SecondaryButton",
+            "property": "color-block",
+            "match": "buttonBase",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "({ $active }) => $active && css`\n    background: var(--od-surface);\n    color: var(--od-text);\n    box-shadow: var(--od-shadow-1);\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "Tab",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TextInput",
+            "property": "color-block",
+            "match": "controlStyles",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "TogglePassword",
+            "property": "color-block",
+            "match": "orderingFocusRing",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          },
+          {
+            "component": "WrapperPassword",
+            "property": "color-block",
+            "match": "TextInput",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact semantic, compatibility, operational-state, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The shell semantic inventory pins the full expression. This guard pins the existing colour as it is and changes none."
+          }
+        ]
+      }
+    }
+  ]
+}

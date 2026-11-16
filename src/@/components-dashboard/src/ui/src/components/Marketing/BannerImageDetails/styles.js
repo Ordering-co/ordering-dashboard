@@ -26,7 +26,7 @@ export const HeaderContainer = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin: 0;
     font-weight: 700;
     ${props => props.theme?.rtl
@@ -92,7 +92,7 @@ export const DropDownWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
         padding: 7px 20px;
         &:active {
@@ -159,7 +159,7 @@ export const UploadImageIconContainer = styled.div`
   p {
     margin: 0px;
     padding-top: 14px;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     color: ${props => props.theme.colors.lightGray};
     text-align: center;
   }
@@ -169,7 +169,7 @@ export const FormController = styled.div`
   flex-direction: column;
 
   label {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     margin-bottom: 8px;
   }
 `
@@ -184,7 +184,7 @@ export const SelectWrapper = styled.div`
 : css`
       margin-right: 2px;
     `}
-    font-size: 14px;
+    font-size: var(--od-type-control-value-size);
     background: ${props => props.theme.colors.secundary};
     border: none;
     > div:first-child {
@@ -259,7 +259,7 @@ export const Image = (props) => {
 }
 
 export const BusinessName = styled.span`
-  font-size: 12px;
+  font-size: var(--od-type-control-size);
   ${props => props.theme?.rtl
 ? css`
     margin-right: 12px;
@@ -294,14 +294,14 @@ export const Option = styled.div`
   span {
     display: flex;
     flex-direction: column;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     max-width: 170px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     color: ${props => props.theme.colors.textGray};
     b {
-      font-size: 14px;
+      font-size: var(--od-type-control-value-size);
       line-height: 20px;
       font-weight: 400;
       color: ${props => props.theme.colors.textBlack};

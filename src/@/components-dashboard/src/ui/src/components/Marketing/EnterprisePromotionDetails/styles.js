@@ -28,7 +28,7 @@ export const Header = styled.div`
     h1 {
       margin-top: 0;
       margin-bottom: 0;
-      font-size: 20px;
+      font-size: var(--od-type-title-size);
       font-weight: 700;
       max-width: 350px;
     }
@@ -47,8 +47,21 @@ export const Tab = styled.div`
   user-select: none;
   padding: 10px 0px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   white-space: nowrap;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--od-action);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
   ${props => props.theme?.rtl
 ? css`
     margin-left: 30px;
@@ -103,7 +116,7 @@ export const WrapperActionSelector = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {

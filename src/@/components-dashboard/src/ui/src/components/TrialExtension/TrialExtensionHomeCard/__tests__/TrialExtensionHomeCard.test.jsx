@@ -19,10 +19,6 @@ vi.mock('../../../../../../index.js', () => ({
 vi.mock('../../../../contexts/TrialExtensionContext', () => ({
   useTrialExtension: () => mocks.trialExtension
 }))
-vi.mock('../../../../styles', () => ({
-  Button: ({ children, ...props }) => <button {...props}>{children}</button>
-}))
-
 import { TrialExtensionHomeCard } from '..'
 
 describe('TrialExtensionHomeCard', () => {
@@ -33,6 +29,14 @@ describe('TrialExtensionHomeCard', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Book a call' }))
     expect(mocks.trialExtension.openBooking).toHaveBeenCalledWith('home')
+  })
+
+  it('uses the Product primary button (HD-02), not the legacy one', () => {
+    renderWithProviders(<TrialExtensionHomeCard />)
+    const button = screen.getByRole('button', { name: 'Book a call' })
+    expect(button).toHaveAttribute('data-variant', 'primary')
+    expect(button).toHaveAttribute('data-size', 'md')
+    expect(button).toHaveClass('odc-btn')
   })
 
   it('renders nothing when not available', () => {

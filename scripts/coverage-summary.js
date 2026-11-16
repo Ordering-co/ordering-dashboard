@@ -76,8 +76,8 @@ const statements = pct(total.statements.covered, total.statements.total)
 const branches = pct(total.branches.covered, total.branches.total)
 const functions = pct(total.functions.covered, total.functions.total)
 const lines = pct(total.lines.covered, total.lines.total)
-const average = (statements + branches + functions + lines) / 4
 const round = (n) => Math.round(n * 100) / 100
+const average = round((statements + branches + functions + lines) / 4)
 
 console.log('')
 console.log('Coverage summary (CI formula)')
@@ -89,3 +89,7 @@ console.log(`Lines      : ${round(lines)}%`)
 console.log(`Average    : ${round(average)}%  (threshold: 70%)`)
 console.log('')
 console.log(average >= 70 ? '✅ Meets 70% gate' : '❌ Below 70% gate')
+
+if (process.argv.includes('--strict') && (average < 70 || Object.values(total).some(({ total }) => total === 0))) {
+  process.exitCode = 1
+}

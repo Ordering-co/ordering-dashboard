@@ -17,7 +17,7 @@ export const HeaderContainer = styled.div`
   margin-bottom: 20px;
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0;
   }
@@ -25,7 +25,7 @@ export const HeaderContainer = styled.div`
   p {
     margin: 0;
     color: ${props => props.theme.colors?.disabled || '#748194'};
-    font-size: 13px;
+    font-size: var(--od-type-secondary-size);
   }
 `
 
@@ -48,7 +48,7 @@ export const SectionCard = styled.div`
 `
 
 export const SectionTitle = styled.h2`
-  font-size: 15px;
+  font-size: var(--od-type-section-title-size);
   font-weight: 600;
   margin: 0 0 12px 0;
 `
@@ -64,7 +64,7 @@ export const EmptyWrapper = styled.div`
   text-align: center;
   padding: 24px 0;
   color: ${props => props.theme.colors?.disabled || '#748194'};
-  font-size: 13px;
+  font-size: var(--od-type-secondary-size);
 `
 
 export const EditorWrapper = styled.div`

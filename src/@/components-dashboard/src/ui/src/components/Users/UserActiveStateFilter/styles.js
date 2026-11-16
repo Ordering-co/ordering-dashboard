@@ -6,8 +6,13 @@ export const UserActiveStateFilterContainer = styled.div`
 `
 
 export const Tab = styled.div`
+  appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
   padding: 10px 0px;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   ${props => props.theme?.rtl
 ? css`
     margin-left: 30px;
@@ -27,4 +32,15 @@ export const Tab = styled.div`
   ${({ active }) => !active && css`
     color: #909BA9;
   `}
+
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: ${props => props.theme?.ordering?.radius?.control ?? '4px'};
+  }
+
+  @media (pointer: coarse) {
+    min-height: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+    min-width: ${props => props.theme?.ordering?.component?.density?.touchTargetMinimum ?? '44px'};
+  }
 `

@@ -1,0 +1,103 @@
+/* redesign UF-B1b: the save bar promoted from Settings (settings-hub-form.css, ). Tokens only. */
+
+/* ── Fixed at the foot of the content from the first visible change ── */
+.odc-savebar {
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--od-x-layer-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-2) var(--od-space-4);
+  margin-block-start: var(--od-space-4);
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-savebar *,
+.odc-savebar *::before,
+.odc-savebar *::after {
+  box-sizing: border-box;
+}
+
+.odc-savebar-text {
+  display: grid;
+  flex: 1 1 0;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-savebar-count {
+  margin: 0;
+  font-weight: var(--od-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.odc-savebar-names {
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-savebar-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-x-space-1-5);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-savebar-message:focus { outline: none; }
+
+.odc-savebar-message[data-tone='error'] { color: var(--od-danger-functional); }
+
+.odc-savebar-message > .odc-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: var(--od-x-space-half);
+}
+
+/* redesign stores 2.A: the opt-in retry sits after the error (beside the alert, not inside it); it keeps its size. */
+.odc-savebar-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+.odc-savebar-error > .odc-btn {
+  flex: none;
+}
+
+.odc-savebar-actions {
+  display: flex;
+  flex: none;
+  gap: var(--od-space-2);
+}
+
+/* redesign : when the actions wrap under the text, the error's Retry (sm, 28px) reaches 8px below its box and a 32px
+   action 6px above its own. --od-space-2 (8px on a 16px root, 7px on the dashboard's 14px one) let the areas cross; the row gap grows
+   to --od-space-4 (14px there: the 8 + 6 the two areas need, no more) under the same query that turns the 44px reach on
+   (product.css). Only the spacing changes. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-savebar { row-gap: var(--od-space-4); }
+}
+
+/* On a phone the actions take the full width, 44px tall: Discard and Save sit --od-space-2 (8px) apart, under the 12px
+   that decision 12 asks between 44px touch areas, so they keep 44 visible (W0-D-08 rule; as the Settings bar it comes from). */
+@media (max-width: 767px) {
+  .odc-savebar-actions { inline-size: 100%; }
+
+  .odc-savebar-actions > .odc-btn {
+    flex: 1 1 0;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

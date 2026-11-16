@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   Checkout as CheckoutController,
   useOrder,
@@ -15,25 +15,36 @@ import { ConfigFileContext } from '../../../../contexts/ConfigFileContext'
 import { getDashboardStorageKey } from '~/utils/local-tenant'
 import { parseJsonArray } from '../../../../../../utils/safeJsonParse'
 import parsePhoneNumber from 'libphonenumber-js'
-import VscWarning from '@meronex/icons/vsc/VscWarning'
 
 import { PaymentOptions } from '../PaymentOptions'
 import { PaymentOptionWallet } from '../PaymentOptionWallet'
 import { DriverTips } from '../DriverTips'
 import { CartBill } from '../CartBill'
 
-import { Alert, NotFoundSource } from '../../../Shared'
+import { NotFoundSource } from '../../../Shared'
+import { InlineNotice, Button as ProductButton } from '../../../Shared/Product'
 import { Button } from '../../../../styles'
 
-import {
-  Conatiner,
-  WarningMessage,
-  PaymentMethodContainer,
-  SectionTitleContainer,
-  Flag,
-  WarningText,
-  WrapperPlaceOrderButton
-} from './styles'
+import { WrapperPlaceOrderButton } from './styles'
+import '../steps.css'
+
+// Redesign 5.5-B: the alerts of before (a dialog each) are inline messages in the step, same text.
+const AlertNotices = ({ alert, acceptLabel, onAccept }) => {
+  if (!alert?.open) return null
+  const messages = [].concat(alert.content ?? []).filter(Boolean)
+  return messages.map((message, index) => (
+    <InlineNotice
+      key={index}
+      tone='danger'
+      role='alert'
+      action={index === messages.length - 1
+        ? <ProductButton variant='link' size='sm' onClick={onAccept}>{acceptLabel}</ProductButton>
+        : undefined}
+    >
+      {typeof message === 'string' ? message : (message?.message ?? String(message))}
+    </InlineNotice>
+  ))
+}
 
 const CheckoutUI = (props) => {
   const {
@@ -51,7 +62,8 @@ const CheckoutUI = (props) => {
     isResetPaymethod,
     setIsResetPaymethod,
     onPlaceOrderClick,
-    placeSpotNumber
+    placeSpotNumber,
+    onRegisterPlaceOrder
   } = props
 
   const [validationFields] = useValidationFields()
@@ -158,6 +170,48 @@ const CheckoutUI = (props) => {
     setUserErrors(errors)
   }
 
+  // ── The place-order action, for a host that pins it (the wizard footer) ──
+  // A host passes `onRegisterPlaceOrder`; it gets `{ disabled, placing, reason, place }` (or null while there
+  // is nothing to place) and the button below is not drawn. `place` is the very handler of that button.
+  const placeOrderRef = useRef(null)
+  placeOrderRef.current = () => handlePlaceOrder()
+  const placeOrderVisible = !cartState.loading && !!cart && cart?.status !== 2
+  const isMaximumInvalid = !cart?.valid_maximum
+  const isMinimumInvalid = !cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100)
+  const isSpotMissing = isTableNumberEnabled === '1' && (options?.type === 3 && !(cart?.spot_number || placeSpotNumber))
+  const isDriverTipMissing = options.type === 1 &&
+    validationFields?.fields?.checkout?.driver_tip?.enabled &&
+    validationFields?.fields?.checkout?.driver_tip?.required &&
+    (Number(cart?.driver_tip) <= 0)
+  const isPaymethodMissing = !paymethodSelected && cart?.balance > 0
+
+  // What stops the order, first blocker first: the same texts the notices below show.
+  let blockingReason = null
+  if (isMaximumInvalid) blockingReason = `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+  else if (isMinimumInvalid) blockingReason = `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+  else if (!cart?.valid_address) blockingReason = t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')
+  else if (isPaymethodMissing) blockingReason = t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')
+  else if (!cart?.valid_products) blockingReason = t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')
+  else if (isSpotMissing) blockingReason = t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')
+  else if (isDriverTipMissing) blockingReason = t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')
+  else if (validateCommentsCartField) blockingReason = t('WARNING_INVALID_CART_COMMENTS', 'Cart comments is required.')
+  else if (validateZipcodeCard) blockingReason = t('WARNING_CARD_ZIPCODE_REQUIRED', 'Your card selected has not zipcode')
+  const registeredReason = isDisablePlaceOrderButton ? blockingReason : null
+
+  useEffect(() => {
+    if (!onRegisterPlaceOrder) return
+    onRegisterPlaceOrder(placeOrderVisible
+      ? {
+          disabled: !!isDisablePlaceOrderButton,
+          placing: !!placing,
+          reason: registeredReason,
+          place: () => placeOrderRef.current()
+        }
+      : null)
+  }, [placeOrderVisible, !!isDisablePlaceOrderButton, !!placing, registeredReason])
+
+  useEffect(() => () => { onRegisterPlaceOrder?.(null) }, [])
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -181,29 +235,29 @@ const CheckoutUI = (props) => {
   }, [isResetPaymethod])
 
   return (
-    <Conatiner>
+    <div className='odc-steps-checkout'>
+      <AlertNotices
+        alert={alertState}
+        acceptLabel={t('ACCEPT', 'Accept')}
+        onAccept={() => setAlertState({ open: false, content: [] })}
+      />
+
       {!cartState.loading && cart?.status === 2 && (
-        <WarningMessage>
-          <VscWarning />
-          <h1>
-            {t('CART_STATUS_PENDING_MESSAGE', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the page')}
-          </h1>
-        </WarningMessage>
+        <InlineNotice tone='warning'>
+          {t('CART_STATUS_PENDING_MESSAGE', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the page')}
+        </InlineNotice>
       )}
 
       {!cartState.loading && cart && (
-        <PaymentMethodContainer className='paymentsContainer'>
-          <SectionTitleContainer>
-            <h3>{t('PAYMENT_METHODS', 'Payment Methods')}</h3>
-            <Flag>{t('REQUIRED', 'Required')}</Flag>
-          </SectionTitleContainer>
+        <div className='odc-steps-payments paymentsContainer'>
+          <div className='odc-steps-section-head'>
+            <h4 className='odc-steps-heading'>{t('PAYMENT_METHODS', 'Payment Methods')}</h4>
+            <span className='odc-steps-flag'>{t('REQUIRED', 'Required')}</span>
+          </div>
           {!cartState.loading && cart?.status === 4 && (
-            <WarningMessage style={{ marginTop: 20 }}>
-              <VscWarning />
-              <h1>
-                {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
-              </h1>
-            </WarningMessage>
+            <InlineNotice tone='warning'>
+              {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+            </InlineNotice>
           )}
           <PaymentOptions
             cart={cart}
@@ -224,7 +278,7 @@ const CheckoutUI = (props) => {
             paymethodClicked={paymethodClicked}
             setPaymethodClicked={setPaymethodClicked}
           />
-        </PaymentMethodContainer>
+        </div>
       )}
 
       {isWalletEnabled && !businessDetails?.loading && (
@@ -250,7 +304,8 @@ const CheckoutUI = (props) => {
       )}
       {!cartState.loading && cart && <CartBill cart={cart} />}
 
-      {!cartState.loading && cart && cart?.status !== 2 && (
+      {/* Without a host that pins the action (onRegisterPlaceOrder) the button stays here, as before. */}
+      {!onRegisterPlaceOrder && placeOrderVisible && (
         <WrapperPlaceOrderButton>
           <Button
             color={(!cart?.valid_maximum || (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100))) ? 'secundary' : 'primary'}
@@ -271,66 +326,52 @@ const CheckoutUI = (props) => {
       )}
 
       {!cart?.valid_address && cart?.status !== 2 && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
-        </WarningText>
+        </InlineNotice>
       )}
 
-      {(!paymethodSelected && cart?.balance > 0) && cart?.status !== 2 && (
-        <WarningText>
+      {isPaymethodMissing && cart?.status !== 2 && (
+        <InlineNotice tone='warning'>
           {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
-        </WarningText>
+        </InlineNotice>
       )}
 
       {!cart?.valid_products && cart?.status !== 2 && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
-        </WarningText>
+        </InlineNotice>
       )}
 
       {isTableNumberEnabled === '1' && (options?.type === 3 && !(cart?.spot_number || placeSpotNumber)) && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')}
-        </WarningText>
+        </InlineNotice>
       )}
 
-      {options.type === 1 &&
-        validationFields?.fields?.checkout?.driver_tip?.enabled &&
-        validationFields?.fields?.checkout?.driver_tip?.required &&
-        (Number(cart?.driver_tip) <= 0) &&
-        (
-          <WarningText>
-            {t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
-          </WarningText>
-        )}
+      {isDriverTipMissing && (
+        <InlineNotice tone='warning'>
+          {t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
+        </InlineNotice>
+      )}
 
       {validateCommentsCartField && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('WARNING_INVALID_CART_COMMENTS', 'Cart comments is required.')}
-        </WarningText>
+        </InlineNotice>
       )}
 
       {validateZipcodeCard && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('WARNING_CARD_ZIPCODE_REQUIRED', 'Your card selected has not zipcode')}
-        </WarningText>
+        </InlineNotice>
       )}
       {cart?.valid_preorder !== undefined && !cart?.valid_preorder && (
-        <WarningText>
+        <InlineNotice tone='warning'>
           {t('INVALID_CART_MOMENT', 'Selected schedule time is invalid, please select a schedule into the business schedule interval.')}
-        </WarningText>
+        </InlineNotice>
       )}
-
-      <Alert
-        title={t('CUSTOMER_DETAILS', 'Customer Details')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => setAlertState({ open: false, content: [] })}
-        onAccept={() => setAlertState({ open: false, content: [] })}
-        closeOnBackdrop={false}
-      />
-    </Conatiner>
+    </div>
   )
 }
 
@@ -512,14 +553,10 @@ export const Checkout = (props) => {
 
       {cartUuid && cartState.cart && cartState.cart?.status !== 1 && <CheckoutController {...checkoutProps} />}
 
-      <Alert
-        title={t('CHECKOUT ', 'Checkout')}
-        content={alertState.content}
-        acceptText={t('ACCEPT', 'Accept')}
-        open={alertState.open}
-        onClose={() => closeAlert()}
+      <AlertNotices
+        alert={alertState}
+        acceptLabel={t('ACCEPT', 'Accept')}
         onAccept={() => closeAlert()}
-        closeOnBackdrop={false}
       />
     </>
   )

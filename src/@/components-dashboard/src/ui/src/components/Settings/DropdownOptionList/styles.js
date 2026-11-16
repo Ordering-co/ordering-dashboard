@@ -34,7 +34,7 @@ export const DropdownOptionWrapper = styled.div`
 `
 
 export const DropdownOptionName = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   width: 30%;
   display: flex;
   align-items: center;
@@ -42,7 +42,7 @@ export const DropdownOptionName = styled.div`
 
 export const CityName = styled.div`
   width: 30%;
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   box-sizing: border-box;
 
   ${props => props.theme.colors.rtl
@@ -77,7 +77,7 @@ export const CityName = styled.div`
 `
 
 export const CountryName = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   width: 20%;
   box-sizing: border-box;
   div {
@@ -112,7 +112,7 @@ export const CountryName = styled.div`
 `
 
 export const ActionsContainer = styled.div`
-  font-size: 12px;
+  font-size: var(--od-type-content-size);
   flex: 1;
   display: flex;
   align-items: center;
@@ -146,7 +146,7 @@ export const EnableWrapper = styled.div`
   width: fit-content;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
     color: ${props => props.theme.colors.headingColor};
 
     ${props => props.theme?.rtl
@@ -201,7 +201,7 @@ export const ActionSelectorWrapper = styled.div`
     > div {
       border-radius: 8px;
       .dropdown-item {
-        font-size: 12px;
+        font-size: var(--od-type-control-size);
         color: ${props => props.theme.colors.headingColor};
       }
       .dropdown-item:last-child {

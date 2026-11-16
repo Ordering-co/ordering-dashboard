@@ -91,6 +91,9 @@ export const DriversGroupsList = (props) => {
                 <th>
                   <GroupIdWrapper>
                     <CheckBoxWrapper
+                      type='button'
+                      aria-label={t('SELECT_ALL', 'Select all')}
+                      aria-pressed={!driversGroupsState.loading && (selectedGroupList.length === driversGroupsState.groups.length)}
                       onClick={() => handleAllSelectGroup()}
                       isChecked={!driversGroupsState.loading && (selectedGroupList.length === driversGroupsState.groups.length)}
                     >
@@ -188,7 +191,10 @@ export const DriversGroupsList = (props) => {
                       <GroupIdWrapper>
                         {!isFromStore && (
                           <CheckBoxWrapper
+                            type='button'
                             className='group-checkbox'
+                            aria-label={`${t('SELECT', 'Select')} ${group?.name ?? ''}`}
+                            aria-pressed={selectedGroupList.includes(group.id)}
                             onClick={() => handleSelectGroup(group.id)}
                             isChecked={selectedGroupList.includes(group.id)}
                           >

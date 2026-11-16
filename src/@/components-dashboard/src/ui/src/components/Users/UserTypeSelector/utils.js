@@ -64,3 +64,18 @@ export const userTypesValues = (props) => {
   ]
   return values.filter((option) => ((option.showOption && !Array.isArray(defaultUserTypesSelected)) || (defaultUserTypesSelected?.includes(option.value))))
 }
+
+// redesign D-11: the name of a level as plain text (the selector rows are JSX), with the same keys and defaults as the rows
+export const userTypeLabel = (t, level) => {
+  if (level === null || level === undefined || level === '') return ''
+  switch (Number(level)) {
+    case 0: return t('ADMINISTRATOR', 'Administrator')
+    case 2: return t('BUSINESS_OWNER', 'Business owner')
+    case 3: return t('USER', 'User')
+    case 4: return t('DRIVER', 'Driver')
+    case 5: return t('DRIVER_MANAGER', 'Driver manager')
+    case 9: return t('CALL_CENTER_AGENT', 'Call center agent')
+    case 8: return t('PROFESSIONAL', 'Professional')
+    default: return ''
+  }
+}

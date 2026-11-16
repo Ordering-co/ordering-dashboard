@@ -1,0 +1,122 @@
+/*
+ * redesign  (B1a): the Business & Services section of a professional's record (search, list of stores with the number of
+ * services, and the services of one store inside the section).
+ * Values come from --od-* (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else.
+ * Logical properties only, so right-to-left needs no second set of rules. Component classes use the `psv-` prefix; the
+ * wrappers keep `odc-`.
+ */
+
+.psv-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* P/SearchField carries `flex: 0 1 280px` for a row bar; in this column that basis became its HEIGHT: no flex here */
+.psv-search { flex: none; inline-size: 100%; }
+
+/* ── The list: one row per store, the whole row is the button ── */
+.psv-list {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.psv-item { min-inline-size: 0; }
+
+.psv-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height-lg);
+  margin: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-1-5);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: transparent;
+  color: var(--od-text);
+  font-family: inherit;
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.psv-row:hover { background: var(--od-x-hover); }
+
+.psv-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.psv-name {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.psv-count {
+  flex: none;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.psv-count-skeleton {
+  flex: none;
+  inline-size: calc(var(--od-x-control-height) * 2);
+}
+
+.psv-chevron { color: var(--od-text-muted); }
+
+.psv-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.psv-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+/* ── The services of one store ── */
+.psv-detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* apply-list row 22: the name starts at its own width (auto, not 0), so when «Remove from store» does not fit beside it the button wraps */
+.psv-store-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+/* Phone (E10: a narrow window is a phone layout): the row reaches the 44px touch area; the back button keeps its own 44px area (P/Button) */
+@media (pointer: coarse), (max-width: 767px) {
+  .psv-row { min-block-size: var(--od-x-target-coarse); }
+}

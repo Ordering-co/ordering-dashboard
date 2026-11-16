@@ -1,0 +1,36 @@
+/* Learn menu (audit 4): a Product Menu trigger and popup. Values: --od-* and --od-x-* tokens only. */
+
+/* The wrapper only keeps the trigger on the line of its page head; the head decides the rest. */
+.od-ui:where(.od-learn-menu) {
+  display: flex;
+  align-items: center;
+}
+
+/* Outside the orders head (every other page head) Learn keeps the touch target the legacy trigger had. */
+.od-ui.od-learn-menu .learn-drop-down {
+  margin-inline: var(--od-x-space-2-5);
+  min-block-size: var(--od-x-target-coarse);
+}
+
+/* Each item opens a new tab: the external-link mark closes the row (like the sidebar's links) and the
+   «opens in a new tab» hint is read as the item's description, not drawn as a second line. */
+.odc-menu[data-learn-menu] .odc-menu-icon {
+  order: 1;
+  margin-inline-start: auto;
+}
+
+.odc-menu[data-learn-menu][dir='rtl'] .odc-menu-icon {
+  scale: -1 1;
+}
+
+.odc-menu[data-learn-menu] .odc-menu-description {
+  position: absolute;
+  inline-size: var(--od-x-hairline);
+  block-size: var(--od-x-hairline);
+  margin: calc(var(--od-x-hairline) * -1);
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -35,7 +35,7 @@ export const ProductItem = styled.div`
   `}
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     flex: 1;
   }
 

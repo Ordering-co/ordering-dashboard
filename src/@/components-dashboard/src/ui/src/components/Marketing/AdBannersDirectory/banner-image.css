@@ -1,0 +1,259 @@
+/*
+ * redesign AB-B4 (decision 3 → 3A; M-AB01, M-AB15, M-AB22) · The image dialog of a banner: the sections, the business list and the product tree.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17). Class prefix odc-banners-.
+ * The dialog itself (title, footer, sizes, the bottom sheet under 768px) is P/Dialog's; this file lays out what goes inside it.
+ */
+
+.odc-banners-image-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The notices belong to the dialog body, not to a page bar: no page gutter around them */
+.odc-banners-image-body .odc-notice {
+  margin-inline: 0;
+  margin-block: 0;
+}
+
+.odc-banners-image-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-banners-image-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-required {
+  color: var(--od-text-muted);
+}
+
+/* ── «Link kept as it is (<type>)»: the selected, read-only line of a link main did not know (M-AB03) ── */
+.odc-banners-link-kept {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  padding: var(--od-x-space-1-5) var(--od-x-space-2-5);
+  border: var(--od-x-hairline) solid var(--od-action);
+  border-radius: var(--od-radius-component);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+/* ── A field's own message (M-AB25): the text says it, the icon repeats it, the colour is never the only signal ── */
+.odc-banners-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-field-error .odc-icon {
+  flex: none;
+  margin-block-start: var(--od-x-space-half);
+}
+
+/* ── The footer: «Delete image» sits at the start, «Cancel» and the primary at the end ── */
+.odc-btn.odc-banners-image-delete[data-variant='ghost'] {
+  margin-inline-end: auto;
+  color: var(--od-danger-functional);
+}
+
+/* ── The business list: search, «Linked now», a radio list of logo + name, pages ── */
+.odc-banners-pick {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+.odc-banners-pick-search {
+  flex: 0 0 auto;
+  inline-size: 100%;
+}
+
+.odc-banners-pick-note,
+.odc-banners-pick-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-banners-pick-error {
+  margin: 0;
+  color: var(--od-danger-functional);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* Twenty rows would push the footer off a phone: the list scrolls inside itself */
+.odc-banners-pick-group .odc-radiogroup-options {
+  max-block-size: calc(var(--od-x-control-height) * 7);
+  overflow-y: auto;
+}
+
+.odc-banners-pick-group .odc-radio {
+  border-radius: 0;
+}
+
+.odc-banners-pick-group .odc-radio + .odc-radio {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-pick-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The logo and the product image are 20px (--od-x-icon-md) */
+.odc-banners-pick-label .odc-avatar,
+.odc-banners-thumb {
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+}
+
+.odc-banners-pick-name,
+.odc-banners-product-name,
+.odc-banners-group-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-banners-pick-skeleton {
+  display: flex;
+  flex-direction: column;
+}
+
+.odc-banners-pick-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  padding-inline: var(--od-x-space-1-5);
+}
+
+/* ── The product tree: collapsible groups of radio rows ── */
+.odc-banners-picker {
+  display: flex;
+  flex-direction: column;
+  max-block-size: calc(var(--od-x-control-height) * 9);
+  overflow-y: auto;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+}
+
+.odc-banners-group + .odc-banners-group {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-banners-group-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-2-5);
+  border: 0;
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-banners-group-head:hover,
+.odc-banners-product:hover {
+  background: var(--od-x-hover);
+}
+
+.odc-banners-group-head:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: calc(var(--od-focus-ring-width) * -1);
+}
+
+.odc-banners-group-body {
+  display: flex;
+  flex-direction: column;
+  padding-inline-start: var(--od-space-5);
+}
+
+.odc-banners-product {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-block-size: var(--od-x-control-height);
+  margin: 0;
+  padding-block: var(--od-x-space-1-5);
+  padding-inline: var(--od-x-space-2-5);
+  cursor: pointer;
+}
+
+.odc-banners-radio {
+  flex: none;
+  inline-size: var(--od-x-checkbox-box);
+  block-size: var(--od-x-checkbox-box);
+  margin: 0;
+  accent-color: var(--od-action);
+  cursor: pointer;
+}
+
+.odc-banners-radio:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-banners-thumb {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  overflow: hidden;
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-control);
+  background: var(--od-bg);
+  color: var(--od-text-muted);
+}
+
+.odc-banners-thumb img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.odc-banners-thumb .odc-icon {
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+}
+
+/* Touch (decision 12): the headers and the rows are the target, 44px VISIBLE (as the RadioGroup rows: stacked, so a pseudo-element area would overlap) */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-banners-group-head,
+  .odc-banners-product {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

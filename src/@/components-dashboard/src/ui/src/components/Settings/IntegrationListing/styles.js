@@ -30,7 +30,7 @@ export const Header = styled.div`
 
   h1 {
     flex: 1;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
     line-height: 35px;
@@ -68,7 +68,7 @@ export const CategorGroup = styled.div`
 export const CategorySection = styled.div`
  h2 {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--od-type-section-title-size);
   line-height: 24px;
   margin: 0;
   margin-left: 20px;
@@ -99,6 +99,7 @@ export const SpecialPartnerWrapper = styled.div`
 `
 
 export const SettingItemContainer = styled.div`
+  position: relative;
   width: calc(100% - 20px);
   margin: 10px;
   display: flex;
@@ -187,13 +188,44 @@ export const SettingItemContent = styled.div`
     margin-left: 13px;
   `}
   h5 {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     font-weight: 500;
     margin-bottom: 6px;
   }
+  /* : the title is the native button of the card. Its ::after covers the whole card, so a click anywhere on
+     the card (and the focus ring) belongs to the button. */
+  h5 button {
+    appearance: none;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:focus-visible::after {
+      outline: 2px solid var(--od-focus);
+      outline-offset: -2px;
+    }
+  }
   p {
-    color: ${props => props.theme.colors.lightGray};
-    font-size: 12px;
+    color: var(--od-x-text-subtle);
+    font-size: var(--od-type-secondary-size);
     margin: 0px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -245,7 +277,7 @@ export const Tabs = styled.div`
 
 export const Tab = styled.div`
   font-weight: 400;
-  font-size: 14px;
+  font-size: var(--od-type-control-size);
   line-height: 18px;
   padding-bottom: 14px;
   color: ${props => props.theme.colors.lightGray};
@@ -272,4 +304,22 @@ export const Tab = styled.div`
       `}
     }
   }
+`
+
+/**
+ * the SideBar draws a 44px close button and a 44px expand button 20px from its right edge. The lists in the
+ * panel end their header 85px from that edge, which put the expand button over "Add ...". This wrapper moves the content
+ * edge 32px in, so the header actions end before the expand button, where the expand button is drawn (`$reserve="expand"`).
+ * on a phone only the close button is drawn (20 to 64px from the edge) and the lists end their header 55px from
+ * it, so the close button sat 9px over "Add ..."; there the edge moves 16px in (`$reserve="close"`).
+ */
+export const PanelContent = styled.div`
+  /* : a flex child of the panel; without it the wide table stretches the panel past the phone */
+  min-width: 0;
+  ${({ $reserve, theme }) => $reserve === 'expand' && (theme?.rtl
+    ? css`padding-left: 32px;`
+    : css`padding-right: 32px;`)}
+  ${({ $reserve, theme }) => $reserve === 'close' && (theme?.rtl
+    ? css`padding-left: 16px;`
+    : css`padding-right: 16px;`)}
 `

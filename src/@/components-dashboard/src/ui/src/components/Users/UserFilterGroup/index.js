@@ -114,10 +114,10 @@ const UserFilterGroupUI = (props) => {
                 />
               </FormControl>
               <FormControl>
-                <label>{t('EXTERNAL_ID', 'External id')}</label>
+                <label>{t('EXTERNAL_ID', 'External ID')}</label>
                 <Input
                   type='text'
-                  placeholder={t('EXTERNAL_ID', 'External id')}
+                  placeholder={t('EXTERNAL_ID', 'External ID')}
                   autoComplete='off'
                   value={filterValues?.externalId || ''}
                   onChange={(e) => handleChangeValue({ externalId: e.target.value })}

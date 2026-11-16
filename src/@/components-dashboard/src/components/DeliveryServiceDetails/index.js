@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
@@ -8,7 +8,6 @@ import { useLanguage } from '../../contexts/LanguageContext'
 export const DeliveryServiceDetails = (props) => {
   const {
     UIComponent,
-    deliveryServicesState,
     curDriversGroup,
     driverGroupId,
     businesses,
@@ -18,7 +17,7 @@ export const DeliveryServiceDetails = (props) => {
   } = props
 
   const [ordering] = useApi()
-  const [{ token, user }] = useSession()
+  const [{ token }] = useSession()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
   const [deliveryServiceState, setDeliveryServiceState] = useState({ deliveryService: props.curDriversGroup, loading: !props.curDriversGroup, error: null })
@@ -29,6 +28,8 @@ export const DeliveryServiceDetails = (props) => {
   const [useAdvanced, setUseAdvanced] = useState(false)
   const [pluginState, setPluginState] = useState({ configs: null, loading: false, error: null })
   const [availableModifyData, setAvailableModifyData] = useState(false)
+  // redesign DS-B1 (M-DS22): the plugin key the credentials were last asked for
+  const pluginKeyRef = useRef()
 
   const fetchOptions = {
     method: 'GET',
@@ -48,43 +49,6 @@ export const DeliveryServiceDetails = (props) => {
   }
 
   /**
-   * Method to get the drives group from API
-   */
-  const getDriversGroup = async () => {
-    const groupId = curDriversGroup?.id || driverGroupId
-    if (!groupId) return
-    try {
-      setDeliveryServiceState({
-        ...deliveryServiceState,
-        loading: true
-      })
-
-      const response = await fetch(`${ordering.root}/drivergroups/${groupId}`, fetchOptions)
-      const { result, error } = await response.json()
-      if (!error) {
-        setDeliveryServiceState({
-          loading: false,
-          deliveryService: result,
-          error: null
-        })
-        initSet(result)
-      } else {
-        setDeliveryServiceState({
-          ...deliveryServiceState,
-          loading: false,
-          error: result
-        })
-      }
-    } catch (error) {
-      setDeliveryServiceState({
-        ...deliveryServiceState,
-        loading: false,
-        error: [error.message]
-      })
-    }
-  }
-
-  /**
    * Method to update selected drivers group from API
    * @param {Object} changes
    */
@@ -94,14 +58,15 @@ export const DeliveryServiceDetails = (props) => {
       setActionState({ ...actionState, loading: true, error: null })
       let changes = _changes
       const skipeableValues = ['', '[]']
-      const newChangeState = { ...changesState }
+      // redesign DS-B1 (M-DS2): the keys that go in the PUT; only those leave changesState after a good save
+      const sentKeys = []
       Object.keys(changes)?.map(changeName => {
         if (typeof changes?.[changeName] !== 'undefined') {
           changes = {
             ...changes,
             [changeName]: skipeableValues.includes(changes?.[changeName]) ? null : changes?.[changeName]
           }
-          delete newChangeState[changeName]
+          sentKeys.push(changeName)
         }
       })
 
@@ -115,22 +80,30 @@ export const DeliveryServiceDetails = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ error: null, loading: false })
-        const groups = deliveryGroups.groups.filter(group => {
-          if (group.id === groupId) {
-            Object.assign(group, content.result)
-            const useAdvancedLogistics = group?.autoassign_amount_drivers !== 0 && group?.orders_group_max_orders !== 0
-            useAdvancedLogistics ? setUseAdvanced(true) : setUseAdvanced(false)
-          }
-          return true
+        // redesign DS-B1 (M-DS2): new group objects, written into the groups' state (not the providers')
+        const groups = (deliveryGroups?.groups ?? []).map(group => {
+          if (group.id !== groupId) return group
+          const merged = { ...group, ...content.result }
+          const useAdvancedLogistics = merged?.autoassign_amount_drivers !== 0 && merged?.orders_group_max_orders !== 0
+          useAdvancedLogistics ? setUseAdvanced(true) : setUseAdvanced(false)
+          return merged
         })
-        setDeliveryGroups({ ...deliveryServicesState, groups })
+        setDeliveryGroups({ ...deliveryGroups, groups })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-        setChangesState(newChangeState)
+        // redesign DS-B1 (M-DS2): functional, so a draft typed while the PUT was in flight survives
+        setChangesState(prev => {
+          const next = { ...prev }
+          sentKeys.forEach(key => { delete next[key] })
+          return next
+        })
+        return { ok: true }
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
+        return { ok: false, error: content.result }
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -209,17 +182,27 @@ export const DeliveryServiceDetails = (props) => {
     })
   }
 
+  // checking «Use advanced logistic» again restores the values it had (saved or edited here), 1 only if it never had any
+  const advancedValuesRef = useRef({})
   const handleLogistic = (checked) => {
-    const changes = {
-      autoassign_amount_drivers: checked ? 1 : 0,
-      orders_group_max_orders: checked ? 1 : 0
-    }
+    const positive = (value) => Number(value) > 0 ? Number(value) : null
+    const saved = deliveryServiceState?.deliveryService
+    const keys = ['autoassign_amount_drivers', 'orders_group_max_orders']
+    const changes = {}
+    keys.forEach(key => {
+      if (!checked) {
+        const current = positive(changesState[key] ?? saved?.[key])
+        if (current) advancedValuesRef.current[key] = current
+      }
+      changes[key] = checked ? (advancedValuesRef.current[key] ?? positive(saved?.[key]) ?? 1) : 0
+    })
     handleChangesState(changes)
   }
 
   const getPluginInformation = async (pluginKey) => {
     try {
-      setPluginState({ ...pluginState, loading: true })
+      // redesign DS-B1 (M-DS9): a (re)load clears the previous error
+      setPluginState(prev => ({ ...prev, loading: true, error: null }))
       const filterConditons = [
         {
           attribute: 'key',
@@ -234,18 +217,29 @@ export const DeliveryServiceDetails = (props) => {
       const response = await fetch(`${ordering.root}/configs?where=${JSON.stringify(filterConditons)}`, fetchOptions)
       const content = await response.json()
       if (!content.error) {
-        setPluginState({
-          ...pluginState,
+        setPluginState(prev => ({
+          ...prev,
           configs: content.result.filter(config => typeof config?.id === 'number'),
-          loading: false
-        })
+          loading: false,
+          error: null
+        }))
         if (content.result.every(config => config?.value !== '')) {
           setAvailableModifyData(true)
         }
+      } else {
+        // redesign DS-B1 (M-DS9): the API refused; say so instead of leaving `loading` on
+        setPluginState({ configs: null, loading: false, error: content.result })
       }
     } catch (err) {
-      setPluginState({ ...pluginState, loading: false, error: [err.message] })
+      setPluginState({ configs: null, loading: false, error: [err.message] })
     }
+  }
+
+  // redesign DS-B1 (M-DS9): the "Retry" of the credentials; the same request, for the current provider
+  const reloadPluginInformation = async () => {
+    const pluginKey = deliveryServiceState.deliveryService?.plugin?.key
+    if (!deliveryServiceState.deliveryService?.plugin?.id || !pluginKey) return
+    await getPluginInformation(pluginKey)
   }
 
   useEffect(() => {
@@ -257,53 +251,21 @@ export const DeliveryServiceDetails = (props) => {
         deliveryService: curDriversGroup
       })
       initSet(curDriversGroup)
-    } else {
-      setDeliveryServiceState({
-        deliveryService: null, loading: !props.curDriversGroup, error: null
-      })
-      const groupId = curDriversGroup?.id || driverGroupId
-      if (groupId) {
-        getDriversGroup()
-      } else {
-        // default for new group
-        const extraAttributes = {
-          enabled: true,
-          autoassign_amount_drivers: useAdvanced ? 1 : 0,
-          autoassign_autoaccept_by_driver: false,
-          autoassign_autoreject_time: 30,
-          autoassign_increment_radius: 100,
-          autoassign_initial_radius: 500,
-          autoassign_max_in_accepted_by_business: 5,
-          autoassign_max_in_accepted_by_driver: 5,
-          autoassign_max_in_driver_in_business: 5,
-          autoassign_max_in_pending: 5,
-          autoassign_max_in_pickup_completed: 5,
-          autoassign_max_in_ready_for_pickup: 5,
-          autoassign_max_in_driver_on_way: 5,
-          autoassign_max_in_driver_almost_arrived_to_customer: 5,
-          autoassign_max_orders: 5,
-          autoassign_max_radius: 1000,
-          orders_group_max_distance_between_delivery: 200,
-          orders_group_max_distance_between_pickup: 200,
-          orders_group_max_orders: useAdvanced ? 1 : 0,
-          orders_group_max_time_between: 5,
-          orders_group_max_time_between_delivery: 600,
-          orders_group_max_time_between_pickup: 600,
-          orders_group_start_in_status: 7,
-          orders_group_use_maps_api: false,
-          ...(user?.level === 5 && { administrator_id: user?.id })
-        }
-        setChangesState({
-          type: 0,
-          ...extraAttributes
-        })
-        setSelectedBusinessIds([])
-        setSelectedPaymethodIds([])
-      }
     }
+    // the panel always hands the group (`curDriversGroup`, DeliveryServicesListing); the fetch by id and the defaults of a
+    // new group (the old side bar) were unreachable and are gone
   }, [curDriversGroup, driverGroupId])
 
   useEffect(() => {
+    // redesign DS-B1 (M-DS22): another provider (another plugin key) starts locked until its own configs say otherwise
+    const pluginKey = deliveryServiceState.deliveryService?.plugin?.key
+    if (pluginKeyRef.current !== pluginKey) {
+      if (pluginKeyRef.current !== undefined) {
+        setAvailableModifyData(false)
+        setPluginState({ configs: null, loading: false, error: null })
+      }
+      pluginKeyRef.current = pluginKey
+    }
     if (deliveryServiceState.deliveryService?.plugin?.id) {
       getPluginInformation(deliveryServiceState.deliveryService?.plugin?.key)
     }
@@ -334,6 +296,8 @@ export const DeliveryServiceDetails = (props) => {
             handleUpdateDeliveryGroup={handleUpdateDeliveryGroup}
             handleChangeMaxDistance={handleChangeMaxDistance}
             setAvailableModifyData={setAvailableModifyData}
+            // redesign DS-B1 (M-DS9)
+            reloadPluginInformation={reloadPluginInformation}
           />
         )
       }

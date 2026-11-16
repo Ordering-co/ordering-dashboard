@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "id": "l5-b1-open-carts-selectors-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "b1-open-carts-selectors-opencartbill-opencartbillcontainer-table-14px-399d0d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartBill/styles.js",
+      "component": "OpenCartBillContainer",
+      "property": "font-size",
+      "context": "table",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-opencartbill-opencartbillcontainer-table-total-t-bb3906",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartBill/styles.js",
+      "component": "OpenCartBillContainer",
+      "property": "font-size",
+      "context": "table.total > tr",
+      "match": "16px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-opencartbill-opencartbillcontainer-table-payment-27d3f0",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/OpenCartBill/styles.js",
+      "component": "OpenCartBillContainer",
+      "property": "font-size",
+      "context": "table.payments > thead > th",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-contentinfo-h3-14px-fa97a1",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-accordiontext-root-14px-6ce4cc",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "AccordionText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productcomment-h3-14px-e73f43",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductComment",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productinfo-h1-h3-15px-cf4b23",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductInfo",
+      "property": "font-size",
+      "context": "h1,\n  h3",
+      "match": "15px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productinfo-p-20px-b1f569",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductInfo",
+      "property": "font-size",
+      "context": "p",
+      "match": "20px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-producterror-span-18px-750bb4",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductError",
+      "property": "font-size",
+      "context": "span",
+      "match": "18px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productprice-p-span-14px-39e589",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductPrice",
+      "property": "font-size",
+      "context": "p,\n  span",
+      "match": "14px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productselect-root-17px-553d0c",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductSelect",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "17px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productoptionslist-p-12px-11688d",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductOptionsList",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-productoptionslist-li-span--46ada5",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductOptionsList",
+      "property": "font-size",
+      "context": "li span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-scheduleinfowrapper-h3-14px-7227b6",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ScheduleInfoWrapper",
+      "property": "font-size",
+      "context": "h3",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "b1-open-carts-selectors-productitemaccordion-scheduleinfo-span-12px-6b7812",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ScheduleInfo",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "b1-open-carts-selectors-pres-productitemaccordion-contentinfo-span-p-14px-d4cf50",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "span > p",
+      "match": "14px",
+      "reason": "This selector matches no node in the component's current markup, so assigning it a typographic role would publish a claim no fixture can demonstrate; it is preserved and named as debt instead.",
+      "evidence": "ContentInfo renders a div holding an h3 and an optional p; there is no direct span child, so `span > p` matches nothing."
+    },
+    {
+      "id": "b1-open-carts-selectors-pres-productitemaccordion-contentinfo-span-div-span-s-101fa8",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "span > div > span > svg",
+      "match": "20px",
+      "reason": "This font-size sizes an icon glyph, not readable text; any change to the component, value, context or cardinality reopens classification.",
+      "evidence": "The quantity/edit glyphs. They also sit inside the same unrendered span as line 124, so this declaration is doubly unreachable; icon-glyph is the narrower and more durable of the two reasons."
+    },
+    {
+      "id": "b1-open-carts-selectors-pres-productitemaccordion-contentinfo-media-min-width-1da243",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ContentInfo",
+      "property": "font-size",
+      "context": "@media (min-width: 577px) > h3",
+      "match": "18px",
+      "reason": "This declaration is a breakpoint override of an element whose role is already assigned at its base size; the role scale has one size per role and cannot express a per-breakpoint bump, so migrating it would either flatten the responsive behaviour or give one element two roles.",
+      "evidence": "The same ContentInfo h3 that takes `content` at line 111 is raised to 18px above 577px. Giving this one sectionTitle would make one heading content on a phone and a section title on a laptop."
+    },
+    {
+      "id": "b1-open-carts-selectors-pres-productitemaccordion-productactionsedit-svg-20px-778e15",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/CartRecovery/ProductItemAccordion/styles.js",
+      "component": "ProductActionsEdit",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This declaration is identical to its already-migrated twin in Orders, which L3 preserved; preserving it here keeps one visual element from carrying two different treatments on two screens.",
+      "evidence": "Orders/ProductItemAccordion preserved this same svg declaration at the same value in L3."
+    }
+  ]
+}

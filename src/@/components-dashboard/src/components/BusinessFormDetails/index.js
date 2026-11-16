@@ -15,8 +15,8 @@ export const BusinessFormDetails = (props) => {
     UIComponent,
     business,
     handleSuccessUpdate,
-    handleSucessAddBusiness,
-    handleUpdateBusinessState
+    handleUpdateBusinessState,
+    silentToasts
   } = props
 
   const [ordering] = useApi()
@@ -40,25 +40,6 @@ export const BusinessFormDetails = (props) => {
   /**
    * deafult params to add the business newly
    */
-  const defaultAddBusinessParams = {
-    minimum: 0,
-    delivery_price: 0,
-    tax: 0,
-    tax_type: 1,
-    service_fee: 0,
-    enabled: true,
-    owner_id: session?.user?.id,
-    schedule: [
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] }
-    ]
-  }
-
   /**
    * Function to update a business
    */
@@ -80,10 +61,12 @@ export const BusinessFormDetails = (props) => {
 
   /**
    * Default fuction for business profile workflow
+   * redesign stores 5.1a (decision 4): resolves `{ ok: true }` or `{ ok: false, error }`, so a SaveBar and the leave
+   * guard know whether the user may go on. `silentToasts` (opt-in) leaves the «Loading» and «Business updated» feedback to the form.
    */
   const handleUpdateClick = async () => {
     try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (!silentToasts) showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = { ...formState.changes }
       const response = await ordering.businesses(business?.id).save(changes, {
@@ -107,8 +90,10 @@ export const BusinessFormDetails = (props) => {
         } else {
           updateResult(response)
         }
-        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+        if (!silentToasts) showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
+        return { ok: true }
       }
+      return { ok: false, error: response.content.result }
     } catch (err) {
       setFormState({
         ...formState,
@@ -118,52 +103,14 @@ export const BusinessFormDetails = (props) => {
         },
         loading: false
       })
+      return { ok: false, error: err.message }
     }
   }
 
   /**
-   * Method to add the business
+   * redesign stores 5.1a: drops what the form holds (the store itself was never written) and the last error
    */
-  const handleAddBusiness = async () => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
-      const changes = { ...formState.changes, ...defaultAddBusinessParams }
-      const response = await ordering.businesses().save(changes, {
-        accessToken: session.token
-      })
-      setFormState({
-        ...formState,
-        changes: response.content.error ? formState.changes : {},
-        result: response.content,
-        loading: false
-      })
-
-      if (!response.content.error) {
-        setBusinessState({
-          ...businessState,
-          business: {
-            ...businessState.business,
-            ...response.content.result
-          }
-        })
-        showToast(ToastType.Success, t('BUSINESS_ADDED', 'Business added'))
-
-        if (handleSucessAddBusiness) {
-          handleSucessAddBusiness(response.content.result)
-        }
-      }
-    } catch (err) {
-      setFormState({
-        ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
-      })
-    }
-  }
+  const handleDiscardChanges = () => setFormState(prev => ({ ...prev, changes: {}, result: { error: false } }))
 
   /**
    * Update credential data
@@ -305,8 +252,8 @@ export const BusinessFormDetails = (props) => {
           setFormState={setFormState}
           handleChangeInput={handleChangeInput}
           handleButtonUpdateClick={handleUpdateClick}
+          handleDiscardChanges={handleDiscardChanges}
           handlechangeImage={handlechangeImage}
-          handleAddBusiness={handleAddBusiness}
           handleChangeAddress={handleChangeAddress}
           handleChangeCenter={handleChangeCenter}
           handleChangeSwtich={handleChangeSwtich}

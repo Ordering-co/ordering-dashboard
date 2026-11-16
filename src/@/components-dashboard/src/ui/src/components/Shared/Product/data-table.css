@@ -1,0 +1,188 @@
+/* C6 · Data table. Sticky header, C2 rows, one tab stop (roving tabindex on the rows). */
+
+.odc-table-scroll {
+  /* containing block for .odc-sr-only text in cells, so it never overflows the page */
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+.odc-table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-table-scroll *,
+.odc-table-scroll *::before,
+.odc-table-scroll *::after {
+  box-sizing: border-box;
+}
+
+.odc-table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--od-x-layer-raised);
+  block-size: var(--od-x-header-row);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  background: var(--od-bg);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  white-space: nowrap;
+}
+
+/* redesign W1 tramo C r1 (C1c, W1-QC1-15): a column with `rowHeader` paints th[scope='row'] in the body; it follows every rule of the td.
+   :where() keeps the specificity of the td rule, so the page gutter, the end alignment and the wrap rules below still win over it. */
+.odc-table tbody :where(td, th[scope='row']) {
+  block-size: var(--od-x-row-comfortable);
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  text-align: start;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.odc-table tbody th[scope='row'] {
+  font-weight: inherit;
+  color: inherit;
+}
+
+.odc-table[data-density='compact'] tbody :where(td, th[scope='row']) { block-size: var(--od-x-row-compact); }
+
+.odc-table th:first-child,
+.odc-table td:first-child { padding-inline-start: var(--od-x-page-gutter); }
+
+.odc-table th:last-child,
+.odc-table td:last-child { padding-inline-end: var(--od-x-page-gutter); }
+
+.odc-table th[data-align='end'],
+.odc-table td[data-align='end'] {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.odc-table td[data-wrap],
+.odc-table th[scope='row'][data-wrap] { white-space: normal; }
+
+/* Rows. Colour sits on the cells so the hover, selected and arrival layers stack cleanly.
+   redesign W1 tramo C r1 (C1c, W1-PC1-03): the cursor and the hover say «this opens or selects»; DataTable marks a row
+   `data-interactive` only when the table has an onOpenRow or a selection, so a table with neither paints plain rows. */
+.odc-table tbody tr[data-interactive] { cursor: pointer; }
+.odc-table tbody tr[data-interactive]:hover td,
+.odc-table tbody tr[data-interactive]:hover th[scope='row'] { background: var(--od-x-hover); }
+.odc-table tbody tr[data-checked] td,
+.odc-table tbody tr[data-checked] th[scope='row'],
+.odc-table tbody tr[data-active] td,
+.odc-table tbody tr[data-active] th[scope='row'] { background: var(--od-x-selected); }
+
+.odc-table tbody tr[data-active] td:first-child,
+.odc-table tbody tr[data-active] th[scope='row']:first-child { box-shadow: inset var(--od-x-indicator) 0 0 var(--od-action); }
+[dir='rtl'] .odc-table tbody tr[data-active] td:first-child,
+[dir='rtl'] .odc-table tbody tr[data-active] th[scope='row']:first-child,
+.odc-rtl .odc-table tbody tr[data-active] td:first-child,
+.odc-rtl .odc-table tbody tr[data-active] th[scope='row']:first-child {
+  box-shadow: inset calc(var(--od-x-indicator) * -1) 0 0 var(--od-action);
+}
+
+.odc-table tbody tr[data-row-id]:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-table tbody tr[data-new] td,
+.odc-table tbody tr[data-new] th[scope='row'] {
+  animation: odc-arrive var(--od-x-arrive) var(--od-ease-standard);
+}
+
+/* redesign W1 tramo C r1 (C1c, W1-PC1-03): the scroller is a tab stop while the table has no interactive row and overflows */
+.odc-table-scroll[tabindex]:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+@keyframes odc-arrive {
+  from { background: var(--od-warning-soft); }
+  to { background: transparent; }
+}
+
+/* Skeleton and empty rows are not interactive. */
+.odc-table tbody tr[data-skeleton] td { cursor: default; }
+
+/* F6e-3 (Q4-03): the floor is the width the real content asks for (a token the column names). The header cell, the loading
+   cells and the real cells of the column all carry it, and it is a minimum of the cell (the padding of that cell added, the
+   page gutter at the ends), so a table that sizes its columns by content lands on the same grid before and after the rows. */
+.odc-table [data-floor] {
+  --odc-floor-pad: calc(2 * var(--od-space-3));
+  min-inline-size: calc(var(--odc-col-floor) + var(--odc-floor-pad));
+}
+.odc-table [data-floor]:first-child { --odc-floor-pad: calc(var(--od-x-page-gutter) + var(--od-space-3)); }
+.odc-table [data-floor]:last-child { --odc-floor-pad: calc(var(--od-space-3) + var(--od-x-page-gutter)); }
+.odc-table [data-floor]:first-child:last-child { --odc-floor-pad: calc(2 * var(--od-x-page-gutter)); }
+
+/* F4 (C20): a loading cell is made of what the content is made of. */
+.odc-sk-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+}
+
+.odc-sk-cell[data-align='end'] { justify-content: flex-end; }
+
+.odc-sk-lines {
+  display: grid;
+  flex: 1 1 auto;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* The checkbox of the row: the target of the real one (24px), the box inside it. */
+.odc-sk-check {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--od-x-target-fine);
+  block-size: var(--od-x-target-fine);
+  margin: calc(var(--od-space-1) * -1);
+  vertical-align: middle;
+}
+.odc-table tbody td.odc-table-empty {
+  block-size: auto;
+  padding-inline: var(--od-x-page-gutter);
+  border-block-end: 0;
+  white-space: normal;
+}
+
+/* The select-all while the table loads: inert but still focusable (a scroller with nothing focusable fails axe). */
+.odc-table thead .odc-checkbox[aria-disabled='true'] { cursor: not-allowed; }
+.odc-table thead .odc-checkbox[aria-disabled='true'] .odc-checkbox-box { opacity: 0.55; }
+
+/* Touch (C3): with a coarse pointer every row is at least one 44px target tall. */
+@media (pointer: coarse) {
+  .odc-table tbody td,
+  .odc-table[data-density='compact'] tbody td {
+    block-size: var(--od-x-target-coarse);
+  }
+  /* redesign W1 tramo C r1 (C1c, W1-QC1-15): the row header is as tall as the other cells (its own rule: the one above is pinned by touch.w03d1) */
+  .odc-table tbody th[scope='row'],
+  .odc-table[data-density='compact'] tbody th[scope='row'] {
+    block-size: var(--od-x-target-coarse);
+  }
+  .odc-table tbody td.odc-table-empty { block-size: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-table tbody tr[data-new] td,
+  .odc-table tbody tr[data-new] th[scope='row'] { animation: none; }
+}

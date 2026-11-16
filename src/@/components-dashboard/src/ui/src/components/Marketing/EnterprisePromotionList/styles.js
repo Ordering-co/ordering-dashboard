@@ -37,12 +37,12 @@ export const PromotionListTable = styled.table`
   }
 
   th {
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     font-weight: 700;
   }
 
   td {
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
   }
 
   thead {
@@ -51,7 +51,7 @@ export const PromotionListTable = styled.table`
         ${({ noFixedHeader }) => !noFixedHeader && css`
           position: sticky;
           top: 0px;
-          z-index: 100;
+          z-index: var(--od-x-layer-sticky);
         `}
         background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
       }
@@ -93,7 +93,7 @@ export const EnableWrapper = styled.div`
   justify-content: flex-end;
 
   span {
-    font-size: 12px;
+    font-size: var(--od-type-control-size);
 
     ${props => props.theme?.rtl
 ? css`

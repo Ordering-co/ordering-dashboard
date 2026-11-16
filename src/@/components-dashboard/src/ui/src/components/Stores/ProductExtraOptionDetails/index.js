@@ -26,6 +26,7 @@ import { ProductOptionExternalId } from '../ProductOptionExternalId'
 import { IconButton, Input, LinkButton } from '../../../styles'
 import { bytesConverter } from '../../../utils'
 import { Alert, Confirm, Modal, ImageCrop } from '../../Shared'
+import { Dialog } from '../../Shared/Product'
 
 import {
   MainContainer,
@@ -527,12 +528,13 @@ const ProductExtraOptionDetailsUI = (props) => {
           />
         </Modal>
       )}
-      <Modal
-        width='85%'
-        maxWidth='1000px'
+      {/* redesign bugs F row 25 (S-4): the Product Dialog with a title, like the store's Snooze (it was an untitled legacy Modal) */}
+      <Dialog
         open={isExtraOptionSnooze}
-        onClose={() => setIsExtraOptionSnooze(false)}
-        closeOnBackdrop={false}
+        onOpenChange={setIsExtraOptionSnooze}
+        size='lg'
+        title={t('SNOOZE', 'Snooze')}
+        closeLabel={t('CLOSE', 'Close')}
       >
         <SnoozeComponent
           isAutomaticUpdate
@@ -542,7 +544,7 @@ const ProductExtraOptionDetailsUI = (props) => {
           formState={settingChangeState}
           onClose={() => setIsExtraOptionSnooze(false)}
         />
-      </Modal>
+      </Dialog>
     </MainContainer>
   )
 }

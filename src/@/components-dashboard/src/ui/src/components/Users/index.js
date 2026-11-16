@@ -1,15 +1,13 @@
 import { CustomersListing } from './CustomersListing'
+import { StaffListing } from './StaffDirectory/StaffListing'
 import { UserAddForm } from './UserAddForm'
 import { UserMetaFields } from './UserMetaFields'
-import { UsersListing } from './UsersListing'
 import { UsersDeleteButton } from './UsersDeleteButton'
 import { UsersExportCSV } from './UsersExportCSV'
 import { UserTypeSelector } from './UserTypeSelector'
 import { ProfessionalListing } from './ProfessionalListing'
 import { UserFilterGroup } from './UserFilterGroup'
-import { UsersList } from './UsersList'
 import { UsersListingHeader } from './UsersListingHeader'
-import { UserTypeFilter } from './UserTypeFilter'
 import { UserActiveStateFilter } from './UserActiveStateFilter'
 import { UserDetailsLateralBar } from './UserDetailsLateralBar'
 import { UserDetails } from './UserDetails'
@@ -26,17 +24,15 @@ import { ProfessionalAddForm } from './ProfessionalAddForm'
 
 export {
   CustomersListing,
+  StaffListing,
   UserAddForm,
   UserMetaFields,
-  UsersListing,
   UsersDeleteButton,
   UsersExportCSV,
   UserTypeSelector,
   ProfessionalListing,
   UserFilterGroup,
-  UsersList,
   UsersListingHeader,
-  UserTypeFilter,
   UserActiveStateFilter,
   UserDetailsLateralBar,
   UserDetails,

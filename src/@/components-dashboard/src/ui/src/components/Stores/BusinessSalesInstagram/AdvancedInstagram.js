@@ -1,54 +1,24 @@
 import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { useTheme } from 'styled-components'
-import { Input } from '../../../styles'
-import {
-  InstagramAdvancedContainer,
-  Step,
-  CopyInputWrapper,
-  ImageWrapper
-} from './styles'
+import { GuideIntro, GuideStep, GuideSteps, StoreLink } from '../BusinessSalesChannel/GuideParts'
 
-export const AdvancedInstagram = ({ storeUrl }) => {
+// redesign stores 5.15b (; G5-04, G5-12, G5-14): main's three steps and screenshots, as plain text, now with the store's
+// own link (main rendered this tab without it, so it always showed a placeholder address).
+export const AdvancedInstagram = ({ link }) => {
   const [, t] = useLanguage()
-  const theme = useTheme()
 
   return (
-    <InstagramAdvancedContainer>
-      <p>{t('BUSINESS_INSTAGRAM_ADVANCED_DESC', 'This setting is if your Instagram account has 10K followers or you are already an Instagram partner.')}</p>
-      <Step>
-        <h3>{t('STEP', 'Step')} 1</h3>
-        <p
-          dangerouslySetInnerHTML={{ __html: t('BUSINESS_INSTAGRAM_GENERAL_STEP2_DESC', 'Open your Instagram profile and tap on <strong>Edit Profile.</strong>') }}
-        />
-        <img src={theme.images.salesChannels.instagramGeneralStep2} alt='' />
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 2</h3>
-        <p
-          dangerouslySetInnerHTML={{ __html: t('BUSINESS_INSTAGRAM_ADVANCED_STEP3_DESC', 'Click on <strong>Action buttons</strong> and then select the button you need.') }}
-        />
-        <ImageWrapper>
-          <img src={theme.images.salesChannels.instagramAdvancedStep31} alt='' />
-          <img src={theme.images.salesChannels.instagramAdvancedStep32} alt='' />
-        </ImageWrapper>
-      </Step>
-      <Step>
-        <h3>{t('STEP', 'Step')} 3</h3>
-        <p
-          dangerouslySetInnerHTML={{ __html: t('BUSINESS_INSTAGRAM_ADVANCED_STEP4_DESC', 'Now, select <strong>Your business</strong>, and paste the following link. Then, tap on <strong>Done</strong>') }}
-        />
-        <CopyInputWrapper isBottom>
-          <Input
-            defaultValue={storeUrl || 'https://yourbusinessname.com/store/storename'}
-            disabled
-          />
-        </CopyInputWrapper>
-        <ImageWrapper>
-          <img src={theme.images.salesChannels.instagramAdvancedStep41} alt='' />
-          <img src={theme.images.salesChannels.instagramAdvancedStep42} alt='' />
-        </ImageWrapper>
-      </Step>
-    </InstagramAdvancedContainer>
+    <>
+      <GuideIntro>
+        {t('SALES_INSTAGRAM_ADVANCED_INTRO', 'Some business accounts can add an action button, such as “Order food”, to their profile. Use this guide if “Action buttons” shows on your “Edit profile” screen.')}
+      </GuideIntro>
+      <GuideSteps>
+        <GuideStep number={1} text={t('SALES_INSTAGRAM_STEP_EDIT_PROFILE', 'Open your Instagram profile and tap “Edit profile”.')} />
+        <GuideStep number={2} text={t('SALES_INSTAGRAM_ADVANCED_STEP_2', 'Tap “Action buttons” and choose the button you want.')} />
+        <GuideStep number={3} text={t('SALES_INSTAGRAM_ADVANCED_STEP_3', 'Choose “Your business”, paste this link and tap “Done”.')}>
+          <StoreLink link={link} />
+        </GuideStep>
+      </GuideSteps>
+    </>
   )
 }

@@ -12,7 +12,7 @@ export const Title = styled.div`
   h2 {
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     line-height: 30px;
     margin: 0;
     color: ${props => props.theme.colors?.headingColor};
@@ -20,7 +20,7 @@ export const Title = styled.div`
   @media (min-width: 768px) {
     margin-bottom: 25px;
     h2 {
-      font-size: 24px;
+      font-size: var(--od-type-title-size);
     }
   }
 `
@@ -32,11 +32,11 @@ export const ConditionTitle = styled.p`
   margin-bottom: 9px;
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   line-height: 21px;
   color: ${props => props.theme.colors?.headingColor};
   @media (min-width: 768px) {
-    font-size: 16px;
+    font-size: var(--od-type-content-size);
     line-height: 28px;
   }
 `
@@ -46,14 +46,14 @@ export const Conditions = styled.ol`
     margin: 0;
     font-style: normal;
     font-weight: normal;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     color: ${props => props.theme.colors?.headingColor};
   }
   @media (min-width: 768px) {
     padding-left: 20px;
     li {
-      font-size: 16px;
+      font-size: var(--od-type-content-size);
     }
   }
 `
@@ -82,7 +82,7 @@ export const ImageIssue = styled.div`
     margin-bottom: 9px;
     font-style: normal;
     font-weight: 500;
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 21px;
   }
   ul {
@@ -94,7 +94,7 @@ export const ImageIssue = styled.div`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 14px;
+      font-size: var(--od-type-content-size);
       line-height: 24px;
     }
   }

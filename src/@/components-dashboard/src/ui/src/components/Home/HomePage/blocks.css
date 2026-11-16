@@ -1,0 +1,382 @@
+/*
+ * Home blocks (redesign home C2): Needs attention, setup guide, shortcuts, More Services.
+ * Values come from --od-* and --od-x-* only (the literal guard governs this file); logical properties only (RTL).
+ * The page grid lives in home.css (C1): these blocks only own their inside.
+ */
+
+/* redesign home C2 (D1): the card every block of Home sits in */
+.odc-home-block {
+  min-inline-size: 0;
+  padding: var(--od-space-4);
+  background: var(--od-surface);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-component);
+  color: var(--od-text);
+}
+
+.odc-home-block-title,
+.odc-home-section-title {
+  margin: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+}
+
+/* ── Needs attention (D4) ── */
+.odc-attention {
+  /* redesign home R1 (Q-01): the height of a row = its two text lines + its padding, in one place; the skeleton row (same class) and the real row both read it */
+  --odc-attention-row-height: calc(
+    var(--od-x-type-body-size) * var(--od-x-leading-ui) + var(--od-x-space-half) +
+    var(--od-x-type-caption-size) * var(--od-x-leading-ui) + 2 * var(--od-space-2)
+  );
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-attention-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-attention-list > li + li {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-attention-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  /* redesign home R1 (Q-01): never below the comfortable row, and never below the height of the row's own text */
+  min-block-size: max(var(--od-x-row-comfortable), var(--odc-attention-row-height));
+  padding-block: var(--od-space-2);
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  color: inherit;
+  text-decoration: none;
+}
+
+a.odc-attention-row:hover {
+  background: var(--od-x-hover);
+}
+
+a.odc-attention-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-attention-icon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  border-radius: var(--od-radius-round);
+  background: var(--od-surface-subtle);
+  color: var(--od-text);
+}
+
+.odc-attention-icon[data-tone='warning'] {
+  background: var(--od-warning-soft);
+  color: var(--od-warning-functional);
+}
+
+.odc-attention-icon[data-tone='danger'] {
+  background: var(--od-danger-soft);
+  color: var(--od-danger-functional);
+}
+
+.odc-attention-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+.odc-attention-title {
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-attention-scope {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-attention-count {
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-attention-chevron {
+  color: var(--od-text-muted);
+}
+
+.odc-attention-clear {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Setup guide (D3, D9) ── */
+.odc-guide {
+  /* redesign home R1 (Q-03): the height of a step's two text lines, so the skeleton rows (same classes) and the real ones are the same box */
+  --odc-guide-text-height: calc(
+    var(--od-x-type-body-size) * var(--od-x-leading-ui) + var(--od-x-space-half) +
+    var(--od-x-type-caption-size) * var(--od-x-leading-ui)
+  );
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-guide-progress {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-guide-bar {
+  block-size: var(--od-x-space-1-5);
+  overflow: hidden;
+  border-radius: var(--od-radius-round);
+  background: var(--od-border);
+}
+
+.odc-guide-bar-fill {
+  display: block;
+  inline-size: var(--odc-guide-progress, 0%);
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--od-x-tenant-action, var(--od-action));
+}
+
+.odc-guide-steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-guide-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--od-space-3);
+  padding-block: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-guide-mark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--od-x-icon-md);
+  block-size: var(--od-x-icon-md);
+  border: var(--od-x-hairline) solid var(--od-x-control-border);
+  border-radius: var(--od-radius-round);
+}
+
+.odc-guide-mark[data-done] {
+  border-color: var(--od-surface-strong);
+  background: var(--od-surface-strong);
+  color: var(--od-text-inverse);
+}
+
+.odc-guide-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-block-size: var(--odc-guide-text-height);
+  min-inline-size: 0;
+}
+
+.odc-guide-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  color: var(--od-text);
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-guide-step[data-done] .odc-guide-title {
+  color: var(--od-text-muted);
+}
+
+.odc-guide-optional {
+  padding-inline: var(--od-space-2);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-guide-line {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  line-height: var(--od-x-leading-ui);
+  overflow-wrap: anywhere;
+}
+
+.odc-guide-progress-skeleton {
+  /* redesign home R1 (Q-03): one line of the progress text */
+  min-block-size: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui));
+}
+
+.odc-guide-restore {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* ── Shortcuts (D10) ── */
+.odc-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-shortcuts-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+/* ── More Services, support and onboarding (D6) ── */
+.odc-home-more {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-home-more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--od-space-4);
+}
+
+/* redesign  F2: the cards are P/CatalogCard; Home keeps its icon in the text colour, the piece draws it muted */
+.odc-home-more-grid .odc-catalog-card-media {
+  color: var(--od-text);
+}
+
+.odc-home-more-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-home-more-heading {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  overflow-wrap: anywhere;
+}
+
+.odc-home-more-description {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+.odc-home-support-lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-home-support-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-home-support-title > span {
+  color: var(--od-text-muted);
+}
+
+.odc-home-onboarding {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-4);
+}
+
+.odc-home-hubspot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+}
+
+.odc-home-hubspot-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+.odc-home-hubspot-close {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Phone (< 768): one column, the action of a step under its text */
+@media (max-width: 767px) {
+  /* redesign home R1 (Q-07, decision 12): neighbours at 12px or more, so the 44px areas of two shortcuts do not overlap */
+  .odc-shortcuts-row {
+    row-gap: var(--od-space-3);
+    column-gap: var(--od-space-3);
+  }
+
+  .odc-home-more-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .odc-guide-step {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .odc-guide-action {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

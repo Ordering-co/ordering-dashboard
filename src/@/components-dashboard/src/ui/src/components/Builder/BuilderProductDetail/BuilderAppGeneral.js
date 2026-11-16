@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { ExclamationCircle } from 'react-bootstrap-icons'
 
 import { ToastType, useLanguage, useToast } from '../../../../../index'
-import { Button, Input, TextArea } from '../../../styles'
-import { SideBar } from '../../Shared/SideBar'
+import { CircleAlert } from '../../Shared/Icon'
+import { Button, ConfirmDialog, DataTable, InlineNotice, Sheet, TextArea, TextField } from '../../Shared/Product'
 import { PlatformIcon } from '../BuilderShared'
 import {
   getAppFieldError,
@@ -12,22 +11,14 @@ import {
   PACKAGE_PATTERN,
   VERSION_PATTERN
 } from '../utils'
-import {
-  Card,
-  ErrorBanner,
-  Field,
-  FieldHelp,
-  FormActions,
-  FormGrid,
-  InheritedValue,
-  LinkButton,
-  MutedText,
-  PanelContainer,
-  PanelFooter,
-  PlatformName,
-  Table,
-  TableCard
-} from '../styles'
+import '../BuilderAppSettings/builder-app-edit.css'
+
+// redesign B2: the General tab on Product pieces (TextField/TextArea, Buttons, InlineNotice, DataTable, Sheet). Same
+// checks, codes, payloads, toasts and texts as main. main's SideBar never closed on an outside click (Escape only from 1000px): the
+// platform sheet asks before dropping its changes (Escape, the scrim, the X, Cancel) and closes at once with none, as the create
+// panel of /builder (coordinator's review of #430); nothing closes while it saves.
+
+const PLATFORM_FORM_ID = 'builder-platform-form'
 
 const APP_FIELDS = ['name', 'version', 'package', 'description']
 
@@ -71,39 +62,35 @@ const AppFields = ({ idPrefix, values, onChange, messages, placeholders = {}, in
     package: t('BUILDER_PACKAGE_HELP', 'Reverse domain, like com.brand.app')
   }
   return APP_FIELDS.map(field => {
-    const id = `${idPrefix}-${field}`
     const message = messages[field]
-    const Control = field === 'description' ? TextArea : Input
+    const Control = field === 'description' ? TextArea : TextField
     return (
-      <Field key={field} invalid={!!message} className={field === 'description' ? 'full' : undefined}>
-        <FieldHelp as='div'>
-          <label htmlFor={id}>{labels[field]}</label>
-          {onUseAppValue && !inherited[field] && (
-            <LinkButton type='button' onClick={() => onUseAppValue(field)}>
-              {t('BUILDER_USE_APP_VALUE', 'Use app value')}
-            </LinkButton>
-          )}
-        </FieldHelp>
+      <div key={field} className='odc-be-field' data-full={field === 'description' ? '' : undefined}>
+        {/* before the field, as main's: in the label line, reached by Tab before the input */}
+        {onUseAppValue && !inherited[field] && (
+          <Button variant='link' size='sm' className='odc-be-field-action' onClick={() => onUseAppValue(field)}>
+            {t('BUILDER_USE_APP_VALUE', 'Use app value')}
+          </Button>
+        )}
         <Control
-          id={id}
-          type={field === 'description' ? undefined : 'text'}
-          rows={field === 'description' ? 3 : undefined}
+          id={`${idPrefix}-${field}`}
+          label={labels[field]}
           value={values[field]}
           placeholder={placeholders[field] || ''}
           autoComplete='off'
-          aria-invalid={message ? 'true' : 'false'}
-          aria-describedby={`${id}-help`}
-          onChange={(e) => onChange(field, e.target.value)}
+          error={message || undefined}
+          hint={message ? undefined : (inherited[field] ? t('BUILDER_USES_APP_VALUE', 'Uses the app value') : help[field])}
+          onChange={(value) => onChange(field, value)}
         />
-        <FieldHelp id={`${id}-help`}>
-          {message
-            ? <span role='alert'>{message}</span>
-            : <span>{inherited[field] ? t('BUILDER_USES_APP_VALUE', 'Uses the app value') : (help[field] || '')}</span>}
-        </FieldHelp>
-      </Field>
+      </div>
     )
   })
 }
+
+/** A platform's value; one it inherits from the app is muted, as main's. */
+const ValueCell = ({ row, field }) => (
+  <span className='odc-be-value-cell' data-inherited={row.ownFields[field] ? undefined : ''}>{row[field]}</span>
+)
 
 const BuilderPlatformPanel = (props) => {
   const { app, platform, onClose, updatePlatform } = props
@@ -117,6 +104,15 @@ const BuilderPlatformPanel = (props) => {
   const [saving, setSaving] = useState(false)
   const [apiCodes, setApiCodes] = useState([])
   const [failed, setFailed] = useState(false)
+  const [discard, setDiscard] = useState(false)
+
+  // both trimmed: a saved value ending in a space or a line is not a change (review of #433)
+  const changed = APP_FIELDS.some(field => values[field].trim() !== initial[field].trim())
+  const requestClose = () => {
+    if (saving) return
+    if (changed) setDiscard(true)
+    else onClose()
+  }
 
   const inherited = Object.fromEntries(APP_FIELDS.map(field => [field, !values[field].trim()]))
   const clientErrors = submitted ? validate(values, { allowEmpty: true }) : {}
@@ -154,17 +150,30 @@ const BuilderPlatformPanel = (props) => {
     if (!errorCodes.some(code => APP_FIELDS.some(field => code.startsWith(`${field}.`)))) setFailed(true)
   }
 
+  const footer = (
+    <>
+      <Button onClick={requestClose}>{t('CANCEL', 'Cancel')}</Button>
+      <Button type='submit' form={PLATFORM_FORM_ID} variant='primary' disabled={saving}>
+        {saving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
+      </Button>
+    </>
+  )
+
   return (
-    <SideBar open sidebarId='builder-platform-panel' defaultSideBarWidth={480} moveDistance={0} onClose={onClose}>
-      <form onSubmit={handleSubmit} noValidate style={{ height: '100%' }}>
-        <PanelContainer>
-          <h2>{t('BUILDER_PLATFORM_VALUES', '_platform_ values').replace('_platform_', getPlatformLabel(platform))}</h2>
-          <MutedText>{t('BUILDER_PLATFORM_PANEL_HELP', 'Leave a field empty to use the app’s value. Changes apply on the next build.')}</MutedText>
+    <>
+      <Sheet
+        open
+        onOpenChange={(open) => { if (!open) requestClose() }}
+        title={t('BUILDER_PLATFORM_VALUES', '_platform_ values').replace('_platform_', getPlatformLabel(platform))}
+        closeLabel={t('CLOSE', 'Close')}
+        footer={footer}
+      >
+        <form id={PLATFORM_FORM_ID} className='odc-be-panel' onSubmit={handleSubmit} noValidate>
+          <p>{t('BUILDER_PLATFORM_PANEL_HELP', 'Leave a field empty to use the app’s value. Changes apply on the next build.')}</p>
           {failed && (
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>{t('BUILDER_SAVE_ERROR', 'We couldn’t save it. Try again.')}</span>
-            </ErrorBanner>
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+              {t('BUILDER_SAVE_ERROR', 'We couldn’t save it. Try again.')}
+            </InlineNotice>
           )}
           <AppFields
             idPrefix={`builder-platform-${platform}`}
@@ -176,17 +185,23 @@ const BuilderPlatformPanel = (props) => {
             onUseAppValue={(field) => handleChange(field, '')}
             t={t}
           />
-          <PanelFooter>
-            <div>
-              <Button type='button' color='secundary' borderRadius='8px' onClick={onClose}>{t('CANCEL', 'Cancel')}</Button>
-              <Button type='submit' color='primary' borderRadius='8px' disabled={saving}>
-                {saving ? t('BUILDER_SAVING', 'Saving…') : t('SAVE', 'Save')}
-              </Button>
-            </div>
-          </PanelFooter>
-        </PanelContainer>
-      </form>
-    </SideBar>
+        </form>
+      </Sheet>
+      <ConfirmDialog
+        open={discard}
+        title={t('ORDER_PANEL_DISCARD_TITLE', 'Discard your changes?')}
+        confirmLabel={t('DISCARD', 'Discard')}
+        cancelLabel={t('KEEP_EDITING', 'Keep editing')}
+        closeLabel={t('CLOSE', 'Close')}
+        onConfirm={() => {
+          setDiscard(false)
+          onClose()
+        }}
+        onCancel={() => setDiscard(false)}
+      >
+        {t('DRIVERS_DISCARD_BODY', 'What you changed here is not saved yet.')}
+      </ConfirmDialog>
+    </>
   )
 }
 
@@ -247,9 +262,42 @@ export const BuilderAppGeneral = (props) => {
     if (!errorCodes.some(code => APP_FIELDS.some(field => code.startsWith(`${field}.`)))) setFailed(true)
   }
 
+  const columns = [
+    {
+      id: 'platform',
+      header: t('BUILDER_PLATFORM', 'Platform'),
+      cell: (row) => (
+        <span className='odc-be-platform'>
+          <span className='odc-be-platform-name'>
+            <PlatformIcon platform={row.platform} />
+            {getPlatformLabel(row.platform)}
+          </span>
+          {!row.customized && <span className='odc-be-muted'>{t('BUILDER_USES_APP_VALUES', 'Uses app values')}</span>}
+        </span>
+      )
+    },
+    { id: 'name', header: t('BUILDER_STORE_NAME', 'Store name'), cell: (row) => <ValueCell row={row} field='name' /> },
+    { id: 'version', header: t('VERSION', 'Version'), cell: (row) => <ValueCell row={row} field='version' /> },
+    { id: 'package', header: t('BUILDER_PACKAGE', 'Package'), cell: (row) => <ValueCell row={row} field='package' /> },
+    {
+      id: 'actions',
+      header: null,
+      srHeader: t('ACTIONS', 'Actions'),
+      align: 'end',
+      cell: (row) => (
+        <Button
+          aria-label={t('BUILDER_EDIT_PLATFORM', 'Edit _platform_').replace('_platform_', getPlatformLabel(row.platform))}
+          onClick={() => setEditingPlatform(row.platform)}
+        >
+          {t('EDIT', 'Edit')}
+        </Button>
+      )
+    }
+  ]
+
   return (
     <>
-      <Card as='form' aria-labelledby='builder-app-heading' onSubmit={handleSubmit} noValidate>
+      <form className='odc-be-card' aria-labelledby='builder-app-heading' onSubmit={handleSubmit} noValidate>
         <header>
           <h2 id='builder-app-heading'>{t('BUILDER_APP', 'App')}</h2>
           <p>
@@ -258,73 +306,38 @@ export const BuilderAppGeneral = (props) => {
           </p>
         </header>
         {failed && (
-          <div style={{ padding: '8px 24px 0' }}>
-            <ErrorBanner role='alert'>
-              <ExclamationCircle aria-hidden='true' />
-              <span>{t('BUILDER_SAVE_ERROR', 'We couldn’t save it. Try again.')}</span>
-            </ErrorBanner>
-          </div>
+          <InlineNotice tone='danger' icon={CircleAlert} role='alert'>
+            {t('BUILDER_SAVE_ERROR', 'We couldn’t save it. Try again.')}
+          </InlineNotice>
         )}
-        <FormGrid invalid={!!messages.description}>
+        <div className='odc-be-grid'>
           <AppFields idPrefix='builder-app' values={values} onChange={handleChange} messages={messages} t={t} />
-        </FormGrid>
+        </div>
         {dirty && (
-          <FormActions>
-            <Button type='button' color='secundary' borderRadius='8px' onClick={handleDiscard}>{t('BUILDER_DISCARD', 'Discard')}</Button>
-            <Button type='submit' color='primary' borderRadius='8px' disabled={saving}>
+          <div className='odc-be-actions'>
+            <Button onClick={handleDiscard}>{t('BUILDER_DISCARD', 'Discard')}</Button>
+            {/* disabled, not busy, while it saves: as main, Enter in a field can't send it twice */}
+            <Button type='submit' variant='primary' disabled={saving}>
               {saving ? t('BUILDER_SAVING', 'Saving…') : t('BUILDER_SAVE_CHANGES', 'Save changes')}
             </Button>
-          </FormActions>
+          </div>
         )}
-      </Card>
+      </form>
 
-      <Card aria-labelledby='builder-platforms-heading'>
+      <section className='odc-be-card' aria-labelledby='builder-platforms-heading'>
         <header>
           <h2 id='builder-platforms-heading'>{t('BUILDER_PLATFORMS', 'Platforms')}</h2>
           <p>{t('BUILDER_PLATFORMS_HELP', 'Platforms you haven’t customized use the app’s name, version and package.')}</p>
         </header>
-        <TableCard as='div' style={{ border: 0 }}>
-          <Table>
-            <thead>
-              <tr>
-                <th scope='col'>{t('BUILDER_PLATFORM', 'Platform')}</th>
-                <th scope='col'>{t('BUILDER_STORE_NAME', 'Store name')}</th>
-                <th scope='col'>{t('VERSION', 'Version')}</th>
-                <th scope='col'>{t('BUILDER_PACKAGE', 'Package')}</th>
-                <th scope='col'><span className='sr-only'>{t('ACTIONS', 'Actions')}</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              {platformRows.map(row => (
-                <tr key={row.platform} style={{ cursor: 'default' }}>
-                  <td>
-                    <PlatformName>
-                      <PlatformIcon platform={row.platform} />
-                      {getPlatformLabel(row.platform)}
-                    </PlatformName>
-                    {!row.customized && <MutedText small>{t('BUILDER_USES_APP_VALUES', 'Uses app values')}</MutedText>}
-                  </td>
-                  <td><InheritedValue inherited={!row.ownFields.name}>{row.name}</InheritedValue></td>
-                  <td><InheritedValue inherited={!row.ownFields.version}>{row.version}</InheritedValue></td>
-                  <td><InheritedValue inherited={!row.ownFields.package}>{row.package}</InheritedValue></td>
-                  <td>
-                    <Button
-                      type='button'
-                      color='primary'
-                      outline
-                      borderRadius='8px'
-                      aria-label={t('BUILDER_EDIT_PLATFORM', 'Edit _platform_').replace('_platform_', getPlatformLabel(row.platform))}
-                      onClick={() => setEditingPlatform(row.platform)}
-                    >
-                      {t('EDIT', 'Edit')}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableCard>
-      </Card>
+        <div className='odc-be-table'>
+          <DataTable
+            label={t('BUILDER_PLATFORMS', 'Platforms')}
+            columns={columns}
+            rows={platformRows}
+            getRowId={(row) => row.platform}
+          />
+        </div>
+      </section>
 
       {editingPlatform && (
         <BuilderPlatformPanel

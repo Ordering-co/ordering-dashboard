@@ -1,0 +1,432 @@
+/*
+ * redesign SL-F2 (B2) · /stores/list: the shell of the store editor (panel, header, overview).
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only (C17).
+ *
+ * The panel is fixed at the inline end of the page, as BarContainer was. It must NOT get `container-type`, `contain`,
+ * `transform`, `filter`, `will-change` or `perspective` (here or on anything this file adds above it): any of them makes
+ * the panel the containing block of the legacy fixed SideBars that the sections open, and they would stop painting over
+ * the page. Width comes from `data-size`, not from a style written on the node:
+ *   base  the Overview: --od-x-store-panel (500px)
+ *   wide  a section open on a window of 1000px or more: --od-x-store-panel-wide (1000px)
+ *   full  Expand, a window of 500px or less, or a section that asked for the whole width (isExtendExtraOpen); also a
+ *         section on a window between 500 and 999px, which opens inside this same panel instead of a second layer.
+ * The two panel tokens are candidates still to be added to src/brand/candidates.css; until they are, the width falls back
+ * to the nearest existing panel token.
+ */
+
+.odc-se-panel {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-end: var(--assistant-offset, 0);
+  /* The layer BarContainer had (1005): chrome + 5, so it keeps its place against the legacy side bars of the list page. */
+  z-index: calc(var(--od-x-layer-chrome) + 5);
+  display: flex;
+  flex-direction: column;
+  inline-size: 0;
+  max-inline-size: var(--app-width, 100vw);
+  block-size: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+  transition: inline-size var(--od-duration-slow) var(--od-ease-standard);
+}
+
+.odc-se-panel[data-open] {
+  border-inline-start: var(--od-x-hairline) solid var(--od-border);
+  box-shadow: var(--od-x-pop-shadow);
+}
+
+.odc-se-panel[data-open][data-size='base'] { inline-size: var(--od-x-store-panel); }
+.odc-se-panel[data-open][data-size='wide'] { inline-size: var(--od-x-store-panel-wide); }
+.odc-se-panel[data-open][data-size='full'] { inline-size: var(--app-width, 100vw); }
+
+/* redesign tanda AB (, ): docked beside the list (the Overview on a wide window), the panel starts at the bottom
+   edge of the page header, which the list measured (--odc-se-dock-top, set by BusinessDetails with data-docked), and runs to the
+   bottom. Opening or closing it then never moves the header. wide and full, and a window under the dock width, stay at y = 0. */
+.odc-se-panel[data-open][data-size='base'][data-docked] {
+  inset-block-start: var(--odc-se-dock-top, 0);
+  /* no fallback inside calc(): a bare 0 is not a length there and a 0px literal is out of the guard; data-docked and the variable come
+     together from BusinessDetails, so it is always set where this rule applies */
+  block-size: calc(var(--vh, 1vh) * 100 - var(--odc-se-dock-top));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .odc-se-panel { transition: none; }
+}
+
+/* ── Header ── */
+.odc-se-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-3);
+  padding-inline: var(--od-space-5);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+.odc-se-head-row,
+.odc-se-head-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Stacked 32px buttons with a 44px hit area on a phone: 12px between them keeps the areas from crossing. */
+.odc-se-head-tools {
+  flex-wrap: wrap;
+  gap: var(--od-space-3);
+}
+
+.odc-se-title {
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: anywhere;
+  /* redesign bugs F (, Q-05 of bugs G): a long name grew the header to 158px at 1440 and 317px at 390 and pushed the
+     actions to lines of their own. As P/RecordPanel's title (2139eac6): basis 0 so it never breaks the line, it grows up to its text
+     (a short name keeps its status right after it) and a long one takes what the actions leave, in two lines and «…». The whole name
+     is in the DOM and in the heading's `title`. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  flex: 1000 1 0;
+  max-inline-size: max-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.odc-se-spacer {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-se-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-half);
+}
+
+/* redesign SL-Q2 (decision 12): under 768px («More actions», Close and Expand are 32px seen, 44px reached) they are 12px apart
+   instead of 2, so the area of one does not cross the next (touch probe: More actions crossed Close). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-se-actions { gap: var(--od-space-3); }
+}
+
+/* ── Body: Overview is one column (the summary above the section list, 4.B); a section is the list beside it ── */
+.odc-se-main {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.odc-se-nav {
+  min-inline-size: 0;
+}
+
+.odc-se-main[data-view='overview'] > .odc-se-nav {
+  flex: none;
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-5);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* redesign stores 4.A (, decision 11): the notice of a section the address asked for and this account can't open.
+   redesign stores 4.B: on the Overview it sits above the summary, in the panel's gutter. */
+.odc-se-main[data-view='overview'] > .odc-se-denied {
+  flex: none;
+  margin-block: var(--od-space-4) 0;
+  margin-inline: var(--od-space-5);
+}
+
+.odc-se-main[data-view='section'] {
+  display: grid;
+  grid-template-columns: var(--od-x-record-nav) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.odc-se-main[data-view='section'][data-nav='hidden'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.odc-se-main[data-view='section'] > .odc-se-nav {
+  min-block-size: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-block: var(--od-space-4);
+  padding-inline: var(--od-space-3);
+  border-inline-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The legacy section lays itself out inside this box, as it did inside MoreSidebarLayout. */
+.odc-se-content {
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+.odc-se-main[data-view='section'] > .odc-se-content {
+  overflow: auto;
+}
+
+/* redesign  (OP-20, from ): P/SaveBar is sticky with `inset-block-end: 0`, and a sticky box stops at the padding of
+   its scroller, so the fields scrolled under it. The editor has no RecordPanel: each scroller of a bar publishes the offset its own
+   padding needs as --odc-bar-end (this file for .odc-se-content, the styled InfoConatiner for the Store details tabs) and this one
+   rule hands it to every bar under the editor, instead of one `inset-block-end` per form sheet. Three classes outweigh those sheets. */
+.odc-se-main .odc-se-content .odc-savebar {
+  inset-block-end: var(--odc-bar-end, 0);
+}
+
+/* A split detail that scrolls by itself has no padding to give back (the body inside it pads, and the bar stays in that box). */
+.odc-se-content .odc-section-split[data-view='split'] > .odc-section-split-detail {
+  --odc-bar-end: 0;
+}
+
+/* redesign stores 4.B: on the Overview the summary and the list share one scroll; neither shrinks under the other. */
+.odc-se-main[data-view='overview'] > .odc-se-content {
+  flex: none;
+}
+
+/* redesign SL-F2 (B2): below 1000px the sections of main opened in a modal that gave them their margin, and they only
+   pad themselves from 1000px; inside the panel they need the panel's gutter. */
+@media (max-width: 999px) {
+  .odc-se-main[data-view='section'] > .odc-se-content {
+    --odc-se-pad: var(--od-space-4);
+    --odc-bar-end: calc(var(--odc-se-pad) * -1);
+    padding: var(--odc-se-pad);
+  }
+
+  /* J2 RV-4: Store details scrolls in its own box (BusinessDetail's InfoConatiner), so the bottom padding here stayed under its bar
+     as a 16 px strip at 390. Around that frame the editor gives the bottom padding up; the box reaches the foot of the panel. */
+  .odc-se-main[data-view='section'] > .odc-se-content:has(> .odc-sd-frame) {
+    padding-block-end: 0;
+  }
+}
+
+/* A phone: the section selector sits above the content, both at the full width of the panel. The selector is capped so
+   that it stays a selector (SectionNav turns into a list when its own box reaches 600px) on a wide phone or a tablet. */
+@media (max-width: 767px) {
+  .odc-se-head {
+    padding-inline: var(--od-space-4);
+  }
+
+  .odc-se-main[data-view='overview'] > .odc-se-nav {
+    padding-inline: var(--od-space-4);
+  }
+
+  .odc-se-sections {
+    max-inline-size: calc(var(--od-x-record-nav) * 2);
+  }
+
+  .odc-se-main[data-view='section'] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .odc-se-main[data-view='section'] > .odc-se-nav {
+    padding-block: var(--od-space-3);
+    padding-inline: var(--od-space-4);
+    border-inline-end: 0;
+    border-block-end: var(--od-x-hairline) solid var(--od-border);
+  }
+}
+
+/* ── Overview ── */
+.odc-se-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-6);
+  padding-inline: var(--od-space-5);
+}
+
+@media (max-width: 767px) {
+  .odc-se-overview {
+    padding-inline: var(--od-space-4);
+  }
+}
+
+.odc-se-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-se-slug {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-se-description {
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ── Overview summary (redesign stores 4.B, , decision 3) ── */
+/* The notices of the summary sit in its column, like the cards (`.odc-notice` brings the page gutter). */
+.odc-se-overview > .odc-notice {
+  margin-inline: 0;
+}
+
+.odc-se-ended {
+  margin: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-se-ended:focus { outline: none; }
+
+.odc-se-today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+}
+
+.odc-se-today-hours {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--od-space-1) var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-se-today-zone {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-se-facts {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--od-space-1);
+  padding-inline: var(--od-space-4);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+}
+
+.odc-se-fact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  min-block-size: var(--od-x-control-height);
+}
+
+/* With a coarse pointer or under 768px each «›» reaches 44×44 (a centered pseudo-element): the rows are that tall, so the area of
+   one does not cross the next (touch probe, 4.B). */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-se-fact { min-block-size: var(--od-x-target-coarse); }
+}
+
+.odc-se-fact + .odc-se-fact {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-se-fact > dt {
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-se-fact > dd {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-space-1);
+  margin: 0;
+  color: var(--od-text);
+  text-align: end;
+}
+
+/* Something that keeps the store from taking orders (no menu available, no payment method on): the text says it, the dot marks it. */
+.odc-se-fact[data-warn] > dd::before {
+  content: '';
+  inline-size: var(--od-space-2);
+  block-size: var(--od-space-2);
+  border-radius: 50%;
+  background: var(--od-warning-signal);
+}
+
+.odc-se-address {
+  align-items: flex-start;
+}
+
+/* The buttons line up with the field, not with its label or hint. */
+.odc-se-address > .odc-btn {
+  margin-block-start: calc(var(--od-x-type-ui-size) * var(--od-x-leading-ui) + var(--od-x-space-1-5));
+}
+
+.odc-se-saved {
+  align-self: center;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-se-about {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+/* Read only, cut to three lines: it is read and edited whole in Store details › Information. */
+.odc-se-about > .odc-se-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.odc-se-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+}
+
+/* ── Not found ── */
+.odc-se-notfound {
+  display: grid;
+  flex: 1 1 0;
+  place-items: center;
+  min-block-size: 0;
+}
+
+/* redesign SL-Q1 (R-01): the action menus (P/Menu, also the compact SectionNav) mount in body on the overlay role (overlay + 9),
+   already above the editor panel (chrome + 5) and the dialog host: no lift here ( O-7; the old chrome + 6 put them
+   under a dialog). */
+
+/* redesign SL-Q1 (R-04): the panel takes the focus when it opens; the focus ring is for its controls, not for the panel. */
+.odc-se-panel:focus { outline: none; }

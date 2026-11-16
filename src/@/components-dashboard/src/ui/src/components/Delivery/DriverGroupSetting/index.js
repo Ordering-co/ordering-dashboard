@@ -89,7 +89,7 @@ const DriverGroupSettingUI = (props) => {
         {driversGroupsState.loading
           ? (
               [...Array(8).keys()].map(i => (
-            <DriverGroupItem key={i}>
+            <DriverGroupItem as='div' aria-hidden='true' key={i}>
               <Skeleton width={20} height={20} />
               <Skeleton width={100} />
             </DriverGroupItem>
@@ -98,12 +98,15 @@ const DriverGroupSettingUI = (props) => {
           : (
               filteredGroups.map(group => (
             <DriverGroupItem
+              type='button'
               key={group.id}
               onClick={() => handleCheckboxClick(group.id)}
               disabled={actionState.loading || driversGroupsState.loading}
+              aria-pressed={includedGroupIds.includes(group.id)}
             >
               <CheckboxWrapper
                 active={includedGroupIds.includes(group.id)}
+                aria-hidden='true'
               >
                 {includedGroupIds.includes(group.id)
                   ? (

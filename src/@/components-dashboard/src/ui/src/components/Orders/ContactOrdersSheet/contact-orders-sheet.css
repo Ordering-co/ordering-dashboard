@@ -1,0 +1,55 @@
+/* redesign W1-1 (T1-2): the lateral Sheet of a driver, customer or business. Widths come from the Sheet's data-* state:
+   600px normal, 1100px with an order open inside, the whole room when expanded. The assistant takes its room first
+   (--assistant-offset, --app-width), as it did for the lateral bar and as the order Sheet does. */
+.odc-sheet.odc-contact-sheet[data-side='end'] {
+  inline-size: min(600px, var(--app-width, 100vw));
+  max-inline-size: var(--app-width, 100vw);
+  inset-inline-end: var(--assistant-offset, 0);
+}
+
+.odc-sheet.odc-contact-sheet[data-side='end'][data-wide] {
+  inline-size: min(1100px, var(--app-width, 100vw));
+}
+
+.odc-sheet.odc-contact-sheet[data-side='end'][data-expanded] {
+  inline-size: var(--app-width, 100vw);
+}
+
+@media (max-width: 767px) {
+  .odc-sheet.odc-contact-sheet[data-side='end'] {
+    inline-size: 100%;
+    max-inline-size: 100vw;
+    inset-inline-end: 0;
+  }
+}
+
+.odc-contact-sheet > .odc-overlay-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-1);
+}
+
+/* The photo and the role under the name; the expand button at the other end. */
+.odc-contact-head {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-3);
+}
+
+.odc-contact-role {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-type-secondary-size);
+}
+
+.odc-contact-sheet #orderTable {
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-contact-sheet #orderTable table {
+  min-width: initial;
+  inline-size: 100%;
+}

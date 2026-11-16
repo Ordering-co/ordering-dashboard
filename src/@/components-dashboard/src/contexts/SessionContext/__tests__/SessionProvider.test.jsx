@@ -259,3 +259,69 @@ it('local driver logout removes only its scoped cache and identity', async () =>
   expect(localStorage.getItem(TICKET_SECTIONS_STORAGE_KEY)).toBeNull()
   vi.unstubAllGlobals()
 })
+
+describe('SessionProvider login project code resolution', () => {
+  const LoginAction = ({ project }) => {
+    const [, { login }] = useSession()
+    return <button onClick={() => login({ user: { id: 1 }, token: 'tok', project })}>Login</button>
+  }
+
+  const renderWithLogin = ({ project, settings = {} } = {}) => render(
+    <SessionProvider strategy={new WebStrategy(settings)} settings={settings}>
+      <SessionState />
+      <LoginAction project={project} />
+    </SessionProvider>
+  )
+
+  beforeEach(() => localStorage.clear())
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('resolves a logged-in alias to the backend-internal project code', async () => {
+    vi.stubGlobal('fetch', respond(200, { error: false, result: { code: 'internal-code' } }))
+    renderWithLogin({ project: 'demo' })
+    await waitForSession()
+    fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+    await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('true'))
+    expect(localStorage.getItem('project')).toBe('internal-code')
+  })
+
+  it('stores the same project when /current confirms it already matches', async () => {
+    vi.stubGlobal('fetch', respond(200, { error: false, result: { code: 'demo' } }))
+    renderWithLogin({ project: 'demo' })
+    await waitForSession()
+    fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+    await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('true'))
+    expect(localStorage.getItem('project')).toBe('demo')
+  })
+
+  it('keeps the written project and still logs in when /current is down', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')))
+    renderWithLogin({ project: 'demo' })
+    await waitForSession()
+    fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+    await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('true'))
+    expect(localStorage.getItem('project')).toBe('demo')
+  })
+
+  it.each(['_', 'another-project'])('does not resolve %s through a root that is not its own', async (project) => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    renderWithLogin({ project })
+    await waitForSession()
+    fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+    await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('true'))
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(localStorage.getItem('project')).toBe(project)
+  })
+
+  it('does not call /current and keeps the pin for a project-pinned dashboard', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    renderWithLogin({ project: 'pinned-project', settings: { local_project_pin: 'pinned-project' } })
+    await waitForSession()
+    fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+    await waitFor(() => expect(screen.getByTestId('session')).toHaveTextContent('true'))
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(localStorage.getItem('project')).toBe('pinned-project')
+  })
+})

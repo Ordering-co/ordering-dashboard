@@ -44,7 +44,7 @@ export const BusinessWrapper = styled.div`
 
   p {
     margin: 0px;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
   }
 
   ${({ isDisabed }) => isDisabed && css`

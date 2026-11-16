@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { brandFocusOutline, brandFocusRing } from '../../../styles/touchTarget'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -11,6 +12,8 @@ export const IframeContainer = styled.div`
   border-radius: 8px;
   background-color: #fff;
   ${({ $height }) => $height ? `height: ${$height}px;` : ''}
+  /* the load timed out: no blank block while the calendar is unavailable (a late answer clears this) */
+  ${({ $collapsed }) => $collapsed ? 'height: 0;' : ''}
 `
 
 export const StyledIframe = styled.iframe`
@@ -23,16 +26,16 @@ export const StyledIframe = styled.iframe`
    * a min-height avoids a 0px flash. Once sized ($sized), it must drop to 0 or the iframe
    * overflows its own reported height and gets clipped by the container's overflow: hidden.
    */
-  min-height: ${({ $sized }) => $sized ? '0' : '700px'};
+  min-height: ${({ $sized, $collapsed }) => $sized || $collapsed ? '0' : '700px'};
 
   @media (max-width: 700px) {
-    min-height: ${({ $sized }) => $sized ? '0' : '1050px'};
+    min-height: ${({ $sized, $collapsed }) => $sized || $collapsed ? '0' : '1050px'};
   }
 `
 
 export const StatusText = styled.p`
   margin: 0;
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   text-align: center;
   color: ${props => props.theme.colors.headingColor};
   opacity: 0.7;
@@ -66,6 +69,8 @@ export const ProminentLink = styled.a`
   &:focus-visible {
     opacity: 0.9;
   }
+
+  ${brandFocusOutline}
 `
 
 export const SecondaryLink = styled.a`
@@ -74,7 +79,7 @@ export const SecondaryLink = styled.a`
   align-items: center;
   min-height: 44px;
   padding: 0 8px;
-  font-size: 13px;
+  font-size: var(--od-type-control-size);
   color: ${props => props.theme.colors.headingColor};
   opacity: 0.7;
   text-decoration: underline;
@@ -83,6 +88,8 @@ export const SecondaryLink = styled.a`
   &:focus-visible {
     opacity: 1;
   }
+
+  ${brandFocusRing}
 `
 
 export const BookedElsewhere = styled.div`
@@ -108,7 +115,7 @@ export const BookedElsewhereButton = styled.button`
   }
 
   &:focus-visible {
-    outline: 2px solid ${props => props.theme.colors.primary};
+    outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary};
     outline-offset: 2px;
   }
 `

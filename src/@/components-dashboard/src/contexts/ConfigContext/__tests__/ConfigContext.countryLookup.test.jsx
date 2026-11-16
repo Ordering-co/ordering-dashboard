@@ -15,7 +15,7 @@ vi.mock('../../ApiContext', () => ({
       })
     })
     return [{
-      project: 'luisv4plus',
+      project: 'exampletenant',
       configs,
       setAccessToken: () => ({ configs })
     }]

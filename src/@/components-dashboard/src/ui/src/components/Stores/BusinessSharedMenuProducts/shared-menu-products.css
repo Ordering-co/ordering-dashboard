@@ -1,0 +1,150 @@
+/*
+ * redesign stores 5.6 (, G3-04) · Products of a shared menu: the list of a nested P/SectionSplit (the product is its detail).
+ * Product's SearchField and AsyncSwitch own their structure; this adds the pane and what a row is made of, the same rows as the menu
+ * list (business-menu.css). Values: --od-* and --od-x-* only, logical properties only.
+ *
+ * No `overflow`, `container-type` or `contain` on anything that wraps the detail (SectionSplit decisions, points 3 and 3b).
+ */
+
+.odc-smp {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+/* The search field of Product has a flex basis for a filter bar row; in this column it would be that tall. */
+.odc-smp > .odc-smp-search {
+  flex: none;
+}
+
+/* ── The rows ── */
+.odc-smp-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* block, not the flex a list item gets from the shell: the row fills the line */
+.odc-smp-item {
+  display: block;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* [switch] [name] [chevron]. What a failed save says goes on its own line under the row (the switch cell dissolves into the grid). */
+.odc-smp-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-2);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+  cursor: pointer;
+  user-select: none;
+}
+
+.odc-smp-row:hover { background: var(--od-x-hover); }
+
+/* The ring is inset: the pane sits in a scroller and a ring outside the row would be cut */
+.odc-smp-row:focus { outline: none; }
+.odc-smp-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* The open product: soft action fill, action text and a 2px indicator. aria-current says it, and the weight changes (never colour alone). */
+.odc-smp-row[data-current] {
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-semibold);
+}
+
+.odc-smp-row[data-current]::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--od-space-1);
+  inset-inline-start: 0;
+  inline-size: var(--od-x-indicator);
+  border-radius: var(--od-x-indicator);
+  background: var(--od-action-content);
+}
+
+.odc-smp-switch { display: contents; }
+.odc-smp-switch .odc-async-switch { display: contents; }
+
+/* The cells are placed: the notice comes between the switch and the name in the DOM, and would push them to a third line. */
+.odc-smp-switch .odc-switch { grid-row: 1; grid-column: 1; }
+.odc-smp-name { grid-row: 1; grid-column: 2; }
+.odc-smp-chevron { grid-row: 1; grid-column: 3; }
+
+.odc-smp-switch .odc-async-switch-notice {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  max-inline-size: none;
+  margin-block-end: var(--od-space-1);
+}
+
+.odc-smp-name {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--od-x-control-height-sm);
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: var(--od-x-space-half);
+  padding-inline: var(--od-space-1);
+  border: 0;
+  border-radius: var(--od-radius-control);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: start;
+  cursor: inherit;
+}
+
+.odc-smp-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* A long name wraps; it never widens the pane. */
+.odc-smp-label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-smp-chevron {
+  color: var(--od-x-text-subtle);
+}
+
+/* ── States ── */
+.odc-smp-empty {
+  margin: 0;
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── Touch: stacked rows touch each other, so on a coarse pointer or under 768px the rows themselves are 44px. ── */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-smp-row,
+  .odc-smp-name {
+    min-block-size: var(--od-x-target-coarse);
+  }
+}

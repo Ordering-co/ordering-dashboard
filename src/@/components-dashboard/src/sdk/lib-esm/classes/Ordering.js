@@ -295,7 +295,15 @@ const Ordering = /** @class */ (function () {
       }
       xhr.onload = function () {
         if (this.status < 500) {
-          const data_1 = options.json ? JSON.parse(this.response) : this.response
+          // bugs E 40b: a reply that is not JSON (an HTML error page, an empty body) used to throw here, outside
+          // the promise, so it never settled and the caller waited forever. It rejects now, like a 5xx or a network error.
+          let data_1
+          try {
+            data_1 = options.json ? JSON.parse(this.response) : this.response
+          } catch (err) {
+            reject(new Error('Invalid response'))
+            return
+          }
           resolve({
             request: this,
             data: data_1,
@@ -308,6 +316,11 @@ const Ordering = /** @class */ (function () {
       }
       xhr.onerror = function (err) {
         reject(err)
+      }
+      // bugs E 40b: no `onabort` on purpose. `cancelToken.cancel()` aborts, and the callers that cancel rely on that
+      // request staying silent (no error, no toast); rejecting would turn every intended cancel into a failure.
+      xhr.ontimeout = function () {
+        reject(new Error('Request timed out'))
       }
       if (options.json) {
         xhr.setRequestHeader('Content-Type', 'application/json')

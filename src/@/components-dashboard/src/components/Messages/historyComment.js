@@ -72,8 +72,30 @@ const getStaticMapByLocation = (location, size, googleMapsApiKey) => {
     '&key=' + encodeURIComponent(googleMapsApiKey || '')
 }
 
+// redesign F6c (Q2-19): attributes the API names with an internal key that has no translation of its own.
+// Literal t() calls so the i18n scanner picks the keys up.
+const FRIENDLY_ATTRIBUTES = {
+  dashboard_manual_driver_assignment_comment: (t) => t('ORDER_HISTORY_DRIVER_ASSIGNMENT_COMMENT', 'driver assignment comment'),
+  // tanda P: PREPARED_IN, DELIVERED_IN and DELIVERY_DATETIME are not in the catalog; these fell back on English everywhere
+  prepared_in: (t) => t('ORDER_HISTORY_PREPARED_IN', 'preparation time'),
+  delivered_in: (t) => t('ORDER_HISTORY_DELIVERED_IN', 'delivery time'),
+  delivery_datetime: (t) => t('ORDER_HISTORY_DELIVERY_DATETIME', 'delivery date')
+}
+
 const attributeLabel = (changeAttribute, t) => {
-  return escapeHtml(t(changeAttribute.toUpperCase(), changeAttribute.replace(/_/g, ' ')).toLowerCase())
+  const label = FRIENDLY_ATTRIBUTES[changeAttribute]?.(t) ?? t(changeAttribute.toUpperCase(), changeAttribute.replace(/_/g, ' '))
+  return escapeHtml(label.toLowerCase())
+}
+
+const isBlank = (value) => value === null || value === undefined || value === ''
+
+// redesign W1-6 (T1-6-4a, W1-D-18, decision 13): a history value that is a date («2026-10-02 17:00:00», «2026-10-02T17:00:00Z») is
+// painted by parseDate; a value that is minutes («30», 30) stays as the API sent it. The API's `delivery_datetime` is the local one
+// (`delivery_datetime_utc` is the UTC), so it is parsed without the UTC shift, as the rest of the dashboard does with that field.
+const DATE_VALUE = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/
+const formatHistoryDate = (value, changeAttribute, parseDate) => {
+  if (typeof parseDate !== 'function' || typeof value !== 'string' || !DATE_VALUE.test(value.trim())) return value
+  return changeAttribute === 'delivery_datetime' ? parseDate(value.trim(), { utc: false }) : parseDate(value.trim())
 }
 
 export const getHistoryComment = ({
@@ -82,6 +104,7 @@ export const getHistoryComment = ({
   t,
   getOrderState,
   parsePrice,
+  parseDate,
   googleMapsApiKey,
   capitalize
 }) => {
@@ -126,11 +149,11 @@ export const getHistoryComment = ({
   } else if (['prepared_in', 'delivered_in', 'delivery_datetime'].includes(changeAttribute)) {
     comment = t('ORDER_ATTRIBUTE_CHANGED_FROM_TO', 'Order _attribute_ changed from _from_ to _to_.')
       .replace('_attribute_', '<b>' + attributeLabel(changeAttribute, t) + '</b>')
-      .replace('_from_', '<b>' + escapeHtml(message.change.old || 0) + '</b>')
-      .replace('_to_', '<b>' + escapeHtml(message.change.new) + '</b>')
+      .replace('_from_', '<b>' + escapeHtml(formatHistoryDate(message.change.old, changeAttribute, parseDate) || 0) + '</b>')
+      .replace('_to_', '<b>' + escapeHtml(formatHistoryDate(message.change.new, changeAttribute, parseDate)) + '</b>')
   } else if (changeAttribute === 'logistic_status') {
     comment = t('ORDER_ATTRIBUTE_CHANGED_FROM_TO', 'Order _attribute_ changed from _from_ to _to_.')
-      .replace('_attribute_', '<b>' + escapeHtml(t('LOGISTIC_STATUS', 'logistic status')) + '</b>')
+      .replace('_attribute_', '<b>' + escapeHtml(t('LOGISTIC_STATUS', 'Logistic status')) + '</b>')
       .replace('_from_', '<b>' + escapeHtml(getLogisticTagStatus(parseInt(message.change.old, 10), t)) + '</b>')
       .replace('_to_', '<b>' + escapeHtml(getLogisticTagStatus(parseInt(message.change.new, 10), t)) + '</b>')
   } else if (changeAttribute === 'vehicle') {
@@ -146,14 +169,22 @@ export const getHistoryComment = ({
   } else if (changeAttribute !== 'comment' && changeAttribute) {
     const oldLink = formatHistoryHtmlValue(message.change.old)
     const newLink = formatHistoryHtmlValue(message.change.new)
-    if (message.change.old) {
+    if (isBlank(message.change.new)) {
+      // A value that was cleared: never «changed from 496 to .»
+      comment = !isBlank(message.change.old)
+        ? t('ORDER_ATTRIBUTE_REMOVED', 'Order _attribute_ was removed (was _from_).')
+          .replace('_attribute_', '<b>' + attributeLabel(changeAttribute, t) + '</b>')
+          .replace('_from_', '<b>' + oldLink + '</b>')
+        : t('ORDER_ATTRIBUTE_UPDATED', 'Order _attribute_ was updated.')
+          .replace('_attribute_', '<b>' + attributeLabel(changeAttribute, t) + '</b>')
+    } else if (message.change.old) {
       comment = t('ORDER_ATTRIBUTE_CHANGED_FROM_TO', 'Order _attribute_ changed from _from_ to _to_.')
         .replace('_attribute_', '<b>' + attributeLabel(changeAttribute, t) + '</b>')
         .replace('_from_', '<b>' + oldLink + '</b>')
         .replace('_to_', '<b>' + newLink + '</b>')
     } else {
       comment = t('ORDER_ATTRIBUTE_CHANGED_TO', 'Order _attribute_ changed to _to_.')
-        .replace('_attribute_', '<b>' + escapeHtml(t(changeAttribute.toUpperCase()).toLowerCase()) + '</b>')
+        .replace('_attribute_', '<b>' + attributeLabel(changeAttribute, t) + '</b>')
         .replace('_to_', '<b>' + newLink + '</b>')
     }
   }

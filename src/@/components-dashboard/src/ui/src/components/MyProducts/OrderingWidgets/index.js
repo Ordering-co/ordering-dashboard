@@ -15,7 +15,9 @@ import {
 } from './styles'
 
 export const OrderingWidgets = (props) => {
-  const { hideSideBar } = props
+  // redesign ordering-website B4 (D1): `hideTitle` (opt-in) leaves out the title row, its h1 and the menu button: the
+  // sections editor gives the section its own heading. Without it the component is what it was (it is also the /ordering-widgets route).
+  const { hideSideBar, hideTitle } = props
   const [, t] = useLanguage()
   const theme = useTheme()
   const websiteUrl = useWebsiteUrl()
@@ -29,17 +31,20 @@ export const OrderingWidgets = (props) => {
 
   return (
     <Container hideSideBar={hideSideBar}>
-      <HeaderTitleContainer>
-        {isCollapse && !hideSideBar && (
-          <IconButton
-            color='black'
-            onClick={() => handleMenuCollapse(false)}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-        <h1>{t('ORDERING_WIDGETS', 'Ordering Widgets')}</h1>
-      </HeaderTitleContainer>
+      {!hideTitle && (
+        <HeaderTitleContainer>
+          {isCollapse && !hideSideBar && (
+            <IconButton
+              color='black'
+              aria-label={t('OPEN_MENU', 'Open menu')}
+              onClick={() => handleMenuCollapse(false)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+          <h1>{t('ORDERING_WIDGETS', 'Ordering Widgets')}</h1>
+        </HeaderTitleContainer>
+      )}
       <Content>
         <PopupContainer>
           <h2>{t('INTEGRATION_WEBSITE', 'Integration on your website')}: {t('POPUP', 'Popup')}</h2>

@@ -62,6 +62,8 @@ export const BusinessTypeDetail = (props) => {
 
   /**
    * Method to update the product business type from API
+   * redesign stores 5.2: the three requests answer `{ ok: true, result? }` or `{ ok: false, error }`, so the form can keep
+   * the user when a save fails (the leave guard reads it)
    */
   const handleUpdateProductType = async () => {
     try {
@@ -88,8 +90,10 @@ export const BusinessTypeDetail = (props) => {
           error: null
         })
         if (setBusinessTypes) {
+          // redesign stores 5.2: the type that was saved is the open one, whether or not the answer repeats its id
+          const savedId = content?.result?.id ?? businessTypeState?.businessType?.id
           const updatedBusinessTypes = businessTypes.map(type => {
-            if (type.id === content?.result?.id) {
+            if (type.id === savedId) {
               return { ...type, ...content?.result }
             }
             return type
@@ -97,19 +101,21 @@ export const BusinessTypeDetail = (props) => {
           setBusinessTypes(updatedBusinessTypes)
         }
         showToast(ToastType.Success, t('CATEGORY_UPDATED', 'Category updated'))
-      } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        return { ok: true, result: content.result }
       }
+      setFormState({
+        ...formState,
+        loading: false,
+        error: content.result
+      })
+      return { ok: false, error: content.result }
     } catch (err) {
       setFormState({
         ...formState,
         loading: false,
         error: [err.message]
       })
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -144,19 +150,21 @@ export const BusinessTypeDetail = (props) => {
         }
         showToast(ToastType.Success, t('CATEGORY_ADDED', 'Category added'))
         props.onClose && props.onClose()
-      } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        return { ok: true, result: content.result }
       }
+      setFormState({
+        ...formState,
+        loading: false,
+        error: content.result
+      })
+      return { ok: false, error: content.result }
     } catch (err) {
       setFormState({
         ...formState,
         loading: false,
         error: [err.message]
       })
+      return { ok: false, error: [err.message] }
     }
   }
 
@@ -164,6 +172,9 @@ export const BusinessTypeDetail = (props) => {
    * Method to delete the business type from API
    */
   const handleDeleteProductType = async () => {
+    // redesign stores 5.2 (G2-09): a type that is not saved yet has nothing to delete (it read `id` of null: TypeError)
+    const id = businessTypeState?.businessType?.id
+    if (id == null) return { ok: false, error: null }
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
@@ -177,7 +188,7 @@ export const BusinessTypeDetail = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business_types/${businessTypeState.businessType.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business_types/${id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setFormState({
@@ -186,25 +197,27 @@ export const BusinessTypeDetail = (props) => {
           error: null
         })
         if (setBusinessTypes) {
-          const updatedBusinessTypes = businessTypes.filter(type => type.id !== businessTypeState.businessType.id)
+          const updatedBusinessTypes = businessTypes.filter(type => type.id !== id)
           setBusinessTypes(updatedBusinessTypes)
         }
         showToast(ToastType.Success, t('CATEGORY_DELETED', 'Category deleted'))
         props.onClose && props.onClose()
-      } else {
-        setFormState({
-          ...formState,
-          loading: false,
-          error: content.result
-        })
+        return { ok: true }
       }
+      // redesign stores 5.2: the failure of a delete is the confirmation's to say; it is not a form error
+      setFormState({ ...formState, loading: false })
+      return { ok: false, error: content.result }
     } catch (err) {
-      setFormState({
-        ...formState,
-        loading: false,
-        error: [err.message]
-      })
+      setFormState({ ...formState, loading: false })
+      return { ok: false, error: [err.message] }
     }
+  }
+
+  /**
+   * redesign stores 5.2: drops what was typed or picked and not saved (the form's «Discard»)
+   */
+  const cleanChanges = () => {
+    setFormState({ loading: false, changes: {}, error: null })
   }
 
   useEffect(() => {
@@ -229,6 +242,7 @@ export const BusinessTypeDetail = (props) => {
           handleAddProductType={handleAddProductType}
           handleDeleteProductType={handleDeleteProductType}
           handleChangeItem={handleChangeItem}
+          cleanChanges={cleanChanges}
         />
       )}
     </>

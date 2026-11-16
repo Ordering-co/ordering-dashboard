@@ -1,0 +1,3 @@
+.od-ui:where(.od-messages-listing) { min-width: 0; color: var(--od-entity-selector-text); background: var(--od-entity-selector-surface); font-family: var(--od-entity-selector-font); }
+@media (max-width: 390px) { .od-ui:where(.od-messages-listing) { padding: 12px; } }
+@media (prefers-reduced-motion: reduce) { .od-ui:where(.od-messages-listing) * { transition-duration: 0s !important; } }

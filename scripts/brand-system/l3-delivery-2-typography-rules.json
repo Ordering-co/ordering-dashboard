@@ -1,0 +1,577 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-delivery-2-typography",
+  "categories": [
+    "typography"
+  ],
+  "rules": [
+    {
+      "id": "group-advanced-logistics-toggle-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/AdvancedLogisticsForm/styles.js",
+      "component": "CheckboxContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-advanced-logistics-status-option",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/AdvancedLogisticsForm/styles.js",
+      "component": "OrderStatusWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-advanced-logistics-subsection-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/AdvancedLogisticsForm/styles.js",
+      "component": "SubSectionContainer",
+      "property": "font-size",
+      "context": "> div > h1",
+      "match": "14px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "group-add-business-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/BusinessesForm/styles.js",
+      "component": "BusinessWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-add-general-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/GeneralForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-add-general-field-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/GeneralForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "group-add-paymethod-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/PaymethodsForm/styles.js",
+      "component": "GroupWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-add-section-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/styles.js",
+      "component": "Container",
+      "property": "font-size",
+      "context": "h2",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "group-autoassign-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "AutoassignContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "group-autoassign-mode-caption",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "AutoassignItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-autoassign-checkbox-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "CheckboxWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-autoassign-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "FieldContainer",
+      "property": "font-size",
+      "context": "label,\n  legend",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-autoassign-forced-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "ForcedAssignSettingWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-autoassign-distance-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "MaxDistanceCustomerContainer",
+      "property": "font-size",
+      "context": "> div:first-child > label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-autoassign-distance-hint",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAutoassign/styles.js",
+      "component": "MaxDistanceCustomerContainer",
+      "property": "font-size",
+      "context": "> div:first-child > p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-businesses-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupBusinesses/styles.js",
+      "component": "BusinessWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-companies-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupCompanies/styles.js",
+      "component": "GroupWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-zone-empty-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneInformation/styles.js",
+      "component": "ErrorText",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-zone-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneInformation/styles.js",
+      "component": "FormControl",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-zone-add-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "AddDeliveryZoneButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-zone-column-header",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "DeliveryZonesTable",
+      "property": "font-size",
+      "context": "thead > tr > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-zone-open-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "ZoneOpenButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-zone-cell-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "ZoneRow",
+      "property": "font-size",
+      "context": "td,\n  th[scope='row']",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-details-menu-item",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "> div > > div > .dropdown-item",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-details-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDetails/styles.js",
+      "component": "Header",
+      "property": "font-size",
+      "context": "> div:first-child > h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "group-details-tab",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDetails/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-details-tab-active",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDetails/styles.js",
+      "component": "Tab",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-drivers-business-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDrivers/styles.js",
+      "component": "BusinessWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-drivers-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDrivers/styles.js",
+      "component": "DriverInfoContainer",
+      "property": "font-size",
+      "context": "p > &:first-child",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-drivers-email",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDrivers/styles.js",
+      "component": "DriverInfoContainer",
+      "property": "font-size",
+      "context": "p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-drivers-temporal-action",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDrivers/styles.js",
+      "component": "DriverTemporaryContainer",
+      "property": "font-size",
+      "context": "button",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-general-checkbox-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "CheckboxContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-general-manager-name",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "DriverManagerWrapper",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-general-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-general-field-value",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "InputWrapper",
+      "property": "font-size",
+      "context": "div",
+      "match": "14px",
+      "replace": "var(--od-type-control-value-size)"
+    },
+    {
+      "id": "group-general-manager-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "ManagerInfoContainer",
+      "property": "font-size",
+      "context": "p > &:first-child",
+      "match": "13px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-general-manager-email",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupGeneralForm/styles.js",
+      "component": "ManagerInfoContainer",
+      "property": "font-size",
+      "context": "p > &:last-child",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-logistics-config-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogistics/styles.js",
+      "component": "LogisticsConfigItem",
+      "property": "font-size",
+      "context": "span",
+      "match": "14px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-logistics-status-option",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogistics/styles.js",
+      "component": "OrderStatusWrapper",
+      "property": "font-size",
+      "context": "> span",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-logs-time",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "DateTimeWrapper",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-identifier-size)"
+    },
+    {
+      "id": "group-logs-event-type",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "EventTypeContainer",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-logs-empty-state",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "NoData",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "16px",
+      "replace": "var(--od-type-section-title-size)"
+    },
+    {
+      "id": "group-logs-see-changes",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "SeeChanges",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-logs-cell-copy",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "> tbody > td,\n    th[scope='row']",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-logs-column-header",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "Table",
+      "property": "font-size",
+      "context": "thead > tr > th",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    },
+    {
+      "id": "group-logs-user-info",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogs/styles.js",
+      "component": "UserInfoContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-content-size)"
+    },
+    {
+      "id": "group-orders-field-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupOrders/styles.js",
+      "component": "FieldWrapper",
+      "property": "font-size",
+      "context": "> label,\n  > legend",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-orders-title",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupOrders/styles.js",
+      "component": "GroupOrdersContainer",
+      "property": "font-size",
+      "context": "h1",
+      "match": "20px",
+      "replace": "var(--od-type-title-size)"
+    },
+    {
+      "id": "group-orders-maps-label",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupOrders/styles.js",
+      "component": "MapsApiDescriptionContainer",
+      "property": "font-size",
+      "context": "label",
+      "match": "14px",
+      "replace": "var(--od-type-control-size)"
+    },
+    {
+      "id": "group-orders-maps-hint",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupOrders/styles.js",
+      "component": "MapsApiDescriptionContainer",
+      "property": "font-size",
+      "context": "p",
+      "match": "12px",
+      "replace": "var(--od-type-secondary-size)"
+    }
+  ],
+  "preservations": [
+    {
+      "id": "group-advanced-logistics-radio-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupAddForm/AdvancedLogisticsForm/styles.js",
+      "component": "RadioButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This exact font-size controls the order-status radio glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "group-details-actions-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDetails/styles.js",
+      "component": "ActionSelectorWrapper",
+      "property": "font-size",
+      "context": "button > svg",
+      "match": "20px",
+      "reason": "This exact font-size controls the group actions menu glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "group-logistics-chevron-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogistics/styles.js",
+      "component": "LogisticsConfigItem",
+      "property": "font-size",
+      "context": "svg",
+      "match": "20px",
+      "reason": "This exact font-size controls the logistics configuration chevron glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "group-logistics-radio-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupLogistics/styles.js",
+      "component": "RadioButton",
+      "property": "font-size",
+      "context": "svg",
+      "match": "16px",
+      "reason": "This exact font-size controls the order-status radio glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "group-zone-chevron-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "ZoneRow",
+      "property": "font-size",
+      "context": "td,\n  th[scope='row'] > &.arrow",
+      "match": "13px",
+      "reason": "This exact font-size controls the delivery-zone row chevron glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    },
+    {
+      "id": "group-zone-open-chevron-glyph",
+      "kind": "static-declaration",
+      "file": "src/@/components-dashboard/src/ui/src/components/Delivery/DriversGroupDeliveryZoneList/styles.js",
+      "component": "ZoneOpenIconButton",
+      "property": "font-size",
+      "context": "<root>",
+      "match": "13px",
+      "reason": "This exact font-size controls the delivery-zone row chevron glyph geometry rather than readable text.",
+      "evidence": "The adjacent readable content uses central roles while the reviewed icon/control dimensions remain unchanged."
+    }
+  ]
+}

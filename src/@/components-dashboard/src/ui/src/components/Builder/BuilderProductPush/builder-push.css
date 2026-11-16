@@ -1,0 +1,197 @@
+/*
+ * redesign  B2 · /builder/:productId, Push notifications tab: the Firebase card, its account details and the form
+ * to upload or paste a service account. Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical
+ * properties, so right-to-left needs no second set. Prefix: odc-bp-*.
+ */
+
+/* ── Card ── */
+.odc-bp-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  padding: var(--od-space-5) var(--od-space-6);
+  border: var(--od-x-hairline) solid var(--od-border);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+@media (max-width: 767px) {
+  .odc-bp-card {
+    padding: var(--od-space-4);
+  }
+}
+
+.odc-bp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+}
+
+.odc-bp-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+  min-inline-size: 0;
+}
+
+.odc-bp-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  margin: 0;
+  font-size: var(--od-x-type-lead-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bp-subtitle {
+  margin: 0;
+  font-size: var(--od-x-type-body-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-bp-muted {
+  margin: 0;
+  color: var(--od-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.odc-bp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+}
+
+.odc-bp-actions[data-align='end'] {
+  justify-content: flex-end;
+}
+
+/* ── Account details ── */
+.odc-bp-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-4) var(--od-space-6);
+  margin: 0;
+}
+
+.odc-bp-details > div {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.odc-bp-details dt {
+  margin-block-end: var(--od-space-1);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  font-weight: var(--od-font-weight-regular);
+}
+
+.odc-bp-details dd {
+  margin: 0;
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-ui-size);
+  overflow-wrap: anywhere;
+}
+
+/* ── Form ── */
+.odc-bp-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-3);
+  padding-block-start: var(--od-space-4);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-bp-editor > .odc-notice {
+  margin: 0;
+}
+
+.odc-bp-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  padding: var(--od-space-4);
+  border: var(--od-x-hairline) dashed var(--od-border-strong);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+.odc-bp-file[data-invalid] {
+  border-color: var(--od-danger-functional);
+}
+
+.odc-bp-file-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.odc-bp-file-name {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-bp-file-name .odc-icon {
+  flex: none;
+  color: var(--od-action);
+}
+
+.odc-bp-file-text .odc-bp-muted,
+.odc-bp-paste .odc-bp-muted {
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bp-paste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-1);
+}
+
+.odc-bp-paste-input.odc-field-textarea {
+  font-family: var(--od-font-mono);
+  font-size: var(--od-x-type-caption-size);
+}
+
+.odc-bp-switch {
+  align-self: flex-start;
+}
+
+.odc-bp-help {
+  padding: var(--od-space-3);
+  border-radius: var(--od-radius-panel);
+  background: var(--od-surface-subtle);
+}
+
+.odc-bp-help summary {
+  cursor: pointer;
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-bp-help summary:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+}
+
+.odc-bp-help ol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+  margin-block: var(--od-space-3) 0;
+  margin-inline: 0;
+  padding-inline-start: var(--od-space-5);
+}

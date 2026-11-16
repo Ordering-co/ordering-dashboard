@@ -1,0 +1,204 @@
+/* Utilities only: no Preflight or shared-element reset during coexistence. */
+@tailwind utilities;
+
+.od-ui:where(.od-button, .od-icon-button, .od-link-button),
+.od-ui .od-control,
+.od-ui.od-control,
+.od-ui.od-select-popup,
+.od-ui.od-dialog-popup {
+  box-sizing: border-box;
+  font-family: var(--od-ui-font);
+  font-size: var(--od-ui-font-size);
+  line-height: 1.5;
+  color: var(--od-ui-text);
+}
+
+.od-ui:where(.od-button),
+.od-ui .od-control,
+.od-ui.od-control {
+  @apply od-bg-surface od-border-border od-text-text od-px-3;
+  min-height: var(--od-ui-control-height);
+  max-width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--od-ui-radius);
+  font-weight: var(--od-ui-font-weight);
+  padding-block: 0;
+  cursor: pointer;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.od-ui:where(.od-button) {
+  background: var(--od-ui-button-background, var(--od-ui-surface));
+  color: var(--od-ui-button-foreground, var(--od-ui-text));
+  border-color: var(--od-ui-button-border, var(--od-ui-border));
+  border-radius: var(--od-ui-button-radius, var(--od-ui-radius));
+  display: var(--od-ui-button-display, inline-flex);
+  line-height: var(--od-ui-button-line-height, 1.5);
+  padding-inline: var(--od-ui-button-padding-inline, 12px);
+  min-height: var(--od-ui-button-min-height, var(--od-ui-control-height));
+  max-width: var(--od-ui-button-max-width, 100%);
+  width: var(--od-ui-button-width, auto);
+  height: var(--od-ui-button-height, auto);
+  text-align: var(--od-ui-button-text-align, center);
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  transition:
+    background-color var(--od-ui-duration) var(--od-ui-easing),
+    border-color var(--od-ui-duration) var(--od-ui-easing),
+    color var(--od-ui-duration) var(--od-ui-easing);
+}
+
+.od-ui:where(.od-button):hover {
+  background: var(--od-ui-button-hover-background, var(--od-ui-subtle));
+}
+.od-ui:where(.od-button):active {
+  background: var(--od-ui-button-active-background, var(--od-ui-subtle));
+}
+.od-ui:where(.od-button-link):link,
+.od-ui:where(.od-button-link):visited,
+.od-ui:where(.od-button-link.od-button-outline):hover { text-decoration: none; }
+
+.od-ui:where(.od-button-danger-text) {
+  background: var(--od-ui-button-background, transparent);
+  border-color: var(--od-ui-button-border, transparent);
+  color: var(--od-ui-button-foreground, var(--od-ui-danger));
+}
+.od-ui:where(.od-button-danger-text):hover { text-decoration: underline; }
+
+.od-ui:where(.od-button):disabled,
+.od-ui .od-control:disabled,
+.od-ui.od-control:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.od-ui:where(.od-button, .od-icon-button, .od-link-button):focus-visible,
+.od-ui .od-control:focus-visible,
+.od-ui.od-control:focus-visible,
+.od-ui .od-select-option:focus-visible {
+  outline: var(--od-ui-focus-width) solid var(--od-ui-focus);
+  outline-offset: var(--od-ui-focus-offset);
+}
+
+.od-ui:where(.od-icon-button, .od-link-button) {
+  font-weight: var(--od-ui-font-weight);
+}
+
+.od-ui:where(.od-icon-button) {
+  position: relative;
+  box-sizing: border-box;
+  background-color: var(--od-ui-icon-button-background, transparent);
+  border: none;
+  border-radius: var(--od-ui-radius-component);
+  height: 32px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--od-ui-duration) var(--od-ui-easing),
+    border-color var(--od-ui-duration) var(--od-ui-easing),
+    color var(--od-ui-duration) var(--od-ui-easing);
+}
+.od-ui:where(.od-icon-button):disabled { opacity: 0.5; cursor: not-allowed; }
+.od-ui:where(.od-icon-button) > svg {
+  width: var(--od-ui-icon-size);
+  height: var(--od-ui-icon-size);
+  color: var(--od-ui-icon-button-foreground, var(--od-ui-muted));
+}
+.od-ui:where(.od-icon-button):hover { background-color: var(--od-ui-icon-button-hover-background, var(--od-ui-subtle)); }
+.od-ui:where(.od-icon-button):hover > svg { color: var(--od-ui-icon-button-hover-foreground, var(--od-ui-text)); }
+.od-ui:where(.od-icon-button):active { background-color: var(--od-ui-icon-button-active-background, var(--od-ui-action-soft)); }
+.od-ui:where(.od-icon-button) { pointer-events: var(--od-ui-icon-button-pointer-events, auto); }
+
+.od-ui:where(.od-link-button) {
+  cursor: pointer;
+  color: var(--od-ui-link-button-foreground, var(--od-ui-action-content));
+  pointer-events: var(--od-ui-link-button-pointer-events, auto);
+  opacity: var(--od-ui-link-button-opacity, 1);
+  transition:
+    background-color var(--od-ui-duration) var(--od-ui-easing),
+    border-color var(--od-ui-duration) var(--od-ui-easing),
+    color var(--od-ui-duration) var(--od-ui-easing);
+}
+.od-ui:where(.od-link-button):hover {
+  color: var(--od-ui-link-button-foreground, var(--od-ui-action-content));
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-ui:where(.od-button, .od-icon-button, .od-link-button) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}
+
+.od-ui .od-control,
+.od-ui.od-control {
+  @apply od-flex od-items-center od-justify-between od-gap-2;
+  width: 100%;
+  text-align: start;
+}
+.od-ui .od-control > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.od-ui[data-slot='select-root'] { width: 100%; }
+.od-ui .od-control svg,
+.od-ui:where(.od-button:not(.od-button-legacy)) svg { width: var(--od-ui-icon-size); height: var(--od-ui-icon-size); flex-shrink: 0; }
+
+.od-ui.od-select-popup {
+  @apply od-bg-surface od-border-border od-p-2;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--od-ui-radius);
+  width: var(--anchor-width);
+  max-width: calc(100vw - 16px);
+  max-height: min(var(--available-height, 320px), 320px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+/* Legacy ThemeContext's .popup-backdrop is 3000, not its inner Popup's 2001. */
+.od-select-positioner { z-index: 3102; }
+.od-ui .od-select-option {
+  @apply od-flex od-items-center od-gap-2 od-px-2 od-py-1;
+  box-sizing: border-box;
+  min-height: var(--od-ui-control-height);
+  border-radius: var(--od-ui-radius);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  outline-offset: calc(-1 * var(--od-ui-focus-width));
+}
+.od-ui .od-select-option[data-selected],
+.od-ui .od-select-option[data-highlighted] { @apply od-bg-action-soft od-text-action-content; }
+.od-ui .od-select-option[data-disabled] { @apply od-text-muted; cursor: not-allowed; }
+
+.od-dialog-backdrop { position: fixed; inset: 0; z-index: 3100; background: rgb(0 0 0 / 0.4); }
+.od-dialog-positioner {
+  position: fixed; inset: 0; z-index: 3101;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; box-sizing: border-box;
+}
+.od-ui.od-dialog-popup {
+  @apply od-bg-surface od-p-5;
+  border: 1px solid var(--od-ui-border);
+  border-radius: var(--od-ui-radius-panel);
+  max-width: 100%; max-height: calc(100% - 32px);
+  overflow-y: auto; overscroll-behavior: contain;
+  position: relative; text-align: start;
+}
+.od-ui .od-dialog-title { @apply od-text-text od-m-0; font: inherit; font-weight: 600; padding-inline-end: 44px; }
+.od-ui .od-dialog-close { position: absolute; inset-inline-end: 12px; top: 12px; min-width: var(--od-ui-touch-target); min-height: var(--od-ui-touch-target); padding: 0; }
+.od-ui .od-dialog-content { @apply od-my-4 od-text-text; overflow-wrap: anywhere; }
+.od-ui .od-dialog-actions { @apply od-flex od-gap-4; }
+.od-ui .od-dialog-actions > button { flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+
+@media (pointer: coarse) {
+  .od-ui:where(.od-button, .od-icon-button, .od-link-button), .od-ui .od-control, .od-ui.od-control, .od-ui .od-select-option {
+    min-height: var(--od-ui-touch-target);
+    min-width: var(--od-ui-touch-target);
+  }
+
+  .od-ui:where(.od-icon-button) { height: var(--od-ui-touch-target); }
+  .od-ui:where(.od-button) { line-height: var(--od-ui-button-touch-line-height, var(--od-ui-button-line-height)); }
+  .od-ui:where(.od-link-button) { display: inline-flex; align-items: center; }
+}

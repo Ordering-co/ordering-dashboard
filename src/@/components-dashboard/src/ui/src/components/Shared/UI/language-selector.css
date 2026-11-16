@@ -1,0 +1,53 @@
+.od-ui:where(.od-language-selector) {
+  position: relative;
+  color: var(--od-entity-selector-text);
+  font-family: var(--od-entity-selector-font);
+}
+
+.od-ui:where(.od-language-selector) > svg {
+  position: absolute;
+  z-index: var(--od-x-layer-raised);
+  top: 7px;
+  inset-inline-start: 12px;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.od-ui:where(.od-language-selector) .select {
+  min-width: min(200px, 100%);
+  border: none;
+}
+
+.od-ui:where(.od-language-selector) .select > div:first-child {
+  justify-content: flex-start;
+  padding-inline-start: 48px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.od-ui:where(.od-language-selector) .select > div:first-child > div:first-child {
+  flex: unset;
+}
+
+.od-ui:where(.od-language-single) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: var(--od-entity-selector-touch-target);
+  padding: 6px 12px;
+  color: var(--od-entity-selector-text);
+  border: 1px solid transparent;
+}
+
+.od-ui:where(.od-language-single) > svg {
+  width: 20px;
+  height: 20px;
+}
+
+.od-language-text {
+  margin-inline-start: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}

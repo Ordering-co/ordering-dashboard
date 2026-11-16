@@ -47,11 +47,11 @@ export const Image = styled.div`
   height: 90px;
   border-radius: 8px;
   overflow: hidden;
-  background: ${({ isImage, theme }) => isImage ? '#FFF' : `${theme.colors.backgroundPage}`};
+  background: ${({ isImage, theme }) => isImage ? (theme?.ordering?.semantic?.surface?.default ?? '#FFF') : (theme?.ordering?.semantic?.background ?? theme.colors.backgroundPage)};
   cursor: -webkit-grab;
   cursor: grab;
-  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.1));
-  border: 1px solid ${props => props.theme.colors.borderColor};
+  filter: drop-shadow(${props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'});
+  border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.borderColor};
 
   img,
   div:first-child {
@@ -75,7 +75,7 @@ export const Image = styled.div`
 
 export const Camera = styled.div`
   position: absolute;
-  background: ${props => props.theme.colors?.backgroundPage || '#FFF'};
+  background: ${props => props.theme?.ordering?.semantic?.background ?? props.theme.colors?.backgroundPage ?? '#FFF'};
   border-radius: 8px;
   width: 24px;
   height: 24px;
@@ -92,7 +92,7 @@ export const Camera = styled.div`
   `}
   svg {
     font-size: 16px;
-    color: ${props => props.theme.colors.secundaryContrast};
+    color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.secundaryContrast};
   }
 `
 

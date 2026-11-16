@@ -12,13 +12,13 @@ export const AppsUtilities = () => {
     }
     const apps = {
       marketplace: {
-        description: t('CUSTOMER_APP_DESCRIPTION', 'Give your business owners or managers a tool to manage their whole business\'s incoming orders on the go by installing this app on any mobile device they have.'),
+        description: t('CUSTOMER_APP_DESCRIPTION', 'Give your customers an app to order from the stores on your marketplace, pay and track their orders from any mobile device.'),
         images: {
           live: theme.images.myProducts.multiStoreCustomerApp,
           brand: theme.images.myProducts.singleStoreCustomerApp
         },
         live_title: t('MULTI-STORE-CUSTOMER-APP', 'Multi-store Customer App'),
-        live_description: t('MULTI_STORE_CUSTOMER_APP_DESCRIPTION', 'This is a branded Ordering.co product. use it with your project, email, and password for free. features might be limited.'),
+        live_description: t('MULTI_STORE_CUSTOMER_APP_DESCRIPTION', 'This is a branded Ordering.co product. Use it with your project, email, and password for free. Features might be limited.'),
         demo_book_message: 'I would like to book a Demo for the customer app , can you assist me?',
         brand_title: t('SINGLE_STORE_CUSTOMER_APP', 'Single Store Customer App'),
         brand_description: t('SINGLE_STORE_CUSTOMER_APP_DESCRIPTION', 'This App is delivered in less than five working days, fully branded with your guidelines, removing all Ordering.co presence to give your brand more awareness.'),
@@ -36,7 +36,7 @@ export const AppsUtilities = () => {
           brand: theme.images.myProducts.driverAppBrand
         },
         live_title: t('FREE_TO_USE', 'Free to use'),
-        live_description: t('DRIVER_APP_FREE_TO_USE_DESCRIPTION', 'This is a branded Ordering.co product. use it with your project, email, and password for free. features might be limited.'),
+        live_description: t('DRIVER_APP_FREE_TO_USE_DESCRIPTION', 'This is a branded Ordering.co product. Use it with your project, email, and password for free. Features might be limited.'),
         brand_title: t('YOUR_BRANDED_APP', 'Your Branded App'),
         brand_description: t('DRIVER_APP_BRANDED_DESCRIPTION', 'This App is delivered in less than five working days, fully branded with your guidelines, removing all Ordering.co presence to give your brand more awareness.'),
         demo_book_message: 'I would like to book a Demo about the Driver app , can you assist me?',
@@ -54,7 +54,7 @@ export const AppsUtilities = () => {
           brand: theme.images.myProducts.storeAppBrand
         },
         live_title: t('FREE_TO_USE', 'Free to use'),
-        live_description: t('STORE_APP_FREE_TO_USE_DESCRIPTION', 'This is a branded Ordering.co product. use it with your project, email, and password for free. features might be limited.'),
+        live_description: t('STORE_APP_FREE_TO_USE_DESCRIPTION', 'This is a branded Ordering.co product. Use it with your project, email, and password for free. Features might be limited.'),
         demo_book_message: 'I would like to book a Demo about the Store app , can you assist me?',
         brand_title: t('YOUR_BRANDED_APP', 'Your Branded App'),
         brand_description: t('STORE_APP_BRANDED_DESCRIPTION', 'This App is delivered in less than five working days, fully branded with your guidelines, removing all Ordering.co presence to give your brand more awareness.'),
@@ -75,7 +75,7 @@ export const AppsUtilities = () => {
 
   const settingsList = [
     { key: 'basic', name: t('BASIC_SETTINGS', 'Basic Settings') },
-    { key: 'advanced', name: t('ADVANCED_SETTINGS', 'Advanced Settings') }
+    { key: 'advanced', name: t('ADVANCED_SETTINGS_TITLE', 'Advanced settings') }
   ]
 
   return {

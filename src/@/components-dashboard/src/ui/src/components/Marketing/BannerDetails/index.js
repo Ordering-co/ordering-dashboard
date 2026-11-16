@@ -148,8 +148,11 @@ const BannerDetailsUI = (props) => {
           <TabsConatiner>
             {tabOptions.map(option => (
               <Tab
+                as='button'
+                type='button'
                 key={option.key}
                 active={selectedTab === option.key}
+                aria-pressed={selectedTab === option.key}
                 onClick={() => {
                   setSelectedTab(option.key)
                   setBannerMoveDistance(0)

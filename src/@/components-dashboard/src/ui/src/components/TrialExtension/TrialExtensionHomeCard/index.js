@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useLanguage } from '../../../../../index'
 import { useTrialExtension } from '../../../contexts/TrialExtensionContext'
-import { Button } from '../../../styles'
+import { Button } from '../../Shared/Product'
 import { Card, Description, TextContent, Title } from './styles'
 
 /**
@@ -29,9 +29,8 @@ export const TrialExtensionHomeCard = () => {
         </Description>
       </TextContent>
       <Button
-        color='primary'
-        borderRadius='8px'
-        style={{ minHeight: '44px' }}
+        variant='primary'
+        size='md'
         onClick={() => openBooking('home')}
       >
         {t('TRIAL_EXTENSION_BOOK_CALL', 'Book a call')}

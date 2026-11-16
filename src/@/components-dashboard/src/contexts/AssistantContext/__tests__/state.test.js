@@ -132,6 +132,19 @@ describe('conversationReducer: a streamed turn', () => {
     expect(started.actions.a1.status).toBe('expired')
   })
 
+  // redesign AS-A (M-AS12): the server cannot have expired what a confirm still has in flight
+  it('does not expire a proposal whose confirm is in flight when the next turn starts', () => {
+    const state = run(
+      initialConversationState,
+      event('actions', { actions: [preview(), preview({ id: 'a2' })] }),
+      { type: 'actions_busy', ids: ['a1'], busy: true },
+      { type: 'user_message', text: 'Never mind' },
+      event('conversation', { id: 'c1' })
+    )
+    expect(state.actions.a1).toMatchObject({ status: 'proposed', busy: true })
+    expect(state.actions.a2.status).toBe('expired')
+  })
+
   it('takes a refused message out of the chat and shows why', () => {
     const state = run(
       initialConversationState,

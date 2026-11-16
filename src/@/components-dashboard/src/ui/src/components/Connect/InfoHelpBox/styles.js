@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import { glyphButtonReset, overlayGlyphButton } from '../../../styles/glyphButton'
+
 export const Content = styled.div`
   width: 100%;
 `
@@ -16,14 +18,14 @@ export const DataName = styled.div`
 
   p {
     font-weight: bold;
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     margin-bottom: 0px;
     width: auto
   }
 `
 
 export const Description = styled.p`
-  font-size: 14px;
+  font-size: var(--od-type-content-size);
   margin-bottom: 0px;
   padding-top: 10px;
   text-align: justify;
@@ -48,10 +50,11 @@ export const VideoContainer = styled.div`
     background: #E9ECEF;
   }
 
+
+  ${glyphButtonReset}
+  ${overlayGlyphButton({ top: '45%', left: '45%', glyphSize: '34px' })}
+
   svg {
-    top: 45%;
-    left: 45%;
-    position: absolute;
     color: #748194;
     font-size: 34px;
   }

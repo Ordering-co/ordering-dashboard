@@ -1,0 +1,152 @@
+/*
+ * 5.3-A · Detail panel header (prototype .panel-head): one row with Back (phone), the id,
+ * the status badge, a spacer and the actions; under it a muted line of metadata.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties.
+ * The row wraps when the panel is narrow: the badge drops to its own line, after the title.
+ */
+
+.odc-od-head {
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) 0;
+  padding-inline: var(--od-space-5);
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-od-head-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* Arabic, 1440, a long status: «#14428» broke letter by letter. The number is never what gives: the title keeps its
+   width and the row wraps at any panel width, so a long status drops to the next line. Nothing is hidden. */
+.odc-od-title {
+  flex: none;
+  margin: 0;
+  white-space: nowrap;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-semibold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+  overflow-wrap: normal;
+}
+
+.odc-od-spacer {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.odc-od-head-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--od-x-space-half);
+}
+
+/* The badge's box never shrinks below the badge (a long status covered Print): the title is what gives, as before. */
+.odc-od-head-status {
+  display: flex;
+  flex: none;
+}
+
+/* : `order: 9` alone left the badge after the actions (right of Close) whenever the row still had room, as
+   at 1024 (~440px panel). Its box takes the whole line, as the skeleton's does (order-details.css › .odc-od-sk-badge). */
+@container odc-order (max-width: 480px) {
+  .odc-od-head-row > .odc-od-head-status {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* ── Metadata line: created, delivery type, payment, channel, external id ── */
+.odc-od-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--od-space-1) var(--od-x-space-3-5);
+  margin-block-start: var(--od-x-space-1-5);
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+}
+
+.odc-od-meta > span {
+  display: inline-flex;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: var(--od-x-space-1-5);
+  min-inline-size: 0;
+}
+
+/* redesign F6e (Q4-05): the icon and the text of an item stay on one line. The item did wrap its children as separate
+   boxes, so at 1280 with the panel open the wallet sat alone and «Stripe connect (ch_…) (Success)» dropped under it.
+   Now the text is the box that shrinks and breaks (a transaction id has no spaces), after the icon, which keeps its
+   size and sits on the first line. */
+.odc-od-meta .odc-od-meta-icon {
+  flex: none;
+  inline-size: var(--od-x-icon-sm);
+  block-size: var(--od-x-icon-sm);
+  margin-block-start: calc((var(--od-x-type-ui-size) * var(--od-x-leading-ui) - var(--od-x-icon-sm)) / 2);
+}
+
+.odc-od-meta-text {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The item with the Not prepaid badge is as tall as the badge (the loading ghost counts on it): centred, never squeezed. */
+.odc-od-meta > span:has(> .odc-badge) { align-items: center; }
+.odc-od-meta > span:has(> .odc-badge) > .odc-od-meta-icon { margin-block-start: 0; }
+.odc-od-meta > span > .odc-badge { flex: none; }
+
+.odc-od-meta .odc-mono {
+  color: var(--od-text);
+}
+
+.odc-od-link {
+  color: var(--od-action-content);
+  text-decoration: underline;
+  text-underline-offset: var(--od-x-space-half);
+}
+
+.odc-od-link:hover {
+  color: var(--od-text);
+}
+
+.odc-od-link:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-focus-ring-offset);
+  border-radius: var(--od-radius-control);
+}
+
+/* Touch (C3): the Stripe link is a pressed target too. */
+@media (pointer: coarse) {
+  .odc-od-link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--od-x-target-coarse);
+  }
+}
+
+/* redesign tramo A r3 (W0-QA1-01, decision 12): Print and More actions are 2px apart, so on a phone they are SEEN at 44px
+   (the centered area of product.css would cross). Same reading as the grouped buttons of details-tab.css. */
+@media (pointer: coarse), (max-width: 767px) {
+  .odc-od-head-actions > .odc-btn[data-size][data-variant] {
+    block-size: var(--od-x-target-coarse);
+    inline-size: var(--od-x-target-coarse);
+  }
+}
+
+/*: the ticket sections dialog, one switch per row */
+.odc-od-ticket-sections {
+  list-style: none;
+  margin: var(--od-space-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-2);
+}

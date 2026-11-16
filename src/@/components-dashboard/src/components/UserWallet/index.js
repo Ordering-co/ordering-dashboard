@@ -5,6 +5,9 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
+// redesign UC-B1 (B1-5): the error of an outcome is the API result when it is an array of strings, else null; never an object
+const outcomeError = (result) => Array.isArray(result) && result.every(item => typeof item === 'string') ? result : null
+
 export const UserWallet = (props) => {
   const {
     UIComponent,
@@ -29,6 +32,8 @@ export const UserWallet = (props) => {
    * Method to get user wallet info from API
    */
   const getUserWallet = async () => {
+    // redesign UC-B1 (M-C3, decision 4A): no user yet, no request (it used to call /users/undefined/wallets)
+    if (userId === null || userId === undefined) return
     try {
       setWalletState({
         ...walletState,
@@ -167,14 +172,17 @@ export const UserWallet = (props) => {
         setAddWalletState({})
         setActionState({ loading: false, error: null })
         showToast(ToastType.Success, t('WALLET_MONEY_ADDED', 'Wallet money added'))
+        return { ok: true, error: null } // redesign UC-B1 (M-C3): the caller learns the outcome
       } else {
         setActionState({
           loading: false,
           error: content.result
         })
+        return { ok: false, error: outcomeError(content.result) }
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
@@ -210,14 +218,17 @@ export const UserWallet = (props) => {
         setActionState({ loading: false, error: null })
         setReduceWalletState({})
         showToast(ToastType.Success, t('WALLET_MONEY_REDUCED', 'Wallet money reduced'))
+        return { ok: true, error: null } // redesign UC-B1 (M-C3): the caller learns the outcome
       } else {
         setActionState({
           loading: false,
           error: content.result
         })
+        return { ok: false, error: outcomeError(content.result) }
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
+      return { ok: false, error: null }
     }
   }
 
@@ -316,6 +327,8 @@ export const UserWallet = (props) => {
             {...props}
             walletState={walletState}
             walletEventsState={walletEventsState}
+            walletUsers={usersState.users}
+            refreshWallet={getUserWallet}
             addWalletState={addWalletState}
             reduceWalletState={reduceWalletState}
             actionState={actionState}

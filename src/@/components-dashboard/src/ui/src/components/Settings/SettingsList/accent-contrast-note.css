@@ -1,0 +1,6 @@
+/* redesign J5 row 45 (my-products-dashboard P-DB5, ): the contrast notice under the buttons color. .odc-notice brings the
+   page gutter as its inline margin (it was made for the filter bar): here it hangs from the field, flush with the picker. */
+.odc-notice.odc-settings-contrast-note {
+  margin-block: var(--od-space-2) 0;
+  margin-inline: 0;
+}

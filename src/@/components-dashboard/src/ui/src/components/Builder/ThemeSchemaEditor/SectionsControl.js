@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import { ArrowDown, ArrowUp, GripVertical, LockFill } from 'react-bootstrap-icons'
 
-import { SectionGroupHead, SectionList, SectionRow, SrOnly, SwitchTrack, ToggleControl } from '../BuilderWebTheme/styles'
+import { ArrowDown, ArrowUp, GripVertical, LockKeyhole } from '../../Shared/Icon'
+import { IconButton, Switch } from '../../Shared/Product'
 import { editorOf, formatText, getAt, isDefaultSections, moveSection, optionsOf, resolveSections, toSectionsValue } from './schemaNodes'
+import './theme-editor.css'
+
+// redesign B3b: the switches are P/Switch, the arrows P/IconButton, the glyphs Shared/Icon; the list keeps native
+// drag and drop within a block, the announcement and every text
 
 /**
  * A page's sections (`sections`), in the order the website shows them: those
@@ -46,21 +50,19 @@ export const SectionsControl = ({ ctx, path, label, value, own, fallback, onChan
     return null
   }
 
-  if (!defaults.length) return <p style={{ margin: 0, color: '#5E6B7D' }}>{t('BUILDER_THEME_PAGE_NO_SECTIONS', 'This page has no sections to move or hide.')}</p>
+  if (!defaults.length) return <p className='odc-te-muted'>{t('BUILDER_THEME_PAGE_NO_SECTIONS', 'This page has no sections to move or hide.')}</p>
 
   return (
     <>
       {ctx.platform && (
-        <div style={{ paddingBottom: 12 }}>
-          <ToggleControl style={{ gap: 12, fontWeight: 500 }}>
-            <input type='checkbox' role='switch' checked={!!own} onChange={(e) => onChange(e.target.checked ? toSectionsValue(resolveSections(defaults, fallback)) : null)} />
-            <SwitchTrack checked={!!own} aria-hidden='true' />
+        <div className='odc-te-own-order'>
+          <Switch checked={!!own} onCheckedChange={(next) => onChange(next ? toSectionsValue(resolveSections(defaults, fallback)) : null)}>
             {t('BUILDER_THEME_PAGE_SECTIONS_OWN_PLATFORM', 'Order and hide them differently on phones')}
-          </ToggleControl>
-          {!own && <p style={{ margin: '8px 0 0', color: '#5E6B7D', fontSize: 13 }}>{t('BUILDER_THEME_PAGE_SECTIONS_AS_ALL_SCREENS', 'Phones show them as on all screens.')}</p>}
+          </Switch>
+          {!own && <p className='odc-te-muted'>{t('BUILDER_THEME_PAGE_SECTIONS_AS_ALL_SCREENS', 'Phones show them as on all screens.')}</p>}
         </div>
       )}
-      <SectionList aria-label={label} aria-disabled={readOnly ? 'true' : undefined} $readOnly={readOnly}>
+      <ul className='odc-te-sections' aria-label={label} aria-disabled={readOnly ? 'true' : undefined}>
         {sections.map((section, index) => {
           const name = nameOf(section.key)
           const movable = !readOnly && section.group != null
@@ -73,14 +75,15 @@ export const SectionsControl = ({ ctx, path, label, value, own, fallback, onChan
           return (
             <React.Fragment key={section.key}>
               {showGroup && (
-                <SectionGroupHead as='li'>
+                <li className='odc-te-sections-group'>
                   {formatText(t, groupsMeta[section.group]?.label, { fallback: section.group })}
-                  {groupsMeta[section.group]?.info && <small style={{ display: 'block', marginTop: 2, fontSize: 12, fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}>{formatText(t, groupsMeta[section.group].info)}</small>}
-                </SectionGroupHead>
+                  {groupsMeta[section.group]?.info && <small>{formatText(t, groupsMeta[section.group].info)}</small>}
+                </li>
               )}
-              <SectionRow
-                $hidden={!section.visible}
-                $dragging={dragging === section.key}
+              <li
+                className='odc-te-section'
+                data-hidden={!section.visible ? 'true' : undefined}
+                data-dragging={dragging === section.key ? 'true' : undefined}
                 draggable={movable && (up || down) ? 'true' : undefined}
                 onDragStart={(e) => { setDragging(section.key); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', section.key) }}
                 onDragEnd={() => setDragging(null)}
@@ -90,38 +93,35 @@ export const SectionsControl = ({ ctx, path, label, value, own, fallback, onChan
                 }}
                 onDrop={(e) => { e.preventDefault(); if (dragging) move(dragging, section.key); setDragging(null) }}
               >
-                <span aria-hidden='true' title={section.group == null ? t('BUILDER_THEME_SECTION_FIXED', 'Keeps its place') : undefined}>
-                  {section.group == null ? <LockFill size={12} /> : movable ? <GripVertical /> : null}
+                <span className='odc-te-section-handle' aria-hidden='true' title={section.group == null ? t('BUILDER_THEME_SECTION_FIXED', 'Keeps its place') : undefined}>
+                  {section.group == null ? <LockKeyhole className='odc-icon' /> : movable ? <GripVertical className='odc-icon' /> : null}
                 </span>
-                <span>
+                <span className='odc-te-section-name'>
                   {name}
-                  {section.group == null && !readOnly && <SrOnly>{t('BUILDER_THEME_SECTION_FIXED', 'Keeps its place')}</SrOnly>}
-                  {!readOnly && changed && <SrOnly>{t('BUILDER_THEME_CHANGED', 'Changed')}</SrOnly>}
+                  {section.group == null && !readOnly && <span className='odc-sr-only'>{t('BUILDER_THEME_SECTION_FIXED', 'Keeps its place')}</span>}
+                  {!readOnly && changed && <span className='odc-sr-only'>{t('BUILDER_THEME_CHANGED', 'Changed')}</span>}
                 </span>
-                <div>
-                  <span>
+                <div className='odc-te-section-actions'>
+                  <span className='odc-te-section-moves'>
                     {movable && (up || down) && (
                       <>
-                        <button type='button' disabled={!up} aria-label={t('BUILDER_THEME_MOVE_UP', 'Move _name_ up').replace('_name_', name)} onClick={() => move(section.key, up)}><ArrowUp aria-hidden='true' /></button>
-                        <button type='button' disabled={!down} aria-label={t('BUILDER_THEME_MOVE_DOWN', 'Move _name_ down').replace('_name_', name)} onClick={() => move(section.key, down)}><ArrowDown aria-hidden='true' /></button>
+                        <IconButton icon={ArrowUp} size='sm' disabled={!up} label={t('BUILDER_THEME_MOVE_UP', 'Move _name_ up').replace('_name_', name)} onClick={() => move(section.key, up)} />
+                        <IconButton icon={ArrowDown} size='sm' disabled={!down} label={t('BUILDER_THEME_MOVE_DOWN', 'Move _name_ down').replace('_name_', name)} onClick={() => move(section.key, down)} />
                       </>
                     )}
                   </span>
-                  {section.hideable
-                    ? (
-                      <ToggleControl>
-                        <input type='checkbox' role='switch' aria-label={t('BUILDER_THEME_SHOW_SECTION', 'Show _name_').replace('_name_', name)} checked={section.visible} disabled={readOnly} onChange={(e) => save(sections.map(item => item.key === section.key ? { ...item, visible: e.target.checked } : item))} />
-                        <SwitchTrack checked={section.visible} aria-hidden='true' />
-                      </ToggleControl>
-                      )
-                    : <small>{t('BUILDER_THEME_ALWAYS_VISIBLE', 'Always visible')}</small>}
+                  <span className='odc-te-section-show'>
+                    {section.hideable
+                      ? <Switch label={t('BUILDER_THEME_SHOW_SECTION', 'Show _name_').replace('_name_', name)} checked={section.visible} disabled={readOnly} onCheckedChange={(next) => save(sections.map(item => item.key === section.key ? { ...item, visible: next } : item))} />
+                      : t('BUILDER_THEME_ALWAYS_VISIBLE', 'Always visible')}
+                  </span>
                 </div>
-              </SectionRow>
+              </li>
             </React.Fragment>
           )
         })}
-      </SectionList>
-      <SrOnly role='status'>{announce}</SrOnly>
+      </ul>
+      <span className='odc-sr-only' role='status'>{announce}</span>
     </>
   )
 }

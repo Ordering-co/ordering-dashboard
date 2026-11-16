@@ -6,7 +6,7 @@ export const Container = styled.div`
   width: 100%;
   position: relative;
   > h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: 700;
     margin: 0px;
   }

@@ -45,7 +45,12 @@ export const MapCanvas = styled.div`height:260px;width:100%;background:var(--sub
 export const Success = styled.div`text-align:center;max-width:600px;margin:24px auto;.check{display:grid;place-items:center;background:var(--success-bg);color:var(--success);border-radius:50%;font-size:36px;width:72px;height:72px;margin:0 auto 24px;}h1{margin-bottom:16px;}p{color:var(--muted);margin-bottom:24px;}a{display:inline-flex;align-items:center;justify-content:center;background:var(--action);color:var(--contrast);border-radius:8px;padding:12px 24px;text-decoration:none;margin-bottom:20px;}a.secondary-link{background:transparent;color:var(--action);padding:0;text-decoration:underline;}`
 export const ScheduleFrame = styled.fieldset`
   >div{min-width:0;} .day-title{min-width:0!important;min-height:44px;cursor:pointer;}.day-selector{gap:12px;flex-wrap:wrap;}.day-selector .days{min-width:0;}.day-selector .days>div{flex-wrap:wrap;gap:4px;}.select{border-radius:8px;min-height:44px;}.icons{margin:0!important;}svg[data-onboarding-action]{box-sizing:border-box;width:44px;height:44px;padding:12px;flex-shrink:0;}.icons>div>div[data-onboarding-action]{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;} &[aria-disabled=true]{pointer-events:none;}
-  @media(min-width:920px){>div>div{flex-direction:row;align-items:center;gap:16px;}.day-title{flex:0 0 110px;padding:0!important;}.day-selector{flex:1;padding:0!important;}}
+  /* : Shared/UI/schedule.css styles the actions container as .od-ui:where(.od-schedule-actions) but Schedule.jsx does not give it od-ui, so none of its rules apply; the frame lays it out. The day name must not break mid-word (the title was a fixed 110px column; the h4 carries inline padding and overflow-wrap:anywhere). The one-line row needs about 1020px of viewport with the sidebar (title, four selects, add and copy), so it starts at 1024px; below that the day sits above its hours, like the shared Schedule. */
+  && .day-title h4{overflow-wrap:normal;word-break:normal;}
+  && .day-selector{align-items:center;}
+  && .od-schedule-actions{display:flex;align-items:center;flex:0 0 auto;margin-inline-start:auto!important;}
+  && .od-schedule-actions .od-icon-button{width:44px;height:44px;min-width:44px;min-height:44px;}
+  @media(min-width:1024px){>div>div{flex-direction:row;align-items:center;gap:12px;}.od-schedule-trash-wrapper{width:44px;}.day-title{flex:0 0 auto;min-width:136px!important;padding:0!important;}.day-selector{flex:1;gap:8px;padding:0!important;}}
   [data-onboarding-hidden=true]{display:none!important;}
   .list .option{min-height:44px;}
   .list[data-onboarding-popover]{position:fixed!important;transform:none!important;top:var(--onboarding-popover-top)!important;left:var(--onboarding-popover-left)!important;bottom:auto!important;max-height:var(--onboarding-popover-height)!important;width:var(--onboarding-popover-width)!important;overflow-y:auto!important;}
@@ -59,6 +64,7 @@ export const ScheduleFrame = styled.fieldset`
     && .day-selector .days>div>div{width:auto;min-width:0;margin:0;}
     && .day-selector .days>div>div:nth-child(3){display:none;}
     && .day-selector .days>div>div:nth-child(6){grid-column:1/-1;justify-content:flex-end;}
+    && .day-selector .days>div>div[data-hidden]{display:none;}
   }
 
 `

@@ -1,0 +1,251 @@
+/*
+ * Conversation list of the /messages inbox (redesign messages B3a; decisions 2A, 3A, 6A and 7A).
+ * Values come from --od-* and --od-x-* only (literal guard: scripts/product-ui/literal-guard.mjs). Logical properties only,
+ * so right-to-left needs no second set of rules. The pane fills the height its host gives it: the head, the notice and the
+ * pagination stay where they are and only the list scrolls.
+ */
+.odc-conv {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+  min-inline-size: 0;
+  block-size: 100%;
+  background: var(--od-bg);
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+/* ── Head: title, then the scope and the sort. They wrap instead of overflowing, whatever the language. ── */
+.odc-conv-head {
+  display: grid;
+  flex: none;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+  padding-block: var(--od-space-4) var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+.odc-conv-title {
+  margin: 0;
+  font-size: var(--od-x-type-section-size);
+  font-weight: var(--od-font-weight-semibold);
+  letter-spacing: var(--od-x-tracking-title);
+  line-height: var(--od-x-leading-title);
+}
+
+.odc-conv-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2) var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* The scope takes what the sort leaves; when both do not fit in a line the sort goes under it. */
+.odc-conv-scope {
+  flex: 1 1 var(--od-x-menu-min);
+  min-inline-size: 0;
+}
+
+.odc-conv-controls .odc-btn {
+  flex: none;
+  max-inline-size: 100%;
+}
+
+/* ── The notice of messages that arrived outside this page (6A) ── */
+.odc-conv > .odc-notice {
+  flex: none;
+  margin-block: var(--od-space-2) 0;
+  margin-inline: var(--od-space-3);
+}
+
+/* ── The list scrolls inside the pane ── */
+.odc-conv-list {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* redesign messages R1 (Q-03): «Go to first page» moves the focus here while page 1 loads. */
+.odc-conv-list:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-conv-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.odc-conv-item {
+  margin: 0;
+  padding: 0;
+  border-block-end: var(--od-x-hairline) solid var(--od-border);
+}
+
+/* The empty and error states sit in a pane, not in a page: less air than the page-wide ones. */
+.odc-conv-list .odc-state {
+  padding-block: var(--od-space-7);
+  padding-inline: var(--od-space-4);
+}
+
+/* ── A row: one native button that covers it. 64px at least (4rem, --od-space-8): two lines and their padding. ── */
+.odc-conv-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  /* redesign messages integration: line 2 (business · status) spans to the end edge; the time and the count share line 1 */
+  grid-template-areas: 'avatar line aside' 'avatar meta meta';
+  align-items: center;
+  column-gap: var(--od-space-3);
+  row-gap: var(--od-x-space-half);
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--od-space-8);
+  margin: 0;
+  padding-block: var(--od-space-3);
+  padding-inline: var(--od-space-4);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-ui-size);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .odc-conv-row:where(:not([data-skeleton], [data-selected])):hover { background: var(--od-x-hover); }
+}
+
+/* The open conversation: soft action background and a 3px bar at the start edge (it does not move the content). */
+.odc-conv-row[data-selected] { background: var(--od-action-soft); }
+
+.odc-conv-row[data-selected]::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: calc(var(--od-x-indicator) + var(--od-x-hairline));
+  background: var(--od-action);
+}
+
+.odc-conv-row:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+/* Loading: the same box as a row, nothing to press. */
+.odc-conv-row[data-skeleton] { cursor: default; }
+
+/* An order whose chat has ended: the name is muted, nothing else changes. */
+.odc-conv-row[data-ended] .odc-conv-name { color: var(--od-text-muted); }
+
+.odc-conv-body {
+  display: grid;
+  gap: var(--od-x-space-half);
+  min-inline-size: 0;
+}
+
+/* A real row lends its two lines to the row's grid (the skeleton keeps its own column). */
+.odc-conv-row:not([data-skeleton]) .odc-conv-body {
+  display: contents;
+}
+
+.odc-conv-row:not([data-skeleton]) > :first-child { grid-area: avatar; }
+
+/* Line 1: the customer (it gives way with an ellipsis) and « · #number » (it never does). */
+.odc-conv-line {
+  grid-area: line;
+  display: flex;
+  align-items: baseline;
+  min-inline-size: 0;
+}
+
+.odc-conv-name {
+  min-inline-size: 0;
+  overflow: hidden;
+  font-weight: var(--od-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-conv-number {
+  flex: none;
+  color: var(--od-text-muted);
+  white-space: pre;
+}
+
+/* Line 2: the business when asked for, then the status, across the row. The status wraps before it is ever cut. */
+.odc-conv-meta {
+  grid-area: meta;
+  display: flex;
+  align-items: baseline;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+  color: var(--od-text-muted);
+}
+
+.odc-conv-business {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  max-inline-size: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.odc-conv-meta .odc-status {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+/* The time of the last message and the unread count, together on line 1 at the end edge. */
+.odc-conv-aside {
+  grid-area: aside;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-2);
+}
+
+.odc-conv-time {
+  color: var(--od-text-muted);
+  font-size: var(--od-x-type-caption-size);
+  white-space: nowrap;
+}
+
+/* ── The foot: the pagination stays under the list ── */
+.odc-conv-foot {
+  flex: none;
+  padding-block: 0;
+  padding-inline: var(--od-space-3);
+  border-block-start: var(--od-x-hairline) solid var(--od-border);
+  background: var(--od-bg);
+}
+
+/* ── Phone: the pane is the whole screen. The row is already a 64px-high, full-width button (over the 44px of a touch area);
+   the head gives up some of its padding so the controls fit a 320px screen in any language. ── */
+@media (max-width: 767px) {
+  .odc-conv-head {
+    padding-block: var(--od-space-3);
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+
+  .odc-conv-row { padding-inline: var(--od-x-page-gutter-mobile); }
+
+  /* redesign messages FASE 3: the sort wraps under the scope; 16px apart, their 44px touch areas do not cross */
+  .odc-conv-controls { row-gap: var(--od-space-4); }
+}
+
+/* redesign deliveries-followups review r1 R-1 (, W1-D-25): with a coarse pointer on a wider screen the scope options are 32
+   drawn with a 44px area too, so the sort under them keeps the phone's 16px: at 8px their areas crossed by 2px. */
+@media (pointer: coarse) {
+  .odc-conv-controls { row-gap: var(--od-space-4); }
+}

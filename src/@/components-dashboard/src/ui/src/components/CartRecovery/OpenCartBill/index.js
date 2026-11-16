@@ -19,7 +19,7 @@ export const OpenCartBill = (props) => {
   const pulseCouponName = cart?.metafields?.find?.(meta => meta?.key === 'pulse_coupon_name')
   const walletName = {
     cash: {
-      name: t('CASH_WALLET', 'Cash Wallet')
+      name: t('CASH_WALLET_NAME', 'Cash wallet')
     },
     credit_point: {
       name: t('POINTS_WALLET', 'Points Wallet')

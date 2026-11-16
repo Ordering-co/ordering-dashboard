@@ -8,6 +8,8 @@
  * call `t(labelKey, label)`.
  */
 
+import { getSettingsBlockFieldName, getSettingsConfigCopy } from './settingsCustomSections'
+
 export const SETTINGS_FALLBACK_GROUP_KEY = 'more'
 
 /**
@@ -228,7 +230,7 @@ export const SETTINGS_SPECIAL_SCREENS = [
   },
   { key: 'places', group: 'locations', settingsType: 'key_enterprise', labelKey: 'COUNTRIES_CITIES', label: 'Countries & cities' },
   { key: 'multi_country', group: 'locations', settingsType: 'key_enterprise', labelKey: 'MULTI_COUNTRY', label: 'Multi-country' },
-  { key: 'sites', group: 'website', settingsType: 'key_enterprise', labelKey: 'SALES_CHANNELS', label: 'Sales channels' },
+  { key: 'sites', group: 'website', settingsType: 'key_enterprise', labelKey: 'SALES_CHANNELS_TITLE', label: 'Sales channels' },
   { key: 'pages', group: 'website', settingsType: 'key_general', labelKey: 'WEBSITE_PAGES', label: 'Website pages' }
 ]
 
@@ -287,7 +289,9 @@ export const SETTINGS_CATEGORY_COPY = {
   addon_stripe_connect: { labelKey: 'SETTINGS_SECTION_STRIPE_CONNECT', label: 'Stripe Connect' },
   addon_delivery_companies: { labelKey: 'SETTINGS_SECTION_DELIVERY_COMPANIES', label: 'Delivery companies' },
   addon_appointments: { labelKey: 'SETTINGS_SECTION_APPOINTMENTS', label: 'Appointments' },
-  store_reservation: { labelKey: 'SETTINGS_SECTION_RESERVATIONS', label: 'Reservations' }
+  // the API name and description read «Professional User Signup» and «…settings..»
+  professional_signup: { labelKey: 'SETTINGS_SECTION_PROFESSIONAL_SIGNUP', label: 'Professional sign-up' },
+  store_reservation: { labelKey: 'SETTINGS_SECTION_RESERVATIONS', label: 'Reservations', descriptionKey: 'SETTINGS_SECTION_RESERVATIONS_DESCRIPTION', description: 'Turn reservations on and set their defaults.' }
 }
 
 /**
@@ -316,11 +320,18 @@ export const SETTINGS_HUB_EXCLUDED_CATEGORY_KEYS = ['dashboard_theme']
 /**
  * Plugin config categories that belong to delivery companies. Their
  * credentials are edited in Connect, so they are filtered out
- * of Apps & developers.
+ * of Apps & developers. The API names plugin categories `plugin_<x>`
+ * (`plugin_uber_direct_integration`), so both forms are recognised.
  */
 export const SETTINGS_DELIVERY_COMPANY_PLUGIN_KEYS = [
   'doordash_drive_integration',
   'uber_direct_integration',
+  'shipday_delivery_integration',
+  'yango_delivery_integration',
+  'llamafood_delivery_integration',
+  'pedidosya_integration',
+  'pickerexpress_integration',
+  'rappi_cargo_integration',
   'doordash',
   'lalamove',
   'picker_express'
@@ -393,7 +404,10 @@ export const isSettingsCategoryExcludedFromHub = ({ key } = {}) => SETTINGS_HUB_
 
 export const isSettingsConfigHidden = ({ key } = {}) => SETTINGS_HIDDEN_CONFIG_KEYS.includes(key)
 
-export const isDeliveryCompanyPluginCategory = ({ key } = {}) => SETTINGS_DELIVERY_COMPANY_PLUGIN_KEYS.includes(key)
+export const isDeliveryCompanyPluginCategory = ({ key } = {}) => (
+  SETTINGS_DELIVERY_COMPANY_PLUGIN_KEYS.includes(key) ||
+  (typeof key === 'string' && key.startsWith('plugin_') && SETTINGS_DELIVERY_COMPANY_PLUGIN_KEYS.includes(key.slice('plugin_'.length)))
+)
 
 const isFlagOn = (config) => {
   const value = config?.value
@@ -707,9 +721,47 @@ export const normalizeSettingsSearch = (value) =>
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
 
-const scoreSettingsField = (config, section, terms) => {
-  const label = normalizeSettingsSearch(config.name || '')
-  const description = normalizeSettingsSearch(config.description || '')
+/**
+ * Labels a field shows on screen that are not its API name: sub-fields a custom
+ * block draws by itself (Date and time > Custom format). The search also looks
+ * at them.
+ */
+export const SETTINGS_SEARCH_VISIBLE_LABELS = {
+  dates_general_format: [
+    { labelKey: 'SETTINGS_DATE_TIME_FORMAT', label: 'Date and time format' },
+    { labelKey: 'SETTINGS_DATE_TIME_CUSTOM', label: 'Custom format' }
+  ]
+}
+
+const translateText = (t, key, fallback) => (
+  typeof t === 'function' && key ? t(key, fallback) : fallback
+)
+
+// Every text of a field the user can read: the API name, the copy the hub paints and the extra labels of its custom
+// block, in English and translated.
+const getFieldLabels = (config, t) => {
+  const copy = getSettingsConfigCopy(config)
+  const entries = [
+    ...(copy ? [copy] : []),
+    ...(SETTINGS_SEARCH_VISIBLE_LABELS[config.key] || [])
+  ]
+  return [
+    config.name || '',
+    ...entries.flatMap(entry => [entry.label, translateText(t, entry.labelKey, entry.label)]),
+    // redesign (owner decision 32 A): the name a custom block gives a cell («Waiting for the customer — Enable»)
+    getSettingsBlockFieldName(config) || '',
+    (typeof t === 'function' && getSettingsBlockFieldName(config, t)) || ''
+  ].map(normalizeSettingsSearch).filter(Boolean)
+}
+
+const scoreSettingsField = (config, section, terms, t) => {
+  const labels = getFieldLabels(config, t)
+  // (Z F3): the API description and the one the hub shows (settingsConfigNames help), in English and translated
+  const copy = getSettingsConfigCopy(config)
+  const description = normalizeSettingsSearch([
+    config.description || '',
+    ...(copy?.help ? [copy.help, translateText(t, copy.helpKey, copy.help)] : [])
+  ].join(' '))
   const key = normalizeSettingsSearch(config.key)
   const aliases = (SETTINGS_SEARCH_ALIASES[config.key] || []).map(normalizeSettingsSearch)
   let score = 0
@@ -718,7 +770,7 @@ const scoreSettingsField = (config, section, terms) => {
       score += 3
       return true
     }
-    if (label.includes(term)) {
+    if (labels.some(label => label.includes(term))) {
       score += 2
       return true
     }
@@ -733,16 +785,21 @@ const scoreSettingsField = (config, section, terms) => {
 
 /**
  * Field and section search across the hub. Returns hits with type, path,
- * and score sorted by relevance then label.
+ * and score sorted by relevance then label. `t` (the language function) lets
+ * it find what the screen shows in the user's language: translated field
+ * labels and section titles, besides the English ones.
  */
-export const searchSettingsHub = (hub = [], query = '') => {
+export const searchSettingsHub = (hub = [], query = '', { t } = {}) => {
   const terms = normalizeSettingsSearch(query).split(/\s+/).filter(Boolean)
   if (!terms.length) return []
   const hits = []
   hub.forEach(group => {
     group.sections.forEach(section => {
-      const sectionLabel = normalizeSettingsSearch(section.copy?.label || section.category?.name || '')
-      if (terms.every(term => sectionLabel.includes(term))) {
+      const sectionLabels = [
+        section.copy?.label || section.category?.name || '',
+        translateText(t, section.copy?.labelKey, section.copy?.label || section.category?.name || section.key)
+      ].map(normalizeSettingsSearch)
+      if (sectionLabels.some(label => terms.every(term => label.includes(term)))) {
         hits.push({
           type: 'section',
           groupKey: group.key,
@@ -752,7 +809,7 @@ export const searchSettingsHub = (hub = [], query = '') => {
         })
       }
       ;(section.category?.configs || []).forEach(config => {
-        const score = scoreSettingsField(config, section, terms)
+        const score = scoreSettingsField(config, section, terms, t)
         if (score > 0) {
           hits.push({
             type: 'config',

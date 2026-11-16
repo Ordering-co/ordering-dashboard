@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 export const Container = styled.div`
   > h1 {
     font-weight: 700;
-    font-size: 24px;
+    font-size: var(--od-type-title-size);
     line-height: 36px;
     margin-top: 0px;
     margin-bottom: 25px;
@@ -17,7 +17,7 @@ export const FormControl = styled.div`
     display: block;
     margin-bottom: 12px;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
   input {
@@ -27,7 +27,7 @@ export const FormControl = styled.div`
   > span {
     display: flex;
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: var(--od-type-secondary-size);
     line-height: 18px;
   }
 `
@@ -37,7 +37,7 @@ export const CnameNotifyRow = styled.div`
   align-items: flex-start;
   gap: 8px;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
 
   > button {
@@ -62,7 +62,7 @@ export const TitleWrapper = styled.div`
   label {
     display: block;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-bottom: 0;
   }
@@ -119,7 +119,13 @@ export const ButtonGroup = styled.div`
   }
 `
 
-export const CheckBoxWrapper = styled.div`
+export const CheckBoxWrapper = styled.button.attrs({ type: 'button' })`
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
   margin-bottom: 15px;
   display: flex;
   align-items: center;
@@ -139,7 +145,7 @@ export const CheckBoxWrapper = styled.div`
   }
   span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     user-select: none;
   }
@@ -156,7 +162,8 @@ export const CustomDomainInfo = styled.div`
       color: ${props => props.theme.colors.primary};
     }
   }
-  &:hover > div {
+  &:hover > div,
+  &:focus-within > div {
     visibility: visible;
     opacity: 1;
   }
@@ -165,22 +172,23 @@ export const CustomDomainInfo = styled.div`
 export const CustomDomainInfoContent = styled.div`
   position: absolute;
   top: 100%;
-  z-index: 999;
+  z-index: calc(var(--od-x-layer-chrome) - 1);
   background: ${props => props.theme.colors.backgroundInfo};
   border: 1px solid ${props => props.theme.colors.primary};
   box-sizing: border-box;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 7.6px;
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: var(--od-type-secondary-size);
   line-height: 18px;
   min-width: 150px;
   transition: all 0.3s linear;
   visibility: hidden;
   opacity: 0;
-  right: -100px;
+  inset-inline-end: 0;
+  max-inline-size: calc(100vw - 32px);
   ${props => props.theme.rtl && css`
-    left: 0px;s
+    left: 0px;
     right: initial;
   `}
 

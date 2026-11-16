@@ -1,0 +1,36 @@
+/*
+ * redesign NF-A (, decisions D1-D4): the 404. A header row (the open-menu button when the sidebar is collapsed, an empty
+ * row otherwise, so the state does not jump) and one empty state centred in the height that is left. Values: --od-* and --od-x-*
+ * only (guard: productLiteralGuard.test.js). Logical properties, so right-to-left needs no second set of rules.
+ */
+
+/* The shell is a flex row: the page takes the free space and at least the viewport height, with the header on top and the state below. */
+.odc-nf {
+  flex: 1;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  min-block-size: calc(var(--vh, 1vh) * 100);
+  padding: var(--od-x-page-gutter);
+}
+
+/* On a phone the page takes the mobile gutter, as /orders. */
+@media (max-width: 767px) {
+  .odc-nf {
+    padding-inline: var(--od-x-page-gutter-mobile);
+  }
+}
+
+.odc-nf-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-inline-size: 0;
+}
+
+/* The state sits in the middle of the height that is left under the header. */
+.odc-nf > .odc-state {
+  align-self: center;
+}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '~/__tests__/helpers/testUtils'
 import themeJson from '~/theme.json'
 
@@ -48,6 +49,8 @@ vi.mock('../../../../../index', async () => {
 import { AssistantProvider, useAssistantPageEntities, useAssistantRecordChanges } from '../../../../../contexts/AssistantContext'
 import { EventProvider } from '../../../../../contexts/EventContext'
 import { AssistantPanel } from '../AssistantPanel'
+import { LegacyPlanUpgradeProvider } from '../../../contexts/LegacyPlanUpgradeContext'
+import { ProjectContext } from '../../../contexts/ProjectContext'
 import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
 
 const ROOT = 'https://ai.test/projects/demo/ai/assistant'
@@ -92,16 +95,20 @@ const RecordScreen = ({ onChange }) => {
   return null
 }
 
-const renderPanel = ({ onRecordChange = () => {}, children = null } = {}) => {
+const renderPanel = ({ onRecordChange = () => {}, children = null, legacy = false } = {}) => {
   // The context comes from the browser URL (lateral panels write it with replaceState)
   window.history.replaceState(null, '', PAGE_URL)
   return renderWithProviders(
     <EventProvider>
-      <AssistantProvider baseUrl='https://ai.test'>
-        <RecordScreen onChange={onRecordChange} />
-        {children}
-        <AssistantPanel />
-      </AssistantProvider>
+      <ProjectContext.Provider value={[{ dashboardUpgradeRequired: legacy }]}>
+        <AssistantProvider baseUrl='https://ai.test'>
+          <LegacyPlanUpgradeProvider>
+            <RecordScreen onChange={onRecordChange} />
+            {children}
+            <AssistantPanel />
+          </LegacyPlanUpgradeProvider>
+        </AssistantProvider>
+      </ProjectContext.Provider>
     </EventProvider>,
     { theme: themeJson, initialEntries: [PAGE_URL] }
   )
@@ -130,7 +137,28 @@ describe('AssistantPanel', () => {
   })
 
   afterEach(() => {
+    vi.unstubAllEnvs()
     delete global.fetch
+  })
+
+  it.each(['launcher', 'shortcut'])('uses the upgrade dialog from the %s even with a saved-open pane', async (entry) => {
+    vi.stubEnv('VITE_DASHBOARD_UPGRADE_FORM_URL', 'https://forms.example.test/request')
+    route('GET', '/status', json({ ...STATUS, notice_accepted: false }))
+    const user = userEvent.setup()
+    renderPanel({ legacy: true })
+    const launcher = await screen.findByRole('button', { name: 'Mia' })
+    expect(screen.queryByText(/Notice version/)).not.toBeInTheDocument()
+
+    if (entry === 'launcher') await user.click(launcher)
+    else fireEvent.keyDown(document, { key: 'j', ctrlKey: true })
+
+    const dialog = await screen.findByRole('dialog', { name: 'Request an upgrade' })
+    expect(within(dialog).getByRole('link', { name: 'Open in a new tab' })).toHaveAttribute('target', '_blank')
+    expect(screen.queryByText(/Notice version/)).not.toBeInTheDocument()
+    expect(window.location.pathname).toBe('/stores/products/pizza-hub')
+    await user.click(within(dialog).getByRole('button', { name: 'Close' }))
+    if (entry === 'launcher') await waitFor(() => expect(launcher).toHaveFocus())
+    expect(screen.queryByText(/Notice version/)).not.toBeInTheDocument()
   })
 
   it('asks for the data notice once and then opens the chat', async () => {
@@ -205,6 +233,55 @@ describe('AssistantPanel', () => {
     expect(screen.queryByText('Looking up data…')).not.toBeInTheDocument()
   })
 
+  // redesign J5 row 49 (assistant P-1) and review J5 #2: the chat is cleared only once api-ai deleted the conversation
+  const startConversation = async () => {
+    route('GET', '/status', json(STATUS))
+    route('POST', '/messages', () => sse([
+      ['conversation', { id: 'c1', title: 'Hours' }],
+      ['text', { delta: 'Hello back' }],
+      ['done', { message_id: 2, aborted: false }]
+    ]))
+    route('GET', '/status', json(STATUS))
+    renderPanel()
+    await send('Hello')
+    expect(await screen.findByText('Hello back')).toBeInTheDocument()
+  }
+  const askToDelete = async (user) => {
+    await user.click(screen.getByRole('button', { name: 'More actions' }))
+    await user.click(await screen.findByRole('menuitem', { name: 'Delete conversation' }))
+    const dialog = await screen.findByRole('alertdialog', { name: 'Delete this conversation?' })
+    await user.click(within(dialog).getByRole('button', { name: 'Delete conversation' }))
+    return dialog
+  }
+
+  it('deletes the conversation in api-ai and then starts an empty chat', async () => {
+    await startConversation()
+    route('DELETE', '/conversations/c1', json(null))
+    const user = userEvent.setup()
+    await askToDelete(user)
+    await waitFor(() => expect(screen.queryByText('Hello back')).not.toBeInTheDocument())
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    expect(window.sessionStorage.getItem('assistant:demo:7:conversation')).toBeNull()
+  })
+
+  it('keeps the conversation and says so when api-ai could not delete it', async () => {
+    await startConversation()
+    route('DELETE', '/conversations/c1', json('Server error', 500))
+    const user = userEvent.setup()
+    const dialog = await askToDelete(user)
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent("We couldn't delete the conversation. Try again.")
+    expect(screen.getByText('Hello back')).toBeInTheDocument()
+    expect(window.sessionStorage.getItem('assistant:demo:7:conversation')).toBe('c1')
+  })
+
+  it('takes a conversation that is already gone (404) as deleted', async () => {
+    await startConversation()
+    route('DELETE', '/conversations/c1', json('Not found', 404))
+    const user = userEvent.setup()
+    await askToDelete(user)
+    await waitFor(() => expect(screen.queryByText('Hello back')).not.toBeInTheDocument())
+  })
+
   it('streams an answer with the page context and confirms the proposed change', async () => {
     route('GET', '/status', json(STATUS))
     route('POST', '/messages', (options) => {
@@ -238,15 +315,19 @@ describe('AssistantPanel', () => {
     expect(within(screen.getByRole('heading', { name: /Pepperoni price/ })).getByText('Beta')).toBeInTheDocument()
     expect(window.sessionStorage.getItem('assistant:demo:7:conversation')).toBe('c1')
 
-    const card = screen.getByText('Pizza Pepperoni').closest('div[class]').parentElement.parentElement
+    const card = screen.getByRole('article', { name: 'Pizza Pepperoni' }) // redesign AS-A: the card is an article named by its record
     expect(within(card).getByText('Price')).toBeInTheDocument()
     expect(within(card).getByText('$12.00')).toBeInTheDocument()
     expect(within(card).getByText('$14.00')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm change' })) // redesign AS-A: the button says what it confirms
     expect(await screen.findByText('Product updated: Pizza Pepperoni')).toBeInTheDocument()
-    expect(screen.getByText('Price: $12.00 → $14.00')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Confirm' })).not.toBeInTheDocument()
+    // redesign AS-A: the result keeps the change as a field with its old and new value, not as one line of text
+    const result = screen.getByRole('article', { name: 'Pizza Pepperoni' })
+    expect(within(result).getByText('Price')).toBeInTheDocument()
+    expect(within(result).getByText('$12.00')).toBeInTheDocument()
+    expect(within(result).getByText('$14.00')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Confirm change' })).not.toBeInTheDocument() // redesign AS-A
     // Screens showing the product reload it
     expect(onRecordChange).toHaveBeenCalledExactlyOnceWith({
       entity: 'Product',
@@ -304,7 +385,7 @@ describe('AssistantPanel', () => {
     renderPanel()
 
     await send('Raise it')
-    fireEvent.click(await screen.findByRole('button', { name: 'Confirm' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Confirm change' })) // redesign AS-A
 
     expect(await screen.findByText('We couldn\'t confirm the change to Pizza Pepperoni')).toBeInTheDocument()
     expect(screen.getByText('It looks applied. This is what Pizza Pepperoni has now:')).toBeInTheDocument()
@@ -362,7 +443,7 @@ describe('AssistantPanel', () => {
     renderPanel()
 
     await send('Raise it')
-    fireEvent.click(await screen.findByRole('button', { name: 'Confirm' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Confirm change' })) // redesign AS-A
 
     expect(await screen.findByText('You don\'t have permission to make this change. No change was made.')).toBeInTheDocument()
     expect(screen.getByText('This is the change:')).toBeInTheDocument()
@@ -447,6 +528,32 @@ describe('AssistantPanel', () => {
     expect(await screen.findByText('Your user can\'t use the assistant in this project.')).toBeInTheDocument()
   })
 
+  // bugs H #5: on /assistant the conversation is the page, so ⌘J must not flip the hidden panel (it would pop open
+  // when leaving the page); anywhere else ⌘J still toggles it
+  it('ignores ⌘J on /assistant and toggles the panel elsewhere', async () => {
+    route('GET', '/status', json(STATUS))
+    window.history.replaceState(null, '', '/assistant')
+    const { unmount } = renderWithProviders(
+      <EventProvider>
+        <AssistantProvider baseUrl='https://ai.test'>
+          <AssistantPanel />
+        </AssistantProvider>
+      </EventProvider>,
+      { theme: themeJson, initialEntries: ['/assistant'] }
+    )
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+    fireEvent.keyDown(document, { key: 'j', metaKey: true })
+    expect(window.sessionStorage.getItem('assistant:demo:7:open')).toBe('1')
+    unmount()
+
+    route('GET', '/status', json(STATUS))
+    renderPanel()
+    expect(await screen.findByText('How can I help?')).toBeInTheDocument()
+    fireEvent.keyDown(document, { key: 'j', metaKey: true })
+    await waitFor(() => expect(window.sessionStorage.getItem('assistant:demo:7:open')).not.toBe('1'))
+  })
+
+  // main
   it('tells bottom bars the room the launcher takes while it shows', async () => {
     window.sessionStorage.removeItem('assistant:demo:7:open')
     route('GET', '/status', json(STATUS))

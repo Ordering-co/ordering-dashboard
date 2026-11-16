@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useEvent } from '~components'
 import { HelmetTags } from '../../components/HelmetTags'
 import { ResetPassword as ResetPasswordController } from '~ui'
+import settings from '../../config'
 
 export const ResetPassword = (props) => {
   const [events] = useEvent()
@@ -25,6 +26,7 @@ export const ResetPassword = (props) => {
     code: codeString,
     random: randomString,
     project: projectString,
+    useProjectDomain: settings?.use_project_domain,
     redirectResetPassword: ({ code, random }) => {
       events.emit('go_to_page', {
         page: 'reset_password',

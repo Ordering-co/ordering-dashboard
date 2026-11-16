@@ -14,7 +14,7 @@ export const OptionStripeContainer = styled.div`
 
     span.Text {
       color: hsla(0,0%,10%,.5);
-      font-size: 12px;
+      font-size: var(--od-type-secondary-size);
       font-weight: 400;
       margin: 0;
       cursor: default;
@@ -85,7 +85,7 @@ export const CardItemContent = styled.div`
   }
 
   span {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     color: ${props => props.theme?.colors.headingColor};
   }
 `
@@ -122,15 +122,24 @@ export const AddNewCard = styled.div`
 
 export const CardItemActionsWrapper = styled.div`
   position: relative;
-  span {
+  /* redesign  (row 82): the ⋮ is a real button (reset to the former span look), so it takes Tab/Enter */
+  > button {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
     border-radius: 7.6px;
     cursor: pointer;
     width: 26px;
     height: 24px;
     transition: all 0.3s;
+
+    &:focus-visible {
+      outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+      outline-offset: var(--od-x-focus-inset);
+    }
 
     svg {
       font-size: 20px;
@@ -139,6 +148,22 @@ export const CardItemActionsWrapper = styled.div`
 
     &:hover {
       background: #F8F9FA;
+    }
+
+    /* redesign  (batch O, row 19 a): 44px touch area without moving the layout. A centred ::after grows only the hit
+       area, so the 26x24 box and the menu at top: 100% of the wrapper stay put. Mouse measures at 390px, hence max-width too. */
+    @media (pointer: coarse), (max-width: 767px) {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: max(100%, var(--od-touch-target-minimum, 44px));
+        height: max(100%, var(--od-touch-target-minimum, 44px));
+        transform: translate(-50%, -50%);
+      }
     }
   }
 `
@@ -161,9 +186,15 @@ export const ActionsContent = styled.div`
     right: 0;
   `}
 
-  div {
+  /* redesign  (row 82): the items are real buttons (role='menuitem'), reset to the former div look */
+  button {
+    display: block;
+    width: 100%;
     padding: 10px 13px;
-    font-size: 14px;
+    border: 0;
+    background: transparent;
+    font-size: var(--od-type-control-size);
+    text-align: start;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.3s;
@@ -171,6 +202,11 @@ export const ActionsContent = styled.div`
 
     &:hover {
       background: #f8f9fa;
+    }
+
+    &:focus-visible {
+      outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+      outline-offset: var(--od-x-focus-inset);
     }
 
     &.delete {
@@ -187,7 +223,7 @@ export const CardInputWrapper = styled.div`
 `
 
 export const ErrorMessage = styled.div`
-  font-size: 16px;
+  font-size: var(--od-type-content-size);
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 20px;

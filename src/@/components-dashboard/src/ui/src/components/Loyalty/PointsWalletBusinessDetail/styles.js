@@ -30,7 +30,7 @@ export const HeaderContainer = styled.div`
   `}
 
   h1 {
-    font-size: 20px;
+    font-size: var(--od-type-title-size);
     font-weight: bold;
     margin: 0px;
   }
@@ -41,13 +41,13 @@ export const DetailContent = styled.div``
 export const PointsRedemptionWrapper = styled.div`
   h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     margin-top: 0px;
     margin-bottom: 5px;
     line-height: 24px;
   }
   p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 10px;
@@ -83,7 +83,7 @@ export const PaymentRulesWrapper = styled.div`
   p {
     font-size: 14px;
     line-height: 24px;
-    color: ${props => props.theme.colors.lightGray};
+    color: var(--od-x-text-subtle);
     margin-top: 5px;
     margin-bottom: 0px;
   }
@@ -113,7 +113,7 @@ export const CheckBoxWrapper = styled.div`
     `}
   }
   p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin: 0px;
   }
@@ -149,20 +149,20 @@ export const PointsAccumulationContainer = styled.div`
 
   > h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 5px;
   }
   > p {
-    font-size: 14px;
+    font-size: var(--od-type-content-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 20px;
-    color: ${props => props.theme.colors.lightGray};
+    color: var(--od-x-text-subtle);
   }
   > span {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
   }
 `
@@ -199,7 +199,7 @@ export const ToggleWrapper = styled.div`
   margin-bottom: 11px;
 
   p {
-    font-size: 14px;
+    font-size: var(--od-type-control-size);
     line-height: 24px;
     margin: 0px 15px 0px 0px;
     ${props => props.theme.rtl && css`
@@ -224,7 +224,7 @@ export const ExPirationWrapper = styled.div`
 
   > h2 {
     font-weight: 600;
-    font-size: 16px;
+    font-size: var(--od-type-section-title-size);
     line-height: 24px;
     margin-top: 0px;
     margin-bottom: 23px;

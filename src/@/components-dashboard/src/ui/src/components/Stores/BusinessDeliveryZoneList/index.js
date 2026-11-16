@@ -1,133 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import React from 'react'
 import { useLanguage } from '../../../../../index'
-import { BusinessDeliveryZoneDetails } from '../BusinessDeliveryZoneDetails'
-import { SideBar } from '../../Shared'
-import { ChevronRight } from 'react-bootstrap-icons'
-import { Checkbox, LinkButton } from '../../../styles'
-import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
+import { Button, InlineNotice } from '../../Shared/Product'
+import { Plus, TriangleAlert } from '../../Shared/Icon'
+import { ZonesTable } from '../../Shared/DeliveryZones/ZonesTable'
+import { visibleZones } from '../../Shared/DeliveryZones/zoneData'
+import { useDeliveryZonesSplit } from './DeliveryZonesSplit'
+import './delivery-zones.css'
 
-import {
-  ZoneContainer,
-  DeliveryZonesTable,
-  AddDeliveryZoneButtonWrapper,
-  ZoneTbody,
-  CheckboxWrapper
-} from './styles'
+// redesign stores 5.8: the zones of the store are the rows of the shared ZonesTable (the one of the delivery groups). Opening a
+// zone and adding one belong to DeliveryZonesSplit, which wraps the whole Delivery tab (the open zone is the detail of its P/SectionSplit);
+// this list reads them from `useDeliveryZonesSplit()`. The props are the contract of 5.7: `zoneListState { changes, isCheckAll }` and
+// the two handlers come from the Delivery controller, whose pending map is saved by the tab's Save bar.
 
 export const BusinessDeliveryZoneList = (props) => {
   const {
     business,
-    setIsExtendExtraOpen,
-    handleSuccessUpdate,
     zoneListState,
     handleChangeZoneState,
     handleChangeAllZoneState
   } = props
 
-  const query = new URLSearchParams(useLocation().search)
   const [, t] = useLanguage()
-  const [isOpenDetails, setIsOpenDetails] = useState(false)
-  const [curZone, setCurZone] = useState(null)
+  const { currentId, openZone, addZone, notFound } = useDeliveryZonesSplit()
 
-  const handleCloseOption = () => {
-    setIsOpenDetails(false)
-    setIsExtendExtraOpen(false)
-    setCurZone(null)
-    removeQueryToUrl(['zone', 'zone_tab'])
-  }
-
-  const handleOpenZone = (e, zone, isInitialRender) => {
-    const isInvalid = e?.target?.closest('.zone-enabled')
-    if (isInvalid) return
-    setCurZone(zone)
-    setIsExtendExtraOpen(true)
-    setIsOpenDetails(true)
-
-    if (!isInitialRender) {
-      addQueryToUrl({ zone: zone?.id })
-    }
-  }
-
-  useEffect(() => {
-    const zoneId = query.get('zone')
-    if (zoneId) {
-      const initZone = business?.zones?.find(zone => zone.id === Number(zoneId))
-      if (initZone) {
-        setTimeout(() => {
-          handleOpenZone(null, initZone, true)
-        }, 500)
-      }
-    }
-  }, [])
+  const loading = !Array.isArray(business?.zones)
+  const zones = visibleZones(business?.zones)
+  const title = t('DELIVERY_ZONES_TITLE', 'Delivery zones')
 
   return (
-    <>
-      <ZoneContainer>
-        <DeliveryZonesTable>
-          <thead>
-            <tr>
-              <th>
-                <CheckboxWrapper>
-                  <Checkbox
-                    checked={zoneListState.isCheckAll}
-                    onChange={e => handleChangeAllZoneState(e.target.checked)}
-                  />
-                </CheckboxWrapper>
-              </th>
-              <th>{t('NAME', 'Name')}</th>
-              <th>{t('MINIMUM', 'Minimum')}</th>
-              <th>{t('PRICE', 'Price')}</th>
-              <th />
-            </tr>
-          </thead>
-          {business?.zones?.filter(zone => zone?.type !== 3).map(zone => (
-            <ZoneTbody
-              key={zone.id}
-              active={zone.id === curZone?.id}
-              onClick={(e) => handleOpenZone(e, zone)}
-            >
-              <tr>
-                <td>
-                  <CheckboxWrapper className='zone-enabled'>
-                    <Checkbox
-                      checked={!!zoneListState.changes[zone.id]}
-                      onChange={e => handleChangeZoneState(zone.id, e.target.checked)}
-                    />
-                  </CheckboxWrapper>
-                </td>
-                <td>{zone?.name}</td>
-                <td>{zone?.minimum}</td>
-                <td>{zone?.price}</td>
-                <td className='arrow'><ChevronRight /></td>
-              </tr>
-            </ZoneTbody>
-          ))}
-        </DeliveryZonesTable>
+    <section className='odc-delivery-zones'>
+      <h2 className='odc-delivery-zones-title'>{title}</h2>
 
-        <AddDeliveryZoneButtonWrapper>
-          <LinkButton
-            onClick={(e) => handleOpenZone(e, null)}
-          >
-            {t('ADD_DELIVERY_ZONE', 'Add delivery zone')}
-          </LinkButton>
-        </AddDeliveryZoneButtonWrapper>
-      </ZoneContainer>
-      {isOpenDetails && (
-        <SideBar
-          isBorderShow
-          open={isOpenDetails}
-          onClose={() => handleCloseOption()}
-        >
-          <BusinessDeliveryZoneDetails
-            zone={curZone}
-            business={business}
-            onClose={() => handleCloseOption()}
-            handleSuccessUpdate={handleSuccessUpdate}
-            businessZones={business?.zones}
-          />
-        </SideBar>
+      {notFound && (
+        <InlineNotice tone='warning' icon={TriangleAlert}>
+          {t('STORE_ZONE_NOT_FOUND', "This delivery zone doesn't exist or was deleted.")}
+        </InlineNotice>
       )}
-    </>
+
+      <ZonesTable
+        zones={zones}
+        isActive={zone => !!zoneListState?.changes?.[zone.id]}
+        onToggle={(zone, next) => handleChangeZoneState(zone.id, next)}
+        onToggleAll={handleChangeAllZoneState}
+        allChecked={zones.length > 0 && !!zoneListState?.isCheckAll}
+        activeControl='switch'
+        selectedId={currentId}
+        currentId={currentId}
+        getRowAttributes={zone => ({ 'data-section-split-key': zone.id })}
+        onOpen={openZone}
+        loading={loading}
+        label={title}
+        loadingLabel={t('DRIVERS_GROUPS_ZONES_LOADING', 'Loading delivery zones')}
+      />
+
+      {!loading && zones.length === 0 && (
+        <p className='odc-delivery-zones-empty'>{t('DRIVERS_GROUPS_ZONES_EMPTY', 'No delivery zones yet')}</p>
+      )}
+
+      <div className='odc-delivery-zones-add'>
+        <Button type='button' icon={Plus} onClick={addZone}>
+          {t('ADD_DELIVERY_ZONE', 'Add delivery zone')}
+        </Button>
+      </div>
+    </section>
   )
 }

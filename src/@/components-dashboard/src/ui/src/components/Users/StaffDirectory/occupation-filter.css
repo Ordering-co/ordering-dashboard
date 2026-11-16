@@ -1,0 +1,23 @@
+/*
+ * redesign  (B1b): the occupation row of the professionals list. Product buttons that wrap onto as many lines as they need
+ * (no sideways scroll, as the other filter rows). Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js).
+ * Logical properties only.
+ */
+
+.odc-occ-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The chosen occupation says so beyond the background: the action border and text (as the date presets) */
+.odc-occ-filter .odc-btn[aria-pressed='true'] {
+  border-color: var(--od-action);
+  background: var(--od-x-selected);
+  color: var(--od-action-content);
+  font-weight: var(--od-font-weight-medium);
+}
+
+.odc-occ-filter .odc-btn[aria-pressed='true']:hover { background: var(--od-x-selected); }

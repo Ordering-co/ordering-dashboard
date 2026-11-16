@@ -1,0 +1,65 @@
+/*
+ * redesign DG-B4 (decision 1 | M-DG6, M-DG12): the panel of a delivery group (RecordPanel with sections). Values come from --od-*
+ * (release) and --od-x-* (src/brand/candidates.css) only; the literal guard fails on anything else. Logical properties only (C17).
+ * Component classes use the `gp-` prefix; the wrappers keep `odc-`.
+ */
+
+.gp-body {
+  min-inline-size: 0;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: var(--od-x-type-body-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* A section that is kept mounted for its draft (the zones) is hidden, not removed */
+.gp-section[hidden] { display: none; }
+
+.gp-section { min-inline-size: 0; }
+
+/* ── Status next to the title: «Enabled» and the switch ──
+   redesign DG-R1 (R1-06): one line, never the badge over the switch (it wrapped when the header row ran out of room and took the
+   title's room with it). The room is made by the query below instead: the title keeps it, or the status goes to its own line. */
+.gp-status {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  column-gap: var(--od-space-3);
+  white-space: nowrap;
+}
+
+/* The RecordPanel drops the status to its own line at 480px of panel. The title of this panel shares its row with Learn (with its
+   text), Open as page, the menu and Close, which is not enough for a short name at 519px (the split view at 1440), so here it drops
+   earlier. Same rules as the panel's own, at a wider limit. */
+@container odc-record (max-width: 600px) {
+  .odc-record-head-row:has(.gp-status) { flex-wrap: wrap; }
+  .odc-record-head-row > .odc-record-status:has(.gp-status) {
+    order: 9;
+    flex-basis: 100%;
+  }
+}
+
+/* ── Loading ── */
+.gp-skeleton {
+  display: grid;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.gp-title-skeleton {
+  display: block;
+  inline-size: var(--od-x-menu-min);
+  max-inline-size: 100%;
+}
+
+/* ── A group that did not open: Retry and Close side by side ── */
+.gp-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--od-space-2);
+}
+
+/* : after a save the panel itself takes the focus (tabindex -1, never in the tab order); no ring around the whole record,
+   as the drivers time page container */
+.gp-record:focus { outline: none; }

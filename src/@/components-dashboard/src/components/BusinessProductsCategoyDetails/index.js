@@ -55,10 +55,13 @@ export const BusinessProductsCategoyDetails = (props) => {
     if (isChecked.enabled !== undefined) {
       currentChanges = { enabled: isChecked.enabled }
     }
-    if (isChecked.enabledParent) {
-      currentChanges = { ...currentChanges, parent_category_id: categorySelected?.id }
-    } else {
-      currentChanges = { ...currentChanges, parent_category_id: null }
+    // bugs E D18: the Enabled switch calls this with `{ enabled }` only; it used to fall into the else branch and
+    // send `parent_category_id: null`, un-nesting the category. Only the nest checkbox (`{ enabledParent }`) moves the parent.
+    if (isChecked.enabledParent !== undefined) {
+      currentChanges = {
+        ...currentChanges,
+        parent_category_id: isChecked.enabledParent ? categorySelected?.id : null
+      }
     }
 
     setFormState({
@@ -141,19 +144,24 @@ export const BusinessProductsCategoyDetails = (props) => {
 
   /**
   * Default fuction for business profile workflow
+  * redesign stores 2.F: it answers `{ ok: true }` / `{ ok: false, error }` (nothing before; the callers ignore it).
+  * `options.keepPendingChanges` with a plain `changes` object (the Snooze dialog) saves ONLY those keys. Here `formState.changes`
+  * is the whole category model, so it keeps the other pending edits and takes the saved value of the sent keys (the form's next
+  * Save never re-sends the old one); it is not replaced by the answer and `formState.result` is not touched (the editor opens an
+  * Alert from `result.error`; the dialog shows the error inline). A failure leaves the form as it was.
   */
-  const handleUpdateClick = async () => {
+  const handleUpdateClick = async (givenChanges, options = {}) => {
     const keysToDelete = ['rank']
+    const keepPending = !!options?.keepPendingChanges && !!givenChanges && typeof givenChanges === 'object' &&
+      !givenChanges.target && !givenChanges.nativeEvent && Object.keys(givenChanges).length > 0
     if (category) {
       const id = category?.id || categoryId
-      if (loading) return
+      if (loading) return { ok: false }
       try {
         showToast(ToastType.Info, t('LOADING', 'Loading'))
-        setFormState({
-          ...formState,
-          loading: true
-        })
-        const changes = { ...formState.changes }
+        if (keepPending) setFormState(prev => ({ ...prev, loading: true }))
+        else setFormState({ ...formState, loading: true })
+        const changes = keepPending ? { ...givenChanges } : { ...formState.changes }
         for (const key in changes) {
           if ((!(key === 'snooze_until' && changes[key] === null) && changes[key] === null) || keysToDelete.includes(key)) {
             delete changes[key]
@@ -161,7 +169,18 @@ export const BusinessProductsCategoyDetails = (props) => {
         }
         const { content } = await ordering.businesses(businessState?.business?.id).categories(parseInt(id)).save(changes)
         if (!content.error) {
-          if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
+          if (keepPending) {
+            const saved = {}
+            Object.keys(changes).forEach(key => {
+              saved[key] = content.result?.[key] !== undefined ? content.result[key] : changes[key]
+            })
+            setFormState(prev => ({ ...prev, changes: { ...prev.changes, ...saved }, loading: false }))
+            setCategorySelected(content.result)
+            if (handleUpdateBusinessState) {
+              const updatedBusiness = await businessUpdate(content)
+              handleUpdateBusinessState(updatedBusiness)
+            }
+          } else if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
             const updatedChanges = { ribbon: { enabled: false } }
             const { content } = await ordering.businesses(businessState?.business?.id).categories(parseInt(id)).save(updatedChanges)
             setFormState({
@@ -195,6 +214,10 @@ export const BusinessProductsCategoyDetails = (props) => {
             }
           }
           showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
+          return { ok: true }
+        }
+        if (keepPending) {
+          setFormState(prev => ({ ...prev, loading: false }))
         } else {
           setFormState({
             ...formState,
@@ -203,16 +226,27 @@ export const BusinessProductsCategoyDetails = (props) => {
             loading: false
           })
         }
+        return { ok: false, error: content.result }
       } catch (err) {
-        setFormState({
-          ...formState,
-          result: {
-            error: true,
-            result: [err.message]
-          },
-          loading: false
-        })
+        if (keepPending) {
+          setFormState(prev => ({ ...prev, loading: false }))
+        } else {
+          setFormState({
+            ...formState,
+            result: {
+              error: true,
+              result: [err.message]
+            },
+            loading: false
+          })
+        }
+        return { ok: false, error: [err.message] }
       }
+    } else if (keepPending) {
+      // redesign stores 2.F (review R-1): a category being created has nothing to save on its own yet; the snooze
+      // goes into the form and is created with it, as before
+      setFormState(prev => ({ ...prev, changes: { ...prev.changes, ...givenChanges } }))
+      return { ok: true }
     } else {
       createBusinessCategory()
     }

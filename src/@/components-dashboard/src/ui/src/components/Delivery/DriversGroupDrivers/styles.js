@@ -8,7 +8,7 @@ export const Container = styled.div`
   > button {
     position: sticky;
     top: 100%;
-    height: 42px;
+    min-height: 44px;
     margin-top: 20px;
   }
 `
@@ -20,15 +20,12 @@ export const SearchBarWrapper = styled.div`
 export const ButtonGroup = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
   margin-bottom: 20px;
-  button:first-child {
-    ${props => props.theme?.rtl
-? css`
-      margin-left: 7px;
-    `
-: css`
-      margin-right: 7px;
-    `}
+
+  button {
+    min-height: 44px;
   }
 `
 
@@ -42,11 +39,11 @@ export const BusinessWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
+  border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor};
 
   p {
     margin: 0px;
-    font-size: 12px;
+    font-size: var(--od-type-content-size);
   }
 
   ${({ isDisabed }) => isDisabed && css`
@@ -60,7 +57,7 @@ export const WrapperImage = styled.div`
   height: 40px;
   width: 40px;
   ${({ isSkeleton }) => !isSkeleton && css`
-    border: 1px solid #E3E3E3;
+    border: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? '#E3E3E3'};
   `}
   border-radius: 8px;
 
@@ -92,7 +89,7 @@ export const Image = (props) => {
   return (
     <ImageStyled
       {...props}
-      style={{ backgroundImage: `url(${props.bgimage})` }}
+      style={props.bgimage ? { backgroundImage: `url(${props.bgimage})` } : undefined}
     >
       {props.children}
     </ImageStyled>
@@ -100,7 +97,7 @@ export const Image = (props) => {
 }
 
 export const DriverInfoContainer = styled.div`
-  padding-right: 15px;
+  padding-inline-end: 15px;
   width: 200px;
   p {
     margin: 0px;
@@ -111,27 +108,39 @@ export const DriverInfoContainer = styled.div`
     text-overflow: ellipsis;
     &:first-child {
       font-weight: 500;
-      font-size: 13px;
+      font-size: var(--od-type-control-size);
     }
 
     &:last-child {
-      font-size: 12px;
-      color: ${props => props.theme.colors.lightGray};
+      font-size: var(--od-type-secondary-size);
+      color: ${props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray};
     }
   }
 `
 export const DriverTemporaryContainer = styled.div`
-  padding-left: 5px;
+  padding-inline-start: 5px;
 
-  p {
+  button {
     margin: 0px;
+    padding: 0px;
     font-weight: 500;
-    font-size: 13px;
+    font-size: var(--od-type-control-size);
+    font-family: inherit;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: start;
+    min-height: 44px;
+    cursor: pointer;
 
     &:hover {
       text-decoration: underline;
-      color: ${props => props.theme.colors.primary};
-      cursor: pointer;
+      color: ${props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary};
+      outline-offset: 2px;
     }
   }
 `

@@ -51,7 +51,21 @@ export const ProductStartGuide = (props) => {
     <Container>
       <h2>{t('HOW_DO_YOU_WANT_TO_START', 'How do you want to start?')}</h2>
       {guideList.filter(guide => guide.enabled).map(guide => (
-        <GuideItemContainer key={guide.id} onClick={guide.onClick} data-testid={`product-start-guide-${guide.id}`}>
+        // bugs E D21: the guide items were clickable divs the keyboard could not reach. Same div and look (no new style,
+        // so the governed styles do not change): a named button in the tab order that Enter or Space activate like the click.
+        <GuideItemContainer
+          key={guide.id}
+          role='button'
+          tabIndex={0}
+          aria-label={`${guide.title}. ${guide.description}`}
+          onClick={guide.onClick}
+          onKeyDown={(event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return
+            event.preventDefault()
+            guide.onClick()
+          }}
+          data-testid={`product-start-guide-${guide.id}`}
+        >
           <IconWrapper>
             {guide.icon}
           </IconWrapper>

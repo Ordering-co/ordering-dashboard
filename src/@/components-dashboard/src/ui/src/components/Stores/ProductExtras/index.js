@@ -4,6 +4,7 @@ import { useLanguage, ProductExtras as ProductExtrasController } from '../../../
 import { useWindowSize } from '../../../hooks/useWindowSize'
 import { Button, Checkbox, IconButton, Input, LinkButton } from '../../../styles'
 import { Alert, Confirm, Modal } from '../../Shared'
+import { Button as ProductButton, Dialog } from '../../Shared/Product'
 import { ProductExtraOptions } from '../ProductExtraOptions'
 import { ChevronRight, Pencil } from 'react-bootstrap-icons'
 import { useTheme } from 'styled-components'
@@ -60,7 +61,8 @@ const ProductExtrasUI = (props) => {
   const [currentExtra, setCurrentExtra] = useState(null)
   const [extraIds, setExtraIds] = useState([])
   const [isCheckboxClicked, setIsCheckboxClicked] = useState(false)
-  const [timer, setTimer] = useState(null)
+  // bugs E: the name of the new option; it is created with Enter or «Add», not after a pause in the typing
+  const [newExtraName, setNewExtraName] = useState('')
   const [extraSelected, setExtraSelected] = useState(null)
   const [isProductExtraSnooze, setProductExtraSnooze] = useState(false)
 
@@ -103,15 +105,12 @@ const ProductExtrasUI = (props) => {
     setExtraSelected(null)
   }
 
-  const onChangeAddExtraInput = (e) => {
-    e.persist()
-    clearTimeout(timer)
-    const _timer = setTimeout(function () {
-      if (e.target.value) {
-        handleAddExtra({ name: e.target.value })
-      }
-    }, 750)
-    setTimer(_timer)
+  // With nothing typed, the controller closes the form (as before)
+  const handleSubmitNewExtra = (e) => {
+    e.preventDefault()
+    if (extrasState?.loading) return
+    const name = newExtraName.trim()
+    name ? handleAddExtra({ name }) : handleAddExtra()
   }
 
   const handleChangeExtra = async (id, changes) => {
@@ -123,11 +122,17 @@ const ProductExtrasUI = (props) => {
           'Name is required'
         ).replace('_attribute_', t('NAME', 'Name'))]
       })
-      return
+      return { ok: false }
     }
-    await handleUpdateExtraState(id, changes)
+    // redesign stores 2.F: the caller gets how the save went; nothing else changes here
+    const result = await handleUpdateExtraState(id, changes)
     handleCloseEdit()
+    return result
   }
+
+  useEffect(() => {
+    if (!isAddMode) setNewExtraName('')
+  }, [isAddMode])
 
   useEffect(() => {
     let _extraIds = []
@@ -206,7 +211,8 @@ const ProductExtrasUI = (props) => {
               <MoreContainer>
                 <OptionNameWrapper>
                   <span className='name'>{extra.name}</span>
-                  <IconButton onClick={(e) => handleOpenEdit(e, extra)}>
+                  {/* redesign bugs F row 25 (S-5): the pencil gets a name, «Edit <option>» (the key MenuEditor already uses) */}
+                  <IconButton aria-label={`${t('EDIT', 'Edit')} ${extra.name}`} onClick={(e) => handleOpenEdit(e, extra)}>
                     <Pencil />
                   </IconButton>
                 </OptionNameWrapper>
@@ -220,18 +226,26 @@ const ProductExtrasUI = (props) => {
         {isAddMode && (
           <ExtraAddForm
             ref={conatinerRef}
-            onSubmit={(e) => {
-              e.preventDefault()
-              handleAddExtra()
-            }}
+            onSubmit={handleSubmitNewExtra}
           >
             <input
               name='name'
+              aria-label={t('NAME', 'Name')}
               placeholder={t('WRITE_A_NAME', 'Write a name')}
-              onChange={(e) => onChangeAddExtraInput(e)}
+              value={newExtraName}
+              onChange={(e) => setNewExtraName(e.target.value)}
+              // a disabled «Add» blocks the form's Enter, so an empty Enter closes the form here (as before)
+              onKeyDown={(e) => e.key === 'Enter' && !newExtraName.trim() && handleSubmitNewExtra(e)}
               autoComplete='off'
               readOnly={extrasState?.loading}
             />
+            <ProductButton
+              type='submit'
+              variant='primary'
+              disabled={!newExtraName.trim() || extrasState?.loading}
+            >
+              {t('ADD', 'Add')}
+            </ProductButton>
           </ExtraAddForm>
         )}
         <AddButtonWrapper>
@@ -315,12 +329,13 @@ const ProductExtrasUI = (props) => {
           </ExtraOptionEditContainer>
         </Modal>
       )}
-      <Modal
-        width='85%'
-        maxWidth='1000px'
+      {/* redesign bugs F row 25 (S-4): the Product Dialog with a title, like the store's Snooze (it was an untitled legacy Modal) */}
+      <Dialog
         open={isProductExtraSnooze}
-        onClose={() => setProductExtraSnooze(false)}
-        closeOnBackdrop={false}
+        onOpenChange={setProductExtraSnooze}
+        size='lg'
+        title={t('SNOOZE', 'Snooze')}
+        closeLabel={t('CLOSE', 'Close')}
       >
         <SnoozeComponent
           isAutomaticUpdate
@@ -330,7 +345,7 @@ const ProductExtrasUI = (props) => {
           formState={extrasState}
           onClose={() => setProductExtraSnooze(false)}
         />
-      </Modal>
+      </Dialog>
       <Alert
         title={t('WEB_APPNAME', 'Ordering')}
         content={alertState.content}

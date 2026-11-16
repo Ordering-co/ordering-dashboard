@@ -14,6 +14,7 @@ import {
   Amount,
   TransactionCode
 } from './styles'
+import { strongSegments } from './strongSegments'
 
 export const CustomerWalletEvents = (props) => {
   const {
@@ -52,17 +53,19 @@ export const CustomerWalletEvents = (props) => {
                   {walletType === 'cash' ? parsePrice(event.amount) : event.amount}
                 </Amount>
               </TransactionHeader>
-              <Transaction
-                dangerouslySetInnerHTML={{
-                  __html: parseEvent(event)
-                }}
-              />
+              <Transaction>
+                {strongSegments(parseEvent(event)).map((segment, index) => (
+                  segment.strong
+                    ? <strong key={index}>{segment.text}</strong>
+                    : <React.Fragment key={index}>{segment.text}</React.Fragment>
+                ))}
+              </Transaction>
               <TransactionDescription>
                 {event.description}
               </TransactionDescription>
               {event?.wallet_event?.order_id && (
                 <TransactionDescription>
-                  <strong>{t('INVOICE_ORDER_NO', 'Order No')}</strong> {event?.wallet_event?.order_id}
+                  <strong>{t('INVOICE_ORDER_NO', 'Order number')}</strong> {event?.wallet_event?.order_id}
                 </TransactionDescription>
               )}
               <TransactionCode>

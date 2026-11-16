@@ -1,46 +1,44 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { DropdownButton, Dropdown } from 'react-bootstrap'
-import { XLg, ThreeDots } from 'react-bootstrap-icons'
-import { useTheme } from 'styled-components'
-import {
-  useLanguage
-} from '~components'
+import { useLanguage } from '../../../../../index'
+import { translateApiMessage } from '../../../../../utils/translateApiMessage'
 import { BusinessMenuOptions as BusinessMenuOptionsController } from '../../../../../components/BusinessMenuOptions'
 
-import { Button } from '~ui'
-
-import { useWindowSize } from '../../../hooks/useWindowSize'
-import { IconButton } from '../../../styles'
-import { AutoScroll, Confirm, Modal, IntegrationLogs } from '../../Shared'
+import { IntegrationLogs } from '../../Shared'
+import { Button, ConfirmDialog, Dialog, InlineNotice, Menu, Tabs, useLeaveGuard, useSectionSplit } from '../../Shared/Product'
+import { CircleAlert, Ellipsis, SlidersHorizontal, Trash2 } from '../../Shared/Icon'
 import { SnoozeComponent } from '../SnoozeComponent'
 import { BusinessMenuShare } from '../BusinessMenuShare'
 import { BusinessMenuBasicOptions } from '../BusinessMenuBasicOptions'
+import { validateMenuForm } from '../BusinessMenuBasicOptions/treeModel'
 import { BusinessMenuCustomFields } from '../BusinessMenuCustomFields'
 import { BusinessSharedMenuProducts } from '../BusinessSharedMenuProducts'
 import { BusinessMenuChannels } from '../BusinessMenuChannels'
-import { addQueryToUrl } from '../../../utils'
+import { addQueryToUrl, removeQueryToUrl } from '../../../utils'
+import './business-menu-options.css'
 
-import {
-  Container,
-  Header,
-  ActionBlock,
-  TabContainer,
-  TabInnerContainer,
-  Tab,
-  ActionSelectorWrapper
-} from './styles'
+// redesign stores 5.5a (S1, S4-S6): the detail of a menu lives inside P/SectionSplit, which draws the title (the name of
+// the menu), the X or «‹ Back», handles Esc and owns the focus. This draws what is inside: the tabs (own saved menus), the actions
+// (Snooze and the ⋯ menu, saved menus), the body of the tab and the Delete confirmation. The width is the piece's (G3-13): nothing
+// here measures or sets a width.
+
+const SETTING_TABS = ['basic', 'channels', 'share_with', 'logs']
+
+// the first message of what the controller answers (a string or a list of them), or null
+const firstMessage = (error) => {
+  const message = Array.isArray(error) ? error[0] : error
+  return typeof message === 'string' && message.trim() ? message : null
+}
 
 const BusinessMenuOptionsUI = (props) => {
   const {
-    open,
-    onClose,
     menu,
     business,
     handleUpdateBusinessState,
     isSelectedSharedMenus,
     handleDeleteMenu,
     handleUpdateBusinessMenuOption,
+    handleAddBusinessMenuOption,
     handleChangeInput,
     setIsOpenSharedProduct,
     sitesState,
@@ -48,39 +46,71 @@ const BusinessMenuOptionsUI = (props) => {
     menuList,
     formState,
     businessMenuState,
-    setCurrentMenu
+    setCurrentMenu,
+    isDirty,
+    pendingChangeKeys,
+    discardChanges,
+    selectedProductsIds
   } = props
 
-  const query = new URLSearchParams(useLocation().search)
-  const theme = useTheme()
   const [, t] = useLanguage()
-  const { width } = useWindowSize()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [selectedMenuOption, setSelectedMenuOption] = useState('basic')
-  const [confirm, setConfirm] = useState({ open: false, content: null, handleOnAccept: null })
+  const location = useLocation()
+  const { registerCloseGuard } = useSectionSplit()
+  const mounted = useRef(true)
+  const actionsRef = useRef(null)
   const [isCustomFieldsOpen, setIsCustomFieldsOpen] = useState(false)
   const [isMenuSnooze, setIsMenuSnooze] = useState(false)
+  // how many times the leave guard's Save found something missing: Basic marks it (the notice, the focus) each time this goes up
+  const [validationAttempt, setValidationAttempt] = useState(0)
+  const [deleteState, setDeleteState] = useState({ open: false, busy: false, error: null })
 
-  const actionSidebar = (value) => {
-    if (!value) {
-      props.onClose()
-    }
-    setIsMenuOpen(value)
-    document.getElementById('menu_options').style.width = value
-      ? width > 1000 ? '500px' : '100%'
-      : '0'
+  const isNew = !menu || Object.keys(menu).length === 0
+  const isShared = !isNew && !!isSelectedSharedMenus
+  const isOwnSaved = !isNew && !isSelectedSharedMenus
+  const hasSites = sitesState?.sites?.length > 0
+
+  // The tab is local. It is read from the URL once, when the menu opens (so `?menu=&setting_tab=` opens what it did), and written
+  // only when the user clicks a tab: opening a menu never writes it, and a new menu does not inherit one (G3-10).
+  const [tab, setTab] = useState(() => new URLSearchParams(location.search).get('setting_tab') || 'basic')
+  const activeTab = isOwnSaved && SETTING_TABS.includes(tab) && (tab !== 'channels' || hasSites) ? tab : 'basic'
+
+  useEffect(() => {
+    mounted.current = true
+    return () => { mounted.current = false }
+  }, [])
+
+  useEffect(() => {
+    if (isNew) removeQueryToUrl(['setting_tab'])
+  }, [isNew])
+
+  const handleTabChange = (next) => {
+    setTab(next)
+    addQueryToUrl({ setting_tab: next })
   }
 
-  const handleDeleteClick = () => {
-    setConfirm({
-      open: true,
-      content: t('QUESTION_DELETE_MENU', 'Are you sure that you want to delete this menu?'),
-      handleOnAccept: () => {
-        handleDeleteMenu()
-        setConfirm({ ...confirm, open: false })
+  // Save of the guard validates with the same rule as Basic's Save: a blank name or a new menu without products never reaches the API.
+  // It brings the user to Basic, which shows what is missing, and the guard keeps them where they are.
+  const saveFromGuard = () => {
+    const { ok } = validateMenuForm({ menu: businessMenuState?.menu || menu, changes: formState?.changes, selectedProductsIds })
+    if (!ok) {
+      if (activeTab !== 'basic') {
+        setTab('basic')
+        if (isOwnSaved) addQueryToUrl({ setting_tab: 'basic' })
       }
-    })
+      setValidationAttempt(attempt => attempt + 1)
+      return { ok: false }
+    }
+    return menu?.id ? handleUpdateBusinessMenuOption() : handleAddBusinessMenuOption()
   }
+
+  // Closing the detail by any way (X, «‹ Back», Esc, another row, the editor) asks first when there is unsaved work.
+  useLeaveGuard({
+    dirty: Boolean(isDirty),
+    count: pendingChangeKeys?.length || 1,
+    save: saveFromGuard,
+    discard: () => discardChanges?.(),
+    registerCloseGuard
+  })
 
   const handleChangeSnooze = (changes) => {
     const _changes = {
@@ -92,187 +122,129 @@ const BusinessMenuOptionsUI = (props) => {
     handleChangeInput(_changes)
   }
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      if (width < 1000) {
-        document.getElementById('menu_options').style.width = '100%'
-      } else {
-        document.getElementById('menu_options').style.width = '500px'
-      }
-    }
-  }, [width])
-
-  useEffect(() => {
-    if (!open) return
-    actionSidebar(true)
-  }, [open])
-
-  useEffect(() => {
-    if (Object.keys(menu)?.length === 0) {
-      setSelectedMenuOption('basic')
-    }
-  }, [menu])
-
-  const handleTabClick = (settingTab) => {
-    setSelectedMenuOption(settingTab)
-    addQueryToUrl({ setting_tab: settingTab })
+  // Delete (S6, G3-01): asks with the name; if the API refuses, the dialog stays open and says why. When it works the controller
+  // closes the detail.
+  const closeDelete = () => {
+    if (deleteState.busy) return
+    setDeleteState({ open: false, busy: false, error: null })
   }
 
-  useEffect(() => {
-    if (!isSelectedSharedMenus) {
-      const settingTab = query.get('setting_tab')
-      if (settingTab) {
-        handleTabClick(settingTab)
-      } else {
-        handleTabClick('basic')
-      }
+  const confirmDelete = async () => {
+    if (deleteState.busy) return
+    setDeleteState({ open: true, busy: true, error: null })
+    let result
+    try {
+      result = await handleDeleteMenu()
+    } catch (error) {
+      result = { ok: false, error: error?.message }
     }
-  }, [isSelectedSharedMenus])
+    if (!mounted.current) return
+    if (result?.ok === false) {
+      setDeleteState({
+        open: true,
+        busy: false,
+        error: translateApiMessage(t, firstMessage(result.error), t('STORES_MENU_DELETE_ERROR', "We couldn't delete this menu. Try again."))
+      })
+      return
+    }
+    setDeleteState({ open: false, busy: false, error: null })
+  }
+
+  const tabItems = [
+    { value: 'basic', label: t('BASIC', 'Basic') },
+    ...(hasSites ? [{ value: 'channels', label: t('CHANNELS', 'Channels') }] : []),
+    { value: 'share_with', label: t('SHARE_WITH', 'Share with') },
+    { value: 'logs', label: t('MENU_LOGS', 'Logs') }
+  ]
+
+  const menuItems = [
+    ...(!isSelectedSharedMenus
+      ? [{
+          key: 'custom_fields',
+          label: t('CUSTOM_FIELDS', 'Custom fields'),
+          icon: SlidersHorizontal,
+          onSelect: () => setIsCustomFieldsOpen(true)
+        }]
+      : []),
+    {
+      key: 'delete',
+      label: t('DELETE', 'Delete'),
+      icon: Trash2,
+      tone: 'danger',
+      separatorBefore: !isSelectedSharedMenus,
+      onSelect: () => setDeleteState({ open: true, busy: false, error: null })
+    }
+  ]
+
+  let body
+  if (isShared) {
+    body = (
+      <BusinessSharedMenuProducts
+        menu={menu}
+        business={business}
+        handleUpdateBusinessState={handleUpdateBusinessState}
+        setIsOpenSharedProduct={setIsOpenSharedProduct}
+        setMenuList={setMenuList}
+        menuList={menuList}
+      />
+    )
+  } else if (activeTab === 'channels') {
+    body = <BusinessMenuChannels {...props} />
+  } else if (activeTab === 'share_with') {
+    body = (
+      <BusinessMenuShare
+        menu={menu}
+        setCurrentMenu={setCurrentMenu}
+        business={business}
+        handleUpdateBusinessState={handleUpdateBusinessState}
+        setMenuList={setMenuList}
+        menuList={menuList}
+      />
+    )
+  } else if (activeTab === 'logs') {
+    body = <IntegrationLogs model='Menu' modelId={menu?.id} />
+  } else {
+    body = <BusinessMenuBasicOptions {...props} validationAttempt={validationAttempt} />
+  }
 
   return (
-    <>
-      <Container id='menu_options'>
-        <Header>
-          <h1>{t('MENU_SETTINGS', 'Menu settings')}</h1>
-          <ActionBlock>
-            {Object.keys(menu)?.length > 0 && (
-              <>
-                <ActionSelectorWrapper>
-                  <Button
-                    className='snooze'
-                    color='lightGreen'
-                    borderRadius='8px'
-                    onClick={() => setIsMenuSnooze(true)}
-                  >
-                    {t('SNOOZE', 'Snooze')}
-                  </Button>
-                </ActionSelectorWrapper>
-                <ActionSelectorWrapper>
-                  <DropdownButton
-                    className='product_actions'
-                    menuAlign={theme?.rtl ? 'left' : 'right'}
-                    title={<ThreeDots />}
-                    id={theme?.rtl ? 'dropdown-menu-align-left' : 'dropdown-menu-align-right'}
-                  >
-                    {!isSelectedSharedMenus && (
-                      <Dropdown.Item
-                        onClick={() => setIsCustomFieldsOpen(true)}
-                      >
-                        {t('CUSTOM_FIELDS', 'Custom fields')}
-                      </Dropdown.Item>
-                    )}
-                    <Dropdown.Item
-                      onClick={() => handleDeleteClick()}
-                    >
-                      {t('DELETE', 'Delete')}
-                    </Dropdown.Item>
-                  </DropdownButton>
-                </ActionSelectorWrapper>
-              </>
-            )}
-            <IconButton
-              color='black'
-              onClick={() => onClose()}
-            >
-              <XLg />
-            </IconButton>
-          </ActionBlock>
-        </Header>
-        {Object.keys(menu)?.length > 0 && !isSelectedSharedMenus && (
-          <TabContainer>
-            <TabInnerContainer>
-              <AutoScroll innerScroll scrollId='menu_options'>
-                <Tab
-                  active={selectedMenuOption === 'basic'}
-                  onClick={() => handleTabClick('basic')}
-                >
-                  {t('BASIC', 'Basic')}
-                </Tab>
-                {sitesState?.sites?.length > 0 && (
-                  <Tab
-                    active={selectedMenuOption === 'channels'}
-                    onClick={() => handleTabClick('channels')}
-                  >
-                    {t('CHANNELS', 'Channels')}
-                  </Tab>
-                )}
-                {Object.keys(menu)?.length > 0 && (
-                  <Tab
-                    active={selectedMenuOption === 'share_with'}
-                    onClick={() => handleTabClick('share_with')}
-                  >
-                    {t('SHARE_WITH', 'Share with')}
-                  </Tab>
-                )}
-                <Tab
-                  active={selectedMenuOption === 'logs'}
-                  onClick={() => handleTabClick('logs')}
-                >
-                  {t('MENU_LOGS', 'Logs')}
-                </Tab>
-              </AutoScroll>
-            </TabInnerContainer>
-          </TabContainer>
-        )}
-
-        {(!isSelectedSharedMenus || Object.keys(menu)?.length === 0)
-          ? (
-              <>
-                {selectedMenuOption === 'basic' && (
-                  <BusinessMenuBasicOptions
-                    {...props}
-                  />
-                )}
-                {selectedMenuOption === 'channels' && (
-                  <BusinessMenuChannels
-                    {...props}
-                  />
-                )}
-                {selectedMenuOption === 'share_with' && (
-                  <BusinessMenuShare
-                    menu={menu}
-                    setCurrentMenu={setCurrentMenu}
-                    business={business}
-                    handleUpdateBusinessState={handleUpdateBusinessState}
-                    setMenuList={setMenuList}
-                    menuList={menuList}
-                  />
-                )}
-                {selectedMenuOption === 'logs' && (
-                  <IntegrationLogs model='Menu' modelId={menu?.id} />
-                )}
-              </>
-            )
-          : (
-              <BusinessSharedMenuProducts
-                menu={menu}
-                business={business}
-                handleUpdateBusinessState={handleUpdateBusinessState}
-                setIsOpenSharedProduct={setIsOpenSharedProduct}
-                setMenuList={setMenuList}
-                menuList={menuList}
+    <div className='odc-bmo'>
+      {!isNew && (
+        <div className='odc-bmo-tools'>
+          {isOwnSaved && (
+            <div className='odc-bmo-tabs'>
+              <Tabs
+                label={t('MENU_SETTINGS', 'Menu settings')}
+                value={activeTab}
+                onValueChange={handleTabChange}
+                items={tabItems}
               />
-            )}
-        {isCustomFieldsOpen && (
-          <Modal
-            width='70%'
-            open={isCustomFieldsOpen}
-            onClose={() => setIsCustomFieldsOpen(false)}
-          >
-            <BusinessMenuCustomFields
-              open={isCustomFieldsOpen}
-              onClose={() => setIsCustomFieldsOpen(false)}
-              businessId={business?.id}
-              menuId={menu.id}
-            />
-          </Modal>
-        )}
-        <Modal
-          width='85%'
-          maxWidth='1000px'
+            </div>
+          )}
+          <div className='odc-bmo-actions' ref={actionsRef}>
+            <Button onClick={() => setIsMenuSnooze(true)}>{t('SNOOZE', 'Snooze')}</Button>
+            <Menu icon={Ellipsis} label={t('MORE_ACTIONS', 'More actions')} items={menuItems} />
+          </div>
+        </div>
+      )}
+      <div className='odc-bmo-body'>{body}</div>
+      {isOwnSaved && (
+        <BusinessMenuCustomFields
+          open={isCustomFieldsOpen}
+          onClose={() => setIsCustomFieldsOpen(false)}
+          returnFocus={() => actionsRef.current?.querySelector('button[aria-haspopup]')}
+          businessId={business?.id}
+          menuId={menu.id}
+        />
+      )}
+      {!isNew && (
+        // redesign bugs F row 25 (S-4): the Product Dialog with a title, like the store's Snooze (it was an untitled legacy Modal)
+        <Dialog
           open={isMenuSnooze}
-          onClose={() => setIsMenuSnooze(false)}
-          closeOnBackdrop={false}
+          onOpenChange={setIsMenuSnooze}
+          size='lg'
+          title={t('SNOOZE', 'Snooze')}
+          closeLabel={t('CLOSE', 'Close')}
         >
           <SnoozeComponent
             dataState={businessMenuState?.menu}
@@ -281,20 +253,29 @@ const BusinessMenuOptionsUI = (props) => {
             formState={formState}
             onClose={() => setIsMenuSnooze(false)}
           />
-        </Modal>
-        <Confirm
-          title={t('WEB_APPNAME', 'Ordering')}
-          width='700px'
-          content={confirm.content}
-          acceptText={t('ACCEPT', 'Accept')}
-          open={confirm.open}
-          onClose={() => setConfirm({ ...confirm, open: false })}
-          onCancel={() => setConfirm({ ...confirm, open: false })}
-          onAccept={confirm.handleOnAccept}
-          closeOnBackdrop={false}
-        />
-      </Container>
-    </>
+        </Dialog>
+      )}
+      {!isNew && (
+        <ConfirmDialog
+          open={deleteState.open}
+          tone='danger'
+          busy={deleteState.busy}
+          title={t('STORES_MENU_DELETE_TITLE', 'Delete menu "_name_"?').replace('_name_', menu?.name ?? '')}
+          confirmLabel={t('STORES_MENU_DELETE_CONFIRM', 'Delete menu')} // redesign tanda AB (S-5): verb + object
+          cancelLabel={t('CANCEL', 'Cancel')}
+          closeLabel={t('CLOSE', 'Close')}
+          onCancel={closeDelete}
+          onConfirm={confirmDelete}
+        >
+          <p className='odc-bmo-delete-body'>{t('STORES_MENU_DELETE_BODY', "This can't be undone.")}</p>
+          {deleteState.error && (
+            <InlineNotice tone='danger' icon={CircleAlert} role='alert' className='odc-bmo-delete-error'>
+              {deleteState.error}
+            </InlineNotice>
+          )}
+        </ConfirmDialog>
+      )}
+    </div>
   )
 }
 

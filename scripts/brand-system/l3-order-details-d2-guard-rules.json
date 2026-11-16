@@ -1,0 +1,1289 @@
+{
+  "schemaVersion": 1,
+  "id": "l3-order-details-d2-guards",
+  "categories": [
+    "pilot-guards"
+  ],
+  "rules": [
+    {
+      "id": "l3-order-details-d2-messages-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "MessagesProps /* binding-sha256:d77561b5b335c5689acfe2478106365a0dec6152e337d3ee9af18c4d385270d5 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX prop bundle is bound to the complete reviewed local initializer and dependency graph; any source, dependency, write or cardinality change reopens review.",
+            "evidence": "The D2 guard pins the recursive binding digest so visual props cannot enter this bundle without review."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-messages-history-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/orderPlacedHistory.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d2-messages-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/Messages/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "NotSendMessage",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D2 detail source scopes this declaration to an icon while adjacent readable text uses a central typography role."
+          },
+          {
+            "component": "WrapperHeader",
+            "property": "font",
+            "match": "({ messageDashboardView }) => messageDashboardView && css`\n    width: 92%;\n    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? 'var(--od-border)'};\n    padding-bottom: 5px;\n    flex-wrap: wrap;\n    row-gap: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "WrapperHeader",
+            "property": "font",
+            "match": "({ historyView }) => historyView && css`\n    width: 92%;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "ImageContainer",
+            "property": "font",
+            "match": "({ isCircle }) => isCircle && css`\n    img, svg {\n      width: 20px;\n      height: 20px;\n      border-radius: 50%;\n    }\n    svg {\n      padding: 3px;\n    }\n\n    ${({ isReceived }) => !isReceived && css`\n      justify-content: flex-end;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "ImageContainer",
+            "property": "font",
+            "match": "({ isReceived }) => !isReceived && css`\n      justify-content: flex-end;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "MyName",
+            "property": "font",
+            "match": "props => props.theme?.rtl && css`\n      text-align: left;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "SendImage",
+            "property": "font-size",
+            "match": "20px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D2 detail source scopes this declaration to an icon while adjacent readable text uses a central typography role."
+          },
+          {
+            "component": "TabItem",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.headingColor};\n    color: ${props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors?.headingColor};\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "font-size",
+            "match": "30px",
+            "context": "svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D2 detail source scopes this declaration to an icon while adjacent readable text uses a central typography role."
+          },
+          {
+            "component": "ChatContactInfoContainer",
+            "property": "font",
+            "match": "({ selected }) => !selected && css`\n    opacity: 0.55;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "SendToContainer",
+            "property": "font",
+            "match": "({ isReceived }) => isReceived && css`\n    text-align: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "NotSendMessage",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? 'var(--od-text-muted)'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "NotSendMessage",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? 'var(--od-surface-subtle)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperHeader",
+            "property": "color-block",
+            "match": "({ messageDashboardView }) => messageDashboardView && css`\n    width: 92%;\n    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.border?.default ?? 'var(--od-border)'};\n    padding-bottom: 5px;\n    flex-wrap: wrap;\n    row-gap: 10px;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperHeader",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? 'var(--od-border)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "Added 2026-10-08 (W1-6a, T1-6-4a): new code, the image-remove control on P/IconButton draws its ring with the border token; pinned like the D2 inventory pins every semantic expression (W1-PB1-07: it does not follow removed code)."
+          },
+          {
+            "component": "WrapperHeader",
+            "property": "color-block",
+            "match": "({ historyView }) => historyView && css`\n    width: 92%;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImageContainer",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[1] ?? 'var(--od-shadow-1)'",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImageContainer",
+            "property": "color-block",
+            "match": "({ isCircle }) => isCircle && css`\n    img, svg {\n      width: 20px;\n      height: 20px;\n      border-radius: 50%;\n    }\n    svg {\n      padding: 3px;\n    }\n\n    ${({ isReceived }) => !isReceived && css`\n      justify-content: flex-end;\n    `}\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImageContainer",
+            "property": "color-block",
+            "match": "({ isReceived }) => !isReceived && css`\n      justify-content: flex-end;\n    `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderNumber",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleBusines",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleBusines",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleCustomer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleCustomer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.foreground ?? props.theme?.colors?.primaryContrast ?? 'var(--od-action-foreground)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "Chat",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatImage",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImagePreviewWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImagePreviewWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.hover ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ImagePreviewWrapper",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MyName",
+            "property": "color-block",
+            "match": "props => props.theme?.rtl && css`\n      text-align: left;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendForm",
+            "property": "border-top",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendForm",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendImage",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? 'var(--od-text-muted)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendImage",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendImage",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDeleteImage",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? 'var(--od-text)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDeleteImage",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? 'var(--od-surface)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "WrapperDeleteImage",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? 'var(--od-border)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "border-bottom",
+            "match": "1px solid transparent",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? 'var(--od-text-muted)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: 1px solid ${props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.headingColor};\n    color: ${props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors?.headingColor};\n    font-weight: 600;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "TabItem",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "HeaderInfo",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MessagesSearch",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.strong ?? 'var(--od-border-strong)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MessagesSearch",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? 'var(--od-text-muted)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MessagesSearch",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? 'var(--od-border)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? 'var(--od-surface-subtle)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? 'var(--od-action-soft)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "OrderDetailIconButton",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatContactInfoContainer",
+            "property": "border",
+            "match": "1px solid transparent",
+            "context": "<root>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatContactInfoContainer",
+            "property": "color-block",
+            "match": "({ selected }) => !selected && css`\n    opacity: 0.55;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatContactInfoContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ChatContactInfoContainer",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoBlock",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendToContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryContrast",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "SendToContainer",
+            "property": "color-block",
+            "match": "({ isReceived }) => isReceived && css`\n    text-align: initial;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-contact-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": []
+      }
+    },
+    {
+      "id": "l3-order-details-d2-contact-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderContactInformation/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "ToggleItemWrapper",
+            "property": "font",
+            "match": "({ active }) => active && css`\n    border-bottom: none;\n    .down-arrow {\n      transform: rotateZ(180deg);\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "font",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "PhotoWrapper",
+            "property": "box-shadow",
+            "match": "props => props.theme?.ordering?.shadow?.[1] ?? '0px 1px 4px rgba(0, 0, 0, 0.1)'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "InfoContent",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ActionIconWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CompanySelectorContainer",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CompanySelectorContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverSelectorContainer",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "DriverSelectorContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CutsomerDetail",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerInfoTable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors?.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerInfoTable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerInfoTable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors?.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerInfoTable",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.hover ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerInfoTable",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ToggleItemWrapper",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors?.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ToggleItemWrapper",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ToggleItemWrapper",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ToggleItemWrapper",
+            "property": "color-block",
+            "match": "({ active }) => active && css`\n    border-bottom: none;\n    .down-arrow {\n      transform: rotateZ(180deg);\n    }\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ReviewButton",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ReviewButton",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.action?.soft ?? props.theme.colors.secundary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "ReviewButton",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors?.backgroundPage ?? '#FFF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? props.theme.colors.borderColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "color-block",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.secundaryLight",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "border-color",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? '#CCC'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "CustomerEditWrapper",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "props",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact parameter-forwarding spread preserves the existing component contract; any source, write or cardinality change reopens review.",
+            "evidence": "The D2 source forwards its received styled-component props without introducing local visual values."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-logistic-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderLogisticInformation/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color",
+            "match": "'primary'",
+            "context": "JSXAttribute",
+            "count": 1,
+            "reason": "This exact JSX color is a reviewed public Ordering wrapper variant, not a direct CSS value; any change reopens review.",
+            "evidence": "The D2 source inventory pins wrapper variant names while literal JSX colors remain fail-closed."
+          },
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "logisticsProps /* binding-sha256:83a64209a685368270c2c943920596d2f14cf8ca4e0f03def2ca9798a74a5552 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX prop bundle is bound to the complete reviewed local initializer and dependency graph; any source, dependency, write or cardinality change reopens review.",
+            "evidence": "The D2 guard pins the recursive binding digest so visual props cannot enter this bundle without review."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-logistic-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderLogisticInformation/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "UppercaseText",
+            "property": "font",
+            "match": "({ title }) => title && css`\n    font-weight: 500;\n    font-size: var(--od-type-content-size);\n    opacity: 0.8;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete interpolation contains reviewed layout or state composition and no ungoverned readable-text size; any change reopens classification.",
+            "evidence": "The D2 detail typography inventory pins the expression, context and cardinality while every readable size uses central roles."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "WraaperLogs",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.subtle ?? '#EFEFEF'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "BubbleConsole",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "UppercaseText",
+            "property": "color-block",
+            "match": "({ title }) => title && css`\n    font-weight: 500;\n    font-size: var(--od-type-content-size);\n    opacity: 0.8;\n  `",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-meta-index-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/index.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": []
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "jsx-prop",
+            "property": "color-block",
+            "match": "MetaFieldsProps /* binding-sha256:51ef160bd881d7417830b057df32480ab58c1a6260c825f5b117cee9538e87c0 */",
+            "context": "JSXSpreadAttribute",
+            "count": 1,
+            "reason": "This exact JSX prop bundle is bound to the complete reviewed local initializer and dependency graph; any source, dependency, write or cardinality change reopens review.",
+            "evidence": "The D2 guard pins the recursive binding digest so visual props cannot enter this bundle without review."
+          }
+        ]
+      }
+    },
+    {
+      "id": "l3-order-details-d2-meta-styles-js",
+      "kind": "pilot-guard",
+      "file": "src/@/components-dashboard/src/ui/src/components/Orders/OrderMetaFields/styles.js",
+      "allowedBaseUiSources": [],
+      "typographyPolicy": {
+        "roles": [
+          "control",
+          "controlValue",
+          "content",
+          "secondary",
+          "sectionTitle",
+          "title",
+          "identifier"
+        ],
+        "exceptions": [
+          {
+            "component": "MetaContainer",
+            "property": "font-size",
+            "match": "20px",
+            "context": ".meta_value > svg",
+            "count": 1,
+            "reason": "This exact font-size controls SVG geometry and not readable text.",
+            "evidence": "The D2 detail source scopes this declaration to an icon while adjacent readable text uses a central typography role."
+          }
+        ]
+      },
+      "semanticColorPolicy": {
+        "exceptions": [
+          {
+            "component": "MetaTitle",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 2,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddContainer",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#c2c2c2'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddContainer",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddContainer",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddContainer",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.content ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RoundBorder",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.semantic?.border?.default ?? '#c2c2c2'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RoundBorder",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? props.theme.colors?.headingColor",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "RoundBorder",
+            "property": "background",
+            "match": "props => props.theme?.ordering?.semantic?.surface?.default ?? props.theme.colors.backgroundPage",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "NoMetaField",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.muted ?? props.theme.colors.lightGray",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddForm",
+            "property": "outline",
+            "match": "props => props.theme?.ordering?.semantic?.action?.focus ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddForm",
+            "property": "color",
+            "match": "props => props.theme?.ordering?.semantic?.text?.default ?? '#000'",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddForm",
+            "property": "border",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddForm",
+            "property": "background-color",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          },
+          {
+            "component": "MetaAddForm",
+            "property": "border-bottom",
+            "match": "props => props.theme?.ordering?.actionOverride ?? props.theme?.ordering?.semantic?.action?.default ?? props.theme.colors.primary",
+            "context": "<dynamic>",
+            "count": 1,
+            "reason": "This exact complete semantic, compatibility, shadow or layout expression is pinned; any branch, token or cardinality change reopens review.",
+            "evidence": "The D2 semantic-color inventory pins the full expression and rejects additions, substitutions, duplication and relocation."
+          }
+        ]
+      }
+    }
+  ]
+}

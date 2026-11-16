@@ -1,0 +1,26 @@
+diff --git a/floating-ui-react/components/FloatingPortal.js b/floating-ui-react/components/FloatingPortal.js
+index 0b4b5ff31a3ec65fae71702226fd1fcd77cf1946..e52d60cdb1696349fcaca5bf6432445f20a0a78b 100644
+--- a/floating-ui-react/components/FloatingPortal.js
++++ b/floating-ui-react/components/FloatingPortal.js
+@@ -170,7 +170,7 @@ const FloatingPortal = exports.FloatingPortal = /*#__PURE__*/React.forwardRef(fu
+     // Restore tabbability before the focus manager's queued focus-on-open step runs.
+     (0, _tabbable.enableFocusInside)(portalNode);
+     focusInsideDisabledRef.current = false;
+-  }, [open, portalNode]);
++  }, [modal, open, portalNode]);
+   const portalContextValue = React.useMemo(() => ({
+     beforeOutsideRef,
+     afterOutsideRef,
+diff --git a/floating-ui-react/components/FloatingPortal.mjs b/floating-ui-react/components/FloatingPortal.mjs
+index 7a9f72636e217a7f906844fe3f8ebde171890518..9223c38dad8f29b2df202e623fe7d6f30f9ded11 100644
+--- a/floating-ui-react/components/FloatingPortal.mjs
++++ b/floating-ui-react/components/FloatingPortal.mjs
+@@ -161,7 +161,7 @@ export const FloatingPortal = /*#__PURE__*/React.forwardRef(function FloatingPor
+     // Restore tabbability before the focus manager's queued focus-on-open step runs.
+     enableFocusInside(portalNode);
+     focusInsideDisabledRef.current = false;
+-  }, [open, portalNode]);
++  }, [modal, open, portalNode]);
+   const portalContextValue = React.useMemo(() => ({
+     beforeOutsideRef,
+     afterOutsideRef,

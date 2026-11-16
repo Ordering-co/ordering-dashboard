@@ -1,5 +1,7 @@
 import moment from 'moment'
 
+import { formatRelativeSeconds } from '../../../../../utils/relativeTime'
+
 /** Environment variable the setup guide tells the user to set. */
 export const MCP_ENV_VAR = 'ORDERING_MCP_KEY'
 
@@ -39,29 +41,15 @@ export const isMcpTokenExpiringSoon = (token, now = Date.now()) => {
   return !!expiresAt && expiresAt.valueOf() - now <= MCP_EXPIRING_SOON_DAYS * 86400000
 }
 
-const DAY = 86400
-
 /**
  * "in 6 days", "3 hours ago", "yesterday"… in the dashboard language, via
  * Intl.RelativeTimeFormat. Days up to two months, then months, then years.
+ * (P3): the calculation is the dashboard's one (`formatRelativeSeconds`); these options keep the keys' words.
  */
 export const formatMcpRelative = (value, { now = Date.now(), locale = 'en' } = {}) => {
   const date = parseMcpDate(value)
   if (!date) return null
-  const seconds = Math.round((date.valueOf() - now) / 1000)
-  const abs = Math.abs(seconds)
-  let rtf
-  try {
-    rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
-  } catch {
-    rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
-  }
-  if (abs < 60) return rtf.format(0, 'minute')
-  if (abs < 3600) return rtf.format(Math.round(seconds / 60), 'minute')
-  if (abs < DAY) return rtf.format(Math.round(seconds / 3600), 'hour')
-  if (abs < 60 * DAY) return rtf.format(Math.round(seconds / DAY), 'day')
-  if (abs < 365 * DAY) return rtf.format(Math.round(seconds / (30 * DAY)), 'month')
-  return rtf.format(Math.round(seconds / (365 * DAY)), 'year')
+  return formatRelativeSeconds(Math.round((date.valueOf() - now) / 1000), { locale, nowBelow: 60, nowUnit: 'minute', daysUpTo: 60, round: 'signed' })
 }
 
 /** Presets that fit under the API max, plus the default when it is not one of them. */

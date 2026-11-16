@@ -1,0 +1,211 @@
+/*
+ * redesign stores 5.14 (, E4) · The promotions of a store on Product: the head («Promotions» and «Add promotion»), the
+ * states (loading, error, empty), the table (cards under 768px) and the detail inside a P/SectionSplit.
+ * Values: --od-* and --od-x-* only (guard: productLiteralGuard.test.js). Logical properties only, so right-to-left needs no second set.
+ * No `overflow`, `container-type`, `contain`, `transform` or `filter` on any wrapper between the root and the editor's scroller
+ * (instructions 3 and 3b of stores-2-b-section-split/decisions.md): the detail is sticky to that scroller. Prefix: odc-bpl-*.
+ */
+
+.odc-bpl {
+  display: grid;
+  gap: var(--od-space-4);
+  box-sizing: border-box;
+  min-inline-size: 0;
+  padding: var(--od-space-5); /* the section gutter, as Markups (odc-bm) and Tax & fees (odc-tf) */
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+}
+
+.odc-bpl-pane {
+  display: grid;
+  gap: var(--od-space-4);
+  min-inline-size: 0;
+}
+
+/* ── Head: the section title and the one primary button ── */
+.odc-bpl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* the section title, as Markups (odc-bm-title) and Business fees (odc-bf-title) */
+.odc-bpl-title {
+  margin: 0;
+  color: var(--od-text);
+  font-size: var(--od-x-type-title-size);
+  font-weight: var(--od-font-weight-bold);
+  line-height: var(--od-x-leading-title);
+  letter-spacing: var(--od-x-tracking-title);
+}
+
+/* «Add promotion» breaks at its spaces instead of leaving a narrow panel */
+.odc-bpl-head > .odc-btn,
+.odc-bpl-empty > .odc-btn {
+  max-inline-size: 100%;
+  block-size: auto;
+  min-block-size: var(--od-x-control-height);
+  padding-block: var(--od-x-space-half);
+  white-space: normal;
+}
+
+.odc-bpl-notice { min-inline-size: 0; }
+
+/* ── Empty ── */
+.odc-bpl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+.odc-bpl-empty-text {
+  margin: 0;
+  color: var(--od-x-text-subtle);
+  font-size: var(--od-type-content-size);
+  line-height: var(--od-x-leading-body);
+}
+
+/* ── The cells (the table and the cards draw the same ones) ── */
+
+/* The name: a native button, so Enter and Space open the promotion. A click on the row opens it too (the table owns that). */
+.odc-bpl-name {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--od-text);
+  font-family: var(--od-font-sans);
+  font-size: inherit;
+  font-weight: var(--od-font-weight-medium);
+  line-height: var(--od-x-leading-ui);
+  text-align: start;
+  cursor: pointer;
+}
+
+.odc-bpl-name:focus-visible {
+  outline: var(--od-focus-ring-width) solid var(--od-focus-ring-color);
+  outline-offset: var(--od-x-focus-inset);
+}
+
+.odc-bpl-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--od-space-2);
+  min-inline-size: 0;
+}
+
+/* The thumbnail is a square of the image or of the placeholder; the name is beside it, so it says nothing of its own */
+.odc-bpl-thumb {
+  flex: none;
+  inline-size: var(--od-x-avatar-lg);
+  block-size: var(--od-x-avatar-lg);
+  border-radius: var(--od-radius-control);
+  background: var(--od-surface-subtle);
+  object-fit: cover;
+}
+
+/* The element that clips carries dir="auto" in the markup: a Latin name in an Arabic page ends «Ana De…», never «…na Deb». */
+.odc-bpl-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  min-inline-size: 0;
+  /* the card's title link carries odc-mono (a figure); the name is text */
+  font-family: var(--od-font-sans);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+  text-overflow: ellipsis;
+}
+
+.odc-bpl-type {
+  display: block;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+}
+
+.odc-bpl-discount,
+.odc-bpl-dates {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.odc-bpl-range {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* what is said under a value: the minimum purchase, Expired, Scheduled */
+.odc-bpl-sub,
+.odc-bpl-state {
+  display: block;
+  max-inline-size: 100%;
+  color: var(--od-text-muted);
+  font-size: var(--od-type-secondary-size);
+  font-weight: var(--od-font-weight-regular);
+  line-height: var(--od-x-leading-ui);
+  unicode-bidi: isolate;
+}
+
+.odc-bpl-none { color: var(--od-text-muted); }
+
+/* The switch of a row: a click on it is its own, and the row keeps its padding around it */
+.odc-bpl-control {
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.odc-bpl-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--od-space-3);
+  min-inline-size: 0;
+}
+
+/* P/RecordCard draws an arrow between `from` and `to`; a promotion card has no `to`, so the arrow points at nothing */
+.odc-bpl .odc-order-card-arrow { display: none; }
+
+/* P/RecordCard keeps its title link at flex: none, so a long promotion name pushed the card past the panel (the same as 5.13, noted
+   for ): here the link may shrink and the name wraps to two lines. The P/ piece is unchanged. */
+.odc-bpl .odc-order-card-link {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+/* ── The detail ── */
+.odc-bpl-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--od-space-4);
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--od-font-sans);
+  color: var(--od-text);
+}
+
+/* the panels start under the tab bar with the same room as the fields between them */
+.odc-bpl-detail .odc-tab-panel {
+  padding-block-start: var(--od-space-4);
+}
+
+.odc-bpl-delete-body {
+  margin: 0;
+}
+
+.odc-bpl-delete-error { margin-block-start: var(--od-space-3); }

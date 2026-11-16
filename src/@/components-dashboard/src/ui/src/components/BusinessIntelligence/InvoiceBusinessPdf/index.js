@@ -104,7 +104,8 @@ export const InvoiceBusinessPdf = (props) => {
       {
         exportInvoiceList?.invoice?.from && exportInvoiceList?.invoice?.to && (
           <>
-            <span>{t('FROM', 'From')} <b>{exportInvoiceList?.invoice?.from}</b> {t('TO', 'To')} <b>{exportInvoiceList?.invoice?.to}</b></span><br />
+            {/* redesign invoice FB (D10, IV-09): the days of the period with the date format of the project, not the ISO string */}
+            <span>{t('FROM', 'From')} <b>{parseDate(exportInvoiceList?.invoice?.from, { utc: false, dateOnly: true, inputFormat: 'YYYY-MM-DD' })}</b> {t('TO', 'To')} <b>{parseDate(exportInvoiceList?.invoice?.to, { utc: false, dateOnly: true, inputFormat: 'YYYY-MM-DD' })}</b></span><br />
           </>
         )
       }

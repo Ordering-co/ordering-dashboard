@@ -92,10 +92,11 @@ export const SiteTheme = (props) => {
   /**
    * Method to assign the theme to site
    */
-  const handleAssignTheme = async () => {
+  const handleAssignTheme = async (options) => {
     try {
       setActionState({ ...actionState, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      // redesign `options.inlineError` = the caller says the error inline, so no Loading toast
+      if (options?.inlineError !== true) showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -117,21 +118,24 @@ export const SiteTheme = (props) => {
         loading: false,
         error: error ? result : null
       })
+      return { error: !!error, result }
     } catch (err) {
       setActionState({
         loading: false,
         error: [err.message]
       })
+      return { error: true, result: [err.message] }
     }
   }
 
   /**
    * Method to update the site theme from API
    */
-  const handleUpdateSiteTheme = async (values) => {
+  const handleUpdateSiteTheme = async (values, options) => {
     try {
       setActionState({ ...actionState, loading: true })
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      // redesign see handleAssignTheme
+      if (options?.inlineError !== true) showToast(ToastType.Info, t('LOADING', 'Loading'))
       const themeId = siteThemesState.result[0]?.theme_id
       const requestOptions = {
         method: 'POST',
@@ -147,20 +151,36 @@ export const SiteTheme = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         showToast(ToastType.Success, t('THEME_UPDATED', 'Theme updated'))
+        // redesign (OP-12): replace the site theme record instead of appending to the array
+        // (the API may answer an array or a single object, so never spread `result`)
+        let nextResult = siteThemesState.result
+        if (Array.isArray(result)) {
+          nextResult = result
+        } else if (result && typeof result === 'object') {
+          // the request sends `values` as JSON text: an answer that echoes it gives text back, the record keeps an object
+          const answered = result.values ?? values
+          let nextValues = answered
+          if (typeof answered === 'string') {
+            try { nextValues = JSON.parse(answered) } catch (error) { nextValues = values }
+          }
+          nextResult = [{ ...siteThemesState.result[0], ...result, values: nextValues }]
+        }
         setSiteThemesState({
           ...siteThemesState,
-          result: [...siteThemesState.result, ...result]
+          result: nextResult
         })
       }
       setActionState({
         loading: false,
         error: error ? result : null
       })
+      return { error: !!error, result }
     } catch (err) {
       setActionState({
         loading: false,
         error: [err.message]
       })
+      return { error: true, result: [err.message] }
     }
   }
 
@@ -168,20 +188,25 @@ export const SiteTheme = (props) => {
    * Method to add the theme gallery item from API
    */
   const handleAddThemeGallery = async (base64Image) => {
-    const themeId = siteThemesState.result[0]?.theme_id
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        type: 'image',
-        file: base64Image
-      })
+    // redesign a failed request now resolves to `{ error: true, result: [message] }` instead of throwing
+    try {
+      const themeId = siteThemesState.result[0]?.theme_id
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          type: 'image',
+          file: base64Image
+        })
+      }
+      const response = await fetch(`${ordering.root}/themes/${themeId}/gallery`, requestOptions)
+      return await response.json()
+    } catch (err) {
+      return { error: true, result: [err.message] }
     }
-    const response = await fetch(`${ordering.root}/themes/${themeId}/gallery`, requestOptions)
-    return await response.json()
   }
 
   useEffect(() => {
@@ -206,6 +231,8 @@ export const SiteTheme = (props) => {
             handleAssignTheme={handleAssignTheme}
             handleUpdateSiteTheme={handleUpdateSiteTheme}
             handleAddThemeGallery={handleAddThemeGallery}
+            getSiteTheme={getSiteTheme}
+            getThemes={getThemes}
           />
         )
       }
